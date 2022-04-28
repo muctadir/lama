@@ -1,5 +1,7 @@
-mysql-connector-python
+mysqlclient
 sqlalchemy
 Flask
 marshmallow
 flask-cors
+flask_login
+flask_migrate

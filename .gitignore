@@ -1,1 +1,3 @@
 backend/venv/*
+backend/src/__pycache__/*
+backend/src/routes/__pycache__/*
