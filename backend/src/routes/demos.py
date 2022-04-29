@@ -1,27 +1,42 @@
+from sqlite3 import OperationalError
 from src import app, db
-from src.models.model import TestModel
-from flask import jsonify, request
+from src.models.auth_models import User, UserSchema
+from flask import request, jsonify
 
-@app.route("/demo_request", methods=["POST", "GET"])
-def demo_request():
+@app.route("/user", methods=["POST", "GET"])
+def user():
     if request.method == "POST":
-        # TODO: Implement example using MySQL db
-        return
-    else: # GET
-        data = jsonify(foo="bar",
-                ping="pong")
-        return data
+        username = request.args.get("username")
+        password = request.args.get("password") # should be encrypted before sending it to the backend anyway
+        if username and password:
+            new_user = User(username=username, password=password)
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+            except OperationalError: # Something out of our control, like connection lost or such
+                return "503 Service Unavailable"
+        else:
+            return "400 Bad Request"
+    else:
+        id = request.args.get("index")
+        if id:
+            try:
+                user = User.query.get(id)
+            except OperationalError:
+                return "503 Service Unavailable"
+            if user:
+                user_schema = UserSchema()
+                user_json = user_schema.dump(user)
+                user_json.pop("password")
+                return user_json
+            else:
+                return "404 Not Found"
+        return "400 Bad Request"
 
-@app.route("/test")
-def test():
-    return "Hello, World!"
-
-@app.route("/read")
-def read():
-    index = request.args.get("index")
-    if index:
-        result = TestModel.query.get(index)
-        if result:
-            return {"index":result.field1, "text":result.field2}
-        return "Entry does not exist with this index"
-    return "No index supplied"
+@app.route("/users", methods=["GET"])
+def users():
+    user_schema = UserSchema()
+    try:
+        return jsonify([user_schema.dump(user) for user in User.query.all()]) # cannot return lists -> convert to json
+    except OperationalError:
+        return "503 Service Unavailable"
