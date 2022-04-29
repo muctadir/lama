@@ -5,3 +5,4 @@ marshmallow
 flask-cors
 flask_login
 flask_migrate
+click
