@@ -1,0 +1,17 @@
+name: Run Unit Tests
+
+on: [pull_request]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - run: npm ci
+      working-directory: ${{ github.workspace }}/frontend
+    - run: npm run build 
+      working-directory: ${{ github.workspace }}/frontend
+    - run: npm run githubTest
+      working-directory: ${{ github.workspace }}/frontend
