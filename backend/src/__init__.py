@@ -2,7 +2,7 @@ import click
 from flask import Flask
 from flask.cli import AppGroup
 #from flask_login import LoginManager
-from flask_migrate import Migrate
+from flask_migrate import Migrate, init, migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -31,14 +31,19 @@ ma = Marshmallow(app)
 
 db_opt = AppGroup("db-opt")
 
-# TODO: add db-opt command to do all the initializing
+# initializes database
+@db_opt.command("init")
+def init():
+        init()
+        db.create_all()
+        update("Initial migration")
 
-# clears database recreates table
-# TODO: Use Migrate for this instead, and for initialization
+# drops all tables and recreates them (useful if you change the schema or models)
 @db_opt.command("reset")
 def reset():
-        # TODO: Figure out how to delete tables
+        db.drop_all()
         db.create_all()
+        update("Database reset")
 
 # fills the user table with a bunch of random users
 @db_opt.command("fill")
@@ -50,6 +55,10 @@ def fill():
         users = [User(username=word, password=password) for word in lorem.split()]
         db.session.add_all(users)
         db.session.commit()
+
+def update(message):
+        migrate(message=message)
+        upgrade()
 
 app.cli.add_command(db_opt)
 
