@@ -9,6 +9,6 @@ RUN npm i
 
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:1.21.6-alpine
 
 COPY --from=node /usr/local/app/dist/webapp /usr/share/nginx/html
