@@ -5,6 +5,7 @@ from flask.cli import AppGroup
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 
 host = "localhost:3306"
 username = "root"
@@ -19,6 +20,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://{username}:{password}@{
         dbname=dbname)
 app.config['SQLALCHEMY_ECHO'] = False  # Set this configuration to True if you want to see all of the SQL generated.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # To suppress this warning
+
+CORS(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
