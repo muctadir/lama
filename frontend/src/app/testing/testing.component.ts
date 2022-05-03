@@ -23,7 +23,6 @@ export class TestingComponent implements OnInit {
           this.text = "There was an error";
           console.log(error);
         });
-      console.log(response);
     }
   }
 

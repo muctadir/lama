@@ -13,6 +13,7 @@ def user():
             try:
                 db.session.add(new_user)
                 db.session.commit()
+                return "Success"
             except OperationalError: # Something out of our control, like connection lost or such
                 return "503 Service Unavailable"
         else:
