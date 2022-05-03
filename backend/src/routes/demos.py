@@ -28,7 +28,7 @@ def user():
                 user_schema = UserSchema()
                 user_json = user_schema.dump(user)
                 user_json.pop("password")
-                return user_json
+                return jsonify(user_json)
             else:
                 return "404 Not Found"
         return "400 Bad Request"
