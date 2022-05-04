@@ -1,0 +1,29 @@
+# Why not use the image Python?
+# It was elected to not use the Python image because Flask
+# requires mysql-dev which is not installed in the Python image. 
+# and cannot be installed as the python image lacks a package manager.
+FROM ubuntu:22.04
+
+EXPOSE 5000
+
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libmysqlclient-dev \
+    python3-pip \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+ADD requirements.txt /app
+
+RUN pip3 install -r requirements.txt
+
+ADD ./ /app/
+
+RUN flask --version
