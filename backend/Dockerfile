@@ -13,6 +13,7 @@ RUN apt-get update \
     libssl-dev \
     libffi-dev \
     python3-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -24,5 +25,7 @@ RUN pip3 install -r requirements.txt
 ADD ./ /app/
 
 EXPOSE 5000
+
+HEALTHCHECK --interval=5s --timeout=3s CMD curl --fail http://localhost:5000/health || exit 
 
 CMD ["flask", "run", "--host", "0.0.0.0"]
