@@ -4,8 +4,6 @@
 # and cannot be installed as the python image lacks a package manager.
 FROM ubuntu:22.04
 
-EXPOSE 5000
-
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN apt-get update \
@@ -15,7 +13,6 @@ RUN apt-get update \
     libssl-dev \
     libffi-dev \
     python3-dev \
-    mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -26,4 +23,6 @@ RUN pip3 install -r requirements.txt
 
 ADD ./ /app/
 
-RUN flask --version
+EXPOSE 5000
+
+CMD ["flask", "run", "--host", "0.0.0.0"]
