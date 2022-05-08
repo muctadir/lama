@@ -3,6 +3,11 @@ from src import app, db
 from src.models.auth_models import User, UserSchema
 from flask import request, jsonify
 
+@app.route("/health", methods=["GET"])
+def heath():
+    if request.method == "GET":
+        return "200 OK"
+
 @app.route("/user", methods=["POST", "GET"])
 def user():
     if request.method == "POST":

@@ -1,0 +1,10 @@
+venv
+migrations
+src/__pycache__
+src/routes/__pycache__
+src/models/__pycache__
+venv/*
+src/__pycache__/*
+src/routes/__pycache__/*
+src/models/__pycache__/*
+migrations/*
