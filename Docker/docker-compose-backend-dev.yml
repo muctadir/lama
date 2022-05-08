@@ -10,10 +10,10 @@ services:
     image: mysql:8.0.29
     container_name: lama-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ff
+      MYSQL_ROOT_PASSWORD: rootPassword
       MYSQL_DATABASE: lama
       MYSQL_USER: lamaUser
-      MYSQL_PASSWORD: ff
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     volumes:
