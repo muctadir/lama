@@ -1,0 +1,15 @@
+Flask
+mysqlclient
+sqlalchemy
+Flask-SQLAlchemy
+marshmallow
+marshmallow-sqlalchemy
+flask-marshmallow
+flask-migrate
+flask-cors
+flask-login
+Flask-Principal
+click
+python-dotenv
+pytest
+coverage
