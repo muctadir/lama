@@ -25,14 +25,11 @@ Only needs to be done the first time
 3. Choose based on operating system (this is a step to make sure you ran the correct script in the last step)
 
 ## Part 4: Known Errors
-`Error response from daemon: i/o timeout`:
+`Error response from daemon: i/o timeout`:<br />
+Reason 1: Port 80 is in use already (by another docker container) <br />
+Fix: Close the app (Part 3), delete the container and retry Part 2 <br />
 
-Reason 1: Port 80 is in use already (by another docker container)
-
-Fix: Close the app (Part 3), delete the container and retry Part 2
-
-Reason 2: Took too long to boot.
-
+Reason 2: Took too long to boot. <br />
 Fix: Close the app (Part 3). Starting up is faster the second time so retry. If it's still too slow, see other possible reasons, or give up.
 
 ---
