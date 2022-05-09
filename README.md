@@ -1,4 +1,4 @@
-# LAMA - LL
+![LaMa logo](/frontend/assets/lama_nobg.png)
 
 ## Part 1: First-time setup
 1. If you have don't have a TU/e laptop or you have already done this, skip to Part 2
