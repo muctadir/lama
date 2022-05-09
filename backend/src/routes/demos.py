@@ -13,7 +13,7 @@ def user():
             try:
                 db.session.add(new_user)
                 db.session.commit()
-                return "Success"
+                return "201 Created"
             except OperationalError: # Something out of our control, like connection lost or such
                 return "503 Service Unavailable"
         else:
@@ -29,7 +29,9 @@ def user():
                 user_schema = UserSchema()
                 user_json = user_schema.dump(user)
                 user_json.pop("password")
-                return jsonify(user_json)
+                response = jsonify(user_json)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
             else:
                 return "404 Not Found"
         return "400 Bad Request"
@@ -41,6 +43,5 @@ def users():
         response = jsonify([user_schema.dump(user) for user in User.query.all()]) # cannot return lists -> convert to json
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-        #return jsonify([user_schema.dump(user) for user in User.query.all()]) # cannot return lists -> convert to json
     except OperationalError:
         return "503 Service Unavailable"
