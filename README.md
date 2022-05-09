@@ -26,9 +26,13 @@ Only needs to be done the first time
 
 ## Part 4: Known Errors
 `Error response from daemon: i/o timeout`:
+
 Reason 1: Port 80 is in use already (by another docker container)
+
 Fix: Close the app (Part 3), delete the container and retry Part 2
+
 Reason 2: Took too long to boot.
+
 Fix: Close the app (Part 3). Starting up is faster the second time so retry. If it's still too slow, see other possible reasons, or give up.
 
 ---
