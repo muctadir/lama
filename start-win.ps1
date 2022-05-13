@@ -3,7 +3,7 @@ Clear-Host
 Write-Output "What operating system are you running?"
 Write-Output "1) Windows"
 Write-Output "2) Linux"
-$os = read-host 'Boot option: '
+$os = read-host 'Boot option'
 if ($os -ne 1) {
     Write-Output "You gave an invalid option for the OS (either not 1/2 or Linux)."
     Write-Output "Try again by reopening the file. Goodbye for now!"
@@ -16,7 +16,7 @@ Write-Output "2) Suited for frontend development [Flask, MySQL & phpMyAdmin Dock
 Write-Output "3) Suited for backend development [Angular, MySQL & phpMyAdmin Dockerized]"
 Write-Output "================================================================================="
 
-$option = read-host 'Boot option: ' 
+$option = read-host 'Start option' 
 
 if ($option -eq 1)
 {
@@ -39,8 +39,8 @@ elseif ( $option -eq 2 )
     Write-Output "2) Suited for frontend development [Flask, MySQL & phpMyAdmin Dockerized]"
     Write-Output "================================================================================="
     docker compose -f Docker/docker-compose-frontend-dev.yml up --build -d
-    docker exec lama-flask db-opt init
-    docker exec lama-flask db-opt fill
+    docker exec lama-flask flask db-opt init
+    docker exec lama-flask flask db-opt fill
     Write-Output "================================================================================="
     Write-Output "To finish set up, enter the following commands (this cannot be automated...)"
     Write-Output "1) cd frontend"
