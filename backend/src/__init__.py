@@ -22,7 +22,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = URI
 app.config['SQLALCHEMY_ECHO'] = False  # Set this configuration to True if you want to see all of the SQL generated.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # To suppress this warning
 
-CORS(app)
+CORS(app, 
+                origins="http://localhost:80",
+                allow_headers="Access-Control-Allow-Origin") # Should only accept requests from the frontend server
 
 db = SQLAlchemy(app)
 mig = Migrate(app, db)
