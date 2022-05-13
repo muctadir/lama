@@ -1,3 +1,5 @@
+import re
+
 class AppUtil():
     @staticmethod
     def check_args(required, args):
@@ -26,13 +28,41 @@ class AppUtil():
     @staticmethod
     def check_username(username):
         """
-        TODO: Should return True <=> in correct format
+        @param username : a string
+        @return : True <=> username is valid
+        A valid username is defined as a username that:
+            has no leading or trailing whitespace
+            is at least 5 characters long
+            is no more than 32 characters long (database constraint)
         """
-        return True
+        return len(username.strip()) == len(username) and \
+                len(username) >= 4 and \
+                len(username) <= 32 # max username length according to db
     
     @staticmethod
     def check_password(password):
         """
-        TODO: Should return True <=> fulfills password complexity requirements
+        A valid password is defined as a password that:
+            has no leading or trailing whitespace
+            is no more than 64 characters long (database constraint)
+        A complex password is defined as a password that:
+            is not in the list of banned common passwords (or similar to them)
+            is at least 8 characters long
+            fulfills at least one of the following requirements:
+                contains an uppercase and lowercase character
+                contains a special and non-special character
+                contains a number and non-number character
+                
+                NB: we say at least one because enforcing many constraints actually makes passwords more predictable
         """
-        return True
+        banned = ["password", "password123"] # A list of common banned passwords (use env. variable?)
+        caseRe = r"(?=.*[a-z]).*[A-Z]" # Uppercase and lowercase
+        specialRe = r"(?=.*\W).*[\w]" # Special and non-special (note: underscore is non-special)
+        numberRe = r"(?=.*[0-9]).*[^0-9]" # Number and non-number
+        valid = len(password) <= 64 and len(password) == len(password.strip())
+        complex = len(password) >= 8 and \
+                password.lower() not in banned and \
+                (re.match(caseRe, password) or \
+                re.match(specialRe, password) or \
+                re.match(numberRe, password))
+        return valid and complex
