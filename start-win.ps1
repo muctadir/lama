@@ -24,8 +24,8 @@ if ($option -eq 1)
     Write-Output "1) Production [Fully Dockerized]"
     Write-Output "================================================================================="
     docker compose -f Docker/docker-compose.yml up --build -d
-    docker exec lama-flask db-opt init
-    docker exec lama-flask db-opt fill
+    docker exec lama-flask flask db-opt init
+    docker exec lama-flask flask db-opt fill
     Write-Output "================================================================================="
     Write-Output "Script is complete. Check above for errors."
     Write-Output "If you want to shut down, run the stop-win.ps1 file."
