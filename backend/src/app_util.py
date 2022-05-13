@@ -22,3 +22,17 @@ class AppUtil():
         Note: This can get super complex so don't worry about it too much
         """
         return True
+    
+    @staticmethod
+    def check_username(username):
+        """
+        TODO: Should return True <=> in correct format
+        """
+        return True
+    
+    @staticmethod
+    def check_password(password):
+        """
+        TODO: Should return True <=> fulfills password complexity requirements
+        """
+        return True
