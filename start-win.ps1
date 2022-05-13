@@ -24,10 +24,12 @@ if ($option -eq 1)
     Write-Output "1) Production [Fully Dockerized]"
     Write-Output "================================================================================="
     docker compose -f Docker/docker-compose.yml up --build -d
+    docker exec lama-flask db-opt init
+    docker exec lama-flask db-opt fill
     Write-Output "================================================================================="
     Write-Output "Script is complete. Check above for errors."
     Write-Output "If you want to shut down, run the stop-win.ps1 file."
-    Write-Output " Goodbye for now!"
+    Write-Output "Goodbye for now!"
     Write-Output "================================================================================="
     exit
 }
@@ -37,10 +39,12 @@ elseif ( $option -eq 2 )
     Write-Output "2) Suited for frontend development [Flask, MySQL & phpMyAdmin Dockerized]"
     Write-Output "================================================================================="
     docker compose -f Docker/docker-compose-frontend-dev.yml up --build -d
+    docker exec lama-flask db-opt init
+    docker exec lama-flask db-opt fill
     Write-Output "================================================================================="
     Write-Output "To finish set up, enter the following commands (this cannot be automated...)"
-    Write-Output "cd frontend"
-    Write-Output "ng serve"
+    Write-Output "1) cd frontend"
+    Write-Output "2) ng serve"
     Write-Output "================================================================================="
     Write-Output "Script is complete. Check above for errors."
     Write-Output "If you want to shut down, you will need to: "
@@ -56,12 +60,16 @@ elseif ( $option -eq 3 )
     Write-Output "================================================================================="
     docker compose -f Docker/docker-compose-backend-dev.yml up --build -d
     Write-Output "================================================================================="
+    Write-Output "!! Make sure that the migration file is deleted !!"
+    Write-Output "================================================================================="
     Write-Output "To finish set up, enter the following commands (this cannot be automated...)"
-    Write-Output "cd backend"
-    Write-Output "py -m venv venv"
-    Write-Output ".\venv\Scripts\activate"
-    Write-Output "pip install -r .\requirements.txt"
-    Write-Output "flask run"
+    Write-Output "1) cd backend"
+    Write-Output "2) py -m venv venv"
+    Write-Output "3) .\venv\Scripts\activate"
+    Write-Output "4) pip install -r .\requirements.txt"
+    Write-Output "5) flask db-opt init"
+    Write-Output "6) flask db-opt fill"
+    Write-Output "7) flask run"
     Write-Output "================================================================================="
     Write-Output "Script is complete. Check above for errors."
     Write-Output "If you want to shut down, you will need to:"

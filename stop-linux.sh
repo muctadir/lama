@@ -17,6 +17,6 @@ then
 fi
 
 echo "Stopping LAMA."
-docker-compose -f Docker/docker-compose.yml down
+docker-compose -f Docker/docker-compose.yml down -v
 echo "Script is complete. Goodbye!"
 exit
