@@ -1,6 +1,7 @@
 from src import db, ma # need this in every model
 
-class User(db.Model): # Obviously needs to be fleshed out
+class User(db.Model):
+    # TODO: Handle `approved` using Flask-Principal?
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True) # auto_increment=True is default for integer primary key
     username = db.Column(db.String(32), unique=True)
