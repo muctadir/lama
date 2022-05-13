@@ -30,7 +30,7 @@ export class TestingComponent implements OnInit {
     const get_list = document.querySelector('#get_output');
     if (get_list != null) {
       // Tries the get request and outputs the response to the webpage
-      const response = axios.get('http://127.0.0.1:5000/users')
+      const response = axios.get('http://127.0.0.1:5000/auth/pending')
         .then(response => get_list.innerHTML = JSON.stringify(response.data))
         .catch(error => {
           this.text = "There was an error";

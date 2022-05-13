@@ -1,12 +1,13 @@
 import click
 from flask import Flask
 from flask.cli import AppGroup
-#from flask_login import LoginManager
-from flask_migrate import Migrate, init, migrate, upgrade, stamp
+from flask_login import LoginManager
+from flask_migrate import Migrate, init, migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 from os import environ
+from secrets import token_hex
 
 HOST = environ.get("HOST")
 PORT = environ.get("PORT")
@@ -31,8 +32,10 @@ mig = Migrate(app, db)
 # Important: Initialize Marshmallow after SQLAlchemy
 ma = Marshmallow(app)
 
-# login_manager = LoginManager()
-# login_manager.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+app.secret_key = token_hex() # generates a secret key
 
 db_opt = AppGroup("db-opt")
 
@@ -58,6 +61,26 @@ def fill():
 
 app.cli.add_command(db_opt)
 
-# Circular imports are a special workaround for Flask, and also lets us have routes and models in their own module 
-from src import routes
+# Docs specify to return None if no user with id instead of an exception
+# Docs do not specify what to do in case of database exception
+# Leads to me to believe they do not like exceptions
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        user = db.session.query(User).get(user_id)
+        if user:
+            return user
+    finally: 
+        return None
+
+# Circular imports are a special workaround for Flask, and also lets us have routes and models in their own module
+# Essentially: app needs to import the routes
+# Routes depend on app
+# Import the routes after app is defined
+# Register any blueprints associated with the routes
+# (and yes, this is a Flask thing, I'm not just crazy)
+from src import routes # This will import routes not tied to a blueprint
+from src.routes.auth_routes import auth_routes # This will import the blueprint
 from src.models.auth_models import User
+
+app.register_blueprint(auth_routes)
