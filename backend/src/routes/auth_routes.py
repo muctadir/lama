@@ -15,9 +15,10 @@ def register():
     args = request.args.to_dict() 
     required = ["username", "email", "password", "description"] # Required arguments
     if AppUtil.check_args(required, args):
-        return create_user(args)
-    else:
-        return make_response(("Bad Request", 400))
+        if AppUtil.check_email(args["email"]):
+            return create_user(args)
+        return make_response(("Invalid email", 400))
+    return make_response(("Bad Request", 400))
 
 @app.route("/auth/pending", methods=["GET"]) # TODO: CORS
 def pending():
@@ -36,10 +37,12 @@ def create_user(args):
     Adds a user to the database assuming correct (and unmodified) arguments are supplied
     Assigns default attributes to the user:
         approved : 0
-    Hashes password before adding user
+    Hashes password
+    Converts email to lowercase
     """
     args["approved"] = 0 # By default, a newly created user needs to be improved
     args["password"] = generate_password_hash(args["password"])
+    args["email"] = args["email"].lower()
     new_user = User(**args)
     try:
         db.session.add(new_user)

@@ -13,3 +13,12 @@ class AppUtil():
                     return False
             return True
         return False
+    
+    @staticmethod
+    def check_email(email):
+        """
+        TODO: Should return True <=> the email supplied is a valid email
+        See: https://www.rfc-editor.org/rfc/rfc3696#section-3
+        Note: This can get super complex so don't worry about it too much
+        """
+        return True
