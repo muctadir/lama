@@ -19,11 +19,16 @@ class AppUtil():
     @staticmethod
     def check_email(email):
         """
-        TODO: Should return True <=> the email supplied is a valid email
+        @param email: a string
+        @return : True <==> email is a validly formatted email
+        Note: Does not check if email actually exists
+        Note: Whilst the input field on the frontend can check this, users can edit html
+            so the backend should also check formatting
         See: https://www.rfc-editor.org/rfc/rfc3696#section-3
-        Note: This can get super complex so don't worry about it too much
+        Pattern taken from: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#validation
         """
-        return True
+        pattern = r"/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/"
+        return re.match(pattern, email) and len(email) <= 320
     
     @staticmethod
     def check_username(username):
