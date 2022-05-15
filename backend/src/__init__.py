@@ -23,9 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = URI
 app.config['SQLALCHEMY_ECHO'] = False  # Set this configuration to True if you want to see all of the SQL generated.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # To suppress this warning
 
-CORS(app, 
-                origins="http://localhost:80",
-                allow_headers="Access-Control-Allow-Origin") # Should only accept requests from the frontend server
+CORS(app)
 
 db = SQLAlchemy(app)
 mig = Migrate(app, db)
@@ -35,7 +33,7 @@ ma = Marshmallow(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-app.secret_key = token_hex() # generates a secret key
+app.secret_key = token_hex() # generates a secret key for login use
 
 db_opt = AppGroup("db-opt")
 
@@ -83,4 +81,5 @@ from src import routes # This will import routes not tied to a blueprint
 from src.routes.auth_routes import auth_routes # This will import the blueprint
 from src.models.auth_models import User
 
-app.register_blueprint(auth_routes)
+CORS(auth_routes)
+app.register_blueprint(auth_routes, url_prefix="/auth")

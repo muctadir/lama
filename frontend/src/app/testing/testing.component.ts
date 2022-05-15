@@ -13,16 +13,23 @@ export class TestingComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  postrequest() {
-    const post_list = document.querySelector('#post_output');
-    if (post_list != null) {
-      const article = { title: 'Axios POST Request Example' };
-      const response = axios.post('http://127.0.0.1:5000/user', {}, {params: {username: "Lannes", password: "VivLF"}})
-        .then(response => post_list.innerHTML = response.data)
+  register() {
+    const post_form: HTMLFormElement = (document.querySelector("#registrationForm")! as HTMLFormElement);
+    const p_response: HTMLElement = document.querySelector("#registrationResponse")!;
+    if (post_form != null && post_form.checkValidity()) {
+      const article = { title: 'Registration POST Request' };
+      let params: Record<string, string> = {};
+      for (let i = 0; i < post_form.length; i++) { // No forEach for HTMLCollection
+        let param = post_form[i] as HTMLInputElement;
+        params[param.name] = param.value;
+      }
+      const response = axios.post('http://127.0.0.1:5000/auth/register', {}, {params: params})
+        .then(response => p_response.innerHTML = JSON.stringify([response.data, response.status]))
         .catch(error => {
-          this.text = "There was an error";
-          console.log(error);
+          p_response.innerHTML = JSON.stringify([error.response.data, error.response.status])
         });
+    } else {
+      alert("Bad formatting");
     }
   }
 

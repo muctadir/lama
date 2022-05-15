@@ -2,10 +2,24 @@
 
 <p>{{text}}</p>
 
+<h3>Registration Form</h3>
+<form id="registrationForm" method="post">
+  <label for="username">Username:</label><br>
+  <input type="text" id="username" name="username" required><br>
+  <label for="password">Password:</label><br>
+  <input type="password" id="password" name="password"><br>
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email"><br>
+  <label for="description">Description:</label><br>
+  <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
+</form>
+<button (click)="register()">Register</button>
 
-<h3>Post request output:</h3>
-<button (click)="postrequest()">Do post request</button>
-<div id="post_output"></div>
+<p id="registrationResponse"></p>
+
+<!-- <h3>Register</h3>
+<button (click)="register()">Register</button>
+<div id="register"></div> -->
 
 <h3>Get request output:</h3>
 <button (click)="getrequest()">Do get request</button>

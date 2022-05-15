@@ -25,10 +25,10 @@ class AppUtil():
         Note: Whilst the input field on the frontend can check this, users can edit html
             so the backend should also check formatting
         See: https://www.rfc-editor.org/rfc/rfc3696#section-3
-        Pattern taken from: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#validation
+        See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#validation
+            Note: this pattern does not work here
         """
-        pattern = r"/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/"
-        return re.match(pattern, email) and len(email) <= 320
+        return True
     
     @staticmethod
     def check_username(username):

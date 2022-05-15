@@ -2,20 +2,22 @@ from src import app, db # need this in every route
 from src.app_util import AppUtil
 from src.models.auth_models import User, UserSchema
 from flask import make_response, request, Blueprint
-from sqlite3 import OperationalError
+from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
+from flask_cors import cross_origin
 
 auth_routes = Blueprint("auth", __name__)
 
 @auth_routes.route("/register", methods=["POST"])
+@cross_origin()
 def register():
     """
     Registers a user when supplied username, email, password, and description
     See create_user() for default arguments
     """
     # request.args is immutable, so convert to dict (also for unpacking later)
-    args = request.args.to_dict() 
+    args = request.args.to_dict()
     required = ["username", "email", "password", "description"] # Required arguments
     if AppUtil.check_args(required, args):
         if check_format(**args):
@@ -26,6 +28,7 @@ def register():
     return make_response(("Bad Request", 400))
 
 @auth_routes.route("/pending", methods=["GET"])
+@cross_origin()
 def pending():
     """
     Returns list of all users that are pending approval from the super-admin
@@ -33,13 +36,14 @@ def pending():
     if not request.args.to_dict(): # only if there are no arguments
         try:
             pending = db.session.query(User).filter(User.approved == 0)
-        except:
+        except OperationalError:
             return make_response(("Service Unavailable", 503))
         user_schema = UserSchema(many=True) # many is for serializing lists
         pending = user_schema.dumps(pending) # dumps automatically converts to json, as opposed to dump
         return make_response(pending) # default code is 200
 
 @auth_routes.route("/login")
+@cross_origin()
 def login():
     args = request.args.to_dict()
     if AppUtil.check_args(["username", "password"], args): # Correct arguments supplied
