@@ -1,0 +1,23 @@
+<h1>Project Creation</h1>
+
+<!-- Button to go to the home page -->
+<button type="button" class="btn btn-primary" routerLink="/home">Home</button>
+
+<!-- Filling in Project information -->
+<form id="projectCreationForm" method="post">
+    <!-- Username -->
+    <label for="projectName">Project name:</label><br>
+    <input type="text" id="projectName" name="projectName" required><br>
+    <!-- Description -->
+    <label for="projectDescription">Description:</label><br>
+    <input type="text" id="projectDescription" name="projectDescription" required><br>
+</form>
+
+<!-- Response -->
+<p id="createProjectResponse"></p>
+<br/>
+
+<!-- Submit button -->
+<button type="button" class="btn btn-primary" (click)="createProject()">Create Project</button>
+<br/>
+

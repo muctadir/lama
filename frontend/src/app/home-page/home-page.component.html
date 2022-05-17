@@ -1,0 +1,36 @@
+<h1>Home Page</h1>
+
+<button type="button" class="btn btn-primary" id="createProjectButton" routerLink="/createProject">Create project</button>
+
+<p>Projects</p>
+
+<!-- Show all projects in divisions -->
+<div class='projectParagraph' *ngFor="let project of projects">
+    <div class="conainer">
+        <div class="row">
+            <div class="col-sm" id="projectNameColumn">
+                <!-- Shows project name, artifact progress bar, and number of users -->
+                <b>{{project.projectName}}</b>
+            </div>
+            <div class="col-sm">
+                <!-- Progress bar -->
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.numberOfCLArtifacts}}
+                    aria-valuemin="0" attr.aria-valuemax={{project.numberOfArtifacts}} [style.width]="(project.numberOfCLArtifacts / project.numberOfArtifacts)*100 + '%'"> 
+                    </div>
+                </div>
+                <span class='progressBarNumbers'>{{project.numberOfCLArtifacts}} / {{project.numberOfArtifacts}}</span>
+            </div>
+            <!-- Number of users -->
+            <div class="col-sm" id="numberOfUsersColumn">
+                <span class='numberOfUsers'>{{project.numberOfUsers}}</span>
+            </div>
+            <div class="row">
+                <!-- Shows project description -->
+                {{project.projectDescription}}
+            </div>
+        </div>
+    </div>
+    
+</div>
+<br/> 

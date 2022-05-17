@@ -8,8 +8,10 @@ def heath():
     if request.method == "GET":
         return "200 OK"
 
+# DEPRECATED
 @app.route("/user", methods=["POST", "GET"])
 def user():
+    return "501 Not Implemented"
     if request.method == "POST":
         username = request.args.get("username")
         password = request.args.get("password") # should be encrypted before sending it to the backend anyway

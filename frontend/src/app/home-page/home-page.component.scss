@@ -1,0 +1,39 @@
+// Division for projects
+div.projectParagraph{
+    margin: 5% 15% 5% 15%;
+    padding: 10px 5% 10px 5%;
+    border-left: solid;
+    border-color: orange;
+}
+
+// The numbers next to the progress bar
+span.progressBarNumbers{
+    color: red;
+    float: right;
+}
+
+// The numbers of users
+span.numberOfUsers{
+    float:right;
+    color: blue;
+}
+
+// Create project button on Home Page
+#createProjectButton{
+    float: right;
+    margin-right: 5%;
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+}
+
+// Progress bar 
+div.progress{
+    width: 50%;
+    float: left;
+}
+
+// Columns of the grid
+div.col-sm{
+    padding: 0px 0px;
+}
