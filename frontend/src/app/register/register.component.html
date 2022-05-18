@@ -1,38 +1,21 @@
 <div class="container-fluid min-vh-100 d-flex flex-column">
-    <div class="row flex-grow-1">
-        <div class="col-2"></div>
-        <div class="col-8 d-flex justify-content-center" id="middle-col">
-            <form>
-                <div id="header">Please enter your information</div>
-                <!-- Username field -->
-                <div class="form-group">
-                    <label id="field_text">Username:</label>
-                    <input type="username" class="form-control" id="form-format" placeholder="Username" formControlName="username">
-                </div>
-                <!-- Email field -->
-                <div class="form-group">
-                    <label id="field_text">Email Address:</label>
-                    <input type="email" class="form-control" id="form-format" placeholder="Email address" formControlName="email">
-                </div>
-                <!-- Password field -->
-                <div class="form-group">
-                    <label id="field_text">Password:</label>
-                    <input type="password" class="form-control" id="form-format" placeholder="Password" formControlName="password">
-                </div>
-                <!-- Description field -->
-                <div class="form-group">
-                    <label id="field_text">Description:</label>
-                    <textarea class="form-control" rows="4" placeholder="Description" maxlength="140"></textarea>
-                </div>
-    
-                <!-- Button -->
-                <div>
-                    <button type="submit" class="btn btn-primary" id="register-button">Register</button>
-                    <a [routerLink]="['/login']" [title]="'login'" id="back-login">I already have an account</a>
-                </div>
-            </form>
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <div id="header">Registration</div>
         </div>
-        <div class="col-2"></div>
-        
+    </div>
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <app-account-information-form></app-account-information-form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <!-- Button -->
+            <div>
+                <button type="submit" class="btn btn-primary" id="register-button">Register</button>
+                <a [routerLink]="['/login']" [title]="'login'" id="back-login">I already have an account</a>
+            </div>
+        </div>
     </div>
 </div>
