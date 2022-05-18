@@ -28,9 +28,11 @@ function addValues(name:string, descr:string, nop:number, noa: number, nocla: nu
   var project3 = addValues('Project 3', "Third project", 3, 20, 10);
   // Project 4
   var project4 = addValues('Project 4', "Fourth project", 59, 200, 10);
+  // Project 5
+  var project5 = addValues('Project 5', "Fifth project", 7, 100, 90);
 
   // Array of projects
-  let projects: Project[] = [project1, project2, project3, project4];
+  let projects: Project[] = [project1, project2, project3, project4, project5];
 
 @Component({
   selector: 'app-home-page',
