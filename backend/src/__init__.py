@@ -18,22 +18,30 @@ DIALECT = environ.get("DIALECT")
 DRIVER = environ.get("DRIVER")
 URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
-app = Flask("__name__")
-app.config['SQLALCHEMY_DATABASE_URI'] = URI
-app.config['SQLALCHEMY_ECHO'] = False  # Set this configuration to True if you want to see all of the SQL generated.
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # To suppress this warning
+db = SQLAlchemy()
+ma = Marshmallow()
+    
 
-CORS(app)
+# TODO document the weird cli thing
+# TODO refactor to use current_app
+def create_app(test_config=None):
+    app = Flask(__name__)
+    if test_config is None:
+        app.config['SQLALCHEMY_DATABASE_URI'] = URI
+        app.config['SQLALCHEMY_ECHO'] = False  # Set this configuration to True if you want to see all of the SQL generated.
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # To suppress this warning
 
-db = SQLAlchemy(app)
-mig = Migrate(app, db)
-# Important: Initialize Marshmallow after SQLAlchemy
-ma = Marshmallow(app)
+        CORS(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+        db.init_app(app)
+        mig = Migrate(app, db)
 
-app.secret_key = token_hex() # generates a secret key for login use
+        login_manager = LoginManager()
+        login_manager.init_app(app)
+
+        app.secret_key = token_hex() # generates a secret key for login use
+    else:
+        print('Testing app factory not implemented!')
 
 db_opt = AppGroup("db-opt")
 
