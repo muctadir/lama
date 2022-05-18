@@ -1,0 +1,45 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// Header above the input fields
+#header{
+    font-size: 22px;
+    letter-spacing: 1px;
+    padding-left: 70px;
+    padding-right: 70px;
+}
+
+// texts above each of the forms indicating what the form is for
+#field_text{
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+// the register button at the bottom of the forms
+#register-button{
+    margin-top: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    letter-spacing: 1px;
+    font-size: 17px;
+}
+
+// Changes the color of the button to orange
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: $orange-shade !important;
+}
+
+// Ensures that the content is not entirely at the top of the page
+#middle-col{
+    margin-top: 10vh;
+}
+
+// Styles the link to go back to the login page
+#back-login{
+    font-size: 12px;
+    float: right;
+    color: #ed5a06;
+}

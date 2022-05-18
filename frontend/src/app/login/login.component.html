@@ -1,0 +1,68 @@
+<!-- Main bootstrap container covering the page -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main_body">
+
+    <!-- Row which will fill the space above the content -->
+    <div class="row flex-grow-1">
+        <div class="col-5" id="left_fill"></div>
+        <div class="col-7" id="right_fill"></div>
+    </div>
+  
+    <!-- Row containing the actual content -->
+    <div class="row align-items-center" id="main_row">
+        <!-- Left column containing page content (logo, name) -->
+        <div class="col-5" id="body_left">
+            <!-- Adds in the logo on the left side of the login page -->
+            <img [src]="'assets/lama_login.png'" alt="Image showing the logo of LaMa (Labelling Machine)" id="image_logo">
+
+            <!-- Text below the logo-->
+            <div id="logo_text">LaMa</div>
+            <div id="app_name">Labelling Machine</div>
+        </div>
+
+        <!-- Right column containing page content (login input fields) -->
+        <div class="col-7" id="body_right">
+
+            <!-- Container containing login content -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-2"></div>
+
+                    <!-- Column with the actual content -->
+                    <div class="col-6">
+
+                        <!-- Text above the text-fields -->
+                        <div id="user_login">User Login</div>
+                        <!-- Forms for log-in information -->
+                        <form [formGroup]="loginForm">
+                            <!-- Username field -->
+                            <div class="form-group">
+                                <label id="field_text">Username:</label>
+                                <input type="username" class="form-control" placeholder="Username" formControlName="username">
+                            </div>
+                            <!-- Password field -->
+                            <div class="form-group">
+                                <label id="field_text">Password:</label>
+                                <input type="password" class="form-control" placeholder="Password" formControlName="password">
+                            </div>
+                            <!-- Potential error messages that should be displayed -->
+                            <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
+                            <!-- Button -->
+                            <button type="submit" class="btn btn-primary" id="login_button" (click)="loginSubmit()">Login</button>
+                        </form>
+                        
+                        <!-- Link to registration page -->
+                        <div><a [routerLink]="['/register']" id="create-account">Create an account</a></div>
+
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <!-- Row which will fill the space below the content -->
+    <div class="row flex-grow-1">
+        <div class="col-5" id="left_fill"></div>
+        <div class="col-7" id="right_fill"></div>
+    </div>
+  </div>

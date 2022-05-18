@@ -1,0 +1,96 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// Ensures that the container covers the entire page
+#body_main{
+    height: 100vh;
+}
+
+// row in bootstrap grid containing main content
+#main_row{
+    height: 100%;
+}
+
+// Left column containing the image and the name of the applications
+#body_left{
+    background-color: $grey-shade;
+    text-align: center;
+}
+
+// Right column containing the input fields for the login
+#body_right{
+    background-color: $white-shade;
+}
+
+// Ensures that the images scales with the page size
+#image_logo{
+    max-width: 300px;
+    max-height: 300px;
+    width: 70%;
+    height: 70%;
+}
+
+// Text inside the left column saying LaMa
+#logo_text{
+    color: $white-shade;
+    font-size: 35px;
+    letter-spacing: 3px;
+}
+
+// Text inside the left column saying Labelling Machine
+#app_name{
+    color: $white-shade;
+    font-size: 20px;
+    letter-spacing: 3px;
+}
+
+// Text which says user login
+#user_login{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+// Text above the log in input fields
+#field_text{
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+// The login button below the input fields
+#login_button{
+    margin-top: 30px;
+    padding-left: 45px;
+    padding-right: 45px;
+    letter-spacing: 1px;
+    font-size: 17px;
+}
+
+// Sets layout of the error message that is displayed when login input is incorrect
+#error-msg{
+    color: $orange-shade;
+    font-size: 15px;
+}
+
+// Changes the color of the button to orange
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+     background-color: $orange-shade !important;
+}
+
+#create-account {
+    color: $orange-shade;
+    font-size: 12px;
+}
+
+// Space above and below the logo that needs to be filled with $grey-shade
+#left_fill{
+    background-color: $grey-shade;
+}
+
+// Space above and below the login fields that needs to be filled with $white-shade
+#right_fill{
+    background-color: $white-shade;
+}
