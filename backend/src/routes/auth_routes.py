@@ -11,7 +11,7 @@ from flask_cors import cross_origin
 auth_routes = Blueprint("auth", __name__)
 
 @auth_routes.route("/register", methods=["POST"])
-@cross_origin()
+#@cross_origin()
 def register():
     """
     Registers a user when supplied username, email, password, and description
@@ -29,7 +29,7 @@ def register():
     return make_response(("Bad Request", 400))
 
 @auth_routes.route("/pending", methods=["GET"])
-@cross_origin()
+#@cross_origin()
 def pending():
     """
     Returns list of all users that are pending approval from the super-admin
@@ -44,7 +44,7 @@ def pending():
         return make_response(pending) # default code is 200
 
 @auth_routes.route("/login")
-@cross_origin()
+#@cross_origin()
 def login():
     args = request.args.to_dict()
     if AppUtil.check_args(["username", "password"], args): # Correct arguments supplied

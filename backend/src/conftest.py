@@ -9,7 +9,7 @@ def app():
 
 @fixture
 def client(app):
-    return app.test_client
+    return app.test_client()
 
 @fixture
 def runner(app):

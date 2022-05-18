@@ -5,6 +5,7 @@ src/routes/__pycache__
 src/models/__pycache__
 src/tests/__pycache__
 venv/*
+env/*
 src/__pycache__/*
 src/routes/__pycache__/*
 src/models/__pycache__/*

@@ -57,34 +57,35 @@ def create_app(test_config=None):
 
         login_manager = LoginManager()
         login_manager.init_app(app)
+        # Docs specify to return None if no user with id instead of an exception
+        # Docs do not specify what to do in case of database exception
+        # Leads to me to believe they do not like exceptions
+        @login_manager.user_loader
+        def load_user(user_id):
+            try:
+                user = db.session.query(User).get(user_id)
+                if user:
+                    return user
+            finally: 
+                return None
 
         app.secret_key = token_hex() # generates a secret key for login use
 
         app.cli.add_command(db_opt)
 
-        CORS(auth_routes)
-        CORS(demos)
-        app.register_blueprint(auth_routes, url_prefix="/auth")
-        app.register_blueprint(demos, url_prefix="/")
+        app.register_blueprint(auth_routes)
+        app.register_blueprint(demos)
+
+        CORS(app)
+        return app
     else:
         # TODO accept URI in test_config and merge these if conditions
         from flask import make_response
         @app.route("/foo", methods=["GET", "POST"])
         def foo_route():
             return make_response(("bar", 200))
-
-# Docs specify to return None if no user with id instead of an exception
-# Docs do not specify what to do in case of database exception
-# Leads to me to believe they do not like exceptions
-@login_manager.user_loader
-def load_user(user_id):
-    try:
-        user = db.session.query(User).get(user_id)
-        if user:
-            return user
-    finally: 
-        return None
-
+        return app
+        
 # Circular imports are a special workaround for Flask, and also lets us have routes and models in their own module
 # Essentially: app needs to import the routes
 # Routes depend on app

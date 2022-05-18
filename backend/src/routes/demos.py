@@ -1,8 +1,9 @@
 from sqlite3 import OperationalError
 from flask import current_app as app
-from src.model import db
+from src.models import db
 from src.models.auth_models import User, UserSchema
 from flask import request, jsonify
+from flask import Blueprint
 
 demos = Blueprint("demos", __name__)
 
