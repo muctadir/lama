@@ -1,0 +1,53 @@
+<div *ngIf="!edit" class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="container">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <div id="header">
+                    Account details
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 offset-2">
+                <b>Username:</b> {{ user.getUsername() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 offset-2">
+                <b>Email:</b> {{ user.getEmail() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 offset-2">
+                <b>Description:</b> {{ user.getDescription() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 offset-2">
+                <button (click)="edit = !edit" class="btn btn-primary">Edit information</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div *ngIf="edit" class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <div id="header">Changing your account information</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <app-account-information-form [userInfo]=user></app-account-information-form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 offset-2">
+            <button type="submit" class="btn btn-primary">Change</button>
+        </div>
+        <!-- TODO: Right align! -->
+        <div class="col-2 offset-4 float-right">
+            <button (click)="edit = !edit" class="btn btn-danger">Cancel</button>
+        </div>
+    </div>
+</div>
