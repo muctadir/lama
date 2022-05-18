@@ -1,6 +1,7 @@
-from src import app, db # need this in every route
+from src import db # need this in every route
 from src.app_util import AppUtil
 from src.models.auth_models import User, UserSchema
+from flask import current_app as app
 from flask import make_response, request, Blueprint
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
