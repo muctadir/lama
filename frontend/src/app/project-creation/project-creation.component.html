@@ -1,61 +1,104 @@
 <body>
-    <h1>Create Project</h1>
-
-    <!-- Button to go to the home page -->
+    <p class="header">Create Project</p>
 
     <div class="container">
         <div class="row">
             <div class="col">
                 <!-- Filling in Project information -->
                 <form id="projectCreationForm" method="post">
-                    <div id="header">Please enter the project's information</div>
                     <!-- Username field -->
                     <div class="form-group">
-                        <label for="projectName">Project name:</label><br>
-                        <input type="text" id="projectName" name="projectName" required><br>
+                        <label for="projectName" id="field_text">Project name:</label><br>
+                        <input class="form-control" type="text" placeholder="Project Name" name="projectName" required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
-                        <label for="projectDescription">Description:</label><br>
-                        <input type="text" id="projectDescription" name="projectDescription" required><br>
+                        <label for="projectDescription" id="field_text">Description:</label><br>
+                        <textarea class="form-control" rows="4" placeholder="Description" maxlength="140"></textarea>
+                    </div>  
+                    
+                    <div>
+                        <!-- Response -->
+                        <!-- TO TEST CAN BE DELETED LATER -->
+                        <p id="createProjectResponse"></p>
                     </div>
-                    
-                    
                 </form>
             </div>
             <div class="col">
-                <!-- <div>
-                    Members
-                    <mat-list>
-                        <mat-list-item *ngFor="let link of links">
-                            
-                         </mat-list-item>
-                    </mat-list>
-                </div> -->
-                <div>
-                    Labeller Count
+
+                <!-- Division around the whole members section -->
+                <div class="projectSettingsDivParent">
+                    <span class="settingsHeader">Members</span>
+                    <!-- Division around the input -->
+                    <div class="projectSettingsDiv">
+                        <div id="membersDiv">
+                            <span class="projectAdminSpan">Project admin</span>
+                            <br/>
+                            <form action="/action_page.php">
+                                <!-- Name and checkbox per member of the project -->
+                                <label *ngFor="let member of members" for="user" style="display: block;"> 
+                                    {{ member.userName }}
+                                    <!-- I cant get these checkboxes orange, someone pls help -->
+                                    <input type="checkbox" id="user" name="user" class="memberCheckbox">
+                                </label>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    Label Type
+
+                <!-- Division around the labeller count -->
+                <form>      
+                    <div class="form-group projectSettingsDivParent">
+                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
+                        <!-- Division around the input -->
+                        <div class="projectSettingsDiv">
+                            <div id="labellerCountDiv">
+                                <select class="form-control" id="exampleFormControlSelect1" style="max-width:10%;">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> 
+                </form>
+
+                <!-- Division around the label types -->
+                <div class="projectSettingsDivParent">
+                    <span class="settingsHeader">Label Type</span>
+                    <!-- Division around the input -->
+                    <div class="projectSettingsDiv">
+                        <!-- All label types in the project -->
+                        <div id="labelTypeDiv">
+                            label type 1 <br/>
+                            label type 2 <br/>
+                            label type 3 <br/>
+                            label type 4 <br/>
+                            label type 5 <br/>
+                            label type 6 <br/>
+                            label type 7 <br/>
+                            label type 8 <br/>
+                            label type 9 <br/>
+                            label type 10 <br/>
+                            label type 11 <br/>
+                        </div>
+                    </div>
                 </div>
-
-                <button type="button" class="btn btn-primary" routerLink="/home">Cancel</button>
-
-                <!-- Response -->
-                <p id="createProjectResponse"></p>
-                <br/>
-
-                <!-- Submit button -->
-                <button type="button" class="btn btn-primary" (click)="createProject()">Create Project</button>
-                <br/>
-
             </div>
         </div>
+
+        <!-- Buttons row -->
+        <div class="row justify-content-end fixed-bottom top-buffer">
+            <!-- Cancel button -->
+            <button type="button" class="btn btn-secondary text-nowrap" id="cancelProjectCreationButton" routerLink="/home">Cancel</button>
+        
+            <!-- Submit button -->
+            <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">Create Project</button>
+        </div>
+
     </div>
+
 </body>
-
-
-
-
-

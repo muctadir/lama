@@ -10,16 +10,34 @@ interface User {
   userName: string;
 }
 
+
 // Functions for adding values
-function addValues(name:string, descr:string):Project {
+function addValuesProject(name:string, desc:string):Project {
   var projectName = name;
-  var projectDescription = descr;
+  var projectDescription = desc;
   // Return the given values
   return {projectName, projectDescription};
 }
 
+// Functions for adding values
+function addValuesUser(name:string):User {
+  var userName = name;
+  // Return the given values
+  return {userName};
+}
+
+let Veerle = addValuesUser("Veerle");
+let Vic = addValuesUser("Vic");
+let Bartjan = addValuesUser("Bartjan");
+let Jarl = addValuesUser("Jarl");
+let Chinno = addValuesUser("Chinno");
+let Chinno2 = addValuesUser("Chinno2");
+let Chinno3 = addValuesUser("Chinno3");
+let Chinno4 = addValuesUser("Chinno4");
+let Chinno5 = addValuesUser("Chinno5");
+
 // Array of projects
-// let members: User[] = ["Veerle", "Vic", "Bartjan", "Jarl", "Chinno"];
+let members: User[] = [Veerle, Vic, Bartjan, Jarl, Chinno, Chinno2, Chinno3, Chinno4, Chinno5];
 
 @Component({
   selector: 'app-project-creation',
@@ -28,8 +46,7 @@ function addValues(name:string, descr:string):Project {
 })
 export class ProjectCreationComponent implements OnInit {
   
-  // members = members;
-  // member = members[0];
+  members = members;
 
   constructor() { }
 
@@ -57,7 +74,7 @@ export class ProjectCreationComponent implements OnInit {
       }
 
       // Create new project with values
-      var project = addValues(params['projectName'], params['projectDescription']);
+      var project = addValuesProject(params['projectName'], params['projectDescription']);
                   
       // Post values
       p_response.innerHTML= "Project was created <br/>" + "It has name " + project.projectName + "<br/> And the description is: " + project.projectDescription;
