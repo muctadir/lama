@@ -1,0 +1,133 @@
+// Color variables
+:root {
+    --main-color-1: #ED5A06;
+    --main-color-2: #38474e;
+}
+
+// Body
+body{
+    color: var(--main-color-2);
+}
+
+// TOP BAR
+#topBarRow{
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 98%;
+}
+// Header saying "Projects"
+p.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+// CREATE PROJECT
+// Create project button on Home Page
+#createProjectButton{
+    float: right;
+    margin-right: 10px;    
+    margin-top: 10px;
+    background-color: white;
+    border: 2px solid;
+    border-color: var(--main-color-2);
+    color: black;
+
+}
+// Create project button on hover
+#createProjectButton:hover, #createProjectButton:focus, #createProjectButton:active{
+    background-color: rgb(222, 222, 222);
+}
+// Create button plus
+svg.bi.bi-plus{
+    width: 22px;
+    height: 22px;
+}
+// Account Settings icon
+svg.bi.bi-person-circle{
+    float: right;
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-left: 5px;
+    fill: #ED5A06;   
+    width: 40px;
+    height: 40px;
+}
+
+// Division around all projects
+div.allProjects{
+    margin: 4px 120px 4px 4px;
+    padding: 4px;
+    height: 80vh;
+    overflow-y: scroll;
+}
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+// Divisions for projects
+div.projectParagraph{
+    margin: 2% 5% 5% 10%;
+    padding: 10px 5% 10px 5%;
+    border-left: 2px solid;
+    border-color: var(--main-color-2);
+}
+// Columns of the grid
+div.col{
+    padding: 0px;
+}
+
+
+// Different look for project names
+.projectName{
+    font-size: 30px;
+    letter-spacing: 1px;
+    margin: 0px;
+    padding: 0px;
+}
+
+// PROGRESS BAR
+// The division of the progress
+div.progress{
+    margin-top:5px;
+    width: 60%;
+    float: left;
+    border-radius: 10px
+}
+// Actual progress bar
+div.progress-bar{
+    background-color: var(--main-color-1);
+    border-radius: 10px
+}
+// The numbers next to the progress bar
+span.progressBarNumbers{
+    float: right;
+}
+
+// NUMBER OF USERS
+// The numbers of users text
+span.numberOfUsers{
+    float: right;
+    margin-top: 2px;
+}
+// The user icon next to the number of user
+svg.bi.bi-person{
+    float: right;
+    vertical-align: middle;
+    margin-left: 8px;
+    fill: #ED5A06;   
+    width: 30px;
+    height: 30px;
+}
+
+
+

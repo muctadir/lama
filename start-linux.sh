@@ -30,8 +30,6 @@ then
     echo "1) Production [Fully Dockerized]"
     echo "================================================================================="
     docker-compose -f Docker/docker-compose.yml up --build -d
-    docker exec lama-flask flask db-opt init
-    docker exec lama-flask flask db-opt fill
     echo "================================================================================="
     echo "Script is complete. Check above for errors."
     echo "If you want to shut down, run the stop-linux.sh file."
@@ -44,8 +42,6 @@ then
     echo "2) Suited for frontend development [Flask, MySQL & phpMyAdmin Dockerized]"
     echo "=================================================================================" && sleep 2
     docker-compose -f Docker/docker-compose-frontend-dev.yml up --build -d 
-    docker exec lama-flask flask db-opt init
-    docker exec lama-flask flask db-opt fill
     echo "================================================================================="
     echo "To finish set up, enter the following commands (this cannot be automated...)"
     echo "cd frontend"
@@ -65,13 +61,10 @@ then
     docker-compose -f Docker/docker-compose-backend-dev.yml up --build -d 
     echo "================================================================================="
     echo "To finish set up, enter the following commands (this cannot be automated...)"
-    echo "!! Make sure that the migration file is deleted !!"
     echo "cd backend"
     echo "python -m venv venv"
     echo "source venv/bin/activate"
     echo "sudo pip install -r requirements.txt"
-    echo "flask db-opt init"
-    echo "flask db-opt fill"
     echo "flask run"
     echo "================================================================================="
     echo "Script is complete. Check above for errors."

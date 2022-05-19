@@ -1,1 +1,1 @@
-from src.routes import demos
+from src.routes import demos, auth_routes
