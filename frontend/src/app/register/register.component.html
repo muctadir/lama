@@ -1,0 +1,20 @@
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <div id="header">Registration</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <app-account-information-form></app-account-information-form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 offset-2 justify-content-center">
+            <!-- Button -->
+            <button type="submit" class="btn btn-primary" id="register-button" (click)="onRegister()">Register</button>
+
+            <a [routerLink]="['/login']" id="back-login">I already have an account</a>
+        </div>
+    </div>
+</div>

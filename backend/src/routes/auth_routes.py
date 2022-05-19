@@ -16,8 +16,8 @@ def register():
     Registers a user when supplied username, email, password, and description
     See create_user() for default arguments
     """
-    # request.args is immutable, so convert to dict (also for unpacking later)
-    args = request.args.to_dict()
+    args = request.json
+    print(args)
     required = ["username", "email", "password", "description"] # Required arguments
     if AppUtil.check_args(required, args):
         if check_format(**args):
@@ -33,7 +33,7 @@ def pending():
     """
     Returns list of all users that are pending approval from the super-admin
     """
-    if not request.args.to_dict(): # only if there are no arguments
+    if not request.json: # only if there are no arguments
         try:
             pending = db.session.query(User).filter(User.approved == 0)
         except OperationalError:
@@ -45,7 +45,7 @@ def pending():
 @auth_routes.route("/login")
 @cross_origin()
 def login():
-    args = request.args.to_dict()
+    args = request.json
     if AppUtil.check_args(["username", "password"], args): # Correct arguments supplied
         user = db.session.query(User).filter(User.username == args["username"]) # Get user with username
         if user and check_password_hash(user.password, args["password"]): # user exists and password matches

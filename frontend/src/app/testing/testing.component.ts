@@ -23,7 +23,7 @@ export class TestingComponent implements OnInit {
         let param = post_form[i] as HTMLInputElement;
         params[param.name] = param.value;
       }
-      const response = axios.post('http://127.0.0.1:5000/auth/register', {}, {params: params})
+      const response = axios.post('http://127.0.0.1:5000/auth/register', params)
         .then(response => p_response.innerHTML = JSON.stringify([response.data, response.status]))
         .catch(error => {
           p_response.innerHTML = JSON.stringify([error.response.data, error.response.status])
