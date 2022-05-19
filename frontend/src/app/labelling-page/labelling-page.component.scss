@@ -7,7 +7,7 @@
 #artifact-container{
     margin-left: 10px;
     margin-right: 10px;
-    max-height: 40vh;
+    height: 40vh;
     padding-bottom: 20px;
     position:relative;
 }
@@ -34,7 +34,7 @@
 #input{
     position: absolute;
     height: 50vh;
-    padding-top: 40px;
+    padding-top: 30px;
 }
 // Scrollbar
 ::-webkit-scrollbar {
@@ -49,6 +49,22 @@
 ::-webkit-scrollbar-thumb {
     background: #38474e; 
     border-radius: 10px;
+}
+
+#lanbelling{
+    float: left;
+}
+
+#remark{
+    float: right;
+}
+
+#label{
+    float: left;
+}
+
+#description{
+    float: right;
 }
 
 
