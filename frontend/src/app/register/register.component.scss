@@ -1,21 +1,15 @@
-// Color variables
-$grey-shade: #38474e;
-$white-shade: #FFFFFF;
-$orange-shade: #ed5a06;
-
 // Header above the input fields
 #header{
     font-size: 22px;
     letter-spacing: 1px;
-    padding-left: 70px;
-    padding-right: 70px;
+    text-align: center;
 }
 
-// texts above each of the forms indicating what the form is for
-#field_text{
+// Styles the link to go back to the login page
+#back-login{
     font-size: 12px;
-    letter-spacing: 1px;
-    margin-top: 10px;
+    float: right;
+    color: #ed5a06;
 }
 
 // the register button at the bottom of the forms
@@ -25,6 +19,7 @@ $orange-shade: #ed5a06;
     padding-right: 50px;
     letter-spacing: 1px;
     font-size: 17px;
+
 }
 
 // Changes the color of the button to orange
@@ -42,10 +37,4 @@ $orange-shade: #ed5a06;
     font-size: 12px;
     float: right;
     color: #ed5a06;
-}
-
-// Sets layout of the error message that is displayed when register input is incorrect
-#error-msg{
-    color: $orange-shade;
-    font-size: 15px;
 }
