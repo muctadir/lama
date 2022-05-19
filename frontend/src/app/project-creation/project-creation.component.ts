@@ -5,6 +5,11 @@ interface Project {
   projectName: string,
   projectDescription: string;
 }
+
+interface User {
+  userName: string;
+}
+
 // Functions for adding values
 function addValues(name:string, descr:string):Project {
   var projectName = name;
@@ -13,12 +18,18 @@ function addValues(name:string, descr:string):Project {
   return {projectName, projectDescription};
 }
 
+// Array of projects
+// let members: User[] = ["Veerle", "Vic", "Bartjan", "Jarl", "Chinno"];
+
 @Component({
   selector: 'app-project-creation',
   templateUrl: './project-creation.component.html',
   styleUrls: ['./project-creation.component.scss']
 })
 export class ProjectCreationComponent implements OnInit {
+  
+  // members = members;
+  // member = members[0];
 
   constructor() { }
 
