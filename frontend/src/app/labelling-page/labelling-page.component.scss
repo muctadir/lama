@@ -1,0 +1,54 @@
+#artifact-id{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+
+#artifact-container{
+    margin-left: 10px;
+    margin-right: 10px;
+    max-height: 40vh;
+    padding-bottom: 20px;
+    position:relative;
+}
+
+#text-container{
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 22vh;
+    overflow-y: scroll;
+    //position: absolute;
+
+}
+
+#split-button{
+    float: right;
+}
+
+#author{
+    padding-top: 10px;
+    padding-left: 20px;
+    float: left;
+}
+
+#input{
+    position: absolute;
+    height: 50vh;
+    padding-top: 40px;
+}
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+
+
