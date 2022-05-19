@@ -9,6 +9,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
+import { HomePageComponent } from './home-page/home-page.component';
+import { ProjectCreationComponent } from './project-creation/project-creation.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { AccountInformationFormComponent } from './account-information-form/acco
     LoginComponent,
     RegisterComponent,
     AccountComponent,
-    AccountInformationFormComponent
+    AccountInformationFormComponent,
+    HomePageComponent,
+    ProjectCreationComponent
   ],
   imports: [
     BrowserModule,
