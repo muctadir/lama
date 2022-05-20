@@ -1,21 +1,24 @@
 <body>
     <p class="header">Create Project</p>
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
+    <div class="container main">
+
+        <div class="row justify-content-between">
+
+            <!-- Left side of the page -->
+            <div class="col-5">
                 <!-- Filling in Project information -->
                 <form id="projectCreationForm" method="post">
                     <!-- Username field -->
                     <div class="form-group">
-                        <label for="projectName" id="field_text">Project name:</label><br>
+                        <label for="projectName" id="field_text">Project Name:</label><br>
                         <input class="form-control" type="text" placeholder="Project Name" name="projectName" required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <textarea class="form-control" rows="4" placeholder="Description" maxlength="140"></textarea>
+                        <textarea class="form-control" rows="10" placeholder="Description"></textarea>
                     </div>  
                     
                     <div>
@@ -25,22 +28,54 @@
                     </div>
                 </form>
             </div>
-            <div class="col">
 
+            <!-- Right side of the page -->
+            <div class="col-6">
                 <!-- Division around the whole members section -->
                 <div class="projectSettingsDivParent">
-                    <span class="settingsHeader">Members</span>
+                    <div class="row">
+                        <div class="col">
+                            <span class="settingsHeader">Members</span>
+                        </div>
+                        <div class="col-2">
+                            <!-- Button for adding new members -->
+                            <button class="btn" type="button" id="addMembersButton" (click)="addMemberClick()">
+                                <svg class="bi bi-plus members" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                     <!-- Division around the input -->
                     <div class="projectSettingsDiv">
                         <div id="membersDiv">
-                            <span class="projectAdminSpan">Project admin</span>
-                            <br/>
+                            <!-- Row for the 'Project admin' words -->
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <span class="projectAdminSpan">Project admin</span>
+                                </div>
+                            </div>
                             <form action="/action_page.php">
                                 <!-- Name and checkbox per member of the project -->
                                 <label *ngFor="let member of members" for="user" style="display: block;"> 
-                                    {{ member.userName }}
-                                    <!-- I cant get these checkboxes orange, someone pls help -->
-                                    <input type="checkbox" id="user" name="user" class="memberCheckbox">
+                                    <!-- Row for the delete, name and project admin -->
+                                    <div class="row">
+                                        <!-- Column for delete icon -->
+                                        <div class="col-1">
+                                            <svg class="bi bi-x memberDelete" id="{{member.userName}}" viewBox="0 0 16 16" (click)="removeMember(member.userName)">
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                        </div>
+                                        <!-- Column for username -->
+                                        <div class="col-7">
+                                            {{ member.userName }}
+                                        </div>
+                                        <!-- Column for checkbox -->
+                                        <div class="col-4 checkboxCol">
+                                            <!-- I cant get these checkboxes orange, someone pls help -->
+                                            <input type="checkbox" id="user" name="user" class="memberCheckbox">
+                                        </div>                                        
+                                    </div>
                                 </label>
                             </form>
                         </div>
@@ -53,14 +88,9 @@
                         <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
                         <!-- Division around the input -->
                         <div class="projectSettingsDiv">
+                            <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                <select class="form-control" id="exampleFormControlSelect1" style="max-width:10%;">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
+                                <input type="number" class="form-control" name="numberOfLabellers" placeholder="2" min="2" max="20">
                             </div>
                         </div>
                     </div> 
@@ -73,17 +103,18 @@
                     <div class="projectSettingsDiv">
                         <!-- All label types in the project -->
                         <div id="labelTypeDiv">
-                            label type 1 <br/>
-                            label type 2 <br/>
-                            label type 3 <br/>
-                            label type 4 <br/>
-                            label type 5 <br/>
-                            label type 6 <br/>
-                            label type 7 <br/>
-                            label type 8 <br/>
-                            label type 9 <br/>
-                            label type 10 <br/>
-                            label type 11 <br/>
+                            <div id="labelTypeList">
+                                <div *ngFor="let labelType of labelTypes">
+                                    <input type="labelType" class="form-control labelType" placeholder="Label type">
+                                </div>
+                            </div>
+                            <!-- Button for adding new label types -->
+                            <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
+                                Add Label Type
+                                <svg class="bi bi-plus label-type" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+
 // Project object
 interface Project {
   projectName: string,
@@ -10,43 +11,45 @@ interface User {
   userName: string;
 }
 
-
-// Functions for adding values
-function addValuesProject(name:string, desc:string):Project {
-  var projectName = name;
-  var projectDescription = desc;
-  // Return the given values
-  return {projectName, projectDescription};
-}
-
-// Functions for adding values
-function addValuesUser(name:string):User {
-  var userName = name;
-  // Return the given values
-  return {userName};
-}
-
-let Veerle = addValuesUser("Veerle");
-let Vic = addValuesUser("Vic");
-let Bartjan = addValuesUser("Bartjan");
-let Jarl = addValuesUser("Jarl");
-let Chinno = addValuesUser("Chinno");
-let Chinno2 = addValuesUser("Chinno2");
-let Chinno3 = addValuesUser("Chinno3");
-let Chinno4 = addValuesUser("Chinno4");
-let Chinno5 = addValuesUser("Chinno5");
-
-// Array of projects
-let members: User[] = [Veerle, Vic, Bartjan, Jarl, Chinno, Chinno2, Chinno3, Chinno4, Chinno5];
-
 @Component({
   selector: 'app-project-creation',
   templateUrl: './project-creation.component.html',
   styleUrls: ['./project-creation.component.scss']
 })
+
 export class ProjectCreationComponent implements OnInit {
+
+
+  // Functions for adding values
+  addValuesProject(name:string, desc:string):Project {
+    var projectName = name;
+    var projectDescription = desc;
+    // Return the given values
+    return {projectName, projectDescription};
+  }
+
+  // Functions for adding values
+  addValuesUser(name:string):User {
+    var userName = name;
+    // Return the given values
+    return {userName};
+  }
+
+  Veerle = this.addValuesUser("Veerle");
+  Vic = this.addValuesUser("Vic");
+  Bartjan = this.addValuesUser("Bartjan");
+  Jarl = this.addValuesUser("Jarl");
+  Chinno = this.addValuesUser("Chinno");
+  Chinno2 = this.addValuesUser("Chinno2");
+  Chinno3 = this.addValuesUser("Chinno3");
+  Chinno4 = this.addValuesUser("Chinno4");
+  Chinno5 = this.addValuesUser("Chinno5");
+
+  // Array of projects
+  members: User[] = [this.Veerle, this.Vic, this.Bartjan, this.Jarl, this.Chinno, this.Chinno2, this.Chinno3, this.Chinno4, this.Chinno5];
   
-  members = members;
+  // Label types
+  labelTypes: string[] = ["doing"];
 
   constructor() { }
 
@@ -74,7 +77,7 @@ export class ProjectCreationComponent implements OnInit {
       }
 
       // Create new project with values
-      var project = addValuesProject(params['projectName'], params['projectDescription']);
+      var project = this.addValuesProject(params['projectName'], params['projectDescription']);
                   
       // Post values
       p_response.innerHTML= "Project was created <br/>" + "It has name " + project.projectName + "<br/> And the description is: " + project.projectDescription;
@@ -87,4 +90,23 @@ export class ProjectCreationComponent implements OnInit {
     }
   }
 
+  addMemberClick(){
+
+    }
+
+  // Function for removing users
+  removeMember(id:any){
+    // Go through all members
+    this.members.forEach((member, index)=>{
+      // If clicked cross matches the person, splice them from the members
+      if(member.userName==id){
+        this.members.splice(index,1);
+      }
+    });    
+  }
+
+  // Function for adding a new label type input
+  addLabelType(){
+    this.labelTypes.push("");
+  }
 }
