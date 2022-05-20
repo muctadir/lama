@@ -17,7 +17,6 @@ def register():
     See create_user() for default arguments
     """
     args = request.json
-    print(args)
     required = ["username", "email", "password", "description"] # Required arguments
     if AppUtil.check_args(required, args):
         if check_format(**args):
@@ -57,12 +56,9 @@ def login():
 def create_user(args):
     """
     Adds a user to the database assuming correct (and unmodified) arguments are supplied
-    Assigns default attributes to the user:
-        approved : 0
     Hashes password
     Converts email to lowercase
     """
-    args["approved"] = 0 # By default, a newly created user needs to be improved
     args["password"] = generate_password_hash(args["password"])
     args["email"] = args["email"].lower()
     new_user = User(**args)
