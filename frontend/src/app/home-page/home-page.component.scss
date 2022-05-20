@@ -1,12 +1,11 @@
 // Color variables
-:root {
-    --main-color-1: #ED5A06;
-    --main-color-2: #38474e;
-}
+$main-color-1: #ED5A06;
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
 
 // Body
 body{
-    color: var(--main-color-2);
+    color: $grey-shade;
 }
 
 // TOP BAR
@@ -27,15 +26,15 @@ p.header{
     float: right;
     margin-right: 10px;    
     margin-top: 10px;
-    background-color: white;
+    background-color: $white-shade;
     border: 2px solid;
-    border-color: var(--main-color-2);
-    color: black;
+    border-color: $grey-shade;
+    color: $grey-shade;
 
 }
 // Create project button on hover
 #createProjectButton:hover, #createProjectButton:focus, #createProjectButton:active{
-    background-color: rgb(222, 222, 222);
+    background-color: $white-shade;
 }
 // Create button plus
 svg.bi.bi-plus{
@@ -48,7 +47,7 @@ svg.bi.bi-person-circle{
     vertical-align: middle;
     margin-top: 10px;
     margin-left: 5px;
-    fill: #ED5A06;   
+    fill: $main-color-1;   
     width: 40px;
     height: 40px;
 }
@@ -71,7 +70,7 @@ div.allProjects{
 }
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: $grey-shade; 
     border-radius: 10px;
 }
 // Divisions for projects
@@ -79,7 +78,7 @@ div.projectParagraph{
     margin: 2% 5% 5% 10%;
     padding: 10px 5% 10px 5%;
     border-left: 2px solid;
-    border-color: var(--main-color-2);
+    border-color: $grey-shade;
 }
 // Columns of the grid
 div.col{
@@ -105,7 +104,7 @@ div.progress{
 }
 // Actual progress bar
 div.progress-bar{
-    background-color: var(--main-color-1);
+    background-color: $main-color-1;
     border-radius: 10px
 }
 // The numbers next to the progress bar
@@ -124,10 +123,7 @@ svg.bi.bi-person{
     float: right;
     vertical-align: middle;
     margin-left: 8px;
-    fill: #ED5A06;   
+    fill: $main-color-1;   
     width: 30px;
     height: 30px;
 }
-
-
-

@@ -12,7 +12,7 @@
                     <!-- Username field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        <input class="form-control" type="text" placeholder="Project Name" name="projectName" required><br>
+                        <input class="form-control" type="text" placeholder="Project Name" required><br>
                     </div>
                     
                     <!-- Description field -->
@@ -23,7 +23,7 @@
                     
                     <div>
                         <!-- Response -->
-                        <!-- TO TEST CAN BE DELETED LATER -->
+                        <!-- TODO TO TEST CAN BE DELETED LATER -->
                         <p id="createProjectResponse"></p>
                     </div>
                 </form>
@@ -33,28 +33,55 @@
             <div class="col-6">
                 <!-- Division around the whole members section -->
                 <div class="projectSettingsDivParent">
+                    <!-- "Members" header -->
                     <div class="row">
                         <div class="col">
                             <span class="settingsHeader">Members</span>
                         </div>
+                        <!-- Col for adding users button -->
                         <div class="col-2">
                             <!-- Button for adding new members -->
-                            <button class="btn" type="button" id="addMembersButton" (click)="addMemberClick()">
+                            <button class="btn" type="button" id="addMembersButton" (click)="addMembersClick()">
                                 <svg class="bi bi-plus members" viewBox="0 0 16 16">
                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                 </svg>
                             </button>
+
+                            <!-- TODO make pop-up for where user can select members -->
+
+                            <!-- Modal -->
+                            <ng-template #addMembersModal let-modal>
+                                <div class="modal-dialog">    
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Modal Header</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <p>Some text in the modal.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+
                         </div>
                     </div>
-                    <!-- Division around the input -->
+
+                    <!-- Division around the all members -->
                     <div class="projectSettingsDiv">
                         <div id="membersDiv">
                             <!-- Row for the 'Project admin' words -->
                             <div class="row justify-content-end">
                                 <div class="col-4">
-                                    <span class="projectAdminSpan">Project admin</span>
+                                    <p class="projectAdminSpan">Project admin</p>
                                 </div>
                             </div>
+                            
+                            <!-- TODO Vic what is this php link???? -->
                             <form action="/action_page.php">
                                 <!-- Name and checkbox per member of the project -->
                                 <label *ngFor="let member of members" for="user" style="display: block;"> 
@@ -72,8 +99,8 @@
                                         </div>
                                         <!-- Column for checkbox -->
                                         <div class="col-4 checkboxCol">
-                                            <!-- I cant get these checkboxes orange, someone pls help -->
-                                            <input type="checkbox" id="user" name="user" class="memberCheckbox">
+                                            <!-- TODO I cant get these checkboxes orange, someone pls help -->
+                                            <input type="checkbox">
                                         </div>                                        
                                     </div>
                                 </label>
@@ -98,7 +125,7 @@
 
                 <!-- Division around the label types -->
                 <div class="projectSettingsDivParent">
-                    <span class="settingsHeader">Label Type</span>
+                    <span class="settingsHeader"> Label Type </span>
                     <!-- Division around the input -->
                     <div class="projectSettingsDiv">
                         <!-- All label types in the project -->
@@ -133,3 +160,4 @@
     </div>
 
 </body>
+

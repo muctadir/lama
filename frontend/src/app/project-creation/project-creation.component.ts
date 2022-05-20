@@ -90,9 +90,10 @@ export class ProjectCreationComponent implements OnInit {
     }
   }
 
-  addMemberClick(){
-
-    }
+  // Function for adding users
+  addMembersClick(){
+    console.log("hoi"); 
+  }
 
   // Function for removing users
   removeMember(id:any){
