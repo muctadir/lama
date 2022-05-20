@@ -4,7 +4,7 @@ from enum import Enum
 from marshmallow import fields
     
 
-class UserStatus(Enum, fields.Field):
+class UserStatus(Enum):
     """
     Pending, approved, denied relate to the approval upon account creation
     Deleted refers to a soft deleted user, a stronger status than denied
