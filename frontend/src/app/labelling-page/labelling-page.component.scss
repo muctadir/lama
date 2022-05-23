@@ -1,70 +1,33 @@
-#artifact-id{
-    font-size: 35px;
+#pageTitle {
+    padding-top: 10px;
+    border-bottom: 1px; 
+    border-bottom-style: solid;
+}
+
+#artifactId, #artifactButtons {
+    font-size: 36px;
     letter-spacing: 1px;
-    padding-top: 10px;
+}
+#artifactButtons {
+    text-align: right;
+}
+#artifactButtons i {
+    border: 2px solid #ed5a06;
+    border-radius: 5px;
 }
 
-#artifact-container{
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 40vh;
-    padding-bottom: 20px;
-    position:relative;
+.labelTypeTitle {
+    font-size: 25px;
+    letter-spacing: 1px;
 }
 
-#text-container{
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 22vh;
-    overflow-y: scroll;
-    //position: absolute;
-
+.artifactContainer {
+    border-bottom: 1px; 
+    border-bottom-style: solid;
 }
 
-#split-button{
-    float: right;
+/*TODO: For some reason the variable defined in the root stylesheet is not working*/
+.labelTypeDescription {
+    border-left: 2px solid #ed5a06;
+    padding-left: 10px;
 }
-
-#author{
-    padding-top: 10px;
-    padding-left: 20px;
-    float: left;
-}
-
-#input{
-    position: absolute;
-    height: 50vh;
-    padding-top: 30px;
-}
-// Scrollbar
-::-webkit-scrollbar {
-    width: 10px;
-}
-// Scrollbar background
-::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-    border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-    background: #38474e; 
-    border-radius: 10px;
-}
-
-#lanbelling{
-    float: left;
-}
-
-#remark{
-    float: right;
-}
-
-#label{
-    float: left;
-}
-
-#description{
-    float: right;
-}
-
-

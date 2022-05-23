@@ -12,6 +12,7 @@ import { AccountInformationFormComponent } from './account-information-form/acco
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { LabellingPageComponent } from './labelling-page/labelling-page.componen
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,9 @@
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+/* Importing Bootstrap Icons file. */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
 /* You can add global styles to this file, and also import other style files */
 // Color variables
 $grey-shade: #38474e;
