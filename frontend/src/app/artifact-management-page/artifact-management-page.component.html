@@ -1,0 +1,49 @@
+<!-- Main bootstrap container covering the page -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main_body">
+    
+    <!--Top Row-->
+    <div class="row align-items-center" id="top_row">
+        <!--Title Header-->
+        <div class="col">
+            <p class="header">Artifact Management</p>
+        </div>
+        <!--Add Artifact Button-->
+        <div class="col">
+            <button type="button" class="btn btn-secondary" id="addArtifactButton" routerLink="/home">
+                Add Artifact
+                <svg class="bi bi-plus" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+            </button>
+    </div>
+    
+    <!--Content Row-->
+    <div class="row align-items-center" style="border:1px solid red;" id="main_row">
+        <!--For loop through data array-->
+        <div class='artifactParagraph' *ngFor="let artifact of artifacts">
+            <div class="single-artifact">
+                <!--Artefact ID-->
+                <div class="row" id="artifactId">
+                    <div class="col-3"></div>
+                    <div class="col-2"><h2>Artifact {{artifact.id}}</h2></div>
+                </div>
+                <!--Artefact Text + Number of times labelled-->
+                <div class="container">
+                    <div class="row" id="textAndNumber">
+                        <div class="col-2"></div>
+                        <div class="col-7"><h3>{{artifact.text}}</h3></div>
+                        <div class="col-1"><h4>{{artifact.timesLabelled}}</h4></div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row" id="horizontalLine">
+                        <div class="col-2"></div>
+                        <hr style="height:1px; width:60%; border-width:0;">    
+                    </div>
+                </div>
+
+            </div>  
+        </div>
+        
+    </div> 
+</div>

@@ -11,6 +11,7 @@ import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
     AccountComponent,
     AccountInformationFormComponent,
     HomePageComponent,
-    ProjectCreationComponent
+    ProjectCreationComponent,
+    ArtifactManagementPageComponent
   ],
   imports: [
     BrowserModule,
