@@ -2,11 +2,24 @@ from sqlite3 import OperationalError
 from src import app, db
 from src.models.auth_models import User, UserSchema
 from flask import request, jsonify
+from flask_login import current_user
 
 @app.route("/health", methods=["GET"])
 def heath():
     if request.method == "GET":
         return "200 OK"
+
+@app.route("/home", methods=["GET"])
+def homePage():
+    # Check if the user is logged in
+    if(current_user.is_authenticated() ):
+        # Get the ID of the user currently logged in
+        uID = current_user.get_id()
+    else:
+        return "401 Unauthorized"
+
+    # Get the data necessary for the page
+    
 
 # DEPRECATED
 @app.route("/user", methods=["POST", "GET"])
