@@ -12,6 +12,8 @@ import { AccountInformationFormComponent } from './account-information-form/acco
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { AddUsersModalComponent } from './add-users-modal/add-users-modal.component';
 
 @NgModule({
   declarations: [
@@ -22,13 +24,15 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
     AccountComponent,
     AccountInformationFormComponent,
     HomePageComponent,
-    ProjectCreationComponent
+    ProjectCreationComponent,
+    AddUsersModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
