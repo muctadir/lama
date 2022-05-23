@@ -10,11 +10,13 @@ class Project(db.Model):
     criteria = db.Column(db.Integer)
     # Frozen: Project can't be edited, but remains viewable
     frozen = db.Column(db.Boolean, default=False)
+    # List of users in the project
     users = db.relationship('Membership', back_populates='project')
     
 class Membership(db.Model):
 
     __tablename__ = 'membership'
+    # id of project and user in relationship respectively
     pId = db.Column(db.ForeignKey('project.id'), primary_key=True)
     uId = db.Column(db.ForeignKey('user.id'), primary_key=True)
     # Admin: Whether or not the user is a project admin of the project
@@ -22,6 +24,7 @@ class Membership(db.Model):
     # Deleted: (Soft) deleted, the user is no longer part of a project
     #       but they remain in the system to view their changes
     deleted = db.Column(db.Boolean, default=False)
+    # Project and user in the relationship
     project = db.relationship('Project', back_populates='users')
     user = db.relationship('User', back_populates='projects')
 

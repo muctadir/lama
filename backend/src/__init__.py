@@ -80,6 +80,9 @@ def load_user(user_id):
 from src import routes # This will import routes not tied to a blueprint
 from src.routes.auth_routes import auth_routes # This will import the blueprint
 from src.models.auth_models import User
+import src.models.auth_models
+import src.models.item_models
+import src.models.project_models
 
 CORS(auth_routes)
 app.register_blueprint(auth_routes, url_prefix="/auth")

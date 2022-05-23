@@ -24,6 +24,7 @@ class User(UserMixin, db.Model):
     status = db.Column(db.Enum(UserStatus), default=UserStatus.pending) # See UserStatus
     description = db.Column(db.Text) # Personal description
     projects = db.relationship('Membership', back_populates='user')
+    # TODO: Add relationship to Label and Artifact
 
     # The discriminator column for the subtypes
     type = db.Column(db.String(32))
