@@ -27,8 +27,11 @@ export class LoginComponent {
    * @modifies this.errorMsg
    */
   loginSubmit() {
+    // checks input
     let not_empty = this.service.checkFilled(this.loginForm.value.username) && 
                 this.service.checkFilled(this.loginForm.value.password);
+                
+    // chooses desired behaviour based on validity of input
     if (not_empty) {
       this.errorMsg = "";
       this.checkLogin();

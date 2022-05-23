@@ -5,6 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { InputCheckService } from '../input-check.service';
 
 describe('LoginComponent', () => {
+  /* Test environment setup */
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
@@ -23,6 +24,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
+  /* Test cases */
   // Checks whether the component gets created
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -22,20 +22,28 @@ export class RegisterComponent {
     description: ''
   });
 
-  /* Checks whether the username/password is nonempty, and checks whether the email is valid 
-    Calls method responsible for registering if input is valid */
+  /**
+   * Checks whether the username/password is nonempty, and checks whether the email is valid.
+   * If input is valid, calls method registering the user.
+   */
   onRegister(){
+    // Checks input
     let not_empty = this.service.checkFilled(this.registerForm.value.username) && 
                 this.service.checkFilled(this.registerForm.value.password) &&
                 this.service.checkEmail(this.registerForm.value.email);
 
-    // Calls the registeration function (TODO), or displays an error.
+    // chooses desired behaviour based on validity of input
     if (not_empty){
       this.errorMsg = "";
-      console.log(this.registerForm.value);
+      this.register()
     } else {
       this.errorMsg = "Invalid username, password or email.";
     }
+  }
+
+  /* TODO: implement this register function */
+  register() {
+    console.log(this.registerForm.value);
   }
 
 }
