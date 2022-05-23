@@ -21,7 +21,11 @@ export class LoginComponent {
     password: ''
   });
 
-  /* Method which will be called upon clicking the log-in button */
+  /**
+   * Checks whether the input is valid, if it is valid, removes error message and calls login function
+   * If input is not valid, changes errorMsg to display an error.
+   * @modifies this.errorMsg
+   */
   loginSubmit() {
     let not_empty = this.service.checkFilled(this.loginForm.value.username) && 
                 this.service.checkFilled(this.loginForm.value.password);
