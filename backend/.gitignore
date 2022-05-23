@@ -11,3 +11,4 @@ src/routes/__pycache__/*
 src/models/__pycache__/*
 src/tests/__pycache__/*
 migrations/*
+migrations-test/*

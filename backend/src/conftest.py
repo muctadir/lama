@@ -6,6 +6,7 @@ def app():
     app = create_app({'TESTING': True})
     yield app
     # Tear-down goes here.
+    # TODO: Delete migrations folder
 
 @fixture
 def client(app):
