@@ -1,0 +1,40 @@
+sonarqube-check:
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+    - sonar-scanner
+  allow_failure: true
+  only:
+    - main # or the name of your main branch 
+  
+frontend-check:
+  image: ubuntu:latest
+
+  cache:
+    paths:
+      - node_modules/
+
+  before_script: 
+    - apt-get update -y
+    - apt-get install curl wget -y 
+    - curl -fsSL https://deb.nodesource.com/setup_16.x 
+    - apt-get update -y
+    - apt-get install -y nodejs npm
+    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - apt install ./google-chrome-stable_current_amd64.deb -y
+    - |
+      ls
+      cd "$CI_PROJECT_DIR/frontend"
+    - export CHROME_BIN=/usr/bin/google-chrome 
+    - npm ci 
+  script:
+    - npm run build
+    - npm run githubTest

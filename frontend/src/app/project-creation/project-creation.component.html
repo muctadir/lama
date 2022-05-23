@@ -1,0 +1,61 @@
+<body>
+    <h1>Create Project</h1>
+
+    <!-- Button to go to the home page -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Filling in Project information -->
+                <form id="projectCreationForm" method="post">
+                    <div id="header">Please enter the project's information</div>
+                    <!-- Username field -->
+                    <div class="form-group">
+                        <label for="projectName">Project name:</label><br>
+                        <input type="text" id="projectName" name="projectName" required><br>
+                    </div>
+                    
+                    <!-- Description field -->
+                    <div class="form-group">
+                        <label for="projectDescription">Description:</label><br>
+                        <input type="text" id="projectDescription" name="projectDescription" required><br>
+                    </div>
+                    
+                    
+                </form>
+            </div>
+            <div class="col">
+                <!-- <div>
+                    Members
+                    <mat-list>
+                        <mat-list-item *ngFor="let link of links">
+                            
+                         </mat-list-item>
+                    </mat-list>
+                </div> -->
+                <div>
+                    Labeller Count
+                </div>
+                <div>
+                    Label Type
+                </div>
+
+                <button type="button" class="btn btn-primary" routerLink="/home">Cancel</button>
+
+                <!-- Response -->
+                <p id="createProjectResponse"></p>
+                <br/>
+
+                <!-- Submit button -->
+                <button type="button" class="btn btn-primary" (click)="createProject()">Create Project</button>
+                <br/>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+
+

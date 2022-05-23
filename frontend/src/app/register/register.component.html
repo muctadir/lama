@@ -1,0 +1,22 @@
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8 d-flex justify-content-center" id="middle-col">
+            <div>
+                <div id="header">Please enter your info down below:</div>
+                <app-account-information-form></app-account-information-form>
+
+                <!-- Potential error messages that should be displayed -->
+                <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
+                <!-- Button -->
+                <div>
+                    <button type="submit" class="btn btn-primary" id="register-button" (click)="onRegister()">Register</button>
+
+                    <a [routerLink]="['/login']" id="back-login">I already have an account</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 offset-2 justify-content-center">
+        </div>
+    </div>
+</div>
