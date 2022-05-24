@@ -1,4 +1,4 @@
-from src import db, ma
+from src.models import db, ma # need this in every model
 from flask_login import UserMixin
 from enum import Enum
 from marshmallow import fields
