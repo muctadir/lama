@@ -1,9 +1,8 @@
 <!-- Main bootstrap container covering the page -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="main_body">
-    
-    <!--Top Row-->
-    <div class="row align-items-center" id="top_row">
-        <!--Title Header-->
+
+    <!--Title Row-->
+    <div class="row" id="topRow">
         <div class="col">
             <p class="header">Artifact Management</p>
         </div>
@@ -16,34 +15,41 @@
                 </svg>
             </button>
     </div>
-    
-    <!--Content Row-->
-    <div class="row align-items-center" style="border:1px solid red;" id="main_row">
-        <!--For loop through data array-->
-        <div class='artifactParagraph' *ngFor="let artifact of artifacts">
-            <div class="single-artifact">
-                <!--Artefact ID-->
-                <div class="row" id="artifactId">
-                    <div class="col-3"></div>
-                    <div class="col-2"><h2>Artifact {{artifact.id}}</h2></div>
-                </div>
-                <!--Artefact Text + Number of times labelled-->
-                <div class="container">
-                    <div class="row" id="textAndNumber">
-                        <div class="col-2"></div>
-                        <div class="col-7"><h3>{{artifact.text}}</h3></div>
-                        <div class="col-1"><h4>{{artifact.timesLabelled}}</h4></div>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="row" id="horizontalLine">
-                        <div class="col-2"></div>
-                        <hr style="height:1px; width:60%; border-width:0;">    
-                    </div>
-                </div>
 
-            </div>  
+    <!--Content Row-->
+    <div class="row align-items-center" id="main_row">
+        <!--For loop through data array-->
+        <div class='artifactGroup' *ngFor="let artifact of artifacts">
+            <!--Container for each artifact-->
+            <div class="container" id="singleArtifact">
+                <div class="row align-items-center" id="artifactId">
+                    <div class="col" id="artifact-id-column">
+                        <p class="artifactID">Artifact {{artifact.id}}</p>
+                    </div>
+                </div>
+                <!--Artefact Text-->
+                <div class="row justify-content-center" id="textAndNumber">
+                    <div class="col-11" id="text-timesLabelled-column">
+                        <p class="artifactText">{{artifact.text}}</p>
+                    </div>
+                     <!--Times Labelled-->
+                    <div class="col-1">
+                        <p class="timesLabelled">{{artifact.timesLabelled}}</p>
+                    </div>
+                </div>
+                <!--Line Separator-->
+                <div class="row justify-content-center" id="horizontalLineRow">
+                    <div class="col-6"></div>
+                    <hr class="horizontalLine" style="height:1px; width:95%; border-width:0px;">    
+                </div>
+                
+            </div>
+
+            
         </div>
         
-    </div> 
+
+    </div>
+    
+    
 </div>
