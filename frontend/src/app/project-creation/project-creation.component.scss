@@ -2,7 +2,11 @@
 // Veerle Fürst
 
 // Color variables
-@import "../../styles.scss";
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// @import "../../styles.scss";
 
 // General text settings
 body{
@@ -90,11 +94,8 @@ body{
 .bi.bi-x{
     font-size: 20px;
     color: $grey-shade;
-    padding:0px;
-    margin:0px;
-}
-// When hovering over the cross
-.memberDelete:hover{
+    padding: 0px;
+    margin: 0px;
     cursor: pointer;
 }
 // Button for adding members
