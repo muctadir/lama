@@ -131,11 +131,6 @@ export class ProjectCreationComponent implements OnInit {
     }
   }
 
-  // Function for adding users
-  addMembersClick(){
-    console.log("hoi"); 
-  }
-
   // Function for removing users
   removeMember(id:any){
     // Go through all members
@@ -158,6 +153,6 @@ export class ProjectCreationComponent implements OnInit {
     const modalRef = this.modalService.open(AddUsersModalContent);
     modalRef.componentInstance.users = this.members;
   }
-  
+
  }
 
