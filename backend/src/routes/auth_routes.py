@@ -35,7 +35,7 @@ def pending():
     """
     if not request.json: # only if there are no arguments
         try:
-            pending = db.session.query(User).filter(User.approved == 0)
+            pending = db.session.query(User).filter(User.status == 'pending')
         except OperationalError:
             return make_response(("Service Unavailable", 503))
         user_schema = UserSchema(many=True) # many is for serializing lists
