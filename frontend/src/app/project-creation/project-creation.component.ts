@@ -24,7 +24,7 @@ interface User {
       <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body row" *ngFor="let user of users" style="padding:2px 16px; max-height: 25px;">
-        <div class="col" style="padding:1px; list-style: none; max-height: 25px;">
+        <div class="col" style="padding:15 1 1 1px; list-style: none; max-height: 25px;">
           <li> {{ user.userName }}</li>
         </div>
         <!-- Col for adding users button -->
