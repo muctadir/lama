@@ -1,3 +1,5 @@
+// Veerle Furst
+
 // Project class 
 
 // A project object is created in steps

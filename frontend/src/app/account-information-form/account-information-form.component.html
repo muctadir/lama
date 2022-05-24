@@ -7,17 +7,17 @@
     <!-- Email field -->
     <div class="form-group">
         <label id="field_text">Email Address:</label>
-        <input type="email" class="form-control" id="form-format" placeholder="Email address" [formControl]="email" value = "{{ email }}">
+        <input type="email" class="form-control" placeholder="Email address" [formControl]="email" value = "{{ email }}">
     </div>
     <!-- Password field -->
     <div class="form-group">
         <label id="field_text">Password:</label>
-        <input type="password" class="form-control" id="form-format" placeholder="Password" [formControl]="password">
+        <input type="password" class="form-control" placeholder="Password" [formControl]="password">
     </div>
     <!-- Password Verify field -->
     <div class="form-group">
         <label id="field_text">Repeat Password:</label>
-        <input type="password" class="form-control" id="form-format" placeholder="Password" [formControl]="passwordVerify">
+        <input type="password" class="form-control" placeholder="Password" [formControl]="passwordVerify">
     </div>
     <!-- Description field -->
     <div class="form-group">
@@ -25,6 +25,4 @@
         <textarea class="form-control" rows="4" placeholder="Description" [formControl]="description" maxlength="140">{{ description }}</textarea>
     </div>
 
-    <!-- Potential error messages that should be displayed -->
-    <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
 </form>

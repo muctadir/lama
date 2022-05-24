@@ -1,11 +1,16 @@
 from sqlite3 import OperationalError
-from src import app, db
+from flask import current_app as app
+from src.models import db
 from src.models.auth_models import User, UserSchema
 from flask import request, jsonify
+from flask import Blueprint
 from flask_login import current_user
 
-@app.route("/health", methods=["GET"])
-def heath():
+
+demos = Blueprint("demos", __name__)
+
+@demos.route("/health", methods=["GET"])
+def health():
     if request.method == "GET":
         return "200 OK"
 
@@ -22,7 +27,7 @@ def homePage():
     
 
 # DEPRECATED
-@app.route("/user", methods=["POST", "GET"])
+@demos.route("/user", methods=["POST", "GET"])
 def user():
     return "501 Not Implemented"
     if request.method == "POST":
@@ -56,7 +61,7 @@ def user():
                 return "404 Not Found"
         return "400 Bad Request"
 
-@app.route("/users", methods=["GET"])
+@demos.route("/users", methods=["GET"])
 def users():
     user_schema = UserSchema()
     try:
