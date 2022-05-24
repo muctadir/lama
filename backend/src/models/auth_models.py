@@ -35,9 +35,13 @@ class User(UserMixin, db.Model):
     }
 
 class SuperAdmin(User):
+    """
+    All super admins are also included in the user table.
+    """
 
     __tablename__ = 'super_admin'
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
     # Add more data to super admin class if ever needed:
 
     __mapper_args__ = {
