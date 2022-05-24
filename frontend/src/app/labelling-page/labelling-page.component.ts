@@ -6,6 +6,7 @@ type labelType = {
   labels: Array<String>
 }
 
+
 @Component({
   selector: 'app-labelling-page',
   templateUrl: './labelling-page.component.html',
@@ -35,7 +36,15 @@ export class LabellingPageComponent implements OnInit {
   }
 
   selectedText() {
-    this.hightlightedText = document.getSelection();
+    this.hightlightedText = document.getSelection()
+  }
+
+  splitArtifact(){
+    alert("Wowee, its a split");
+  }
+   
+  highlightArtifact(){
+    alert("Gee wizz, you did a highlight");
   }
 
   constructor() { }

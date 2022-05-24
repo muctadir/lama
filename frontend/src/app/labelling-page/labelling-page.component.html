@@ -1,35 +1,46 @@
-<div class="container-fluid min-vh-100 d-flex flex-column">
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- contains the page title and little buttons -->
     <div class="row" id="pageTitle">
+        <!-- title name -->
         <div id="artifactId" class="col-10">
             Artifact {{ artifactId }} 
         </div> 
+        <!-- the top buttons -->
         <div  *ngIf="hightlightedText != null " class="col-2">
             <div id="artifactButtons">
-                <i (click)="notImplemented()" class="bi bi-scissors"></i><i (click)="notImplemented()" class="bi bi-brush"></i>
+                <!-- calling split and highlight  -->
+                <i (click)="splitArtifact()" class="bi bi-scissors"></i><i (click)="highlightArtifact()" class="bi bi-brush"></i>
             </div>
         </div>
     </div>
     <div class = "row" >
-        <div class = "row" id="artifactContainer">
+        <!-- container for artifact itself -->
+        <div class = "artifactContainer" id="artifactContainer">
             <p (mouseup)="selectedText()" (mousedown)="selectedText()">{{ artifact }}</p>
         </div>
         
+        <!-- who it is labelled by -->
         <div class="col-6">
             <div> 
                 Labeled by: <span *ngFor="let labeler of labelers; let last = last">{{ labeler }}<span *ngIf="!last">, </span></span>
             </div>
         </div>
 
-        <div class="col-6">
+        <!-- previous artifacts that it was split from, if any -->
+        <div class="col-6" id="names">
             <p class="float-end">
                 Artifact was split into artifact #45 and artifact #190.
             </p>
         </div>
 
+        <!-- lower part of page  -->
         <div class="row">
-            <div class="col-6">
+            <!-- left side its a bit wider so i did sm8-->
+            <div class="col-sm-8" id="labelThing">
                 <div *ngFor="let labelType of labelTypes">
                     <div class="row">
+                        <!-- left part of this for the label itself -->
                         <div class="col-6">
                             <div class = "labelTypeTitle">
                                 <span>{{ labelType.labelTypeName }}</span> <span (click)="notImplemented()" class="float-end"><i class="bi bi-plus-lg"></i></span>
@@ -40,26 +51,31 @@
                                 </select>
                             </div>
                         </div> 
+                        <!-- right part of this for the label descriptions -->
                         <div class="col-6" >
                             <div class = "labelTypeDescription">
-                                <h2>Description</h2>
-                                <p>{{ labelType.labelTypeDescription }}</p>
+                                <div class="descriptionTitle">
+                                    <p>Description</p>
+                                </div>
+                                <div class="descriptionText">
+                                    <p>{{ labelType.labelTypeDescription }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="col-6 ">
+            <!-- right part for remarks followed by little buttons -->
+            <div class="col-sm-4 ">
                 <div class="form-group">
-                    <textarea class="form-control" rows="8" placeholder="Remark"></textarea>
+                    <textarea class="form-control" rows="8" placeholder="Remark" id="remark"></textarea>
                 </div>
-            </div>
-        </div>
-        <div class="row ">
-            <div class="form-group">
-                <button class="btn btn-light float-end" (click)="notImplemented()" style="margin-left:10px;">Skip</button> 
-                <button class="btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
+                <!-- both bottom buttons -->
+                <div class="form-group" id="butt">
+                    <button class="btn btn-light float-end" (click)="notImplemented()" style="margin-left:10px;">Skip</button> 
+                    <button class="btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
+                </div>
             </div>
         </div>
     </div>
