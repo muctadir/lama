@@ -1,10 +1,20 @@
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <div class="row">
-        <div class="col-1">
-            <router-outlet name="side-nav"></router-outlet>
-        </div>
-        <div class="col-11">
-            <router-outlet></router-outlet>
-        </div>
+        <ng-container *ngIf="collapsed">
+            <div class="col-1 marg-padd">
+                <router-outlet name="side-nav"></router-outlet>
+            </div>
+            <div class="col-11 marg-padd">
+                <router-outlet></router-outlet>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!collapsed">
+            <div class="col-2 marg-padd">
+                <router-outlet name="side-nav"></router-outlet>
+            </div>
+            <div class="col-10 marg-padd">
+                <router-outlet></router-outlet>
+            </div>
+        </ng-container>
     </div>
 </div>

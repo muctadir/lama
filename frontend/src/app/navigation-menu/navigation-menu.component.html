@@ -1,1 +1,144 @@
-<p>navigation-menu works!</p>
+<!-- Container holding navigation menu -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
+    <!-- Row for icon to pop the menu in and out -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div>
+                <a><em class="bi bi-list" (click)="changeSize()"></em></a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for projects icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><em class="bi bi-house" (click)="tester()"></em></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Projects</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for stats icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><em class="bi bi-bar-chart-line"></em></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Statistics</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for labelling icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><em class="bi bi-tags"></em></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Labelling</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for artifact management icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><div class="bi">AM</div></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Artifact management</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for label management icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><div class="bi">LM</div></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Label management</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+    
+    <!-- Row for theme management icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><div class="bi">TM</div></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Theme management</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for conflict management icon -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+            <div *ngIf="collapsed">
+                <a><em class="bi bi-binoculars"></em></a>
+            </div>
+            <div *ngIf="!collapsed">
+                <a class="text-menu" (click)="tester()">Conflict</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Container holding the setting and logout logo -->
+    <div class="row row-margin mt-auto">
+        <div class="col-12">
+            <div class="container">
+
+                <!-- Row for settings icon -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div *ngIf="collapsed">
+                            <a><em class="bi bi-gear"></em></a>
+                        </div>
+                        <div *ngIf="!collapsed">
+                            <a class="text-menu" (click)="tester()">Settings</a>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Row for logout icon -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div *ngIf="collapsed">
+                            <a><em class="bi bi-box-arrow-left"></em></a>
+                        </div>
+                        <div *ngIf="!collapsed">
+                            <a class="text-menu" (click)="tester()">Log out</a>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Row to move settings and logout up -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div id="bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

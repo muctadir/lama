@@ -1,0 +1,43 @@
+// Import style sheet with global variables
+@import "../../styles.scss";
+
+// Sets background color of the navigation menu
+#main-cont {
+    background-color: $grey-shade;
+}
+
+// puts a slight margin between each element of the navigation menu
+.row-margin {
+    margin-top: 5px;
+}
+
+// sets sizing + color of the icons
+.bi {
+    color: $white-shade; 
+    font-size: clamp(10px, 2vw, 40px);
+    cursor: pointer;
+}
+
+// sets sizing + color of the nav menu text when not collapsed
+// TODO make font sizing dynamic
+.text-menu {
+    font-size: 20px;
+    color: $white-shade;
+    cursor: pointer;
+}
+
+// Ensures that there is no line under the links in the menu
+a, u {
+    text-decoration: none;
+}
+
+// puts the line below each menu icon
+.line {
+    background-color: $offgrey-shade;
+    width: 100%;
+    height: 2px;
+}
+
+#bottom {
+    height: 30px;
+}
