@@ -111,7 +111,7 @@ body{
 // The division of the progress
 .progress{
     margin-top:5px;
-    width: 60%;
+    width: 100%;
     float: left;
     border-radius: 10px
 }
@@ -120,15 +120,16 @@ body{
     background-color: $orange-shade;
     border-radius: 10px
 }
-// The numbers next to the progress bar
-.progressBarNumbers{
-    float: right;
-}
 
 // FROZEN AND ADMIN
 // Cols for admin and frozen
 .col-1{
     text-align: center;
+}
+// Admin icon
+.bi.bi-key{
+    font-size: 30px;
+    color: $grey-shade;
 }
 // Frozen layout
 .bi.bi-snow{
