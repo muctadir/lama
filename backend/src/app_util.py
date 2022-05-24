@@ -47,6 +47,8 @@ class AppUtil():
     @staticmethod
     def check_password(password):
         """
+        @param username : a string
+        @return : True <=> password is valid and complex
         A valid password is defined as a password that:
             has no leading or trailing whitespace
             is no more than 64 characters long (database constraint)
@@ -71,3 +73,18 @@ class AppUtil():
                 re.match(specialRe, password) or \
                 re.match(numberRe, password))
         return valid and complex
+    
+    @staticmethod
+    def get_all_subclasses(cls):
+        """
+        @param cls : class to get subclasses of
+        @return all subclasses of cls, including non-immediate subclasses
+        Note: If you only need immediate subclasses then use cls.__subclasses__()
+        """
+        all_subclasses = set()
+
+        for subclass in cls.__subclasses__():
+            all_subclasses.add(subclass)
+            all_subclasses.update(AppUtil.get_all_subclasses(subclass))
+        
+        return all_subclasses
