@@ -1,4 +1,4 @@
-from src import db, ma
+from src.models import db, ma
 from sqlalchemy.orm import declarative_mixin, declared_attr
 from src.app_util import AppUtil
 # Abstract Base Class, inheriting this makes a class abstract

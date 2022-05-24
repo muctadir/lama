@@ -1,4 +1,4 @@
-from src import db, ma
+from src.models import db, ma
 
 class Project(db.Model):
 
