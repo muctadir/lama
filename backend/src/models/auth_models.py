@@ -1,4 +1,4 @@
-from src import db, ma # need this in every model
+from src.models import db, ma # need this in every model
 from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
