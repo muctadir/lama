@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 // Victoria Bogachenkova
 // Veerle Fürst
+
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 // Project object
 interface Project {
@@ -79,6 +80,7 @@ export class ProjectCreationComponent implements OnInit {
     return {userName};
   }
 
+  // Fake users
   Veerle = this.addValuesUser("Veerle");
   Vic = this.addValuesUser("Vic");
   Bartjan = this.addValuesUser("Bartjan");
@@ -95,7 +97,6 @@ export class ProjectCreationComponent implements OnInit {
   all_members: User[] = [this.Veerle, this.Vic, this.Bartjan, this.Jarl, this.Chinno, this.Chinno2, this.Chinno3, this.Chinno4, this.Chinno5, this.Chinno6, this.Chinno7];
   // Array of members in the project
   project_members: User[] = []
-
 
   // Label types
   labelTypes: string[] = ["doing"];
@@ -115,7 +116,7 @@ export class ProjectCreationComponent implements OnInit {
       // Typescript dictionary (string -> string)
       let params: Record<string, string> = {};
       // Take all form elements
-      for (let i = 0; i < post_form.length; i++) { // No forEach for HTMLCollection
+      for (let i = 0; i < post_form.length; i++) { 
         // Add them to dictionary
         let param = post_form[i] as HTMLInputElement; // Typecast
         params[param.name] = param.value;
@@ -131,6 +132,7 @@ export class ProjectCreationComponent implements OnInit {
       post_form.reset();
      
     } else {
+      // Send error message
       alert("Bad formatting");
     }
   }

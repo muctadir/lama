@@ -1,14 +1,6 @@
 // Veerle Furst
 
 // Project class 
-
-// A project object is created in steps
-// 1. get all projects the user can see and save the id, name, description, and frozen
-// 2. get whether the user is admin or not and save this boolean
-// 3. get all artifacts per project and save this number
-// 4. get all completely labelled artifacts per project and save this number
-// 5. get all users within a project and save this number
-
 export class Project {
     projectID: number;
     projectName: string;
