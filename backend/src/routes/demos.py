@@ -8,7 +8,7 @@ from flask import Blueprint
 demos = Blueprint("demos", __name__)
 
 @demos.route("/health", methods=["GET"])
-def heath():
+def health():
     if request.method == "GET":
         return "200 OK"
 

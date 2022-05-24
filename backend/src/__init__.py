@@ -67,7 +67,7 @@ def create_app(config={'TESTING': False}):
     # __name__ identifies this .py file, it's a technicality needed for Flask.
     app = Flask(__name__)
     # Setting the database URI.
-    if config['TESTING'] == True:
+    if config['TESTING'] is True:
         # When testing, we want to have access to a mock database.
         # This is an SQLite database stored in-memory.
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
@@ -85,18 +85,18 @@ def create_app(config={'TESTING': False}):
     mig = Migrate(app, db)
 
     # Since a new database is created when testing, we must migrate each time.
-    if config['TESTING'] == True:
+    if config['TESTING'] is True:
         # The in-memory database is discarded after each test, so we have to
         # remove the migrations folder used by the last test.
-        # TODO: Perhaps to this in teardown?
+        # TODO: Perhaps do this in teardown?
         mig_path = Path(__file__).parent.parent / 'migrations-test'
         if mig_path.is_dir():
             rmtree(str(mig_path))
         # This signals which app object the commands below apply to.
         with app.app_context():
-            init(directory='migrations-test')
-            migrate(directory='migrations-test')
-            upgrade(directory='migrations-test')
+            init(directory=str(mig_path))
+            migrate(directory=str(mig_path))
+            upgrade(directory=str(mig_path))
 
     # Used for managing user logins and sessions.
     login_manager = LoginManager()
