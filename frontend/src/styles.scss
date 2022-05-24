@@ -8,3 +8,8 @@ $orange-shade: #ed5a06;
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: $orange-shade !important;
 }
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+/* Importing Bootstrap Icons file. */
+@import "~bootstrap-icons/font/bootstrap-icons.css";

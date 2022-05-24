@@ -10,8 +10,9 @@ import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { AddUsersModalContent, ProjectCreationComponent } from './project-creation/project-creation.component';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -22,15 +23,18 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
     AccountComponent,
     AccountInformationFormComponent,
     HomePageComponent,
-    ProjectCreationComponent
+    ProjectCreationComponent,
+    AddUsersModalContent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent]
 })
 export class AppModule { }
