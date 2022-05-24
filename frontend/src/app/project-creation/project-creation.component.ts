@@ -1,3 +1,6 @@
+// Victoria Bogachenkova
+// Veerle Fürst
+
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 

@@ -1,3 +1,6 @@
+// Victoria Bogachenkova
+// Veerle Fürst
+
 import { Component, OnInit } from '@angular/core';
 // import { Project } from '../project';
 
