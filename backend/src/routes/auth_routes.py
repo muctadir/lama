@@ -10,7 +10,7 @@ from flask_cors import cross_origin
 
 auth_routes = Blueprint("auth", __name__)
 
-@auth_routes.route("/register", methods=["POST"])
+@auth_routes.route("/auth/register", methods=["POST"])
 @cross_origin()
 def register():
     """
@@ -27,7 +27,7 @@ def register():
         return make_response(("Invalid format", 400))
     return make_response(("Bad Request", 400))
 
-@auth_routes.route("/pending", methods=["GET"])
+@auth_routes.route("/auth/pending", methods=["GET"])
 @cross_origin()
 def pending():
     """
@@ -42,7 +42,7 @@ def pending():
         pending = user_schema.dumps(pending) # dumps automatically converts to json, as opposed to dump
         return make_response(pending) # default code is 200
 
-@auth_routes.route("/login")
+@auth_routes.route("/auth/login")
 @cross_origin()
 def login():
     args = request.json
