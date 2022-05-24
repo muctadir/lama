@@ -33,30 +33,34 @@ body{
     border: 2px solid;
     border-color: $grey-shade;
     color: $grey-shade;
-
 }
 // Create project button on hover
 #createProjectButton:hover, #createProjectButton:focus, #createProjectButton:active{
     background-color: $white-shade;
 }
+// Create project text within button
+#createProjectText{
+    float:left;
+    margin-top: 4px; 
+    margin-right: 4px;   
+}
 // Create button plus
-svg.bi.bi-plus{
-    width: 22px;
-    height: 22px;
+.bi.bi-plus{
+    font-size: 22px;
+    color: $grey-shade;
 }
 // Account Settings icon
-svg.bi.bi-person-circle{
+.bi.bi-person-circle, .bi.bi-person-circle::before{
     float: right;
     vertical-align: middle;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-left: 5px;
-    fill: $main-color-1;   
-    width: 40px;
-    height: 40px;
+    color: $main-color-1;   
+    font-size: 45px;
 }
 
 // Division around all projects
-div.allProjects{
+.allProjects{
     margin: 4px 10px 4px 4px;
     padding: 4px;
     height: 80vh;
@@ -78,14 +82,14 @@ div.allProjects{
     border-radius: 10px;
 }
 // Divisions for projects
-div.projectParagraph{
+.projectParagraph{
     margin: 2% 5% 5% 10%;
     padding: 10px 5% 10px 5%;
     border-left: 2px solid;
     border-color: $grey-shade;
 }
 // Columns of the grid
-div.col{
+.col{
     padding: 0px;
 }
 
@@ -99,19 +103,19 @@ div.col{
 
 // PROGRESS BAR
 // The division of the progress
-div.progress{
+.progress{
     margin-top:5px;
     width: 60%;
     float: left;
     border-radius: 10px
 }
 // Actual progress bar
-div.progress-bar{
+.progress-bar{
     background-color: $main-color-1;
     border-radius: 10px
 }
 // The numbers next to the progress bar
-span.progressBarNumbers{
+.progressBarNumbers{
     float: right;
 }
 
@@ -121,24 +125,22 @@ span.progressBarNumbers{
     text-align: center;
 }
 // Frozen layout
-svg.bi.bi-snow{
-    width: 20px;
-    height: 20px; 
-    fill: $grey-shade;
+.bi.bi-snow{
+    font-size: 20px;
+    color: $grey-shade;
 }
 
 // NUMBER OF USERS
 // The numbers of users text
-span.numberOfUsers{
+.numberOfUsers{
     float: right;
-    margin-top: 2px;
+    margin-top: 12px;
 }
 // The user icon next to the number of user
-svg.bi.bi-person{
+.bi.bi-person{
     float: right;
-    vertical-align: middle;
     margin-left: 8px;
-    fill: $main-color-1;   
-    width: 30px;
-    height: 30px;
+    margin-bottom: 10px;
+    color: $main-color-1;   
+    font-size: 30px;
 }

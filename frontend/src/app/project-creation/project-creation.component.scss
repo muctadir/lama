@@ -19,8 +19,7 @@ body{
 
 // Plus icon
 .bi.bi-plus{
-    width: 24px;
-    height: 24px;
+    font-size: 24px;
     color: $grey-shade;
 }
 
@@ -88,17 +87,20 @@ body{
 }
 // Cross icon next to member name
 .bi.bi-x{
-    width: 20px;
-    height: 20px;
-    fill: $grey-shade;
+    font-size: 20px;
+    color: $grey-shade;
+    padding:0px;
+    margin:0px;
 }
+// When hovering over the cross
 .memberDelete:hover{
     cursor: pointer;
 }
 // Button for adding members
-.addMembersButton{
+#addMembersButton{
     background-color: $white-shade;
     width: 30px;
+    padding:0px;
 }
 // Plus icon for label types
 .bi.bi-plus.members{
@@ -123,6 +125,12 @@ body{
     margin: 0px;
     text-align: left;
 }
+// Add label type text 
+#addLabelTypeText{
+    float: left;
+    margin-top: 5px;
+}
+
 
 // SCROLLBARS
 // Scrollbar

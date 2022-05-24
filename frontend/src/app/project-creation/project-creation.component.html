@@ -51,11 +51,9 @@
                         <!-- Col for adding users button -->
                         <div class="col-2">
                             <!-- Button for adding new members -->
-                            <button class="btn" type="button" id="addMembersButton" (click)="addMembersClick()">
+                            <button class="btn" type="button" id="addMembersButton" (click)="addMember()">
                                 <!-- Members icon -->
-                                <svg class="bi bi-plus members" viewBox="0 0 16 16">
-                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                </svg>
+                                <i class="bi bi-plus members"></i>
                             </button>
 
                             <!-- TODO make pop-up for where user can select members -->
@@ -97,14 +95,12 @@
                             <label *ngFor="let member of members" for="user" style="display: block;"> 
 
                                 <!-- Row for the delete, name and project admin -->
-                                <div class="row">
+                                <div class="row align-items-center">
 
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
                                         <!-- x icon -->
-                                        <svg class="bi bi-x memberDelete" id="{{member.userName}}" viewBox="0 0 16 16" (click)="removeMember(member.userName)">
-                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                        </svg>
+                                        <i class="bi bi-x memberDelete" (click)="removeMember(member.userName)"></i>
                                     </div>
 
                                     <!-- Column for username -->
@@ -151,11 +147,9 @@
                             </div>
                             <!-- Button for adding new label types -->
                             <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
-                                Add Label Type
+                                <span id="addLabelTypeText">Add Label Type</span>
                                 <!-- Plus icon -->
-                                <svg class="bi bi-plus label-type" viewBox="0 0 16 16">
-                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                </svg>
+                                <i class="bi bi-plus labelType"></i>
                             </button>
                         </div>
                     </div>

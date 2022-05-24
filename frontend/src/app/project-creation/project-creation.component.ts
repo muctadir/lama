@@ -91,7 +91,7 @@ export class ProjectCreationComponent implements OnInit {
   }
 
   // Function for adding users
-  addMembersClick(){
+  addMember(){
     console.log("hoi"); 
   }
 
