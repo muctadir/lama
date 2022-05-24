@@ -6,6 +6,9 @@ from flask_login import LoginManager
 from flask_migrate import Migrate, init, migrate, upgrade
 from src.models import db, ma
 from src.models.auth_models import User
+import src.models.auth_models
+import src.models.project_models
+import src.models.item_models
 from src.routes import demos, auth_routes
 from flask_cors import CORS
 from os import environ
