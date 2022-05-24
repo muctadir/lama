@@ -41,33 +41,11 @@
                         <!-- Col for adding users button -->
                         <div class="col-2">
                             <!-- Button for adding new members -->
-                            <button class="btn" type="button" id="addMembersButton" (click)="addMembersClick()">
+                            <button class="btn" type="button" id="addMembersButton" (click)="open()">
                                 <svg class="bi bi-plus members" viewBox="0 0 16 16">
                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                 </svg>
                             </button>
-
-                            <!-- TODO make pop-up for where user can select members -->
-
-                            <!-- Modal -->
-                            <ng-template #addMembersModal let-modal>
-                                <div class="modal-dialog">    
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Modal Header</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        <p>Some text in the modal.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-template>
-
                         </div>
                     </div>
 
