@@ -2,9 +2,7 @@
 // Veerle Fürst
 
 // Color variables
-$main-color-1: #ED5A06;
-$grey-shade: #38474e;
-$white-shade: #FFFFFF;
+@import "../../styles.scss";
 
 // Body
 body{
@@ -58,7 +56,7 @@ body{
     vertical-align: middle;
     margin-top: 5px;
     margin-left: 5px;
-    color: $main-color-1;   
+    color: $orange-shade;   
     font-size: 45px;
 }
 
@@ -76,7 +74,7 @@ body{
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: $white-shade; 
     border-radius: 10px;
 }
 // Scrollbar scroller
@@ -114,7 +112,7 @@ body{
 }
 // Actual progress bar
 .progress-bar{
-    background-color: $main-color-1;
+    background-color: $orange-shade;
     border-radius: 10px
 }
 // The numbers next to the progress bar
@@ -144,6 +142,6 @@ body{
     float: right;
     margin-left: 8px;
     margin-bottom: 10px;
-    color: $main-color-1;   
+    color: $orange-shade;   
     font-size: 30px;
 }

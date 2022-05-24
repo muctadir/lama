@@ -24,35 +24,19 @@ export class Project {
         projectID: number, 
         projectName: string,
         projectDescription: string,
+        numberOfUsers: number,
+        numberOfArtifacts: number,
+        numberOfCLArtifacts: number,
         frozen: boolean,
+        admin: boolean
     ) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
-        this.numberOfUsers = 0; // hardcoded to be changed later
-        this.numberOfArtifacts = 0; // hardcoded to be changed later
-        this.numberOfCLArtifacts = 0; // hardcoded to be changed later
+        this.numberOfUsers = numberOfUsers; // hardcoded to be changed later
+        this.numberOfArtifacts = numberOfArtifacts; // hardcoded to be changed later
+        this.numberOfCLArtifacts = numberOfCLArtifacts; // hardcoded to be changed later
         this.frozen = frozen;
-        this.admin = false; // hardcoded to be changed later
+        this.admin = admin; // hardcoded to be changed later
     }
-
-    // Setting admin
-    setAdminProject(admin: boolean){
-        this.admin = admin;
-    } 
-
-    // Setting artifacts per project
-    setArtifactsProject(numberOfArtifacts: number){
-        this.numberOfArtifacts = numberOfArtifacts;
-    } 
-
-    // Setting number of completely labelled artifacts per project
-    setnumberOfCLArtifacts(numberOfCLArtifacts: number){
-        this.numberOfCLArtifacts = numberOfCLArtifacts;
-    } 
-
-    // Setting number of users per project
-    setnumberOfUsers(numberOfUsers: number){
-        this.numberOfUsers = numberOfUsers;
-    } 
   }
