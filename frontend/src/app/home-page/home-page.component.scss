@@ -6,6 +6,8 @@ $white-shade: #FFFFFF;
 // Body
 body{
     color: $grey-shade;
+    font-size: 15px;
+    letter-spacing: 1px;
 }
 
 // TOP BAR
@@ -15,11 +17,12 @@ body{
     max-width: 98%;
 }
 // Header saying "Projects"
-p.header{
+.header{
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
+
 // CREATE PROJECT
 // Create project button on Home Page
 #createProjectButton{
@@ -54,12 +57,13 @@ svg.bi.bi-person-circle{
 
 // Division around all projects
 div.allProjects{
-    margin: 4px 120px 4px 4px;
+    margin: 4px 10px 4px 4px;
     padding: 4px;
     height: 80vh;
     overflow-y: scroll;
 }
-// Scrollbar
+// SCROLLBAR
+// Scrollbar general
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -85,7 +89,6 @@ div.col{
     padding: 0px;
 }
 
-
 // Different look for project names
 .projectName{
     font-size: 30px;
@@ -110,6 +113,18 @@ div.progress-bar{
 // The numbers next to the progress bar
 span.progressBarNumbers{
     float: right;
+}
+
+// FROZEN AND ADMIN
+// Cols for admin and frozen
+.col-1{
+    text-align: center;
+}
+// Frozen layout
+svg.bi.bi-snow{
+    width: 20px;
+    height: 20px; 
+    fill: $grey-shade;
 }
 
 // NUMBER OF USERS

@@ -1,14 +1,23 @@
 <body>
-    <p class="header">Create Project</p>
+    <!-- Conatiner for the top row -->
+    <div class="container" id="topBarRow"> 
+        <div class="row">
+            <p class="header">Create Project</p>
+        </div>
+    </div>
 
+    <!-- Container for settings -->
     <div class="container main">
 
+        <!-- Row for all settings -->
         <div class="row justify-content-between">
 
-            <!-- Left side of the page -->
+            <!-- Left side of the page (project name and description) -->
             <div class="col-5">
+
                 <!-- Filling in Project information -->
                 <form id="projectCreationForm" method="post">
+
                     <!-- Username field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
@@ -29,8 +38,9 @@
                 </form>
             </div>
 
-            <!-- Right side of the page -->
+            <!-- Right side of the page (members, labeller count, label types) -->
             <div class="col-6">
+
                 <!-- Division around the whole members section -->
                 <div class="projectSettingsDivParent">
                     <!-- "Members" header -->
@@ -59,30 +69,33 @@
                                 </div>
                             </div>
                             
-                            <!-- TODO Vic what is this php link???? -->
-                            <form action="/action_page.php">
-                                <!-- Name and checkbox per member of the project -->
-                                <label *ngFor="let member of members" for="user" style="display: block;"> 
-                                    <!-- Row for the delete, name and project admin -->
-                                    <div class="row">
-                                        <!-- Column for delete icon -->
-                                        <div class="col-1">
-                                            <svg class="bi bi-x memberDelete" id="{{member.userName}}" viewBox="0 0 16 16" (click)="removeMember(member.userName)">
-                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                            </svg>
-                                        </div>
-                                        <!-- Column for username -->
-                                        <div class="col-7">
-                                            {{ member.userName }}
-                                        </div>
-                                        <!-- Column for checkbox -->
-                                        <div class="col-4 checkboxCol">
-                                            <!-- TODO I cant get these checkboxes orange, someone pls help -->
-                                            <input type="checkbox">
-                                        </div>                                        
+                            
+                            <!-- Name and checkbox per member of the project -->
+                            <label *ngFor="let member of members" for="user" style="display: block;"> 
+
+                                <!-- Row for the delete, name and project admin -->
+                                <div class="row">
+
+                                    <!-- Column for delete icon -->
+                                    <div class="col-1">
+                                        <!-- x icon -->
+                                        <svg class="bi bi-x memberDelete" id="{{member.userName}}" viewBox="0 0 16 16" (click)="removeMember(member.userName)">
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
                                     </div>
-                                </label>
-                            </form>
+
+                                    <!-- Column for username -->
+                                    <div class="col-7">
+                                        {{ member.userName }}
+                                    </div>
+
+                                    <!-- Column for checkbox -->
+                                    <div class="col-4 checkboxCol">
+                                        <!-- TODO I cant get these checkboxes orange, someone pls help -->
+                                        <input type="checkbox">
+                                    </div>                                        
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -116,6 +129,7 @@
                             <!-- Button for adding new label types -->
                             <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
                                 Add Label Type
+                                <!-- Plus icon -->
                                 <svg class="bi bi-plus label-type" viewBox="0 0 16 16">
                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                 </svg>
@@ -127,16 +141,19 @@
         </div>
           
 
-        <!-- Buttons row -->
+        <!-- Buttons row (cancel and submit button) -->
         <div class="row justify-content-end fixed-bottom top-buffer">
             <!-- Cancel button -->
-            <button type="button" class="btn btn-secondary text-nowrap" id="cancelProjectCreationButton" routerLink="/home">Cancel</button>
+            <button type="button" class="btn btn-secondary text-nowrap" id="cancelProjectCreationButton" routerLink="/home">
+                Cancel
+            </button>
         
             <!-- Submit button -->
-            <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">Create Project</button>
+            <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">
+                Create Project
+            </button>
         </div>
 
     </div>
 
 </body>
-

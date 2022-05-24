@@ -48,7 +48,7 @@ interface Project {
   projectName: string,
   projectDescription: string;
 }
-
+// User object
 interface User {
   userName: string;
 }

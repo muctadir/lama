@@ -5,9 +5,18 @@ $orange-shade: #ed5a06;
 
 // General text settings
 body{
+    color: $grey-shade;
     font-size: 15px;
     letter-spacing: 1px;
 }
+
+// Top bar row
+#topBarRow{
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 98%;
+}
+
 // Plus icon
 .bi.bi-plus{
     width: 24px;
@@ -17,8 +26,8 @@ body{
 
 // Header of the page
 .header{
-    font-size: 22px;
-    padding-left: 10px;
+    font-size: 35px;
+    letter-spacing: 1px;
     padding-top: 10px;
 }
 
