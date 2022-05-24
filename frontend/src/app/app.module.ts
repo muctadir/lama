@@ -10,10 +10,9 @@ import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { AddUsersModalContent, ProjectCreationComponent } from './project-creation/project-creation.component';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { AddUsersModalComponent } from './add-users-modal/add-users-modal.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -25,7 +24,7 @@ import { AddUsersModalComponent } from './add-users-modal/add-users-modal.compon
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
-    AddUsersModalComponent
+    AddUsersModalContent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +34,7 @@ import { AddUsersModalComponent } from './add-users-modal/add-users-modal.compon
     NgbModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent]
 })
 export class AppModule { }
