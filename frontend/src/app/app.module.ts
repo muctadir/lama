@@ -11,6 +11,8 @@ import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
+import { ProjectComponent } from './project/project.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
     AccountComponent,
     AccountInformationFormComponent,
     HomePageComponent,
-    ProjectCreationComponent
+    ProjectCreationComponent,
+    NavigationMenuComponent,
+    ProjectComponent
   ],
   imports: [
     BrowserModule,
