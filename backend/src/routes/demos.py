@@ -14,7 +14,7 @@ def health():
     if request.method == "GET":
         return "200 OK"
 
-@app.route("/home", methods=["GET"])
+@demos.route("/home", methods=["GET"])
 def homePage():
     # Check if the user is logged in
     if(current_user.is_authenticated() ):
