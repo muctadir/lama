@@ -69,5 +69,10 @@ A good overview/tutorial:
 https://flask.palletsprojects.com/en/2.1.x/testing/
 
 ## Future work
-Simulate logged in users making requests:
+* Simulate logged in users making requests: 
 https://flask-login.readthedocs.io/en/latest/#automated-testing
+
+* Display code coverage:
+https://flask.palletsprojects.com/en/2.1.x/testing/
+
+* Unit test auxillary functions that are not routes.
