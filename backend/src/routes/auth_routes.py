@@ -1,6 +1,7 @@
-from src import app, db # need this in every route
+from src import db # need this in every route
 from src.app_util import AppUtil
 from src.models.auth_models import User, UserSchema
+from flask import current_app as app
 from flask import make_response, request, Blueprint
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,7 +10,7 @@ from flask_cors import cross_origin
 
 auth_routes = Blueprint("auth", __name__)
 
-@auth_routes.route("/register", methods=["POST"])
+@auth_routes.route("/auth/register", methods=["POST"])
 @cross_origin()
 def register():
     """
@@ -17,7 +18,6 @@ def register():
     See create_user() for default arguments
     """
     args = request.json
-    print(args)
     required = ["username", "email", "password", "description"] # Required arguments
     if AppUtil.check_args(required, args):
         if check_format(**args):
@@ -27,7 +27,7 @@ def register():
         return make_response(("Invalid format", 400))
     return make_response(("Bad Request", 400))
 
-@auth_routes.route("/pending", methods=["GET"])
+@auth_routes.route("/auth/pending", methods=["GET"])
 @cross_origin()
 def pending():
     """
@@ -35,14 +35,14 @@ def pending():
     """
     if not request.json: # only if there are no arguments
         try:
-            pending = db.session.query(User).filter(User.approved == 0)
+            pending = db.session.query(User).filter(User.status == 'pending')
         except OperationalError:
             return make_response(("Service Unavailable", 503))
         user_schema = UserSchema(many=True) # many is for serializing lists
         pending = user_schema.dumps(pending) # dumps automatically converts to json, as opposed to dump
         return make_response(pending) # default code is 200
 
-@auth_routes.route("/login")
+@auth_routes.route("/auth/login")
 @cross_origin()
 def login():
     args = request.json
@@ -57,12 +57,9 @@ def login():
 def create_user(args):
     """
     Adds a user to the database assuming correct (and unmodified) arguments are supplied
-    Assigns default attributes to the user:
-        approved : 0
     Hashes password
     Converts email to lowercase
     """
-    args["approved"] = 0 # By default, a newly created user needs to be improved
     args["password"] = generate_password_hash(args["password"])
     args["email"] = args["email"].lower()
     new_user = User(**args)
