@@ -3,10 +3,8 @@
     --main-color-1: #ED5A06;
     --main-color-2: #38474e;
 }
-
-// Body
 body{
-    color: var(--main-color-2);
+    overflow-y: hidden;
 }
 // TOP BAR
 #topBarRow{
@@ -72,3 +70,30 @@ p.artifactText{
 #main_row{
     padding-top: 50px;
 }
+#searchContainerCol{
+    padding-left:0px ;
+    padding-bottom: 20px;
+}
+
+// Division around artifacts
+div.allArtifacts{
+    margin: 4px 120px 4px 4px;
+    padding: 4px;
+    height: 80vh;
+    overflow-y: scroll;
+}
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+
