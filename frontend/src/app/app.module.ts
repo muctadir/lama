@@ -13,6 +13,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { ProjectComponent } from './project/project.component';
+import { StatsComponent } from './stats/stats.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { ProjectComponent } from './project/project.component';
     HomePageComponent,
     ProjectCreationComponent,
     NavigationMenuComponent,
-    ProjectComponent
+    ProjectComponent,
+    StatsComponent
   ],
   imports: [
     BrowserModule,

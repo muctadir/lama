@@ -6,11 +6,17 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class NavCollapseService {
 
+  /* Indicates whether the navigation menu is collapsed or not, initially true => collapsed */
   private collapsed = new BehaviorSubject(true);
+  /* Holds the current state of the BehaviourSubject */
   currentCollapsed = this.collapsed.asObservable();
 
-  constructor() { }
-
+  /**
+   * Changes the value of collapsed BehaviourSubject to the opposite
+   * 
+   * @param message the current state
+   * @modifies collapsed
+   */
   modifyCollapsed(message: boolean) {
     this.collapsed.next(!message);
   }

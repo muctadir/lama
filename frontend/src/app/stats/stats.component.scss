@@ -1,0 +1,9 @@
+// Import style sheet with global variables
+@import "../../styles.scss";
+
+// Sets the layout of the header saying Statistics
+p.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
