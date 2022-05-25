@@ -37,6 +37,7 @@ svg.bi.bi-plus{
 }
 #artifactId {
     text-align: left;
+    padding-left: 10px;
     padding-bottom: 10px;
     letter-spacing: 1px;
     font-style: normal;
@@ -52,10 +53,10 @@ svg.bi.bi-plus{
 #horizontalLineRow{
     padding-top: 10px;
     padding-bottom: 30px;
-    padding-right: 100px;
+    padding-right: 0px;
 }
-hr.horizontalLine {
-    padding-top: 0px;
+#horizontalLineColumn{
+    padding-right: 0px;
 }
 p.timesLabelled{
     font-size: 20px;
@@ -63,7 +64,11 @@ p.timesLabelled{
     color: #000000;
 }
 p.artifactText{
+    padding-right: 0px;
     font-size: 15px;
     line-height: 17px;
     color: #000000;
+}
+#main_row{
+    padding-top: 50px;
 }

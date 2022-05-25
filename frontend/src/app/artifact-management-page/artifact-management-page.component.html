@@ -17,9 +17,9 @@
     </div>
 
     <!--Content Row-->
-    <div class="row align-items-center" id="main_row">
+    <div class="row align-items-center" id="main_row">\\
         <!--For loop through data array-->
-        <div class='artifactGroup' *ngFor="let artifact of artifacts">
+        <div class='artifactGroup' *ngFor="let artifact of artifacts ">
             <!--Container for each artifact-->
             <div class="container" id="singleArtifact">
                 <div class="row align-items-center" id="artifactId">
@@ -32,24 +32,17 @@
                     <div class="col-11" id="text-timesLabelled-column">
                         <p class="artifactText">{{artifact.text}}</p>
                     </div>
-                     <!--Times Labelled-->
+                    <!--Times Labelled-->
                     <div class="col-1">
                         <p class="timesLabelled">{{artifact.timesLabelled}}</p>
                     </div>
                 </div>
                 <!--Line Separator-->
-                <div class="row justify-content-center" id="horizontalLineRow">
-                    <div class="col-6"></div>
-                    <hr class="horizontalLine" style="height:1px; width:95%; border-width:0px;">    
+                <div class="row" id="horizontalLineRow">
+                    <div class="col" id="horizontalLineColumn" ></div>
+                    <hr class="horizontalLine" style="height:1px; width:99%; border-width:0px;">    
                 </div>
-                
             </div>
-
-            
         </div>
-        
-
     </div>
-    
-    
 </div>
