@@ -1,0 +1,8 @@
+// Import style sheet with global variables
+@import "../../styles.scss";
+
+// Ensures that navigation menu and main content do not have a white space
+.marg-padd {
+    margin: 0px;
+    padding: 0px;
+}

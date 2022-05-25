@@ -1,0 +1,69 @@
+// Import style sheet with global variables
+@import "../../styles.scss";
+
+// Sets background color of the navigation menu
+#main-cont {
+    background-color: $grey-shade;
+}
+
+// puts a slight margin between each element of the navigation menu
+.row-margin {
+    margin-top: 5px;
+}
+
+// default view of the icons (white color)
+.def {
+    color: $white-shade; 
+    font-size: clamp(10px, 2vw, 40px);
+    cursor: pointer;
+}
+
+// alternative view of the icons (orange color), for the page youre currently viewing
+.alt {
+    color: $orange-shade; 
+    font-size: clamp(10px, 2vw, 40px);
+    cursor: pointer;
+}
+
+// sets sizing + color of the nav menu text when not collapsed
+.text-menu {
+    font-size: 25px;
+    color: $white-shade;
+    cursor: pointer;
+}
+
+// sets sizing + color of nav menu text when not collapsed, and currently being viewed.
+.text-menu-alt {
+    font-size: 25px;
+    color: $orange-shade;
+    cursor: pointer;
+}
+
+// Ensures that there is no line under the links in the menu
+a, u {
+    text-decoration: none;
+}
+
+// puts the line below each menu icon
+.line {
+    background-color: $offgrey-shade;
+    width: 100%;
+    height: 2px;
+}
+
+// ensures that the settings and logout button are not at the complete bottom of the page
+#bottom {
+    height: 30px;
+}
+
+// removes padding and margin
+.remove_pad_marg {
+    padding: 0px;
+    margin: 0px;
+}
+
+// reduces the padding to 12px and margin to 0px
+.reduce_pad_marg {
+    padding: 12px;
+    margin: 0px;
+}

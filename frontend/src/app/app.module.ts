@@ -11,6 +11,10 @@ import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { AddUsersModalContent, ProjectCreationComponent } from './project-creation/project-creation.component';
+import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
+import { ProjectComponent } from './project/project.component';
+import { StatsComponent } from './stats/stats.component';
+
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -24,6 +28,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
+    NavigationMenuComponent,
+    ProjectComponent,
+    StatsComponent,
     AddUsersModalContent
   ],
   imports: [
