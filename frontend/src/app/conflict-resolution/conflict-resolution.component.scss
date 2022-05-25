@@ -1,0 +1,140 @@
+// Veerle Fürst
+
+// Color variables
+$main-color-1: #ED5A06;
+$grey-shade: #38474e;
+$light-grey-shade: #aaaaaa;
+$white-shade: #FFFFFF;
+
+// Body
+body{
+    color: $grey-shade;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+// Container
+#topBarContainer{
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 98%;
+}
+
+// TEXT
+// Orange text
+.coloredText{
+    color: $main-color-1;
+}
+// Bold text
+.boldText{
+    font-weight: 500;
+}
+
+// TOP BAR
+// Row
+#topBarRow{
+    margin-bottom: 20px;
+}
+// Header
+.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+
+// SPLITTING ICON
+// Splitting artifact icon
+.splittingArtifactDiv{
+    width: 50px;
+    height: 50px;
+    border: 2px solid $main-color-1;
+    border-radius: 10px;
+}
+// Scissors icon
+.bi.bi-scissors{
+    margin-left: 8px;
+    font-size: 30px;
+    color: $grey-shade;
+}
+
+// DESCRIPTION AND SPLIT INFO ROW
+// Row of the description
+#descRow{
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    height: 140px;
+    overflow-y: scroll;
+}
+// Row where the split information is
+#splitRow{
+    padding-right: 25px;
+}
+
+// BUTTONS FOR LABEL CREATION AND MERGING
+// Buttons for creating and merging labels
+.labelButtons{
+    width: 150px;
+    margin: 10px;
+    background-color: $main-color-1;
+    border: none;
+}
+
+// CONFLICTING LABELS SECTION
+// Margin for the left for all rows
+.margin{
+    margin-left: 10px;
+    margin-top: 25px;
+}
+// Header for the conflicting labels
+#conflictLabelsHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+// Division around all labellers
+.labellerDiv{
+    height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+// EACH LABELLER
+// Rows of each labeller
+#labellerRow{
+    border-top: 2px solid $light-grey-shade;
+    margin-right: 100px;
+    padding-top: 10px;
+}
+// EACH LABEL TYPE
+.labelTypeDiv{
+    height: 125px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+// Row for each label type
+#labelTypeRow{
+    margin-top: 10px;
+}
+// REMARK
+// Remark column
+#remarkCol{
+    margin-left:50px;
+}
+
+
+// SCROLLBAR
+// Scrollbar general
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: $grey-shade; 
+    border-radius: 10px;
+}

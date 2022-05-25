@@ -8,6 +8,8 @@ import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account/account.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { ConflictPageComponent } from './conflict-page/conflict-page.component';
+import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 
 
 const routes: Routes = [{path: '', component: LoginComponent},
@@ -16,7 +18,9 @@ const routes: Routes = [{path: '', component: LoginComponent},
     {path: 'testing', component: TestingComponent},
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
-    {path: 'createProject', component:ProjectCreationComponent}];
+    {path: 'createProject', component:ProjectCreationComponent},
+    {path: 'conflict', component:ConflictPageComponent},
+    {path: 'conflictResolution', component:ConflictResolutionComponent}];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],

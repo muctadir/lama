@@ -1,0 +1,35 @@
+<body>
+    <div class="container" id="topBarContainer">
+        <!-- Row of the top bar -->
+        <div class="row" id="topBarRow">
+            <!-- Header with Conflict name -->
+            <p class="header"> Conflicts </p>
+        </div>
+    </div>
+
+    <div class="conflictDiv">
+        <div class="container">
+            <!-- Div for each conflicting artifact -->
+            <div *ngFor="let conflict of conflicts" class="conflictDivs">
+                <!-- Row with name of artifact -->
+                <div class="row">
+                    <p class="artifactName">{{conflict.conflictName}}</p>
+                </div>
+                <!-- Row with description of artifact and resolve button -->
+                <div class="row">
+                    <!-- Column for artifact description -->
+                    <div class="col">
+                        {{conflict.conflictDescription}}
+                    </div>
+                    <!-- Column with resolve button -->
+                    <div class="col-3 text-center">
+                        <button class="btn btn-secondary" id="resolveConflictButton" routerLink="/conflictResolution">
+                            Resolve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>

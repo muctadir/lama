@@ -13,6 +13,8 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { AddUsersModalContent, ProjectCreationComponent } from './project-creation/project-creation.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConflictPageComponent } from './conflict-page/conflict-page.component';
+import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
-    AddUsersModalContent
+    AddUsersModalContent,
+    ConflictPageComponent,
+    ConflictResolutionComponent
   ],
   imports: [
     BrowserModule,
