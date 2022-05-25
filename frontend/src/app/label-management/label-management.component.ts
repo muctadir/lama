@@ -7,17 +7,40 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-label-management',
   styleUrls: ['./label-management.component.scss'],
   template: `
-    <div class="modal-header">
-      <h4 class="modal-title">Merge Labels</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body row" *ngFor="let user of users" style="padding:2px 16px; max-height: 25px;">
-        
-    </div>
-    
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  <div class="modal-header">
+  <h4 class="modal-title">Create Label</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body row" style="padding:2px 16px;">
+  <form action="/action_page.php">
+    <div class="row">
+      <div class="col">
+        <p>Label </p>
+        <hr>
+        <select id="label-type" name="label-type">
+          <option value="volvo">Emotion</option>
+          <option value="saab">Good</option>
+          <option value="fiat">Bad</option>
+        </select>
+        <br><br>
+        <p>Label Name</p>
+        <hr>
+        <textarea class="form-control" rows="2" placeholder="Label Name" maxlength="140"></textarea> 
       </div>
+      <div class="col">
+        <p>Merge Name</p>
+        <hr>
+        <textarea class="form-control" rows="1" placeholder="Label Name" maxlength="140"></textarea> 
+        <br><br>
+        <p>Description</p>
+        <textarea class="form-control" rows="6" placeholder="Description" maxlength="140"></textarea>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>
   `
 })
 
@@ -37,13 +60,32 @@ export class MergeLabelsModalContent {
       <h4 class="modal-title">Create Label</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body row" *ngFor="let user of users" style="padding:2px 16px; max-height: 25px;">
-        
+    <div class="modal-body row" style="padding:2px 16px;">
+      <form action="/action_page.php">
+        <div class="row">
+          <div class="col">
+            <p>Label Type</p>
+            <hr>
+            <select id="label-type" name="label-type">
+              <option value="volvo">Emotion</option>
+              <option value="saab">Good</option>
+              <option value="fiat">Bad</option>
+            </select>
+            <br><br>
+            <p>Label Name</p>
+            <hr>
+            <textarea class="form-control" rows="2" placeholder="Label Name" maxlength="140"></textarea> 
+          </div>
+          <div class="col">
+            <p>Description</p>
+            <textarea class="form-control" rows="6" placeholder="Description" maxlength="140"></textarea>
+          </div>
+        </div>
+      </form>
     </div>
-    
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-      </div>
+    </div>
   `
 })
 
@@ -60,6 +102,7 @@ export class CreateLabelsModalContent {
   styleUrls: ['./label-management.component.scss']
 })
 export class LabelManagementComponent implements OnInit {
+  
 
   constructor(private modalService: NgbModal) {}
 
