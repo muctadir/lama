@@ -1,8 +1,10 @@
 // Victoria Bogachenkova
 // Veerle Fürst
+// Ana-Maria Olteniceanu
 
 import { Component, OnInit } from '@angular/core';
 // import { Project } from '../project';
+import axios from 'axios';
 
 
 // Project object 
@@ -39,9 +41,11 @@ function addValues(name:string, descr:string, nop:number, noa:number, nocla:numb
   var project4 = addValues('Project 4', "Fourth project", 59, 200, 10, true, false);
   // Project 5
   var project5 = addValues('Project 5', "Fifth project", 7, 100, 90, true, true);
+  // Project 5
+  var project6 = addValues('Project 6', "Bliep", 80, 1100, 1000, true, true);
 
-  // Array of projects
-  let projects: Project[] = [project1, project2, project3, project4, project5];
+//   Array of projects
+  let projects: Project[] = [project1, project2, project3, project4, project5, project6];
 
 @Component({
   selector: 'app-home-page',
@@ -49,48 +53,45 @@ function addValues(name:string, descr:string, nop:number, noa:number, nocla:numb
   styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
+
+  projects=projects;
   
-  projects = projects;
  
   constructor( ) { }
 
+  // On startup we get all information for the projects of the user
   ngOnInit(): void {
-    // 1. get all projects the user can see and save the id, name, description, and frozen
-    // 2. get whether the user is admin or not and save this boolean
-    // 3. get all artifacts per project and save this number
-    // 4. get all completely labelled artifacts per project and save this number
-    // 5. get all users within a project and save this number
-
-
-    // Get userID of logged in user
-    // userID = getUserID();
 
     // Make list of all projects
-    // projects = Project[];
+    // let projects: Array<Project> = new Array()
 
-    // project1 = new Project(1, "hey", "hello", false); // this works
+    // // Get the informtion needed from the back end
+    // let projectList_Json = axios.get('http://127.0.0.1:5000/auth/home')
+    //   // TODO implement
+    //   .then(projectList_Json => {
+    //     let projectList = JSON.parse(projectList_Json.data);
+    //     console.log(projectList.data)
 
-    // Get all project per user
-    // for each row in returned query
-    // projects[i] = new Project(projectID, projectName, projectDesc, frozen)
+    //     // For each project in the list
+    //     for (let project of projectList){
 
-    // Get admin status
-    // for each item in projects, do query
-    // projects[i].setAdminProject(admin);
+    //       // Initialize a new project with all values
+    //       let projectNew = new Project(
+    //         project["projectId"],
+    //         project["projectName"],
+    //         project["projectDesc"],
+    //         project["projectUsers"],
+    //         project["projectNrArtifacts"],
+    //         project["projectNrCLArtifacts"],
+    //         project["projectFrozen"],
+    //         project["projectAdmin"]
+    //       );
 
-    // Get total number of artifacts status
-    // for each item in projects, do query
-    // projects[i].setArtifactsProject(totalNumberOfArtifacts);
-
-    // Get number of completely labelled artifacts
-    // for each item in projects, do query
-    // projects[i].setnumberOfCLArtifacts(numberOfCLArtifacts)
-
-    // Get number of users
-    // for each item in projects, do query
-    // projects[i].setnumberOfUsers(numberOfUsers)
-
-  }
-
-   
+    //       // Add project to list
+    //       projects.push(projectNew);
+    //     }
+    //   })
+    //   // If there is an error
+    //   .catch(error => {JSON.stringify([error.response.data, error.response.status])});
+  }   
 }
