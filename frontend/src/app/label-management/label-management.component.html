@@ -5,12 +5,12 @@
                 <p class="header">Label Management</p>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-secondary" id="createLabelButton" routerLink="/createProject" (click)="open()" >
-                    Create project
+                <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
+                    Create label
                     <i class="bi bi-plus"></i>
                 </button>                
-                <button type="button" class="btn btn-secondary" id="mergeLabelButton" routerLink="/mergeLabel">
-                    Merge label
+                <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()">
+                    Merge labels
                     <i class="bi bi-plus"></i>
                 </button>                
             </div>
