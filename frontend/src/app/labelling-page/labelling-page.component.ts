@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from 'app/label-form/label-form.component';
 type labelType = {
   labelTypeName: String,
   labelTypeDescription: String,
   labels: Array<String>
 }
-
 
 @Component({
   selector: 'app-labelling-page',
@@ -47,9 +47,13 @@ export class LabellingPageComponent implements OnInit {
     alert("Gee wizz, you did a highlight");
   }
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
+  }
+
+  open() {
+    const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl'});
   }
 
 }

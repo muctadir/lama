@@ -1,6 +1,6 @@
 <!-- Author: Bartjan Henkemans -->
 
-<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+<div class="container-fluid min-vh-100 d-flex flex-column modal-body" id="body">
     <div class="row" class="title">
         <div class="col-12">
             Create Label
@@ -35,7 +35,7 @@
     </div>
     <div class="row" style="margin-top: 10px;">
         <div class="form-group" id="butt">
-            <button class="btn btn-light float-end" (click)="notImplemented()" style="margin-left:10px;">Cancel</button> 
+            <button class="btn btn-light float-end" (click)="activeModal.close('Close click')" style="margin-left:10px;">Cancel</button> 
             <button class="btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
         </div>
     </div>

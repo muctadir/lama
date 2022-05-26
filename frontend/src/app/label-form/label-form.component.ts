@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 type labelType = {
   labelTypeName: String,
   labelTypeDescription: String,
@@ -24,7 +25,7 @@ export class LabelFormComponent implements OnInit {
     },
   ]
 
-  constructor() { }
+  constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit(): void {
   }
