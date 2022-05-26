@@ -13,6 +13,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from './label-form/label-form.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
-    LabellingPageComponent
+    LabellingPageComponent,
+    LabelFormComponent
   ],
   imports: [
     BrowserModule,
