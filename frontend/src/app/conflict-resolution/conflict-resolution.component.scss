@@ -122,6 +122,19 @@ body{
     margin-left:50px;
 }
 
+// SELECT DROPDOWN
+// Dropdown layout
+select{
+    width: 125px;
+    border-radius: 7px;
+    padding: 5px;
+}
+// Disabled dropdown
+select:disabled{
+    background-color: $light-grey-shade;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
 
 // SCROLLBAR
 // Scrollbar general
