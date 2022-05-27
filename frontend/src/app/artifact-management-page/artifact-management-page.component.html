@@ -58,4 +58,16 @@
             </div>
         </div>
     </div>
+
+    <!--Testing List view with pagenation-->
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active" *ngFor = "let artifact of artifacts" >
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Artifact {{artifact.id}}</h5>
+            <small>{{artifact.timesLabelled}}</small>
+          </div>
+          <p class="mb-1">{{artifact.text}}</p>
+        </a>
+      </div>
+
 </div>
