@@ -108,7 +108,7 @@ export class LabelManagementComponent implements OnInit {
 
   // Open the modal and populate it with users
   openMerge() {
-    const modalRef = this.modalService.open(MergeLabelsModalContent);
+    const modalRef = this.modalService.open(MergeLabelsModalContent,  { size: 'xl'});
     // modalRef.componentInstance.users = this.all_members;
     // // Push the username into the members list 
     // modalRef.componentInstance.newItemEvent.subscribe(($e: any) => {
@@ -119,7 +119,7 @@ export class LabelManagementComponent implements OnInit {
 
   // Open the modal and populate it with users
   openCreate() {
-    const modalRef = this.modalService.open(CreateLabelsModalContent);
+    const modalRef = this.modalService.open(CreateLabelsModalContent, { size: 'xl'});
     // modalRef.componentInstance.users = this.all_members;
     // // Push the username into the members list 
     // modalRef.componentInstance.newItemEvent.subscribe(($e: any) => {
