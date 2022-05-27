@@ -11,14 +11,14 @@
             <div>
                 <div class="subTitle">Label type</div>
                 <div class="form-group">
-                    <select class="form-control" name="labels">
-                        <option *ngFor="let labelType of labelTypes" value="{{ labelType.labelTypeName }}">{{ labelType.labelTypeName }}</option>
+                    <select class="form-control"  id="label-type" name="labels">
+                        <option *ngFor="let labelType of labelTypes" value="{{ labelType.labelTypeName }}" style="max-width:10%;">{{ labelType.labelTypeName }}</option>
                     </select>
                 </div>
             </div>
             <div>
                 <div class="subTitle">Label name</div>
-                <input type="text" class="form-control" placeholder="Name">
+                <input type="text" class="form-control" id="label-name" placeholder="Name">
             </div>
         </div>
         <div class="col-6">
