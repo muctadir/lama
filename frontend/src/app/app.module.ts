@@ -14,6 +14,7 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
 import { LabelManagementComponent } from './label-management/label-management.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateLabelFormComponent } from './create-label-form/create-label-form.component';
+import { MergeLabelFormComponent } from './merge-label-form/merge-label-form.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { CreateLabelFormComponent } from './create-label-form/create-label-form.
     HomePageComponent,
     ProjectCreationComponent,
     LabelManagementComponent,
-    CreateLabelFormComponent
+    CreateLabelFormComponent,
+    MergeLabelFormComponent
   ],
   imports: [
     BrowserModule,
