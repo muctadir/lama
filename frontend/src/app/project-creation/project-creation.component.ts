@@ -1,9 +1,21 @@
 // Victoria Bogachenkova
 // Veerle Fürst
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+// Project object
+interface Project {
+  projectName: string,
+  projectDescription: string;
+}
+
+// User object
+interface User {
+  userName: string;
+}
+
+// Template for the modal
 @Component({
   selector: 'app-project-creation',
   styleUrls: ['./project-creation.component.scss'],
@@ -13,17 +25,15 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
       <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body row" *ngFor="let user of users" style="padding:2px 16px; max-height: 25px;">
-        <div class="col" style="padding:1px; list-style: none; max-height: 25px;">
+        <div class="col" style="padding:15 1 1 1px; list-style: none; max-height: 25px;">
           <li> {{ user.userName }}</li>
-
         </div>
         <!-- Col for adding users button -->
         <div class="col-2">
-            <!-- Button for adding new members -->
-            <button class="btn" type="button" id="addMembersButton" (click)="addUser()">
-                <svg class="bi bi-plus members" viewBox="0 0 16 16">
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                </svg>
+            <!-- Button for adding new project_members -->
+            <button class="btn" type="button" id="addMembersButton" (click)="addUser(user.userName)">
+              <!-- Plus icon -->
+              <i class="bi bi-plus labelType"></i>
             </button>
         </div>
         <br>
@@ -35,25 +45,16 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   `
 })
 
+// Content of the modal
 export class AddUsersModalContent {
-  @Input() users: User[] = [];
+  @Input() users: any;
+  @Output() newItemEvent = new EventEmitter<any>();
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  // Function for adding a new user input
-  addUser(){
-    this.users.push();
+  addUser(name:string) {
+    this.newItemEvent.emit(name);
   }
-}
-
-// Project object
-interface Project {
-  projectName: string,
-  projectDescription: string;
-}
-// User object
-interface User {
-  userName: string;
 }
 
 @Component({
@@ -79,6 +80,7 @@ export class ProjectCreationComponent implements OnInit {
     return {userName};
   }
 
+  // Fake users
   Veerle = this.addValuesUser("Veerle");
   Vic = this.addValuesUser("Vic");
   Bartjan = this.addValuesUser("Bartjan");
@@ -91,30 +93,43 @@ export class ProjectCreationComponent implements OnInit {
   Chinno6 = this.addValuesUser("Chinno6");
   Chinno7 = this.addValuesUser("Chinno7");
 
-  // Array of memebers
-  members: User[] = [this.Veerle, this.Vic, this.Bartjan, this.Jarl, this.Chinno, this.Chinno2, this.Chinno3, this.Chinno4, this.Chinno5, this.Chinno6, this.Chinno7];
-  
+  // Array of all possible members
+  all_members: User[] = [this.Veerle, this.Vic, this.Bartjan, this.Jarl, this.Chinno, this.Chinno2, this.Chinno3, this.Chinno4, this.Chinno5, this.Chinno6, this.Chinno7];
+  // Array of members in the project
+  project_members: User[] = []
+
   // Label types
   labelTypes: string[] = ["doing"];
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    // TODO
+    // Get the person who is creating the project
+    // Add that person to this project
+    // addUser(user.userName);
+    // Give that user the admin role
+    // Get the checkbox of the current user
+    // let currentUserCheckbox = document.getElementById("projectAdminCheckBox'+Jarl'") as HTMLInputElement;
+    // Make the checkbox checked
+    // if (currentUserCheckbox != null) {
+    //   currentUserCheckbox.checked = true;
+    // }
+
+  }
 
   // Function for creating the project
   createProject() { 
     // Get the form
-    const post_form: HTMLFormElement = (document.querySelector("#projectCreationForm")! as HTMLFormElement);
+    const post_form: HTMLFormElement = (document.querySelector("#projectCreationForm")!);
     // Message for confirmation/error
     const p_response: HTMLElement = document.querySelector("#createProjectResponse")!;
     
     // Check validity of filled in form
     if (post_form != null && post_form.checkValidity()) {
-      // Jarls shit
-      const article = { title: 'Create Project POST Request' };
 
       // Typescript dictionary (string -> string)
       let params: Record<string, string> = {};
       // Take all form elements
-      for (let i = 0; i < post_form.length; i++) { // No forEach for HTMLCollection
+      for (let i = 0; i < post_form.length; i++) { 
         // Add them to dictionary
         let param = post_form[i] as HTMLInputElement; // Typecast
         params[param.name] = param.value;
@@ -130,6 +145,7 @@ export class ProjectCreationComponent implements OnInit {
       post_form.reset();
      
     } else {
+      // Send error message
       alert("Bad formatting");
     }
   }
@@ -137,10 +153,10 @@ export class ProjectCreationComponent implements OnInit {
   // Function for removing users
   removeMember(id:any){
     // Go through all members
-    this.members.forEach((member, index)=>{
+    this.project_members.forEach((project_members, index)=>{
       // If clicked cross matches the person, splice them from the members
-      if(member.userName==id){
-        this.members.splice(index,1);
+      if(project_members.userName==id){
+        this.project_members.splice(index,1);
       }
     });    
   }
@@ -152,9 +168,15 @@ export class ProjectCreationComponent implements OnInit {
 
   constructor(private modalService: NgbModal) {}
 
+  // Open the modal and populate it with users
   open() {
     const modalRef = this.modalService.open(AddUsersModalContent);
-    modalRef.componentInstance.users = this.members;
+    modalRef.componentInstance.users = this.all_members;
+    // Push the username into the members list 
+    modalRef.componentInstance.newItemEvent.subscribe(($e: any) => {
+      var username = {userName: $e};
+      this.project_members.push(username);
+    })
   }
 
  }

@@ -6,6 +6,8 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
+// @import "../../styles.scss";
+
 // General text settings
 body{
     color: $grey-shade;
@@ -92,11 +94,8 @@ body{
 .bi.bi-x{
     font-size: 20px;
     color: $grey-shade;
-    padding:0px;
-    margin:0px;
-}
-// When hovering over the cross
-.memberDelete:hover{
+    padding: 0px;
+    margin: 0px;
     cursor: pointer;
 }
 // Button for adding members
@@ -104,6 +103,7 @@ body{
     background-color: $white-shade;
     width: 30px;
     padding:0px;
+    border:none;
 }
 // Plus icon for label types
 .bi.bi-plus.members{
@@ -156,7 +156,7 @@ body{
     margin-top: 10px;
 }
 
-// BUTTONS
+// BOTTOM BUTTONS
 // Row for buttons
 .fixed-bottom{
     margin-right: 15px;
@@ -181,8 +181,4 @@ body{
     border: 2px solid;
     border-color: $orange-shade;
     color: $white-shade;
-}
-
-#addMembersButton{
-    border:none;
 }

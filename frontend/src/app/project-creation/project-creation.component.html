@@ -5,7 +5,7 @@
     <!-- Conatiner for the top row -->
     <div class="container" id="topBarRow"> 
         <div class="row">
-            <p class="header">Create Project</p>
+            <p class="header"> Create Project </p>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
                             
                             
                             <!-- Name and checkbox per member of the project -->
-                            <label *ngFor="let member of members" for="user" style="display: block;"> 
+                            <label *ngFor="let member of project_members" for="user" style="display: block;"> 
 
                                 <!-- Row for the delete, name and project admin -->
                                 <div class="row align-items-center">
@@ -81,7 +81,7 @@
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
                                         <!-- x icon -->
-                                        <i class="bi bi-x memberDelete" (click)="removeMember(member.userName)"></i>
+                                        <i class="bi bi-x" (click)="removeMember(member.userName)"></i>
                                     </div>
 
                                     <!-- Column for username -->
@@ -91,8 +91,8 @@
 
                                     <!-- Column for checkbox -->
                                     <div class="col-4 checkboxCol">
-                                        <!-- TODO I cant get these checkboxes orange, someone pls help -->
-                                        <input type="checkbox">
+                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                        <input type="checkbox" id="projectAdminCheckBox'+{{member.userName}}+'">
                                     </div>                                        
                                 </div>
                             </label>
@@ -108,7 +108,7 @@
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                <input type="number" class="form-control" name="numberOfLabellers" placeholder="2" min="2" max="20" style="max-width: 10%;">
+                                <input type="number" class="form-control" name="numberOfLabellers" placeholder="2" min="2" max="20" style="max-width: 20%;">
                             </div>
                         </div>
                     </div> 

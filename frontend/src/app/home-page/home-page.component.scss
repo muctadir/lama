@@ -2,9 +2,11 @@
 // Veerle Fürst
 
 // Color variables
-$main-color-1: #ED5A06;
 $grey-shade: #38474e;
 $white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// @import "../../styles.scss";
 
 // Body
 body{
@@ -14,6 +16,7 @@ body{
 }
 
 // TOP BAR
+// Row of the top bar
 #topBarRow{
     margin-left: 10px;
     margin-right: 10px;
@@ -58,7 +61,7 @@ body{
     vertical-align: middle;
     margin-top: 5px;
     margin-left: 5px;
-    color: $main-color-1;   
+    color: $orange-shade;   
     font-size: 45px;
 }
 
@@ -76,7 +79,7 @@ body{
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: $white-shade; 
     border-radius: 10px;
 }
 // Scrollbar scroller
@@ -108,24 +111,25 @@ body{
 // The division of the progress
 .progress{
     margin-top:5px;
-    width: 60%;
+    width: 100%;
     float: left;
     border-radius: 10px
 }
 // Actual progress bar
 .progress-bar{
-    background-color: $main-color-1;
+    background-color: $orange-shade;
     border-radius: 10px
-}
-// The numbers next to the progress bar
-.progressBarNumbers{
-    float: right;
 }
 
 // FROZEN AND ADMIN
 // Cols for admin and frozen
 .col-1{
     text-align: center;
+}
+// Admin icon
+.bi.bi-key{
+    font-size: 30px;
+    color: $grey-shade;
 }
 // Frozen layout
 .bi.bi-snow{
@@ -144,6 +148,6 @@ body{
     float: right;
     margin-left: 8px;
     margin-bottom: 10px;
-    color: $main-color-1;   
+    color: $orange-shade;   
     font-size: 30px;
 }

@@ -1,5 +1,12 @@
 // Import style sheet with global variables
-@import "../../styles.scss";
+// @import "../../styles.scss";
+
+// Dear whoever wrote this component.
+// Importing styles.scss also imports the *entirety* of bootstrap
+// This causes memory issues
+// ONLY IMPORT FROM STYLES.SCSS WHAT YOU TRULY NEED, INSTEAD OF EVERYTHING
+// Lots of love,
+// - Eddie
 
 // Sets the layout of the header saying Statistics
 p.header{
