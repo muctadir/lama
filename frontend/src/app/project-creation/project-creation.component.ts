@@ -101,7 +101,20 @@ export class ProjectCreationComponent implements OnInit {
   // Label types
   labelTypes: string[] = ["doing"];
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    // TODO
+    // Get the person who is creating the project
+    // Add that person to this project
+    // addUser(user.userName);
+    // Give that user the admin role
+    // Get the checkbox of the current user
+    // let currentUserCheckbox = document.getElementById("projectAdminCheckBox'+Jarl'") as HTMLInputElement;
+    // Make the checkbox checked
+    // if (currentUserCheckbox != null) {
+    //   currentUserCheckbox.checked = true;
+    // }
+
+  }
 
   // Function for creating the project
   createProject() { 

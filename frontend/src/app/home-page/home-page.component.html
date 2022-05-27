@@ -28,14 +28,14 @@
     <!-- Show all projects in divisions -->
     <div class="allProjects">
         <div class='projectParagraph' *ngFor="let project of projects">
-            <div class="conainer">
+            <div class="container">
                 <!-- Row for each project -->
                 <div class="row align-items-center">
 
                     <!-- Column for each project name -->
                     <div class="col" id="projectNameColumn">
                         <!-- Shows project name, artifact progress bar, and number of users -->
-                        <p class="projectName"> {{project.projectName}} </p>
+                        <p class="projectName"> {{project.name}} </p>
                     </div>
 
                     <!-- Column for progress bar and values-->
@@ -80,7 +80,7 @@
                     <!-- Row for project description -->
                     <div class="row">
                         <!-- Shows project description -->
-                        {{project.projectDescription}}
+                        {{project.description}}
                     </div>
                 </div>
             </div>
