@@ -9,20 +9,24 @@
     <div class="row modal-body">
         <div class="col-6">
             <div>
-                <div class="subTitle">Label type</div>
-                <div class="form-group">
-                    <select class="form-control" name="labels">
-                        <option *ngFor="let labelType of labelTypes" value="{{ labelType.labelTypeName }}">{{ labelType.labelTypeName }}</option>
+                <div class="subTitle">Label 1</div>
+                <div class="form-group" *ngFor="let label of labels">
+                    <select class="form-control" id="label-name" name="labels">
+                        <option  value="{{ label.labelName }}">{{ label.labelName }}</option>
                     </select>
-                    <!-- <div *ngFor="let labelType of labelTypes" value="{{ labelType.labelTypeDescription }}">{{ labelType.labelTypeDescription }}</div> -->
+                    <div>{{ label.labelType }}</div>
+                    <textarea class="form-control" rows="8" value="{{ label.labelDescription }}" id="remark"></textarea>
                 </div>
             </div>
-            <div>
-                <div class="subTitle">Label name</div>
-                <input type="text" class="form-control" placeholder="Name">
-            </div>
+            
         </div>
-        <div class="col-6">
+        <div class="col-6"> 
+            <div>
+                <div class="subTitle">    
+                    Merge Name
+                </div>
+                <input type="text" class="form-control" id="label-name" placeholder="Merge Name">
+            </div>
             <div>
                 <div class="subTitle">    
                     Description
