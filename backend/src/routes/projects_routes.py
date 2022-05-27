@@ -2,17 +2,14 @@
 # Eduardo Costa Martins
 # Ana-Maria Olteniceanu
 
-from sqlite3 import OperationalError
-from xmlrpc.client import Boolean, boolean
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema
-from src.models.item_models import ProjectItem, ChangingItem, Artifact
-from src.models.project_models import Project, Membership, ProjectSchema
-from flask import request, jsonify, Blueprint, make_response
+from src.models.auth_models import User
+from src.models.item_models import Artifact
+from src.models.project_models import Membership, ProjectSchema
+from flask import jsonify, Blueprint, make_response
 from flask_login import current_user
-from json import dumps
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
