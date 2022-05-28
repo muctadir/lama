@@ -11,6 +11,7 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
 import { ProjectComponent} from './project/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { StatsComponent } from './stats/stats.component';
+import { ThemeManagementComponent } from './theme-management/theme-management.component';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
       {path: 'stats', component: StatsComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
+    {path: 'theme', component: ThemeManagementComponent},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
 
 @NgModule({

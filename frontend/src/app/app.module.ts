@@ -17,6 +17,7 @@ import { StatsComponent } from './stats/stats.component';
 
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ThemeManagementComponent } from './theme-management/theme-management.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NavigationMenuComponent,
     ProjectComponent,
     StatsComponent,
-    AddUsersModalContent
+    AddUsersModalContent,
+    ThemeManagementComponent
   ],
   imports: [
     BrowserModule,
