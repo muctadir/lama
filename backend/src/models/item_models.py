@@ -178,6 +178,8 @@ class Label(ChangingItem, db.Model):
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
     deleted = db.Column(db.Boolean, default=False)
     # TODO: Relationship with User and Artifact
+    # The id of the label that this label was merged into (null if this label was not merged)
+    child_id = db.Column(db.Integer, db.ForeignKey('label.id'))
     # Parents is a list of labels merged into this one
     # backref creates a child attribute which is the label that this label was merged into
     parents = db.relationship('Label',
