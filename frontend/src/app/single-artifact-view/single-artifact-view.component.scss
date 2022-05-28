@@ -96,8 +96,9 @@ div.artifactContainer{
     text-align: right
 }
 #labelTypeName1{
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 1px;
+    font-weight: 450;
 }
 #labelGiven{
     font-size: 17px;
@@ -106,8 +107,16 @@ div.artifactContainer{
 #remarks{
     font-size: 18px;
     letter-spacing: 1px;
+    text-align: left;
+    font-weight: 500;
+}
+#remarksText{
+    font-size: 17px;
+    letter-spacing: 1px;
+    text-align: left;
 }
 #labellerName{
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: 1px;
+    font-weight: 500;
 }

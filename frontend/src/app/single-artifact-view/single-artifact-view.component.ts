@@ -11,7 +11,6 @@ const lorem = new LoremIpsum({
     min: 4
   }
 });
-
 type labelType = {
   labelTypeName: String,
   labelTypeDescription: String,
@@ -22,20 +21,16 @@ type userLabel = {
   labellerName: String,
   labelRemark: String,
   labelsGiven: Array<labelGroup>
-
 }
 //For labels given by 1 user
 type labelGroup = {
   labelTypeName1: String,
   labelGiven: String,
-
 }
-
 type label = {
   labelName: String,
   labelDescription: String,
 }
-
 
 @Component({
   selector: 'app-single-artifact-view',
@@ -48,6 +43,7 @@ export class SingleArtifactViewComponent implements OnInit {
   artifactIdentifier: String = 'XJY03';
   labelers: Array<String> = ["Bartjan", "Veerle"]
   artifact: String = lorem.generateParagraphs(10);
+  allLabels: Array<String> = ['Sad','Ecstatic','Latin','English']
   labelTypes: Array<labelType> = [
     {
       labelTypeName: "Type A",
