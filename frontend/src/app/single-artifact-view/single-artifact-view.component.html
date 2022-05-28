@@ -61,11 +61,11 @@
                         <!--Label Type and Given Label-->
                         <div class="col-6">
                             <div class="row">
-                                <div class="col" *ngFor="let label of userLabel.labelsGiven">
-                                    {{label.labelTypeName1}}
-                                </div>
-                                <div class="col" *ngFor="let label of userLabel.labelsGiven">
-                                    {{label.labelGiven}}
+                                <div class="col-12" *ngFor="let label of userLabel.labelsGiven">
+                                    <div class="row">                                       
+                                        <div class="col">{{label.labelTypeName1}}</div>
+                                        <div class="col">{{label.labelGiven}}</div>
+                                    </div> 
                                 </div>
                             </div>
                         </div>
