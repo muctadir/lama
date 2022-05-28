@@ -222,6 +222,13 @@ class LabelSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
 
+class ThemeSchema(ma.SQLAlchemyAutoSchema):
+
+    class Meta:
+        model = Theme
+        include_fk = True
+        load_instance = True
+
 # TODO: Find a way to make a schema for the changes.
 # Problem: Using Change as model gives error since it does not have mapper,
 #       since it does not inherit db.Model
