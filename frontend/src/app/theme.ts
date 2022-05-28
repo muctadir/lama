@@ -2,6 +2,7 @@
  * @author B. Henkemans
  */
 export class Theme {
+    
     private themeName: String;
     private themeDescription: String;
     private themeParentIDs: Array<Number> | undefined;

@@ -1,1 +1,34 @@
-<p>theme-management works!</p>
+<!-- @author: Bartjan Henkemans -->
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <div class="row" >
+        <div class="col-10 header" id="pageTitle"> 
+            Themes
+        </div>
+        <div class="col-2" id="addButton">
+            <button class="form-control btn btn-light" (click)="notImplemented();"><i class="bi bi-plus-lg"></i>Add Theme</button>   
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" sortable="name" (sort)="notImplemented();">Name</th>
+                        <th scope="col" sortable="description" (sort)="notImplemented();">Description</th>
+                        <th scope="col" sortable="labels" (sort)="notImplemented();">Labels</th>                
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let theme of themes">
+                        <td>{{ theme.getThemeName() }}</td>
+                        <td> {{ theme.getThemeDescription () }}</td>
+                        <td> 7 </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
