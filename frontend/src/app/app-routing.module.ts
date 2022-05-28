@@ -7,6 +7,7 @@ import { AccountComponent } from './account/account.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
+import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 
 const routes: Routes = [{path: '', component: LoginComponent},
     {path: 'login', component: LoginComponent},
@@ -15,7 +16,8 @@ const routes: Routes = [{path: '', component: LoginComponent},
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'artifactmanagement', component:ArtifactManagementPageComponent}];
+    {path: 'artifactmanagement', component:ArtifactManagementPageComponent},
+    {path: 'singleartifact', component:SingleArtifactViewComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

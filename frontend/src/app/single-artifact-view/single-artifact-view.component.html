@@ -1,0 +1,85 @@
+<!-- @author: Chinno Lavin -->
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- contains the page title and Artifact Identifier -->
+    <div class="row" id="pageTitle">
+        <!-- title name -->
+        <div id="artifactId" class="col-10">
+            Artifact {{artifactId}}
+        </div> 
+        <!-- Artifact Identifier -->
+        <div class="col-2" id="artifactIdentifier">
+            {{artifactIdentifier}}
+        </div>
+    </div>
+
+    <!-- Container for Artifact -->
+    <div class="row">
+        <div class = "artifactContainer" id="artifactContainer">
+            <p>{{ artifact }}</p>
+        </div>
+
+        <!-- Edit Button -->
+        <div class="col-6">
+            <div class="form-group" id="editButton">
+                <button class="btn btn-primary float-start" (click)="notImplemented()" style="margin-left:10px;">Edit</button> 
+            </div>
+
+        </div>
+
+        <!-- previous artifacts that it was split from, if any -->
+        <div class="col-6" id="names">
+            <p class="float-end">
+                Artifact was split into artifact #45 and artifact #190.
+            </p>
+        </div>
+    </div>
+
+    <!-- Bottom part of page-->
+    <div class="row">
+        <!--Labelled By text-->
+        <div class="col-12" id="labelledBy">
+            <p class="float-start">Labelled By</p>
+        </div> 
+        <!--Line Separator-->
+        <div class="col-12" id="horizontalLineMain">
+            <hr class="horizontalLine" style="height:1px; width:99%; border-width:0px;">    
+        </div>
+
+        <!--User Labels-->
+        <div class="col-sm-12">
+            <!--User + labels given per label type + Remark-->                  
+            <div *ngFor = "let userLabel of userLabels">
+                <div class="row">
+                    <!--Labeller Name-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{userLabel.labellerName}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--Label Type and Given Label-->
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col" *ngFor="let label of userLabel.labelsGiven">
+                                    {{label.labelTypeName1}}
+                                </div>
+                                <div class="col" *ngFor="let label of userLabel.labelsGiven">
+                                    {{label.labelGiven}}
+                                </div>
+                            </div>
+                        </div>
+                        <!--Label Remark-->
+                        <div class="col-6">
+                            Remark: {{userLabel.labelRemark}}
+                        </div>
+                    </div>                      
+                </div>               
+            </div>
+        </div>
+        
+        
+    </div>
+
+</div>
+

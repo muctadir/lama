@@ -12,6 +12,7 @@ import { AccountInformationFormComponent } from './account-information-form/acco
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
+import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ArtifactManagementPageComponent } from './artifact-management-page/arti
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
-    ArtifactManagementPageComponent
+    ArtifactManagementPageComponent,
+    SingleArtifactViewComponent
   ],
   imports: [
     BrowserModule,
