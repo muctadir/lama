@@ -1,6 +1,6 @@
 #pageTitle {
     padding-top: 10px;
-    border-bottom: 1px; 
+    border-bottom: 0px; 
     border-bottom-style: solid;
 }
 
@@ -34,8 +34,10 @@
 
 .artifactContainer {
     max-height: 25vh;
-    border-bottom: 1px; 
-    border-bottom-style: solid;
+    border: 1px; 
+    border: solid;
+    border-color: #1C5858;
+    border-width: thin;
 }
 
 div.artifactContainer{
@@ -64,8 +66,11 @@ div.artifactContainer{
     background: #38474e; 
     border-radius: 10px;
 }
-
-
+//"Labelled by" section
+div.allUserLabels{
+    height: 50vh;
+    overflow-y: scroll
+}
 /*TODO: For some reason the variable defined in the root stylesheet is not working*/
 .labelTypeDescription {
     border-left: 2px solid #ed5a06;
@@ -80,9 +85,10 @@ div.artifactContainer{
 }
 
 #body{
-    margin: 0;
-     height: 100%;
-    overflow: hidden;
+    margin: 0px;
+    height: 100%;
+    padding-left: 30px;
+    padding-right: 50px;
 }
 
 #remark{
@@ -90,6 +96,12 @@ div.artifactContainer{
 }
 
 #editButton{
+    padding-top: 5px;
+    height: 38px;
+    width: 150px;
+    border: none;
+}
+#editButtonRow{
     padding-top: 10px;
 }
 #artifactIdentifier{
@@ -119,4 +131,7 @@ div.artifactContainer{
     font-size: 20px;
     letter-spacing: 1px;
     font-weight: 500;
+}
+#split1, #split2{
+    color: #ed5a06;
 }
