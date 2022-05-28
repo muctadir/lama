@@ -86,6 +86,7 @@ class Change():
     is required for the table to be created).
     End result: each ChangingItem automatically has a changelog table/class created.
     """
+    # TODO: Use __table__args__ and ForeignKeyConstraint to specify join condition instead of primaryjoin
 
     # Removes 'Change' part from class name
     @declared_attr
@@ -104,7 +105,9 @@ class Change():
     # user : User object corresponding to user that made the change
     @declared_attr
     def user(cls):
-        return db.relationship('User')
+        # backref creates <item>.changes attribute in user containing list of changes the user made
+        # for this type of item
+        return db.relationship('User', backref=cls.__tablename__ + 's')
     
     # p_id : project id that the item belongs to
     @declared_attr
@@ -133,7 +136,7 @@ class Change():
 
     # TODO: Enum for ChangeType
     # Date and time when change was made
-    timestamp = db.Column(db.DateTime, primary_key=True)
+    timestamp = db.Column(db.DateTime)
 
 class LabelType(ProjectItem, db.Model):
 
@@ -146,10 +149,22 @@ class Artifact(ChangingItem, db.Model):
     __tablename__ = 'artifact'
     # The name (or some other identifier) of the file the artifact originated from
     identifier = db.Column(db.String(64))
+    # The qualitative data that the artifact carries
+    # TODO: Consider using LargeBinary as data type
     data = db.Column(db.Text)
     # TODO: Enum DataType (I don't want to deal with this now)
     completed = db.Column(db.Boolean, default=False)
     # TODO: Relationship with User and Label
+    # The id of the split source (null if this artifact did not originate from a split)
+    parent_id = db.Column(db.Integer, db.ForeignKey('artifact.id'))
+    # Children is list of artifacts created from split
+    # backref creates a parent attribute which is the split source (as an Artifact object)
+    children = db.relationship('Artifact', 
+            backref=db.backref('parent', remote_side='[Artifact.p_id, Artifact.id]'))
+    # start and end position of split TODO: Use association table?
+    # also, how will this work with other kinds of data?
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)
 
 class Label(ChangingItem, db.Model):
 
@@ -159,10 +174,22 @@ class Label(ChangingItem, db.Model):
     # The actual label type object this label corresponds to
     label_type = db.relationship('LabelType', back_populates='labels')
     # Description of meaning of label
-    lDesc = db.Column(db.Text)
-    # Boolean for if the label was (soft) deleted (i.e. cannot be edited)
+    desc = db.Column(db.Text)
+    # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
     deleted = db.Column(db.Boolean, default=False)
     # TODO: Relationship with User and Artifact
+    # Parents is a list of labels merged into this one
+    # backref creates a child attribute which is the label that this label was merged into
+    parents = db.relationship('Label',
+            backref=db.backref('child', remote_side='[Label.p_id, Label.id]'))
+
+class Theme(ChangingItem, db.Model):
+
+    __tablename__ = 'theme'
+    # Description of meaning of theme
+    desc = db.Column(db.Text)
+    # Boolean for if the theme was (soft) deleted (can be seen in history, but not used)
+    deleted = db.Column(db.Boolean, default=False)
 
 # TODO: Should make sure subclasses are not abstract before creating changelog for them
 #       or alternatively, make sure they inherit db.Model

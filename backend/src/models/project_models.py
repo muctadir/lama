@@ -17,8 +17,8 @@ class Membership(db.Model):
 
     __tablename__ = 'membership'
     # id of project and user in relationship respectively
-    pId = db.Column(db.ForeignKey('project.id'), primary_key=True)
-    uId = db.Column(db.ForeignKey('user.id'), primary_key=True)
+    p_id = db.Column(db.ForeignKey('project.id'), primary_key=True)
+    u_id = db.Column(db.ForeignKey('user.id'), primary_key=True)
     # Admin: Whether or not the user is a project admin of the project
     admin = db.Column(db.Boolean, default=False)
     # Deleted: (Soft) deleted, the user is no longer part of a project
