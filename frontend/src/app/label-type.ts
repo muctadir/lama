@@ -1,7 +1,6 @@
 /**
  * @author B. Henkemans
  */
-import { throws } from "assert";
 import { Label } from "./label";
 
 export class LabelType {
