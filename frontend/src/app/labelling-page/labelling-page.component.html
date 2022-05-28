@@ -1,54 +1,54 @@
 <!-- @author: Bartjan Henkemans & Thea Bradly -->
-<!-- big container -->
+<!-- Main container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
     <!-- contains the page title and little buttons -->
     <div class="row" id="pageTitle">
         <!-- title name -->
         <div id="artifactId" class="col-10">
-            Artifact {{ artifactId }} 
+            Artifact {{ artifact?.getIdentifier()! }} 
         </div> 
         <!-- the top buttons -->
         <div  *ngIf="hightlightedText != null " class="col-2">
             <div id="artifactButtons">
                 <!-- calling split and highlight  -->
-                <i (click)="splitArtifact()" class="bi bi-scissors"></i><i (click)="highlightArtifact()" class="bi bi-brush"></i>
+                <i (click)="notImplemented()" class="bi bi-scissors"></i><i (click)="notImplemented()" class="bi bi-brush"></i>
             </div>
         </div>
     </div>
     <div class = "row" >
         <!-- container for artifact itself -->
         <div class = "artifactContainer" id="artifactContainer">
-            <p (mouseup)="selectedText()" (mousedown)="selectedText()">{{ artifact }}</p>
+            <p (mouseup)="selectedText()" (mousedown)="selectedText()">{{ artifact?.getData()! }}</p>
         </div>
         
         <!-- who it is labelled by -->
         <div class="col-6">
             <div> 
-                Labeled by: <span *ngFor="let labeler of labelers; let last = last">{{ labeler }}<span *ngIf="!last">, </span></span>
+                Labeled by: <span *ngFor="let labeler of artifact?.getLabelers()!; let last = last">{{ labeler }}<span *ngIf="!last">, </span></span>
             </div>
         </div>
 
         <!-- previous artifacts that it was split from, if any -->
         <div class="col-6" id="names">
-            <p class="float-end">
+            <!-- <p class="float-end">
                 Artifact was split into artifact #45 and artifact #190.
-            </p>
+            </p> -->
         </div>
 
         <!-- lower part of page  -->
         <div class="row">
             <!-- left side its a bit wider so i did sm8-->
             <div class="col-sm-8" id="labelThing">
-                <div *ngFor="let labelType of labelTypes">
+                <div *ngFor="let labelType of labels">
                     <div class="row">
                         <!-- left part of this for the label itself -->
                         <div class="col-6">
                             <div class = "labelTypeTitle">
-                                <span>{{ labelType.labelTypeName }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span>
+                                <span>{{ labelType?.getLabelTypeName()! }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span>
                             </div> 
-                            <div class="form-group">
+                            <div>
                                 <select class="form-control" name="labels">
-                                    <option *ngFor="let label of labelType.labels" value="{{ label.labelName }}">{{ label.labelName }}</option>
+                                    <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getLabelName() }}">{{ label.getLabelName() }}</option>
                                 </select>
                             </div>
                         </div> 
@@ -59,7 +59,7 @@
                                     <p>Description</p>
                                 </div>
                                 <div class="descriptionText">
-                                    <p>{{ labelType.labelTypeDescription }}</p>
+                                    <p>{{ labelType?.getLabelTypeDescription() }}</p>
                                 </div>
                             </div>
                         </div>
@@ -69,13 +69,11 @@
             
             <!-- right part for remarks followed by little buttons -->
             <div class="col-sm-4 ">
-                <div class="form-group">
-                    <textarea class="form-control" rows="8" placeholder="Remark" id="remark"></textarea>
-                </div>
-                <!-- both bottom buttons -->
-                <div class="form-group" id="butt">
-                    <button class="btn btn-light float-end" (click)="notImplemented()" style="margin-left:10px;">Skip</button> 
-                    <button class="btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
+                <textarea class="form-control" rows="8" placeholder="Remark" id="remark"></textarea>
+            <!-- both bottom buttons -->
+                <div id="butt">
+                    <button class="form-group btn btn-light float-end" (click)="notImplemented()" style="margin-left:10px;">Skip</button> 
+                    <button class="form-group btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
                 </div>
             </div>
         </div>
