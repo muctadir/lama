@@ -166,3 +166,10 @@ class ThemeSchema(ma.SQLAlchemyAutoSchema):
         model = Theme
         include_fk = True
         load_instance = True
+
+class LabellingSchema(ma.SQLAlchemyAutoSchema):
+
+    class Meta:
+        model = Labelling
+        include_fk = True
+        load_instance = True
