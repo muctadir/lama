@@ -43,7 +43,7 @@
         </div> 
         <!--Line Separator-->
         <div class="col-12" id="horizontalLineMain">
-            <hr class="horizontalLine" style="height:1px; width:99%; border-width:0px;">    
+            <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
         </div>
 
         <!--User Labels-->
@@ -53,8 +53,12 @@
                 <div class="row">
                     <!--Labeller Name-->
                     <div class="row">
-                        <div class="col-sm-12">
-                            {{userLabel.labellerName}}
+                        <div class="col-sm-6">
+                            <p id="labellerName">{{userLabel.labellerName}}</p>
+                        </div>
+                        <!--Remarks header-->
+                        <div class="col-sm-6">
+                            <p id="remarks">Remarks:</p>
                         </div>
                     </div>
                     <div class="row">
@@ -63,23 +67,24 @@
                             <div class="row">
                                 <div class="col-12" *ngFor="let label of userLabel.labelsGiven">
                                     <div class="row">                                       
-                                        <div class="col">{{label.labelTypeName1}}</div>
-                                        <div class="col">{{label.labelGiven}}</div>
+                                        <div class="col"><p id="labelTypeName1">{{label.labelTypeName1}}</p></div>
+                                        <div class="col"><p id="labelGiven">{{label.labelGiven}}</p></div>
                                     </div> 
                                 </div>
                             </div>
                         </div>
                         <!--Label Remark-->
                         <div class="col-6">
-                            Remark: {{userLabel.labelRemark}}
+                            <p>{{userLabel.labelRemark}}</p>
                         </div>
                     </div>                      
-                </div>               
+                </div>    
+                <!--Line Separator-->
+                    <div class="col-12" id="horizontalLineMain">
+                        <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
+                    </div>           
             </div>
-        </div>
-        
-        
+        </div>             
     </div>
-
 </div>
 

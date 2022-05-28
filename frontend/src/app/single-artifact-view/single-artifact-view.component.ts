@@ -85,6 +85,7 @@ export class SingleArtifactViewComponent implements OnInit {
       labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows"},
                     {labelTypeName1: "Language", labelGiven: "Latin"}]
     },
+    
   ]
 
 

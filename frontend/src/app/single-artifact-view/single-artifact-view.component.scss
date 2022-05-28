@@ -44,7 +44,6 @@ div.artifactContainer{
     min-height: 40vh;
     overflow-y: scroll;
 }
-
 #names{
     padding-top: 3px;
     padding-bottom: 5px;
@@ -92,8 +91,23 @@ div.artifactContainer{
 
 #editButton{
     padding-top: 10px;
-    position: fixed;
 }
 #artifactIdentifier{
     text-align: right
+}
+#labelTypeName1{
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+#labelGiven{
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+#remarks{
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+#labellerName{
+    font-size: 18px;
+    letter-spacing: 1px;
 }
