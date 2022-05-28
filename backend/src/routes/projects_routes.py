@@ -10,6 +10,7 @@ from src.models.item_models import Artifact
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response
 from flask_login import current_user
+from sqlalchemy import select
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -34,7 +35,9 @@ def home_page():
         return make_response("Not Found", 404)
 
     # Get membership of the user
-    projects_of_user = Membership.query.filter(Membership.uId==user_id)
+    projects_of_user = db.session.execute(
+        select(Membership).where(Membership.uId==user_id)
+    ).scalars().all()
 
     # List for project information
     projects_info = []
@@ -58,11 +61,14 @@ def home_page():
         projects_admin = membership_project.admin
 
         # Get the artifacts for each project 
-        project_artifacts = Artifact.query.filter(Artifact.p_id==project_id)
+        project_artifacts_stmt = select(Artifact).where(Artifact.p_id==project_id)
+        project_artifacts = db.session.execute(project_artifacts_stmt).scalars().all()
         # Get the number of total artifacts
-        project_nr_artifacts = project_artifacts.count()
-        # Get the number of completely labelled artifacts for each project 
-        project_nr_cl_artifacts = project_artifacts.filter(Artifact.completed=="true").count()
+        project_nr_artifacts = len(project_artifacts)
+        # Get the number of completely labelled artifacts for each project
+        project_nr_cl_artifacts = len(db.session.execute(
+            project_artifacts_stmt.where(Artifact.completed=="true")
+        ).scalars().all())
 
         # Get the number users from the project
         project_users = len(project.users)
