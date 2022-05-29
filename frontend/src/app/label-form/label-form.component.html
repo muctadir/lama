@@ -11,14 +11,20 @@
             <div>
                 <div class="subTitle">Label type</div>
                 <div class="form-group">
-                    <select class="form-control" name="labels">
-                        <option *ngFor="let labelType of labelTypes" value="{{ labelType?.getLabelTypeName()}}">{{ labelType?.getLabelTypeName() }}</option>
+                    <select class="form-control" name="labels" 
+                        [(ngModel)]="inputLabelType">
+                        <option *ngFor="let labelType of labelTypes" 
+                                value="{{ labelType?.getLabelTypeName()}}"
+                                [ngValue]="labelType">
+                            {{ labelType?.getLabelTypeName() }}
+                        </option>
                     </select>
                 </div>
             </div>
             <div>
                 <div class="subTitle">Label name</div>
-                <input type="text" class="form-control" placeholder="Name">
+                <input type="text" class="form-control" placeholder="Name"
+                       [(ngModel)]="inputName">
             </div>
         </div>
         <div class="col-6">
@@ -26,8 +32,12 @@
                 <div class="subTitle">    
                     Description
                 </div>
-                <div class="form-group">
-                    <textarea class="form-control" rows="8" placeholder="Description" id="remark"></textarea>
+                <div>
+                    <textarea class="form-control" rows="8" 
+                              placeholder="Description" 
+                              id="remark" 
+                              [(ngModel)]="inputDescription">
+                    </textarea>
                 </div>
             </div>
         </div>
@@ -35,8 +45,8 @@
     </div>
     <div class="row" style="margin-top: 10px;">
         <div class="form-group" id="butt">
-            <button class="btn btn-light float-end" (click)="activeModal.close('Close click')" style="margin-left:10px;">Cancel</button> 
-            <button class="btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
+            <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button> 
+            <button class="btn btn-primary float-end" (click)="submit()" >Submit</button>
         </div>
     </div>
 </div>  
