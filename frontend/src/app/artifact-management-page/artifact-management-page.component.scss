@@ -4,7 +4,7 @@
     --main-color-2: #38474e;
 }
 body{
-    overflow-y: hidden;
+
 }
 // TOP BAR
 #topBarRow{
@@ -43,10 +43,6 @@ svg.bi.bi-plus{
 }
 
 //New Table version styles
-
-#tableRow{
-    padding-top: 20px;
-}
 p.artifactID{
     font-size: 20px;
     letter-spacing: 1px;
@@ -89,5 +85,51 @@ p.timeslabelledHeader{
 }
 //table hovering color
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color:#ed5b0618;
+    background-color:#ed5b0670;
   }
+// Pagination Color
+ngb-pagination ::ng-deep a {
+    color:#ED5A06 !important;
+}  
+ngb-pagination ::ng-deep .page-item.active .page-link {
+border-color: #1C5858;
+background-color: white;
+}
+ngb-pagination ::ng-deep .page-item.active .page-link:focus, .page-link:not(:disabled):not(.disabled):active:focus {
+box-shadow: 0 0 0 0.1rem dimgrey;
+}
+ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
+box-shadow: 0 0 0 0.1rem dimgrey;
+}
+
+//Scroll Related Business
+.my-custom-scrollbar {
+    position:relative;
+    height: 80vh;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+#scrolly{
+    padding-right: 40px;
+}
+

@@ -11,7 +11,9 @@ import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./artifact-management-page.component.scss']
 })
 export class ArtifactManagementPageComponent implements OnInit {
-
+  //Pagination Settings
+  page = 1;
+  pageSize = 5;
   //Hard coded artifacts
   artifacts=[
     {

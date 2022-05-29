@@ -21,24 +21,34 @@
     <!--Row containing Artifacts Table-->
     <div class="row justify-content-sm-center" id="tableRow">
         <div class="col-9">
-            <table class="table table-hover" id="artifactsTable">
-                <!--Table Headers-->
-                <thead>
-                    <tr>
-                        <th scope="col"><p class="idHeader">ID</p></th>
-                        <th scope="col"><p class="artifactHeader">Artifact</p></th>
-                        <th scope="col"><p class="timeslabelledHeader">Times Labelled</p></th>
-                    </tr>
-                </thead>
-                <!--Table Content-->
-                <tbody>
-                    <tr *ngFor="let artifact of artifacts">
-                        <td><p class="artifactID">{{artifact.id}}</p></td>
-                        <td><p class="artifactText">{{artifact.text}}</p></td>
-                        <td><p class="timesLabelled">{{artifact.timesLabelled}}</p></td>
-                    </tr>
-                </tbody>
-        </table>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+                <table class="table table-hover" id="artifactsTable">
+                    <!--Table Headers-->
+                    <thead>
+                        <tr>
+                            <th scope="col"><p class="idHeader">ID</p></th>
+                            <th scope="col"><p class="artifactHeader">Artifact</p></th>
+                            <th scope="col"><p class="timeslabelledHeader">Times Labelled</p></th>
+                        </tr>
+                    </thead>
+                    <!--Table Content-->
+                    <tbody>
+                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize">
+                            <td><p class="artifactID">{{artifact.id}}</p></td>
+                            <td><p class="artifactText">{{artifact.text}}</p></td>
+                            <td><p class="timesLabelled">{{artifact.timesLabelled}}</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <!--Pagination-->          
+        <div class="col-12 justify-content-center" id="paginatioCol">
+            <ngb-pagination
+                [(page)]="page"
+                [pageSize]="pageSize"
+                [collectionSize]="artifacts.length" size="lg">
+            </ngb-pagination>
+        </div>
         </div>
     </div>
 </div>
