@@ -142,6 +142,13 @@ class Label(ChangingItem, db.Model):
     # User that have used this label
     users = association_proxy('labellings', 'user')
 
+    # Themes this label is assigned to
+    themes = relationship('Theme',
+            secondary='label_to_theme',
+            primaryjoin='and_(Label.id==label_to_theme.c.l_id, Label.p_id==label_to_theme.c.p_id)',
+            back_populates='labels'
+    )
+
 class Theme(ChangingItem, db.Model):
 
     __tablename__ = 'theme'
@@ -157,6 +164,13 @@ class Theme(ChangingItem, db.Model):
             primaryjoin='and_(Theme.id==theme_to_theme.c.super_id, Theme.p_id==theme_to_theme.c.p_id)',
             secondaryjoin='and_(Theme.id==theme_to_theme.c.sub_id, Theme.p_id==theme_to_theme.c.p_id)',
             backref='super_themes'
+    )
+
+    # Labels assigned to this theme
+    labels = relationship('Label',
+            secondary='label_to_theme',
+            primaryjoin='and_(Theme.id==label_to_theme.c.t_id, Theme.p_id==label_to_theme.c.p_id)',
+            back_populates='themes'
     )
 
 
@@ -214,6 +228,14 @@ theme_to_theme = Table('theme_to_theme', db.Model.metadata,
         Column('p_id', Integer, ForeignKey('project.id')),
         Column('super_id', Integer, ForeignKey('theme.id')),
         Column('sub_id', Integer, ForeignKey('theme.id'))
+)
+
+# Table to manage label to theme relationship
+# If you wish to add other attributes, an association class should be used instead
+label_to_theme = Table('label_to_theme', db.Model.metadata,
+        Column('p_id', Integer, ForeignKey('project.id')),
+        Column('t_id', Integer, ForeignKey('theme.id')),
+        Column('l_id', Integer, ForeignKey('label.id'))
 )
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
