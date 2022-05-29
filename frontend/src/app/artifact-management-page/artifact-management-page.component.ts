@@ -3,8 +3,6 @@ import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
-
-
 @Component({
   selector: 'app-artifact-management-page',
   templateUrl: './artifact-management-page.component.html',
