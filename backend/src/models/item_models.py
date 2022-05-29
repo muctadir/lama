@@ -1,6 +1,13 @@
 """
 Authors:
 Eduardo Costa Martins
+
+This module includes project items, as well as relationships between those items.
+
+Relevant info:
+@declarative_mixin : decorates a class as a sort of "abstract" class for tables
+@declared_attr : certain special attributes need to be declared as functions when using mixins,
+                 these are accessed as attributes though (not as functions)
 """
 
 from src.models import db, ma
@@ -10,16 +17,6 @@ from sqlalchemy.ext.associationproxy import association_proxy
 # Abstract Base Class, inheriting this makes a class abstract
 from abc import ABC
 # TODO: Enforce ProjectItem, ChangingItem to be abstract
-
-"""
-This module includes project items, as well as relationships between those items.
-This includes changelogs as well.
-Note: the above is subject to change, if this file gets too large
-
-Relevant info:
-@declarative_mixin : decorates a class as a sort of "abstract" class for tables
-@declared_attr : certain special attributes need to be declared as functions when using mixins
-"""
 
 @declarative_mixin
 class ProjectItem():

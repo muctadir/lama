@@ -1,6 +1,13 @@
 """
 Authors:
 Eduardo Costa Martins
+
+This module includes project related models.
+
+Relevant info:
+@declarative_mixin : decorates a class as a sort of "abstract" class for tables
+@declared_attr : certain special attributes need to be declared as functions when using mixins,
+                 these are accessed as attributes though (not as functions)
 """
 
 from src.models import db, ma
