@@ -1,5 +1,11 @@
+"""
+Authors:
+Eduardo Costa Martins
+"""
+
 from src.models import db, ma
-from sqlalchemy.orm import declarative_mixin, declared_attr
+from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy.orm import declarative_mixin, declared_attr, relationship
 from src.app_util import AppUtil
 
 # TODO: Enforce Change to be abstract
@@ -42,26 +48,24 @@ class Change():
     # u_id : user id that made the change
     @declared_attr
     def u_id(cls):
-        return db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+        return Column(Integer, ForeignKey('user.id'), primary_key=True)
     
     # user : User object corresponding to user that made the change
     @declared_attr
     def user(cls):
         # backref creates <item>.changes attribute in user containing list of changes the user made
         # for this type of item
-        return db.relationship('User', backref=cls.__tablename__ + 's')
+        return relationship('User', backref=cls.__tablename__ + 's')
     
     # p_id : project id that the item belongs to
     @declared_attr
     def p_id(cls):
-        return db.Column(db.Integer, 
-                db.ForeignKey(cls.item_table_name + '.p_id'), 
-                primary_key=True)
+        return Column(Integer, ForeignKey('project.id'), primary_key=True)
     # i_id : item id that was changed
     @declared_attr
     def i_id(cls):
-        return db.Column(db.Integer,
-                db.ForeignKey(cls.item_table_name + '.id'),
+        return Column(Integer,
+                ForeignKey(cls.item_table_name + '.id'),
                 primary_key=True)
     
     # item : Item object corresponding to item that was changed
@@ -69,16 +73,16 @@ class Change():
     def item(cls):
         # Somehow SQLAlchemy does not understand how to join two pairs of foreign keys
         # So we have to spell it out for it in primary join
-        return db.relationship(cls.item_class_name, 
+        return relationship(cls.item_class_name, 
                 back_populates='changes',
                 primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.item_class_name, cls.__name__))
     
     # id : the nth change made to this item
-    id = db.Column(db.Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
 
     # TODO: Enum for ChangeType
     # Date and time when change was made
-    timestamp = db.Column(db.DateTime)
+    timestamp = Column(DateTime)
     
 from src.models.item_models import ChangingItem
 
