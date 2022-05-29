@@ -16,4 +16,10 @@ export class LabelingDataService {
   getLabels(): Observable<Array<LabelType>> {
     return of(labels);
   }
+
+  pushLabels(newLabels: Array<LabelType>): void{
+    console.log("Pushing to backend...")
+    console.log(newLabels)
+    throw new Error("Not implemented");
+  }
 }
