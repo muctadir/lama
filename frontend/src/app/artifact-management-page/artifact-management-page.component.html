@@ -1,3 +1,4 @@
+<!--Author: Chinno Lavin-->
 <!-- Main bootstrap container covering the page -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="main_body">
 
@@ -17,47 +18,27 @@
                 </button>
             </span>
     </div>
-
-    <!--Content Row-->
-    <div class="row align-items-center" id="main_row">
-
-            <!--Search Bar-->
-            <div class="container">
-                <div class="row justify-content-left" id="rchCseaontainerRow">
-                    <div class="col-md-auto offset-md-2" id="searchContainerCol">
-                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon"/>
-                    </div>
-                </div>
-            </div>
-
-        <div class="allArtifacts">
-            <!--For loop through data array-->
-            <div class='artifactGroup' *ngFor="let artifact of artifacts ">
-                <!--Container for each artifact-->
-                <div class="container" id="singleArtifact">     
-                    <!--Artefact ID-->
-                    <div class="row justify-content-center" id="artifactId">
-                        <div class="col" id="artifact-id-column">
-                            <p class="artifactID">Artifact {{artifact.id}}</p>
-                        </div>
-                    </div>
-                    <!--Artefact Text-->
-                    <div class="row justify-content-center" id="textAndNumber">
-                        <div class="col-11" id="text-timesLabelled-column">
-                            <p class="artifactText">{{artifact.text}}</p>
-                        </div>
-                        <!--Times Labelled-->
-                        <div class="col-1">
-                            <p class="timesLabelled">{{artifact.timesLabelled}}</p>
-                        </div>
-                    </div>
-                    <!--Line Separator-->
-                    <div class="row justify-content-center" id="horizontalLineRow">
-                        <div class="col" id="horizontalLineColumn" ></div>
-                        <hr class="horizontalLine" style="height:1px; width:99%; border-width:0px;">    
-                    </div>
-                </div>
-            </div>
+    <!--Row containing Artifacts Table-->
+    <div class="row justify-content-sm-center" id="tableRow">
+        <div class="col-9">
+            <table class="table table-hover" id="artifactsTable">
+                <!--Table Headers-->
+                <thead>
+                    <tr>
+                        <th scope="col"><p class="idHeader">ID</p></th>
+                        <th scope="col"><p class="artifactHeader">Artifact</p></th>
+                        <th scope="col"><p class="timeslabelledHeader">Times Labelled</p></th>
+                    </tr>
+                </thead>
+                <!--Table Content-->
+                <tbody>
+                    <tr *ngFor="let artifact of artifacts">
+                        <td><p class="artifactID">{{artifact.id}}</p></td>
+                        <td><p class="artifactText">{{artifact.text}}</p></td>
+                        <td><p class="timesLabelled">{{artifact.timesLabelled}}</p></td>
+                    </tr>
+                </tbody>
+        </table>
         </div>
     </div>
 </div>

@@ -33,21 +33,6 @@ svg.bi.bi-plus{
     width: 22px;
     height: 22px;
 }
-#artifactId {
-    text-align: left;
-    padding-left: 10px;
-    padding-bottom: 10px;
-    letter-spacing: 1px;
-    font-style: normal;
-    font-size: 30px;
-    line-height: 30px;
-    color: rgba(17, 34, 44, 0.88);
-}
-#textAndNumber {
-    text-align: left;
-    margin-left: auto;
-    margin-right: auto;
-}
 #horizontalLineRow{
     padding-top: 10px;
     padding-bottom: 30px;
@@ -56,44 +41,53 @@ svg.bi.bi-plus{
 #horizontalLineColumn{
     padding-right: 0px;
 }
-p.timesLabelled{
+
+//New Table version styles
+
+#tableRow{
+    padding-top: 20px;
+}
+p.artifactID{
     font-size: 20px;
-    line-height: 24px;
-    color: #000000;
+    letter-spacing: 1px;
+    text-align: center;
+    font-weight: 480;
 }
 p.artifactText{
-    padding-right: 0px;
-    font-size: 15px;
-    line-height: 17px;
-    color: #000000;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: justify;
+    padding-left: 20px;
 }
-#main_row{
-    padding-top: 50px;
+p.timesLabelled{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
 }
-#searchContainerCol{
-    padding-left:0px ;
-    padding-bottom: 20px;
+p.idHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    white-space:nowrap;
+    font-weight: 500;
 }
-
-// Division around artifacts
-div.allArtifacts{
-    margin: 4px 120px 4px 4px;
-    padding: 4px;
-    height: 80vh;
-    overflow-y: scroll;
+p.artifactHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: 500;
+    
 }
-// Scrollbar
-::-webkit-scrollbar {
-    width: 10px;
+p.timeslabelledHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;   
+    white-space:nowrap;
+    font-weight: 500;
 }
-// Scrollbar background
-::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-    border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-    background: #38474e; 
-    border-radius: 10px;
-}
-
+//table hovering color
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color:#ed5b0618;
+  }

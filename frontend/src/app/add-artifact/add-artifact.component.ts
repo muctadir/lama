@@ -8,8 +8,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AddArtifactComponent implements OnInit {
 
-  save(){
-    throw new Error("This function has not been implemented yet.");
+  notImplemented(){
+    alert("Not implemented");
   }
 
   constructor(public activeModal: NgbActiveModal) {
