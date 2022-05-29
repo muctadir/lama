@@ -3,6 +3,16 @@ Authors:
 Eduardo Costa Martins
 
 This module includes changelogs for all the items (or rather, all the code to generate them).
+Example on how to use Change classes:
+
+# This gets the Change class for the item (in case you want to query)
+# Note this is not an instance of the class
+artifact_change = Artifact.__change__
+# This gets the schema class for that change and instantiates it
+artifact_change_schema = artifact_change.__marshmallow__()
+# Now to use it you could for example do:
+changes = artifact_change.query.all()
+json = jsonify(artifact_change_schema.dump(changes, many=True))
 
 Relevant info:
 @declarative_mixin : decorates a class as a sort of "abstract" class for tables
@@ -11,11 +21,60 @@ Relevant info:
 """
 
 from src.models import db, ma
-from sqlalchemy import Column, Integer, DateTime, ForeignKey
-from sqlalchemy.orm import declarative_mixin, declared_attr, relationship
+from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey, event
+from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, mapper
 from src.app_util import AppUtil
+from enum import Enum
+from marshmallow import fields
 
 # TODO: Enforce Change to be abstract
+
+def create_change_schemas(Changes):
+    # Event listener needs a function with no parameters, so we incorporate the parameter
+    # in this inner function, and return the inner function instead
+    def create_change_schemas_fn():
+        # We create a changelog schema for every change class
+        for cls in Changes:
+            # We check to make sure the class provided is indeed a concrete change class
+            if hasattr(cls, '__tablename__') and cls.__name__.endswith('Change'):
+
+                # We define the attributes of the schema
+                # Every schema has a meta class
+                class Meta:
+                    model = cls
+                    include_fk = True
+                    load_instance = True
+                
+                # Marshmallow does not automatically convert to/from enums
+                # We link the attribute to functions that describe how to do so
+                change_type = fields.Method("get_approval", deserialize="load_approval")
+
+                # The functions below describe how to serialize/deserialize enums
+                def get_approval(self, obj):
+                    return obj.type
+                
+                def load_approval(self, value):
+                    return ChangeType[value]
+                
+                schema_class_name = '%sSchema' % cls.__name__
+
+                # type function returns a class object
+                schema_class = type(
+                        schema_class_name,
+                        (ma.SQLAlchemyAutoSchema,), 
+                        {
+                                'change_type': change_type,
+                                'get_approval' : get_approval,
+                                'load_approval': load_approval,
+                                'Meta': Meta
+                        })
+
+                # Give each Change class an attribute __marshmallow__ that contains the class info for the schema
+                # Still needs to be instantiated to be used
+                # e.g. schema = Change.__marshmallow__()
+                setattr(cls, "__marshmallow__", schema_class)
+
+    return create_change_schemas_fn
 
 def create_change_table(cls):
     """
@@ -24,11 +83,34 @@ def create_change_table(cls):
     This allows us to automatically create all the changelog tables for the items,
     since all classes inheriting db.Model create a table.
     """
-
     # type function can create classes
-    return type(cls.__name__ + 'Change',  # class name
-            (Change, db.Model),  # base classes
-            {'__tablename__': cls.__tablename__ + '_change'})  # added attributes/methods
+    change_class = type(
+            cls.__name__ + 'Change',  # Class name
+            (Change, db.Model),  # Base classes
+            {'__tablename__': cls.__tablename__ + '_change'} # Added attributes/methods
+            )
+    setattr(cls, "__change__", change_class)
+    return change_class
+
+class ChangeType(Enum):
+    """
+    An enum describing the type of change that was made.
+    Note that we use the same enum for all subclasses, despite the fact that not all changes can
+    be done to all item types (e.g., you cannot split a label).
+    We use an enum to allow the tool to filter on the type of change
+    The desc attribute of a Change class should be parsed based on its change type
+    """
+    # Creation
+    create = 0
+    # Editting a name
+    name = 1
+    # Editting the description
+    desc = 2
+    # Splitting an artifact
+    split = 3
+    # Merging a label
+    merge = 4
+    # TODO: Add others? Like making a subtheme
 
 @declarative_mixin
 class Change():
@@ -87,7 +169,10 @@ class Change():
     # id : the nth change made to this item
     id = Column(Integer, primary_key=True)
 
-    # TODO: Enum for ChangeType
+    change_type = Column(db.Enum(ChangeType))
+
+    desc = Column(Text)
+
     # Date and time when change was made
     timestamp = Column(DateTime)
     
@@ -95,10 +180,7 @@ from src.models.item_models import ChangingItem
 
 # TODO: Should make sure subclasses are not abstract before creating changelog for them
 #       or alternatively, make sure they inherit db.Model
+# If you want to import a Change class, you can just import this list
 Changes = [create_change_table(changing_item) for changing_item in AppUtil.get_all_subclasses(ChangingItem)]
 
-# TODO: Find a way to make a schema for the changes.
-# Problem: Using Change as model gives error since it does not have mapper,
-#       since it does not inherit db.Model
-# Idea: Use Abstract Concrete Class for Change so that it does inherit db.Model.
-# Problem with this idea is that it is hard
+event.listen(mapper, 'after_configured', create_change_schemas(Changes))
