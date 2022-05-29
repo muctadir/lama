@@ -7,8 +7,7 @@
         <div id="artifactId" class="col-10">
             Artifact {{ artifact?.getIdentifier()! }} 
         </div> 
-        <!-- the top buttons -->
-        <div  *ngIf="hightlightedText != null " class="col-2">
+        <div *ngIf="hightlightedText.length > 0 " class="col-2">
             <div id="artifactButtons">
                 <!-- calling split and highlight  -->
                 <i (click)="notImplemented()" class="bi bi-scissors"></i><i (click)="notImplemented()" class="bi bi-brush"></i>

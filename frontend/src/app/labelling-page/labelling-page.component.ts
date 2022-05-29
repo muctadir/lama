@@ -37,9 +37,19 @@ export class LabellingPageComponent implements OnInit{
       .subscribe(labels => this.labels = labels);
   }
 
-  
+
+  /**
+   * Function is ran on mouseDown or mouseUp and updates the current selection
+   * of the artifact. If the selection is null or empty, the selection is set 
+   * to ""
+   */
   selectedText() {
-    this.hightlightedText = document.getSelection()
+    var hightlightedText: Selection | null = document.getSelection();
+    if (hightlightedText == null || hightlightedText.toString().length <= 0) {
+      this.hightlightedText = ""
+    } else {
+      this.hightlightedText = hightlightedText.toString();
+    }
   }
   
   open() {
