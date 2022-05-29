@@ -169,8 +169,9 @@ class Change():
     # id : the nth change made to this item
     id = Column(Integer, primary_key=True)
 
+    # What kind of change is made? This exists for filtering and parsing
     change_type = Column(db.Enum(ChangeType))
-
+    # A description of the change that was made. This should be parsed based on change_type
     desc = Column(Text)
 
     # Date and time when change was made

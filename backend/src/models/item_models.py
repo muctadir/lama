@@ -77,16 +77,13 @@ class Artifact(ChangingItem, db.Model):
     # The name (or some other identifier) of the file the artifact originated from
     identifier = Column(String(64))
 
-    # The qualitative data that the artifact carries
-    # TODO: Consider using LargeBinary as data type
+    # The text data that the artifact carries
     data = Column(Text)
-
-    # TODO: Enum DataType (I don't want to deal with this now)
 
     completed = Column(Boolean, default=False)
 
-    # start and end position of split TODO: Use association table?
-    # also, how will this work with other kinds of data?
+    # start and end characters of split (in the parent's data)
+    # Null if this artifact was not split from anything
     start = Column(Integer)
     end = Column(Integer)
 
@@ -193,7 +190,6 @@ class Highlight(db.Model):
     # The nth highlight on this artifact by this user
     id = Column(Integer, primary_key=True)
     # The start and end characters of this highlight
-    # TODO: How will this work with other kinds of data?
     start = Column(Integer)
     end = Column(Integer)
 
