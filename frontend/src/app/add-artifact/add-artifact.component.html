@@ -1,0 +1,23 @@
+<!-- Author:Chinno -->
+<div class="container" id="body">
+    <div class="row modal-header" class="title">
+        <div class="col-12">
+            <p id="addArtifacts">Add Artifacts</p>
+        </div>
+    </div>
+    <div class="row modal-body">
+        <div class="col-12">
+            <label class="form-label" for="customFile">Upload a file containing the artifacts</label>
+        </div>
+        <div class="col">
+            <input type="file" class="form-control" id="customFile" />
+        </div>
+    </div>
+    <div class="row" id="buttonRow">
+        <div class="form-group" id="buttons">
+            <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button> 
+            <button class="btn btn-primary float-end" (click)="save()">Save</button>
+        </div>
+    </div>
+</div>  
+

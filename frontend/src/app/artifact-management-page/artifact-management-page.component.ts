@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
+import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
+
 
 
 @Component({
@@ -64,12 +68,20 @@ export class ArtifactManagementPageComponent implements OnInit {
 
   ];
 
-
-
-  constructor() {
-
-    
+  open(){
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'xl'});
   }
+
+ /**
+ * Constructor passes in the modal service
+ * @param modalService 
+ * @param labelingDataService 
+ */
+    constructor(private modalService: NgbModal) {
+
+     }
+
+
 
   ngOnInit(): void {
 
