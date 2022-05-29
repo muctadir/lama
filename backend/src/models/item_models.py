@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db, ma
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
 # Abstract Base Class, inheriting this makes a class abstract
@@ -35,9 +35,10 @@ class ProjectItem():
     name = Column(String(64))
 
     # Project that item belongs to
+    # Backref automatically creates an attribute in project to access the items of this type
     @declared_attr
     def project(cls):
-        return relationship('Project')
+        return relationship('Project', backref=cls.__tablename__ + 's')
 
 @declarative_mixin
 class ChangingItem(ProjectItem):
@@ -149,6 +150,16 @@ class Theme(ChangingItem, db.Model):
     # Boolean for if the theme was (soft) deleted (can be seen in history, but not used)
     deleted = Column(Boolean, default=False)
 
+    # All sub themes
+    # Backref automatically creates super_themes attribute to access super themes
+    sub_themes = relationship('Theme',
+            secondary='theme_to_theme',
+            primaryjoin='and_(Theme.id==theme_to_theme.c.super_id, Theme.p_id==theme_to_theme.c.p_id)',
+            secondaryjoin='and_(Theme.id==theme_to_theme.c.sub_id, Theme.p_id==theme_to_theme.c.p_id)',
+            backref='super_themes'
+    )
+
+
 class Labelling(db.Model):
 
     __tablename__ = 'labelling'
@@ -196,6 +207,14 @@ class Highlight(db.Model):
     # The user and artifact objects corresponding to this highlight
     user = relationship('User', back_populates='highlights')
     artifact = relationship('Artifact', back_populates='highlights')
+
+# Table to manage sub theme relationship
+# If you wish to add other attributes, an association class should be used instead
+theme_to_theme = Table('theme_to_theme', db.Model.metadata,
+        Column('p_id', Integer, ForeignKey('project.id')),
+        Column('super_id', Integer, ForeignKey('theme.id')),
+        Column('sub_id', Integer, ForeignKey('theme.id'))
+)
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
 # i.e., do not use this package at the top level
