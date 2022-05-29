@@ -40,10 +40,13 @@ class User(UserMixin, db.Model):
     status = Column(db.Enum(UserStatus), default=UserStatus.pending)
     # Personal description
     description = Column(Text) 
+
     # List of projects the user is a part of
     projects = relationship('Membership', back_populates='user')
     # List of labellings the user has made
     labellings = relationship('Labelling', back_populates='user')
+    # List of highlights the user has made
+    highlights = relationship('Highlight', back_populates='user')
 
     # The discriminator column for the subtypes
     type = Column(String(32))

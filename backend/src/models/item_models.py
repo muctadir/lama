@@ -141,6 +141,8 @@ class Label(ChangingItem, db.Model):
     # User that have used this label
     users = association_proxy('labellings', 'user')
 
+    highlights = relationship('Highlight', back_populates='artifact')
+
 class Theme(ChangingItem, db.Model):
 
     __tablename__ = 'theme'
@@ -173,6 +175,30 @@ class Labelling(db.Model):
     user = relationship('User', back_populates='labellings')
     artifact = relationship('Artifact', back_populates='labellings')
     label = relationship('Label', back_populates='labellings')
+
+class Highlight(db.Model):
+
+    __tablename__ = 'highlight'
+    __table__args__ = (
+        ForeignKeyConstraint(['a_id', 'p_id'], ['artifact.id', 'artifact.p_id'])
+    )
+
+    # The id of the user that made the highlight
+    u_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    # The id of the artifact that was highlighted
+    a_id = Column(Integer, ForeignKey('artifact.id'), primary_key=True)
+    # The id of the project the artifact is in
+    p_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
+    # The nth highlight on this artifact by this user
+    id = Column(Integer, primary_key=True)
+    # The start and end characters of this highlight
+    # TODO: How will this work with other kinds of data?
+    start = Column(Integer)
+    end = Column(Integer)
+
+    # The user and artifact objects corresponding to this highlight
+    user = relationship('User', back_populates='highlights')
+    artifact = relationship('Artifact', back_populates='highlights')
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
 # i.e., do not use this package at the top level
@@ -212,5 +238,12 @@ class LabellingSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Labelling
+        include_fk = True
+        load_instance = True
+
+class HighlightSchema(ma.SQLAlchemyAutoSchema):
+
+    class Meta:
+        model = Highlight
         include_fk = True
         load_instance = True
