@@ -107,6 +107,9 @@ class Artifact(ChangingItem, db.Model):
     labels = association_proxy('labellings', 'label')
     # List of users that have labelled this artifact
     users = association_proxy('labellings', 'user')
+    
+    # All highlights on this artifact
+    highlights = relationship('Highlight', back_populates='artifact')
 
 class Label(ChangingItem, db.Model):
 
@@ -140,8 +143,6 @@ class Label(ChangingItem, db.Model):
     artifacts = association_proxy('labellings', 'artifact')
     # User that have used this label
     users = association_proxy('labellings', 'user')
-
-    highlights = relationship('Highlight', back_populates='artifact')
 
 class Theme(ChangingItem, db.Model):
 
