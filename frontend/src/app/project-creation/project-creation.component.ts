@@ -4,6 +4,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
+import axios from 'axios';
+import { User } from '../user';
+// import { stringify } from 'querystring';
 
 // Project object
 interface Project {
@@ -11,10 +14,6 @@ interface Project {
   projectDescription: string;
 }
 
-// User object
-interface User {
-  userName: string;
-}
 
 // Template for the modal
 @Component({
@@ -27,12 +26,12 @@ interface User {
     </div>
     <div class="modal-body row" *ngFor="let user of users" style="padding:2px 16px; max-height: 25px;">
         <div class="col" style="padding:15 1 1 1px; list-style: none; max-height: 25px;">
-          <li> {{ user.userName }}</li>
+          <li> {{ user.getUsername() }}</li>
         </div>
         <!-- Col for adding users button -->
         <div class="col-2">
             <!-- Button for adding new project_members -->
-            <button class="btn" type="button" id="addMembersButton" (click)="addUser(user.userName)">
+            <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
               <!-- Plus icon -->
               <i class="bi bi-plus labelType"></i>
             </button>
@@ -53,8 +52,8 @@ export class AddUsersModalContent {
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  addUser(name:string) {
-    this.newItemEvent.emit(name);
+  addUser(user:User) {
+    this.newItemEvent.emit(user);
   }
 }
 
@@ -74,35 +73,34 @@ export class ProjectCreationComponent implements OnInit {
     return {projectName, projectDescription};
   }
 
-  // Functions for adding values
-  addValuesUser(name:string):User {
-    var userName = name;
-    // Return the given values
-    return {userName};
-  }
-
-  // Fake users
-  Veerle = this.addValuesUser("Veerle");
-  Vic = this.addValuesUser("Vic");
-  Bartjan = this.addValuesUser("Bartjan");
-  Jarl = this.addValuesUser("Jarl");
-  Chinno = this.addValuesUser("Chinno");
-  Chinno2 = this.addValuesUser("Chinno2");
-  Chinno3 = this.addValuesUser("Chinno3");
-  Chinno4 = this.addValuesUser("Chinno4");
-  Chinno5 = this.addValuesUser("Chinno5");
-  Chinno6 = this.addValuesUser("Chinno6");
-  Chinno7 = this.addValuesUser("Chinno7");
-
+  
   // Array of all possible members
-  all_members: User[] = [this.Veerle, this.Vic, this.Bartjan, this.Jarl, this.Chinno, this.Chinno2, this.Chinno3, this.Chinno4, this.Chinno5, this.Chinno6, this.Chinno7];
+  allMembers: User[] = [];
+ 
   // Array of members in the project
-  project_members: User[] = []
+  projectMembers: User[] = []
 
   // Label types
   labelTypes: string[] = ["doing", "floing"];
 
   ngOnInit(): void { 
+
+    // Get all users within the tool
+    const response = axios.get('http://127.0.0.1:5000/project/users')
+      .then(response => { 
+        
+        for (let user of response.data) {
+          console.log(response.data);
+          let newUser = new User(user.id, user.username, user.email, user.description);
+          console.log(newUser);
+          this.allMembers.push(newUser);
+        }
+      })
+      .catch(error => {
+        
+      });
+    
+
     // TODO
     // Get the person who is creating the project
     // Add that person to this project
@@ -118,7 +116,7 @@ export class ProjectCreationComponent implements OnInit {
   }
 
   // Function for getting all form elements
-  getFormElements(form:HTMLFormElement){
+  getFormElements(form:HTMLFormElement): Record<string, string>{
     // Make a dictionary for all values
     let params: Record<string, string> = {};
     // For loop for adding the params to the list
@@ -132,7 +130,7 @@ export class ProjectCreationComponent implements OnInit {
   }
 
   // Function for creating the project
-  createProject() { 
+  createProject():void { 
     // Get the forms
     // For with name and description
     const post_form1: HTMLFormElement = (document.querySelector("#projectCreationForm")!);
@@ -181,27 +179,41 @@ export class ProjectCreationComponent implements OnInit {
       // Post values
       p_response.innerHTML += "<br/> numberOfLabellers: " + constraint;
 
+      // Array for all label types
+      let labelTypes = [];
       for (let labelType of this.labelTypes){
         // Create new project with values
         var labelTypesValue = params3['labelType-' + labelType];
-        console.log("labelType"+labelType);
-        console.log(labelTypesValue);
         // Post values
         p_response.innerHTML += "<br/> labelType: " + labelTypesValue;
+        // Add value to label types array
+        labelTypes.push(labelTypesValue);
       }
+      console.log(labelTypes);
 
       // Add the members
-      for(let member of this.project_members){
+      for(let member of this.projectMembers){
         // Post values
-        p_response
+        p_response.innerHTML += "<br/> Member: " + member.getUsername();
       }
+
+      let projectInformation: Record<string, any> = {};
+      projectInformation["project"] = {
+        "name" : params1['projectName'],
+        "description" : params1['projectDescription'],
+        "criteria": params2["numberOfLabellers"]
+      };
+      projectInformation["users"] = this.projectMembers;
+      projectInformation["labelTypes"] = this.labelTypes;
         
       // Send the data to the database
-        // const response = axios.post('http://127.0.0.1:5000/auth/register', params)
-        // .then(response => p_response.innerHTML = JSON.stringify([response.data, response.status]))
-        // .catch(error => {
-        //   p_response.innerHTML = JSON.stringify([error.response.data, error.response.status])
-        // });
+      const response = axios.post('http://127.0.0.1:5000/project/creation', projectInformation)
+      .then(response => { 
+        // TODO 
+       })
+      .catch(error => {
+        // TODO
+      });
      
     } else {
       // Send error message
@@ -217,10 +229,10 @@ export class ProjectCreationComponent implements OnInit {
   // Function for removing users
   removeMember(id:any){
     // Go through all members
-    this.project_members.forEach((project_members, index)=>{
+    this.projectMembers.forEach((projectMembers, index)=>{
       // If clicked cross matches the person, splice them from the members
-      if(project_members.userName==id){
-        this.project_members.splice(index,1);
+      if(projectMembers.getUsername()==id){
+        this.projectMembers.splice(index,1);
       }
     });    
   }
@@ -235,11 +247,15 @@ export class ProjectCreationComponent implements OnInit {
   // Open the modal and populate it with users
   open() {
     const modalRef = this.modalService.open(AddUsersModalContent);
-    modalRef.componentInstance.users = this.all_members;
+    modalRef.componentInstance.users = this.allMembers;
     // Push the username into the members list 
-    modalRef.componentInstance.newItemEvent.subscribe(($e: any) => {
-      var username = {userName: $e};
-      this.project_members.push(username);
+    modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
+       var user = $e;
+      //  Checks if the user is already added
+       if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
+         // If not, we add them
+        this.projectMembers.push(user);
+       }
     })
   }
 

@@ -74,7 +74,7 @@
                             </div>
                             
                             <!-- Name and checkbox per member of the project -->
-                            <label *ngFor="let member of project_members" for="user" style="display: block;"> 
+                            <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
 
                                 <!-- Row for the delete, name and project admin -->
                                 <div class="row align-items-center">
@@ -82,18 +82,19 @@
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
                                         <!-- x icon -->
-                                        <i class="bi bi-x" (click)="removeMember(member.userName)"></i>
+                                        <i class="bi bi-x" (click)="removeMember(member.getUsername())"></i>
                                     </div>
 
                                     <!-- Column for username -->
                                     <div class="col-7">
-                                        {{ member.userName }}
+                                        {{ member.getUsername() }}
                                     </div>
 
                                     <!-- Column for checkbox -->
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                        <input type="checkbox" id="projectAdminCheckBox'+{{member.userName}}+'">
+                                        <!-- TODO FIX THE ID -->
+                                        <input type="checkbox" id="projectAdminCheckBox'+{{member.getUsername()}}+'">
                                     </div>                                        
                                 </div>
                             </label>

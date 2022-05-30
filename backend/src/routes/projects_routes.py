@@ -5,7 +5,7 @@
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User
+from src.models.auth_models import User, UserSchema
 from src.models.item_models import Artifact
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response
@@ -94,7 +94,7 @@ def home_page():
 """
 For creating a new project
 """
-@project_routes.route("/home", methods=["POST"])
+@project_routes.route("/creation", methods=["POST"])
 def create_project():
     # Check if the user is logged in
     if(not current_user.is_authenticated):
@@ -123,3 +123,38 @@ def create_project():
             return "503 Service Unavailable"
     else:
         return "400 Bad Request"
+
+
+
+"""
+For getting all users within the tool
+@returns a list of users
+"""
+@project_routes.route("/users", methods=["GET"])
+def get_users():
+    # # Check if the user is logged in
+    # if(not current_user.is_authenticated):
+    #     # Otherwise send error
+    #     return make_response("Unauthorized", 401)
+
+    # # Get the ID of the user currently logged in
+    # user_id = current_user.get_id()
+    
+    # # Get the user
+    # user = User.get(user_id)
+    # if not user:
+    #     # Otherwise send error
+    #     return make_response("Not Found", 404)
+
+
+    # Make a list for all users
+    all_users = db.session.execute(select(User)).scalars().all()
+
+    # Schema to serialize the User
+    user_schema = UserSchema()
+
+    # Convert the list of users to json
+    response_users = jsonify(user_schema.dump(all_users, many=True))
+
+    # Return the list of users
+    return make_response(response_users)
