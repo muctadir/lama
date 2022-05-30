@@ -14,6 +14,10 @@ import { ProjectCreationComponent } from './project-creation/project-creation.co
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from './label-form/label-form.component';
+import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
+import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
+import { AddArtifactComponent } from './add-artifact/add-artifact.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -27,7 +31,10 @@ import { LabelFormComponent } from './label-form/label-form.component';
     HomePageComponent,
     ProjectCreationComponent,
     LabellingPageComponent,
-    LabelFormComponent
+    LabelFormComponent,
+    ArtifactManagementPageComponent,
+    SingleArtifactViewComponent,
+    AddArtifactComponent
   ],
   imports: [
     BrowserModule,
