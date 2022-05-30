@@ -1,4 +1,19 @@
+"""
+Authors:
+Eduardo Costa Martins
+
+This module includes user related models.
+
+Relevant info:
+@declarative_mixin : decorates a class as a sort of "abstract" class for tables
+@declared_attr : certain special attributes need to be declared as functions when using mixins,
+                 these are accessed as attributes though (not as functions)
+"""
+
 from src.models import db, ma # need this in every model
+from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 from flask_login import UserMixin
 from enum import Enum
 from marshmallow import fields
@@ -15,19 +30,29 @@ class UserStatus(Enum):
 
 class User(UserMixin, db.Model):
 
-    # TODO: Handle `approved` using Flask-Principal?
+    # TODO: Handle `status` using Flask-Principal?
     __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True) # auto_increment=True is default for integer primary key
-    username = db.Column(db.String(32), unique=True)
-    password = db.Column(db.String(128))
-    email = db.Column(db.String(320), unique=True)
-    status = db.Column(db.Enum(UserStatus), default=UserStatus.pending) # See UserStatus
-    description = db.Column(db.Text) # Personal description
-    projects = db.relationship('Membership', back_populates='user')
-    # TODO: Add relationship to Label and Artifact
+    # auto_increment=True is default for integer primary key
+    id = Column(Integer, primary_key=True) 
+    username = Column(String(32), unique=True)
+    password = Column(String(128))
+    email = Column(String(320), unique=True)
+    # See UserStatus
+    status = Column(db.Enum(UserStatus), default=UserStatus.pending)
+    # Personal description
+    description = Column(Text) 
+
+    # List of memberships the user is involved in
+    memberships = relationship('Membership', back_populates='user')
+    # List of projects the user is a part of
+    projects = association_proxy('memberships', 'project')
+    # List of labellings the user has made
+    labellings = relationship('Labelling', back_populates='user')
+    # List of highlights the user has made
+    highlights = relationship('Highlight', back_populates='user')
 
     # The discriminator column for the subtypes
-    type = db.Column(db.String(32))
+    type = Column(String(32))
     # Enables polymorphic loading
     __mapper_args__ = {
         'polymorphic_identity':'user',
@@ -40,7 +65,7 @@ class SuperAdmin(User):
     """
 
     __tablename__ = 'super_admin'
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
     # Add more data to super admin class if ever needed:
 
@@ -51,6 +76,7 @@ class SuperAdmin(User):
 # Note: This is a circular import, but not a circular dependency so nothing breaks
 # i.e., do not use this package at the top level
 from src.models.project_models import Membership
+from src.models.item_models import Labelling
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
 

@@ -1,34 +1,52 @@
+"""
+Authors:
+Eduardo Costa Martins
+
+This module includes project related models.
+
+Relevant info:
+@declarative_mixin : decorates a class as a sort of "abstract" class for tables
+@declared_attr : certain special attributes need to be declared as functions when using mixins,
+                 these are accessed as attributes though (not as functions)
+"""
+
 from src.models import db, ma
+from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 
 class Project(db.Model):
 
     __tablename__ = 'project'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    description = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64))
+    description = Column(Text)
     # Criteria: Number of users that need to label an artifact for it to be considered completely labelled
-    criteria = db.Column(db.Integer)
+    criteria = Column(Integer)
     # Frozen: Project can't be edited, but remains viewable
-    frozen = db.Column(db.Boolean, default=False)
+    frozen = Column(Boolean, default=False)
+    # List of memberships this project is associated with
+    memberships = relationship('Membership', back_populates='project')
     # List of users in the project
-    users = db.relationship('Membership', back_populates='project')
+    users = association_proxy('memberships', 'user')
     
 class Membership(db.Model):
 
     __tablename__ = 'membership'
     # id of project and user in relationship respectively
-    pId = db.Column(db.ForeignKey('project.id'), primary_key=True)
-    uId = db.Column(db.ForeignKey('user.id'), primary_key=True)
+    p_id = Column(ForeignKey('project.id'), primary_key=True)
+    u_id = Column(ForeignKey('user.id'), primary_key=True)
     # Admin: Whether or not the user is a project admin of the project
-    admin = db.Column(db.Boolean, default=False)
+    admin = Column(Boolean, default=False)
     # Deleted: (Soft) deleted, the user is no longer part of a project
     #       but they remain in the system to view their changes
-    deleted = db.Column(db.Boolean, default=False)
+    deleted = Column(Boolean, default=False)
     # Project and user in the relationship
-    project = db.relationship('Project', back_populates='users')
-    user = db.relationship('User', back_populates='projects')
+    project = relationship('Project', back_populates='memberships')
+    user = relationship('User', back_populates='memberships')
 
 from src.models.auth_models import User
+from src.models.item_models import Labelling
 
 class ProjectSchema(ma.SQLAlchemyAutoSchema):
 
