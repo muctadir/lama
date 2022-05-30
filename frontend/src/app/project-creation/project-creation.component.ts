@@ -143,11 +143,23 @@ export class ProjectCreationComponent implements OnInit {
 
     // Message for confirmation/error
     const p_response: HTMLElement = document.querySelector("#createProjectResponse")!;
+
+    // Get all input fields
+    const inputFeilds = document.querySelectorAll("input");
+    // Check if the input fields are filled in
+    const validInputs = Array.from(inputFeilds).filter( input => input.value == "");
+    // Get the description field
+    const descField = document.getElementById("projectDescriptionForm") as HTMLInputElement;
+    // Check if its filled in
+    if(descField != null){
+      if(descField.value == ""){
+        // Otherwise push it
+        validInputs.push(descField);
+      }
+    }
     
     // Check validity of filled in form
-    if (post_form1 != null && post_form1.checkValidity()
-        && post_form2 != null && post_form2.checkValidity()
-        && post_form3 != null && post_form3.checkValidity()) {
+    if (validInputs.length == 0) {
 
       // Params of the name and description
       let params1 = this.getFormElements(post_form1);
@@ -184,6 +196,7 @@ export class ProjectCreationComponent implements OnInit {
         p_response
       }
         
+      // Send the data to the database
         // const response = axios.post('http://127.0.0.1:5000/auth/register', params)
         // .then(response => p_response.innerHTML = JSON.stringify([response.data, response.status]))
         // .catch(error => {
@@ -192,7 +205,12 @@ export class ProjectCreationComponent implements OnInit {
      
     } else {
       // Send error message
-      alert("Bad formatting");
+      p_response.innerHTML = "Fill in all fields!";
+      // Make the error message red
+      let responseObject = document.getElementById("createProjectResponse");
+      if(responseObject != null){
+        responseObject.style.color = 'red';
+        }
     }
   }
 
