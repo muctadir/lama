@@ -29,6 +29,7 @@ const routes: Routes = [
     {path: 'project', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
+      {path: 'conflict', component: ConflictPageComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
