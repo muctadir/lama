@@ -6,9 +6,9 @@ import { CreateLabelFormComponent } from '../create-label-form/create-label-form
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
 
 type label = {
-  labelName: String,
-  labelDescription: String,
-  labelType: String,
+  labelName: string,
+  labelDescription: string,
+  labelType: string,
   labeledArtifacts: number
 }
 
