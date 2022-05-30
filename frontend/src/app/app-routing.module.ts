@@ -8,6 +8,8 @@ import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account/account.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { ConflictPageComponent } from './conflict-page/conflict-page.component';
+import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 import { ProjectComponent} from './project/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { StatsComponent } from './stats/stats.component';
@@ -20,10 +22,14 @@ const routes: Routes = [
     {path: 'testing', component: TestingComponent},
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
+    {path: 'createProject', component:ProjectCreationComponent},
+    {path: 'conflict', component:ConflictPageComponent},
+    {path: 'conflictResolution', component:ConflictResolutionComponent},
     {path: 'createProject', component: ProjectCreationComponent},
     {path: 'project', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
+      {path: 'conflict', component: ConflictPageComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];

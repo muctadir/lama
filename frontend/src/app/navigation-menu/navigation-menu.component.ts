@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { NavCollapseService } from '../nav-collapse.service';
 import { Subscription } from 'rxjs';
 
@@ -21,11 +20,10 @@ export class NavigationMenuComponent implements OnDestroy {
   /**
    * Ensures that page holds the value of the current page, and subscribes to the BehaviourSubject
    * 
-   * @param router instance of router used to get the current url
    * @param commService instance of NavCollapseService used to communicate with project component
    */
-  constructor(private router: Router, private commService: NavCollapseService) {
-    this.det_page();
+  constructor(private commService: NavCollapseService) {
+    this.det_page(0);
     this.subscription = this.commService.currentCollapsed.subscribe(msg => this.collapsed = msg);
   }
 
@@ -51,20 +49,15 @@ export class NavigationMenuComponent implements OnDestroy {
 
 
   /**
-   * Determines what page the user is on based on the url
+   * Determines what page the user is on
+   * 
+   * @param navnr the page to which the user is navigating
    * 
    * @trigger whenever the component is opened, or when user routes to new page in project
    * @modifies page
-   * 
-   * TODO: Add the conditional statements for all the other paths
    */
-  det_page() {
-    let route = this.router.url;
-    if (route.includes("stats")) {
-      this.page = 0;
-    } else {
-      this.page = 1;
-    }
+  det_page(navnr: number) {
+    this.page = navnr;
   }
 
 }
