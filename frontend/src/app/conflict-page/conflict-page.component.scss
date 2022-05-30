@@ -20,7 +20,7 @@ body{
     margin-right: 10px;
     max-width: 98%;
 }
-// Row
+// Row of the top bar
 #topBarRow{
     margin-bottom: 20px;
 }
@@ -40,8 +40,8 @@ body{
 }
 // Divisions for each conflict
 .conflictDivs{
-    margin: 3% 2% 3% 2%;
-    padding: 10px 5px 20px 5px;
+    margin: 2% 2% 2% 2%;
+    padding: 10px 5px 10px 5px;
     border-bottom: 2px solid $light-grey-shade;
 }
 // Name of the artifact
