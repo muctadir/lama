@@ -164,62 +164,37 @@ export class ProjectCreationComponent implements OnInit {
       // Params of the label types
       let params3 = this.getFormElements(post_form3);
 
-      // TODO change to backend stuff
-      // Create new project with values
-      var project = this.addValuesProject(params1['projectName'], params1['projectDescription']);    
-      // Post values
-      p_response.innerHTML= "Project was created <br/>" + "It has name " + project.projectName + "<br/> And the description is: " + project.projectDescription;
-      // clear form
-      post_form1.reset();
-
-      // Create new project with values
-      var constraint = params2["numberOfLabellers"];
-      // Post values
-      p_response.innerHTML += "<br/> numberOfLabellers: " + constraint;
-
-      // Array for all label types
-      let labelTypes = [];
-      for (let labelType of this.labelTypes){
-        // Create new project with values
-        var labelTypesValue = params3['labelType-' + labelType];
-        // Post values
-        p_response.innerHTML += "<br/> labelType: " + labelTypesValue;
-        // Add value to label types array
-        labelTypes.push(labelTypesValue);
-      }
-
-      // Add the members
-      for(let member of this.projectMembers){
-        // Post values
-        p_response.innerHTML += "<br/> Member: " + member.getUsername();
-      }
-
+      // Way to get information to backend
       let projectInformation: Record<string, any> = {};
+      // Project information
       projectInformation["project"] = {
         "name" : params1['projectName'],
         "description" : params1['projectDescription'],
         "criteria": params2["numberOfLabellers"]
       };
+      // Users within the project
       projectInformation["users"] = []
+      // For each user get the admin status
       for(let i=0; i< this.projectMembers.length; i++){
         let admin;
         let adminCheckbox = document.getElementById("projectAdminCheckBox-"+this.projectMembers[i].getUsername()) as HTMLInputElement;
         if(adminCheckbox!=null){
           admin = adminCheckbox?.checked;
         }
+        // Push the user ids and admin status to list
         projectInformation["users"].push({
           "u_id": this.projectMembers[i].getId(),
           "admin": admin
         })
-        // projectInformation["users"].push(this.projectMembers[i].getId(), admin);
       }
-      // projectInformation["users"] = this.projectMembers; // list of u_id and admin
+      // Label type information
       projectInformation["labelTypes"] = this.labelTypes;
         
       // Send the data to the database
       const response = axios.post('http://127.0.0.1:5000/project/creation', projectInformation)
       .then(response => { 
-        // TODO 
+        // TODO
+        p_response.innerHTML = "Project created"
        })
       .catch(error => {
         // TODO
