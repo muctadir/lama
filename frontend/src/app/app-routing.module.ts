@@ -23,13 +23,12 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'conflict', component:ConflictPageComponent},
-    {path: 'conflictResolution', component:ConflictResolutionComponent},
     {path: 'createProject', component: ProjectCreationComponent},
     {path: 'project', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
       {path: 'conflict', component: ConflictPageComponent},
+      {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
