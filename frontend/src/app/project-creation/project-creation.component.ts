@@ -3,10 +3,8 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import axios from 'axios';
 import { User } from '../user';
-// import { stringify } from 'querystring';
 
 // Project object
 interface Project {
@@ -189,7 +187,6 @@ export class ProjectCreationComponent implements OnInit {
         // Add value to label types array
         labelTypes.push(labelTypesValue);
       }
-      console.log(labelTypes);
 
       // Add the members
       for(let member of this.projectMembers){
@@ -203,7 +200,20 @@ export class ProjectCreationComponent implements OnInit {
         "description" : params1['projectDescription'],
         "criteria": params2["numberOfLabellers"]
       };
-      projectInformation["users"] = this.projectMembers;
+      projectInformation["users"] = []
+      for(let i=0; i< this.projectMembers.length; i++){
+        let admin;
+        let adminCheckbox = document.getElementById("projectAdminCheckBox-"+this.projectMembers[i].getUsername()) as HTMLInputElement;
+        if(adminCheckbox!=null){
+          admin = adminCheckbox?.checked;
+        }
+        projectInformation["users"].push({
+          "u_id": this.projectMembers[i].getId(),
+          "admin": admin
+        })
+        // projectInformation["users"].push(this.projectMembers[i].getId(), admin);
+      }
+      // projectInformation["users"] = this.projectMembers; // list of u_id and admin
       projectInformation["labelTypes"] = this.labelTypes;
         
       // Send the data to the database

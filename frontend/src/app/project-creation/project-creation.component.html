@@ -94,7 +94,7 @@
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user (userName) connected to the checkbox-->
                                         <!-- TODO FIX THE ID -->
-                                        <input type="checkbox" id="projectAdminCheckBox'+{{member.getUsername()}}+'">
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getUsername() }}">
                                     </div>                                        
                                 </div>
                             </label>

@@ -7,8 +7,8 @@ from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema
 from src.models.item_models import Artifact
-from src.models.project_models import Membership, ProjectSchema
-from flask import jsonify, Blueprint, make_response
+from src.models.project_models import Membership, MembershipSchema, ProjectSchema, Project
+from flask import jsonify, Blueprint, make_response, request
 from flask_login import current_user
 from sqlalchemy import select
 
@@ -90,42 +90,6 @@ def home_page():
     # Return the list of dictionaries
     return make_response(dict_json)
 
-
-"""
-For creating a new project
-"""
-@project_routes.route("/creation", methods=["POST"])
-def create_project():
-    # Check if the user is logged in
-    if(not current_user.is_authenticated):
-        # Otherwise send error
-        return make_response("Unauthorized", 401)
-
-    # Get the ID of the user currently logged in
-    user_id = current_user.get_id()
-    
-    # Get the user
-    user = User.get(user_id)
-    if not user:
-        # Otherwise send error
-        return make_response("Not Found", 404)
-
-    return "501 Not Implemented"
-    username = request.args.get("username")
-    password = request.args.get("password") # Should be encrypted before sending it to the backend anyway
-    if username and password:
-        new_user = User(username=username, password=password)
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            return "201 Created"
-        except OperationalError: # Something out of our control, like connection lost or such
-            return "503 Service Unavailable"
-    else:
-        return "400 Bad Request"
-
-
-
 """
 For getting all users within the tool
 @returns a list of users
@@ -158,3 +122,38 @@ def get_users():
 
     # Return the list of users
     return make_response(response_users)
+
+"""
+For creating a new project
+"""
+@project_routes.route("/creation", methods=["POST"])
+def create_project():
+    # TODO check if user is legal
+
+    # Get the information given by the frontend
+    project_info = request.json
+
+    # Load the project data into a project object
+    project_schema = ProjectSchema()
+    project = project_schema.load(project_info["project"])
+
+    # Add the project to the database
+    db.session.add(project)
+    db.session.commit()
+    
+    # Get the ids of all users 
+    users = project_info["users"]
+    # Append the user to the project users attribute
+    for user in users:
+        project.users.append(user)#["u_id"], user["admin"])
+
+    # Commit the users
+    db.session.commit()
+
+    # TODO put the label types somewhere
+    # label_type=LabelType(name=name)
+    # db.session.add(label_type)
+    # project.label_types.append(label_type=label_type)
+    # db.session.commit()
+        
+    return "Project created"
