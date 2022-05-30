@@ -17,6 +17,8 @@ import { StatsComponent } from './stats/stats.component';
 
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConflictPageComponent } from './conflict-page/conflict-page.component';
+import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
+    AddUsersModalContent,
+    ConflictPageComponent,
+    ConflictResolutionComponent,
     NavigationMenuComponent,
     ProjectComponent,
     StatsComponent,
