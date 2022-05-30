@@ -85,7 +85,7 @@ p.timeslabelledHeader{
 }
 //table hovering color
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color:#ed5b0670;
+    background-color:#ed5b0637;
   }
 // Pagination Color
 ngb-pagination ::ng-deep a {
@@ -100,6 +100,9 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 }
 ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
 box-shadow: 0 0 0 0.1rem dimgrey;
+}
+#paginationCol{
+    padding-top: 20px;
 }
 
 //Scroll Related Business
