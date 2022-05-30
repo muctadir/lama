@@ -11,6 +11,9 @@ import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
+import { LabellingPageComponent } from './labelling-page/labelling-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from './label-form/label-form.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 import { AddArtifactComponent } from './add-artifact/add-artifact.component';
@@ -27,6 +30,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
+    LabellingPageComponent,
+    LabelFormComponent,
     ArtifactManagementPageComponent,
     SingleArtifactViewComponent,
     AddArtifactComponent
