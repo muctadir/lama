@@ -14,9 +14,6 @@ from src.models import db, ma
 from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
-# Abstract Base Class, inheriting this makes a class abstract
-from abc import ABC
-# TODO: Enforce ProjectItem, ChangingItem to be abstract
 
 @declarative_mixin
 class ProjectItem():
@@ -120,7 +117,7 @@ class Label(ChangingItem, db.Model):
     # The actual label type object this label corresponds to
     label_type = relationship('LabelType', back_populates='labels')
     # Description of meaning of label
-    desc = Column(Text)
+    description = Column(Text)
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
     deleted = Column(Boolean, default=False)
 
@@ -153,7 +150,7 @@ class Theme(ChangingItem, db.Model):
 
     __tablename__ = 'theme'
     # Description of meaning of theme
-    desc = Column(Text)
+    description = Column(Text)
     # Boolean for if the theme was (soft) deleted (can be seen in history, but not used)
     deleted = Column(Boolean, default=False)
 

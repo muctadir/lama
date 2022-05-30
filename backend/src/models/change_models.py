@@ -27,8 +27,6 @@ from src.app_util import AppUtil
 from enum import Enum
 from marshmallow import fields
 
-# TODO: Enforce Change to be abstract
-
 def create_change_schemas(Changes):
     # Event listener needs a function with no parameters, so we incorporate the parameter
     # in this inner function, and return the inner function instead
@@ -98,14 +96,14 @@ class ChangeType(Enum):
     Note that we use the same enum for all subclasses, despite the fact that not all changes can
     be done to all item types (e.g., you cannot split a label).
     We use an enum to allow the tool to filter on the type of change
-    The desc attribute of a Change class should be parsed based on its change type
+    The description attribute of a Change class should be parsed based on its change type
     """
     # Creation
     create = 0
     # Editting a name
     name = 1
     # Editting the description
-    desc = 2
+    description = 2
     # Splitting an artifact
     split = 3
     # Merging a label
@@ -172,7 +170,7 @@ class Change():
     # What kind of change is made? This exists for filtering and parsing
     change_type = Column(db.Enum(ChangeType))
     # A description of the change that was made. This should be parsed based on change_type
-    desc = Column(Text)
+    description = Column(Text)
 
     # Date and time when change was made
     timestamp = Column(DateTime)
