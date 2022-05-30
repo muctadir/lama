@@ -17,7 +17,6 @@ import { LabelFormComponent } from './label-form/label-form.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 import { AddArtifactComponent } from './add-artifact/add-artifact.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
