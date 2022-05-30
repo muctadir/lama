@@ -66,125 +66,69 @@
 
                             <!-- Rows for the labels per label type -->
                             <div class="row" id="labelTypeRow">
-                                <!-- Column for the label type -->
-                                <div class="col">
-                                    <span class="coloredText">Emotion</span>
+                                <span class="coloredText">Emotion:</span>
+                                <!-- Dropdown (disabled or not) -->
+                                <div *ngIf="labeller.current; else elseBlock">
+                                    <!-- Not diabled dropdown -->
+                                    <select>
+                                        <option value="happy">Happy</option>
+                                        <option value="sad">Sad</option>
+                                    </select>
                                 </div>
-                                <!-- Column for the label dropdowns -->
-                                <div class="col">
-                                    <!-- Dropdown (disabled or not) -->
-                                    <div *ngIf="labeller.current; else elseBlock">
-                                        <!-- Not diabled dropdown -->
-                                        <select>
-                                            <option value="happy">Happy</option>
-                                            <option value="sad">Sad</option>
-                                        </select>
-                                    </div>
-                                    <!-- Disabled dropdown -->
-                                    <ng-template #elseBlock>
+                                <!-- Disabled dropdown -->
+                                <ng-template #elseBlock>
+                                    <div>
                                         <select disabled>
                                             <option value="happy">Happy</option>
                                             <option value="sad">Sad</option>
                                         </select>
-                                    </ng-template>
-                                </div>
+                                    </div>
+                                </ng-template>
                             </div>
 
 
                             <!-- Rows for the labels per label type -->
                             <div class="row" id="labelTypeRow">
-                                <!-- Column for the label type -->
-                                <div class="col">
-                                    <span class="coloredText">Language</span>
+                                <span class="coloredText">Language:</span>
+                                <br>
+                                <!-- Dropdown (disabled or not) -->
+                                <div *ngIf="labeller.current; else elseBlock2">
+                                    <!-- Not diabled dropdown -->
+                                    <select>
+                                        <option value="python">Python</option>
+                                        <option value="html">Html</option>
+                                    </select>
                                 </div>
-                                <!-- Column for the label dropdowns -->
-                                <div class="col">
-                                    <!-- Dropdown (disabled or not) -->
-                                    <div *ngIf="labeller.current; else elseBlock2">
-                                        <!-- Not diabled dropdown -->
-                                        <select>
-                                            <option value="python">Python</option>
-                                            <option value="html">Html</option>
-                                        </select>
-                                    </div>
-                                    <!-- Disabled dropdown -->
-                                    <ng-template #elseBlock2>
+                                <!-- Disabled dropdown -->
+                                <ng-template #elseBlock2>
+                                    <div>
                                         <select disabled>
                                             <option value="python">Python</option>
                                             <option value="html">Html</option>
                                         </select>
-                                    </ng-template>
-                                </div>
+                                    </div>
+                                </ng-template>
                             </div>
 
                             <!-- Rows for the labels per label type -->
                             <div class="row" id="labelTypeRow">
                                 <!-- Column for the label type -->
                                 <div class="col">
-                                    <span class="coloredText">Biep</span>
+                                    <span class="coloredText">Biep:</span>
                                 </div>
-                                <!-- Column for the label dropdowns -->
-                                <div class="col">
-                                    <!-- Not diabled dropdown -->
+                                <!-- Not diabled dropdown -->
+                                <div>
                                     <select>
                                         <option value="trial">Trial</option>
-                                        <option value="error">Error</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Rows for the labels per label type -->
-                            <div class="row" id="labelTypeRow">
-                                <!-- Column for the label type -->
-                                <div class="col">
-                                    <span class="coloredText">Biep</span>
-                                </div>
-                                <!-- Column for the label dropdowns -->
-                                <div class="col">
-                                    <!-- Not diabled dropdown -->
-                                    <select>
-                                        <option value="trial">Trial</option>
-                                        <option value="error">Error</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Rows for the labels per label type -->
-                            <div class="row" id="labelTypeRow">
-                                <!-- Column for the label type -->
-                                <div class="col">
-                                    <span class="coloredText">Biep</span>
-                                </div>
-                                <!-- Column for the label dropdowns -->
-                                <div class="col">
-                                    <!-- Not diabled dropdown -->
-                                    <select>
-                                        <option value="trial">Trial</option>
-                                        <option value="error">Error</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Rows for the labels per label type -->
-                            <div class="row" id="labelTypeRow">
-                                <!-- Column for the label type -->
-                                <div class="col">
-                                    <span class="coloredText">Biep</span>
-                                </div>
-                                <!-- Column for the label dropdowns -->
-                                <div class="col">
-                                    <!-- Not diabled dropdown -->
-                                    <select>
-                                        <option value="trial">Trial</option>
-                                        <option value="error">Error</option>
+                                        <option value="error">Error and more errors</option>
                                     </select>
                                 </div>
                             </div>
 
                         </div>
 
-
                     </div>
+
                     <!-- Column for remark -->
                     <div class="col" id="remarkCol">
                         <span class="boldText">Remark: </span> <br>

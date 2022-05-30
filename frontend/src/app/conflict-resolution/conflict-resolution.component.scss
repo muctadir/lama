@@ -108,7 +108,7 @@ body{
 }
 // EACH LABEL TYPE
 .labelTypeDiv{
-    height: 125px;
+    height: 150x;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -125,9 +125,11 @@ body{
 // SELECT DROPDOWN
 // Dropdown layout
 select{
-    width: 125px;
+    width: auto;
     border-radius: 7px;
+    border-color: $light-grey-shade;
     padding: 5px;
+    margin-top: 10px;
 }
 // Disabled dropdown
 select:disabled{
