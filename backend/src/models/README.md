@@ -28,7 +28,11 @@ this exists mostly to simplify queries or to be extended later <br>
     criteria (number of users that need to label an artifact for it to be considered completely labelled) <br>
     frozen (cannot be edited) <br>
     memberships (collection of memberships associated with this project) <br>
-    users (collection of users in this project)
+    users (collection of users in this project) <br>
+    artifacts (collection of artifacts in this project) <br>
+    labels (collection of labels in this project) <br>
+    themes (collection of themes in this project) <br>
+    label_types (collection of label types in this project)
 </details>
 
 <details><summary>Membership</summary>
