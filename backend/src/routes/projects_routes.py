@@ -89,3 +89,37 @@ def home_page():
 
     # Return the list of dictionaries
     return make_response(dict_json)
+
+
+"""
+For creating a new project
+"""
+@project_routes.route("/home", methods=["POST"])
+def create_project():
+    # Check if the user is logged in
+    if(not current_user.is_authenticated):
+        # Otherwise send error
+        return make_response("Unauthorized", 401)
+
+    # Get the ID of the user currently logged in
+    user_id = current_user.get_id()
+    
+    # Get the user
+    user = User.get(user_id)
+    if not user:
+        # Otherwise send error
+        return make_response("Not Found", 404)
+
+    return "501 Not Implemented"
+    username = request.args.get("username")
+    password = request.args.get("password") # Should be encrypted before sending it to the backend anyway
+    if username and password:
+        new_user = User(username=username, password=password)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return "201 Created"
+        except OperationalError: # Something out of our control, like connection lost or such
+            return "503 Service Unavailable"
+    else:
+        return "400 Bad Request"

@@ -3,6 +3,7 @@
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 
 // Project object
 interface Project {
@@ -99,7 +100,7 @@ export class ProjectCreationComponent implements OnInit {
   project_members: User[] = []
 
   // Label types
-  labelTypes: string[] = ["doing"];
+  labelTypes: string[] = ["doing", "floing"];
 
   ngOnInit(): void { 
     // TODO
@@ -116,33 +117,78 @@ export class ProjectCreationComponent implements OnInit {
 
   }
 
+  // Function for getting all form elements
+  getFormElements(form:HTMLFormElement){
+    // Make a dictionary for all values
+    let params: Record<string, string> = {};
+    // For loop for adding the params to the list
+    for (let i = 0; i < form.length; i++) { 
+      // Add them to dictionary
+      let param = form[i] as HTMLInputElement; // Typecast
+      params[param.name] = param.value;
+    }
+    // Return the dictionary of values
+    return params;
+  }
+
   // Function for creating the project
   createProject() { 
-    // Get the form
-    const post_form: HTMLFormElement = (document.querySelector("#projectCreationForm")!);
+    // Get the forms
+    // For with name and description
+    const post_form1: HTMLFormElement = (document.querySelector("#projectCreationForm")!);
+    // Form with the number of labellers
+    const post_form2: HTMLFormElement = (document.querySelector("#constraintForm")!);
+    // For with the label types
+    const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
+
     // Message for confirmation/error
     const p_response: HTMLElement = document.querySelector("#createProjectResponse")!;
     
     // Check validity of filled in form
-    if (post_form != null && post_form.checkValidity()) {
+    if (post_form1 != null && post_form1.checkValidity()
+        && post_form2 != null && post_form2.checkValidity()
+        && post_form3 != null && post_form3.checkValidity()) {
 
-      // Typescript dictionary (string -> string)
-      let params: Record<string, string> = {};
-      // Take all form elements
-      for (let i = 0; i < post_form.length; i++) { 
-        // Add them to dictionary
-        let param = post_form[i] as HTMLInputElement; // Typecast
-        params[param.name] = param.value;
-      }
+      // Params of the name and description
+      let params1 = this.getFormElements(post_form1);
+      // Params of the number of labellers
+      let params2 = this.getFormElements(post_form2);
+      // Params of the label types
+      let params3 = this.getFormElements(post_form3);
 
+      // TODO change to backend stuff
       // Create new project with values
-      var project = this.addValuesProject(params['projectName'], params['projectDescription']);
-                  
+      var project = this.addValuesProject(params1['projectName'], params1['projectDescription']);    
       // Post values
       p_response.innerHTML= "Project was created <br/>" + "It has name " + project.projectName + "<br/> And the description is: " + project.projectDescription;
-
       // clear form
-      post_form.reset();
+      post_form1.reset();
+
+      // Create new project with values
+      var constraint = params2["numberOfLabellers"];
+      // Post values
+      p_response.innerHTML += "<br/> numberOfLabellers: " + constraint;
+
+      for (let labelType of this.labelTypes){
+        // Create new project with values
+        var labelTypesValue = params3['labelType-' + labelType];
+        console.log("labelType"+labelType);
+        console.log(labelTypesValue);
+        // Post values
+        p_response.innerHTML += "<br/> labelType: " + labelTypesValue;
+      }
+
+      // Add the members
+      for(let member of this.project_members){
+        // Post values
+        p_response
+      }
+        
+        // const response = axios.post('http://127.0.0.1:5000/auth/register', params)
+        // .then(response => p_response.innerHTML = JSON.stringify([response.data, response.status]))
+        // .catch(error => {
+        //   p_response.innerHTML = JSON.stringify([error.response.data, error.response.status])
+        // });
      
     } else {
       // Send error message

@@ -24,21 +24,23 @@
                     <!-- Username field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        <input class="form-control" type="text" placeholder="Project Name" required><br>
+                        <input name="projectName" class="form-control" type="text" placeholder="Project Name" required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <textarea class="form-control" rows="10" placeholder="Description"></textarea>
+                        <textarea name="projectDescription" class="form-control" rows="10" placeholder="Description"></textarea>
                     </div>  
                     
-                    <div>
-                        <!-- Response -->
-                        <!-- TODO TO TEST CAN BE DELETED LATER -->
-                        <p id="createProjectResponse"></p>
-                    </div>
                 </form>
+
+                <!-- Response division -->
+                <div id="responseDiv">
+                    <!-- Response -->
+                    <p id="createProjectResponse"></p>
+                </div>
+
             </div>
 
             <!-- Right side of the page (members, labeller count, label types) -->
@@ -71,7 +73,6 @@
                                 </div>
                             </div>
                             
-                            
                             <!-- Name and checkbox per member of the project -->
                             <label *ngFor="let member of project_members" for="user" style="display: block;"> 
 
@@ -96,19 +97,20 @@
                                     </div>                                        
                                 </div>
                             </label>
+
                         </div>
                     </div>
                 </div>
 
                 <!-- Division around the labeller count -->
-                <form>      
+                <form id="constraintForm">      
                     <div class="form-group projectSettingsDivParent">
                         <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
                         <!-- Division around the input -->
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                <input type="number" class="form-control" name="numberOfLabellers" placeholder="2" min="2" max="20" style="max-width: 20%;">
+                                <input type="number" class="form-control" name="numberOfLabellers" value="2" min="2" max="20" style="max-width: 20%;">
                             </div>
                         </div>
                     </div> 
@@ -122,9 +124,12 @@
                         <!-- All label types in the project -->
                         <div id="labelTypeDiv">
                             <div id="labelTypeList">
-                                <div *ngFor="let labelType of labelTypes">
-                                    <input type="labelType" class="form-control labelType" placeholder="Label type">
-                                </div>
+                                <form id="labelTypeForm">
+                                    <div *ngFor="let labelType of labelTypes">
+                                        <!-- Text field for the label type -->
+                                        <input type="text" name="{{ 'labelType-' + labelType }}" class="form-control labelType" value="{{labelType}}" placeholder="Label type">
+                                    </div>
+                                </form>
                             </div>
                             <!-- Button for adding new label types -->
                             <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
