@@ -1,18 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
 // Color variables
 $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
+$offgrey-shade: #1C5858;
 
 // Changes the color of the button to orange
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: $orange-shade !important;
 }
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
-
-/* Importing Bootstrap Icons file. */
-@import "~bootstrap-icons/font/bootstrap-icons.css";
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
