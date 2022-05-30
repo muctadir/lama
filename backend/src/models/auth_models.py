@@ -13,6 +13,7 @@ Relevant info:
 from src.models import db, ma # need this in every model
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 from flask_login import UserMixin
 from enum import Enum
 from marshmallow import fields
@@ -41,8 +42,10 @@ class User(UserMixin, db.Model):
     # Personal description
     description = Column(Text) 
 
+    # List of memberships the user is involved in
+    memberships = relationship('Membership', back_populates='user')
     # List of projects the user is a part of
-    projects = relationship('Membership', back_populates='user')
+    projects = association_proxy('memberships', 'project')
     # List of labellings the user has made
     labellings = relationship('Labelling', back_populates='user')
     # List of highlights the user has made

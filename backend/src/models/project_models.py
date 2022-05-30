@@ -13,6 +13,7 @@ Relevant info:
 from src.models import db, ma
 from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 
 class Project(db.Model):
 
@@ -24,8 +25,10 @@ class Project(db.Model):
     criteria = Column(Integer)
     # Frozen: Project can't be edited, but remains viewable
     frozen = Column(Boolean, default=False)
+    # List of memberships this project is associated with
+    memberships = relationship('Membership', back_populates='project')
     # List of users in the project
-    users = relationship('Membership', back_populates='project')
+    users = association_proxy('memberships', 'user')
     
 class Membership(db.Model):
 
@@ -39,8 +42,8 @@ class Membership(db.Model):
     #       but they remain in the system to view their changes
     deleted = Column(Boolean, default=False)
     # Project and user in the relationship
-    project = relationship('Project', back_populates='users')
-    user = relationship('User', back_populates='projects')
+    project = relationship('Project', back_populates='memberships')
+    user = relationship('User', back_populates='memberships')
 
 from src.models.auth_models import User
 from src.models.item_models import Labelling
