@@ -1,4 +1,4 @@
-All of the *concrete* models contain a _\_tablename__ attribute
+All of the *concrete* models contain a \_\_tablename\_\_ attribute
 <details><summary>User</summary>
     id <br>
     username <br>
