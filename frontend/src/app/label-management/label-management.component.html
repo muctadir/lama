@@ -24,46 +24,37 @@
     </div>
 
 
-    <form>
-        <!-- <div class="mb-3 row">
-          <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
-          <div class="col-xs-3 col-sm-auto">
-            <input id="table-complete-search" type="text" class="form-control" name="searchTerm" [(ngModel)]="service.searchTerm">
+    <!--Row containing Artifacts Table-->
+    <div class="row justify-content-sm-center" id="tableRow">
+      <div class="col-9">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+              <table class="table table-hover" id="labelsTable">
+                  <!--Table Headers-->
+                  <thead>
+                      <tr>
+                          <th scope="col"><p class="labelHeader">Label</p></th>
+                          <th scope="col"><p class="labelTypeHeader">Label Type</p></th>
+                          <th scope="col"><p class="artifactslabelledHeader">Artifacts Labelled</p></th>
+                      </tr>
+                  </thead>
+                  <!--Table Content-->
+                  <tbody  routerLink="/singleartifact">
+                      <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
+                          <td><p class="labelName">{{label.labelName}}</p></td>
+                          <td><p class="labelType">{{label.labelType}}</p></td>
+                          <td><p class="artifactsLabelled">{{label.labeledArtifacts}}</p></td>
+                      </tr>
+                  </tbody>
+              </table>
           </div>
-          <span class="col col-form-label" *ngIf="service.loading$ | async">Loading...</span>
-        </div> -->
-      
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th scope="col" sortable="name">Label</th>
-            <th scope="col" sortable="area">Label Type</th>
-            <th scope="col" sortable="population">Artifacts Labelled</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let label of labels">
-            <th scope="row">{{ label.labelName }}</th>
-            <td>
-              <ngb-highlight [result]="label.labelName"></ngb-highlight>
-            </td>
-            <td><ngb-highlight [result]="label.labelType"></ngb-highlight></td>
-            <td><ngb-highlight [result]="label.labeledArtifacts | number"></ngb-highlight></td>
-          </tr>
-          </tbody>
-        </table>
-      
-        <!-- <div class="d-flex justify-content-between p-2">
-          <ngb-pagination
-            [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
-          </ngb-pagination>
-      
-          <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-            <option [ngValue]="2">2 items per page</option>
-            <option [ngValue]="4">4 items per page</option>
-            <option [ngValue]="6">6 items per page</option>
-          </select>
-        </div> -->
-      
-      </form>
+          <!--Pagination-->          
+          <div class="col-12 justify-content-center" id="paginationCol">
+              <ngb-pagination
+                  [(page)]="page"
+                  [pageSize]="pageSize"
+                  [collectionSize]="labels.length" size="lg">
+              </ngb-pagination>
+          </div>
+      </div>
+  </div>
 </body>
