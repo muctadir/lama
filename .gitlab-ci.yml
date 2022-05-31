@@ -50,6 +50,7 @@ backend-test:
     - |
        ls
        cd "$CI_PROJECT_DIR/backend"
+       ls
        pip3 requirements.txt /a
     -  pip3 install -r requirements.txt
   script:
