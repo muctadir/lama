@@ -150,16 +150,15 @@ def create_project():
     # Commit the users
     db.session.commit()
 
-    # TODO put the label types somewhere
+    # Get the label types from frontend
     label_types = project_info["labelTypes"]
+    # Add each label type to the database
     for type in label_types:
-        p_label_types = db.session.execute(select(LabelType).where(LabelType.p_id==project.id)).scalars().all()
-        if len(p_label_types) == 0:
-            label_id = 1
-        else:
-            label_id = p_label_types[len(p_label_types) - 1].id + 1
-        label_type = LabelType(p_id=project.id, id=label_id, name=type)
+        # Create a label type object
+        label_type = LabelType(p_id=project.id, name=type)
+        # Add the label type to the database
         db.session.add(label_type)
+        # Commit the label type
         db.session.commit()
         
     return "Project created"
