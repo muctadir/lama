@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import axios from 'axios';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { InputCheckService } from '../input-check.service';
 
@@ -52,21 +53,38 @@ export class RegisterComponent {
 
     // chooses desired behaviour based on validity of input
     if (not_empty){
+      // Needed to not show the error
       this.errorMsg = "";
       // calls method responsible for the actual registering
       this.register()
     } else {
-      this.errorMsg = "Invalid username, password or email.";
+      this.errorMsg = "Fill in username, password and email.";
     }
   }
 
-  /* TODO: implement this register function */
+  /* Register the user */
   register() {
-    console.log(this.username.value);
-    console.log(this.email.value);
-    console.log(this.password.value);
-    console.log(this.passwordR.value);
-    console.log(this.desc.value);
+
+    // Information needed for backend
+    let registerInformation = {
+      username: this.username.value,
+      email: this.email.value,
+      description: this.desc.value,
+      password: this.password.value,
+      passwordR: this.passwordR.value,
+    }
+
+    // Post to backend
+    const response = axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
+    .then(response =>{
+      // Print the created message
+      this.errorMsg = response.data;
+    })
+    .catch(error =>{
+      // Print the error message
+      this.errorMsg = error.response.data;
+    })
+
   }
 
 }
