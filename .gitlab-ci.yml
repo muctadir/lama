@@ -15,7 +15,7 @@
 #   only:
 #     - main # or the name of your main branch 
   
-frontend-check:
+frontend-test:
   image: ubuntu:22.04
 
   cache:
@@ -38,3 +38,25 @@ frontend-check:
   script:
     - npm run build
     - npm run githubTest
+
+backend-test:
+  image: ubuntu:22.04
+
+  before_script:
+    - rm /bin/sh && ln -s /bin/bash /bin/sh
+    - apt-get update \
+    && apt-get install -y --no-install-recommends libmysqlclient-dev \
+       python3-pip \
+       build-essential \
+       libssl-dev \
+       libffi-dev \
+       python3-dev \
+       curl \
+       && rm -rf /var/lib/apt/lists/*
+    - |
+       ls
+       cd "$CI_PROJECT_DIR/backend"
+       pip3 requirements.txt /a
+    -  pip3 install -r requirements.txt
+  script:
+    - pytest
