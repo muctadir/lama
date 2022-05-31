@@ -27,12 +27,7 @@ class ProjectItem():
     def p_id(cls):
         return Column(Integer, ForeignKey('project.id'), nullable=False)
 
-<<<<<<< HEAD
-    # id within project
-    id = Column(Integer, primary_key=True, autoincrement=True)
-=======
     id = Column(Integer, primary_key=True)
->>>>>>> main
     name = Column(String(64))
 
     # Project that item belongs to
