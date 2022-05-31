@@ -1,18 +1,18 @@
+//Title Header part of the page
 #pageTitle {
     padding-top: 10px;
     font-size: 35px;
     letter-spacing: 1px;
 }
+//Top half part of page
 #topHalf{
     padding-top:10px;
     padding-left:30px;
     padding-right: 30px;
 }
+//top left section
 #topLeft{
     padding-right: 100px;
-}
-#topRight{
-    padding-left: 0px;
 }
 #name{
     margin-left: 10px;
@@ -22,10 +22,7 @@
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
-#description{
-    font-size: 20px;
-    letter-spacing: 1px;
-}
+//Labels header
 #labels{
     margin-left: 10px;
     border-bottom: 2px; 
@@ -34,6 +31,7 @@
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
+//Labels list from *ngFor
 #allLabels{
     padding-left: 20px;
     font-size:17px;
@@ -45,6 +43,16 @@
 #nameInputCol{
     padding-top: 10px;
 }
+//Top right of page
+#topRight{
+    padding-left: 0px;
+}
+#description{
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+//Subthemes header
 #subThemes{
     padding-top: 10px;
     padding-bottom: 10px;
@@ -54,6 +62,7 @@
     letter-spacing: 1px;
     border-bottom-color: orange
 }
+//Subtheme button
 #addSubthemeButton{
     background-color: #ED5A06;
     border: 2px solid;
@@ -61,6 +70,7 @@
     color: white;
     float: right;
 }
+//Subthemes list 
 #allSubthemes{
     padding-left: 20px;
     font-size:17px;
