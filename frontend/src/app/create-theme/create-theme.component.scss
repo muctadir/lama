@@ -35,7 +35,7 @@
     border-bottom-color: orange;
 }
 #allLabels{
-    padding-left: 0px;
+    padding-left: 20px;
 }
 #allLabelsCol{
     padding-top: 10px;
@@ -45,9 +45,18 @@
 }
 #subThemes{
     padding-top: 10px;
+    padding-bottom: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 20px;
     letter-spacing: 1px;
     border-bottom-color: orange
 }
+#addSubthemeButton{
+    background-color: #ED5A06;
+    border: 2px solid;
+    border-color: #ED5A06;
+    color: white;
+    float: right;
+}
+
