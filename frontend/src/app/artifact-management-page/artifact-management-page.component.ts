@@ -87,4 +87,9 @@ export class ArtifactManagementPageComponent implements OnInit {
 
   }
 
+  notImplemented(): void {
+    alert("Button has not been implemented yet.");
+  }
+
+
 }
