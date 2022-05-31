@@ -1,0 +1,39 @@
+<!-- @author: Chinno Lavin -->
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- Page Header -->
+    <div class="row" >
+        <div class="col-10 header" id="pageTitle"> 
+            Create Theme
+        </div>
+    </div>
+    <!-- Page body top half -->
+    <div class="row" style="border: 1px solid red;">
+        <div class="col-6" style="border: 1px solid red;">
+            <div class="row" style="border: 1px solid red;">
+                <!-- Label Name section -->
+                <div class="col-12" id="name">
+                    Name
+                </div>
+                <div class="col-12" id="nameInputCol">
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Required" required><br>
+                    </div>
+                </div>
+                <!-- Displays All labels section -->
+                <div class="col-12" id="labels">                 
+                    Labels
+                </div>
+                <div class="row">
+                    <div class="col-6" id="allLabelsCol">
+                        <div *ngFor="let label of allLabels">
+                            <p id="allLabels">{{label}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+
+</div>

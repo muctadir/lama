@@ -19,6 +19,7 @@ import { StatsComponent } from './stats/stats.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { SortableThemeHeader } from './sortable-theme.directive';
+import { CreateThemeComponent } from './create-theme/create-theme.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SortableThemeHeader } from './sortable-theme.directive';
     StatsComponent,
     AddUsersModalContent,
     ThemeManagementComponent,
-    SortableThemeHeader
+    SortableThemeHeader,
+    CreateThemeComponent
   ],
   imports: [
     BrowserModule,
