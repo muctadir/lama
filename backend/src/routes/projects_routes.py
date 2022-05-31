@@ -5,7 +5,7 @@
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema
+from src.models.auth_models import User, UserSchema, UserStatus
 from src.models.item_models import Artifact, LabelType, LabelTypeSchema
 from src.models.project_models import Membership, MembershipSchema, ProjectSchema, Project
 from flask import jsonify, Blueprint, make_response, request
@@ -111,8 +111,8 @@ def get_users():
     #     return make_response("Not Found", 404)
 
 
-    # Make a list for all users
-    all_users = db.session.execute(select(User)).scalars().all()
+    # Make a list of all approved users
+    all_users = db.session.execute(select(User).where(User.status==UserStatus.approved)).scalars().all()
 
     # Schema to serialize the User
     user_schema = UserSchema()
@@ -156,9 +156,9 @@ def create_project():
     for type in label_types:
         # Create a label type object
         label_type = LabelType(p_id=project.id, name=type)
+        
         # Add the label type to the database
         db.session.add(label_type)
-        # Commit the label type
         db.session.commit()
         
     return "Project created"
