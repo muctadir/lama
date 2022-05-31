@@ -3,26 +3,51 @@
     font-size: 35px;
     letter-spacing: 1px;
 }
+#topHalf{
+    padding-top:10px;
+    padding-left:30px;
+    padding-right: 30px;
+}
+#topLeft{
+    padding-right: 100px;
+}
+#topRight{
+    padding-left: 0px;
+}
 #name{
-    border-bottom: 1px; 
+    margin-left: 10px;
+    border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 20px;
     letter-spacing: 1px;
-    border-bottom-color: #ED5A06;
+    border-bottom-color: orange;
+}
+#description{
+    font-size: 20px;
+    letter-spacing: 1px;
 }
 #labels{
-    border-bottom: 1px; 
+    margin-left: 10px;
+    border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 20px;
     letter-spacing: 1px;
-    border-bottom-color: #ED5A06;
+    border-bottom-color: orange;
 }
 #allLabels{
-    padding-left: 10px;
+    padding-left: 0px;
 }
 #allLabelsCol{
     padding-top: 10px;
 }
 #nameInputCol{
     padding-top: 10px;
+}
+#subThemes{
+    padding-top: 10px;
+    border-bottom: 2px; 
+    border-bottom-style: solid; 
+    font-size: 20px;
+    letter-spacing: 1px;
+    border-bottom-color: orange
 }
