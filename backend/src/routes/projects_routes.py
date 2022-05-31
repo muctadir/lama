@@ -34,7 +34,7 @@ def home_page():
         return make_response("Not Found", 404)
 
     # Get membership of the user
-    projects_of_user = Membership.query.filter(Membership.uId==user_id)
+    projects_of_user = Membership.query.filter(Membership.u_id==user_id)
 
     # List for project information
     projects_info = []
