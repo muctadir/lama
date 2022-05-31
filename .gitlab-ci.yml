@@ -16,7 +16,7 @@
 #     - main # or the name of your main branch 
   
 frontend-check:
-  image: ubuntu:latest
+  image: ubuntu:22.04
 
   cache:
     paths:
