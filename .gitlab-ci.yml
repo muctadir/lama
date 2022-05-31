@@ -15,36 +15,38 @@
 #   only:
 #     - main # or the name of your main branch 
   
-frontend-test:
-  image: ubuntu:22.04
+# frontend-test:
+#   image: ubuntu:22.04
 
-  cache:
-    paths:
-      - node_modules/
+#   cache:
+#     paths:
+#       - node_modules/
 
-  before_script: 
-    - apt-get update -y
-    - apt-get install curl wget -y 
-    - curl -fsSL https://deb.nodesource.com/setup_16.x 
-    - apt-get update -y
-    - apt-get install -y nodejs npm
-    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - apt install ./google-chrome-stable_current_amd64.deb -y
-    - |
-      ls
-      cd "$CI_PROJECT_DIR/frontend"
-    - export CHROME_BIN=/usr/bin/google-chrome 
-    - npm ci 
-  script:
-    - npm run build
-    - npm run githubTest
+#   before_script: 
+#     - apt-get update -y
+#     - apt-get install curl wget -y 
+#     - curl -fsSL https://deb.nodesource.com/setup_16.x 
+#     - apt-get update -y
+#     - apt-get install -y nodejs npm
+#     - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#     - apt install ./google-chrome-stable_current_amd64.deb -y
+#     - |
+#       ls
+#       cd "$CI_PROJECT_DIR/frontend"
+#     - export CHROME_BIN=/usr/bin/google-chrome 
+#     - npm ci 
+#   script:
+#     - npm run build
+#     - npm run githubTest
 
 backend-test:
   image: ubuntu:22.04
 
   before_script:
     - rm /bin/sh && ln -s /bin/bash /bin/sh
-    - apt-get update && apt-get install -y --no-install-recommends libmysqlclient-dev python3-pip build-essential libssl-dev libffi-dev python3-dev curl && rm -rf /var/lib/apt/lists/*
+    - apt-get update 
+    - apt-get install -y --no-install-recommends libmysqlclient-dev python3-pip build-essential libssl-dev libffi-dev python3-dev curl
+    - rm -rf /var/lib/apt/lists/*
     - |
        ls
        cd "$CI_PROJECT_DIR/backend"
