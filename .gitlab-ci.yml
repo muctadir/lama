@@ -45,7 +45,7 @@ backend-test:
   before_script:
     - rm /bin/sh && ln -s /bin/bash /bin/sh
     - apt-get update \
-    && apt-get install -y --no-install-recommends libmysqlclient-dev \
+       && apt-get install -y --no-install-recommends libmysqlclient-dev \
        python3-pip \
        build-essential \
        libssl-dev \
