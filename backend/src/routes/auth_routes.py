@@ -1,3 +1,6 @@
+# Veerle Furst
+# Jarl Jansen
+
 from src import db # need this in every route
 from src.app_util import AppUtil
 from src.models.auth_models import User, UserSchema
@@ -8,9 +11,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 from flask_cors import cross_origin
 
-auth_routes = Blueprint("auth", __name__)
+auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
-@auth_routes.route("/auth/register", methods=["POST"])
+@auth_routes.route("/register", methods=["POST"])
 @cross_origin()
 def register():
     """
@@ -18,13 +21,31 @@ def register():
     See create_user() for default arguments
     """
     args = request.json
-    required = ["username", "email", "password", "description"] # Required arguments
+    
+    required = ["username", "email", "password", "passwordR", "description"] # Required arguments
+
+    # Checks if required fields are given
     if AppUtil.check_args(required, args):
-        if check_format(**args):
-            if not taken(args["username"], args["email"]):
-                return create_user(args)
-            return make_response(("Username or email taken", 400))
-        return make_response(("Invalid format", 400))
+
+        # Check if passwords are equal
+        if args["password"] == args["passwordR"]:
+
+            # calls the check format function, to see whether user request has valid info
+            check = check_format(**args)
+
+            # checks whether user input is correct
+            if check[0]:
+                # Checking if username and email are taken
+                if not taken(args["username"], args["email"]):
+                    # Go to the function to create the user
+                    return create_user(args)
+                return make_response(("Username or email taken", 400))
+
+            # response if user input is invalid
+            return make_response((check[1], 400))
+        # Response if passwords are not equal
+        return make_response(("Passwords are not equal", 400))
+    # Bad request
     return make_response(("Bad Request", 400))
 
 @auth_routes.route("/auth/pending", methods=["GET"])
@@ -60,8 +81,13 @@ def create_user(args):
     Hashes password
     Converts email to lowercase
     """
+    # return make_response("hello")
+    # Hash password
     args["password"] = generate_password_hash(args["password"])
+    # Make email lowercase
     args["email"] = args["email"].lower()
+    # Remove the second password that was send
+    args.pop("passwordR")
     new_user = User(**args)
     try:
         db.session.add(new_user)
@@ -76,8 +102,12 @@ def taken(username, email):
     return bool(violation)
 
 # Checks validity of all required fields for User creation
-def check_format(username, email, password, description):
-    return AppUtil.check_username(username) and \
-            AppUtil.check_email(email) and \
-            AppUtil.check_password(password) and \
-            len(description) > 0
+def check_format(username, email, password, passwordR, description):
+    if (not AppUtil.check_username(username)):
+        return [False, "Invalid username"]
+    elif (not AppUtil.check_email(email)):
+        return [False, "Invalid email"]
+    elif (not AppUtil.check_password(password)):
+        return [False, "Invalid password"]
+    else:
+        return [True, "Success"]
