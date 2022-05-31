@@ -44,15 +44,7 @@ backend-test:
 
   before_script:
     - rm /bin/sh && ln -s /bin/bash /bin/sh
-    - apt-get update \
-       && apt-get install -y --no-install-recommends libmysqlclient-dev \
-       python3-pip \
-       build-essential \
-       libssl-dev \
-       libffi-dev \
-       python3-dev \
-       curl \
-       && rm -rf /var/lib/apt/lists/*
+    - apt-get update && apt-get install -y --no-install-recommends libmysqlclient-dev python3-pip build-essential libssl-dev libffi-dev python3-dev curl && rm -rf /var/lib/apt/lists/*
     - |
        ls
        cd "$CI_PROJECT_DIR/backend"
