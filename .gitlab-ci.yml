@@ -1,6 +1,5 @@
 stages:
-  - frontend
-  - backend
+  - testing
 # sonarqube-check:
 #   image: 
 #     name: sonarsource/sonar-scanner-cli:latest
@@ -19,7 +18,7 @@ stages:
 #     - main # or the name of your main branch 
   
 frontend-test:
-  stage: frontend
+  stage: testing
   image: ubuntu:22.04
 
   cache:
@@ -44,7 +43,7 @@ frontend-test:
     - npm run githubTest
 
 backend-test:
-  stage: backend
+  stage: testing
   image: ubuntu:22.04
 
   before_script:
