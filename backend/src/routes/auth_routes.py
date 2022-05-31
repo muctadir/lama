@@ -6,6 +6,7 @@ from src.app_util import AppUtil
 from src.models.auth_models import User, UserSchema
 from flask import current_app as app
 from flask import make_response, request, Blueprint
+from sqlalchemy import select
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
@@ -13,6 +14,7 @@ from flask_cors import cross_origin
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
+# Function to register a user
 @auth_routes.route("/register", methods=["POST"])
 @cross_origin()
 def register():
@@ -48,7 +50,8 @@ def register():
     # Bad request
     return make_response(("Bad Request", 400))
 
-@auth_routes.route("/auth/pending", methods=["GET"])
+# Function to get all users who are pending
+@auth_routes.route("/pending", methods=["GET"])
 @cross_origin()
 def pending():
     """
@@ -63,25 +66,37 @@ def pending():
         pending = user_schema.dumps(pending) # dumps automatically converts to json, as opposed to dump
         return make_response(pending) # default code is 200
 
-@auth_routes.route("/auth/login")
+# Function to make a user login
+@auth_routes.route("/login", methods=["POST"])
 @cross_origin()
 def login():
+    """
+    Logs in the user
+    """
     args = request.json
-    if AppUtil.check_args(["username", "password"], args): # Correct arguments supplied
-        user = db.session.query(User).filter(User.username == args["username"]) # Get user with username
-        if user and check_password_hash(user.password, args["password"]): # user exists and password matches
-            login_user(user)
-            return make_response() # Should default to 200 if nothing provided
-        return make_response(("Invalid Username/Password", 400))
+
+    # Checks if correct arguments supplied
+    if AppUtil.check_args(["username", "password"], args): 
+        # Get user with username 
+        user = db.session.execute(select(User).where(User.username == args["username"])).scalars().all()
+        # Check if user exists and password matches
+        if user and check_password_hash(user[0].password, args["password"]): 
+            # Log in user (Flask)
+            login_user(user[0])
+            # Respond that the user is now logged in
+            return make_response(("Logged in", 200))
+        # Respond invalid username or password
+        return make_response(("Invalid username or password", 400))
+    # Respond bad request
     return make_response(("Bad Request", 400))
 
+# Function to create the user that was register
 def create_user(args):
     """
     Adds a user to the database assuming correct (and unmodified) arguments are supplied
     Hashes password
     Converts email to lowercase
     """
-    # return make_response("hello")
     # Hash password
     args["password"] = generate_password_hash(args["password"])
     # Make email lowercase
