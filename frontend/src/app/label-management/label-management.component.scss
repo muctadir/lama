@@ -53,14 +53,16 @@ svg.bi.bi-plus{
     --main-color-1: #ED5A06;
     --main-color-2: #38474e;
 }
-body{
 
-}
 // TOP BAR
 #topBarRow{
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
+}
+
+#tableRow {
+    padding-top: 2em;
 }
 
 #horizontalLineRow{
@@ -98,11 +100,19 @@ p.labelHeader{
     font-weight: 500;
 }
 
+p.labelTypeHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    white-space:nowrap;
+    font-weight: 500;
+}
+
 p.artifactsLabelledHeader{
     font-size: 20px;
     letter-spacing: 1px;
     text-align: center;   
-    white-space:nowrap;
+    white-space: nowrap;
     font-weight: 500;
 }
 //table hovering color
@@ -156,4 +166,7 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 }
 #scrolly{
     padding-right: 40px;
+}
+body{
+    overflow-x:hidden;
 }
