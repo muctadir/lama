@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { LoremIpsum } from "lorem-ipsum";
+import { LabelFormComponent } from '../label-form/label-form.component';
+import { LabelingDataService } from "app/labeling-data.service";
+import { StringArtifact } from 'app/stringartifact';
+import { LabelType } from 'app/label-type';
+
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -38,11 +43,9 @@ type label = {
   styleUrls: ['./single-artifact-view.component.scss']
 })
 export class SingleArtifactViewComponent implements OnInit {
-
-  artifactId: Number = 1;
+  artifact?: StringArtifact;
   artifactIdentifier: String = 'XJY03';
   labelers: Array<String> = ["Bartjan", "Veerle"]
-  artifact: String = lorem.generateParagraphs(10);
   allLabels: Array<String> = ['Sad','Ecstatic','Latin','English']
   labelTypes: Array<labelType> = [
     {
@@ -84,15 +87,35 @@ export class SingleArtifactViewComponent implements OnInit {
     
   ]
 
+  constructor(private labelingDataService: LabelingDataService
+    ) { }
+
+  /**
+   * Author Bartjan
+   * ngOnInit runs after the constructor. When the constructor is executed
+   * the artifacts and labels are pulled in
+   */
+  ngOnInit(): void {
+    this.getArtifact()
+  }
+
+   /**
+   * Author: Bartjan 
+   * Function which subscribes to the labelingDataService and retrieves the artifact.
+   * It waits for a response and when the response arrives it adds Bartjan 
+   * as a labeler and then puts the information into this.artifact.
+   */
+  getArtifact ():void {
+    this.labelingDataService.getArtifact()
+      .subscribe(artifact => {
+        artifact.addLabeler("Bartjan");
+        this.artifact = artifact;
+      });
+    }
 
   notImplemented(){
     alert("This button is not implemented.");
   }
-
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  
 
 }

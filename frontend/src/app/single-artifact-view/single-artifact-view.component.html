@@ -5,7 +5,7 @@
     <div class="row" id="pageTitle">
         <!-- title name -->
         <div id="artifactId" class="col-10">
-            Artifact {{artifactId}}
+            Artifact {{artifact?.getIdentifier()!}}
         </div> 
         <!-- Artifact Identifier -->
         <div class="col-2" id="artifactIdentifier">
@@ -16,7 +16,7 @@
     <!-- Container for Artifact -->
     <div class="row">
         <div class = "artifactContainer" id="artifactContainer">
-            <p>{{ artifact }}</p>
+            <p>{{artifact?.getData()!}}</p>
         </div>
         <div class="row" id="editButtonRow">
             <!-- Edit Button -->
