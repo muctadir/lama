@@ -6,7 +6,7 @@ from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema
-from src.models.item_models import Artifact
+from src.models.item_models import Artifact, LabelType, LabelTypeSchema
 from src.models.project_models import Membership, MembershipSchema, ProjectSchema, Project
 from flask import jsonify, Blueprint, make_response, request
 from flask_login import current_user
@@ -151,9 +151,15 @@ def create_project():
     db.session.commit()
 
     # TODO put the label types somewhere
-    # label_type=LabelType(name=name)
-    # db.session.add(label_type)
-    # project.label_types.append(label_type=label_type)
-    # db.session.commit()
+    label_types = project_info["labelTypes"]
+    for type in label_types:
+        p_label_types = db.session.execute(select(LabelType).where(LabelType.p_id==project.id)).scalars().all()
+        if len(p_label_types) == 0:
+            label_id = 1
+        else:
+            label_id = p_label_types[len(p_label_types) - 1].id + 1
+        label_type = LabelType(p_id=project.id, id=label_id, name=type)
+        db.session.add(label_type)
+        db.session.commit()
         
     return "Project created"

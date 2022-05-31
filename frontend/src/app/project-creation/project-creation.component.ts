@@ -79,7 +79,7 @@ export class ProjectCreationComponent implements OnInit {
   projectMembers: User[] = []
 
   // Label types
-  labelTypes: string[] = ["doing", "floing"];
+  labelTypes: string[] = [];
 
   ngOnInit(): void { 
 
@@ -127,6 +127,20 @@ export class ProjectCreationComponent implements OnInit {
     return params;
   }
 
+  // Function for getting all form elements
+  getLabelTypes(form:HTMLFormElement): string[]{
+    // Make a dictionary for all values
+    let params: string[] = [];
+    // For loop for adding the params to the list
+    for (let i = 0; i < form.length; i++) { 
+      // Add them to dictionary
+      let param = form[i] as HTMLInputElement; // Typecast
+      params[i] = param.value;
+    }
+    // Return the dictionary of values
+    return params;
+  }
+
   // Function for creating the project
   createProject():void { 
     // Get the forms
@@ -162,7 +176,7 @@ export class ProjectCreationComponent implements OnInit {
       // Params of the number of labellers
       let params2 = this.getFormElements(post_form2);
       // Params of the label types
-      let params3 = this.getFormElements(post_form3);
+      let params3 = this.getLabelTypes(post_form3);
 
       // Way to get information to backend
       let projectInformation: Record<string, any> = {};
@@ -188,7 +202,9 @@ export class ProjectCreationComponent implements OnInit {
         })
       }
       // Label type information
-      projectInformation["labelTypes"] = this.labelTypes;
+      console.log(params3)
+      projectInformation["labelTypes"] = params3;
+      
         
       // Send the data to the database
       const response = axios.post('http://127.0.0.1:5000/project/creation', projectInformation)

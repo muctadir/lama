@@ -28,7 +28,7 @@ class ProjectItem():
         return Column(Integer, ForeignKey('project.id'), primary_key=True)
 
     # id within project
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(64))
 
     # Project that item belongs to
