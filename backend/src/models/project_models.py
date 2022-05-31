@@ -19,10 +19,10 @@ class Project(db.Model):
 
     __tablename__ = 'project'
     id = Column(Integer, primary_key=True)
-    name = Column(String(64))
+    name = Column(String(64), nullable=False)
     description = Column(Text)
     # Criteria: Number of users that need to label an artifact for it to be considered completely labelled
-    criteria = Column(Integer)
+    criteria = Column(Integer, default=2)
     # Frozen: Project can't be edited, but remains viewable
     frozen = Column(Boolean, default=False)
     # List of memberships this project is associated with
