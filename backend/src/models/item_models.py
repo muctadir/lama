@@ -25,10 +25,14 @@ class ProjectItem():
     # Declares existence of p_id : foreign key for project
     @declared_attr
     def p_id(cls):
-        return Column(Integer, ForeignKey('project.id'), primary_key=True)
+        return Column(Integer, ForeignKey('project.id'), nullable=False)
 
+<<<<<<< HEAD
     # id within project
     id = Column(Integer, primary_key=True, autoincrement=True)
+=======
+    id = Column(Integer, primary_key=True)
+>>>>>>> main
     name = Column(String(64))
 
     # Project that item belongs to
@@ -73,10 +77,10 @@ class Artifact(ChangingItem, db.Model):
 
     __tablename__ = 'artifact'
     # The name (or some other identifier) of the file the artifact originated from
-    identifier = Column(String(64))
+    identifier = Column(String(64), nullable=False)
 
     # The text data that the artifact carries
-    data = Column(Text)
+    data = Column(Text, nullable=False)
 
     completed = Column(Boolean, default=False)
 
@@ -113,11 +117,11 @@ class Label(ChangingItem, db.Model):
         ForeignKeyConstraint(['p_id', 'lt_id'], ['label_type.p_id', 'label_type.id'])
     )
     # The id of the label type this label corresponds to
-    lt_id = Column(Integer, ForeignKey('label_type.id'))
+    lt_id = Column(Integer, ForeignKey('label_type.id'), nullable=False)
     # The actual label type object this label corresponds to
     label_type = relationship('LabelType', back_populates='labels')
     # Description of meaning of label
-    description = Column(Text)
+    description = Column(Text, nullable=False)
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
     deleted = Column(Boolean, default=False)
 
@@ -204,16 +208,16 @@ class Highlight(db.Model):
     )
 
     # The id of the user that made the highlight
-    u_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    u_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     # The id of the artifact that was highlighted
-    a_id = Column(Integer, ForeignKey('artifact.id'), primary_key=True)
+    a_id = Column(Integer, ForeignKey('artifact.id'), nullable=False)
     # The id of the project the artifact is in
-    p_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
-    # The nth highlight on this artifact by this user
+    p_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+
     id = Column(Integer, primary_key=True)
     # The start and end characters of this highlight
-    start = Column(Integer)
-    end = Column(Integer)
+    start = Column(Integer, nullable=False)
+    end = Column(Integer, nullable=False)
 
     # The user and artifact objects corresponding to this highlight
     user = relationship('User', back_populates='highlights')
