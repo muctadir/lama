@@ -3,9 +3,7 @@
     --main-color-1: #ED5A06;
     --main-color-2: #38474e;
 }
-body{
 
-}
 // TOP BAR
 #topBarRow{
     margin-left: 10px;
@@ -44,19 +42,19 @@ svg.bi.bi-plus{
 
 //New Table version styles
 p.artifactID{
-    font-size: 20px;
+    font-size: 17px;
     letter-spacing: 1px;
     text-align: center;
     font-weight: 480;
 }
 p.artifactText{
-    font-size: 15px;
+    font-size: 14px;
     letter-spacing: 1px;
     text-align: justify;
     padding-left: 20px;
 }
 p.timesLabelled{
-    font-size: 20px;
+    font-size: 17px;
     letter-spacing: 1px;
     text-align: center;
 }
@@ -136,3 +134,8 @@ box-shadow: 0 0 0 0.1rem dimgrey;
     padding-right: 40px;
 }
 
+// Centers the pagination to the middle of the page
+#center-pagination {
+    display: flex; 
+    justify-content: center;
+}

@@ -1,22 +1,33 @@
 <!-- Author:Chinno -->
+
+<!-- Main container of the modal -->
 <div class="container" id="body">
+
+    <!-- Row containing title: "Add artifacts" -->
     <div class="row modal-header" class="title">
         <div class="col-12">
             <p id="addArtifacts">Add Artifacts</p>
         </div>
     </div>
+
+    <!-- Content of the modal -->
     <div class="row modal-body">
+
+        <!-- Text of the modal -->
         <div class="col-12">
             <label class="form-label" for="customFile">Upload a file containing the artifacts</label>
         </div>
+        <!-- File upload button -->
         <div class="col">
-            <input type="file" class="form-control" id="customFile" />
+            <input type="file" class="form-control" id="customFile" (change)="onChange($event)" />
         </div>
     </div>
+
+    <!-- Button at the bottom to cancel and save -->
     <div class="row" id="buttonRow">
         <div class="form-group" id="buttons">
             <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button> 
-            <button class="btn btn-primary float-end" (click)="notImplemented()">Save</button>
+            <button class="btn btn-primary float-end" (click)="fileUpload()">Save</button>
         </div>
     </div>
 </div>  
