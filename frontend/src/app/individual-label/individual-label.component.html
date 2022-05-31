@@ -1,15 +1,36 @@
-<body>
-    <div class="container alignValues" id="topBarRow">
-        <div class="row">
-            <div class="col">
-                <p class="header">Label</p>
-            </div>
-            <div class="col">
-                <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openEdit()" >
-                    Edie label
-                    <i class="bi bi-plus"></i>
-                </button>            
-            </div>
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- contains the page title and Artifact Identifier -->
+    <div class="row" id="pageTitle">
+        <!-- Label Name as title -->
+        <div id="artifactId" class="col-10">
+            {{labelName}}
+        </div> 
+        <!-- Label Type -->
+        <div class="col-2" id="artifactIdentifier">
+            {{labelType}}
         </div>
     </div>
-</body>
+
+    <!-- Container for Artifact
+    <div class="row">
+        <div class = "artifactContainer" id="artifactContainer">
+            <p>{{ artifact }}</p>
+        </div>
+        <div class="row" id="editButtonRow">
+            <!-- Edit Button -->
+            <!-- <div class="col-6">
+                <button class="btn btn-primary float-start" (click)="openEdit()" style="margin-left:10px;" id="editButton">Edit</button> 
+            </div>
+        </div>
+    </div> --> 
+
+    <!-- Bottom part of page-->
+    <div class="row">
+        <!--Line Separator-->
+        <div class="col-12" id="horizontalLineMain">
+            <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
+        </div>
+    
+    </div>
+</div>
+
