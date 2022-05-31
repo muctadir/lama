@@ -9,6 +9,8 @@ export class CreateThemeComponent implements OnInit {
 
   //Hard coded labels
   allLabels = ['Happy','Laughter','Angry','Depressed']
+  //Hard coded sub-themes
+  allSubthemes = ['Happiness','Angriness']
  
   constructor() { }
 

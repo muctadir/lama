@@ -44,8 +44,8 @@
                 <div class="form-group">
                     <textarea class="form-control" rows="10" placeholder="Description"></textarea>
                 </div>
-                 <!-- Sub-themes section -->
-                 <div class="col-12" id="subThemes">
+                <!-- Sub-themes section -->
+                <div class="col-12" id="subThemes">
                     <span>
                         Sub-Themes
                     </span>
@@ -53,6 +53,11 @@
                         <button type="button" class="btn btn-secondary text-nowrap" id="addSubthemeButton" (click)="notImplemented()">
                         Create Project</button>
                     </span>
+                </div>
+                <div class="col-12" id="allSubthemesCol">
+                    <div *ngFor="let subthemes of allSubthemes">
+                        <p id="allSubthemes">{{subthemes}}</p>
+                    </div>
                 </div>
             </div>
         </div>
