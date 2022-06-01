@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { EditLabelFormComponent } from '../edit-label-form/edit-label-form.component';
 
+// Type for artifact
 type artifact = {
   artifactId: number,
   artifactLabeler: string,
@@ -16,12 +17,14 @@ type artifact = {
   styleUrls: ['./individual-label.component.scss']
 })
 export class IndividualLabelComponent implements OnInit {
-
+  
+  // Dummy data
   labelName: String = 'Label 1';
   labelType: Array<String> = ["Emotion", " Positive"];
   labelDescription: String = 'This is a label description.';
   labelThemes: Array<String> = ['Funny',' Positivity',' Casual']
 
+  // Dummy data
   artifacts: Array<artifact> = [
     {
       artifactId: 33,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+// Interface for label
 interface label {
   labelName: string,
   labelDescription: string,
@@ -14,6 +15,7 @@ interface label {
 })
 export class EditLabelFormComponent implements OnInit {
 
+  // Dummy variables
   labels: Array<label> = [
     {
       labelName: "Type A",
@@ -22,12 +24,13 @@ export class EditLabelFormComponent implements OnInit {
     }
   ]
 
-
+// Contrustor with modal
   constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit(): void {
   }
   
+  // Not implemented function
   notImplemented() {
     alert("Not implemented");
   }

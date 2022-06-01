@@ -165,10 +165,13 @@ box-shadow: 0 0 0 0.1rem dimgrey;
     background: #38474e; 
     border-radius: 10px;
 }
+// Scroll bar
 #scrolly{
     padding-right: 40px;
     height: auto;
 }
+
+// Get rid of horizontal scrol; bar
 body{
     overflow-x:hidden;
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+// Tyep for label
 type label = {
   labelName: String,
   labelDescription: String,
@@ -14,6 +15,7 @@ type label = {
 })
 export class MergeLabelFormComponent implements OnInit {
 
+  // Dummy variables
   labels: Array<label> = [
     {
       labelName: "Type A",
@@ -22,10 +24,12 @@ export class MergeLabelFormComponent implements OnInit {
     }
   ]
 
+  // Constructor modal
   constructor(public activeModal: NgbActiveModal) {}
 
   ngOnInit(): void { }
 
+  // Not implemented function
   notImplemented() {
     alert("Not implemented");
   }

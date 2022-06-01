@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
 
+// Type label
 type label = {
   labelName: string,
   labelDescription: string,
@@ -22,6 +23,7 @@ export class LabelManagementComponent implements OnInit {
   page = 1;
   pageSize = 4;
 
+  // Dummy data
   labels: Array<label> = [
     {
       labelName: "Label 1",
@@ -85,7 +87,7 @@ export class LabelManagementComponent implements OnInit {
     }
   ]
   
-
+// Contructor with modal
   constructor(private modalService: NgbModal) {}
 
   // Open the modal and merge lables
