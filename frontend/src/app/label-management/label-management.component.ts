@@ -88,12 +88,12 @@ export class LabelManagementComponent implements OnInit {
 
   constructor(private modalService: NgbModal) {}
 
-  // Open the modal and populate it with users
+  // Open the modal and merge lables
   openMerge() {
     const modalRef = this.modalService.open(MergeLabelFormComponent,  { size: 'xl'});
   }
 
-  // Open the modal and populate it with users
+  // Open the modal and create a new label
   openCreate() {
     const modalRef = this.modalService.open(CreateLabelFormComponent, { size: 'xl'});
   }

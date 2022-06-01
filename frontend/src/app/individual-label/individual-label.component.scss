@@ -1,11 +1,12 @@
 // <!-- Author: Victoria Bogachenkova -->
-// Header saying "Label Management"
+// Header saying "Label "name""
 p.header{
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
 
+// Subtitle
 .subTitle {
     padding-top: 10px;
     margin-bottom: 10px;
@@ -16,6 +17,7 @@ p.header{
     letter-spacing: 1px;
 }
 
+// Text of the ID of artifact
 #artifactIdText {
     color: #ed5a06;
 }

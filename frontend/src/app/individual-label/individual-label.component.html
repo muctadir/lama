@@ -16,18 +16,21 @@
     <div class="row" style="margin: 5px 20px 5px 20px !important;">
         <div class="col-4" id="leftRow">
             <div>
+                <!-- Label Name -->
                 <div class="subTitle">Name</div>
                 <div class="labelName">
                     <p>{{labelName}}</p>
                 </div>
             </div>
             <div>
+                <!-- Label Type -->
                 <div class="subTitle">Label Type</div>
                 <div class="labelType">
                     <p>{{labelType}}</p>
                 </div>
             </div>
             <div>
+                <!-- Which artifacts were labelled -->
                 <div class="subTitle">Artifacts Labelled</div>
                 <div class="labeledArtifacts" *ngFor="let artifact of artifacts">
                     <span id="artifactIdText">Artifact #{{artifact.artifactId}}</span><span> by {{artifact.artifactLabeler}}</span>
@@ -40,12 +43,14 @@
         </div>
         <div class="col-2" id="middleRow"></div>
         <div class="col-6" id="rightRow">
+            <!-- Description -->
             <div class="subTitle">    
                 Description
             </div>
             <div class="form-group">
                 <textarea class="form-control" rows="8" placeholder="Description" id="remark">{{labelDescription}}</textarea>
             </div>
+            <!-- Part of which Themes -->
             <div class="subTitle">    
                 Themes
             </div>
@@ -62,4 +67,3 @@
         <button class="btn btn-primary float-start" (click)="openEdit()" style="margin-left:10px; pos" id="editButton">Edit</button> 
     </div>
 </div>
-

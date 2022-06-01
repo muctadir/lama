@@ -1,3 +1,5 @@
+// <!-- Author: Victoria Bogachenkova -->
+// Title of the page
 .title {
     padding-top: 10px;
     border-bottom: 1px; 
@@ -6,6 +8,7 @@
     letter-spacing: 1px;
 }
 
+// Subtitles on the page
 .subTitle {
     padding-top: 10px;
     margin-bottom: 10px;
@@ -16,10 +19,12 @@
     letter-spacing: 1px;
 }
 
+// Each container
 .container {
     margin-bottom: 10px;
 }
 
+// width of label type depends on input
 #label-type.form-control {
     width: auto;
 }
