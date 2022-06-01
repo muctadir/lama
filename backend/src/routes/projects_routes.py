@@ -5,11 +5,12 @@
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User
-from src.models.item_models import Artifact
-from src.models.project_models import Membership, ProjectSchema
-from flask import jsonify, Blueprint, make_response
+from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.item_models import Artifact, LabelType, LabelTypeSchema
+from src.models.project_models import Membership, MembershipSchema, ProjectSchema, Project
+from flask import jsonify, Blueprint, make_response, request
 from flask_login import current_user
+from sqlalchemy import select
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -34,7 +35,9 @@ def home_page():
         return make_response("Not Found", 404)
 
     # Get membership of the user
-    projects_of_user = Membership.query.filter(Membership.u_id==user_id)
+    projects_of_user = db.session.execute(
+        select(Membership).where(Membership.uId==user_id)
+    ).scalars().all()
 
     # List for project information
     projects_info = []
@@ -58,11 +61,14 @@ def home_page():
         projects_admin = membership_project.admin
 
         # Get the artifacts for each project 
-        project_artifacts = Artifact.query.filter(Artifact.p_id==project_id)
+        project_artifacts_stmt = select(Artifact).where(Artifact.p_id==project_id)
+        project_artifacts = db.session.execute(project_artifacts_stmt).scalars().all()
         # Get the number of total artifacts
-        project_nr_artifacts = project_artifacts.count()
-        # Get the number of completely labelled artifacts for each project 
-        project_nr_cl_artifacts = project_artifacts.filter(Artifact.completed=="true").count()
+        project_nr_artifacts = len(project_artifacts)
+        # Get the number of completely labelled artifacts for each project
+        project_nr_cl_artifacts = len(db.session.execute(
+            project_artifacts_stmt.where(Artifact.completed=="true")
+        ).scalars().all())
 
         # Get the number users from the project
         project_users = len(project.users)
@@ -83,3 +89,76 @@ def home_page():
 
     # Return the list of dictionaries
     return make_response(dict_json)
+
+"""
+For getting all users within the tool
+@returns a list of users
+"""
+@project_routes.route("/users", methods=["GET"])
+def get_users():
+    # # Check if the user is logged in
+    # if(not current_user.is_authenticated):
+    #     # Otherwise send error
+    #     return make_response("Unauthorized", 401)
+
+    # # Get the ID of the user currently logged in
+    # user_id = current_user.get_id()
+    
+    # # Get the user
+    # user = User.get(user_id)
+    # if not user:
+    #     # Otherwise send error
+    #     return make_response("Not Found", 404)
+
+
+    # Make a list of all approved users
+    all_users = db.session.execute(select(User).where(User.status==UserStatus.approved)).scalars().all()
+
+    # Schema to serialize the User
+    user_schema = UserSchema()
+
+    # Convert the list of users to json
+    response_users = jsonify(user_schema.dump(all_users, many=True))
+
+    # Return the list of users
+    return make_response(response_users)
+
+"""
+For creating a new project
+"""
+@project_routes.route("/creation", methods=["POST"])
+def create_project():
+    # TODO check if user is legal
+
+    # Get the information given by the frontend
+    project_info = request.json
+
+    # Load the project data into a project object
+    project_schema = ProjectSchema()
+    project = project_schema.load(project_info["project"])
+
+    # Add the project to the database
+    db.session.add(project)
+    db.session.commit()
+    
+    # Get the ids of all users 
+    users = project_info["users"]
+    # Append the user to the project users attribute
+    for user in users:
+        project.users.append(user)#["u_id"], user["admin"])
+
+    # Commit the users
+    db.session.commit()
+
+    # Get the label types from frontend
+    label_types = project_info["labelTypes"]
+    # Add each label type to the database
+    for type in label_types:
+        # Create a label type object
+        label_type = LabelType(p_id=project.id, name=type)
+        
+        # Add the label type to the database
+        db.session.add(label_type)
+        db.session.commit()
+        
+    return "Project created"

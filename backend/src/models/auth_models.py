@@ -34,13 +34,13 @@ class User(UserMixin, db.Model):
     __tablename__ = 'user'
     # auto_increment=True is default for integer primary key
     id = Column(Integer, primary_key=True) 
-    username = Column(String(32), unique=True)
-    password = Column(String(128))
-    email = Column(String(320), unique=True)
+    username = Column(String(32), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    email = Column(String(320), unique=True, nullable=False)
     # See UserStatus
-    status = Column(db.Enum(UserStatus), default=UserStatus.pending)
+    status = Column(db.Enum(UserStatus), default=UserStatus.pending, nullable=False)
     # Personal description
-    description = Column(Text) 
+    description = Column(Text, default="") 
 
     # List of memberships the user is involved in
     memberships = relationship('Membership', back_populates='user')
