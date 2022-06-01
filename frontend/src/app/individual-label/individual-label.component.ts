@@ -15,8 +15,8 @@ export class IndividualLabelComponent implements OnInit {
 
   labelName: String = 'Label 1';
   labelType: Array<String> = ["Emotion", "Positive"];
-  labelDescription: String = 'Label 1';
-  labelThemes: Array<String> = ['Funny','Positivity','Casual']
+  labelDescription: String = 'This is a label description.';
+  labelThemes: Array<String> = ['Funny',' Positivity',' Casual']
 
   artifacts: Array<artifact> = [
     {
