@@ -8,7 +8,7 @@ import { Component, OnInit} from '@angular/core';
 export class CreateThemeComponent implements OnInit {
 
   //Hard Coded Labels
-  allLabels: String[] = ['Happy', 'Laughter', 'Angry', 'Depressed'];
+  allLabels = ['Happy', 'Laughter', 'Angry', 'Depressed'];
   
   // Labels Added
   addedLabels: String[] = [];
@@ -34,6 +34,9 @@ export class CreateThemeComponent implements OnInit {
         this.addedLabels.splice(index,1);
       }
     });    
+  }
+  displayDescription(){
+    alert("Button has not been implemented yet.");
   }
 
 

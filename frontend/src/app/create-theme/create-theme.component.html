@@ -80,29 +80,26 @@
                 </div>
             </div>
             <div class="row">
-                <!-- Add Labels Left Side -->
+                <!-- Add Labels -->
                 <!-- TODO Filtering and Searching -->
                     <div class="col">
-                        <!-- List of all labels for adding -->
-                        <div *ngFor="let label of allLabels">
-                            <span>
-                                {{label}}
-                            </span>
-                            <!--  add button for each label -->
-                            <button class="btn" type="button"  id="addLabelsButton" (click)="addLabel(label)">
-                                <!-- Plus icon -->
-                                <span class="bi bi-plus labelType" id="addLabelButton">                                  
-                                </span>
-                            </button>
-                        </div>
-
-                    </div>
-                <!-- Add labels Right Side -->
-                    <div class="col">
-                        <span id="labelTypeFilter">
-                        </span>
-                        <span id="searchField">
-                        </span>
+                        <!-- Table for showing all labels -->
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr *ngFor="let label of allLabels" (click)="displayDescription();">
+                                    <td>
+                                        <span>
+                                            {{label}}
+                                        </span>
+                                        <!--  Add label button -->
+                                        <button class="btn" type="button"  id="addLabelsButton" (click)="addLabel(label)">
+                                            <!-- Plus icon -->
+                                            <span class="bi bi-plus labelType" id="addLabelButton">                                  
+                                            </span>
+                                        </button>
+                                    </td>                                 
+                                </tr>
+                          </table>
                     </div>
             </div>
         </div>
