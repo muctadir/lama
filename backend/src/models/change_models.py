@@ -21,7 +21,7 @@ Relevant info:
 """
 
 from src.models import db, ma
-from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey, event
+from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey, event, func
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, mapper
 from src.app_util import AppUtil
 from enum import Enum
@@ -135,7 +135,7 @@ class Change():
     # u_id : user id that made the change
     @declared_attr
     def u_id(cls):
-        return Column(Integer, ForeignKey('user.id'), primary_key=True)
+        return Column(Integer, ForeignKey('user.id'), nullable=False)
     
     # user : User object corresponding to user that made the change
     @declared_attr
@@ -147,13 +147,13 @@ class Change():
     # p_id : project id that the item belongs to
     @declared_attr
     def p_id(cls):
-        return Column(Integer, ForeignKey('project.id'), primary_key=True)
+        return Column(Integer, ForeignKey('project.id'), nullable=False)
     # i_id : item id that was changed
     @declared_attr
     def i_id(cls):
         return Column(Integer,
                 ForeignKey(cls.item_table_name + '.id'),
-                primary_key=True)
+                nullable=False)
     
     # item : Item object corresponding to item that was changed
     @declared_attr
@@ -164,16 +164,15 @@ class Change():
                 back_populates='changes',
                 primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.item_class_name, cls.__name__))
     
-    # id : the nth change made to this item
     id = Column(Integer, primary_key=True)
 
     # What kind of change is made? This exists for filtering and parsing
-    change_type = Column(db.Enum(ChangeType))
+    change_type = Column(db.Enum(ChangeType), nullable=False)
     # A description of the change that was made. This should be parsed based on change_type
     description = Column(Text)
 
     # Date and time when change was made
-    timestamp = Column(DateTime)
+    timestamp = Column(DateTime, default=func.now())
     
 from src.models.item_models import ChangingItem
 

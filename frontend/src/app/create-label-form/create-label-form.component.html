@@ -1,0 +1,49 @@
+<!-- Author: Victoria Bogachenkova -->
+
+<div class="container" id="body">
+    <div class="row modal-header" class="title">
+        <!-- Page Title -->
+        <div class="col-12">
+            Create Label
+        </div>
+    </div>
+    <div class="row modal-body">
+        <div class="col-6">
+            <div>
+                <!-- Label Type -->
+                <div class="subTitle">Label type</div>
+                <div class="form-group">
+                    <!-- Options of the lable types -->
+                    <select class="form-control"  id="label-type" name="labels">
+                        <option *ngFor="let labelType of labelTypes" value="{{ labelType.labelTypeName }}">{{ labelType.labelTypeName }}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <!-- Label Name -->
+                <div class="subTitle">Label name</div>
+                <input type="text" class="form-control" id="label-name" placeholder="Name">
+            </div>
+        </div>
+        <div class="col-6">
+            <div>
+                <!-- Description -->
+                <div class="subTitle">    
+                    Description
+                </div>
+                <!-- Description form input area -->
+                <div class="form-group">
+                    <textarea class="form-control" rows="8" placeholder="Description" id="remark"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- The Submit and Cancel Buttons -->
+    <div class="row" id="buttons-cancel-submit">
+        <div class="form-group" id="butt">
+            <button class="btn btn-light float-end" (click)="activeModal.close('Close click')" id="btns-cancel-submit">Cancel</button> 
+            <button class="btn btn-primary float-end" (click)="notImplemented()" id="btns-cancel-submit">Submit</button>
+        </div>
+    </div>
+</div>  
+

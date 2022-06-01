@@ -21,6 +21,12 @@ import { LabelFormComponent } from './label-form/label-form.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 import { AddArtifactComponent } from './add-artifact/add-artifact.component';
+import { LabelManagementComponent } from './label-management/label-management.component';
+import { CreateLabelFormComponent } from './create-label-form/create-label-form.component';
+import { MergeLabelFormComponent } from './merge-label-form/merge-label-form.component';
+import { IndividualLabelComponent } from './individual-label/individual-label.component';
+import { EditLabelFormComponent } from './edit-label-form/edit-label-form.component';
+
 import { ConflictPageComponent } from './conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 
@@ -45,7 +51,12 @@ import { ConflictResolutionComponent } from './conflict-resolution/conflict-reso
     LabelFormComponent,
     ArtifactManagementPageComponent,
     SingleArtifactViewComponent,
-    AddArtifactComponent
+    AddArtifactComponent,
+    LabelManagementComponent,
+    CreateLabelFormComponent,
+    MergeLabelFormComponent,
+    IndividualLabelComponent,
+    EditLabelFormComponent
   ],
   imports: [
     BrowserModule,

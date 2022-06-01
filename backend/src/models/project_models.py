@@ -19,16 +19,17 @@ class Project(db.Model):
 
     __tablename__ = 'project'
     id = Column(Integer, primary_key=True)
-    name = Column(String(64))
+    name = Column(String(64), nullable=False)
     description = Column(Text)
     # Criteria: Number of users that need to label an artifact for it to be considered completely labelled
-    criteria = Column(Integer)
+    criteria = Column(Integer, default=2)
     # Frozen: Project can't be edited, but remains viewable
     frozen = Column(Boolean, default=False)
     # List of memberships this project is associated with
     memberships = relationship('Membership', back_populates='project')
     # List of users in the project
-    users = association_proxy('memberships', 'user')
+    users = association_proxy('memberships', 'user',
+            creator=lambda user: Membership(u_id=user["u_id"], admin=user["admin"]))
     
 class Membership(db.Model):
 

@@ -1,0 +1,69 @@
+<!-- Author: Victoria Bogachenkova -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- contains the page title and Artifact Identifier -->
+    <div class="row" id="pageTitle">
+        <!-- Label Name as title -->
+        <div id="artifactId" class="col-10">
+            <p class="header">{{labelName}}</p>
+        </div> 
+        <!-- Label Type -->
+        <div class="col-2" id="artifactIdentifier">
+            Label Type: {{labelType}}
+        </div>
+    </div>
+
+    <!-- Container for Labels -->
+    <div class="row" id="rowLabels">
+        <div class="col-4" id="leftRow">
+            <div>
+                <!-- Label Name -->
+                <div class="subTitle">Name</div>
+                <div class="labelName">
+                    <p>{{labelName}}</p>
+                </div>
+            </div>
+            <div>
+                <!-- Label Type -->
+                <div class="subTitle">Label Type</div>
+                <div class="labelType">
+                    <p>{{labelType}}</p>
+                </div>
+            </div>
+            <div>
+                <!-- Which artifacts were labelled -->
+                <div class="subTitle">Artifacts Labelled</div>
+                <div class="labeledArtifacts" *ngFor="let artifact of artifacts">
+                    <span id="artifactIdText">Artifact #{{artifact.artifactId}}</span><span> by {{artifact.artifactLabeler}}</span>
+                    <p id="remarksArtifacts">Remarks:</p>
+                    <div>
+                        <p id="remarksArtifactsContent">{{artifact.artifactRemarks}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2" id="middleRow"></div>
+        <div class="col-6" id="rightRow">
+            <!-- Description -->
+            <div class="subTitle">    
+                Description
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" rows="8" placeholder="Description" id="remark">{{labelDescription}}</textarea>
+            </div>
+            <!-- Part of which Themes -->
+            <div class="subTitle">    
+                Themes
+            </div>
+            <div class="labelThemes">
+                <p>{{labelThemes}}</p>
+            </div>
+        </div>
+    </div> 
+
+    <!-- Back and Edit Buttons -->
+    <div class="col-10"></div>
+    <div class="col-2">
+        <button class="btn btn-secondary float-start" routerLink="/labelmanagement" id="btns-cancel-submit">Back</button> 
+        <button class="btn btn-primary float-start" (click)="openEdit()" id="btns-cancel-submit">Edit</button> 
+    </div>
+</div>

@@ -17,6 +17,9 @@ import { LabellingPageComponent } from './labelling-page/labelling-page.componen
 import { LabelFormComponent } from './label-form/label-form.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
+import { LabelManagementComponent } from './label-management/label-management.component';
+import { IndividualLabelComponent } from './individual-label/individual-label.component';
+
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -39,6 +42,8 @@ const routes: Routes = [
     {path: 'create-label', component:LabelFormComponent},
     {path: 'artifactmanagement', component:ArtifactManagementPageComponent},
     {path: 'singleartifact', component:SingleArtifactViewComponent},
+    {path: 'labelmanagement', component:LabelManagementComponent},
+    {path: 'singlelabel', component:IndividualLabelComponent},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
     
 @NgModule({
