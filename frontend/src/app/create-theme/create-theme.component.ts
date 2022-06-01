@@ -25,6 +25,18 @@ export class CreateThemeComponent implements OnInit {
     this.addedLabels.push(label)
   }
 
+  // Function for removing label
+  removeLabel(label:any){
+    // Go through all labels
+    this.addedLabels.forEach((addedLabels, index)=>{
+      // If clicked cross matches the label, splice them from the labels
+      if(addedLabels==label){
+        this.addedLabels.splice(index,1);
+      }
+    });    
+  }
+
+
   notImplemented(): void {
     alert("Button has not been implemented yet.");
   }
