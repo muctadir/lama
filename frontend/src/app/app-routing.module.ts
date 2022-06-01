@@ -13,6 +13,9 @@ import { ConflictResolutionComponent } from './conflict-resolution/conflict-reso
 import { ProjectComponent} from './project/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { StatsComponent } from './stats/stats.component';
+import { LabelManagementComponent } from './label-management/label-management.component';
+import { IndividualLabelComponent } from './individual-label/individual-label.component';
+
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -31,7 +34,9 @@ const routes: Routes = [
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
-    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
+    {path: '**', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'labelmanagement', component:LabelManagementComponent},
+    {path: 'singlelabel', component:IndividualLabelComponent}];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
