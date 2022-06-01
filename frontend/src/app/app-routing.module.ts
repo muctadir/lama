@@ -34,9 +34,9 @@ const routes: Routes = [
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
-    {path: '**', redirectTo: 'login', pathMatch: 'full'},
     {path: 'labelmanagement', component:LabelManagementComponent},
-    {path: 'singlelabel', component:IndividualLabelComponent}];
+    {path: 'singlelabel', component:IndividualLabelComponent},
+    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
