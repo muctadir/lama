@@ -27,8 +27,13 @@
                 </div>
                 <div class="row">
                     <div class="col-6" id="allLabelsCol">
-                        <div *ngFor="let label of allLabels">
-                            <p id="allLabels">{{label}}</p>
+                        <div *ngFor="let label of addedLabels">
+                            <span id="allLabels">{{label}}</span>
+                            <!-- Column for delete icon -->
+                            <span>
+                                <!-- x icon -->
+                                <i class="bi bi-x" (click)="notImplemented()" id="xIcon"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -49,11 +54,13 @@
                     <span>
                         Sub-Themes
                     </span>
+                    <!-- Sub-theme button -->
                     <span>
                         <button type="button" class="btn btn-secondary text-nowrap" id="addSubthemeButton" (click)="notImplemented()">
-                        Create Project</button>
+                        Add Sub-Theme</button>
                     </span>
                 </div>
+                <!-- Sub-theme list from data -->
                 <div class="col-12" id="allSubthemesCol">
                     <div *ngFor="let subthemes of allSubthemes">
                         <p id="allSubthemes">{{subthemes}}</p>
@@ -74,13 +81,25 @@
             </div>
             <div class="row">
                 <!-- Add Labels Left Side -->
+                <!-- TODO Filtering and Searching -->
                     <div class="col">
+                        <!-- List of all labels for adding -->
+                        <div *ngFor="let label of allLabels">
+                            <span>
+                                {{label}}
+                            </span>
+                            <!--  add button for each label -->
+                            <button class="btn" type="button"  id="addLabelsButton" (click)="addLabel(label)">
+                                <!-- Plus icon -->
+                                <span class="bi bi-plus labelType" id="addLabelButton">                                  
+                                </span>
+                            </button>
+                        </div>
 
                     </div>
                 <!-- Add labels Right Side -->
                     <div class="col">
                         <span id="labelTypeFilter">
-
                         </span>
                         <span id="searchField">
                         </span>

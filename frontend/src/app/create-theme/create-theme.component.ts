@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-create-theme',
@@ -7,14 +7,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateThemeComponent implements OnInit {
 
-  //Hard coded labels
-  allLabels = ['Happy','Laughter','Angry','Depressed']
+  //Hard Coded Labels
+  allLabels: String[] = ['Happy', 'Laughter', 'Angry', 'Depressed'];
+  
+  // Labels Added
+  addedLabels: String[] = [];
+
   //Hard coded sub-themes
-  allSubthemes = ['Happiness','Angriness']
+  allSubthemes = ['Happiness','Angriness'];
  
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  addLabel(label:any){
+    this.addedLabels.push(label)
   }
 
   notImplemented(): void {
@@ -22,3 +30,4 @@ export class CreateThemeComponent implements OnInit {
   }
 
 }
+

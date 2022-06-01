@@ -40,6 +40,10 @@
 #allLabelsCol{
     padding-top: 10px;
 }
+// x icon for removing labels
+#xIcon{
+    float:right
+}
 #nameInputCol{
     padding-top: 10px;
 }
@@ -94,3 +98,7 @@
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
+#addLabelButton{
+    float:right
+}
+
