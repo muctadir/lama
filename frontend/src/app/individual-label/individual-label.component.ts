@@ -1,4 +1,8 @@
+// <!-- Author: Victoria Bogachenkova -->
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
 
 type artifact = {
   artifactId: number,
@@ -31,7 +35,18 @@ export class IndividualLabelComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(private modalService: NgbModal) {}
+
+  // Open the modal and populate it with users
+  openEdit() {
+    const modalRef = this.modalService.open(CreateLabelFormComponent,  { size: 'xl'});
+    // modalRef.componentInstance.users = this.all_members;
+    // // Push the username into the members list 
+    // modalRef.componentInstance.newItemEvent.subscribe(($e: any) => {
+    //   var username = {userName: $e};
+    //   this.project_members.push(username);
+    // })
+  }
 
   ngOnInit(): void {
   }

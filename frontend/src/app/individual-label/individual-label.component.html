@@ -1,9 +1,10 @@
+<!-- Author: Victoria Bogachenkova -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
     <!-- contains the page title and Artifact Identifier -->
     <div class="row" id="pageTitle">
         <!-- Label Name as title -->
         <div id="artifactId" class="col-10">
-            {{labelName}}
+            <p class="header">{{labelName}}</p>
         </div> 
         <!-- Label Type -->
         <div class="col-2" id="artifactIdentifier">
@@ -53,18 +54,10 @@
         </div>
     </div> 
 
-    <!-- Bottom part of page-->
-    <div class="row">
-        <!--Line Separator-->
-        <div class="col-12" id="horizontalLineMain">
-            <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
-        </div>
-    
-    </div>
-
-    <!-- Edit Button -->
-    <!-- <div class="col-6">
+    <!-- Back and Edit Buttons -->
+    <div class="col-6">
+        <button class="btn btn-secondary float-start" routerLink="/labelmanagement" style="margin-left:10px;" id="editButton">Back</button> 
         <button class="btn btn-primary float-start" (click)="openEdit()" style="margin-left:10px;" id="editButton">Edit</button> 
-    </div> -->
+    </div>
 </div>
 
