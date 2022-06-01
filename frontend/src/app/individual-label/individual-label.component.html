@@ -7,14 +7,14 @@
             <p class="header">{{labelName}}</p>
         </div> 
         <!-- Label Type -->
-        <div class="col-2" id="artifactIdentifier">
+        <div class="col-2" id="artifactIdentifier" style="margin-top: 10px;">
             Label Type: {{labelType}}
         </div>
     </div>
 
     <!-- Container for Artifact -->
-    <div class="row">
-        <div class="col-6" id="leftRow">
+    <div class="row" style="margin: 5px 20px 5px 20px !important;">
+        <div class="col-4" id="leftRow">
             <div>
                 <div class="subTitle">Name</div>
                 <div class="labelName">
@@ -30,14 +30,15 @@
             <div>
                 <div class="subTitle">Artifacts Labelled</div>
                 <div class="labeledArtifacts" *ngFor="let artifact of artifacts">
-                    <p>Artifact #{{artifact.artifactId}} by {{artifact.artifactLabeler}}</p>
-                    <p>Remarks:</p>
+                    <span id="artifactIdText">Artifact #{{artifact.artifactId}}</span><span> by {{artifact.artifactLabeler}}</span>
+                    <p style="margin-bottom: 2px;">Remarks:</p>
                     <div>
-                        <p>{{artifact.artifactRemarks}}</p>
+                        <p style="margin-left: 15px;">{{artifact.artifactRemarks}}</p>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-2" id="middleRow"></div>
         <div class="col-6" id="rightRow">
             <div class="subTitle">    
                 Description
@@ -55,9 +56,10 @@
     </div> 
 
     <!-- Back and Edit Buttons -->
-    <div class="col-6">
+    <div class="col-10"></div>
+    <div class="col-2">
         <button class="btn btn-secondary float-start" routerLink="/labelmanagement" style="margin-left:10px;" id="editButton">Back</button> 
-        <button class="btn btn-primary float-start" (click)="openEdit()" style="margin-left:10px;" id="editButton">Edit</button> 
+        <button class="btn btn-primary float-start" (click)="openEdit()" style="margin-left:10px; pos" id="editButton">Edit</button> 
     </div>
 </div>
 

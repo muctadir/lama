@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
+import { EditLabelFormComponent } from '../edit-label-form/edit-label-form.component';
 
 type artifact = {
   artifactId: number,
@@ -18,7 +18,7 @@ type artifact = {
 export class IndividualLabelComponent implements OnInit {
 
   labelName: String = 'Label 1';
-  labelType: Array<String> = ["Emotion", "Positive"];
+  labelType: Array<String> = ["Emotion", " Positive"];
   labelDescription: String = 'This is a label description.';
   labelThemes: Array<String> = ['Funny',' Positivity',' Casual']
 
@@ -39,13 +39,7 @@ export class IndividualLabelComponent implements OnInit {
 
   // Open the modal and populate it with users
   openEdit() {
-    const modalRef = this.modalService.open(CreateLabelFormComponent,  { size: 'xl'});
-    // modalRef.componentInstance.users = this.all_members;
-    // // Push the username into the members list 
-    // modalRef.componentInstance.newItemEvent.subscribe(($e: any) => {
-    //   var username = {userName: $e};
-    //   this.project_members.push(username);
-    // })
+    const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
   }
 
   ngOnInit(): void {
