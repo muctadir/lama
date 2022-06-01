@@ -12,6 +12,8 @@ $offgrey-shade: #1C5858;
     background-color: $orange-shade !important;
 }
 
+/* Importing Bootstrap Icons file. */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 
