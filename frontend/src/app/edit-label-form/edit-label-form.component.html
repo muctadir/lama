@@ -1,0 +1,42 @@
+<!-- Author: Victoria Bogachenkova -->
+
+<div class="container" id="body">
+    <div class="row modal-header" class="title">
+        <div class="col-12">
+            Edit Label
+        </div>
+    </div>
+    <div class="row modal-body">
+        <div class="col-6">
+            <div>
+                <div class="subTitle">Label type</div>
+                <div class="form-group">
+                    <select class="form-control"  id="label-type" name="labels">
+                        <option *ngFor="let label of labels" value="{{ label.labelTypes }}" style="max-width:10%;">{{ label.labelTypes }}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <div class="subTitle">Label name</div>
+                <input *ngFor="let label of labels" type="text" class="form-control" id="label-name" placeholder="{{ label.labelName }}">
+            </div>
+        </div>
+        <div class="col-6">
+            <div>
+                <div class="subTitle">    
+                    Description
+                </div>
+                <div class="form-group">
+                    <textarea *ngFor="let label of labels" class="form-control" rows="8" placeholder="{{ label.labelDescription }}" id="remark"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+        <div class="form-group" id="butt">
+            <button class="btn btn-light float-end" (click)="activeModal.close('Close click')" style="margin-left:10px;">Cancel</button> 
+            <button class="btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
+        </div>
+    </div>
+</div>  
+

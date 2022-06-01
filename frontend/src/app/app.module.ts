@@ -16,6 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateLabelFormComponent } from './create-label-form/create-label-form.component';
 import { MergeLabelFormComponent } from './merge-label-form/merge-label-form.component';
 import { IndividualLabelComponent } from './individual-label/individual-label.component';
+import { EditLabelFormComponent } from './edit-label-form/edit-label-form.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { IndividualLabelComponent } from './individual-label/individual-label.co
     LabelManagementComponent,
     CreateLabelFormComponent,
     MergeLabelFormComponent,
-    IndividualLabelComponent
+    IndividualLabelComponent,
+    EditLabelFormComponent
   ],
   imports: [
     BrowserModule,
