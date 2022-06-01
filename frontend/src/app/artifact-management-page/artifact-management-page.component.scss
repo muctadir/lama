@@ -1,0 +1,141 @@
+// Color variables
+:root {
+    --main-color-1: #ED5A06;
+    --main-color-2: #38474e;
+}
+
+// TOP BAR
+#topBarRow{
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 98%;
+}
+// Header saying "Artifact Management"
+p.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+// Add Artifact button 
+#addArtifactButton{
+    float: right;
+    margin-right: 10px;    
+    margin-top: 10px;
+    background-color: white;
+    border: 2px solid;
+    border-color: var(--main-color-2);
+    color: black;
+}
+// Add Artifact button plus
+svg.bi.bi-plus{
+    width: 22px;
+    height: 22px;
+}
+#horizontalLineRow{
+    padding-top: 10px;
+    padding-bottom: 30px;
+    padding-right: 0px;
+}
+#horizontalLineColumn{
+    padding-right: 0px;
+}
+
+//New Table version styles
+p.artifactID{
+    font-size: 17px;
+    letter-spacing: 1px;
+    text-align: center;
+    font-weight: 480;
+}
+p.artifactText{
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: justify;
+    padding-left: 20px;
+}
+p.timesLabelled{
+    font-size: 17px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+p.idHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    white-space:nowrap;
+    font-weight: 500;
+}
+p.artifactHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: 500;
+    
+}
+p.timeslabelledHeader{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;   
+    white-space:nowrap;
+    font-weight: 500;
+}
+//table hovering color
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color:#ed5b0637;
+  }
+// Pagination Color
+ngb-pagination ::ng-deep a {
+    color:#ED5A06 !important;
+}  
+ngb-pagination ::ng-deep .page-item.active .page-link {
+border-color: #1C5858;
+background-color: white;
+}
+ngb-pagination ::ng-deep .page-item.active .page-link:focus, .page-link:not(:disabled):not(.disabled):active:focus {
+box-shadow: 0 0 0 0.1rem dimgrey;
+}
+ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
+box-shadow: 0 0 0 0.1rem dimgrey;
+}
+#paginationCol{
+    padding-top: 20px;
+}
+
+//Scroll Related Business
+.my-custom-scrollbar {
+    position:relative;
+    height: 80vh;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+#scrolly{
+    padding-right: 40px;
+}
+
+// Centers the pagination to the middle of the page
+#center-pagination {
+    display: flex; 
+    justify-content: center;
+}

@@ -13,6 +13,10 @@ import { ConflictResolutionComponent } from './conflict-resolution/conflict-reso
 import { ProjectComponent} from './project/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { StatsComponent } from './stats/stats.component';
+import { LabellingPageComponent } from './labelling-page/labelling-page.component';
+import { LabelFormComponent } from './label-form/label-form.component';
+import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
+import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -31,8 +35,12 @@ const routes: Routes = [
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
+    {path: 'labelling-page', component:LabellingPageComponent},
+    {path: 'create-label', component:LabelFormComponent},
+    {path: 'artifactmanagement', component:ArtifactManagementPageComponent},
+    {path: 'singleartifact', component:SingleArtifactViewComponent},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
-
+    
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule]

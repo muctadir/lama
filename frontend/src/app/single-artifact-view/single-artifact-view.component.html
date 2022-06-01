@@ -1,0 +1,103 @@
+<!-- @author: Chinno Lavin -->
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- contains the page title and Artifact Identifier -->
+    <div class="row" id="pageTitle">
+        <!-- title name -->
+        <div id="artifactId" class="col-10">
+            Artifact {{artifactId}}
+        </div> 
+        <!-- Artifact Identifier -->
+        <div class="col-2" id="artifactIdentifier">
+            {{artifactIdentifier}}
+        </div>
+    </div>
+
+    <!-- Container for Artifact -->
+    <div class="row">
+        <div class = "artifactContainer" id="artifactContainer">
+            <p>{{ artifact }}</p>
+        </div>
+        <div class="row" id="editButtonRow">
+            <!-- Edit Button -->
+            <div class="col-6" id="editButtonCol">
+                <button class="btn btn-primary float-start" (click)="notImplemented()"  id="editButton">Edit</button> 
+            </div>
+
+            <!-- previous artifacts that it was split from, if any -->
+            <div class="col-6" id="names">
+                <p class="float-end">
+                    Artifact was split into <span id="split1">artifact #45</span> and <span id="split2">artifact #190</span>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom part of page-->
+    <div class="row">
+        <!--Labelled By text-->
+        <div class="col-12" id="labelledBy">
+            <p class="float-start">Labelled By</p>
+        </div> 
+        <!--Line Separator-->
+        <div class="col-12" id="horizontalLineMain">
+            <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
+        </div>
+
+        <!--User Labels-->
+        <div class="allUserLabels">            
+            <div class="col-12">
+                <!--User + labels given per label type + Remark-->                  
+                <div *ngFor = "let userLabel of userLabels">
+                    <div class="row">
+                        <!--Labeller Name-->
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <p id="labellerName">{{userLabel.labellerName}}</p>
+                            </div>
+                            <!--Remarks header-->
+                            <div class="col align-self-start">
+                                <p id="remarks">Remarks:</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--Label Type and Given Label Section-->
+                            <div class="col-5">
+                                <div class="row">
+                                    <div class="col-12" *ngFor="let label of userLabel.labelsGiven">
+                                        <div class="row">   
+                                            <!--Label Type-->                                   
+                                            <div class="col-2"><p id="labelTypeName1">
+                                                {{label.labelTypeName1}}:
+                                            </p></div>
+                                            <!--Label Given-->  
+                                            <div class="col-xs-3" id="labelForm"><p id="labelGiven">
+                                                <select class="form-control" name="labels">                                               
+                                                    <option>
+                                                        {{label.labelGiven}}
+                                                    </option>
+                                                    <option *ngFor ="let labels of allLabels">
+                                                    {{labels}}
+                                                    </option>             
+                                                </select>
+                                            </p></div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Label Remark-->
+                            <div class="col align-self-start">
+                                <p id="remarksText">{{userLabel.labelRemark}}</p>
+                            </div>
+                        </div>                      
+                    </div>    
+                    <!--Line Separator-->
+                        <div class="col-12" id="horizontalLineMain">
+                            <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
+                        </div>           
+                </div>
+            </div>
+        </div>             
+    </div>
+</div>
+
