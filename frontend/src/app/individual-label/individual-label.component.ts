@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { LoremIpsum } from "lorem-ipsum";
 
 type artifact = {
   artifactId: number,
@@ -16,7 +15,7 @@ export class IndividualLabelComponent implements OnInit {
 
   labelName: String = 'Label 1';
   labelType: Array<String> = ["Emotion", "Positive"];
-  labelDescription: String = lorem.generateParagraphs(3);
+  labelDescription: String = 'Label 1';
   labelThemes: Array<String> = ['Funny','Positivity','Casual']
 
   artifacts: Array<artifact> = [
@@ -38,4 +37,3 @@ export class IndividualLabelComponent implements OnInit {
   }
 
 }
-let
