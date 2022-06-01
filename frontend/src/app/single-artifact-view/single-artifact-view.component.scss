@@ -1,51 +1,31 @@
+//page header title
 #pageTitle {
     padding-top: 10px;
     border-bottom: 0px; 
     border-bottom-style: solid;
 }
-
-#artifactId, #artifactIdentifier, #artifactButtons {
+//artifact header part
+#artifactId, #artifactIdentifier,{
     font-size: 36px;
     letter-spacing: 1px;
 }
-#artifactButtons {
-    text-align: right;
-}
+//Labelled by text
 #labelledBy{
     font-size: 25px;
     letter-spacing: 1px;
 }
-
-.labelTypeTitle {
-    font-size: 17px;
-    letter-spacing: 1px;
-}
-
-.descriptionTitle{
-    font-size: 19px;
-    padding-bottom: 2px;
-    height: 28px;
-}
-.descriptionText{
-    max-height: 20vh;
-    font-size: 16px;
-    overflow-y: scroll;
-}
-
+// Container for the artifact
 .artifactContainer {
     max-height: 25vh;
     border: 1px; 
     border: solid;
     border-color: #1C5858;
     border-width: thin;
-}
-
-div.artifactContainer{
-    //margin: 4px 120px 4px 4px;
     padding-bottom: 4px;
     min-height: 40vh;
     overflow-y: scroll;
 }
+//Section right below "labelled by"
 #names{
     padding-top: 3px;
     padding-bottom: 5px;
@@ -78,44 +58,39 @@ div.allUserLabels{
     padding-bottom: 5px;
     padding-top: 5px;
 }
-
-#labelThing{
-    overflow-y: scroll;
-    max-height: 40vh;
-}
-
+// margins for whole page
 #body{
     margin: 0px;
     height: 100%;
     padding-left: 30px;
     padding-right: 50px;
 }
-
-#remark{
-    max-height: 29vh;
-}
-
+//edit button
 #editButton{
-    padding-top: 5px;
     height: 38px;
     width: 150px;
     border: none;
 }
+//edit button container row
 #editButtonRow{
     padding-top: 10px;
 }
+//artifact identifier
 #artifactIdentifier{
     text-align: right
 }
+//labeltype names
 #labelTypeName1{
     font-size: 18px;
     letter-spacing: 1px;
     font-weight: 450;
 }
+//label given for each labeltype for each user
 #labelGiven{
     font-size: 17px;
     letter-spacing: 1px;
 }
+//remark given for each user
 #remarks{
     font-size: 18px;
     letter-spacing: 1px;
@@ -127,6 +102,7 @@ div.allUserLabels{
     letter-spacing: 1px;
     text-align: left;
 }
+//name of labeller
 #labellerName{
     font-size: 20px;
     letter-spacing: 1px;
