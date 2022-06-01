@@ -38,7 +38,7 @@
                       </tr>
                   </thead>
                   <!--Table Content-->
-                  <tbody  routerLink="/singleartifact">
+                  <tbody  routerLink="/singlelabel">
                       <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
                           <td><p class="labelName">{{label.labelName}}</p></td>
                           <td><p class="labelType">{{label.labelType}}</p></td>

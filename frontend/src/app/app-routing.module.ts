@@ -7,6 +7,8 @@ import { AccountComponent } from './account/account.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { LabelManagementComponent } from './label-management/label-management.component';
+import { IndividualLabelComponent } from './individual-label/individual-label.component';
+
 
 const routes: Routes = [{path: '', component: LoginComponent},
     {path: 'login', component: LoginComponent},
@@ -15,7 +17,8 @@ const routes: Routes = [{path: '', component: LoginComponent},
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'labelmanagement', component:LabelManagementComponent}];
+    {path: 'labelmanagement', component:LabelManagementComponent},
+    {path: 'singlelabel', component:IndividualLabelComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
