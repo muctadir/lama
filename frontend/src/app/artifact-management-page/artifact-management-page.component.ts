@@ -69,7 +69,7 @@ export class ArtifactManagementPageComponent implements OnInit {
   ];
 
   open(){
-    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'xl'});
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
   }
 
  /**
