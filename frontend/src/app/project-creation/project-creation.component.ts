@@ -202,7 +202,6 @@ export class ProjectCreationComponent implements OnInit {
         })
       }
       // Label type information
-      console.log(params3)
       projectInformation["labelTypes"] = params3;
       
         
