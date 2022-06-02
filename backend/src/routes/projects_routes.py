@@ -62,7 +62,7 @@ def home_page(*, user):
         project_nr_artifacts = len(project_artifacts)
         # Get the number of completely labelled artifacts for each project
         project_nr_cl_artifacts = len(db.session.execute(
-            project_artifacts_stmt.where(Artifact.completed=="true")
+            project_artifacts_stmt.where(Artifact.completed==True)
         ).scalars().all())
 
         # Get the number users from the project
