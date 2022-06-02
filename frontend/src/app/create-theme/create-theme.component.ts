@@ -7,9 +7,12 @@ import { Component, OnInit} from '@angular/core';
 })
 export class CreateThemeComponent implements OnInit {
 
+  //highlight label variable
+  highlightedLabel: String = '';
+
   //Hard Coded Labels
   allLabels = [{labelName:'Happy',
-                labelDescription:'This is happy'},
+                labelDescription:'This label is used for any text that give off a general positive feeling of happiness or anything similar.'},
                 {labelName:'Laughter',
                 labelDescription:'This is laughter'},
                 {labelName:'Angry',
@@ -39,7 +42,10 @@ export class CreateThemeComponent implements OnInit {
     }
     this.addedLabels.push(label.labelName);
   }
-
+  // Function for highlighting selected label
+  highlightLabel(label:any){
+    this.highlightedLabel = label.labelName;
+  }
   // Function for removing label
   removeLabel(label:any){
     // Go through all labels

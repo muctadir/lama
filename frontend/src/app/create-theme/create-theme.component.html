@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-12" id="nameInputCol">
                     <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Required" required><br>
+                        <input class="form-control" id="nameForm" type="text" placeholder="Required" required><br>
                     </div>
                 </div>
                 <!-- Displays All labels section -->
@@ -50,7 +50,7 @@
                     <textarea class="form-control" rows="10" placeholder="Description"></textarea>
                 </div>
                 <!-- Sub-themes section -->
-                <div class="col-12" id="subThemes">
+                <div class="col-sm-12" id="subThemes">
                     <span>
                         Sub-Themes
                     </span>
@@ -84,31 +84,39 @@
                 <!-- TODO Filtering and Searching -->
                 <div class="col-6">
                     <!-- Table for showing all labels -->
-                    <table class="table table-hover">
+                    <table class="table table-borderless">
                         <tbody>
-                            <tr *ngFor="let label of allLabels" (click)="displayDescription(label);">
+                            <!-- Click shows clicked labels description and highlights it-->
+                            <tr *ngFor="let label of allLabels" (click)="displayDescription(label);" (click)="highlightLabel(label)"  [class.highlighted]="label.labelName === highlightedLabel">
                                 <td>
-                                    <span>
+                                    <span id="addLabelsText">
                                         {{label.labelName}}
                                     </span>
                                     <!--  Add label button -->
                                     <button class="btn" type="button"  id="addLabelsButton" (click)="addLabel(label)">
                                         <!-- Plus icon -->
-                                        <span class="bi bi-plus labelType" id="addLabelButton">                                  
+                                        <span class="bi bi-plus">                                  
                                         </span>
                                     </button>
                                 </td>                                 
                             </tr>
                     </table>
                 </div>
-                 <!-- Add Labels right side -->
+                 <!-- Add Labels right side Description part -->
                 <div class="col-6">
-                    <p>Description:</p>
+                    <p id="labelDescription">Description:</p>
                     <div *ngIf="selectedDescription != null">
-                        <p>{{selectedDescription}}</p>
+                        <p class="labelDescriptionText">{{selectedDescription}}</p>
                     </div>
                 </div>
             </div>          
+        </div>
+        <!--Create/Cancel buttons--> 
+        <div class="col-12" id="createCancelButtons">
+            <div>
+                <button class="form-group btn btn-primary float-end" (click)="notImplemented()" style="margin-left:10px;">Create</button> 
+                <button class="form-group btn btn-light float-end"  routerLink="/theme">Cancel</button>
+            </div>
         </div>
     </div>
 </div>

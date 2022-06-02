@@ -9,32 +9,37 @@
     padding-top:10px;
     padding-left:30px;
     padding-right: 30px;
+    height:50vh; 
 }
 //top left section
 #topLeft{
     padding-right: 100px;
 }
+//Name Header
 #name{
     margin-left: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: orange;
+}
+//Name input box
+#nameForm{
+    width: auto;
 }
 //Labels header
 #labels{
     margin-left: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
 //Labels list from *ngFor
 #allLabels{
-    padding-left: 20px;
-    font-size:17px;
+    font-size:14px;
     letter-spacing: 1px;
 }
 #allLabelsCol{
@@ -52,7 +57,7 @@
     padding-left: 0px;
 }
 #description{
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 1px;
 }
 
@@ -62,7 +67,7 @@
     padding-bottom: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: orange
 }
@@ -77,7 +82,7 @@
 //Subthemes list 
 #allSubthemes{
     padding-left: 20px;
-    font-size:17px;
+    font-size:14px;
     letter-spacing: 1px;
 }
 #allSubthemesCol{
@@ -98,7 +103,49 @@
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
-#addLabelButton{
+//Add label text
+#addLabelsText{
+    font-size: 14px;
+}
+//add label button
+.btn{
     float:right
 }
+//Highlight class
+.highlighted{ 
+    background-color:#ED5A06; 
+    color: white;
+    .btn{
+        color: white !important;
+    }      
+}
+// label description header
+#labelDescription{
+    font-size: 16px;
+    font-weight: 450;
+}
+// Label Description text container
+p.labelDescriptionText{
+    padding-left: 10px;
+    font-size: 14px;
+}
 
+// SCROLLBAR
+// Scrollbar general
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background:white; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: grey; 
+    border-radius: 10px;
+}
+// button container for create and cancel
+#createCancelButtons{
+    padding-bottom: 10px;
+}
