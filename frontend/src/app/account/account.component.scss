@@ -14,6 +14,12 @@ $light-grey-shade: #bfbfbf;
 // INFORMATION PAGE
 
 // TEXT
+// texts above each of the forms indicating what the form is for
+#field_text{
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
 // Text with bold text
 #boldText{
     font-size: 15px;
@@ -26,10 +32,30 @@ $light-grey-shade: #bfbfbf;
     margin-left: 25px;
     text-indent:0;
 }
+// Orange underlined text
+#orangUnderlinedText {
+    color: $orange-shade;
+    text-decoration: underline;
+}
+// Sets layout of the error message that is displayed when register input is incorrect
+#infoMessage{
+    color: $orange-shade;
+    font-size: 15px;
+  }
 
+// Buttons
+.infoButtons{
+    border: none;
+    float: right;
+    width: 150px;
+}
 // Button for editing information
 #editInformationButton{
     border: none;
+}
+// Cancel edit button
+#backButton{
+    margin-right: 20px;
 }
 
 // Columns of the information
