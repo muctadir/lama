@@ -11,6 +11,15 @@ import { Theme } from '../theme';
 import { LoremIpsum } from "lorem-ipsum";
 import { sortEvent, SortableThemeHeader } from '../sortable-theme.directive';
 
+// Type label
+type label = {
+  labelName: string,
+  labelDescription: string,
+  labelType: string,
+  labeledArtifacts: number
+}
+
+
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
     max: 8,
@@ -29,6 +38,12 @@ const lorem = new LoremIpsum({
   styleUrls: ['./theme-management.component.scss']
 })
 export class ThemeManagementComponent  {
+
+  //Pagination Settings
+  page = 1;
+  pageSize = 4;
+
+
 
   /**
    * Code to fill page
