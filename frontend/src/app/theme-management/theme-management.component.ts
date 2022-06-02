@@ -44,21 +44,6 @@ export class ThemeManagementComponent  {
     }
    }
 
-   /**
-    * 
-    */
-  //  @ViewChildren(SortableThemeHeader) headers: QueryList<SortableThemeHeader>;
-
-
-  // onSort({ column, direction }: sortEvent) {
-  //   this.headers.forEach((header) => {
-  //     if (header.sortable !== column) {
-  //       header.direction = '';
-  //     }
-  //   });
-
-  //   this.service.
-  // }
    notImplemented(): void {
      alert("Button has not been implemented yet.");
    }
