@@ -72,7 +72,7 @@
 
     <!-- Page Bottom Half -->
     <div class="row"  id="bottomHalf">
-        <div class="col-8">
+        <div class="col-6">
              <!-- Add Labels Section --> 
             <div class="row">
                 <div class="col" id="addLabels">
@@ -80,28 +80,35 @@
                 </div>
             </div>
             <div class="row">
-                <!-- Add Labels -->
+                <!-- Add Labels Left side -->
                 <!-- TODO Filtering and Searching -->
-                    <div class="col">
-                        <!-- Table for showing all labels -->
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr *ngFor="let label of allLabels" (click)="displayDescription();">
-                                    <td>
-                                        <span>
-                                            {{label}}
+                <div class="col-6">
+                    <!-- Table for showing all labels -->
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr *ngFor="let label of allLabels" (click)="displayDescription(label);">
+                                <td>
+                                    <span>
+                                        {{label.labelName}}
+                                    </span>
+                                    <!--  Add label button -->
+                                    <button class="btn" type="button"  id="addLabelsButton" (click)="addLabel(label)">
+                                        <!-- Plus icon -->
+                                        <span class="bi bi-plus labelType" id="addLabelButton">                                  
                                         </span>
-                                        <!--  Add label button -->
-                                        <button class="btn" type="button"  id="addLabelsButton" (click)="addLabel(label)">
-                                            <!-- Plus icon -->
-                                            <span class="bi bi-plus labelType" id="addLabelButton">                                  
-                                            </span>
-                                        </button>
-                                    </td>                                 
-                                </tr>
-                          </table>
+                                    </button>
+                                </td>                                 
+                            </tr>
+                    </table>
+                </div>
+                 <!-- Add Labels right side -->
+                <div class="col-6">
+                    <p>Description:</p>
+                    <div *ngIf="selectedDescription != null">
+                        <p>{{selectedDescription}}</p>
                     </div>
-            </div>
+                </div>
+            </div>          
         </div>
     </div>
 </div>
