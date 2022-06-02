@@ -29,6 +29,10 @@ import { EditLabelFormComponent } from './edit-label-form/edit-label-form.compon
 
 import { ConflictPageComponent } from './conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
+import { ThemeManagementComponent } from './theme-management/theme-management.component';
+import { SortableThemeHeader } from './sortable-theme.directive';
+import { CreateThemeComponent } from './create-theme/create-theme.component';
+import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +60,11 @@ import { ConflictResolutionComponent } from './conflict-resolution/conflict-reso
     CreateLabelFormComponent,
     MergeLabelFormComponent,
     IndividualLabelComponent,
-    EditLabelFormComponent
+    EditLabelFormComponent,
+    ThemeManagementComponent,
+    SortableThemeHeader,
+    CreateThemeComponent,
+    SingleThemeViewComponent
   ],
   imports: [
     BrowserModule,

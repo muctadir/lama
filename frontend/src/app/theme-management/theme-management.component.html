@@ -1,0 +1,43 @@
+<!-- @author: Bartjan Henkemans -->
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <div class="row" >
+        <div class="col-10 header" id="pageTitle"> 
+            Theme Management
+        </div>
+        <div class="col-2" id="addButton">
+            <button class="form-control btn btn-light"  routerLink="/createTheme"><i class="bi bi-plus-lg"></i>Create Theme</button>   
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center">
+        <div class="col-9">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" sortable="name" (sort)="notImplemented();">Name</th>
+                        <th scope="col" sortable="description" (sort)="notImplemented();">Description</th>
+                        <th scope="col" sortable="labels" (sort)="notImplemented();">Labels</th>                
+                    </tr>
+                </thead>
+                <tbody  routerLink="/singleTheme">
+                    <tr *ngFor="let theme of themes">
+                        <td>{{ theme.getThemeName() }}</td>
+                        <td> {{ theme.getThemeDescription () }}</td>
+                        <td> 7 </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--Pagination-->          
+        <div id="center-pagination">
+            <ngb-pagination
+                [(page)]="page"
+                [pageSize]="pageSize"
+                [collectionSize]="themes.length">
+            </ngb-pagination>
+        </div> 
+
+    </div>
+    
+</div>
