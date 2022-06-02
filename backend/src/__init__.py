@@ -2,14 +2,13 @@
 import click
 from flask import Flask
 from flask.cli import AppGroup
-from flask_login import LoginManager
 from flask_migrate import Migrate, init, migrate, upgrade
 from src.models import db, ma
 from src.models.auth_models import User
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
-from src.routes import demos, auth_routes, project_routes
+from src.routes import demos, auth_routes, project_routes, account_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
@@ -101,22 +100,7 @@ def create_app(config={'TESTING': False}):
             migrate(directory=str(mig_path))
             upgrade(directory=str(mig_path))
 
-    # Used for managing user logins and sessions.
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-
     # TODO: More comments, but this may be changed in the soon future.
-    # Docs specify to return None if no user with id instead of an exception
-    # Docs do not specify what to do in case of database exception
-    # Leads to me to believe they do not like exceptions
-    @login_manager.user_loader
-    def load_user(user_id):
-        try:
-            user = db.session.query(User).get(user_id)
-            if user:
-                return user
-        finally: 
-            return None
 
     # generates a secret key for login use (TODO: Elaborate on this)
     app.secret_key = token_hex() 
@@ -130,6 +114,7 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(auth_routes)
     app.register_blueprint(demos)
     app.register_blueprint(project_routes)
+    app.register_blueprint(account_routes)
 
     # Magic library that makes cross-origin resource sharing work.
     # TODO: Check if we are setting this up correctly.

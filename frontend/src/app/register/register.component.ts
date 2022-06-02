@@ -1,8 +1,11 @@
+// Veerle Furst
+
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import axios from 'axios';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { InputCheckService } from '../input-check.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -36,7 +39,7 @@ export class RegisterComponent {
    * 
    * @param service instance of InputCheckService
    */
-  constructor(private service: InputCheckService) { }
+  constructor(private service: InputCheckService, private route: Router) { }
 
   /**
    * Checks whether the username/password is nonempty, and checks whether the email is valid.
@@ -77,6 +80,8 @@ export class RegisterComponent {
     // Post to backend
     const response = axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
     .then(response =>{
+      this.route.navigate(['/login']);
+
       // Print the created message
       this.errorMsg = response.data;
     })

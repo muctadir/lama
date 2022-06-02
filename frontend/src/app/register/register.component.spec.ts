@@ -1,7 +1,7 @@
+// Jarl Jansen
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RegisterComponent } from './register.component';
-
 import { FormBuilder } from '@angular/forms';
 import { InputCheckService } from '../input-check.service';
 

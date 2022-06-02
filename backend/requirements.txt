@@ -7,8 +7,7 @@ marshmallow-sqlalchemy
 flask-marshmallow
 flask-migrate
 flask-cors
-flask-login
-Flask-Principal
+pyjwt
 click
 python-dotenv
 pytest
