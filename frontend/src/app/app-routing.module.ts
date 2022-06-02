@@ -13,6 +13,7 @@ import { NavigationMenuComponent } from './navigation-menu/navigation-menu.compo
 import { StatsComponent } from './stats/stats.component';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
+import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component: ProjectCreationComponent},
     {path: 'createTheme', component: CreateThemeComponent},
+    {path: 'singleTheme', component: SingleThemeViewComponent},
     {path: 'project', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},

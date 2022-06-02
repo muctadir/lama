@@ -20,6 +20,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { SortableThemeHeader } from './sortable-theme.directive';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
+import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CreateThemeComponent } from './create-theme/create-theme.component';
     AddUsersModalContent,
     ThemeManagementComponent,
     SortableThemeHeader,
-    CreateThemeComponent
+    CreateThemeComponent,
+    SingleThemeViewComponent
   ],
   imports: [
     BrowserModule,
