@@ -1,8 +1,14 @@
+<!-- @author Jarl -->
+
+<!-- Main container holding all the register page content-->
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <div class="row">
+        <!-- filler column -->
         <div class="col-2"></div>
+        <!-- column with main content -->
         <div class="col-8 d-flex justify-content-center" id="middle-col">
             <div>
+                <!-- form fields -->
                 <div id="header">Please enter your info down below:</div>
                 <app-account-information-form></app-account-information-form>
 
@@ -11,11 +17,12 @@
                 <!-- Button -->
                 <div>
                     <button type="submit" class="btn btn-primary" id="register-button" (click)="onRegister()">Register</button>
-
+                    <!-- Link to the login page -->
                     <a [routerLink]="['/login']" id="back-login">I already have an account</a>
                 </div>
             </div>
         </div>
+        <!-- filler column -->
         <div class="col-2 offset-2 justify-content-center">
         </div>
     </div>

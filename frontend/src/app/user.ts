@@ -1,7 +1,12 @@
 export class User {
+    
+    // Unique id number of the user account
     private id: number;
+    // Username of the user account
     private username: string;
+    // Email address of the user account
     private email : string;
+    // String containing the description of the user account
     private description: string;
 
     constructor (id:number, username: string, 

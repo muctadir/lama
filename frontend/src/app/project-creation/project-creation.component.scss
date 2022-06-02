@@ -1,24 +1,188 @@
+// Victoria Bogachenkova
+// Veerle Fürst
+
 // Color variables
 $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
-// Header above the input fields
-#header{
-    font-size: 22px;
+// @import "../../styles.scss";
+
+// General text settings
+body{
+    color: $grey-shade;
+    font-size: 15px;
     letter-spacing: 1px;
-    padding-left: 70px;
-    padding-right: 70px;
 }
 
-// texts above each of the forms indicating what the form is for
+// Top bar row
+#topBarRow{
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 98%;
+}
+
+// Plus icon
+.bi.bi-plus{
+    font-size: 24px;
+    color: $grey-shade;
+}
+
+// Header of the page
+.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+
+// Container of all elements
+.container.main{
+    height: 90vh;
+}
+
+// Texts above each of the forms indicating what the form is for
 #field_text{
-    font-size: 12px;
+    font-size: 18px;
     letter-spacing: 1px;
     margin-top: 10px;
 }
+// Text inside the forms
+.form-control{
+    font-size: 15px;
+}
+// Text above the setting divisions
+.settingsHeader{
+    font-size: 18px;
+}
 
+// Project description
 #projectDescription {
     height:200px;
     font-size:14pt;
+}
+
+// PROJECT SETTINGS DIVISIONS
+// Project settings divions parent
+.projectSettingsDivParent{
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+// Project settings divisions orange lines
+.projectSettingsDiv{
+    border-top: 2px solid $orange-shade;
+    padding: 10px 5px 10px 5px;
+}
+// MEMBER SETTINGS DIVISION
+// Member settings division
+#membersDiv{
+    height: 25vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+// Span of the "Project admin" word
+.projectAdminSpan{
+    text-align: center;
+    text-decoration: underline;
+    padding: 0px;
+    margin: 0px;
+}
+// Style of the member checkbox
+.checkboxCol {  
+    text-align: center; 
+}
+// Cross icon next to member name
+.bi.bi-x{
+    font-size: 20px;
+    color: $grey-shade;
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+}
+// Button for adding members
+#addMembersButton{
+    background-color: $white-shade;
+    width: 30px;
+    padding:0px;
+    border:none;
+}
+// Plus icon for label types
+.bi.bi-plus.members{
+    float: right;
+}
+// LABEL TYPE DIVISION
+// Label type settings division
+#labelTypeDiv{
+    height: 25vh;
+    overflow-y: scroll;
+}
+// Label type forms
+.form-control.labelType{
+    width: 60%;
+    margin-bottom: 10px;
+}
+// Button for adding label types
+#addLabelTypeButton{
+    border: 2px solid $grey-shade;
+    background-color: $white-shade;
+    color: $grey-shade;
+    margin: 0px;
+    text-align: left;
+}
+// Add label type text 
+#addLabelTypeText{
+    float: left;
+    margin-top: 5px;
+}
+
+// Response division
+#responseDiv{
+    margin-top:20px;
+}
+
+// SCROLLBARS
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+
+// Space between the two rows
+.top-buffer{
+    margin-top: 10px;
+}
+
+// BOTTOM BUTTONS
+// Row for buttons
+.fixed-bottom{
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+// Both buttons
+.btn.btn-secondary{
+    width: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+// Cancel project creation button
+#cancelProjectCreationButton{
+    background-color: $white-shade;
+    border: 2px solid;
+    border-color: $grey-shade;
+    color: $grey-shade;
+}
+// Cancel project creation button
+#createProjectButton{
+    background-color: $orange-shade;
+    border: 2px solid;
+    border-color: $orange-shade;
+    color: $white-shade;
 }

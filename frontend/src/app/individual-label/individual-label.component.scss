@@ -1,0 +1,48 @@
+// <!-- Author: Victoria Bogachenkova -->
+// Header saying "Label "name""
+p.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+
+// Subtitle
+.subTitle {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px; 
+    border-bottom-style: solid;
+    border-color: #ed5a06;
+    font-size: 25px;
+    letter-spacing: 1px;
+}
+
+// Text of the ID of artifact
+#artifactIdText {
+    color: #ed5a06;
+}
+
+// Artifact Identifier
+#artifactIdentifier {
+    margin-top: 10px;
+}
+
+// Bottom buttons
+#btns-cancel-submit {
+    margin-left: 10px;
+}
+
+// Row with better margins
+#rowLabels {
+    margin: 5px 20px 5px 20px !important;
+}
+
+// Remarks area
+#remarksArtifacts {
+    margin-bottom: 2px;
+}
+
+// Content of remarks text
+#remarksArtifactsContent {
+    margin-left: 15px;
+}

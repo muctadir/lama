@@ -69,7 +69,7 @@ export class ArtifactManagementPageComponent implements OnInit {
   ];
 
   open(){
-    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'xl'});
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
   }
 
  /**
@@ -86,5 +86,10 @@ export class ArtifactManagementPageComponent implements OnInit {
   ngOnInit(): void {
 
   }
+
+  notImplemented(): void {
+    alert("Button has not been implemented yet.");
+  }
+
 
 }

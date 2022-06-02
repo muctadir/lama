@@ -1,62 +1,88 @@
+<!-- Victoria Bogachenkova -->
+<!-- Veerle Fürst -->
+
 <body>
+    <!-- Top bar of the page -->
     <div class="container" id="topBarRow">
         <div class="row">
+            <!-- Column for the header -->
             <div class="col">
-                <p class="header">Projects</p>
-                </div>
+                <!-- Header saying "Projects" -->
+                <p class="header"> Projects </p>
+            </div>
+            <!-- Column for the adding project button -->
             <div class="col">
-                <svg class="bi bi-person-circle" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                </svg>
+                <!-- Settings icon -->
+                <i class="bi bi-person-circle"></i>
+                <!-- Create project button -->
                 <button type="button" class="btn btn-secondary" id="createProjectButton" routerLink="/createProject">
-                    Create project
-                    <svg class="bi bi-plus" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
+                    <span id="createProjectText">Create project</span>
+                    <!-- Plus icon -->
+                    <i class="bi bi-plus"></i>
                 </button>
-                
             </div>
         </div>
     </div>
+    <!-- Show all projects in divisions -->
+    <div class="allProjects">
+        <div class='projectParagraph' *ngFor="let project of projects">
+            <div class="container">
+                <!-- Row for each project -->
+                <div class="row align-items-center">
 
+                    <!-- Column for each project name -->
+                    <div class="col" id="projectNameColumn">
+                        <!-- Shows project name, artifact progress bar, and number of users -->
+                        <p class="projectName"> {{project.name}} </p>
+                    </div>
 
-<!-- Show all projects in divisions -->
-<div class="allProjects">
-    <div class='projectParagraph' *ngFor="let project of projects">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col" id="projectNameColumn">
-                    <!-- Shows project name, artifact progress bar, and number of users -->
-                    <p class="projectName">{{project.projectName}}</p>
-                </div>
-                <div class="col">
-                    <!-- Progress bar -->
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.numberOfCLArtifacts}}
-                        aria-valuemin="0" attr.aria-valuemax={{project.numberOfArtifacts}} 
-                        [style.width]="(project.numberOfCLArtifacts / project.numberOfArtifacts)*100 + '%'"
-                        style="background-color:#ED5A06 !important;"> 
+                    <!-- Column for progress bar and values-->
+                    <div class="col">
+                        <!-- Progress bar -->
+                        <div class="progress">
+                            <!-- Calculating progress bar and other values -->
+                            <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.numberOfCLArtifacts}}
+                            aria-valuemin="0" attr.aria-valuemax={{project.numberOfArtifacts}} 
+                            [style.width]="(project.numberOfCLArtifacts / project.numberOfArtifacts)*100 + '%'"
+                            style="background-color:#ED5A06 !important;"> 
+                            </div>
                         </div>
                     </div>
-                    <span class='progressBarNumbers'>{{project.numberOfCLArtifacts}} / {{project.numberOfArtifacts}}</span>
-                </div>
-                <!-- Number of users -->
-                <div class="col">
-                    <svg class="bi bi-person" viewBox="0 0 16 16">
-                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                    </svg>
-                    <span class='numberOfUsers'>{{project.numberOfUsers}}</span>
-                </div>
-                <div class="row">
-                    <!-- Shows project description -->
-                    {{project.projectDescription}}
+                    <div class="col-2">
+                        {{project.numberOfCLArtifacts}} / {{project.numberOfArtifacts}}
+                    </div>
+
+                    <!--  Column for whether user is admin or not -->
+                    <div class="col-1">
+                        <div *ngIf="project.admin">
+                            <i class="bi bi-key"></i> 
+                            <!-- Admin -->
+                        </div>
+                    </div>
+                    
+                    <!-- Column for whether project is frozen or not -->
+                    <div class="col-1">
+                        <div *ngIf="project.frozen">
+                            <!-- Snow icon -->
+                            <i class="bi bi-snow"></i>
+                        </div>
+                    </div>
+
+                    <!-- Column for number of users -->
+                    <div class="col-2">
+                        <!-- Member icon -->
+                        <i class="bi bi-person"></i>
+                        <span class='numberOfUsers'>{{project.numberOfUsers}}</span>
+                    </div>
+
+                    <!-- Row for project description -->
+                    <div class="row">
+                        <!-- Shows project description -->
+                        {{project.description}}
+                    </div>
                 </div>
             </div>
         </div>
-        
     </div>
-</div>
-<br/> 
 
 </body>

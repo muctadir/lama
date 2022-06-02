@@ -1,0 +1,217 @@
+<!-- @author Jarl -->
+
+<!-- Container holding navigation menu -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
+
+    <!-- Displays the icon to collapse and expand the navigation menu -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <!-- Displays bootstrap icon, and calls function changeSize on click -->
+            <div>
+                <a><em class="bi bi-list def" (click)="changeSize()"></em></a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for projects -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays projects icon, and reroutes to homepage on click -->
+            <div *ngIf="collapsed">
+                <a><em class="bi bi-house def" [routerLink]="['/home']"></em></a>
+            </div>
+
+            <!-- Displays projects text, and reroutes to homepage on click-->
+            <div *ngIf="!collapsed">
+                <a class="text-menu" [routerLink]="['/home']">Projects</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for stats -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays the stats icon, and reroutes to stats page on click -->
+            <div *ngIf="collapsed">
+                <a>
+                    <em [ngClass]="{'bi': true, 'bi-bar-chart-line': true, 'def': page!=0, 'alt': page==0}" 
+                        [routerLink]="['/project/stats']" 
+                        (click)="det_page(0)">
+                    </em>
+                </a>
+            </div>
+            
+            <!-- Displays the stats text, and reroutes to stats page on click -->
+            <div *ngIf="!collapsed">
+                <a [ngClass]="{'text-menu': page!=0, 'text-menu-alt': page==0}" 
+                   [routerLink]="['/project/stats']"
+                   (click)="det_page(0)">Statistics</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for labelling -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays the labelling icon, and reroutes to labelling page on click -->
+            <!-- TODO add rerouting to labelling page -->
+            <div *ngIf="collapsed">
+                <a>
+                    <em [ngClass]="{'bi': true, 'bi-tags': true, 'def': page!=1, 'alt': page==1}"  
+                        (click)="det_page(1)">
+                    </em>
+                </a>
+            </div>
+
+            <!-- Displays the labelling text, and reroutes to labelling page on click -->
+            <!-- TODO add rerouting to labelling page -->
+            <div *ngIf="!collapsed">
+                <a [ngClass]="{'text-menu': page!=1, 'text-menu-alt': page==1}" 
+                   (click)="det_page(1)">Labelling</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for artifact management -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays the artifact management icon, and reroutes to AM page on click -->
+            <!-- TODO add rerouting to AM page -->
+            <div *ngIf="collapsed">
+                <a [ngClass]="{'def': page!=2, 'alt': page==2}" 
+                   (click)="det_page(2)">AM</a>
+            </div>
+
+            <!-- Displays the artifact management text, and reroutes to AM page on click -->
+            <!-- TODO add rerouting to AM page -->
+            <div *ngIf="!collapsed">
+                <a [ngClass]="{'text-menu': page!=2, 'text-menu-alt': page==2}" 
+                   (click)="det_page(2)">Artifact management</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for label management -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays the label management icon, and reroutes to LM page on click -->
+            <!-- TODO add rerouting to LM page -->
+            <div *ngIf="collapsed">
+                <a [ngClass]="{'def': page!=3, 'alt': page==3}" 
+                   (click)="det_page(3)">LM</a>
+            </div>
+
+            <!-- Displays the label management text, and reroutes to LM page on click -->
+            <!-- TODO add rerouting to LM page -->
+            <div *ngIf="!collapsed">
+                <a [ngClass]="{'text-menu': page!=3, 'text-menu-alt': page==3}" 
+                   (click)="det_page(3)">Label management</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+    
+    <!-- Row for theme management -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays the theme management icon, and reroutes to TM page on click -->
+            <!-- TODO add rerouting to TM page -->
+            <div *ngIf="collapsed">
+                <a [ngClass]="{'def': page!=4, 'alt': page==4}" 
+                   (click)="det_page(4)">TM</a>
+            </div>
+
+            <!-- Displays the theme management text, and reroutes to TM page on click -->
+            <!-- TODO add rerouting to TM page -->
+            <div *ngIf="!collapsed">
+                <a [ngClass]="{'text-menu': page!=4, 'text-menu-alt': page==4}" 
+                   (click)="det_page(4)">Theme management</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Row for conflict management -->
+    <div class="row row-margin">
+        <div class="col-12 text-center">
+
+            <!-- Displays the conflict management icon, and reroutes to CM page on click -->
+            <!-- TODO add rerouting to CM page -->
+            <div *ngIf="collapsed">
+                <a>
+                    <em [ngClass]="{'bi': true, 'bi bi-binoculars': true, 'def': page!=5, 'alt': page==5}" 
+                        [routerLink]="['/project/conflict']" 
+                        (click)="det_page(5)">
+                    </em>
+                </a>
+            </div>
+
+            <!-- Displays the conflict management text, and reroutes to CM page on click -->
+            <!-- TODO add rerouting to CM page -->
+            <div *ngIf="!collapsed">
+                <a [ngClass]="{'text-menu': page!=5, 'text-menu-alt': page==5}"
+                    [routerLink]="['/project/conflict']" 
+                    (click)="det_page(5)">Conflict</a>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Container holding the setting and logout -->
+    <div class="row row-margin mt-auto">
+        <div class="col-12 remove_pad_marg">
+            <div class="container reduce_pad_marg">
+
+                <!-- Row for settings -->
+                <!-- TODO add settings functionality -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <!-- Settings icon -->
+                        <div *ngIf="collapsed">
+                            <a><em class="bi bi-gear def"></em></a>
+                        </div>
+                        <!-- Settings written out -->
+                        <div *ngIf="!collapsed">
+                            <a class="text-menu">Settings</a>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Row for logout -->
+                <!-- TODO add logout functionality -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <!-- Logout icon -->
+                        <div *ngIf="collapsed">
+                            <a><em class="bi bi-box-arrow-left def"></em></a>
+                        </div>
+                        <!-- Logout written out -->
+                        <div *ngIf="!collapsed">
+                            <a class="text-menu">Log out</a>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Row to move settings and logout up -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div id="bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,54 +1,70 @@
-<!--Author: Chinno Lavin-->
+<!--Author: Chinno Lavin, Jarl Jansen-->
+
 <!-- Main bootstrap container covering the page -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="main_body">
 
-    <!--Title Row-->
+    <!-- Title Row, holds Artifact management text and add artifact button -->
     <div class="row" id="topRow">
+
+        <!-- Title text -->
         <div class="col">
             <p class="header">Artifact Management</p>
         </div>
+
         <!--Add Artifact Button-->
         <div class="col">
             <span (click)="open()" class="float-end">
                 <button type="button" class="btn btn-secondary" id="addArtifactButton" >
                     Add Artifact
-                    <svg class="bi bi-plus" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
+                    <!-- Displays the + icon next to "Add artifact" -->
+                    <em class="bi bi-plus-lg"></em>
                 </button>
             </span>
-    </div>
+        </div>
+
     <!--Row containing Artifacts Table-->
     <div class="row justify-content-sm-center" id="tableRow">
         <div class="col-9">
             <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+
+                <!-- Table displaying the artifacts -->
                 <table class="table table-hover" id="artifactsTable">
+
                     <!--Table Headers-->
                     <thead>
                         <tr>
-                            <th scope="col"><p class="idHeader">ID</p></th>
-                            <th scope="col"><p class="artifactHeader">Artifact</p></th>
-                            <th scope="col"><p class="timeslabelledHeader">Times Labelled</p></th>
+                            <!-- ID header -->
+                            <th scope="col" sortable="ID" (sort)="notImplemented();"><p class="idHeader">ID</p></th>
+                            <!-- Artifact header -->
+                            <th scope="col" sortable="Artifact" (sort)="notImplemented();"><p class="artifactHeader">Artifact</p></th>
+                            <!-- # of times labelled header-->
+                            <th scope="col" sortable="timesLabelled" (sort)="notImplemented();"><p class="timeslabelledHeader">Times Labelled</p></th>
                         </tr>
                     </thead>
-                    <!--Table Content-->
+
+                    <!-- Table Content -->
                     <tbody  routerLink="/singleartifact">
                         <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize">
+                            <!-- Artifact ID -->
                             <td><p class="artifactID">{{artifact.id}}</p></td>
+                            <!-- Artifact text -->
                             <td><p class="artifactText">{{artifact.text}}</p></td>
+                            <!-- Time artifact is labelled -->
                             <td><p class="timesLabelled">{{artifact.timesLabelled}}</p></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        <!--Pagination-->          
-        <div class="col-12 justify-content-center" id="paginationCol">
-            <ngb-pagination
-                [(page)]="page"
-                [pageSize]="pageSize"
-                [collectionSize]="artifacts.length" size="lg">
-            </ngb-pagination>
-        </div>
+
+            <!-- Pagination of the table -->
+            <div id="center-pagination">
+                <ngb-pagination
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [collectionSize]="artifacts.length">
+                </ngb-pagination>
+            </div>        
+            
         </div>
     </div>
 </div>

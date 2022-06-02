@@ -1,61 +1,163 @@
+<!-- Victoria Bogachenkova -->
+<!-- Veerle Fürst -->
+
 <body>
-    <h1>Create Project</h1>
-
-    <!-- Button to go to the home page -->
-
-    <div class="container">
+    <!-- Conatiner for the top row -->
+    <div class="container" id="topBarRow"> 
         <div class="row">
-            <div class="col">
+            <p class="header"> Create Project </p>
+        </div>
+    </div>
+
+    <!-- Container for settings -->
+    <div class="container main">
+
+        <!-- Row for all settings -->
+        <div class="row justify-content-between">
+
+            <!-- Left side of the page (project name and description) -->
+            <div class="col-5">
+
                 <!-- Filling in Project information -->
                 <form id="projectCreationForm" method="post">
-                    <div id="header">Please enter the project's information</div>
+
                     <!-- Username field -->
                     <div class="form-group">
-                        <label for="projectName">Project name:</label><br>
-                        <input type="text" id="projectName" name="projectName" required><br>
+                        <label for="projectName" id="field_text">Project Name:</label><br>
+                        <input name="projectName" class="form-control" type="text" placeholder="Project Name" required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
-                        <label for="projectDescription">Description:</label><br>
-                        <input type="text" id="projectDescription" name="projectDescription" required><br>
-                    </div>
-                    
+                        <label for="projectDescription" id="field_text">Description:</label><br>
+                        <textarea name="projectDescription" id='projectDescriptionForm' class="form-control" rows="10" placeholder="Description"></textarea>
+                    </div>  
                     
                 </form>
+
+                <!-- Response division -->
+                <div id="responseDiv">
+                    <!-- Response -->
+                    <p id="createProjectResponse"></p>
+                </div>
+
             </div>
-            <div class="col">
-                <!-- <div>
-                    Members
-                    <mat-list>
-                        <mat-list-item *ngFor="let link of links">
+
+            <!-- Right side of the page (members, labeller count, label types) -->
+            <div class="col-6">
+
+                <!-- Division around the whole members section -->
+                <div class="projectSettingsDivParent">
+                    <!-- "Members" header -->
+                    <div class="row">
+                        <div class="col">
+                            <span class="settingsHeader">Members</span>
+                        </div>
+                        <!-- Col for adding users button -->
+                        <div class="col-2">
+                            <!-- Button for adding new members -->
+                            <button class="btn" type="button" id="addMembersButton" (click)="open()">
+                                <!-- Members icon -->
+                                <i class="bi bi-plus members"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Division around the all members -->
+                    <div class="projectSettingsDiv">
+                        <div id="membersDiv">
+                            <!-- Row for the 'Project admin' words -->
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <p class="projectAdminSpan">Project admin</p>
+                                </div>
+                            </div>
                             
-                         </mat-list-item>
-                    </mat-list>
-                </div> -->
-                <div>
-                    Labeller Count
+                            <!-- Name and checkbox per member of the project -->
+                            <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
+
+                                <!-- Row for the delete, name and project admin -->
+                                <div class="row align-items-center">
+
+                                    <!-- Column for delete icon -->
+                                    <div class="col-1">
+                                        <!-- x icon -->
+                                        <i class="bi bi-x" (click)="removeMember(member.getUsername())"></i>
+                                    </div>
+
+                                    <!-- Column for username -->
+                                    <div class="col-7">
+                                        {{ member.getUsername() }}
+                                    </div>
+
+                                    <!-- Column for checkbox -->
+                                    <div class="col-4 checkboxCol">
+                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                        <!-- TODO FIX THE ID -->
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getUsername() }}">
+                                    </div>                                        
+                                </div>
+                            </label>
+
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    Label Type
+
+                <!-- Division around the labeller count -->
+                <form id="constraintForm">      
+                    <div class="form-group projectSettingsDivParent">
+                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
+                        <!-- Division around the input -->
+                        <div class="projectSettingsDiv">
+                            <!-- Labeller count input -->
+                            <div id="labellerCountDiv">
+                                <input type="number" class="form-control" name="numberOfLabellers" value="2" min="2" max="20" style="max-width: 20%;">
+                            </div>
+                        </div>
+                    </div> 
+                </form>
+
+                <!-- Division around the label types -->
+                <div class="projectSettingsDivParent">
+                    <span class="settingsHeader"> Label Type </span>
+                    <!-- Division around the input -->
+                    <div class="projectSettingsDiv">
+                        <!-- All label types in the project -->
+                        <div id="labelTypeDiv">
+                            <div id="labelTypeList">
+                                <form id="labelTypeForm">
+                                    <div *ngFor="let labelType of labelTypes">
+                                        <!-- Text field for the label type -->
+                                        <input type="text" class="form-control labelType" value="{{labelType}}" placeholder="Label type">
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Button for adding new label types -->
+                            <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
+                                <span id="addLabelTypeText">Add Label Type</span>
+                                <!-- Plus icon -->
+                                <i class="bi bi-plus labelType"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <button type="button" class="btn btn-primary" routerLink="/home">Cancel</button>
-
-                <!-- Response -->
-                <p id="createProjectResponse"></p>
-                <br/>
-
-                <!-- Submit button -->
-                <button type="button" class="btn btn-primary" (click)="createProject()">Create Project</button>
-                <br/>
-
             </div>
         </div>
+          
+
+        <!-- Buttons row (cancel and submit button) -->
+        <div class="row justify-content-end fixed-bottom top-buffer">
+            <!-- Cancel button -->
+            <button type="button" class="btn btn-secondary text-nowrap" id="cancelProjectCreationButton" routerLink="/home">
+                Cancel
+            </button>
+        
+            <!-- Submit button -->
+            <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">
+                Create Project
+            </button>
+        </div>
+
     </div>
+
 </body>
-
-
-
-
-

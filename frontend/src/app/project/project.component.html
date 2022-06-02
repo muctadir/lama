@@ -1,0 +1,31 @@
+<!-- @author Jarl -->
+
+<!-- Container which will hold the nav menu and main content -->
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row">
+
+        <!-- View when nav menu is collapsed -->
+        <ng-container *ngIf="collapsed">
+            <!-- Collapsed nav menu -->
+            <div class="col-1 marg-padd">
+                <router-outlet name="side-nav"></router-outlet>
+            </div>
+            <!-- Main content -->
+            <div class="col-11 marg-padd">
+                <router-outlet></router-outlet>
+            </div>
+        </ng-container>
+
+        <!-- View when nav menu is expanded -->
+        <ng-container *ngIf="!collapsed">
+            <!-- Expanded nav menu -->
+            <div class="col-3 marg-padd">
+                <router-outlet name="side-nav"></router-outlet>
+            </div>
+            <!-- Main content -->
+            <div class="col-9 marg-padd">
+                <router-outlet></router-outlet>
+            </div>
+        </ng-container>
+    </div>
+</div>
