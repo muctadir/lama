@@ -34,16 +34,16 @@ const routes: Routes = [
     {path: 'project', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
+      {path: 'labelling-page', component: LabellingPageComponent},
+      {path: 'create-label', component: LabelFormComponent},
+      {path: 'artifactmanagement', component: ArtifactManagementPageComponent},
+      {path: 'singleartifact', component: SingleArtifactViewComponent},
+      {path: 'labelmanagement', component: LabelManagementComponent},
+      {path: 'singlelabel', component: IndividualLabelComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
-    {path: 'labelling-page', component:LabellingPageComponent},
-    {path: 'create-label', component:LabelFormComponent},
-    {path: 'artifactmanagement', component:ArtifactManagementPageComponent},
-    {path: 'singleartifact', component:SingleArtifactViewComponent},
-    {path: 'labelmanagement', component:LabelManagementComponent},
-    {path: 'singlelabel', component:IndividualLabelComponent},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
     
 @NgModule({

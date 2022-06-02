@@ -1,5 +1,5 @@
 // <!-- Author: Victoria Bogachenkova -->
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
