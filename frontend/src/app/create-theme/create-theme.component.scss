@@ -149,3 +149,8 @@ p.labelDescriptionText{
 #createCancelButtons{
     padding-bottom: 10px;
 }
+// button outline
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
