@@ -36,8 +36,8 @@ class User(db.Model):
     username = Column(String(32), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
     email = Column(String(320), unique=True, nullable=False)
-    # See UserStatus
-    status = Column(db.Enum(UserStatus), default=UserStatus.pending, nullable=False)
+    # See UserStatus currently initilizing to approved
+    status = Column(db.Enum(UserStatus), default=UserStatus.approved, nullable=False)
     # Personal description
     description = Column(Text, default="") 
 
