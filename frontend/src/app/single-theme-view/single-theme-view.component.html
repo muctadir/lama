@@ -5,7 +5,7 @@
     <!-- Page Header -->
     <div class="row"  id="titleRow">
         <div class="col-12 header" id="pageTitle"> 
-            Theme 1
+            {{themeName}}
         </div>
     </div>
 
@@ -19,7 +19,7 @@
             </div>
             <!--Name-->
             <div >
-               <p>Theme 1</p> 
+               <p id="themeNameText">{{themeName}}</p> 
             </div>
             <!--Label Count Header-->
             <div id="labelCount">
@@ -27,33 +27,31 @@
             </div>
             <!--Label Count content-->
             <div >
-                <p>35</p> 
+                <p id="labelCountText">35</p> 
              </div>
             <!--Artifact Count Header-->
             <div id="artifactCount">
                 Artifact Count
             </div>
             <!--Artifact Count Content-->
-            <div >
-                <p>42</p> 
+            <div>
+                <p id="artifactCountText">42</p> 
              </div>
             <!--Parent-Themes Header-->
             <div id="parentThemes">
                 Parent-Themes
             </div>
             <!--Parent-Themes Content-->
-            <div >
-                <p>Emotional</p>
-                <p>Analytical</p> 
+            <div *ngFor="let themes of parentThemes">
+                <p id="parentThemesText">{{themes}}</p>
              </div>
             <!-- Sub-Themes Header-->
             <div id="subThemes">
                 Sub-Themes
             </div>
             <!--Sub-Themes Content-->
-            <div >
-                <p>Happiness</p>
-                <p>Humor</p> 
+            <div *ngFor="let themes of subThemes">
+                <p id="subThemesText">{{themes}}</p>
              </div>
         </div>
         <!--Top Half Right-->
@@ -64,7 +62,7 @@
             </div>
             <!--Description Field-->
             <div class="form-group">
-                <textarea class="form-control" rows="10" placeholder="Description"></textarea>
+                <textarea class="form-control" [disabled]="true" rows="10" placeholder="Description">{{themeDescription}}</textarea>
             </div>
         </div>
     </div>
@@ -72,12 +70,12 @@
     <!--Bottom Half-->
     <div class="row justify-content-md-center" id="bottomHalfContainer">
         <div class="col-12">
-            <!--Table to display labels and their artifacts-->
-            <table class="table table-xs">
+            <!--Table to display labels and their artifacts TODO add to style sheet-->
+            <table class="table table-borderless">
                 <thead>
                     <tr>
-                        <!--Label Header for table-->
-                        <th scope="col">Labels</th>
+                        <!--Label Header for table TODO add black to stylesheet-->
+                        <th scope="col" id="labelsHeader">Labels</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,8 +88,19 @@
                                     <!--Artifacts of label-->
                                     <ngb-accordion *ngFor="let artifacts of label.labelArtifacts" #acc="ngbAccordion" activeIds="ngb-panel-1">
                                             <ngb-panel title="{{artifacts.artifactName}}">
+                                            <!--Artifact Content-->
                                             <ng-template ngbPanelContent>
-                                                
+                                                <div class="row">
+                                                    <!--Artifact Text-->
+                                                    <div class="col-6">
+                                                        <p id="artifactText">{{artifacts.artifactText}}</p>
+                                                    </div>
+                                                    <!--Artifact Remarks-->
+                                                    <div class="col-6">
+                                                        <p  id="artifactRemarkHeader">Remarks:</p>
+                                                        <p id="artifactRemark">{{artifacts.artifactRemark}}</p>
+                                                    </div>
+                                                </div>
                                             </ng-template>
                                             </ngb-panel>
                                     </ngb-accordion>

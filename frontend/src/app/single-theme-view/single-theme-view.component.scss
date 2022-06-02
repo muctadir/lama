@@ -13,7 +13,7 @@
     padding-top: 10px;
     text-align: left;
     letter-spacing: 1px;
-    border-bottom: 2px; 
+    border-bottom: 1px; 
     border-bottom-style: solid;
     border-bottom-color: lightgray;
 }
@@ -29,7 +29,7 @@
 }
 //Name Column
 #name{
-    border-bottom: 2px; 
+    border-bottom: 1px; 
     border-bottom-style: solid; 
     letter-spacing: 1px;
     border-bottom-color: orange;
@@ -37,7 +37,7 @@
 
 //Label Count Header
 #labelCount{
-    border-bottom: 2px; 
+    border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
@@ -45,7 +45,7 @@
 }
 //artifactCount Header
 #artifactCount{
-    border-bottom: 2px; 
+    border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
@@ -53,15 +53,23 @@
 }
 //Parent-Themes Header
 #parentThemes{
-    border-bottom: 2px; 
+    border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
+//Content text of multipl sections in top left part
+#parentThemesText, #themeNameText, #labelCountText, #artifactCountText, #subThemesText{
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+    padding-left: 5px;
+    padding-top: 2px;
+}
 //Sub-ThemesHeader
 #subThemes{
-    border-bottom: 2px; 
+    border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
@@ -80,11 +88,22 @@
 #bottomHalfContainer{
     
 }
-//Labels Header
-#labels{
-    border-bottom: 2px; 
+//Labels Header 
+#labelsHeader{
+    border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
+    font-weight: 450;
     letter-spacing: 1px;
     border-bottom-color: orange;
+}
+// Artifact text and remarks
+#artifactText ,#artifactRemark{
+    font-size: 14px;
+    font-weight: 400;
+}
+//Artifact Remark Header
+#artifactRemarkHeader{
+    font-size: 15px;
+    font-weight: 500;
 }
