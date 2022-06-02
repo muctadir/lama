@@ -11,18 +11,18 @@
 }
 //Labelled by text
 #labelledBy{
-    font-size: 25px;
+    font-size: 18px;
     letter-spacing: 1px;
 }
 // Container for the artifact
 .artifactContainer {
-    max-height: 25vh;
+    max-height: 35vh;
     border: 1px; 
     border: solid;
     border-color: #1C5858;
     border-width: thin;
     padding-bottom: 4px;
-    min-height: 40vh;
+    min-height: 30vh;
     overflow-y: scroll;
 }
 //Section right below "labelled by"
@@ -81,37 +81,32 @@ div.allUserLabels{
 }
 //labeltype names
 #labelTypeName1{
-    font-size: 18px;
+    font-size: 15px;
     letter-spacing: 1px;
     font-weight: 450;
 }
-//label given for each labeltype for each user
-#labelGiven{
-    font-size: 17px;
-    letter-spacing: 1px;
-}
 //remark given for each user
 #remarks{
-    font-size: 18px;
+    font-size: 17px;
     letter-spacing: 1px;
     text-align: left;
-    font-weight: 500;
+    font-weight: 450;
 }
 #remarksText{
-    font-size: 17px;
+    font-size: 16px;
     letter-spacing: 1px;
     text-align: left;
 }
 //name of labeller
 #labellerName{
-    font-size: 20px;
+    font-size: 17px;
     letter-spacing: 1px;
-    font-weight: 500;
+    font-weight: 450;
 }
 #split1, #split2{
     color: #ed5a06;
 }
 //labels input box
-#labelForm{
+#formControl{
     width:auto;
 }
