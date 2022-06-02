@@ -134,9 +134,6 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
 box-shadow: 0 0 0 0.1rem dimgrey;
 }
-#paginationCol{
-    padding-top: 20px;
-}
 
 //Scroll Related Business
 .my-custom-scrollbar {
@@ -174,4 +171,20 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 // Get rid of horizontal scrol; bar
 body{
     overflow-x:hidden;
+}
+
+// Sets the style for the headers in the table
+.tableheader {
+    font-size: 15px;
+}
+
+// Sets the style for the content of the table
+.tablecontent {
+    font-size: 15px;
+}
+
+// Centers the pagination to the middle of the page
+#center-pagination {
+    display: flex; 
+    justify-content: center;
 }

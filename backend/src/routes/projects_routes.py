@@ -157,5 +157,4 @@ def create_project(*, user):
         # Add the label type to the database
         db.session.add(label_type)
         db.session.commit()
-        
     return make_response('OK', 200)

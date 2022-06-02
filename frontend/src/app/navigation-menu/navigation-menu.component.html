@@ -39,7 +39,7 @@
             <div *ngIf="collapsed">
                 <a>
                     <em [ngClass]="{'bi': true, 'bi-bar-chart-line': true, 'def': page!=0, 'alt': page==0}" 
-                        [routerLink]="['/project/stats']" 
+                        [routerLink]="['/project/stats']"
                         (click)="det_page(0)">
                     </em>
                 </a>
@@ -63,7 +63,8 @@
             <!-- TODO add rerouting to labelling page -->
             <div *ngIf="collapsed">
                 <a>
-                    <em [ngClass]="{'bi': true, 'bi-tags': true, 'def': page!=1, 'alt': page==1}"  
+                    <em [ngClass]="{'bi': true, 'bi-tags': true, 'def': page!=1, 'alt': page==1}" 
+                        [routerLink]="['/project/labelling-page']" 
                         (click)="det_page(1)">
                     </em>
                 </a>
@@ -72,8 +73,9 @@
             <!-- Displays the labelling text, and reroutes to labelling page on click -->
             <!-- TODO add rerouting to labelling page -->
             <div *ngIf="!collapsed">
-                <a [ngClass]="{'text-menu': page!=1, 'text-menu-alt': page==1}" 
-                   (click)="det_page(1)">Labelling</a>
+                <a [ngClass]="{'text-menu': page!=1, 'text-menu-alt': page==1}"
+                    [routerLink]="['/project/labelling-page']"
+                    (click)="det_page(1)">Labelling</a>
             </div>
         </div>
         <div class="line"></div>
@@ -87,14 +89,16 @@
             <!-- TODO add rerouting to AM page -->
             <div *ngIf="collapsed">
                 <a [ngClass]="{'def': page!=2, 'alt': page==2}" 
-                   (click)="det_page(2)">AM</a>
+                    [routerLink]="['/project/artifactmanagement']"
+                    (click)="det_page(2)">AM</a>
             </div>
 
             <!-- Displays the artifact management text, and reroutes to AM page on click -->
             <!-- TODO add rerouting to AM page -->
             <div *ngIf="!collapsed">
                 <a [ngClass]="{'text-menu': page!=2, 'text-menu-alt': page==2}" 
-                   (click)="det_page(2)">Artifact management</a>
+                    [routerLink]="['/project/artifactmanagement']"
+                    (click)="det_page(2)">Artifact management</a>
             </div>
         </div>
         <div class="line"></div>
@@ -107,15 +111,17 @@
             <!-- Displays the label management icon, and reroutes to LM page on click -->
             <!-- TODO add rerouting to LM page -->
             <div *ngIf="collapsed">
-                <a [ngClass]="{'def': page!=3, 'alt': page==3}" 
-                   (click)="det_page(3)">LM</a>
+                <a [ngClass]="{'def': page!=3, 'alt': page==3}"
+                    [routerLink]="['/project/labelmanagement']" 
+                    (click)="det_page(3)">LM</a>
             </div>
 
             <!-- Displays the label management text, and reroutes to LM page on click -->
             <!-- TODO add rerouting to LM page -->
             <div *ngIf="!collapsed">
-                <a [ngClass]="{'text-menu': page!=3, 'text-menu-alt': page==3}" 
-                   (click)="det_page(3)">Label management</a>
+                <a [ngClass]="{'text-menu': page!=3, 'text-menu-alt': page==3}"
+                    [routerLink]="['/project/labelmanagement']" 
+                    (click)="det_page(3)">Label management</a>
             </div>
         </div>
         <div class="line"></div>

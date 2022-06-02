@@ -7,7 +7,7 @@
                 <p class="header">Label Management</p>
             </div>
             <div class="col">
-            <!-- Buutons for creating and adding labels -->
+            <!-- Buttons for creating and adding labels -->
                 <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
                     Create label
                     <i class="bi bi-plus"></i>
@@ -29,36 +29,37 @@
 
 
     <!--Row containing Artifacts Table-->
-    <div class="row justify-content-sm-center" id="tableRow">
-      <div class="col-9">
-          <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
-              <table class="table table-hover" id="labelsTable">
-                  <!--Table Headers-->
-                  <thead>
-                      <tr>
-                          <th scope="col"><p class="labelHeader">Label</p></th>
-                          <th scope="col"><p class="labelTypeHeader">Label Type</p></th>
-                          <th scope="col"><p class="artifactsLabelledHeader">Artifacts Labelled</p></th>
-                      </tr>
-                  </thead>
-                  <!--Table Content-->
-                  <tbody  routerLink="/singlelabel">
-                      <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
-                          <td><p class="labelName">{{label.labelName}}</p></td>
-                          <td><p class="labelType">{{label.labelType}}</p></td>
-                          <td><p class="artifactsLabelled">{{label.labeledArtifacts}}</p></td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-          <!--Pagination-->          
-          <div class="col-12 justify-content-center" id="paginationCol">
-              <ngb-pagination
-                  [(page)]="page"
-                  [pageSize]="pageSize"
-                  [collectionSize]="labels.length">
-              </ngb-pagination>
-          </div>
-      </div>
-  </div>
+    <div class="row" id="tableRow">
+        <div class="col-1"></div>
+        <div class="col-9">
+            <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+                <table class="table table-hover" id="labelsTable">
+                    <!--Table Headers-->
+                    <thead>
+                        <tr>
+                            <th scope="col"><p class="labelheader">Label</p></th>
+                            <th scope="col"><p class="labelheader">Label Type</p></th>
+                            <th scope="col"><p class="labelheader">Artifacts Labelled</p></th>
+                        </tr>
+                    </thead>
+                    <!--Table Content-->
+                    <tbody  [routerLink]="['/project/singlelabel']">
+                        <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
+                            <td><p class="tablecontent">{{label.labelName}}</p></td>
+                            <td><p class="tablecontent">{{label.labelType}}</p></td>
+                            <td><p class="tablecontent">{{label.labeledArtifacts}}</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--Pagination -->          
+            <div id="center-pagination">
+                <ngb-pagination
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [collectionSize]="labels.length">
+                </ngb-pagination>
+            </div>
+        </div>
+    </div>
 </body>
