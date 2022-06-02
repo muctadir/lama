@@ -18,13 +18,12 @@ export class SingleThemeViewComponent implements OnInit {
   subThemes = ['Happiness','Humor'];
 
 
-  
-
   //Hard Coded Labels
   allLabels = [{labelName:'Happy',
-  labelDescription:'This label is used for any text that give off a general positive feeling of happiness or anything similar.'},
+  labelDescription:'This label is used for any text that give off a general positive feeling of happiness or anything similar.',
+  labelArtifacts: [{artifactName: 'Artifact 1', artifactText: 'Sunshine and Rainbows', artifactRemark: 'I thought that this is the best thing ever.'},
+                {artifactName: "Artifact 2", artifactText: 'The quick brown fox jumps over the lazy sleeping dog', artifactRemark: 'I thought that this is the second best thing ever.'}]}
   ];
-
 
 
   constructor() { }

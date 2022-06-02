@@ -88,12 +88,12 @@
                                 <ngb-panel title="{{label.labelName}}">
                                   <ng-template ngbPanelContent>
                                     <!--Artifacts of label-->
-                                    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-1">
-                                        <ngb-panel title="{{label.labelName}}">
-                                          <ng-template ngbPanelContent>
-                                            
-                                          </ng-template>
-                                        </ngb-panel>
+                                    <ngb-accordion *ngFor="let artifacts of label.labelArtifacts" #acc="ngbAccordion" activeIds="ngb-panel-1">
+                                            <ngb-panel title="{{artifacts.artifactName}}">
+                                            <ng-template ngbPanelContent>
+                                                
+                                            </ng-template>
+                                            </ngb-panel>
                                     </ngb-accordion>
                                   </ng-template>
                                 </ngb-panel>
