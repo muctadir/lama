@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Artifact_Management } from '../artifact_management';
+import axios from 'axios';
 
 
 @Component({
@@ -12,84 +14,55 @@ export class ArtifactManagementPageComponent implements OnInit {
   //Pagination Settings
   page = 1;
   pageSize = 5;
-  //Hard coded artifacts
-  artifacts=[
-    {
-      id:'1',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'7',
-    },
-    {
-      id:'2',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'4',
-    },
-    {
-      id:'3',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'3',
-    },
-    {
-      id:'4',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'5',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'6',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'7',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'8',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'9',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'10',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    }
-   
 
-  ];
-
-  open(){
-    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
-  }
-
+  artifacts: Artifact_Management[] = [];
  /**
  * Constructor passes in the modal service
  * @param modalService 
  * @param labelingDataService 
  */
-    constructor(private modalService: NgbModal) {
-
-     }
-
-
+    constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    // Make list of all artifacts
 
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    if (typeof token === "string"){
+
+      // Get the informtion needed from the back end
+      axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {
+        headers: {
+          'u_id_token': token
+        }
+      })
+        // When there is a response get the artifacts
+        .then(response => {
+
+          // For each project in the list
+          for (let artifact of response.data){
+
+            // Initialize a new project with all values
+            console.log(artifact)
+            let artifactJson = artifact["artifact"];
+            artifactJson["id"] = artifact["artifact_id"];
+            artifactJson["data"] = artifact["artifact_text"];
+            artifactJson["numberOfUsers"] = artifact["artifact_users"];
+            // artifactJson["completed"] = artifact["artifact_completed"];
+
+            let artifactNew: Artifact_Management = artifactJson as Artifact_Management;                
+
+            // Add project to list
+            this.artifacts.push(artifactNew);
+          }
+        })
+        // If there is an error
+        // TODO change
+        .catch(error => {console.log(error)});
+    } 
   }
-
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
+  
+  open(){
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
   }
-
-
+  
 }
