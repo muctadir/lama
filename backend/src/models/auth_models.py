@@ -14,7 +14,6 @@ from src.models import db, ma # need this in every model
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
-from flask_login import UserMixin
 from enum import Enum
 from marshmallow import fields
 
@@ -28,7 +27,7 @@ class UserStatus(Enum):
     denied = -1
     deleted = -2
 
-class User(UserMixin, db.Model):
+class User(db.Model):
 
     # TODO: Handle `status` using Flask-Principal?
     __tablename__ = 'user'
@@ -58,6 +57,7 @@ class User(UserMixin, db.Model):
         'polymorphic_identity':'user',
         'polymorphic_on':type
     }
+
 
 class SuperAdmin(User):
     """

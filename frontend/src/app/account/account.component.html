@@ -1,5 +1,7 @@
+<!-- Account information division -->
 <div *ngIf="!edit" class="container-fluid min-vh-100 d-flex flex-column">
     <div class="container">
+        <!-- Row for account details-->
         <div class="row">
             <div class="col-8 offset-2">
                 <div id="header">
@@ -7,47 +9,60 @@
                 </div>
             </div>
         </div>
+        <!-- Row for username -->
         <div class="row">
             <div class="col-8 offset-2">
-                <b>Username:</b> {{ user.getUsername() }}
+                <b id="boldText">Username:</b>
+                <hr>
+                <span id="infoText">{{ user.getUsername() }}</span>
             </div>
         </div>
+        <!-- Row for user email -->
         <div class="row">
             <div class="col-8 offset-2">
-                <b>Email:</b> {{ user.getEmail() }}
+                <b id="boldText">Email:</b>
+                <hr>
+                <span id="infoText">{{ user.getEmail() }}</span>
             </div>
         </div>
+        <!-- Row for user description -->
         <div class="row">
             <div class="col-8 offset-2">
-                <b>Description:</b> {{ user.getDescription() }}
+                <b id="boldText">Description:</b>
+                <hr>
+                <span id="infoText">{{ user.getDescription() }}</span>
             </div>
         </div>
+        <!-- Row for edit button -->
         <div class="row">
             <div class="col-8 offset-2">
-                <button (click)="edit = !edit" class="btn btn-primary">Edit information</button>
+                <button (click)="edit = !edit" class="btn btn-primary" id="editInformationButton">Edit information</button>
             </div>
         </div>
     </div>
-    
 </div>
+
+<!-- Edit division -->
 <div *ngIf="edit" class="container-fluid min-vh-100 d-flex flex-column">
+    <!-- Row for the header -->
     <div class="row">
         <div class="col-8 offset-2 justify-content-center">
             <div id="header">Changing your account information</div>
         </div>
     </div>
+    <!-- Row for the form -->
     <div class="row">
         <div class="col-8 offset-2 justify-content-center">
             <app-account-information-form [userInfo]=user></app-account-information-form>
         </div>
     </div>
-    <div class="row">
-        <div class="col-2 offset-2">
-            <button type="submit" class="btn btn-primary">Change</button>
-        </div>
-        <!-- TODO: Right align! -->
-        <div class="col-2 offset-4 float-right">
-            <button (click)="edit = !edit" class="btn btn-danger">Cancel</button>
+    <!-- Row for buttons -->
+    <div class="row">        
+        <div class="col-8 offset-2 text-right">
+            <!-- Edit button -->
+            <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
+            <!-- Cancel button -->
+            <button (click)="edit = !edit" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
         </div>
     </div>
 </div>

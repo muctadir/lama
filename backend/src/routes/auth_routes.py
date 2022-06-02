@@ -2,21 +2,21 @@
 # Jarl Jansen
 
 from src import db # need this in every route
-from src.app_util import AppUtil
+from src.app_util import check_args, check_email, check_password, check_username
 from src.models.auth_models import User, UserSchema
 from flask import current_app as app
 from flask import make_response, request, Blueprint
 from sqlalchemy import select
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user
-from flask_cors import cross_origin
+from jwt import encode
+from functools import wraps
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
 # Function to register a user
 @auth_routes.route("/register", methods=["POST"])
-@cross_origin()
 def register():
     """
     Registers a user when supplied username, email, password, and description
@@ -24,40 +24,31 @@ def register():
     """
     args = request.json
     
-    required = ["username", "email", "password", "passwordR", "description"] # Required arguments
+    # Required arguments
+    required = ["username", "email", "password", "passwordR", "description"] 
 
-    # Checks if required fields are given
-    if AppUtil.check_args(required, args):
+    # Check required arguments are supplied
+    if not check_args(required, args):
+        return make_response(("Bad Request", 400))
 
-        # Check if passwords are equal
-        if args["password"] == args["passwordR"]:
+    # Check that arguments were formatted correctly
+    check, reason = check_format(**args)
+    if not check:
+        return make_response((reason, 400))
 
-            # calls the check format function, to see whether user request has valid info
-            check = check_format(**args)
-
-            # checks whether user input is correct
-            if check[0]:
-                # Checking if username and email are taken
-                if not taken(args["username"], args["email"]):
-                    # Go to the function to create the user
-                    return create_user(args)
-                return make_response(("Username or email taken", 400))
-
-            # response if user input is invalid
-            return make_response((check[1], 400))
-        # Response if passwords are not equal
-        return make_response(("Passwords are not equal", 400))
-    # Bad request
-    return make_response(("Bad Request", 400))
+    # Check that username/email are unique
+    if taken(args["username"], args["email"]):
+        return make_response(("Username or email taken", 400))
+    
+    return create_user(args)
 
 # Function to get all users who are pending
 @auth_routes.route("/pending", methods=["GET"])
-@cross_origin()
 def pending():
     """
     Returns list of all users that are pending approval from the super-admin
     """
-    if not request.json: # only if there are no arguments
+    if not request.args: # only if there are no arguments
         try:
             pending = db.session.query(User).filter(User.status == 'pending')
         except OperationalError:
@@ -68,27 +59,39 @@ def pending():
 
 # Function to make a user login
 @auth_routes.route("/login", methods=["POST"])
-@cross_origin()
 def login():
     """
     Logs in the user
     """
     args = request.json
+    # Check required arguments are supplied
+    if not check_args(["username", "password"], args):
+        return make_response(("Bad Request", 400))
 
-    # Checks if correct arguments supplied
-    if AppUtil.check_args(["username", "password"], args): 
-        # Get user with username 
-        user = db.session.execute(select(User).where(User.username == args["username"])).scalars().all()
-        # Check if user exists and password matches
-        if user and check_password_hash(user[0].password, args["password"]): 
-            # Log in user (Flask)
-            login_user(user[0])
-            # Respond that the user is now logged in
-            return make_response(("Logged in", 200))
-        # Respond invalid username or password
+    # Try getting user
+    try:
+        # Get id and password by username
+        u_id, password = db.session.execute(select(User.id, User.password).where(User.username == args["username"])).one()
+
+        # Check correct password
+        if not check_password_hash(password, args["password"]):
+            return make_response(("Invalid username or password", 400))
+
+        # Login user
+        return login_user(u_id)
+
+    except NoResultFound:
+        # User not found
         return make_response(("Invalid username or password", 400))
-    # Respond bad request
-    return make_response(("Bad Request", 400))
+
+def login_user(u_id):
+    # Encode user id
+    token = encode({'u_id_token': u_id}, app.secret_key, algorithm='HS256')
+    # Return id in headers
+    resp = make_response("Success")
+    resp.headers['u_id_token'] = token
+    resp.headers['Access-Control-Expose-Headers'] =  'Content-Encoding, u_id_token'
+    return resp
 
 # Function to create the user that was register
 def create_user(args):
@@ -108,7 +111,7 @@ def create_user(args):
         db.session.add(new_user)
         db.session.commit()
         return make_response(("Created", 201))
-    except OperationalError: # Something out of our control, like connection lost or such
+    except OperationalError:
         return make_response(("Service Unavailable", 503))
 
 # If there already exists a User with given username or email
@@ -118,11 +121,17 @@ def taken(username, email):
 
 # Checks validity of all required fields for User creation
 def check_format(username, email, password, passwordR, description):
-    if (not AppUtil.check_username(username)):
-        return [False, "Invalid username"]
-    elif (not AppUtil.check_email(email)):
-        return [False, "Invalid email"]
-    elif (not AppUtil.check_password(password)):
-        return [False, "Invalid password"]
+    if not check_username(username):
+        return (False, "Invalid username")
+    elif not check_email(email):
+        return (False, "Invalid email")
+    elif not check_password(password):
+        return (False, "Invalid password")
+    elif passwordR != password:
+        return (False, "Passwords must match")
+    elif not len(description):
+        return (False, "No description provided")
     else:
-        return [True, "Success"]
+        return (True, "Success")
+
+# TODO logout

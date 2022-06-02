@@ -5,38 +5,33 @@
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema, UserStatus
-from src.models.item_models import Artifact, LabelType, LabelTypeSchema
-from src.models.project_models import Membership, MembershipSchema, ProjectSchema, Project
+from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
+from src.models.item_models import Artifact, LabelType
+from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from flask_login import current_user
 from sqlalchemy import select
+from src.app_util import login_required
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
 """
 For getting the project information 
-@returns a list of dictionaries
+@returns a list of dictionaries of the form:
+{
+    project : the serialized project
+    projectAdmin : if the user is an admin
+    projectNrArtifacts : number of artifacts in the project
+    projectNrCLArtifacts : number of completed artifacts in the project
+    projectUsers : number of users in the project
+}
 """
 @project_routes.route("/home", methods=["GET"])
-def home_page():
-    # Check if the user is logged in
-    if(not current_user.is_authenticated):
-        # Otherwise send error
-        return make_response("Unauthorized", 401)
-
-    # Get the ID of the user currently logged in
-    user_id = current_user.get_id()
-    
-    # Get the user
-    user = User.get(user_id)
-    if not user:
-        # Otherwise send error
-        return make_response("Not Found", 404)
+@login_required
+def home_page(*, user):
 
     # Get membership of the user
     projects_of_user = db.session.execute(
-        select(Membership).where(Membership.uId==user_id)
+        select(Membership).where(Membership.u_id==user.id)
     ).scalars().all()
 
     # List for project information
@@ -91,28 +86,17 @@ def home_page():
     return make_response(dict_json)
 
 """
-For getting all users within the tool
-@returns a list of users
+For getting all users that can be added to a project
+@returns a list of users that are not super admins, and not the authenticated user
 """
 @project_routes.route("/users", methods=["GET"])
-def get_users():
-    # # Check if the user is logged in
-    # if(not current_user.is_authenticated):
-    #     # Otherwise send error
-    #     return make_response("Unauthorized", 401)
-
-    # # Get the ID of the user currently logged in
-    # user_id = current_user.get_id()
-    
-    # # Get the user
-    # user = User.get(user_id)
-    # if not user:
-    #     # Otherwise send error
-    #     return make_response("Not Found", 404)
-
+@login_required
+def get_users(*, user):
 
     # Make a list of all approved users
-    all_users = db.session.execute(select(User).where(User.status==UserStatus.approved)).scalars().all()
+    all_users = db.session.execute(select(User).where(User.status==UserStatus.approved,
+            User.type != 'super_admin',
+            User.id != user.id)).scalars().all()
 
     # Schema to serialize the User
     user_schema = UserSchema()
@@ -127,8 +111,8 @@ def get_users():
 For creating a new project
 """
 @project_routes.route("/creation", methods=["POST"])
-def create_project():
-    # TODO check if user is legal
+@login_required
+def create_project(*, user):
 
     # Get the information given by the frontend
     project_info = request.json
@@ -144,21 +128,33 @@ def create_project():
     # Get the ids of all users 
     users = project_info["users"]
     # Append the user to the project users attribute
-    for user in users:
-        project.users.append(user)#["u_id"], user["admin"])
-
+    project.users.extend(users)
+    # Also append the user that created the project as an admin
+    project.users.append({
+        'u_id' : user.id,
+        'admin' : True
+    })
+    # Get the ids of all super_admins
+    # For some reason returns a tuple with one element, so we need to get the first element
+    super_admin_ids,  = db.session.execute(select(SuperAdmin.id)).all()
+    # Add all super admins as admins
+    for super_admin_id in super_admin_ids:
+        project.users.append({
+            'u_id' : super_admin_id,
+            'admin' : True
+        })
     # Commit the users
     db.session.commit()
 
     # Get the label types from frontend
-    label_types = project_info["labelTypes"]
+    type_names = project_info["labelTypes"]
     # Add each label type to the database
-    for type in label_types:
+    for type_name in type_names:
         # Create a label type object
-        label_type = LabelType(p_id=project.id, name=type)
+        label_type = LabelType(p_id=project.id, name=type_name)
         
         # Add the label type to the database
         db.session.add(label_type)
         db.session.commit()
         
-    return "Project created"
+    return make_response('OK', 200)

@@ -84,20 +84,26 @@ export class ProjectCreationComponent implements OnInit {
   ngOnInit(): void { 
 
     // Get all users within the tool
-    const response = axios.get('http://127.0.0.1:5000/project/users')
-      .then(response => { 
-        
-        for (let user of response.data) {
-          console.log(response.data);
-          let newUser = new User(user.id, user.username, user.email, user.description);
-          console.log(newUser);
-          this.allMembers.push(newUser);
+    
+    let token: string | null  = sessionStorage.getItem('ses_token');
+
+    if (typeof token === "string") {
+      const response = axios.get('http://127.0.0.1:5000/project/users', {
+        headers: {
+          'u_id_token': token
         }
       })
-      .catch(error => {
-        
-      });
-    
+        .then(response => { 
+          
+          for (let user of response.data) {
+            let newUser = new User(user.id, user.username, user.email, user.description);
+            this.allMembers.push(newUser);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
 
     // TODO
     // Get the person who is creating the project
@@ -204,16 +210,24 @@ export class ProjectCreationComponent implements OnInit {
       // Label type information
       projectInformation["labelTypes"] = params3;
       
-        
-      // Send the data to the database
-      const response = axios.post('http://127.0.0.1:5000/project/creation', projectInformation)
-      .then(response => { 
-        // TODO
-        p_response.innerHTML = "Project created"
-       })
-      .catch(error => {
-        // TODO
-      });
+      
+      let token: string | null  = sessionStorage.getItem('ses_token');
+
+      if (typeof token === "string") {        
+        // Send the data to the database
+        const response = axios.post('http://127.0.0.1:5000/project/creation', projectInformation, {
+          headers: {
+            'u_id_token': token
+          }
+        })
+        .then(response => { 
+          // TODO
+          p_response.innerHTML = "Project created"
+        })
+        .catch(error => {
+          // TODO
+        });
+      }
      
     } else {
       // Send error message

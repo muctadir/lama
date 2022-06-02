@@ -23,7 +23,7 @@ Relevant info:
 from src.models import db, ma
 from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey, event, func
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, mapper
-from src.app_util import AppUtil
+from src.app_util import get_all_subclasses
 from enum import Enum
 from marshmallow import fields
 
@@ -179,6 +179,6 @@ from src.models.item_models import ChangingItem
 # TODO: Should make sure subclasses are not abstract before creating changelog for them
 #       or alternatively, make sure they inherit db.Model
 # If you want to import a Change class, you can just import this list
-Changes = [create_change_table(changing_item) for changing_item in AppUtil.get_all_subclasses(ChangingItem)]
+Changes = [create_change_table(changing_item) for changing_item in get_all_subclasses(ChangingItem)]
 
 event.listen(mapper, 'after_configured', create_change_schemas(Changes))

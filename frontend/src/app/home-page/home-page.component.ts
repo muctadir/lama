@@ -21,30 +21,38 @@ export class HomePageComponent implements OnInit {
 
     // Make list of all projects
 
-    // Get the informtion needed from the back end
-    let response = axios.get('http://127.0.0.1:5000/project/home')
-      // When there is a response get the projects
-      .then(response => {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    if (typeof token === "string"){
 
-        // For each project in the list
-        for (let project of response.data){
-
-          // Initialize a new project with all values
-          let projectJson = project["project"];
-          projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
-          projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
-          projectJson["numberOfUsers"] = project["projectUsers"];
-          projectJson["admin"] = project["projectAdmin"];
-
-          let projectNew: Project = projectJson as Project;                
-
-          // Add project to list
-          this.projects.push(projectNew);
+      // Get the informtion needed from the back end
+      let response = axios.get('http://127.0.0.1:5000/project/home', {
+        headers: {
+          'u_id_token': token
         }
       })
-      // If there is an error
-      // TODO change
-      .catch(error => {console.log(error)});
-      
-  }   
+        // When there is a response get the projects
+        .then(response => {
+
+          // For each project in the list
+          for (let project of response.data){
+
+            // Initialize a new project with all values
+            let projectJson = project["project"];
+            projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
+            projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
+            projectJson["numberOfUsers"] = project["projectUsers"];
+            projectJson["admin"] = project["projectAdmin"];
+
+            let projectNew: Project = projectJson as Project;                
+
+            // Add project to list
+            this.projects.push(projectNew);
+          }
+        })
+        // If there is an error
+        // TODO change
+        .catch(error => {console.log(error)});
+        
+    }   
+  }
 }

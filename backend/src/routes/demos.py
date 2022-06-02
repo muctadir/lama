@@ -7,7 +7,6 @@ from src.models.auth_models import User, UserSchema
 from src.models.item_models import ProjectItem, ChangingItem, Artifact
 from src.models.project_models import Project, Membership
 from flask import request, jsonify, Blueprint
-from flask_login import current_user
 from json import dumps
 
 
