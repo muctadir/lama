@@ -7,6 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SingleThemeViewComponent implements OnInit {
 
+  //Theme Name Variable
+  themeName: String = '';
+
+  //HardCoded Parent-Themes
+  parentThemes = ['Emotional','Analytical'];
+  //HardCoded Sub-Themes
+  subThemes = ['Happiness','Humor'];
+
+
   constructor() { }
 
   ngOnInit(): void {
