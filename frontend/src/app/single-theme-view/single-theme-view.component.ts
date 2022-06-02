@@ -36,4 +36,8 @@ export class SingleThemeViewComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  notImplemented(): void {
+    alert("Button has not been implemented yet.");
+  }
+
 }

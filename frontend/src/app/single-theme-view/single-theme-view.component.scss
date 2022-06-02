@@ -59,6 +59,11 @@
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
+//Container for parent theme scroll
+#parentThemesScroll{
+    overflow-y: scroll;
+    height: 10vh;
+}
 //Content text of multipl sections in top left part
 #parentThemesText, #themeNameText, #labelCountText, #artifactCountText, #subThemesText{
     font-size: 14px;
@@ -76,6 +81,11 @@
     border-bottom-color: orange;
 }
 
+//Container for sub theme scroll
+#subThemesScroll{
+    overflow-y: scroll;
+    height: 10vh;
+}
 //TOP RIGHT
 //Top right container
 #topRightCol{
@@ -107,3 +117,32 @@
     font-size: 15px;
     font-weight: 500;
 }
+//bottom buttons
+#buttonCol{
+    position: fixed;
+}
+
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+//Table Scroll
+#tableScroll{
+    min-height: 50vh;
+    overflow-y: scroll;
+}
+
