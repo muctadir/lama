@@ -23,5 +23,10 @@
     border-bottom-style: solid;
     border-bottom-color: #38474e;
 }
+// Centers the pagination to the middle of the page
+#center-pagination {
+    display: flex; 
+    justify-content: center;
+}
 
 
