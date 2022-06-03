@@ -37,16 +37,14 @@
             <div>
                 <p id="artifactCountText">42</p> 
              </div>
-            <!--Parent-Themes Header-->
+            <!--Parent-Theme Header-->
             <div id="parentThemes">
-                Parent-Themes
+                Parent-Theme
             </div>
             <!--Parent-Themes Content-->
-            <div id="parentThemesScroll">
-                <div *ngFor="let themes of parentThemes">
+                <div *ngFor="let themes of parentTheme">
                     <p id="parentThemesText">{{themes}}</p>
                 </div>
-            </div>
             <!-- Sub-Themes Header-->
             <div id="subThemes">
                 Sub-Themes
@@ -83,39 +81,39 @@
                     </tr>
                 </thead>
                 <div  id="accordionScroll">
-                <tbody>
-                    <!--List of Label dropdowns accordion-->
-                    <tr *ngFor="let label of allLabels">
-                        <!--Row for each Label-->
-                        <th scope="row">
-                            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-                                <ngb-panel title="{{label.labelName}}">
-                                    <ng-template ngbPanelContent>
-                                        <!--Artifacts of label-->
-                                        <ngb-accordion *ngFor="let artifacts of label.labelArtifacts" #acc="ngbAccordion" activeIds="ngb-panel-1">
-                                            <ngb-panel title="{{artifacts.artifactName}}">
-                                                <!--Artifact Content-->
-                                                <ng-template ngbPanelContent>
-                                                    <div class="row">
-                                                        <!--Artifact Text-->
-                                                        <div class="col-6">
-                                                            <p id="artifactText">{{artifacts.artifactText}}</p>
+                    <tbody>
+                        <!--List of Label dropdowns accordion-->
+                        <tr *ngFor="let label of allLabels">
+                            <!--Row for each Label-->
+                            <th scope="row">
+                                <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                                    <ngb-panel title="{{label.labelName}}">
+                                        <ng-template ngbPanelContent>
+                                            <!--Artifacts of label-->
+                                            <ngb-accordion *ngFor="let artifacts of label.labelArtifacts" #acc="ngbAccordion" activeIds="ngb-panel-1">
+                                                <ngb-panel title="{{artifacts.artifactName}}">
+                                                    <!--Artifact Content-->
+                                                    <ng-template ngbPanelContent>
+                                                        <div class="row">
+                                                            <!--Artifact Text-->
+                                                            <div class="col-6">
+                                                                <p id="artifactText">{{artifacts.artifactText}}</p>
+                                                            </div>
+                                                            <!--Artifact Remarks-->
+                                                            <div class="col-6">
+                                                                <p  id="artifactRemarkHeader">Remarks:</p>
+                                                                <p id="artifactRemark">{{artifacts.artifactRemark}}</p>
+                                                            </div>
                                                         </div>
-                                                        <!--Artifact Remarks-->
-                                                        <div class="col-6">
-                                                            <p  id="artifactRemarkHeader">Remarks:</p>
-                                                            <p id="artifactRemark">{{artifacts.artifactRemark}}</p>
-                                                        </div>
-                                                    </div>
-                                                </ng-template>
-                                            </ngb-panel>
-                                        </ngb-accordion>
-                                    </ng-template>
-                                </ngb-panel>
-                            </ngb-accordion>
-                        </th>
-                    </tr>                    
-                </tbody>
+                                                    </ng-template>
+                                                </ngb-panel>
+                                            </ngb-accordion>
+                                        </ng-template>
+                                    </ngb-panel>
+                                </ngb-accordion>
+                            </th>
+                        </tr>                    
+                    </tbody>
                 </div>
             </table>
         </div>

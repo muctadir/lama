@@ -15,7 +15,7 @@ export class SingleThemeViewComponent implements OnInit {
   themeDescription: String = 'Lorem ipsum dolor sit amet. Et beatae sint ut unde architecto cum esse sequi in sapiente temporibus vel cupiditate amet ut omnis ipsum. 33 eius consequatur aut nemo asperiores et recusandae dolore. Qui voluptatem amet non voluptate error id facilis voluptas ad quod commodi ut rerum officiis eum minus dolores. Et quisquam earum sed quas saepe est nesciunt corporis aut aliquid galisum.';
 
   //HardCoded Parent-Themes
-  parentThemes = ['Emotional','Analytical'];
+  parentTheme = ['Emotional'];
 
   //HardCoded Sub-Themes
   subThemes = ['Happiness','Humor'];
