@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db, ma
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table, UniqueConstraint
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -22,19 +22,22 @@ class ProjectItem():
     i.e. an item uniquely identified by the project id and its own id
     """
 
+
     # Declares existence of p_id : foreign key for project
     @declared_attr
     def p_id(cls):
         return Column(Integer, ForeignKey('project.id'), nullable=False)
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(64))
+    name = Column(String(64), nullable=False)
 
     # Project that item belongs to
     # Backref automatically creates an attribute in project to access the items of this type
     @declared_attr
     def project(cls):
         return relationship('Project', backref=cls.__tablename__ + 's')
+
+    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
 
 @declarative_mixin
 class ChangingItem(ProjectItem):
@@ -66,11 +69,18 @@ class LabelType(ProjectItem, db.Model):
 
     __tablename__ = 'label_type'
     # A list of labels that are of this type
-    labels = relationship('Label', back_populates='label_type')
+    # labels = relationship('Label', back_populates='label_type')
 
 class Artifact(ChangingItem, db.Model):
 
     __tablename__ = 'artifact'
+
+    @declared_attr
+    def __table_args__(cls):
+        args = ChangingItem.__table_args__
+        args += (ForeignKeyConstraint(['p_id', 'id'], ['label.p_id', 'label.lt_id']), )
+        return args
+
     # The name (or some other identifier) of the file the artifact originated from
     identifier = Column(String(64), nullable=False)
 
@@ -108,13 +118,18 @@ class Artifact(ChangingItem, db.Model):
 class Label(ChangingItem, db.Model):
 
     __tablename__ = 'label'
-    __table__args__ = (
-        ForeignKeyConstraint(['p_id', 'lt_id'], ['label_type.p_id', 'label_type.id'])
-    )
+    @declared_attr
+    def __table_args__(cls):
+        args = ChangingItem.__table_args__
+        args += (ForeignKeyConstraint(['p_id', 'lt_id'], ['label_type.p_id', 'label_type.id']), )
+        return args
+
     # The id of the label type this label corresponds to
     lt_id = Column(Integer, ForeignKey('label_type.id'), nullable=False)
     # The actual label type object this label corresponds to
-    label_type = relationship('LabelType', back_populates='labels')
+    label_type = relationship('LabelType', 
+        foreign_keys='[p_id, lt_id]',    
+        backref='labels')
     # Description of meaning of label
     description = Column(Text, nullable=False)
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
@@ -173,10 +188,12 @@ class Theme(ChangingItem, db.Model):
 class Labelling(db.Model):
 
     __tablename__ = 'labelling'
-    __table__args__ = (
+    
+    __table_args__ = (
         ForeignKeyConstraint(['p_id', 'a_id'], ['artifact.p_id', 'artifact.id']),
-        ForeignKeyConstraint(['p_id', 'l_id'], ['label.p_id', 'label.id']),
+        ForeignKeyConstraint(['p_id', 'l_id'], ['label.p_id', 'label.id'])
     )
+
     # The id of the user that labelled the artifact
     u_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     # The id of the artifact that was labelled
@@ -198,8 +215,8 @@ class Labelling(db.Model):
 class Highlight(db.Model):
 
     __tablename__ = 'highlight'
-    __table__args__ = (
-        ForeignKeyConstraint(['a_id', 'p_id'], ['artifact.id', 'artifact.p_id'])
+    __table_args__ = (
+        ForeignKeyConstraint(['a_id', 'p_id'], ['artifact.id', 'artifact.p_id']),
     )
 
     # The id of the user that made the highlight
