@@ -33,7 +33,6 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'createProject', component: ProjectCreationComponent},
     {path: 'createTheme', component: CreateThemeComponent},
     {path: 'singleTheme', component: SingleThemeViewComponent},
     {path: 'project', component: ProjectComponent, children: [
