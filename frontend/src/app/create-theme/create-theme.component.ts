@@ -27,7 +27,7 @@ export class CreateThemeComponent implements OnInit {
   addedLabels: String[] = [];
 
   //Hard coded sub-themes
-  allSubthemes = ['Happiness','Angriness'];
+  allSubthemes = ['Happiness','Angriness', 'SupremeSubtheme'];
  
   constructor() { }
 

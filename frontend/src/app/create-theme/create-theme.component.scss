@@ -13,17 +13,14 @@
 //Top half part of page
 #topHalf{
     padding-top:10px;
-    padding-left:0px;
-    padding-right: 0px;
     height:50vh; 
 }
 //top left section
 #topLeft{
-    padding-right: 100px;
+
 }
 //Name Header
 #name{
-    margin-left: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
@@ -36,7 +33,6 @@
 }
 //Labels header
 #labels{
-    margin-left: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
@@ -79,17 +75,9 @@
     letter-spacing: 1px;
     border-bottom-color: orange
 }
-//Subtheme button
-#addSubthemeButton{
-    background-color: #ED5A06;
-    border: 2px solid;
-    border-color: #ED5A06;
-    color: white;
-    float: right;
-}
 //Subthemes list 
 #allSubthemes{
-    padding-left: 20px;
+    padding-left: 0px;
     font-size:14px;
     letter-spacing: 1px;
 }
@@ -103,7 +91,6 @@
 #bottomHalf{
     padding-top:10px;
     padding-left:0px;
-    padding-right:180px;
 }
 #addLabels{
     border-bottom: 2px; 
@@ -115,7 +102,7 @@
 //Add label text
 .addLabelsText{
     font-size: 14px;
-    padding-left: 10px;
+    padding-left: 0px;
     vertical-align: -5px
 }
 //add label button
@@ -137,7 +124,7 @@
 }
 // Label Description text container
 p.labelDescriptionText{
-    padding-left: 10px;
+    padding-left: 0px;
     font-size: 14px;
 }
 
@@ -177,7 +164,6 @@ p.labelDescriptionText{
 }
 // Add subtheme text
 #addSubthemes{
-    margin-left: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
