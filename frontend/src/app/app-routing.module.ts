@@ -34,8 +34,6 @@ const routes: Routes = [
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
     {path: 'createProject', component: ProjectCreationComponent},
-    {path: 'createTheme', component: CreateThemeComponent},
-    {path: 'singleTheme', component: SingleThemeViewComponent},
     {path: 'project', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
@@ -45,6 +43,9 @@ const routes: Routes = [
       {path: 'singleartifact', component: SingleArtifactViewComponent},
       {path: 'labelmanagement', component: LabelManagementComponent},
       {path: 'singlelabel', component: IndividualLabelComponent},
+      {path: 'thememanagement', component: ThemeManagementComponent},
+      {path: 'createTheme', component: CreateThemeComponent},
+      {path: 'singleTheme', component: SingleThemeViewComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
