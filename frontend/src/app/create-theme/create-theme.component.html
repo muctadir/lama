@@ -13,20 +13,20 @@
         <div class="col-6">
             <div class="row" id="topLeft">
                 <!-- Label Name section -->
-                <div class="col-12" id="name">
+                <div id="name">
                     Name
                 </div>
-                <div class="col-12" id="nameInputCol">
+                <div id="nameInputCol">
                     <div class="form-group">
                         <input class="form-control" id="nameForm" type="text" placeholder="Required" required><br>
                     </div>
                 </div>
                 <!-- Displays All labels section -->
-                <div class="col-12" id="labels">                 
+                <div id="labels">                 
                     Labels
                 </div>
                 <div class="row">
-                    <div class="col-6" id="allLabelsCol">
+                    <div id="allLabelsList">
                         <div *ngFor="let label of addedLabels">
                             <span id="allLabels">{{label}}</span>
                             <!-- Column for delete icon -->
@@ -43,14 +43,14 @@
         <div class="col-6">
             <div class="row" id="topRight">
                 <!-- Description section -->
-                <div class="col-12" id="description">
+                <div id="description">
                     Description
                 </div>
                 <div class="form-group">
                     <textarea class="form-control" rows="10" placeholder="Description"></textarea>
                 </div>
                 <!-- Sub-themes section -->
-                <div class="col-sm-12" id="subThemes">
+                <div id="subThemes">
                     <span>
                         Sub-Themes
                     </span>
@@ -61,7 +61,7 @@
                     </span>
                 </div>
                 <!-- Sub-theme list from data -->
-                <div class="col-12" id="allSubthemesCol">
+                <div id="allSubthemesList">
                     <div *ngFor="let subthemes of allSubthemes">
                         <p id="allSubthemes">{{subthemes}}</p>
                     </div>
@@ -115,7 +115,7 @@
         <div class="col-12" id="createCancelButtons">
             <div>
                 <button class="form-group btn btn-primary float-end" (click)="notImplemented()" style="margin-left:10px;">Create</button> 
-                <button class="form-group btn btn-light float-end"  routerLink="/theme">Cancel</button>
+                <button class="form-group btn btn-light float-end"  routerLink="project/thememanagement">Cancel</button>
             </div>
         </div>
     </div>
