@@ -21,7 +21,7 @@ class ProjectItem():
     Abstract class for all entities belonging to a project
     i.e. an item uniquely identified by the project id and its own id
     """
-
+    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
 
     # Declares existence of p_id : foreign key for project
     @declared_attr
@@ -36,8 +36,6 @@ class ProjectItem():
     @declared_attr
     def project(cls):
         return relationship('Project', backref=cls.__tablename__ + 's')
-
-    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
 
 @declarative_mixin
 class ChangingItem(ProjectItem):
@@ -68,18 +66,13 @@ class ChangingItem(ProjectItem):
 class LabelType(ProjectItem, db.Model):
 
     __tablename__ = 'label_type'
+
     # A list of labels that are of this type
-    # labels = relationship('Label', back_populates='label_type')
+    labels = relationship('Label', back_populates='label_type')
 
 class Artifact(ChangingItem, db.Model):
 
     __tablename__ = 'artifact'
-
-    @declared_attr
-    def __table_args__(cls):
-        args = ChangingItem.__table_args__
-        args += (ForeignKeyConstraint(['p_id', 'id'], ['label.p_id', 'label.lt_id']), )
-        return args
 
     # The name (or some other identifier) of the file the artifact originated from
     identifier = Column(String(64), nullable=False)
@@ -100,10 +93,9 @@ class Artifact(ChangingItem, db.Model):
     # Children is list of artifacts created from split
     # backref creates a parent attribute which is the split source (as an Artifact object)
     children = relationship('Artifact', 
-            backref=backref('parent', remote_side='[Artifact.p_id, Artifact.id]'))
+            backref=backref('parent', remote_side='Artifact.id'))
 
     # Attributes for labelling relationship
-    # List of labellings this artifact is associated with
     labellings = relationship('Labelling', back_populates='artifact')
     # The below attributes are to reduce intermediary access to labellings
     # Do NOT use them to query labellings
@@ -118,18 +110,13 @@ class Artifact(ChangingItem, db.Model):
 class Label(ChangingItem, db.Model):
 
     __tablename__ = 'label'
-    @declared_attr
-    def __table_args__(cls):
-        args = ChangingItem.__table_args__
-        args += (ForeignKeyConstraint(['p_id', 'lt_id'], ['label_type.p_id', 'label_type.id']), )
-        return args
 
     # The id of the label type this label corresponds to
     lt_id = Column(Integer, ForeignKey('label_type.id'), nullable=False)
     # The actual label type object this label corresponds to
     label_type = relationship('LabelType', 
-        foreign_keys='[p_id, lt_id]',    
-        backref='labels')
+            primaryjoin='and_(LabelType.p_id==Label.p_id, LabelType.id==Label.lt_id)',
+            back_populates='labels')
     # Description of meaning of label
     description = Column(Text, nullable=False)
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
@@ -144,7 +131,6 @@ class Label(ChangingItem, db.Model):
             backref=backref('child', remote_side='[Label.p_id, Label.id]'))
 
     # Attributes for labelling relationship
-    # List of labellings this label is associated with
     labellings = relationship('Labelling', back_populates='label')
     # The below attributes are to reduce intermediary access to labellings
     # Do NOT use them to query labellings
@@ -188,11 +174,6 @@ class Theme(ChangingItem, db.Model):
 class Labelling(db.Model):
 
     __tablename__ = 'labelling'
-    
-    __table_args__ = (
-        ForeignKeyConstraint(['p_id', 'a_id'], ['artifact.p_id', 'artifact.id']),
-        ForeignKeyConstraint(['p_id', 'l_id'], ['label.p_id', 'label.id'])
-    )
 
     # The id of the user that labelled the artifact
     u_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
@@ -209,15 +190,16 @@ class Labelling(db.Model):
 
     # The user, artifact, and label object corresponding to this relationship
     user = relationship('User', back_populates='labellings')
-    artifact = relationship('Artifact', back_populates='labellings')
-    label = relationship('Label', back_populates='labellings')
+    artifact = relationship('Artifact', 
+            primaryjoin='and_(Artifact.p_id==Labelling.p_id, Artifact.id==Labelling.a_id)',
+            back_populates='labellings')
+    label = relationship('Label', 
+            primaryjoin='and_(Label.p_id==Labelling.p_id, Label.id==Labelling.l_id)',
+            back_populates='labellings')
 
 class Highlight(db.Model):
 
     __tablename__ = 'highlight'
-    __table_args__ = (
-        ForeignKeyConstraint(['a_id', 'p_id'], ['artifact.id', 'artifact.p_id']),
-    )
 
     # The id of the user that made the highlight
     u_id = Column(Integer, ForeignKey('user.id'), nullable=False)
@@ -233,7 +215,9 @@ class Highlight(db.Model):
 
     # The user and artifact objects corresponding to this highlight
     user = relationship('User', back_populates='highlights')
-    artifact = relationship('Artifact', back_populates='highlights')
+    artifact = relationship('Artifact',
+            primaryjoin='and_(Highlight.p_id==Artifact.p_id, Highlight.a_id==Artifact.id)',
+            back_populates='highlights')
 
 # Table to manage sub theme relationship
 # If you wish to add other attributes, an association class should be used instead
