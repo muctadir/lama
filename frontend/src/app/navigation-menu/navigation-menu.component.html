@@ -134,15 +134,17 @@
             <!-- Displays the theme management icon, and reroutes to TM page on click -->
             <!-- TODO add rerouting to TM page -->
             <div *ngIf="collapsed">
-                <a [ngClass]="{'def': page!=4, 'alt': page==4}" 
+                <a [ngClass]="{'def': page!=4, 'alt': page==4}"
+                    [routerLink]="['/project/thememanagement']"  
                    (click)="det_page(4)">TM</a>
             </div>
 
             <!-- Displays the theme management text, and reroutes to TM page on click -->
             <!-- TODO add rerouting to TM page -->
             <div *ngIf="!collapsed">
-                <a [ngClass]="{'text-menu': page!=4, 'text-menu-alt': page==4}" 
-                   (click)="det_page(4)">Theme management</a>
+                <a [ngClass]="{'text-menu': page!=4, 'text-menu-alt': page==4}"
+                    [routerLink]="['/project/thememanagement']"  
+                    (click)="det_page(4)">Theme management</a>
             </div>
         </div>
         <div class="line"></div>
