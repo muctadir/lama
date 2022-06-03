@@ -93,7 +93,7 @@ class Artifact(ChangingItem, db.Model):
     # Children is list of artifacts created from split
     # backref creates a parent attribute which is the split source (as an Artifact object)
     children = relationship('Artifact', 
-            backref=backref('parent', remote_side='Artifact.id'))
+            backref=backref('parent', remote_side='[Artifact.p_id, Artifact.id]'))
 
     # Attributes for labelling relationship
     labellings = relationship('Labelling', back_populates='artifact')
@@ -154,14 +154,13 @@ class Theme(ChangingItem, db.Model):
     # Boolean for if the theme was (soft) deleted (can be seen in history, but not used)
     deleted = Column(Boolean, default=False)
 
+    # Attributes for merging relationship
+    # The id of the label that this label was merged into (null if this label was not merged)
+    super_theme_id = Column(Integer, ForeignKey('theme.id'))
     # All sub themes
-    # Backref automatically creates super_themes attribute to access super themes
-    sub_themes = relationship('Theme',
-            secondary='theme_to_theme',
-            primaryjoin='and_(Theme.id==theme_to_theme.c.super_id, Theme.p_id==theme_to_theme.c.p_id)',
-            secondaryjoin='and_(Theme.id==theme_to_theme.c.sub_id, Theme.p_id==theme_to_theme.c.p_id)',
-            backref='super_themes'
-    )
+    # backref creates a super_theme attribute
+    sub_themes = relationship('Theme', 
+            backref=backref('super_theme', remote_side='[Theme.p_id, Theme.id]'))
 
     # Labels assigned to this theme
     labels = relationship('Label',
@@ -219,15 +218,8 @@ class Highlight(db.Model):
             primaryjoin='and_(Highlight.p_id==Artifact.p_id, Highlight.a_id==Artifact.id)',
             back_populates='highlights')
 
-# Table to manage sub theme relationship
-# If you wish to add other attributes, an association class should be used instead
-theme_to_theme = Table('theme_to_theme', db.Model.metadata,
-        Column('p_id', Integer, ForeignKey('project.id')),
-        Column('super_id', Integer, ForeignKey('theme.id')),
-        Column('sub_id', Integer, ForeignKey('theme.id'))
-)
-
 # Table to manage label to theme relationship
+# A many to many theme to theme hierarchy would work a similar way
 # If you wish to add other attributes, an association class should be used instead
 label_to_theme = Table('label_to_theme', db.Model.metadata,
         Column('p_id', Integer, ForeignKey('project.id')),
