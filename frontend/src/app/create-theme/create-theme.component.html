@@ -61,8 +61,13 @@
                     </div>
                     <!-- Sub-theme list from data -->
                     <div id="allSubthemesList">
-                        <div *ngFor="let subthemes of allSubthemes">
-                            <p id="allSubthemes">{{subthemes}}</p>
+                        <div *ngFor="let subtheme of addedSubthemes">
+                            <span id="allSubthemes">{{subtheme}}</span>
+                             <!-- Column for delete icon -->
+                             <span>
+                                <!-- x icon -->
+                                <i class="bi bi-x" (click)="removeSubtheme(subtheme)" id="xIcon"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -119,7 +124,28 @@
             <!-- Add Sub-Themes Section --> 
             <div id="addSubthemes">
                 Add Sub-Themes
-            </div>        
+            </div>
+            <!-- Table for showing all Sub-Themes -->
+            <table class="table table-borderless">
+                <tbody>
+                    <div id="subthemeScroll">
+                        <!-- Click shows clicked Subtheme and highlights it-->
+                        <tr *ngFor="let subtheme of allSubthemes" (click)="highlightSubtheme(subtheme)"  [class.highlighted]="subtheme === highlightedSubtheme">
+                            <td>
+                                <span class="addSubthemeText">
+                                    {{subtheme}}
+                                </span>
+                                <!--  Add subtheme button -->
+                                <button class="btn" type="button" id="addsubthemeButton" (click)="addSubtheme(subtheme)">
+                                    <!-- Plus icon -->
+                                    <span class="bi bi-plus">                                  
+                                    </span>
+                                </button>
+                            </td>                                 
+                        </tr>
+                    </div>
+                </tbody>
+            </table>        
         </div>
     </div>
 

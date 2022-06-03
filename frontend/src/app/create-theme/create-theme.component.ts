@@ -10,6 +10,9 @@ export class CreateThemeComponent implements OnInit {
   //highlight label variable
   highlightedLabel: String = '';
 
+  //highlight subtheme variable
+  highlightedSubtheme: String = '';
+
   //Hard Coded Labels
   allLabels = [{labelName:'Happy',
                 labelDescription:'This label is used for any text that give off a general positive feeling of happiness or anything similar.'},
@@ -25,6 +28,9 @@ export class CreateThemeComponent implements OnInit {
 
   // Labels Added
   addedLabels: String[] = [];
+
+  //Subthemes Added
+  addedSubthemes: String[] = []
 
   //Hard coded sub-themes
   allSubthemes = ['Happiness','Angriness', 'SupremeSubtheme'];
@@ -42,10 +48,27 @@ export class CreateThemeComponent implements OnInit {
     }
     this.addedLabels.push(label.labelName);
   }
+
+  //Function for adding subtheme to added subthemes array
+  addSubtheme(subtheme:any){
+    for (var addedSubtheme of this.addedSubthemes){
+      if (addedSubtheme == subtheme){
+        return;
+      }
+    }
+    this.addedSubthemes.push(subtheme);
+  }
+
   // Function for highlighting selected label
   highlightLabel(label:any){
     this.highlightedLabel = label.labelName;
   }
+
+  //Function for highlighting selected sub-theme
+  highlightSubtheme(subtheme:any){
+    this.highlightedSubtheme = subtheme;
+  }
+
   // Function for removing label
   removeLabel(label:any){
     // Go through all labels
@@ -56,6 +79,16 @@ export class CreateThemeComponent implements OnInit {
       }
     });    
   }
+  // Function for removing subtheme
+  removeSubtheme(subthemes:any){
+  // Go through all labels
+  this.addedSubthemes.forEach((addedSubthemes, index)=>{
+    // If clicked cross matches the label, splice them from the labels
+    if(addedSubthemes==subthemes){
+      this.addedSubthemes.splice(index,1);
+    }
+  });    
+}
   //Displays the description for selected label
   displayDescription(label:any){
     this.selectedDescription = label.labelDescription;
