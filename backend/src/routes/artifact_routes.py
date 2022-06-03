@@ -104,3 +104,8 @@ def add_new_artifacts(*, user):
         db.session.commit()
 
     return make_response("Route accessed")
+
+@artifact_routes.route("/singleArtifact", methods=["GET"])
+@login_required
+def single_artifact(*, user):
+    

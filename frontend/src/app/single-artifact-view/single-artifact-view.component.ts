@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoremIpsum } from "lorem-ipsum";
+import {StringArtifact} from "../stringartifact"
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -16,7 +17,8 @@ type labelType = {
   labelTypeDescription: String,
   labels: Array<label>
 }
-// For table data of users + labels given 
+// For table data of users + labels given
+// TODO: Replace these with classes once those are overhauled 
 type userLabel = {
   labellerName: String,
   labelRemark: String,
@@ -39,11 +41,14 @@ type label = {
 })
 export class SingleArtifactViewComponent implements OnInit {
 
-  artifactId: Number = 1;
-  artifactIdentifier: String = 'XJY03';
-  labelers: Array<String> = ["Bartjan", "Veerle"]
+  // TODO: Pass artifact object here
+  // For now hardcoded data
+  artifactId: Number = 3;
+  artifactIdentifier: String = 'File4';
+  labelers: Array<String> = []
   artifact: String = lorem.generateParagraphs(10);
-  allLabels: Array<String> = ['Sad','Ecstatic','Latin','English']
+  allLabels: Array<String> = []
+  
   labelTypes: Array<labelType> = [
     {
       labelTypeName: "Type A",
@@ -89,10 +94,22 @@ export class SingleArtifactViewComponent implements OnInit {
     alert("This button is not implemented.");
   }
 
-
+  // What?
   constructor() { }
 
   ngOnInit(): void {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    if (typeof token === "string"){
+
+      // Get the information needed from the back end
+      axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {
+        headers: {
+          'u_id_token': token
+        },
+        params: {
+          'p_id' : this.p_id
+        }
+      })
   }
 
 }

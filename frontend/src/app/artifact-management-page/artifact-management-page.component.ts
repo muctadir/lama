@@ -15,8 +15,10 @@ export class ArtifactManagementPageComponent implements OnInit {
   page = 1;
   pageSize = 5;
 
+  // Project id. Currently hardcoded
   p_id = 4;
 
+  // Make list of all artifacts
   artifacts: Artifact_Management[] = [];
  /**
  * Constructor passes in the modal service
@@ -26,9 +28,7 @@ export class ArtifactManagementPageComponent implements OnInit {
     constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
-    // Make list of all artifacts
 
-    console.log(this.p_id)
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
 
@@ -53,7 +53,6 @@ export class ArtifactManagementPageComponent implements OnInit {
             artifactJson["id"] = artifact["artifact_id"];
             artifactJson["data"] = artifact["artifact_text"];
             artifactJson["numberOfUsers"] = artifact["artifact_users"];
-            // artifactJson["completed"] = artifact["artifact_completed"];
 
             let artifactNew: Artifact_Management = artifactJson as Artifact_Management;                
 

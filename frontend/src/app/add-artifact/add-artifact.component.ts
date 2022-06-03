@@ -92,7 +92,6 @@ export class AddArtifactComponent {
         };
         allArtifacts.push(artifactInformation)
       }
-      console.log(allArtifacts)
 
       // Message for confirmation/error
       const p_response: HTMLElement = document.querySelector("#createArtifactResponse")!;
