@@ -48,17 +48,12 @@
                     Description
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control" rows="10" placeholder="Description"></textarea>
+                    <textarea class="form-control" rows="10" placeholder="Description" id="descriptionArea"></textarea>
                 </div>
                 <!-- Sub-themes section -->
                 <div id="subThemes">
                     <span>
                         Sub-Themes
-                    </span>
-                    <!-- Sub-theme button -->
-                    <span>
-                        <button type="button" class="btn btn-secondary text-nowrap" id="addSubthemeButton" (click)="notImplemented()">
-                        Add Sub-Theme</button>
                     </span>
                 </div>
                 <!-- Sub-theme list from data -->
@@ -75,15 +70,13 @@
     <div class="row"  id="bottomHalf">
         <div class="col-6">
             <!-- Add Labels Section --> 
-            <div class="row">
-                <div class="col" id="addLabels">
-                    Add Labels
-                </div>
+            <div id="addLabels">
+                Add Labels
             </div>
             <div class="row">
                 <!-- Add Labels Left side -->
                 <!-- TODO Filtering and Searching -->
-                <div class="col-7">
+                <div class="col">
                     <!-- Table for showing all labels -->
                     <table class="table table-borderless">
                         <tbody>
@@ -91,7 +84,7 @@
                                 <!-- Click shows clicked labels description and highlights it-->
                                 <tr *ngFor="let label of allLabels" (click)="displayDescription(label);" (click)="highlightLabel(label)"  [class.highlighted]="label.labelName === highlightedLabel">
                                     <td>
-                                        <span id="addLabelsText">
+                                        <span class="addLabelsText">
                                             {{label.labelName}}
                                         </span>
                                         <!--  Add label button -->
@@ -107,7 +100,7 @@
                     </table>
                 </div>
                 <!-- Add Labels right side Description part -->
-                <div class="col-5">
+                <div class="col">
                     <p id="labelDescription">Description:</p>
                     <div id="descriptionScroll">
                         <div *ngIf="selectedDescription != null">
@@ -117,9 +110,12 @@
                 </div>
             </div>          
         </div>
-        <!--Add Subthemes part bottom half right side--> 
-        <div class="col-6">
-            
+        <!--bottom half right side--> 
+        <div class="col-6"> 
+             <!-- Add Sub-Themes Section --> 
+                <div id="addSubthemes">
+                    Add Sub-Themes
+                </div>        
         </div>
 
     </div>

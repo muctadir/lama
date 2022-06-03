@@ -13,7 +13,7 @@
 //Top half part of page
 #topHalf{
     padding-top:10px;
-    padding-left:30px;
+    padding-left:0px;
     padding-right: 0px;
     height:50vh; 
 }
@@ -62,7 +62,7 @@
 }
 //Top right of page
 #topRight{
-    padding-left: 0px;
+    padding-left:0px;
 }
 #description{
     font-size: 18px;
@@ -102,20 +102,21 @@
 //Bottom Half
 #bottomHalf{
     padding-top:10px;
-    padding-left:30px;
+    padding-left:0px;
     padding-right:180px;
 }
 #addLabels{
-    margin-left: 10px;
     border-bottom: 2px; 
     border-bottom-style: solid; 
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
 //Add label text
-#addLabelsText{
+.addLabelsText{
     font-size: 14px;
+    padding-left: 10px;
+    vertical-align: -5px
 }
 //add label button
 .btn{
@@ -173,5 +174,20 @@ p.labelDescriptionText{
 #descriptionScroll{
     overflow-y: scroll;
     height: 30vh;
+}
+// Add subtheme text
+#addSubthemes{
+    margin-left: 10px;
+    border-bottom: 2px; 
+    border-bottom-style: solid; 
+    font-size: 18px;
+    letter-spacing: 1px;
+    border-bottom-color: orange;
+}
+// description box size
+#descriptionArea{
+    width: 600px;
+    height: 200px;
+    resize: none;
 }
 
