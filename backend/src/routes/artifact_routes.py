@@ -19,7 +19,7 @@ def artifact_management(*, user):
     # artifacts_info = request.json
     # Get project ID
     # Hardcoded for now
-    p_id = 4
+    p_id = request.args.get('p_id', '')
 
     # Get membership of the user
     membership = db.session.execute(
@@ -83,3 +83,9 @@ def artifact_management(*, user):
 
     # Return the list of dictionaries
     return make_response(dict_json)
+
+
+@artifact_routes.route("/creation", methods=["GET"])
+@login_required
+def artifact_management(*, user):
+    return make_response("Route accessed")

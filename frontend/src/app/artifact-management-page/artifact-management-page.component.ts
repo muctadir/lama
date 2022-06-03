@@ -15,6 +15,8 @@ export class ArtifactManagementPageComponent implements OnInit {
   page = 1;
   pageSize = 5;
 
+  p_id = 4;
+
   artifacts: Artifact_Management[] = [];
  /**
  * Constructor passes in the modal service
@@ -26,13 +28,17 @@ export class ArtifactManagementPageComponent implements OnInit {
   ngOnInit(): void {
     // Make list of all artifacts
 
+    console.log(this.p_id)
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
 
-      // Get the informtion needed from the back end
+      // Get the information needed from the back end
       axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {
         headers: {
           'u_id_token': token
+        },
+        params: {
+          'p_id' : this.p_id
         }
       })
         // When there is a response get the artifacts

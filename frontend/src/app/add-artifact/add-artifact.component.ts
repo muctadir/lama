@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import axios from 'axios';
+import { User } from '../user';
 
 @Component({
   selector: 'app-add-artifact',
@@ -73,6 +75,27 @@ export class AddArtifactComponent {
 
       // TODO call the database to upload the artifacts
       console.log(new_artifacts);
+
+      // Message for confirmation/error
+      const p_response: HTMLElement = document.querySelector("#createArtifactResponse")!;
+      
+      let token: string | null  = sessionStorage.getItem('ses_token');
+
+      if (typeof token === "string") {        
+        // Send the data to the database
+        const response = axios.post('http://127.0.0.1:5000/artifact/creation', new_artifacts, {
+          headers: {
+            'u_id_token': token
+          }
+        })
+        .then(response => { 
+          // TODO
+          p_response.innerHTML = "Artifacts added"
+        })
+        .catch(error => {
+          // TODO
+        });
+      }
 
     }
 
