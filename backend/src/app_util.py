@@ -76,9 +76,6 @@ def check_password(password):
             (re.match(caseRe, password) or \
             re.match(specialRe, password) or \
             re.match(numberRe, password))
-    print(valid)
-    print(complex)
-    print(valid and complex)
     return valid and complex
 
 def get_all_subclasses(cls):

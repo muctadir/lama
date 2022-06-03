@@ -116,7 +116,7 @@ def editUserPassword(*, user):
         update(User).
         where(User.id == user.id).
         values(
-            password=hashedPassword
+            password = hashedPassword
         )
     )
     # Commit the new information
