@@ -13,7 +13,7 @@ artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
-def artifact_management(*, user):
+def get_artifacts(*, user):
 
     # Get the information given by the frontend
     # artifacts_info = request.json
@@ -85,7 +85,22 @@ def artifact_management(*, user):
     return make_response(dict_json)
 
 
-@artifact_routes.route("/creation", methods=["GET"])
+@artifact_routes.route("/creation", methods=["POST"])
 @login_required
-def artifact_management(*, user):
+def add_new_artifacts(*, user):
+
+    # Get the information given by the frontend
+    artifact_info = request.json
+
+    # Schema to serialize the Artifact
+    artifact_schema = ArtifactSchema()
+    i = 0
+    for artifact in artifact_info:
+        artifact_object = artifact_schema.load(artifact)
+        i += 1
+
+        # Add the artifact to the database
+        db.session.add(artifact_object)
+        db.session.commit()
+
     return make_response("Route accessed")

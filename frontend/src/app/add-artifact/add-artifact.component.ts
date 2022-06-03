@@ -50,6 +50,9 @@ export class AddArtifactComponent {
    * @TODO add database connection
    */
   fileUpload(): void {
+    // Hardcoded project ID
+    // Fix it when we can pass a project id
+    let p_id = 4;
 
     // Array which will hold the uploaded artifacts
     let new_artifacts: Array<string> = [];
@@ -76,6 +79,21 @@ export class AddArtifactComponent {
       // TODO call the database to upload the artifacts
       console.log(new_artifacts);
 
+      // Way to get information to backend
+      let artifactInformation: Record<string, any> = {};
+      let allArtifacts = []
+      for(let i=0; i < new_artifacts.length; i++) {
+        
+        // Artifact cd  information
+        artifactInformation= {
+          'identifier' : "This is a string",
+          "data" : new_artifacts[i],
+          'p_id' : p_id //needs to be an id that exists in the database
+        };
+        allArtifacts.push(artifactInformation)
+      }
+      console.log(allArtifacts)
+
       // Message for confirmation/error
       const p_response: HTMLElement = document.querySelector("#createArtifactResponse")!;
       
@@ -83,7 +101,7 @@ export class AddArtifactComponent {
 
       if (typeof token === "string") {        
         // Send the data to the database
-        const response = axios.post('http://127.0.0.1:5000/artifact/creation', new_artifacts, {
+        const response = axios.post('http://127.0.0.1:5000/artifact/creation', allArtifacts, {
           headers: {
             'u_id_token': token
           }
@@ -95,8 +113,8 @@ export class AddArtifactComponent {
         .catch(error => {
           // TODO
         });
-      }
 
+      }
     }
 
     // Starts reading the file
