@@ -7,6 +7,7 @@
             Create Theme
         </div>
     </div>
+
     <!-- Page body top half -->
     <div class="row" id="topHalf">
         <!-- Left side of top half -->
@@ -73,7 +74,7 @@
     <!-- Page Bottom Half -->
     <div class="row"  id="bottomHalf">
         <div class="col-6">
-             <!-- Add Labels Section --> 
+            <!-- Add Labels Section --> 
             <div class="row">
                 <div class="col" id="addLabels">
                     Add Labels
@@ -82,7 +83,7 @@
             <div class="row">
                 <!-- Add Labels Left side -->
                 <!-- TODO Filtering and Searching -->
-                <div class="col-6">
+                <div class="col-7">
                     <!-- Table for showing all labels -->
                     <table class="table table-borderless">
                         <tbody>
@@ -105,21 +106,30 @@
                         </tbody>
                     </table>
                 </div>
-                 <!-- Add Labels right side Description part -->
-                <div class="col-6">
+                <!-- Add Labels right side Description part -->
+                <div class="col-5">
                     <p id="labelDescription">Description:</p>
-                    <div *ngIf="selectedDescription != null">
-                        <p class="labelDescriptionText">{{selectedDescription}}</p>
+                    <div id="descriptionScroll">
+                        <div *ngIf="selectedDescription != null">
+                            <p class="labelDescriptionText">{{selectedDescription}}</p>
+                        </div>
                     </div>
                 </div>
             </div>          
         </div>
-        <!--Create/Cancel buttons--> 
-        <div class="col-12" id="createCancelButtons">
-            <div>
-                <button class="form-group btn btn-primary float-end" (click)="notImplemented()" style="margin-left:10px;">Create</button> 
-                <button class="form-group btn btn-light float-end"  routerLink="project/thememanagement">Cancel</button>
-            </div>
+        <!--Add Subthemes part bottom half right side--> 
+        <div class="col-6">
+            
+        </div>
+
+    </div>
+
+    <!--Page Footer--> 
+    <!--Create/Cancel buttons--> 
+    <div class="col-12" id="createCancelButtons">
+        <div>
+            <button class="form-group btn btn-primary float-end" (click)="notImplemented()" style="margin-left:10px;">Create</button> 
+            <button class="form-group btn btn-light float-end"  routerLink="project/thememanagement">Cancel</button>
         </div>
     </div>
 </div>

@@ -1,3 +1,9 @@
+//page body
+#body{
+    height: 100vh;
+    overflow:auto;
+}
+
 //Title Header part of the page
 #pageTitle {
     padding-top: 10px;
@@ -8,7 +14,7 @@
 #topHalf{
     padding-top:10px;
     padding-left:30px;
-    padding-right: 30px;
+    padding-right: 0px;
     height:50vh; 
 }
 //top left section
@@ -97,7 +103,7 @@
 #bottomHalf{
     padding-top:10px;
     padding-left:30px;
-    padding-right:200px;
+    padding-right:180px;
 }
 #addLabels{
     margin-left: 10px;
@@ -160,6 +166,11 @@ p.labelDescriptionText{
   }
 // Scroll list of labels too choose from
 #labelScroll{
+    overflow-y: scroll;
+    height: 30vh;
+}
+//Scroll for description
+#descriptionScroll{
     overflow-y: scroll;
     height: 30vh;
 }
