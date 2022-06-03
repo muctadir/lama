@@ -96,7 +96,7 @@
 //BOTTOM HALF
 //Bottom Half Container
 #bottomHalfContainer{
-    
+
 }
 //Labels Header 
 #labelsHeader{
@@ -145,4 +145,8 @@
     min-height: 50vh;
     overflow-y: scroll;
 }
-
+// Scrolling for the accordion
+#accordionScroll{
+    overflow-y: scroll;
+    height: 30vh;
+}

@@ -82,17 +82,18 @@
                         <th scope="col" id="labelsHeader">Labels</th>
                     </tr>
                 </thead>
+                <div  id="accordionScroll">
                 <tbody>
-                    <!--List of Label dropdowns-->
-                    <div>
-                        <tr *ngFor="let label of allLabels">
-                            <th scope="row">
-                                <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-                                    <ngb-panel title="{{label.labelName}}">
+                    <!--List of Label dropdowns accordion-->
+                    <tr *ngFor="let label of allLabels">
+                        <!--Row for each Label-->
+                        <th scope="row">
+                            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                                <ngb-panel title="{{label.labelName}}">
                                     <ng-template ngbPanelContent>
                                         <!--Artifacts of label-->
                                         <ngb-accordion *ngFor="let artifacts of label.labelArtifacts" #acc="ngbAccordion" activeIds="ngb-panel-1">
-                                                <ngb-panel title="{{artifacts.artifactName}}">
+                                            <ngb-panel title="{{artifacts.artifactName}}">
                                                 <!--Artifact Content-->
                                                 <ng-template ngbPanelContent>
                                                     <div class="row">
@@ -107,15 +108,15 @@
                                                         </div>
                                                     </div>
                                                 </ng-template>
-                                                </ngb-panel>
+                                            </ngb-panel>
                                         </ngb-accordion>
                                     </ng-template>
-                                    </ngb-panel>
-                                </ngb-accordion>
-                            </th>
-                        </tr> 
-                    </div>                   
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </th>
+                    </tr>                    
                 </tbody>
+                </div>
             </table>
         </div>
 
