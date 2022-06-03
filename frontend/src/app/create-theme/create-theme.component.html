@@ -86,20 +86,23 @@
                     <!-- Table for showing all labels -->
                     <table class="table table-borderless">
                         <tbody>
-                            <!-- Click shows clicked labels description and highlights it-->
-                            <tr *ngFor="let label of allLabels" (click)="displayDescription(label);" (click)="highlightLabel(label)"  [class.highlighted]="label.labelName === highlightedLabel">
-                                <td>
-                                    <span id="addLabelsText">
-                                        {{label.labelName}}
-                                    </span>
-                                    <!--  Add label button -->
-                                    <button class="btn" type="button" id="addLabelsButton" (click)="addLabel(label)">
-                                        <!-- Plus icon -->
-                                        <span class="bi bi-plus">                                  
+                            <div id="labelScroll">
+                                <!-- Click shows clicked labels description and highlights it-->
+                                <tr *ngFor="let label of allLabels" (click)="displayDescription(label);" (click)="highlightLabel(label)"  [class.highlighted]="label.labelName === highlightedLabel">
+                                    <td>
+                                        <span id="addLabelsText">
+                                            {{label.labelName}}
                                         </span>
-                                    </button>
-                                </td>                                 
-                            </tr>
+                                        <!--  Add label button -->
+                                        <button class="btn" type="button" id="addLabelsButton" (click)="addLabel(label)">
+                                            <!-- Plus icon -->
+                                            <span class="bi bi-plus">                                  
+                                            </span>
+                                        </button>
+                                    </td>                                 
+                                </tr>
+                            </div>
+                        </tbody>
                     </table>
                 </div>
                  <!-- Add Labels right side Description part -->

@@ -44,6 +44,8 @@
 }
 #allLabelsList{
     padding-top: 10px;
+    overflow-y: scroll;
+    height: 20vh;
 }
 // x icon for removing labels
 #xIcon{
@@ -87,6 +89,8 @@
 }
 #allSubthemesList{
     padding-top: 10px;
+    overflow-y: scroll;
+    height: 10vh;
 }
 
 //Bottom Half
@@ -154,3 +158,9 @@ p.labelDescriptionText{
     outline: none;
     box-shadow: none;
   }
+// Scroll list of labels too choose from
+#labelScroll{
+    overflow-y: scroll;
+    height: 30vh;
+}
+
