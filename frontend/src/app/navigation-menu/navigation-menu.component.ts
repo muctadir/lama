@@ -66,7 +66,6 @@ export class NavigationMenuComponent {
     });
   }
 
-
   /**
    * Changes the navigation menu from collapsed to non-collapsed, and the other way around.
    * 
