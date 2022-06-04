@@ -18,7 +18,7 @@ All of the classes
     <b>desc:</b> string <br>
     <b>type:</b> string <br>
     labelParents: Array &lt Label &gt  (array containing parent labels) <br>
-    labelChilds: Array < Label >  (array containing child labels) <br>
+    labelChilds: Array [Label]  (array containing child labels) <br>
     artifacts: Array &lt Artifact &gt  (array containing artifacts with the label) <br>
     users: Array &lt User &gt  (array containing user who have used the label) <br>
     themes: Array &lt Theme &gt  (array of themes to which the label belongs) <br>
