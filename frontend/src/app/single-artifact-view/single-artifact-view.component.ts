@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoremIpsum } from "lorem-ipsum";
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 import axios from 'axios';
 
 const lorem = new LoremIpsum({
@@ -41,13 +43,16 @@ type label = {
 })
 export class SingleArtifactViewComponent implements OnInit {
 
+  // Initialize the ReroutingService
+  routeService: ReroutingService = new ReroutingService();
+
   // Hardcoded data
   artifactId: Number = 0;
   artifactIdentifier: String = '';
   // labelers: Array<String> = []
   artifact: String = '';
   allLabels: Array<String> = []
-  p_id = 4;
+  p_id = 0;
   
   labelTypes: Array<labelType> = [
     {
@@ -94,7 +99,11 @@ export class SingleArtifactViewComponent implements OnInit {
     alert("This button is not implemented.");
   }
 
-  constructor() { }
+  /**
+  * Constructor passes in the modal service, initializes Router
+  * @param router instance of Router
+  */
+   constructor(private router: Router) { }
 
   ngOnInit(): void {
     // Get artifact object from the artifact management page
@@ -106,6 +115,10 @@ export class SingleArtifactViewComponent implements OnInit {
     
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
+      // Gets the url from the router
+      let url: string = this.router.url
+      this.artifactId = Number(this.routeService.getArtifactID(url))
+      console.log(this.artifactId)
 
       // Get the artifact information from the back end
       axios.get('http://127.0.0.1:5000/artifact/singleArtifact', {

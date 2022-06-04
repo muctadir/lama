@@ -23,4 +23,16 @@ export class ReroutingService {
     // Returns the project ID
     return p_id
   }
+
+  /**
+   * Gets the artifact ID from a url string
+   * @param url_path the url in string format
+   * @returns artifact ID
+   */
+   getArtifactID(url_path : string) : string {
+    // Removes the first "/" from the string
+    let pos = url_path.indexOf('singleartifact/') + 15
+    let a_id = url_path.substring(pos, url_path.length) 
+    return a_id
+  }
 }

@@ -43,8 +43,8 @@
                     </thead>
 
                     <!-- Table Content -->
-                    <tbody  (click)="reRouter()">
-                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize">
+                    <tbody>
+                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(artifact.id)">
                             <!-- Artifact ID -->
                             <td><p class="artifactID">{{artifact.id}}</p></td>
                             <!-- Artifact text -->

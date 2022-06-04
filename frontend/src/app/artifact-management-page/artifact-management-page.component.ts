@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Artifact_Management } from '../artifact_management';
-
 import axios from 'axios';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
@@ -23,6 +22,7 @@ export class ArtifactManagementPageComponent {
 
   // Make list of all artifacts
   artifacts: Artifact_Management[] = [];
+  
 /**
    * Constructor passes in the modal service, initializes Router
    * @param modalService instance of NgbModal
@@ -74,7 +74,7 @@ export class ArtifactManagementPageComponent {
    * 
    * @trigger user clicks on artifact
    */
-   reRouter() : void {
+   reRouter(a_id: number) : void {
     // Gets the url from the router
     let url: string = this.router.url
     
@@ -84,7 +84,7 @@ export class ArtifactManagementPageComponent {
     let p_id = routeService.getProjectID(url);
     
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'singleartifact']);
+    this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
 
   notImplemented(): void {
