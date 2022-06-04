@@ -4,6 +4,8 @@ import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Artifact_Management } from '../artifact_management';
 
 import axios from 'axios';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 
 @Component({
@@ -11,7 +13,7 @@ import axios from 'axios';
   templateUrl: './artifact-management-page.component.html',
   styleUrls: ['./artifact-management-page.component.scss']
 })
-export class ArtifactManagementPageComponent implements OnInit {
+export class ArtifactManagementPageComponent {
   //Pagination Settings
   page = 1;
   pageSize = 5;
@@ -21,12 +23,12 @@ export class ArtifactManagementPageComponent implements OnInit {
 
   // Make list of all artifacts
   artifacts: Artifact_Management[] = [];
- /**
- * Constructor passes in the modal service
- * @param modalService 
- * @param labelingDataService 
- */
-    constructor(private modalService: NgbModal) { }
+/**
+   * Constructor passes in the modal service, initializes Router
+   * @param modalService instance of NgbModal
+   * @param router instance of Router
+   */
+    constructor(private modalService: NgbModal, private router: Router) { }
 
     ngOnInit(): void {
 
@@ -65,7 +67,29 @@ export class ArtifactManagementPageComponent implements OnInit {
         .catch(error => {console.log(error)});
     } 
   }
-  
+
+  /**
+   * Gets the project id from the URL and reroutes 
+   * to the single artifact view of the same project
+   * 
+   * @trigger user clicks on artifact
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'singleartifact']);
+  }
+
+  notImplemented(): void {
+    alert("Button has not been implemented yet.");
+  }
   open(){
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
   }

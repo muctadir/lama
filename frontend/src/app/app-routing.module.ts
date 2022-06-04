@@ -33,7 +33,8 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'project', component: ProjectComponent, children: [
+    {path: 'createProject', component: ProjectCreationComponent},
+    {path: 'project/:projectId', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
       {path: 'labelling-page', component: LabellingPageComponent},
@@ -48,8 +49,8 @@ const routes: Routes = [
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
-    ]},
-    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
+    ]}];
+    //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
     
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],

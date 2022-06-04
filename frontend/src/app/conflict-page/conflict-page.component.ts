@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 // Artifact object 
 interface Artifact {
@@ -19,12 +21,9 @@ function addValues(name:string, descr:string):Artifact {
   templateUrl: './conflict-page.component.html',
   styleUrls: ['./conflict-page.component.scss']
 })
-export class ConflictPageComponent implements OnInit {
+export class ConflictPageComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  constructor(private router: Router) { }
 
   // Hardcoding some conflicts
   conflict1 = addValues("Artifact 1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
@@ -33,5 +32,24 @@ export class ConflictPageComponent implements OnInit {
   // List of the projects
   conflicts: Artifact[] = [this.conflict1, this.conflict2, this.conflict3];
 
+
+  /**
+   * Gets the project id from the URL and reroutes to the conflict resolution page
+   * of the same project
+   * 
+   * @trigger resolve conflict button is pressed
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'conflictResolution']);
+  }
 
 }

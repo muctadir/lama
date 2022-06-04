@@ -5,8 +5,14 @@ $orange-shade: #ed5a06;
 $offgrey-shade: #1C5858;
 
 // Sets background color of the navigation menu
-#main-cont {
+#main-col {
     background-color: $grey-shade;
+    height: 100vh;
+}
+
+#main-cont {
+    padding: 5px;
+    height: 100vh;
 }
 
 // puts a slight margin between each element of the navigation menu

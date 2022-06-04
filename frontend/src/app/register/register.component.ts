@@ -78,7 +78,7 @@ export class RegisterComponent {
     }
 
     // Post to backend
-    const response = axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
+    axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
     .then(response =>{
       this.route.navigate(['/login']);
 
