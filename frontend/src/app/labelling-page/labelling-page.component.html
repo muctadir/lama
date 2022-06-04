@@ -42,12 +42,12 @@
                         <div class="col-6">
                             <!-- Title of the labelType -->
                             <div class = "labelTypeTitle">
-                                <span>{{ labelType?.getLabelTypeName()! }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span>
+                                <!-- <span>{{ labelType?.getLabelTypeName()! }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span> -->
                             </div> 
                             <!-- List of available labels -->
                             <div>
                                 <select class="form-control" name="labels">
-                                    <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getLabelName() }}">{{ label.getLabelName() }}</option>
+                                    <!-- <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getLabelName() }}">{{ label.getLabelName() }}</option> -->
                                 </select>
                             </div>
                         </div> 
@@ -59,7 +59,7 @@
                                     <p>Description</p>
                                 </div>
                                 <div class="descriptionText">
-                                    <p>{{ labelType?.getLabelTypeDescription() }}</p>
+                                    <!-- <p>{{ labelType?.getLabelTypeDescription() }}</p> -->
                                 </div>
                             </div>
                         </div>

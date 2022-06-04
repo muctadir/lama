@@ -45,9 +45,9 @@
                     <!--Table Content-->
                     <tbody  [routerLink]="['/project/singlelabel']">
                         <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
-                            <td><p class="tablecontent">{{label.labelName}}</p></td>
-                            <td><p class="tablecontent">{{label.labelType}}</p></td>
-                            <td><p class="tablecontent">{{label.labeledArtifacts}}</p></td>
+                            <td><p class="tablecontent">{{label.getName()}}</p></td>
+                            <td><p class="tablecontent">{{label.getType()}}</p></td>
+                            <td><p class="tablecontent">{{label.getLabeledAmount()}}</p></td>
                         </tr>
                     </tbody>
                 </table>

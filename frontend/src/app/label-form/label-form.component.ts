@@ -27,8 +27,8 @@ export class LabelFormComponent implements OnInit {
   }
 
   getLabels (): void {
-    this.labelingDataService.getLabels()
-      .subscribe(labels => this.labelTypes = labels);
+    // this.labelingDataService.getLabels()
+    //   .subscribe(labels => this.labelTypes = labels);
   }
 
   submit (): void {
@@ -41,11 +41,11 @@ export class LabelFormComponent implements OnInit {
       }
       else {
         for (var i: number = 0; i < this.labelTypes.length; i++) {
-          if (this.labelTypes[i].getLabelTypeName() === this.inputLabelType.getLabelTypeName()) {
-            this.labelTypes[i].addLabel(new Label(this.inputName, this.inputName, 
-              this.inputDescription, 0, false));
-              break;
-          }
+          // if (this.labelTypes[i].getLabelTypeName() === this.inputLabelType.getLabelTypeName()) {
+            // this.labelTypes[i].addLabel(new Label(this.inputName, this.inputName, 
+              // this.inputDescription, 0, false));
+              // break;
+          // }
         }
         this.labelingDataService.pushLabels(this.labelTypes);
       }

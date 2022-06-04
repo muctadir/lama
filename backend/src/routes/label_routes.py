@@ -1,7 +1,6 @@
 # Author: Eduardo
 # Author: Bartjan
-from crypt import methods
-from backend.src.app_util import check_args
+from src.app_util import check_args
 from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
@@ -10,8 +9,6 @@ from src.app_util import login_required
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema
 
 # Merge labels
-# Get all labels
-# Edit label
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -20,9 +17,9 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @login_required
 def create_label(*, user):
 
-    args = request.json
+    args = request.args
 
-    required = ('labelTypeId', 'labelName', 'labelDescription', 'pId')
+    required = ['labelTypeId', 'labelName', 'labelDescription', 'pId']
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
@@ -53,6 +50,8 @@ def create_label(*, user):
 
     return make_response('Created')
 
+# Author: Bartjan, Victoria
+@label_routes.route('/edit', methods=['PATCH'])
 @login_required
 def edit_label(*, user):
 
@@ -87,3 +86,34 @@ def edit_label(*, user):
     db.session.commit()
 
     return make_response('Ok')
+
+# Author: Bartjan, Victoria
+# Check whether the pID exists
+@label_routes.route('/getAll', methods=['GET'])
+@login_required
+def get_all_labels(*, user):
+
+    args = request.args
+    required = ['p_id']
+
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Get all the labels of a labelType
+    labels = db.session.execute(
+            select(Label).where(Label.p_id==args['p_id'])
+        ).scalars().all()
+
+    label_schema = LabelSchema()
+    
+    label_info_array = []
+    for label in labels:
+        label_json = label_schema.dump(label)        
+        info = {
+            'label': label_json,
+            'label_type': label.label_type.name
+        }
+        label_info_array.append(info)
+
+    dict_json = jsonify(label_info_array)
+    return make_response(dict_json)

@@ -41,8 +41,8 @@ export class LabellingPageComponent implements OnInit{
    * the artifacts and labels are pulled in
    */
   ngOnInit(): void {
-    this.getArtifact();
-    this.getLabels();
+    // this.getArtifact();
+    // this.getLabels();
   }
 
   /**
@@ -51,11 +51,11 @@ export class LabellingPageComponent implements OnInit{
    * as a labeler and then puts the information into this.artifact.
    */
   getArtifact ():void {
-    this.labelingDataService.getArtifact()
-      .subscribe(artifact => {
-        artifact.addLabeler("Bartjan");
-        this.artifact = artifact;
-      });
+    // this.labelingDataService.getArtifact()
+    //   .subscribe(artifact => {
+    //     artifact.addLabeler("Bartjan");
+    //     this.artifact = artifact;
+    //   });
   }
 
   /**
@@ -63,8 +63,8 @@ export class LabellingPageComponent implements OnInit{
    * It waits for a response, when the response arrives it puts the information into this.labels.
    */
   getLabels (): void {
-    this.labelingDataService.getLabels()
-      .subscribe(labels => this.labels = labels);
+    // this.labelingDataService.getLabels()
+    //   .subscribe(labels => this.labels = labels);
   }
 
 
