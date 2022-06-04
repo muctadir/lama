@@ -21,7 +21,7 @@ export class LabelingDataService {
         'u_id_token': token
       }, 
       params: {
-        'p_id': 1
+        'p_id': 2
       }
     }).then((response) => {
       console.log(response)
