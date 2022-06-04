@@ -52,3 +52,38 @@ def create_label(*, user):
     # label_json = jsonify(label_schema.dump(labels, many=True))
 
     return make_response('Created')
+
+@login_required
+def edit_label(*, user):
+
+    args = request.json
+    required = ('labelId', 'labelTypeId', 'labelName', 'labelDescription', 'pId')
+
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    label = db.session.get(Label, args['labelId'])
+    newLabel = label
+    if not label:
+        return make_response('Label does not exist', 400)
+
+    if label.p_id != args["pId"]:
+        return make_response('Label not part of project', 400)
+
+    if not args['labelTypeId'] != "":
+        newLabel.lt_id = args['labelTypeId']
+
+    if not len(args['labelName']) <= 0:
+        newLabel.name = args['labelName']
+
+    if not len(args['labelDescription']) <= 0:
+        newLabel.description = args['labelDescription']
+
+    if newLabel == label:
+        # Returns if the label is not modified
+        return make_response('Not Modified', 204)
+
+    db.session.update(label)
+    db.session.commit()
+
+    return make_response('Ok')
