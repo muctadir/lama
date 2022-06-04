@@ -18,7 +18,7 @@ export class ArtifactManagementPageComponent implements OnInit {
   pageSize = 5;
 
   // Project id. Currently hardcoded
-  p_id = 4;
+  p_id = 3;
 
   // Make list of all artifacts
   artifacts: Artifact_Management[] = [];

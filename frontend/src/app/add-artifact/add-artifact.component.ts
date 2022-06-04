@@ -52,7 +52,7 @@ export class AddArtifactComponent {
   fileUpload(): void {
     // Hardcoded project ID
     // Fix it when we can pass a project id
-    let p_id = 4;
+    let p_id = 3;
 
     // Array which will hold the uploaded artifacts
     let new_artifacts: Array<string> = [];
@@ -99,6 +99,7 @@ export class AddArtifactComponent {
         
         // Artifact cd  information
         artifactInformation= {
+          'name': i.toString(),
           'identifier' : identifier,
           "data" : new_artifacts[i],
           'p_id' : p_id //needs to be an id that exists in the database
