@@ -76,8 +76,21 @@ export class AddArtifactComponent {
       // Removes the artifacts which are only a newline
       new_artifacts =  new_artifacts.filter(e => e);
 
-      // TODO call the database to upload the artifacts
-      console.log(new_artifacts);
+      // Random identifier
+      function makeid(length:number) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * 
+            charactersLength));
+        }
+        return result;
+      }
+
+      // Make an identifier
+      // TODO: Make it unique
+      let identifier = makeid(5);
 
       // Way to get information to backend
       let artifactInformation: Record<string, any> = {};
@@ -86,13 +99,12 @@ export class AddArtifactComponent {
         
         // Artifact cd  information
         artifactInformation= {
-          'identifier' : "This is a string",
+          'identifier' : identifier,
           "data" : new_artifacts[i],
           'p_id' : p_id //needs to be an id that exists in the database
         };
         allArtifacts.push(artifactInformation)
       }
-      console.log(allArtifacts)
 
       // Message for confirmation/error
       const p_response: HTMLElement = document.querySelector("#createArtifactResponse")!;
