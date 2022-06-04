@@ -1,42 +1,40 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, HostBinding, } from '@angular/core';
 import { NavCollapseService } from '../nav-collapse.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navigation-menu',
   templateUrl: './navigation-menu.component.html',
   styleUrls: ['./navigation-menu.component.scss']
 })
-export class NavigationMenuComponent implements OnDestroy {
+export class NavigationMenuComponent {
+  @HostBinding('style.width') get className() { 
+    if (this.collapsed) {
+      return '8.3333333333%';
+    } else {
+      return '25%';
+    }
+  }
 
-  /* Indicates whether the navigation menu is collapsed or not */
+  tester() {
+    this.collapsed = !this.collapsed;
+  }
+
   collapsed = true;
-  /* Holds the link with the BehaviourSubject, which is used to communicate with the project component */
-  subscription: Subscription;
 
-  /* Indicates what page the user is currently viewing. */
   page = 0;
+
+
 
   /**
    * Ensures that page holds the value of the current page, and subscribes to the BehaviourSubject
    * 
    * @param commService instance of NavCollapseService used to communicate with project component
    */
-  constructor(private router: Router, private commService: NavCollapseService) {
+  constructor(private router: Router) {
     this.route_det_page();
-    this.subscription = this.commService.currentCollapsed.subscribe(msg => this.collapsed = msg);
   }
 
-  /**
-   * Destroys the BehaviourSubject used to communicate between the navigation menu and the project component
-   * 
-   * @trigger when component gets destroyed
-   * @modifies subscription
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
 
   /**
    * Changes the navigation menu from collapsed to non-collapsed, and the other way around.
@@ -45,10 +43,13 @@ export class NavigationMenuComponent implements OnDestroy {
    * @modifies collapsed
    */
   changeSize() {
-    this.commService.modifyCollapsed(this.collapsed);
+    this.collapsed = !this.collapsed;
   }
 
 
+
+
+  
   /**
    * Determines what page the user is on
    * 
@@ -59,6 +60,24 @@ export class NavigationMenuComponent implements OnDestroy {
    */
   det_page(navnr: number) {
     this.page = navnr;
+    if (this.page == 0) {
+      this.router.navigate(['/project/stats']);
+    } 
+    else if (this.page == 1) {
+      this.router.navigate(['/project/labelling-page']);
+    }
+    else if (this.page == 2) {
+      this.router.navigate(['/project/artifactmanagement']);
+    }
+    else if (this.page == 3) {
+      this.router.navigate(['/project/labelmanagement']);
+    }
+    else if (this.page == 4) {
+      this.router.navigate(['/project/thememanagement']);
+    }
+    else if (this.page == 5) {
+      this.router.navigate(['/project/conflict']);
+    }
   }
 
   /**
