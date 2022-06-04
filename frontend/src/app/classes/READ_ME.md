@@ -4,11 +4,11 @@ All of the classes
     <b>identifier:</b> string <br>
     <b>data:</b> any <br>
     completed: boolean (when the artifact has been completely labelled) <br>
-    labellings: Array\<Labelling\> (how the artifact was labelled) <br>
+    labellings: Array &lt Labelling &gt (how the artifact was labelled) <br>
     start: number (start index of artifact split) <br>
     end: number (end index of artifact split) <br>
     parentId: number (parent artifact ID in case of split) <br>
-    childIds: Array\<number\> (child artifact IDs in case of split) <br>
+    childIds: Array &lt number &gt  (child artifact IDs in case of split) <br>
     highlighted: any (highlight info of the artifact)
 </details>
 
@@ -17,31 +17,31 @@ All of the classes
     <b>name:</b> string <br>
     <b>desc:</b> string <br>
     <b>type:</b> string <br>
-    labelParents: Array\<Label\> (array containing parent labels) <br>
-    labelChilds: Array\<Label\> (array containing child labels) <br>
-    artifacts: Array\<Artifact\> (array containing artifacts with the label) <br>
-    users: Array\<User\> (array containing user who have used the label) <br>
-    themes: Array\<Theme\> (array of themes to which the label belongs) <br>
+    labelParents: Array &lt Label &gt  (array containing parent labels) <br>
+    labelChilds: Array &lt Label &gt  (array containing child labels) <br>
+    artifacts: Array &lt Artifact &gt  (array containing artifacts with the label) <br>
+    users: Array &lt User &gt  (array containing user who have used the label) <br>
+    themes: Array &lt Theme &gt  (array of themes to which the label belongs) <br>
     deleted: boolean (deletion status of the label)
 </details>
 
 <details><summary>LabelType</summary>
     <b>id:</b> number <br>
     <b>name:</b> string <br>
-    <b>labels:</b> Array\<Label\>
+    <b>labels:</b> Array &lt Label &gt 
 </details>
 
 <details><summary>Labelling</summary>
     <b>id:</b> number <br>
     <b>name:</b> string <br>
-    <b>labels:</b> Array\<any\>
+    <b>labels:</b> Array &lt any &gt 
 </details>
 
 <details><summary>Project</summary>
     <b>id:</b> number <br>
     <b>name:</b> string <br>
     <b>description:</b> string <br>
-    users: Array\<User\> (array of users of the project) <br>
+    users: Array &lt User &gt  (array of users of the project) <br>
     numberOfArtifacts: number (number of artifacts in a) <br>
     numberOfCLArtifacts: number (number of completely labelled artifacts in a project) <br>
     frozen: boolean (status on if the project is frozen) <br>
@@ -54,11 +54,11 @@ All of the classes
     <b>identifier:</b> string <br>
     <b>data:</b> string <br>
     completed: boolean (when the artifact has been completely labelled) <br>
-    labellings: Array<Labelling> (how the artifact was labelled) <br>
+    labellings: Array &lt Labelling> (how the artifact was labelled) <br>
     start: number (start index of artifact split) <br>
     end: number (end index of artifact split) <br>
     parentId: number (parent artifact ID in case of split) <br>
-    childIds: Array<number> (child artifact IDs in case of split) <br>
+    childIds: Array &lt number> (child artifact IDs in case of split) <br>
     highlighted: any (highlight info of the artifact)
 </details>
 
@@ -66,9 +66,9 @@ All of the classes
     <b>id:</b> number <br>
     <b>name:</b> string <br>
     <b>desc:</b> string <br>
-    themeParents: Array\<Theme\> (array of parent themes of the theme) <br>
-    themeChilds: Array\<Theme\> (array of child themes of the theme) <br>
-    labels: Array\<Label\> (array of labels that belong to the theme) <br>
+    themeParents: Array &lt Theme &gt  (array of parent themes of the theme) <br>
+    themeChilds: Array &lt Theme &gt  (array of child themes of the theme) <br>
+    labels: Array &lt Label &gt  (array of labels that belong to the theme) <br>
     deleted: boolean (deletion status of the theme)
 </details>
 
