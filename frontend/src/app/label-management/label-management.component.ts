@@ -16,6 +16,7 @@ import { LabelType } from '../label-type';
 export class LabelManagementComponent implements OnInit {
   //Pagination Settings
   labels: Array<Label> = new Array<Label>();
+  p_id: number = 2;
   page: number = 1;
   pageSize: number = 4;
   projectId: number = 1; // hardcoded TODO: Change
@@ -39,7 +40,7 @@ export class LabelManagementComponent implements OnInit {
   }
 
   async getLabels(): Promise<void> {
-    const labels = await this.labelingDataService.getLabels();
+    const labels = await this.labelingDataService.getLabels(2);
     this.labels = labels;
   }
 
