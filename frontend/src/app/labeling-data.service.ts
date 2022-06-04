@@ -34,7 +34,7 @@ export class LabelingDataService {
         'u_id_token': token
       }, 
       params: {
-        'p_id': 2
+        'p_id': p_id
       }
     }).then((response) => {
       // Put response in object
