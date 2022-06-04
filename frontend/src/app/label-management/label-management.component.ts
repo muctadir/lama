@@ -5,6 +5,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
 
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
+
 // Type label
 type label = {
   labelName: string,
@@ -18,7 +21,7 @@ type label = {
   templateUrl: './label-management.component.html',
   styleUrls: ['./label-management.component.scss']
 })
-export class LabelManagementComponent implements OnInit {
+export class LabelManagementComponent {
   //Pagination Settings
   page = 1;
   pageSize = 4;
@@ -88,7 +91,7 @@ export class LabelManagementComponent implements OnInit {
   ]
   
 // Contructor with modal
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal, private router: Router) {}
 
   // Open the modal and merge lables
   openMerge() {
@@ -100,7 +103,23 @@ export class LabelManagementComponent implements OnInit {
     const modalRef = this.modalService.open(CreateLabelFormComponent, { size: 'xl'});
   }
 
-  ngOnInit(): void {
+  /**
+   * Gets the project id from the URL and reroutes to the single label page
+   * of the same project
+   * 
+   * @trigger click on label
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'singlelabel']);
   }
 
 }

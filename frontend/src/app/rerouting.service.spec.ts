@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NavCollapseService } from './nav-collapse.service';
+import { ReroutingService } from './rerouting.service';
 
-describe('NavCollapseService', () => {
-  let service: NavCollapseService;
+describe('ReroutingService', () => {
+  let service: ReroutingService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(NavCollapseService);
+    service = TestBed.inject(ReroutingService);
   });
 
   it('should be created', () => {

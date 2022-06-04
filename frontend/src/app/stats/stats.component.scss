@@ -3,6 +3,10 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
+#main-cont {
+    height: 100vh;
+    overflow: scroll;
+}
 
 // Sets the layout of the header saying Statistics
 p.header{
@@ -98,7 +102,6 @@ p.header{
 .tablecontent {
     font-size: 15px;
 }
-
 
 //Scroll Related Business
 .my-custom-scrollbar {

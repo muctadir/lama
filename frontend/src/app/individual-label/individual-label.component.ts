@@ -1,6 +1,8 @@
 // <!-- Author: Victoria Bogachenkova -->
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 import { EditLabelFormComponent } from '../edit-label-form/edit-label-form.component';
 
@@ -16,7 +18,7 @@ type artifact = {
   templateUrl: './individual-label.component.html',
   styleUrls: ['./individual-label.component.scss']
 })
-export class IndividualLabelComponent implements OnInit {
+export class IndividualLabelComponent {
   
   // Dummy data
   labelName: String = 'Label 1';
@@ -38,14 +40,30 @@ export class IndividualLabelComponent implements OnInit {
     }
   ]
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal, private router: Router) {}
 
   // Open the modal and populate it with users
   openEdit() {
     const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
   }
 
-  ngOnInit(): void {
+  /**
+   * Gets the project id from the URL and reroutes to the label management page
+   * of the same project
+   * 
+   * @trigger back button is pressed
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'labelmanagement']);
   }
 
 }

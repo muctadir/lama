@@ -10,6 +10,8 @@ import { Component, OnInit, Query, QueryList, ViewChildren } from '@angular/core
 import { Theme } from 'app/classes/theme';
 import { LoremIpsum } from "lorem-ipsum";
 import { sortEvent, SortableThemeHeader } from '../sortable-theme.directive';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 // Type label
 type label = {
@@ -51,7 +53,7 @@ export class ThemeManagementComponent  {
   randomNumber: number = Math.ceil(Math.random() * 9);
 
   themes: Array<Theme>;
-  constructor() {
+  constructor(private router: Router) {
     this.themes = new Array<Theme>();
     for (var i: number = 0; i < this.randomNumber; i = i + 1){
       var title:string = lorem.generateWords(1);
@@ -62,4 +64,21 @@ export class ThemeManagementComponent  {
    notImplemented(): void {
      alert("Button has not been implemented yet.");
    }
+
+  /**
+   * Gets the project id from the URL and reroutes to other pages
+   * of the same project
+   */
+   reRouter(new_page : string) : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, new_page]);
+  }
 }
