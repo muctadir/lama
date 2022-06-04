@@ -1,6 +1,5 @@
-import { Component, OnDestroy, HostBinding, } from '@angular/core';
-import { NavCollapseService } from '../nav-collapse.service';
-import { Router } from '@angular/router';
+import { Component, HostBinding } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -8,31 +7,63 @@ import { Router } from '@angular/router';
   styleUrls: ['./navigation-menu.component.scss']
 })
 export class NavigationMenuComponent {
+  /**
+   * Changes the sizing of the navigation component 
+   * based on whether the menu should be collapsed or not
+   */
   @HostBinding('style.width') get className() { 
+    // if the navigation bar is collapsed set size to col-1
     if (this.collapsed) {
       return '8.3333333333%';
-    } else {
+    } 
+    // if the navigation bar is not collapsed set size to col-3
+    else {
       return '25%';
     }
   }
 
-  tester() {
-    this.collapsed = !this.collapsed;
-  }
-
+  /* Indicates whether the navigation bar should be expanded or collapsed. */
   collapsed = true;
 
+  /* Indicates the what icon in the navigation bar should be highlighted. */
   page = 0;
 
-
-
   /**
-   * Ensures that page holds the value of the current page, and subscribes to the BehaviourSubject
+   * Subscribes to the router events, when the routing changes updates the icon highlighted
+   * in the navigation bar accordingly
    * 
-   * @param commService instance of NavCollapseService used to communicate with project component
+   * @param router Instance of the Router class used to get info about the current route
+   * 
+   * @trigger when the route changes
+   * @modifies page 
    */
   constructor(private router: Router) {
-    this.route_det_page();
+    // subscribes to the router event
+    this.router.events.subscribe((ev) => {
+      if (ev instanceof NavigationEnd) {
+        // code executed when the route changes 
+        let new_route = ev['urlAfterRedirects'];
+        if (new_route.includes("stats")) {
+          // highlights stats page icon
+          this.page = 0;
+        } else if (new_route.includes("labelling")) {
+          // highlights labelling page icon
+          this.page = 1;
+        } else if (new_route.includes("artifact")) {
+          // highlights artifact management page icon
+          this.page = 2;
+        } else if (new_route.includes("label")) {
+          // highlights labelling management page icon
+          this.page = 3;
+        } else if (new_route.includes("theme")) {
+          // highlights theme management page icon
+          this.page = 4;
+        } else if (new_route.includes("conflict")) {
+          // highlights conflict management page icon
+          this.page = 5;
+        }
+      }
+    });
   }
 
 
@@ -44,73 +75,6 @@ export class NavigationMenuComponent {
    */
   changeSize() {
     this.collapsed = !this.collapsed;
-  }
-
-
-
-
-  
-  /**
-   * Determines what page the user is on
-   * 
-   * @param navnr the page to which the user is navigating
-   * 
-   * @trigger whenever the component is opened, or when user routes to new page in project
-   * @modifies page
-   */
-  det_page(navnr: number) {
-    this.page = navnr;
-    if (this.page == 0) {
-      this.router.navigate(['/project/stats']);
-    } 
-    else if (this.page == 1) {
-      this.router.navigate(['/project/labelling-page']);
-    }
-    else if (this.page == 2) {
-      this.router.navigate(['/project/artifactmanagement']);
-    }
-    else if (this.page == 3) {
-      this.router.navigate(['/project/labelmanagement']);
-    }
-    else if (this.page == 4) {
-      this.router.navigate(['/project/thememanagement']);
-    }
-    else if (this.page == 5) {
-      this.router.navigate(['/project/conflict']);
-    }
-  }
-
-  /**
-   * Determines the page that shown be shown based on the current route
-   * 
-   * @trigger when a navigation-menu is initialized
-   */
-  route_det_page() {
-    let route = this.router.url;
-    // if the route contains stats page, should highlight icon 0
-    if (route.includes("stats")){
-      this.page = 0;
-    } 
-    // if the route contains labelling page, should highlight icon 1
-    if (route.includes("labelling")){
-      this.page = 1;
-    }
-    // if the route contains artifact management page, should highlight icon 2
-    if (route.includes("artifact")){
-      this.page = 2;
-    }
-    // if the route contains label management page, should highlight icon 2
-    if (route.includes("labelmanagement")){
-      this.page = 3;
-    }
-    // if the route contains theme management page, should highlight icon 2
-    if (route.includes("theme")){
-      this.page = 4;
-    }
-    // if the route contains conflict page, should highlight icon 2
-    if (route.includes("conflict")){
-      this.page = 5;
-    }
   }
 
 }
