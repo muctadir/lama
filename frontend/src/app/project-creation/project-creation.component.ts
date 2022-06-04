@@ -6,12 +6,6 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import axios from 'axios';
 import { User } from '../user';
 
-// Project object
-interface Project {
-  projectName: string,
-  projectDescription: string;
-}
-
 
 // Template for the modal
 @Component({
@@ -62,14 +56,6 @@ export class AddUsersModalContent {
 })
 
 export class ProjectCreationComponent implements OnInit {
-
-  // Functions for adding values
-  addValuesProject(name:string, desc:string):Project {
-    var projectName = name;
-    var projectDescription = desc;
-    // Return the given values
-    return {projectName, projectDescription};
-  }
 
   
   // Array of all possible members

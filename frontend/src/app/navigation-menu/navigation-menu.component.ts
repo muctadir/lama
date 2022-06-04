@@ -92,6 +92,11 @@ export class NavigationMenuComponent implements OnDestroy {
     if (route.includes("conflict")){
       this.page = 5;
     }
+
+    // if the route contains project settings page, should highlight settings icon
+    if (route.includes("settings")){
+      this.page = 6;
+    }
   }
 
 }

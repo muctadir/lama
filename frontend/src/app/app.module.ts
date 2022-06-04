@@ -33,6 +33,7 @@ import { ThemeManagementComponent } from './theme-management/theme-management.co
 import { SortableThemeHeader } from './sortable-theme.directive';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
+import { ProjectSettingsComponent } from './project-settings/project-settings.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.
     ThemeManagementComponent,
     SortableThemeHeader,
     CreateThemeComponent,
-    SingleThemeViewComponent
+    SingleThemeViewComponent,
+    ProjectSettingsComponent
   ],
   imports: [
     BrowserModule,

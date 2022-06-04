@@ -19,10 +19,10 @@ import { ArtifactManagementPageComponent } from './artifact-management-page/arti
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 import { LabelManagementComponent } from './label-management/label-management.component';
 import { IndividualLabelComponent } from './individual-label/individual-label.component';
-
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
+import { ProjectSettingsComponent } from './project-settings/project-settings.component';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -48,6 +48,7 @@ const routes: Routes = [
       {path: 'singleTheme', component: SingleThemeViewComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
+      {path: 'settings', component: ProjectSettingsComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];

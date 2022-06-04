@@ -1,0 +1,161 @@
+<!-- Victoria Bogachenkova -->
+<!-- Veerle Fürst -->
+
+<body>
+    <!-- Conatiner for the top row -->
+    <div class="container" id="topBarRow"> 
+        <div class="row">
+            <p class="header"> Edit Project </p>
+        </div>
+    </div>
+
+    <!-- Container for settings -->
+    <div *ngIf="edit" class="container main">
+
+        <!-- Row for all settings -->
+        <div class="row justify-content-between">
+
+            <!-- Left side of the page (project name and description) -->
+            <div class="col-5">
+
+                <!-- Filling in Project information -->
+                <form id="projectCreationForm" method="post">
+
+                    <!-- Username field -->
+                    <div class="form-group">
+                        <label for="projectName" id="field_text">Project Name:</label><br>
+                        <input name="projectName" class="form-control" type="text" placeholder="Project Name" required><br>
+                    </div>
+                    
+                    <!-- Description field -->
+                    <div class="form-group">
+                        <label for="projectDescription" id="field_text">Description:</label><br>
+                        <textarea name="projectDescription" id='projectDescriptionForm' class="form-control" rows="10" placeholder="Description"></textarea>
+                    </div>  
+                    
+                </form>
+
+                <!-- Response division -->
+                <div id="responseDiv">
+                    <!-- Response -->
+                    <p id="createProjectResponse"></p>
+                </div>
+
+            </div>
+
+            <!-- Right side of the page (members, labeller count, label types) -->
+            <div class="col-6">
+                 <!-- Division around the whole members section -->
+                 <div class="projectSettingsDivParent">
+                    <!-- "Members" header -->
+                    <div class="row">
+                        <div class="col">
+                            <span class="settingsHeader">Members</span>
+                        </div>
+                        <!-- Col for adding users button -->
+                        <div class="col-2">
+                            <!-- Button for adding new members -->
+                            <button class="btn" type="button" id="addMembersButton" (click)="test()">
+                                <!-- Members icon -->
+                                <i class="bi bi-plus members"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Division around the all members -->
+                    <div class="projectSettingsDiv">
+                        <div id="membersDiv">
+                            <!-- Row for the 'Project admin' words -->
+                            <div class="row justify-content-end">
+                                <div class="col-4">
+                                    <p class="projectAdminSpan">Project admin</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Name and checkbox per member of the project -->
+                            <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
+
+                                <!-- Row for the delete, name and project admin -->
+                                <div class="row align-items-center">
+
+                                    <!-- Column for delete icon -->
+                                    <div class="col-1">
+                                        <!-- x icon -->
+                                        <i class="bi bi-x" (click)="test()"></i>
+                                    </div>
+
+                                    <!-- Column for username -->
+                                    <div class="col-7">
+                                        {{ member.getUsername() }}
+                                    </div>
+
+                                    <!-- Column for checkbox -->
+                                    <div class="col-4 checkboxCol">
+                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                        <!-- TODO FIX THE ID -->
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getUsername() }}">
+                                    </div>                                        
+                                </div>
+                            </label>
+
+                        </div>
+            </div>
+            </div>
+        </div>
+            </div>
+        </div>
+          
+        <div *ngIf="!edit" class="container main">
+
+            <!-- Row for all settings -->
+            <div class="row justify-content-between">
+    
+                <!-- Left side of the page (project name and description) -->
+                <div class="col-5">
+    
+                        <!-- Username field -->
+                        <div class="form-group">
+                            <label for="projectName" id="field_text">Project Name:</label><br>
+                            <p>{{projectName}}</p>
+                        </div>
+                        
+                        <!-- Description field -->
+                        <div class="form-group">
+                            <label for="projectDescription" id="field_text">Description:</label><br>
+                            <p>{{projectDesc}}</p>
+                        </div>  
+    
+                    <!-- Response division -->
+                    <div id="responseDiv">
+                        <!-- Response -->
+                        <p id="createProjectResponse"></p>
+                    </div>
+    
+                </div>
+    
+                <!-- Right side of the page (members, labeller count, label types) -->
+                <div class="col-6">
+    
+                                    </div>
+                </div>
+            </div>
+              
+    
+        <!-- Buttons row (cancel and submit button) -->
+        <div class="row justify-content-end fixed-bottom top-buffer">
+            <!-- Cancel button -->
+            <button type="button" class="btn btn-secondary text-nowrap" id="cancelProjectCreationButton" routerLink="/home">
+                Cancel
+            </button>
+        
+            <!-- Submit button -->
+            <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="unclickEdit()">
+                Create Project
+            </button>
+
+            <!-- Submit button -->
+            <button *ngIf="!edit" type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="clickEdit()">
+                Create Project
+            </button>
+        </div>
+</body>

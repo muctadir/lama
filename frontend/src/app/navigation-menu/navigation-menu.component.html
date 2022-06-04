@@ -187,11 +187,18 @@
                     <div class="col-12 text-center">
                         <!-- Settings icon -->
                         <div *ngIf="collapsed">
-                            <a><em class="bi bi-gear def"></em></a>
+                            <a><em
+                                [ngClass]="{'bi': true, 'bi bi-gear': true, 'def': page!=6, 'alt': page==6}" 
+                                [routerLink]="['/project/settings']"
+                                (click)="det_page(6)">
+                            </em></a>
                         </div>
                         <!-- Settings written out -->
                         <div *ngIf="!collapsed">
-                            <a class="text-menu">Settings</a>
+                            <a class="text-menu"
+                            [ngClass]="{'text-menu': page!=6, 'text-menu-alt': page==6}"
+                            [routerLink]="['/project/settings']"
+                            (click)="det_page(6)">Settings</a>
                         </div>
                     </div>
                     <div class="line"></div>
