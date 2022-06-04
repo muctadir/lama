@@ -4,11 +4,11 @@ All of the classes
     <b>identifier:</b> string <br>
     <b>data:</b> any <br>
     completed: boolean (when the artifact has been completely labelled) <br>
-    labellings: Array &lt Labelling &gt (how the artifact was labelled) <br>
+    labellings: Array < Labelling > (how the artifact was labelled) <br>
     start: number (start index of artifact split) <br>
     end: number (end index of artifact split) <br>
     parentId: number (parent artifact ID in case of split) <br>
-    childIds: Array &lt number &gt  (child artifact IDs in case of split) <br>
+    childIds: Array <&lt> number <&gt>  (child artifact IDs in case of split) <br>
     highlighted: any (highlight info of the artifact)
 </details>
 
