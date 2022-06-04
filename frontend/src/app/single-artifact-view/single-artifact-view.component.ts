@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoremIpsum } from "lorem-ipsum";
-import {StringArtifact} from "../stringartifact"
+import { ArtifactServiceService } from 'app/artifact-service.service';
+import axios from 'axios';
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -41,17 +42,17 @@ type label = {
 })
 export class SingleArtifactViewComponent implements OnInit {
 
-  // TODO: Pass artifact object here
-  // For now hardcoded data
-  artifactId: Number = 3;
-  artifactIdentifier: String = 'File4';
-  labelers: Array<String> = []
-  artifact: String = lorem.generateParagraphs(10);
+  // Hardcoded data
+  artifactId: Number = 0;
+  artifactIdentifier: String = '';
+  // labelers: Array<String> = []
+  artifact: String = '';
   allLabels: Array<String> = []
+  p_id = 4;
   
   labelTypes: Array<labelType> = [
     {
-      labelTypeName: "Type A",
+      labelTypeName: "",
       labelTypeDescription: lorem.generateParagraphs(1),
       labels: [{labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
                {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
@@ -59,7 +60,7 @@ export class SingleArtifactViewComponent implements OnInit {
                {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},]
     },
     {
-      labelTypeName: "Type B",
+      labelTypeName: "",
       labelTypeDescription: lorem.generateParagraphs(1),
       labels: [{labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
                {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
@@ -94,22 +95,53 @@ export class SingleArtifactViewComponent implements OnInit {
     alert("This button is not implemented.");
   }
 
-  // What?
-  constructor() { }
+  constructor(private shared: ArtifactServiceService) { }
 
   ngOnInit(): void {
+    // Get artifact object from the artifact management page
+    this.artifactId = this.shared.getMessage()
+
+    // this.artifactIdentifier = this.message.identifier;
+    // this.labelers = 
+    // artifact: String = '';
+    // allLabels: Array<String> = []
+    
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
 
-      // Get the information needed from the back end
-      axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {
+      // Get the artifact information from the back end
+      axios.get('http://127.0.0.1:5000/artifact/singleArtifact', {
         headers: {
           'u_id_token': token
         },
         params: {
-          'p_id' : this.p_id
+          'a_id' : this.artifactId
         }
       })
-  }
 
+      // When there is a response get artifact information
+      .then(response => {
+
+        // Pass the artifact information from the response
+        let artifact_info = response.data
+        this.artifactIdentifier = artifact_info['artifactIdentifier'];
+        this.artifact = artifact_info['artifact'];
+      })
+
+      // Get the labellings of this artifact
+      axios.get('http://127.0.0.1:5000/artifact/artifactLabellings', {
+        headers: {
+          'u_id_token': token
+        },
+        params: {
+          'a_id' : this.artifactId
+        }
+      })
+
+      // When there is a response get artifact information
+      .then(response => {
+        console.log(response.data)
+      })
+    }
+  }
 }

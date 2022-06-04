@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Artifact_Management } from '../artifact_management';
+import { ArtifactServiceService } from 'app/artifact-service.service';
+
 import axios from 'axios';
 
 
@@ -25,9 +27,9 @@ export class ArtifactManagementPageComponent implements OnInit {
  * @param modalService 
  * @param labelingDataService 
  */
-    constructor(private modalService: NgbModal) { }
+    constructor(private modalService: NgbModal, private shared: ArtifactServiceService) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
 
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
@@ -47,8 +49,7 @@ export class ArtifactManagementPageComponent implements OnInit {
           // For each project in the list
           for (let artifact of response.data){
 
-            // Initialize a new project with all values
-            console.log(artifact)
+            // Initialize a new project with all valuesr
             let artifactJson = artifact["artifact"];
             artifactJson["id"] = artifact["artifact_id"];
             artifactJson["data"] = artifact["artifact_text"];
@@ -68,6 +69,11 @@ export class ArtifactManagementPageComponent implements OnInit {
   
   open(){
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
+  }
+
+  getArtifact(id:number){
+
+    this.shared.setMessage(id)
   }
   
 }

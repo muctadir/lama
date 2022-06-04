@@ -44,7 +44,7 @@
 
                     <!-- Table Content -->
                     <tbody  routerLink="/singleartifact">
-                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize">
+                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize" (click)="getArtifact(artifact.id)">
                             <!-- Artifact ID -->
                             <td><p class="artifactID">{{artifact.id}}</p></td>
                             <!-- Artifact text -->

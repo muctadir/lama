@@ -38,7 +38,6 @@ def get_artifacts(*, user):
 
         # Get all the labellings the user has done in the current project
         labellings = db.session.execute(
-            # select(Artifact).where(Artifact.p_id==p_id, user in Artifact.users)
             select(Labelling).where(Labelling.u_id==user.id, Labelling.p_id==p_id)
         ).scalars().all()
 
@@ -108,4 +107,67 @@ def add_new_artifacts(*, user):
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 def single_artifact(*, user):
-    
+    # Get artifact id
+    a_id = request.args.get('a_id', '')
+
+    # Get the current artifact
+    artifact = db.session.execute(
+        select(Artifact).where(Artifact.id == a_id)
+    ).scalars().all()[0]
+
+    # Add artifact information to a dictionary
+    info = {
+        'artifactIdentifier': artifact.identifier,
+        'artifact': artifact.data
+    }
+
+    # Jsonify the dictionary with information
+    dict_json = jsonify(info)
+
+    # Return the dictionary
+    return make_response(dict_json)
+
+@artifact_routes.route("/artifactLabellings", methods=["GET"])
+@login_required
+def artifact_labellings(*, user):
+    # Get artifact id
+    a_id = request.args.get('a_id', '')
+
+    # Get all the labellings of this artifact
+    labellings = db.session.execute(
+        select(Labelling).where(Labelling.a_id==a_id)
+    ).scalars().all()
+
+    # List for labelling information
+    labelling_info = []
+
+    # For each labelling
+    for labelling in labellings:
+        # Get the username of the labeller
+        labeller_name = labelling.user.username
+
+        # Get the remark of this label
+        label_remark = labelling.remark
+
+        # Get the label type of this label
+        label_type_name = labelling.label.label_type.name
+
+        # Get the given label
+        label_given = labelling.label.name
+
+        # Put all values into a dictionary
+        info = {
+            "labellerName": labeller_name,
+            "labelRemark": label_remark,
+            "labelTypeName": label_type_name,
+            "labelGiven": label_given
+        }
+
+        # Append the dictionary to the list
+        labelling_info.append(info)
+
+    # Convert the list of dictionaries to json
+    dict_json = jsonify(labelling_info)
+
+    # Return the list of dictionaries
+    return make_response(dict_json)
