@@ -27,7 +27,7 @@
                 <div *ngIf="collapsed" class="text-center">
                     <a>
                         <em [ngClass]="{'bi': true, 'bi-bar-chart-line': true, 'def': page!=0, 'alt': page==0}" 
-                            [routerLink]="['/project/stats']">
+                            (click)="changePage('stats')">
                         </em>
                     </a>
                 </div>
@@ -35,7 +35,7 @@
                 <!-- Displays the stats text, and reroutes to stats page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=0, 'text-menu-alt': page==0}" 
-                    [routerLink]="['/project/stats']">Statistics</a>
+                    (click)="changePage('stats')">Statistics</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -46,7 +46,7 @@
                 <div *ngIf="collapsed" class="text-center">
                     <a>
                         <em [ngClass]="{'bi': true, 'bi-tags': true, 'def': page!=1, 'alt': page==1}" 
-                            [routerLink]="['/project/labelling-page']">
+                        (click)="changePage('labelling-page')">
                         </em>
                     </a>
                 </div>
@@ -54,7 +54,7 @@
                 <!-- Displays the labelling text, and reroutes to labelling page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=1, 'text-menu-alt': page==1}"
-                        [routerLink]="['/project/labelling-page']">Labelling</a>
+                        (click)="changePage('labelling-page')">Labelling</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -63,13 +63,13 @@
                 <!-- Displays the artifact management page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <a [ngClass]="{'def': page!=2, 'alt': page==2}" 
-                        [routerLink]="['/project/artifactmanagement']">AM</a>
+                    (click)="changePage('artifactmanagement')">AM</a>
                 </div>
 
                 <!-- Displays the artifact management text, and reroutes to AM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=2, 'text-menu-alt': page==2}" 
-                        [routerLink]="['/project/artifactmanagement']">Artifact management</a>
+                    (click)="changePage('artifactmanagement')">Artifact management</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -79,13 +79,13 @@
                 <!-- Displays the label management page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <a [ngClass]="{'def': page!=3, 'alt': page==3}"
-                        [routerLink]="['/project/labelmanagement']">LM</a>
+                    (click)="changePage('labelmanagement')">LM</a>
                 </div>
 
                 <!-- Displays the label management text, and reroutes to LM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=3, 'text-menu-alt': page==3}"
-                        [routerLink]="['/project/labelmanagement']">Label management</a>
+                    (click)="changePage('labelmanagement')">Label management</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -95,13 +95,13 @@
                 <!-- Displays the theme management page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <a [ngClass]="{'def': page!=4, 'alt': page==4}"
-                        [routerLink]="['/project/thememanagement']">TM</a>
+                    (click)="changePage('thememanagement')">TM</a>
                 </div>
 
                 <!-- Displays the theme management text, and reroutes to TM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=4, 'text-menu-alt': page==4}"
-                        [routerLink]="['/project/thememanagement']">Theme management</a>
+                    (click)="changePage('thememanagement')">Theme management</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -111,8 +111,8 @@
                 <!-- Displays the conflict management page icon-->
                 <div *ngIf="collapsed" class="text-center">
                     <a>
-                        <em [ngClass]="{'bi': true, 'bi bi-binoculars': true, 'def': page!=5, 'alt': page==5}" 
-                            [routerLink]="['/project/conflict']">
+                        <em [ngClass]="{'bi': true, 'bi bi-binoculars': true, 'def': page!=5, 'alt': page==5}"
+                        (click)="changePage('conflict')">
                         </em>
                     </a>
                 </div>
@@ -120,7 +120,7 @@
                 <!-- Displays the conflict management text, and reroutes to CM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=5, 'text-menu-alt': page==5}"
-                        [routerLink]="['/project/conflict']">Conflict</a>
+                    (click)="changePage('conflict')">Conflict</a>
                 </div>
 
                 <!-- Line below the icon -->

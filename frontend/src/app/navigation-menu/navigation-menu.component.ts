@@ -1,5 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -33,6 +34,7 @@ export class NavigationMenuComponent {
    * in the navigation bar accordingly
    * 
    * @param router Instance of the Router class used to get info about the current route
+   * @param 
    * 
    * @trigger when the route changes
    * @modifies page 
@@ -72,8 +74,22 @@ export class NavigationMenuComponent {
    * @trigger when the top most icon is clicked in the navigation menu
    * @modifies collapsed
    */
-  changeSize() {
+  changeSize() : void {
     this.collapsed = !this.collapsed;
+  }
+
+
+  changePage(next_page : string) : void  {
+    // Removes the first character from the route
+    let url : string = this.router.url;
+
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, next_page]);
   }
 
 }
