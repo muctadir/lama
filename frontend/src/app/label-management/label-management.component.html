@@ -1,22 +1,20 @@
 <!-- Author: Victoria Bogachenkova -->
-<body>
-    <div class="container alignValues" id="topBarRow">
-        <div class="row">
-            <div class="col">
-                <!-- Header -->
-                <p class="header">Label Management</p>
-            </div>
-            <div class="col">
-            <!-- Buttons for creating and adding labels -->
-                <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
-                    Create label
-                    <i class="bi bi-plus"></i>
-                </button>                
-                <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()">
-                    Merge labels
-                    <i class="bi bi-plus"></i>
-                </button>                
-            </div>
+<div class="container-fluid min-vh-100 d-flex flex-column alignValues" id="topBarRow">
+    <div class="row">
+        <div class="col">
+            <!-- Header -->
+            <p class="header">Label Management</p>
+        </div>
+        <div class="col">
+        <!-- Buttons for creating and adding labels -->
+            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
+                Create label
+                <i class="bi bi-plus"></i>
+            </button>                
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()">
+                Merge labels
+                <i class="bi bi-plus"></i>
+            </button>                
         </div>
     </div>
 
@@ -43,7 +41,7 @@
                         </tr>
                     </thead>
                     <!--Table Content-->
-                    <tbody  [routerLink]="['/project/singlelabel']">
+                    <tbody (click)="reRouter()">
                         <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
                             <td><p class="tablecontent">{{label.labelName}}</p></td>
                             <td><p class="tablecontent">{{label.labelType}}</p></td>
@@ -62,4 +60,4 @@
             </div>
         </div>
     </div>
-</body>
+</div>
