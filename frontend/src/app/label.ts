@@ -275,10 +275,5 @@
      setDeleted(deleted: boolean | undefined): void {
          this.deleted = deleted
      }
-
-     getLabeledAmount(): number {
-         if (this.artifacts == undefined)  return 0
-         else return (this.artifacts).length;
-     }
  }
  
