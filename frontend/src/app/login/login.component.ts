@@ -66,7 +66,7 @@ export class LoginComponent {
       sessionStorage.setItem('ses_token', token);
 
       // Navigates to the home page
-      this.route.navigate(['/artifactmanagement']);
+      this.route.navigate(['/home']);
 
       // Print the created message
       this.errorMsg = "";

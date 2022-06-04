@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { LoremIpsum } from "lorem-ipsum";
-import { ArtifactServiceService } from 'app/artifact-service.service';
 import axios from 'axios';
 
 const lorem = new LoremIpsum({
@@ -95,11 +94,10 @@ export class SingleArtifactViewComponent implements OnInit {
     alert("This button is not implemented.");
   }
 
-  constructor(private shared: ArtifactServiceService) { }
+  constructor() { }
 
   ngOnInit(): void {
     // Get artifact object from the artifact management page
-    this.artifactId = this.shared.getMessage()
 
     // this.artifactIdentifier = this.message.identifier;
     // this.labelers = 

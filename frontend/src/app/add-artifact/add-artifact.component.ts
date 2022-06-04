@@ -99,7 +99,7 @@ export class AddArtifactComponent {
         
         // Artifact cd  information
         artifactInformation= {
-          'name': i.toString(),
+          'name': identifier.concat(i.toString()),
           'identifier' : identifier,
           "data" : new_artifacts[i],
           'p_id' : p_id //needs to be an id that exists in the database
