@@ -92,10 +92,12 @@ def edit_label(*, user):
 @label_routes.route('/getAll', methods=['GET'])
 @login_required
 def get_all_labels(*, user):
-
+    # Get args from request 
     args = request.args
+    # What args are required
     required = ['p_id']
 
+    # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     
@@ -105,8 +107,12 @@ def get_all_labels(*, user):
         ).scalars().all()
 
     label_schema = LabelSchema()
-    
+
+    #Make empty array to store our info objects 
     label_info_array = []
+
+    # Go through every label, get the information,
+    # append the labeltype 
     for label in labels:
         label_json = label_schema.dump(label)        
         info = {
@@ -114,6 +120,6 @@ def get_all_labels(*, user):
             'label_type': label.label_type.name
         }
         label_info_array.append(info)
-
+    # JSONify and respond
     dict_json = jsonify(label_info_array)
     return make_response(dict_json)
