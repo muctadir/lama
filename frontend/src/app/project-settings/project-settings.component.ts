@@ -10,7 +10,9 @@ export class ProjectSettingsComponent implements OnInit {
 
   projectName: string = "project name";
   projectDesc: string = "project description";
-  projectMembers: User[] = [];
+  projectMembers: string[] = ["Linh","Jarl","Thea", "Vic"];
+  labelCount: string = "2";
+  labelTypes: string[] = [];
   edit: boolean = false;
 
   constructor() { }
@@ -26,7 +28,25 @@ export class ProjectSettingsComponent implements OnInit {
     this.edit = false;
   }
 
-  test(): void{
-    
+  addMembers(username: string): void {
+    //this.projectMembers.push(username);
+  }
+
+  addLabelTypes(labelType: string): void {
+    this.labelTypes.push(labelType);
+  }
+
+  saveEdit(): void {
+    this.projectName = (<HTMLInputElement>document.getElementById("projectName")).value;
+    this.projectDesc = (<HTMLInputElement>document.getElementById("projectDescriptionForm")).value;
+    this.labelCount = (<HTMLInputElement>document.getElementById("numberOfLabellers")).value;
+    this.edit = false;
+  }
+
+  addLabelType(){
+    this.labelTypes.push("");
+  }
+
+  test(): void{ 
   }
 }

@@ -5,6 +5,7 @@
 $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
+$green-shade: #1c5858;
 
 // @import "../../styles.scss";
 
@@ -173,16 +174,24 @@ body{
     margin-right: 10px;
 }
 // Cancel project creation button
-#cancelProjectCreationButton{
+#cancelProjectEditButton{
     background-color: $white-shade;
     border: 2px solid;
     border-color: $grey-shade;
     color: $grey-shade;
 }
 // Cancel project creation button
-#createProjectButton{
+#editProjectButton, #saveProjectButton{
     background-color: $orange-shade;
     border: 2px solid;
     border-color: $orange-shade;
+    color: $white-shade;
+}
+
+// Cancel project creation button
+#freezeProjectButton {
+    background-color: $green-shade;
+    border: 2px solid;
+    border-color: $green-shade;
     color: $white-shade;
 }
