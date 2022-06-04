@@ -69,7 +69,7 @@ def home_page(*, user):
         project_users = len(project.users)
         
         # Put all values into a dictonary
-        info ={
+        info = {
             "project" : project_json,
             "projectAdmin": projects_admin,
             "projectNrArtifacts": project_nr_artifacts,
@@ -157,5 +157,4 @@ def create_project(*, user):
         # Add the label type to the database
         db.session.add(label_type)
         db.session.commit()
-        
     return make_response('OK', 200)

@@ -25,7 +25,7 @@ export class HomePageComponent implements OnInit {
     if (typeof token === "string"){
 
       // Get the informtion needed from the back end
-      let response = axios.get('http://127.0.0.1:5000/project/home', {
+      axios.get('http://127.0.0.1:5000/project/home', {
         headers: {
           'u_id_token': token
         }
@@ -55,4 +55,5 @@ export class HomePageComponent implements OnInit {
         
     }   
   }
+
 }

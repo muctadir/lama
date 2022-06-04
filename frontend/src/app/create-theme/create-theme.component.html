@@ -1,0 +1,122 @@
+<!-- @author: Chinno Lavin -->
+<!-- big container -->
+<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+    <!-- Page Header -->
+    <div class="row" >
+        <div class="col-10 header" id="pageTitle"> 
+            Create Theme
+        </div>
+    </div>
+    <!-- Page body top half -->
+    <div class="row" id="topHalf">
+        <!-- Left side of top half -->
+        <div class="col-6">
+            <div class="row" id="topLeft">
+                <!-- Label Name section -->
+                <div class="col-12" id="name">
+                    Name
+                </div>
+                <div class="col-12" id="nameInputCol">
+                    <div class="form-group">
+                        <input class="form-control" id="nameForm" type="text" placeholder="Required" required><br>
+                    </div>
+                </div>
+                <!-- Displays All labels section -->
+                <div class="col-12" id="labels">                 
+                    Labels
+                </div>
+                <div class="row">
+                    <div class="col-6" id="allLabelsCol">
+                        <div *ngFor="let label of addedLabels">
+                            <span id="allLabels">{{label}}</span>
+                            <!-- Column for delete icon -->
+                            <span>
+                                <!-- x icon -->
+                                <i class="bi bi-x" (click)="removeLabel(label)" id="xIcon"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Right side of top half -->
+        <div class="col-6">
+            <div class="row" id="topRight">
+                <!-- Description section -->
+                <div class="col-12" id="description">
+                    Description
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="10" placeholder="Description"></textarea>
+                </div>
+                <!-- Sub-themes section -->
+                <div class="col-sm-12" id="subThemes">
+                    <span>
+                        Sub-Themes
+                    </span>
+                    <!-- Sub-theme button -->
+                    <span>
+                        <button type="button" class="btn btn-secondary text-nowrap" id="addSubthemeButton" (click)="notImplemented()">
+                        Add Sub-Theme</button>
+                    </span>
+                </div>
+                <!-- Sub-theme list from data -->
+                <div class="col-12" id="allSubthemesCol">
+                    <div *ngFor="let subthemes of allSubthemes">
+                        <p id="allSubthemes">{{subthemes}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Bottom Half -->
+    <div class="row"  id="bottomHalf">
+        <div class="col-6">
+             <!-- Add Labels Section --> 
+            <div class="row">
+                <div class="col" id="addLabels">
+                    Add Labels
+                </div>
+            </div>
+            <div class="row">
+                <!-- Add Labels Left side -->
+                <!-- TODO Filtering and Searching -->
+                <div class="col-6">
+                    <!-- Table for showing all labels -->
+                    <table class="table table-borderless">
+                        <tbody>
+                            <!-- Click shows clicked labels description and highlights it-->
+                            <tr *ngFor="let label of allLabels" (click)="displayDescription(label);" (click)="highlightLabel(label)"  [class.highlighted]="label.labelName === highlightedLabel">
+                                <td>
+                                    <span id="addLabelsText">
+                                        {{label.labelName}}
+                                    </span>
+                                    <!--  Add label button -->
+                                    <button class="btn" type="button" id="addLabelsButton" (click)="addLabel(label)">
+                                        <!-- Plus icon -->
+                                        <span class="bi bi-plus">                                  
+                                        </span>
+                                    </button>
+                                </td>                                 
+                            </tr>
+                    </table>
+                </div>
+                 <!-- Add Labels right side Description part -->
+                <div class="col-6">
+                    <p id="labelDescription">Description:</p>
+                    <div *ngIf="selectedDescription != null">
+                        <p class="labelDescriptionText">{{selectedDescription}}</p>
+                    </div>
+                </div>
+            </div>          
+        </div>
+        <!--Create/Cancel buttons--> 
+        <div class="col-12" id="createCancelButtons">
+            <div>
+                <button class="form-group btn btn-primary float-end" (click)="notImplemented()" style="margin-left:10px;">Create</button> 
+                <button class="form-group btn btn-light float-end"  routerLink="/theme">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
