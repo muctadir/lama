@@ -104,13 +104,15 @@ this exists mostly to simplify queries or to be extended later <br>
 <details><summary>Labelling</summary>
     u_id (user id that made this labelling) <br>
     a_id (artifact id that was labelled) <br>
+    lt_id (label type id corresponding to the label used) <br>
     l_id (label id that the artifact was labelled with) <br>
     p_id (project id that the artifact/label) <br>
     remark (why was this artifact labelled with this label?) <br>
     time (how long did it take the user to label this artifact?) <br>
     user (user object that made the labelling) <br>
     artifact (artifact object that was labelled) <br>
-    label (label object that the artifact was labelled with)
+    label (label object that the artifact was labelled with) <br>
+    label_type (short for label.label_type)
 </details>
 
 <details><summary>Highlight</summary>
