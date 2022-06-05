@@ -17,7 +17,7 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @login_required
 def create_label(*, user):
 
-    args = request.args
+    args = request.json
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'pId']
 
@@ -31,9 +31,9 @@ def create_label(*, user):
     if len(args['labelDescription']) <= 0:
         return make_response('Bad request: Label description cannot have size <= 0')
     # Check whether the label type exists
-    label_type = db.session.get(LabelType, args['labelTypeId'])
-    if not label_type:
+    if (db.session.get(LabelType, args['labelTypeId']).count()) <= 0:
         return make_response('Label type does not exist', 400)
+
     # Check whether the label is part of the project
     if label_type.p_id != args['pId']:
         return make_response('Label type not in this project', 400)
@@ -44,9 +44,6 @@ def create_label(*, user):
     # Commit the label
     db.session.add(label)
     db.session.commit()
-
-    # label_schema = LabelSchema()
-    # label_json = jsonify(label_schema.dump(labels, many=True))
 
     return make_response('Created')
 
@@ -122,4 +119,35 @@ def get_all_labels(*, user):
         label_info_array.append(info)
     # JSONify and respond
     dict_json = jsonify(label_info_array)
+    return make_response(dict_json)
+
+
+# Author: Bartjan
+@label_routes.route('/get', methods=['GET'])
+@login_required
+def get_single_label(*, user):
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id', 'label_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Get label
+    label = db.session.execute(
+            select(Label).where(Label.id==args['label_id'])).scalars().first()
+    
+    if not label:
+        return make_response('Label does not exist', 400)
+
+
+    label_schema = LabelSchema()
+
+    dict_json = jsonify({
+        'label': label_schema.dump(label),
+        'label_type': label.label_type.name
+    })
+
     return make_response(dict_json)

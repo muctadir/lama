@@ -43,8 +43,8 @@
                         </tr>
                     </thead>
                     <!--Table Content-->
-                    <tbody  [routerLink]="['/project/singlelabel']">
-                        <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize">
+                    <tbody>
+                        <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize" [routerLink]="['/project/singlelabel']" [queryParams]="{label_id: label.getId() }">
                             <td><p class="tablecontent">{{label.getName()}}</p></td>
                             <td><p class="tablecontent">{{label.getType()}}</p></td>
                             <td><p class="tablecontent">{{label.getNumberOfArtifacts()}}</p></td>
