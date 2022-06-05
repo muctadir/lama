@@ -70,7 +70,7 @@ describe('Project', () => {
     expect(project.getUsers())
       .toBe(users)
   })
-  
+
   // Getting the number of users
   it("Should get the amount of users", () => {
     const user1 = new User(1, "Veerle");
