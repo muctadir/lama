@@ -9,6 +9,8 @@ All of the *concrete* models contain a \_\_tablename\_\_ attribute
     memberships (collection of memberships the user is associated with) <br>
     projects (collection of projects) <br>
     labellings (collection of labellings (info on how the user has labelled artifacts)) <br>
+    labels (collection of labels the user has labelled an artifact with) <br>
+    artifacts (collection of artifacts the user has labelled) <br>
     highlights (collection of highlights (which artifacts the user has highlighted and how)) <br>
     type (user or super_admin) <br>
     artifact_changes (collection of changes made to artifacts) <br>
