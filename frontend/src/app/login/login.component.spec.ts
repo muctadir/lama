@@ -12,7 +12,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
+      declarations: [LoginComponent],
       // Adding the RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Added the dependencies InputCheckService, FormBuilder
@@ -49,11 +49,17 @@ describe('LoginComponent', () => {
   // Checks the loginSubmit function using dummy form input 
   // (username: testusername and password: testpassword)
   it('Checks the loginSubmit function using dummy form input', () => {
-    // initializes the loginForm
+    // Initializes the loginForm
     component.loginForm.value.username = "testusername";
     component.loginForm.value.password = "testpassword";
 
+    // Ensures that the checkLogin function is not called
+    spyOn(component, 'checkLogin');
+
+    // Calls the loginSubmit function
     component.loginSubmit();
+
+    // Since loginForm is non-empty we expect error to be empty string
     expect(component.errorMsg).toBe("");
   });
 
