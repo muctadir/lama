@@ -99,6 +99,7 @@ export class LabelingDataService {
       response.data.forEach((d: any) => {
         result.push(new LabelType(d.id, d.name, new Array<Label>()))
       });
+      console.log(result);
       return result;
     }).catch(err => {
       throw err;
@@ -106,9 +107,29 @@ export class LabelingDataService {
 
   }
 
-  pushLabels(newLabels: Array<LabelType>): void{
-    console.log("Pushing to backend...")
-    console.log(newLabels)
-    throw new Error("Not implemented")
+  submitLabel(p_id: number, label: Label,
+    labelTypeId: number): Promise<boolean> {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+    // Check if the p_id is larger than 0
+    if (p_id < 0) throw new Error("p_id cannot be less than 0")
+    let result : boolean;
+    return axios.post('http://127.0.0.1:5000/label/create',
+     {
+       'labelTypeId': labelTypeId,
+       'labelName': label.getName(),
+       'labelDescription': label.getDesc(),
+       'p_id': p_id
+      },
+      {headers: {
+        'u_id_token': token
+      }})
+      .then((response) => {
+      return Math.floor(response.status/100) == 2;
+    }).catch(err => {
+      result = false;
+      return false;
+    });
   }
 }

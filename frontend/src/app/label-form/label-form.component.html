@@ -1,6 +1,6 @@
 <!-- Author: Bartjan Henkemans -->
 
-<div class="container" id="body">
+<form [formGroup]="labelForm" class="container" id="body">
     <div class="row modal-header" class="title">
         <div class="col-12">
             Create Label
@@ -11,32 +11,26 @@
             <div>
                 <div class="subTitle">Label type</div>
                 <div class="form-group">
-                    <select class="form-control" name="labels" 
-                        [(ngModel)]="inputLabelType">
-                        <option *ngFor="let labelType of labelTypes" 
-                                value="{{ labelType?.getName()}}"
-                                [ngValue]="labelType">
-                            {{ labelType?.getName() }}
-                        </option>
+                    <select class="form-control" formControlName="labelTypeId">
+                        <option *ngFor="let labelType of labelTypes" [ngValue]="labelType.getId()">{{labelType.getName()}}</option>
                     </select>
                 </div>
             </div>
             <div>
                 <div class="subTitle">Label name</div>
-                <input type="text" class="form-control" placeholder="Name"
-                       [(ngModel)]="inputName">
+                <input type="text" class="form-control" placeholder="Name" formControlName="labelName">
             </div>
         </div>
         <div class="col-6">
             <div>
-                <div class="subTitle">    
+                <div class="subTitle">
                     Description
                 </div>
                 <div>
-                    <textarea class="form-control" rows="8" 
-                              placeholder="Description" 
-                              id="remark" 
-                              [(ngModel)]="inputDescription">
+                    <textarea class="form-control" rows="8"
+                              placeholder="Description"
+                              id="remark"
+                              formControlName = "labelDescription">
                     </textarea>
                 </div>
             </div>
@@ -45,9 +39,9 @@
     </div>
     <div class="row" style="margin-top: 10px;">
         <div class="form-group" id="butt">
-            <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button> 
+            <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button>
             <button class="btn btn-primary float-end" (click)="submit()" >Submit</button>
         </div>
     </div>
-</div>  
+</form>
 

@@ -18,8 +18,8 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 def create_label(*, user):
 
     args = request.json
-
-    required = ['labelTypeId', 'labelName', 'labelDescription', 'pId']
+    print(args)
+    required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
@@ -30,17 +30,19 @@ def create_label(*, user):
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
         return make_response('Bad request: Label description cannot have size <= 0')
-    # Check whether the label type exists
-    if (db.session.get(LabelType, args['labelTypeId']).count()) <= 0:
-        return make_response('Label type does not exist', 400)
+    # # Check whether the label type exists
+    # if (db.session.get(LabelType, args['labelTypeId']).count()) <= 0:
+    #     return make_response('Label type does not exist', 400)
 
-    # Check whether the label is part of the project
-    if label_type.p_id != args['pId']:
-        return make_response('Label type not in this project', 400)
+    # # Check whether the label is part of the project
+    # if label_type.p_id != args['pId']:
+    #     return make_response('Label type not in this project', 400)
     # Make the label
     label = Label(name=args['labelName'],
         description=args['labelDescription'],
-        lt_id=args['lt_id'])
+        lt_id=args['labelTypeId'],
+        p_id=args['p_id'])
+        
     # Commit the label
     db.session.add(label)
     db.session.commit()
