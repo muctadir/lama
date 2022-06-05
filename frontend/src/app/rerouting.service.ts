@@ -22,17 +22,18 @@ export class ReroutingService {
    * @returns project ID
    */
   getProjectID(url_path : string) : string {
-    // Get position of first slash
-    let first_slash = this.getPosition(url_path, '/', 1) ;
+    // Removes the first "/" from the string
+    let p_id : string = url_path.substring(1); 
 
     // Removes everything before the first "/"
-    let p_id : string = url_path.substring(first_slash + 1);
+    p_id = p_id.substring(p_id.indexOf('/') + 1);
 
     // Removes everything after the project ID, (only project ID remains)
-    p_id = p_id.substring(0, first_slash);
+    p_id = p_id.substring(0, p_id.indexOf('/'));
 
     // Returns the project ID
     return p_id
+
   }
 
   /**
