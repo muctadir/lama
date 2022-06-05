@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
+import { Component } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Artifact_Management } from '../artifact_management';
 import axios from 'axios';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
+import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
 
 
 @Component({

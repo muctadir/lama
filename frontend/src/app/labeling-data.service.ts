@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { StringArtifact } from './stringartifact';
-import { LabelType } from './label-type';
+import { StringArtifact } from 'app/classes/stringartifact';
+import { LabelType } from 'app/classes/label-type';
 import { artifact, labels } from './static-test-info';
 
 @Injectable({

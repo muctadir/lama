@@ -14,9 +14,9 @@
                     <select class="form-control" name="labels" 
                         [(ngModel)]="inputLabelType">
                         <option *ngFor="let labelType of labelTypes" 
-                                value="{{ labelType?.getLabelTypeName()}}"
+                                value="{{ labelType?.getName()}}"
                                 [ngValue]="labelType">
-                            {{ labelType?.getLabelTypeName() }}
+                            {{ labelType?.getName() }}
                         </option>
                     </select>
                 </div>
