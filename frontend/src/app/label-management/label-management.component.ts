@@ -5,8 +5,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
 import { LabelingDataService } from '../labeling-data.service';
-import { Label } from '../label';
-import { LabelType } from '../label-type'; 
+import { Label } from 'app/classes/label';
+import { LabelType } from 'app/classes/label-type'; 
 
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
@@ -17,22 +17,28 @@ import { ReroutingService } from 'app/rerouting.service';
   styleUrls: ['./label-management.component.scss']
 })
 export class LabelManagementComponent {
+  routeService: ReroutingService;
+  url: string;
+  labels: Array<Label>;
+
   //Pagination Settings
-  labels: Array<Label> = new Array<Label>();
-  p_id: number = 1;
   page: number = 1;
   pageSize: number = 4;
-  projectId: number = 1; // hardcoded TODO: Change
-  
   
 // Contructor with modal
   constructor(private modalService: NgbModal,
     private labelingDataService: LabelingDataService,
-    private router: Router) {}
+    private router: Router) {
+      this.routeService = new ReroutingService();
+      this.url = this.router.url;
+      this.labels = new Array<Label>();
+  }
     
   ngOnInit(): void { 
-    this.getLabels();
+    const p_id = parseInt(this.routeService.getProjectID(this.url));
+    this.getLabels(p_id);
   }
+
   // Open the modal and merge lables
   openMerge() {
     const modalRef = this.modalService.open(MergeLabelFormComponent,  { size: 'xl'});
@@ -43,8 +49,8 @@ export class LabelManagementComponent {
     const modalRef = this.modalService.open(CreateLabelFormComponent, { size: 'xl'});
   }
 
-  async getLabels(): Promise<void> {
-    const labels = await this.labelingDataService.getLabels(this.p_id);
+  async getLabels(p_id: number): Promise<void> {
+    const labels = await this.labelingDataService.getLabels(p_id);
     this.labels = labels;
   }
   
@@ -54,17 +60,11 @@ export class LabelManagementComponent {
    * 
    * @trigger click on label
    */
-   reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+  reRouter(label_id: number) : void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
+    let p_id = this.routeService.getProjectID(this.url);
     
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'singlelabel']);
+    this.router.navigate(['/project', p_id, 'singlelabel', label_id]);
   }
-
 }
