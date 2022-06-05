@@ -42,7 +42,7 @@ const routes: Routes = [
       {path: 'artifactmanagement', component: ArtifactManagementPageComponent},
       {path: 'singleartifact', component: SingleArtifactViewComponent},
       {path: 'labelmanagement', component: LabelManagementComponent},
-      {path: 'singlelabel', component: IndividualLabelComponent},
+      {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
       {path: 'createTheme', component: CreateThemeComponent},
       {path: 'singleTheme', component: SingleThemeViewComponent},
