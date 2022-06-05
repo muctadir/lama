@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { User } from '../user';
+import { User } from 'app/classes/user';
 
 @Component({
   selector: 'app-account-information-form',
@@ -32,11 +32,11 @@ export class AccountInformationFormComponent implements OnInit {
       this.username.setValue(this.userInfo.getUsername());
     }
 
-    if (this.userInfo?.getEmail() != undefined && this.userInfo?.getEmail().length != 0) {
+    if (this.userInfo?.getEmail() != undefined){
       this.email.setValue(this.userInfo.getEmail());
     }
 
-    if (this.userInfo?.getDescription() != undefined && this.userInfo?.getDescription().length != 0) {
+    if (this.userInfo?.getDescription() != undefined){ 
       this.description.setValue(this.userInfo.getDescription());
     }
   }
