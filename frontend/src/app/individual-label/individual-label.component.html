@@ -4,11 +4,7 @@
     <div class="row" id="pageTitle">
         <!-- Label Name as title -->
         <div id="artifactId" class="col-10">
-            <p class="header">Label {{label_id}}</p>
-        </div> 
-        <!-- Label Type -->
-        <div class="col-2" id="artifactIdentifier">
-            Label Type: {{label.getType()}}
+            <p class="header">{{label.getName()}}</p>
         </div>
     </div>
 
@@ -19,7 +15,7 @@
                 <!-- Label Name -->
                 <div class="subTitle">Name</div>
                 <div class="labelName">
-                    <p>Label {{label.getId()}}</p>
+                    <p>{{label.getName()}}</p>
                 </div>
             </div>
             <div>
@@ -55,7 +51,7 @@
                 Themes
             </div>
             <div *ngFor="let theme of label.getThemes()" class="labelThemes">
-                <p>{{theme.getThemeName()}}</p>
+                <p>{{theme.getName()}}</p>
             </div>
         </div>
     </div> 
