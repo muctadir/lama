@@ -44,13 +44,13 @@
 
                     <!-- Table Content -->
                     <tbody>
-                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(artifact.id)">
+                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(artifact.getId())">
                             <!-- Artifact ID -->
-                            <td><p class="artifactID">{{artifact.id}}</p></td>
+                            <td><p class="artifactID">{{artifact.getId()}}</p></td>
                             <!-- Artifact text -->
-                            <td><p class="artifactText">{{artifact.data}}</p></td>
-                            <!-- Time artifact is labelled -->
-                            <td><p class="timesLabelled">{{artifact.numberOfUsers}}</p></td>
+                            <td><p class="artifactText">{{artifact.getData()}}</p></td>
+                            <!-- Times artifact is labelled -->
+                            <td><p class="timesLabelled">{{artifact.getNumberOfLabellings()}}</p></td>
                         </tr>
                     </tbody>
                 </table>

@@ -33,7 +33,8 @@ export class AddArtifactComponent {
   constructor(public activeModal: NgbActiveModal, private router: Router) { }
 
   /**
-   * Stores the file uploaded by the user to the @file variable
+   * Stores the file uploaded by the user to the @file variable 
+   * and stores the ID of the current project to the @p_id variable
    * 
    * @param event The file upload event
    * @returns nothing
@@ -62,11 +63,11 @@ export class AddArtifactComponent {
    * The resulting artifacts gets send to the database.
    * 
    * @returns nothing
-   * 
-   * @TODO add database connection
    */
   fileUpload(): void {
+    // Stores the project id in a local variable
     let p_id = this.p_id
+    
     // Array which will hold the uploaded artifacts
     let new_artifacts: Array<string> = [];
 

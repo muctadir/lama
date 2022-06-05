@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { Artifact_Management } from '../artifact_management';
+import { StringArtifact } from 'app/classes/stringartifact';
 import axios from 'axios';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
@@ -24,7 +24,7 @@ export class ArtifactManagementPageComponent {
   routeService: ReroutingService = new ReroutingService();
 
   // Make list of all artifacts
-  artifacts: Artifact_Management[] = [];
+  artifacts: StringArtifact[] = [];
   
 /**
    * Constructor passes in the modal service, initializes Router
@@ -56,18 +56,27 @@ export class ArtifactManagementPageComponent {
         // When there is a response get the artifacts
         .then(response => {
 
-          // For each project in the list
+          // For each artifact in the list
           for (let artifact of response.data){
 
-            // Initialize a new project with all valuesr
+            // Initialize a new artifact with all values
             let artifactJson = artifact["artifact"];
             artifactJson["id"] = artifact["artifact_id"];
+            artifactJson["identifier"] = artifact["artifact_identifier"],
             artifactJson["data"] = artifact["artifact_text"];
-            artifactJson["numberOfUsers"] = artifact["artifact_users"];
+            artifactJson["labellings"] = artifact["artifact_labellings"];
 
-            let artifactNew: Artifact_Management = artifactJson as Artifact_Management;                
+            // Create an artifact object
+            let artifactNew: StringArtifact = new StringArtifact(
+              artifactJson["id"],
+              artifactJson["identifier"],
+              artifactJson["data"]
+            )
 
-            // Add project to list
+            // Get the number of labellings on this artifact
+            artifactNew.setLabellings(artifactJson["labellings"])
+
+            // Add artifact to list
             this.artifacts.push(artifactNew);
           }
         })

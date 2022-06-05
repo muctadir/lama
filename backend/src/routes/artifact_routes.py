@@ -43,7 +43,8 @@ def get_artifacts(*, user):
 
         # Take the artifacts labelled by the user
         for labelling in labellings:
-            artifacts.append(labelling.artifact)
+            if labelling.artifact not in artifacts:
+                artifacts.append(labelling.artifact)
 
     # List of artifacts to be passed to frontend
     artifact_info = []

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoremIpsum } from "lorem-ipsum";
+import { StringArtifact } from 'app/classes/stringartifact';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import axios from 'axios';
@@ -47,56 +48,56 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the ReroutingService
   routeService: ReroutingService = new ReroutingService();
 
-  // Hardcoded data
+  // Artifact Data
   artifactId: Number = 0;
   artifactIdentifier: String = '';
   // labelers: Array<String> = []
   artifact: String = '';
   allLabels: Array<String> = []
   p_id = 0;
-  
+
   labelTypes: Array<labelType> = [
     {
       labelTypeName: "",
       labelTypeDescription: lorem.generateParagraphs(1),
-      labels: [{labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},]
+      labels: [{ labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
+      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
+      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
+      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },]
     },
     {
       labelTypeName: "",
       labelTypeDescription: lorem.generateParagraphs(1),
-      labels: [{labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},]
+      labels: [{ labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
+      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
+      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
+      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },]
     },
   ]
   userLabels: Array<userLabel> = [
     {
       labellerName: "Chinno",
       labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Happy", labelRemark: "I did this because I thought it would fit well."},
-                    {labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well."}]
+      labelsGiven: [{ labelTypeName1: "Emotion", labelGiven: "Happy", labelRemark: "I did this because I thought it would fit well." },
+      { labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
     },
     {
       labellerName: "Veerle",
       labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Ecstatic", labelRemark: "I did this because I thought it would fit well."},
-                    {labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well."}]
+      labelsGiven: [{ labelTypeName1: "Emotion", labelGiven: "Ecstatic", labelRemark: "I did this because I thought it would fit well." },
+      { labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
     },
     {
       labellerName: "Jarl Jarl",
       labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows", labelRemark: "I did this because I thought it would fit well."},
-                    {labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well."}]
+      labelsGiven: [{ labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows", labelRemark: "I did this because I thought it would fit well." },
+      { labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
     },
-    
+
   ]
 
 
-  notImplemented(){
+  notImplemented() {
     alert("This button is not implemented.");
   }
 
@@ -104,7 +105,7 @@ export class SingleArtifactViewComponent implements OnInit {
   * Constructor passes in the modal service, initializes Router
   * @param router instance of Router
   */
-   constructor(private router: Router) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     // Get artifact object from the artifact management page
@@ -113,9 +114,9 @@ export class SingleArtifactViewComponent implements OnInit {
     // this.labelers = 
     // artifact: String = '';
     // allLabels: Array<String> = []
-    
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
+
+    let token: string | null = sessionStorage.getItem('ses_token');
+    if (typeof token === "string") {
       // Gets the url from the router
       let url: string = this.router.url
       this.artifactId = Number(this.routeService.getArtifactID(url))
@@ -127,18 +128,23 @@ export class SingleArtifactViewComponent implements OnInit {
           'u_id_token': token
         },
         params: {
-          'a_id' : this.artifactId
+          'a_id': this.artifactId
         }
       })
 
-      // When there is a response get artifact information
-      .then(response => {
+        // When there is a response get artifact information
+        .then(response => {
 
-        // Pass the artifact information from the response
-        let artifact_info = response.data
-        this.artifactIdentifier = artifact_info['artifactIdentifier'];
-        this.artifact = artifact_info['artifact'];
-      })
+          // Get the artifact from the response
+          let artifact = response.data
+
+          // Get the artifact data
+          this.artifactId = artifact["artifact_id"];
+          this.artifactIdentifier = artifact["artifact_identifier"],
+          this.artifact = artifact["artifact_text"];
+
+
+        })
 
       // Get the labellings of this artifact
       axios.get('http://127.0.0.1:5000/artifact/artifactLabellings', {
@@ -146,14 +152,14 @@ export class SingleArtifactViewComponent implements OnInit {
           'u_id_token': token
         },
         params: {
-          'a_id' : this.artifactId
+          'a_id': this.artifactId
         }
       })
 
-      // When there is a response get artifact information
-      .then(response => {
-        console.log(response.data)
-      })
+        // When there is a response get artifact information
+        .then(response => {
+          console.log(response.data)
+        })
     }
   }
 }
