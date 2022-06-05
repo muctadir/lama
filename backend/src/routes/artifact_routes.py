@@ -140,23 +140,23 @@ def single_artifact(*, user):
     # Text of the artifact
     artifact_text = artifact.data
 
-        # Put all values into a dictionary
-        info = {
-            "artifact": artifact_json,
-            "artifact_id": artifact_id,
-            "artifact_identifier": artifact_identifier,
-            "artifact_text": artifact_text,
-            "artifact_labellings": labellings
-        }
+    #     # Put all values into a dictionary
+    #     info = {
+    #         "artifact": artifact_json,
+    #         "artifact_id": artifact_id,
+    #         "artifact_identifier": artifact_identifier,
+    #         "artifact_text": artifact_text,
+    #         "artifact_labellings": labellings
+    #     }
 
-        # Append dictionary to list
-        artifact_info.append(info)
+    #     # Append dictionary to list
+    #     artifact_info.append(info)
 
-    # Convert the list of dictionaries to json
-    dict_json = jsonify(artifact_info)
+    # # Convert the list of dictionaries to json
+    # dict_json = jsonify(artifact_info)
 
-    # Return the list of dictionaries
-    return make_response(dict_json)
+    # # Return the list of dictionaries
+    # return make_response(dict_json)
 
     # Add artifact information to a dictionary
     info = {
