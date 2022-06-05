@@ -3,8 +3,8 @@
 
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema
-from src.models.project_models import Membership, Labelling
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
 from src.app_util import login_required
@@ -50,6 +50,7 @@ def get_artifacts(*, user):
 
     # Schema to serialize the Project
     artifact_schema = ArtifactSchema()
+    labelling_schema = LabellingSchema()
 
     # For each displayed artifact
     for artifact in artifacts:
@@ -57,21 +58,30 @@ def get_artifacts(*, user):
         # Convert artifact to JSON
         artifact_json = artifact_schema.dump(artifact)
 
-        # Name of the artifact
+        # Id of the artifact
         artifact_id = artifact.id
+
+        # Artifact identifier
+        artifact_identifier = artifact.identifier
 
         # Text of the artifact
         artifact_text = artifact.data
 
-        # Number of users who labelled this artifact
-        artifact_users = len(artifact.users)
+        # Get the labellings of this artifact
+        artifact_labellings = artifact.labellings
+        # Serialize all labellings
+        labellings = []
+        for labelling in artifact_labellings:
+            labelling_json = labelling_schema.dump(labelling)
+            labellings.append(labelling_json)
 
         # Put all values into a dictionary
         info = {
             "artifact": artifact_json,
             "artifact_id": artifact_id,
+            "artifact_identifier": artifact_identifier,
             "artifact_text": artifact_text,
-            "artifact_users": artifact_users
+            "artifact_labellings": labellings
         }
 
         # Append dictionary to list
@@ -114,6 +124,39 @@ def single_artifact(*, user):
     artifact = db.session.execute(
         select(Artifact).where(Artifact.id == a_id)
     ).scalars().all()[0]
+
+     # Schema to serialize the Project
+    artifact_schema = ArtifactSchema()
+
+    # Convert artifact to JSON
+    artifact_json = artifact_schema.dump(artifact)
+
+    # Id of the artifact
+    artifact_id = artifact.id
+
+    # Artifact identifier
+    artifact_identifier = artifact.identifier
+
+    # Text of the artifact
+    artifact_text = artifact.data
+
+        # Put all values into a dictionary
+        info = {
+            "artifact": artifact_json,
+            "artifact_id": artifact_id,
+            "artifact_identifier": artifact_identifier,
+            "artifact_text": artifact_text,
+            "artifact_labellings": labellings
+        }
+
+        # Append dictionary to list
+        artifact_info.append(info)
+
+    # Convert the list of dictionaries to json
+    dict_json = jsonify(artifact_info)
+
+    # Return the list of dictionaries
+    return make_response(dict_json)
 
     # Add artifact information to a dictionary
     info = {

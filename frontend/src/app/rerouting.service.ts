@@ -1,3 +1,6 @@
+// Jarl Jansen
+// Ana-Maria Olteniceanu
+
 import { Injectable } from '@angular/core';
 
 @Injectable({
