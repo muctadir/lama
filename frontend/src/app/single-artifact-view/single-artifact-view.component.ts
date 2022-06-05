@@ -30,6 +30,7 @@ type userLabel = {
 type labelGroup = {
   labelTypeName1: String,
   labelGiven: String,
+  labelRemark: String
 }
 type label = {
   labelName: String,
@@ -76,20 +77,20 @@ export class SingleArtifactViewComponent implements OnInit {
     {
       labellerName: "Chinno",
       labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Happy"},
-                    {labelTypeName1: "Language", labelGiven: "Latin"}]
+      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Happy", labelRemark: "I did this because I thought it would fit well."},
+                    {labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well."}]
     },
     {
       labellerName: "Veerle",
-      labelRemark: "Maybe this was suitable because...",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Ecstatic"},
-                    {labelTypeName1: "Language", labelGiven: "Latin"}]
+      labelRemark: "I did this because I thought it would fit well.",
+      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Ecstatic", labelRemark: "I did this because I thought it would fit well."},
+                    {labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well."}]
     },
     {
       labellerName: "Jarl Jarl",
-      labelRemark: "I thought that perhaps the blah fitted the bloo",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows"},
-                    {labelTypeName1: "Language", labelGiven: "Latin"}]
+      labelRemark: "I did this because I thought it would fit well.",
+      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows", labelRemark: "I did this because I thought it would fit well."},
+                    {labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well."}]
     },
     
   ]

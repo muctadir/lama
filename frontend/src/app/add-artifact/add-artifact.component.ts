@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import axios from 'axios';
-import { User } from '../user';
+import { User } from 'app/classes/user';
 
 @Component({
   selector: 'app-add-artifact',
