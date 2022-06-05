@@ -16,7 +16,7 @@ export class StringArtifact extends Artifact {
      * @param identifier 
      * @param data
      */
-    constructor(id: number, identifier: string, data:string) {
+    constructor(id: number, identifier: string, data: string) {
         super(id, identifier);
         this.data = data;
     }
@@ -41,14 +41,15 @@ export class StringArtifact extends Artifact {
      * gets the start
      * @return this.start 
      */
-     getStart(): number | undefined {
+    getStart(): number | undefined {
         return this.start;
     }
+
     /**
      * sets the start
      * @params start
      */
-     setStart(start: number): void {
+    setStart(start: number): void {
         this.start = start;
     }
 
@@ -56,14 +57,15 @@ export class StringArtifact extends Artifact {
      * gets the end
      * @return this.end 
      */
-     getEnd(): number | undefined {
+    getEnd(): number | undefined {
         return this.end;
     }
+    
     /**
      * sets the end
      * @params end
      */
-     setEnd(end: number): void {
+    setEnd(end: number): void {
         this.end = end;
     }
 }

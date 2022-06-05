@@ -36,7 +36,7 @@ export class Label {
      * @param name
      * @param desc
      */
-    constructor(id: number, name: string, desc: string, type:string) {
+    constructor(id: number, name: string, desc: string, type: string) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -72,7 +72,7 @@ export class Label {
      * @param name: string 
      */
     setName(name: string): void {
-        if (name.length <= 0){
+        if (name.length <= 0) {
             throw new Error("The label name should not be of length 0 as an argument in setName()");
         }
         this.name = name;
@@ -98,7 +98,7 @@ export class Label {
      * returns label type
      * @returns this.type
      */
-     getType(): string {
+    getType(): string {
         return this.type;
     }
 
@@ -114,7 +114,7 @@ export class Label {
      * Function returns the parent labels
      * @returns this.labelParents
      */
-     getParents(): Array<Label> | undefined {
+    getParents(): Array<Label> | undefined {
         return this.labelParents;
     }
 
@@ -130,10 +130,10 @@ export class Label {
      * Function get the number of parent labels
      * @return this.themeParents.length
      */
-     getNumberOfParents(): number | undefined{
+    getNumberOfParents(): number | undefined {
         let parentsVar = this.labelParents;
         // Make sure the parents are defined when calling
-        if(parentsVar != undefined){
+        if (parentsVar != undefined) {
             return parentsVar.length;
         } else {
             return 0;
@@ -144,7 +144,7 @@ export class Label {
      * Function returns the child labels
      * @returns this.labelChilds
      */
-     getChilds(): Array<Label> | undefined {
+    getChilds(): Array<Label> | undefined {
         return this.labelChilds;
     }
 
@@ -160,10 +160,10 @@ export class Label {
      * Function get the number of child labels
      * @return this.labelChilds.length
      */
-     getNumberOfChilds(): number | undefined{
+    getNumberOfChilds(): number | undefined {
         let childsVar = this.labelChilds;
         // Make sure the childs are defined when calling
-        if(childsVar != undefined){
+        if (childsVar != undefined) {
             return childsVar.length;
         } else {
             return 0;
@@ -174,7 +174,7 @@ export class Label {
      * Function returns the artifacts of label
      * @returns this.artifacts
      */
-     getArtifacts(): Array<Artifact> | undefined {
+    getArtifacts(): Array<Artifact> | undefined {
         return this.artifacts;
     }
 
@@ -190,7 +190,7 @@ export class Label {
      * Returns the amount of artifacts connected to this label if the array has been defined.
      * @returns artifacts.length
      */
-     getNumberOfArtifacts(): number {
+    getNumberOfArtifacts(): number {
         if (this.artifacts == undefined) {
             return 0;
         } else {
@@ -202,7 +202,7 @@ export class Label {
      * Function returns the users who have used the label
      * @returns this.users
      */
-     getUsers(): Array<User> | undefined {
+    getUsers(): Array<User> | undefined {
         return this.users;
     }
 
@@ -218,7 +218,7 @@ export class Label {
      * Returns the amount of users connected to this label if the array has been defined.
      * @returns users.length
      */
-     getNumberOfUsers(): number {
+    getNumberOfUsers(): number {
         if (this.users == undefined) {
             return 0;
         } else {
@@ -230,7 +230,7 @@ export class Label {
      * Function returns the themes of label
      * @returns this.themess
      */
-     getThemes(): Array<Theme> | undefined {
+    getThemes(): Array<Theme> | undefined {
         return this.themes;
     }
 
@@ -246,7 +246,7 @@ export class Label {
      * Returns the amount of themes connected to this label if the array has been defined.
      * @returns themes.length
      */
-     getNumberOfThemes(): number {
+    getNumberOfThemes(): number {
         if (this.themes == undefined) {
             return 0;
         } else {
@@ -258,7 +258,7 @@ export class Label {
      * Function returns label deletion status
      * @returns this.deleted
      */
-     getDeleted(): boolean | undefined {
+    getDeleted(): boolean | undefined {
         return this.deleted;
     }
 

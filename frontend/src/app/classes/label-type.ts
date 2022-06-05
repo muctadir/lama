@@ -19,7 +19,7 @@ export class LabelType {
      * @param name 
      * @param labels 
      */
-    constructor(id:number, name:string, labels: Array<Label>) {
+    constructor(id: number, name: string, labels: Array<Label>) {
         this.name = name;
         this.id = id;
         this.labels = labels;
@@ -29,9 +29,10 @@ export class LabelType {
      * Returns id of the label type
      * @returns this.id
      */
-     getId():number {
+    getId(): number {
         return this.id;
     }
+
     /**
      * Sets id of label type
      * @param id 
@@ -44,14 +45,15 @@ export class LabelType {
      * Returns name of the label type
      * @returns this.labelTypeName
      */
-    getName ():string {
+    getName(): string {
         return this.name;
     }
+
     /**
      * Sets name of the label type
      * @param name 
      */
-    setName (name: string): void {
+    setName(name: string): void {
         this.name = name;
     }
 
@@ -62,13 +64,15 @@ export class LabelType {
     getLabels(): Array<Label> {
         return this.labels;
     }
+
     /**
      * Sets labels of the label type
      * @params labels
      */
     setLabels(labels: Array<Label>): void {
         this.labels = labels;
-    }    
+    }
+
     /**
      * I should probably check if we are adding a unique label.
      * @params label 
@@ -76,6 +80,7 @@ export class LabelType {
     getNumberOfLabels(): number {
         return this.labels.length;
     }
+
     /**
      * I should probably check if we are adding a unique label.
      * @params label 
@@ -83,6 +88,7 @@ export class LabelType {
     addLabel(label: Label): void {
         this.labels.push(label);
     }
+
     /**
      * Removes label with certain Id from labelType.
      * @param Id 
@@ -94,6 +100,6 @@ export class LabelType {
                 return;
             }
         }
-        throw new Error ("Label ID does not exist.");
+        throw new Error("Label ID does not exist.");
     }
 }

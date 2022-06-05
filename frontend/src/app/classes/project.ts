@@ -1,5 +1,5 @@
 // Veerle Furst
-import {User} from "./user";
+import { User } from "./user";
 
 // Project class 
 export class Project {
@@ -20,7 +20,7 @@ export class Project {
     // Criteria of the project
     private criteria: number | undefined;
     // If user is admin of the project
-    private admin: boolean | undefined; 
+    private admin: boolean | undefined;
 
     /**
      * Constructor sets id, name, and description
@@ -28,7 +28,7 @@ export class Project {
      * @param name
      * @param desc 
      */
-    constructor(id: number, name: string, desc: string){
+    constructor(id: number, name: string, desc: string) {
         this.id = id;
         this.name = name;
         this.description = desc;
@@ -41,11 +41,12 @@ export class Project {
     getId(): number {
         return this.id;
     }
+
     /**
      * Function sets project id
      * @params id
      */
-     setId(id:number): void {
+    setId(id: number): void {
         this.id = id;
     }
 
@@ -53,14 +54,15 @@ export class Project {
      * Function returns project name
      * @returns this.name
      */
-     getName(): string {
+    getName(): string {
         return this.name;
     }
+
     /**
      * Function sets project name
      * @params name
      */
-     setName(name:string): void {
+    setName(name: string): void {
         this.name = name;
     }
 
@@ -68,14 +70,15 @@ export class Project {
      * Function returns project description
      * @returns this.description
      */
-     getDescription(): string {
+    getDescription(): string {
         return this.description;
     }
+
     /**
      * Function sets project description
      * @params desc
      */
-     setDescription(desc:string): void {
+    setDescription(desc: string): void {
         this.description = desc;
     }
 
@@ -83,24 +86,26 @@ export class Project {
      * Function returns project users
      * @returns this.users
      */
-     getUsers(): Array<User> | undefined{
+    getUsers(): Array<User> | undefined {
         return this.users;
     }
+
     /**
      * Function sets project users
      * @params userss
      */
-     setUsers(users:Array<User>): void {
+    setUsers(users: Array<User>): void {
         this.users = users;
     }
+
     /**
      * Function get the number of users in the project
      * @return this.users.length
      */
-     getNumberOfUsers(): number | undefined{
+    getNumberOfUsers(): number | undefined {
         let usersVar = this.users;
         // Make sure the users are defined when calling
-        if(usersVar != undefined){
+        if (usersVar != undefined) {
             return usersVar.length;
         } else {
             return 0;
@@ -111,19 +116,20 @@ export class Project {
      * Function gets project number of artifacts
      * @returns numberOfArtifacts
      */
-     getNumberOfArtifacts():number {
+    getNumberOfArtifacts(): number {
         const numberOfArtifacts = this.numberOfArtifacts;
-        if(numberOfArtifacts != undefined){
+        if (numberOfArtifacts != undefined) {
             return numberOfArtifacts;
         } else {
             return 0;
         }
     }
+
     /**
      * Function sets project number of artifacts
      * @params numberOfArtifacts
      */
-     setNumberOfArtifacts(numberOfArtifacts:number): void {
+    setNumberOfArtifacts(numberOfArtifacts: number): void {
         this.numberOfArtifacts = numberOfArtifacts;
     }
 
@@ -131,19 +137,20 @@ export class Project {
      * Function gets project number of completely labelled artifacts
      * @returns numberOfCLArtifacts
      */
-     getNumberOfCLArtifacts():number {
+    getNumberOfCLArtifacts(): number {
         const numberOfCLArtifacts = this.numberOfCLArtifacts;
-        if(numberOfCLArtifacts != undefined){
+        if (numberOfCLArtifacts != undefined) {
             return numberOfCLArtifacts;
         } else {
             return 0;
         }
     }
+
     /**
      * Function sets project number of completely labelled artifacts
      * @params numberOfCLArtifacts
      */
-     setNumberOfCLArtifacts(numberOfCLArtifacts:number): void {
+    setNumberOfCLArtifacts(numberOfCLArtifacts: number): void {
         this.numberOfCLArtifacts = numberOfCLArtifacts;
     }
 
@@ -151,14 +158,15 @@ export class Project {
      * Function returns project frozen
      * @returns this.frozen
      */
-     getFrozen(): boolean | undefined {
+    getFrozen(): boolean | undefined {
         return this.frozen;
     }
+
     /**
      * Function sets project frozen
      * @params frozen
      */
-     setFrozen(frozen:boolean): void {
+    setFrozen(frozen: boolean): void {
         this.frozen = frozen;
     }
 
@@ -166,7 +174,7 @@ export class Project {
      * Function returns project criteria
      * @returns this.criteria
      */
-     getCriteria(): number | undefined {
+    getCriteria(): number | undefined {
         return this.criteria;
     }
 
@@ -174,15 +182,15 @@ export class Project {
      * Function sets project criteria
      * @params criteria
      */
-     setCriteria(criteria:number): void {
+    setCriteria(criteria: number): void {
         this.criteria = criteria;
     }
 
-     /**
-     * Function returns project admin
-     * @returns this.admin
-     */
-      getAdmin(): boolean | undefined {
+    /**
+    * Function returns project admin
+    * @returns this.admin
+    */
+    getAdmin(): boolean | undefined {
         return this.admin;
     }
 
@@ -190,7 +198,7 @@ export class Project {
      * Function sets project criteria
      * @params criteria
      */
-     setAdmin(admin:boolean): void {
+    setAdmin(admin: boolean): void {
         this.admin = admin;
     }
 }

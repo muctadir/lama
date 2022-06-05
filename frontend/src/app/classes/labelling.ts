@@ -24,9 +24,10 @@ export class Labelling {
      * Gets the userId
      * @returns this.userId
      */
-     getUserId(): number {
+    getUserId(): number {
         return this.userId;
     }
+
     /**
      * Sets the userId
      * @param userId 
@@ -39,9 +40,10 @@ export class Labelling {
      * Gets the username
      * @returns this.username
      */
-     getUsername(): string {
+    getUsername(): string {
         return this.username;
     }
+
     /**
      * Sets the username
      * @param username 
@@ -54,9 +56,10 @@ export class Labelling {
      * Gets the labels
      * @returns this.labels
      */
-     getLabels(): Array<any> {
+    getLabels(): Array<any> {
         return this.labels;
     }
+
     /**
      * Sets the labels
      * @param labels 
@@ -64,6 +67,7 @@ export class Labelling {
     setLabels(labels: Array<any>): void {
         this.labels = labels;
     }
+
     /**
      * Gets the number of labels given to the artifact
      * @return this.labels.length 

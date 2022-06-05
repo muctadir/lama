@@ -34,7 +34,7 @@ describe('User', () => {
         user.setDescription(desc)
         expect(user.getDescription())
             .toBe(desc);
-    });  
+    });
 
     // Setting and getting the status of the user
     it('Should return the status of the user', () => {
@@ -42,7 +42,7 @@ describe('User', () => {
         user.setStatus(status)
         expect(user.getStatus())
             .toBe(status);
-    });  
+    });
 
     // Setting and getting the type of the user
     it('Should return the type of the user', () => {
@@ -50,6 +50,6 @@ describe('User', () => {
         user.setType(type)
         expect(user.getType())
             .toBe(type);
-    });  
-    
+    });
+
 });

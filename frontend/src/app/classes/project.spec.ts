@@ -20,12 +20,13 @@ describe('Project', () => {
     expect(testProject.getId())
       .toBe(testId)
   })
+
   // Setting the id
   it("Should set the id", () => {
-      const newId = 2;
-      project.setId(newId);
-      expect(project.getId())
-        .toBe(newId)
+    const newId = 2;
+    project.setId(newId);
+    expect(project.getId())
+      .toBe(newId)
   })
 
   // Getting the name
@@ -35,12 +36,13 @@ describe('Project', () => {
     expect(testProject.getName())
       .toBe(testName)
   })
+
   // Setting the name
   it("Should set the name", () => {
-      const newName = "Project 2";
-      project.setName(newName);
-      expect(project.getName())
-        .toBe(newName)
+    const newName = "Project 2";
+    project.setName(newName);
+    expect(project.getName())
+      .toBe(newName)
   })
 
   // Getting the description
@@ -50,12 +52,13 @@ describe('Project', () => {
     expect(testProject.getDescription())
       .toBe(testDesc)
   })
+
   // Setting the description
   it("Should set the description", () => {
-      const newDesc = "Test project";
-      project.setDescription(newDesc);
-      expect(project.getDescription())
-        .toBe(newDesc)
+    const newDesc = "Test project";
+    project.setDescription(newDesc);
+    expect(project.getDescription())
+      .toBe(newDesc)
   })
 
   // Setting and getting the users
@@ -67,6 +70,7 @@ describe('Project', () => {
     expect(project.getUsers())
       .toBe(users)
   })
+  
   // Getting the number of users
   it("Should get the amount of users", () => {
     const user1 = new User(1, "Veerle");
@@ -116,5 +120,5 @@ describe('Project', () => {
     expect(project.getAdmin())
       .toBe(admin)
   })
-  
+
 });

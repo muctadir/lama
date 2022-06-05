@@ -21,7 +21,7 @@ describe('LabelType', () => {
     expect(labelType.getId())
       .toBe(id);
   });
-  
+
   // Setting label type id
   it('should set the id of the labelType', () => {
     // Create instances

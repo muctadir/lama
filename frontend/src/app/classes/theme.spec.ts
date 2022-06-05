@@ -42,7 +42,7 @@ describe('Theme', () => {
     expect(theme.getName())
       .toBe(name)
   })
-  
+
   // Setting the name
   it("should set the name", () => {
     // Create instances
@@ -174,6 +174,6 @@ describe('Theme', () => {
     expect(theme2.getDeleted())
       .toBe(status)
   })
-  
+
 
 });

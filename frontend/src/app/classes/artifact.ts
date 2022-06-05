@@ -1,7 +1,7 @@
 // Veerle Furst
 // BartJan Henkemans
 
-import {Labelling} from "./labelling"
+import { Labelling } from "./labelling"
 
 export abstract class Artifact {
     // Id of artifact 
@@ -40,14 +40,15 @@ export abstract class Artifact {
      * returns id of the artifact
      * @returns this.id
      */
-     getId(): number {
+    getId(): number {
         return this.id;
     }
+
     /**
      * sets id of the artifact
      * @params id
      */
-     setId(id:number): void {
+    setId(id: number): void {
         this.id = id;
     }
 
@@ -58,6 +59,7 @@ export abstract class Artifact {
     getIdentifier(): string {
         return this.identifier;
     }
+
     /**
      * sets the identifier of the artifact
      * @pre identifier.length != 0 && identifier != null
@@ -77,6 +79,7 @@ export abstract class Artifact {
     getCompleted(): boolean | undefined {
         return this.completed;
     }
+
     /**
      * sets the status of the artifact
      * @param completed 
@@ -92,26 +95,29 @@ export abstract class Artifact {
     getLabellings(): Array<Labelling> | undefined {
         return this.labellings;
     }
+
     /**
      * sets the labellings
      * @params labellings
      */
-     setLabellings(labellings: Array<Labelling>): void {
+    setLabellings(labellings: Array<Labelling>): void {
         this.labellings = labellings;
     }
+
     /**
      * gets the number of labellings
      * @return this.labelling.length
      */
-     getNumberOfLabellings(): number {
+    getNumberOfLabellings(): number {
         const labelling = this.labellings
-        // Make sure the list in not undefined
-        if(labelling != undefined){
+        // Make sure the list is not undefined
+        if (labelling != undefined) {
             return labelling.length;
         } else {
             return 0;
         }
     }
+
     /**
      * adds a labellings to the list
      * @param labeler 
@@ -119,7 +125,7 @@ export abstract class Artifact {
     addLabelling(labeler: Labelling): void {
         const labelling = this.labellings
         // Make sure the list in not undefined
-        if(labelling != undefined){
+        if (labelling != undefined) {
             labelling.push(labeler);
         }
     }
@@ -128,14 +134,15 @@ export abstract class Artifact {
      * gets the parentId
      * @return this.parentId 
      */
-     getParentId(): number | undefined {
+    getParentId(): number | undefined {
         return this.parentId;
     }
+
     /**
      * sets the parentId
      * @params parentId
      */
-     setParentId(parentId: number): void {
+    setParentId(parentId: number): void {
         this.parentId = parentId;
     }
 
@@ -143,24 +150,26 @@ export abstract class Artifact {
      * gets the childIds
      * @return this.childIds 
      */
-     getChildIds(): Array<number> | undefined {
+    getChildIds(): Array<number> | undefined {
         return this.childIds;
     }
+
     /**
      * sets the childIds
      * @params childIds
      */
-     setChildIds(childIds: Array<number>): void {
+    setChildIds(childIds: Array<number>): void {
         this.childIds = childIds;
     }
+
     /**
      * gets the number of childIds
      * @returns this.childIds.length
      */
-     getNumberOfChildIds(): number {
+    getNumberOfChildIds(): number {
         const childIds = this.childIds;
         // Check if list is undefined
-        if(childIds != undefined){
+        if (childIds != undefined) {
             return childIds.length;
         } else {
             return 0;
@@ -171,14 +180,15 @@ export abstract class Artifact {
      * gets the highlighted
      * @return this.highlighted 
      */
-     getHighlighted(): any | undefined {
+    getHighlighted(): any | undefined {
         return this.highlighted;
     }
+
     /**
      * sets the highlighted
      * @params highlighted
      */
-     setHighlighted(highlighted: any): void {
+    setHighlighted(highlighted: any): void {
         this.highlighted = highlighted;
     }
 
