@@ -23,13 +23,13 @@
                     <!-- Username field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        <input id="projectName" name="projectName" class="form-control" type="text" placeholder={{projectName}} required><br>
+                        <input id="projectName" name="projectName" class="form-control" type="text" placeholder="Project Name" value={{projectName}} required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <textarea name="projectDescription" id='projectDescriptionForm' class="form-control" rows="10" placeholder={{projectDesc}}></textarea>
+                        <textarea name="projectDescription" id='projectDescriptionForm' class="form-control" rows="10" placeholder="Project Description" value={{projectDesc}}></textarea>
                     </div>  
                     
                 </form>
@@ -54,7 +54,7 @@
                         <!-- Col for adding users button -->
                         <div class="col-2">
                             <!-- Button for adding new members -->
-                            <button class="btn" type="button" id="addMembersButton" (click)="test()">
+                            <button class="btn" type="button" id="addMembersButton" (click)="openAdd()">
                                 <!-- Members icon -->
                                 <i class="bi bi-plus members"></i>
                             </button>
@@ -85,7 +85,7 @@
 
                                     <!-- Column for username -->
                                     <div class="col-7">
-                                        {{ member }}
+                                        {{ member.getUsername() }}
                                     </div>
 
                                     <!-- Column for checkbox -->
@@ -123,9 +123,9 @@
                     <div id="labelTypeDiv">
                         <div id="labelTypeList">
                             <form id="labelTypeForm">
-                                <div>
+                                <div *ngFor="let labelType of labelTypes">
                                     <!-- Text field for the label type -->
-                                    <input type="text" class="form-control labelType" value="labelType" placeholder="Label type">
+                                    <input type="text" class="form-control labelType" value={{labelType}} placeholder="Label type">
                                 </div>
                             </form>
                         </div>
@@ -199,7 +199,7 @@
                        <!-- Col for adding users button -->
                        <div class="col-2">
                            <!-- Button for adding new members -->
-                           <button class="btn" type="button" id="addMembersButton" (click)="test()">
+                           <button class="btn" type="button" id="addMembersButton" (click)="openAddError()">
                                <!-- Members icon -->
                                <i class="bi bi-plus members"></i>
                            </button>
@@ -210,8 +210,10 @@
                    <div class="projectSettingsDiv">
                        <div id="membersDiv">
                            <!-- Row for the 'Project admin' words -->
-                           <div class="row justify-content-end">
-                               <div class="col-4">
+                           <div class="row align-items-center">
+                            <div class="col-7">
+                            </div>   
+                            <div class="col-4">
                                    <p class="projectAdminSpan">Project admin</p>
                                </div>
                            </div>
@@ -224,14 +226,14 @@
 
                                    <!-- Column for username -->
                                    <div class="col-7">
-                                       {{ member }}
+                                       {{ member.getUsername() }}
                                    </div>
 
                                    <!-- Column for checkbox -->
                                    <div class="col-4 checkboxCol">
                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
                                        <!-- TODO FIX THE ID -->
-                                       <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member}}">
+                                       <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member}}" disabled="true" checked="true">
                                    </div>                                        
                                </div>
                            </label>
