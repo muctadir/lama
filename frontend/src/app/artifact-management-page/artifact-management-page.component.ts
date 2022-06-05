@@ -18,7 +18,10 @@ export class ArtifactManagementPageComponent {
   pageSize = 5;
 
   // Project id. Currently hardcoded
-  p_id = 3;
+  p_id = 0;
+
+  // Initialize the ReroutingService
+  routeService: ReroutingService = new ReroutingService();
 
   // Make list of all artifacts
   artifacts: Artifact_Management[] = [];
@@ -34,6 +37,12 @@ export class ArtifactManagementPageComponent {
 
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
+
+    // Gets the url from the router
+    let url: string = this.router.url
+
+    // Use reroutingService to obtain the project ID
+    this.p_id = Number(this.routeService.getProjectID(url));
 
       // Get the information needed from the back end
       axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {

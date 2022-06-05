@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 import axios from 'axios';
 import { User } from 'app/classes/user';
 
@@ -13,12 +15,22 @@ export class AddArtifactComponent {
   /* Stores the file that the user uploads */
   file: File | null = null;
 
+  // Project ID
+  p_id: number | null = null
+
+  // Initialize the ReroutingService
+  routeService: ReroutingService = new ReroutingService();
+
+  // Gets the url from the router
+  url: string = this.router.url
+
   /**
    * Initializes the modal
    * 
    * @param activeModal modal init
+   * @param router instance of Router
    */
-  constructor(public activeModal: NgbActiveModal) { }
+  constructor(public activeModal: NgbActiveModal, private router: Router) { }
 
   /**
    * Stores the file uploaded by the user to the @file variable
@@ -38,6 +50,10 @@ export class AddArtifactComponent {
     // stores the file in a the "file" variable
     this.file = input.files[0];
     console.log(this.file);
+
+    // Use reroutingService to obtain the project ID
+    this.p_id = Number(this.routeService.getProjectID(this.url));
+    console.log(this.p_id)
   }
 
   /**
@@ -50,10 +66,7 @@ export class AddArtifactComponent {
    * @TODO add database connection
    */
   fileUpload(): void {
-    // Hardcoded project ID
-    // Fix it when we can pass a project id
-    let p_id = 3;
-
+    let p_id = this.p_id
     // Array which will hold the uploaded artifacts
     let new_artifacts: Array<string> = [];
 
@@ -97,12 +110,12 @@ export class AddArtifactComponent {
       let allArtifacts = []
       for(let i=0; i < new_artifacts.length; i++) {
         
-        // Artifact cd  information
+        // Artifact information
         artifactInformation= {
           'name': identifier.concat(i.toString()),
           'identifier' : identifier,
           "data" : new_artifacts[i],
-          'p_id' : p_id //needs to be an id that exists in the database
+          'p_id' : p_id
         };
         allArtifacts.push(artifactInformation)
       }
