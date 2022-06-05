@@ -53,27 +53,27 @@ export class IndividualLabelComponent {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
-    }
+  }
 
-    /**
-     * OnInit,
-     *  1. the p_id of the project is retrieved
-     *  2. the labelId of the label is retrieved
-     *  3. the label loading is started
-     */
-    ngOnInit(): void {
-      let p_id = parseInt(this.routeService.getProjectID(this.url));
-      let labelID = parseInt(this.routeService.getLabelID(this.url));
-      this.getLabel(p_id, labelID);
-    }
-    
-    /**
-     * Async function which gets the label
-     */
-    async getLabel(p_id: number, labelID: number): Promise<void> {
-      const label = await this.labelingDataService.getLabel(p_id, labelID);
-      this.label = label;
-    } 
+  /**
+   * OnInit,
+   *  1. the p_id of the project is retrieved
+   *  2. the labelId of the label is retrieved
+   *  3. the label loading is started
+   */
+  ngOnInit(): void {
+    let p_id = parseInt(this.routeService.getProjectID(this.url));
+    let labelID = parseInt(this.routeService.getLabelID(this.url));
+    this.getLabel(p_id, labelID);
+  }
+  
+  /**
+   * Async function which gets the label
+   */
+  async getLabel(p_id: number, labelID: number): Promise<void> {
+    const label = await this.labelingDataService.getLabel(p_id, labelID);
+    this.label = label;
+  } 
 
   /**
    * Gets the project id from the URL and reroutes to the label management page
@@ -81,7 +81,7 @@ export class IndividualLabelComponent {
    * 
    * @trigger back button is pressed
    */
-   reRouter() : void {
+  reRouter() : void {
     // Use reroutingService to obtain the project ID
     let p_id = this.routeService.getProjectID(this.url);
     
@@ -93,6 +93,6 @@ export class IndividualLabelComponent {
    * Opens modal to edit label
    */
   openEdit() {
-  const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
+    const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
   }
 }
