@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <!-- Container for settings -->
+    <!--Container if in edit mode-->
     <div *ngIf="edit" class="container main">
 
         <!-- Row for all settings -->
@@ -18,9 +18,9 @@
             <div class="col-5">
 
                 <!-- Filling in Project information -->
-                <form id="projectCreationForm" method="post">
+                <form id="projectEditingForm" method="post">
 
-                    <!-- Username field -->
+                    <!-- Project Name field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
                         <input id="projectName" name="projectName" class="form-control" type="text" placeholder="Project Name" value={{projectName}} required><br>
@@ -31,7 +31,6 @@
                         <label for="projectDescription" id="field_text">Description:</label><br>
                         <textarea name="projectDescription" id='projectDescriptionForm' class="form-control" rows="10" placeholder="Project Description" value={{projectDesc}}></textarea>
                     </div>  
-                    
                 </form>
 
                 <!-- Response division -->
@@ -39,7 +38,6 @@
                     <!-- Response -->
                     <p id="createProjectResponse"></p>
                 </div>
-
             </div>
 
             <!-- Right side of the page (members, labeller count, label types) -->
@@ -73,10 +71,8 @@
                             
                             <!-- Name and checkbox per member of the project -->
                             <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
-
                                 <!-- Row for the delete, name and project admin -->
                                 <div class="row align-items-center">
-
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
                                         <!-- x icon -->
@@ -92,102 +88,98 @@
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user (userName) connected to the checkbox-->
                                         <!-- TODO FIX THE ID -->
-                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member }}">
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMember[member.getId()-1]">
                                     </div>                                        
                                 </div>
                             </label>
-
-                        </div>
-            </div>
-            </div>
-            <!-- Division around the labeller count -->
-            <form id="constraintForm">      
-                <div class="form-group projectSettingsDivParent">
-                    <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
-                    <!-- Division around the input -->
-                    <div class="projectSettingsDiv">
-                        <!-- Labeller count input -->
-                        <div id="labellerCountDiv">
-                            <input type="number" class="form-control" name="numberOfLabellers" value={{labelCount}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
                         </div>
                     </div>
-                </div> 
-            </form>
-
-            <!-- Division around the label types -->
-            <div class="projectSettingsDivParent">
-                <span class="settingsHeader"> Label Type </span>
-                <!-- Division around the input -->
-                <div class="projectSettingsDiv">
-                    <!-- All label types in the project -->
-                    <div id="labelTypeDiv">
-                        <div id="labelTypeList">
-                            <form id="labelTypeForm">
-                                <div *ngFor="let labelType of labelTypes">
-                                    <!-- Text field for the label type -->
-                                    <input type="text" class="form-control labelType" value={{labelType}} placeholder="Label type">
-                                </div>
-                            </form>
+                </div>
+                <!-- Division around the labeller count -->
+                <form id="constraintForm">      
+                    <div class="form-group projectSettingsDivParent">
+                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
+                        <!-- Division around the input -->
+                        <div class="projectSettingsDiv">
+                            <!-- Labeller count input -->
+                            <div id="labellerCountDiv">
+                                <input type="number" class="form-control" name="numberOfLabellers" value={{labelCount}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
+                            </div>
                         </div>
-                        <!-- Button for adding new label types -->
-                        <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
-                            <span id="addLabelTypeText">Add Label Type</span>
-                            <!-- Plus icon -->
-                            <i class="bi bi-plus labelType"></i>
-                        </button>
+                    </div> 
+                </form>
+
+                <!-- Division around the label types -->
+                <div class="projectSettingsDivParent">
+                    <span class="settingsHeader"> Label Type </span>
+                    <!-- Division around the input -->
+                    <div class="projectSettingsDiv">
+                        <!-- All label types in the project -->
+                        <div id="labelTypeDiv">
+                            <div id="labelTypeList">
+                                <form id="labelTypeForm">
+                                    <div *ngFor="let labelType of labelTypes">
+                                        <!-- Text field for the label type -->
+                                        <input type="text" class="form-control labelType" value={{labelType}} placeholder="Label type">
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Button for adding new label types -->
+                            <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
+                                <span id="addLabelTypeText">Add Label Type</span>
+                                <!-- Plus icon -->
+                                <i class="bi bi-plus labelType"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-            </div>
-            <div class="row justify-content-between">
-                <div class="col-5">
-                <!-- Submit button -->
+        <!--Division around buttons-->
+        <div class="row justify-content-between">
+            <div class="col-5">
+            <!-- Freeze button -->
                 <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-start" id="freezeProjectButton" (click)="unclickEdit()">
                     Freeze
                 </button>
-                </div>
-                <!-- Cancel button -->
-                <div class="col-6">
-                <!-- Submit button -->
+            </div>
+            <!-- Division for save & cancel button -->
+            <div class="col-6">
+                <!-- Save button -->
                 <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-end" id="saveProjectButton" (click)="saveEdit()">
                     Save
                 </button>
+                <!-- Cancel button -->
                 <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-end" id="cancelProjectEditButton" (click)="unclickEdit()">
                     Cancel
                 </button>
-                </div>
-                </div>
             </div>
-          
-        <div *ngIf="!edit" class="container main">
-
-            <!-- Row for all settings -->
-            <div class="row justify-content-between">
+        </div>
+    </div>
     
-                <!-- Left side of the page (project name and description) -->
-                <div class="col-5">
-    
-                        <!-- Username field -->
-                        <div class="form-group">
-                            <label for="projectName" id="field_text">Project Name:</label><br>
-                            {{projectName}}
-                        </div>
-                        
-                        <!-- Description field -->
-                        <div class="form-group">
-                            <label for="projectDescription" id="field_text">Description:</label><br>
-                            <p>{{projectDesc}}</p>
-                        </div>  
-    
+    <!--Container if not in edit mode-->
+    <div *ngIf="!edit" class="container main">
+        <!-- Row for all settings -->
+        <div class="row justify-content-between">
+            <!-- Left side of the page (project name and description) -->
+            <div class="col-5">
+                    <!-- Username field -->
+                    <div class="form-group">
+                        <label for="projectName" id="field_text">Project Name:</label><br>
+                        {{projectName}}
+                    </div>                    
+                    <!-- Description field -->
+                    <div class="form-group">
+                        <label for="projectDescription" id="field_text">Description:</label><br>
+                        <p>{{projectDesc}}</p>
+                    </div>  
                     <!-- Response division -->
                     <div id="responseDiv">
                         <!-- Response -->
                         <p id="createProjectResponse"></p>
                     </div>
-    
                 </div>
-                <!-- Right side of the page (members, labeller count, label types) -->
+            <!-- Right side of the page (members, labeller count, label types) -->
             <div class="col-6">
                 <!-- Division around the whole members section -->
                 <div class="projectSettingsDivParent">
@@ -198,7 +190,7 @@
                        </div>
                        <!-- Col for adding users button -->
                        <div class="col-2">
-                           <!-- Button for adding new members -->
+                           <!-- Button for adding new members, show error since not in edit mode -->
                            <button class="btn" type="button" id="addMembersButton" (click)="openAddError()">
                                <!-- Members icon -->
                                <i class="bi bi-plus members"></i>
@@ -210,75 +202,74 @@
                    <div class="projectSettingsDiv">
                        <div id="membersDiv">
                            <!-- Row for the 'Project admin' words -->
-                           <div class="row align-items-center">
-                            <div class="col-7">
-                            </div>   
-                            <div class="col-4">
+                            <div class="row align-items-center">
+                                <!--Column to keep projectAdmin centered-->
+                                <div class="col-7">
+                                </div>   
+                                <div class="col-4">
                                    <p class="projectAdminSpan">Project admin</p>
-                               </div>
-                           </div>
+                                </div>
+                            </div>
                            
-                           <!-- Name and checkbox per member of the project -->
-                           <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
-
+                            <!-- Name and checkbox per member of the project -->
+                            <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
                                <!-- Row for the delete, name and project admin -->
-                               <div class="row align-items-center">
-
-                                   <!-- Column for username -->
-                                   <div class="col-7">
-                                       {{ member.getUsername() }}
-                                   </div>
-
+                                <div class="row align-items-center">
+                                    <!-- Column for username -->
+                                    <div class="col-7">
+                                        {{ member.getUsername() }}
+                                    </div>
                                    <!-- Column for checkbox -->
                                    <div class="col-4 checkboxCol">
                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                       <!-- Checkbox disabled since not in edit mode-->
                                        <!-- TODO FIX THE ID -->
-                                       <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member}}" disabled="true" checked="true">
-                                   </div>                                        
-                               </div>
-                           </label>
-
-                       </div>
-           </div>
-           </div>
-           <!-- Division around the labeller count -->
-           <form id="constraintForm">      
-               <div class="form-group projectSettingsDivParent">
-                   <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
-                   <!-- Division around the input -->
-                   <div class="projectSettingsDiv">
-                       <!-- Labeller count input -->
-                       <div id="labellerCountDiv">
-                           {{ labelCount }}
-                       </div>
-                   </div>
-               </div> 
-           </form>
-
-           <!-- Division around the label types -->
-           <div class="projectSettingsDivParent">
-               <span class="settingsHeader"> Label Type </span>
-               <!-- Division around the input -->
-               <div class="projectSettingsDiv">
-                   <!-- All label types in the project -->
-                   <div id="labelTypeDiv">
-                       <div id="labelTypeList" *ngFor="let labelType of labelTypes">
-                               <div>
-                                   <!-- Text field for the label type -->
-                                   {{ labelType }}
-                               </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
+                                       <input type="checkbox" id="{{ 'projectAdminCheckBoxHome-' + member.getId()}}" [checked]="adminMember[member.getId()-1]" disabled="true">
+                                    </div>                                        
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                
-       <div class="row justify-content-end">
-        <!-- Submit button -->
-        <button *ngIf="!edit" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
-            Edit
-        </button>
-        </div>
+
+                <!-- Division around the labeller count -->
+                <form id="constraintForm">      
+                    <div class="form-group projectSettingsDivParent">
+                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
+                        <!-- Division around the input -->
+                        <div class="projectSettingsDiv">
+                            <!-- Labeller count input -->
+                            <div id="labellerCountDiv">
+                                {{ labelCount }}
+                            </div>
+                        </div>
+                    </div> 
+                </form>
+           
+                <!-- Division around the label types -->
+                <div class="projectSettingsDivParent">
+                    <span class="settingsHeader"> Label Type </span>
+                    <!-- Division around the input -->
+                    <div class="projectSettingsDiv">
+                        <!-- All label types in the project -->
+                        <div id="labelTypeDiv">
+                            <div id="labelTypeList" *ngFor="let labelType of labelTypes">
+                                <div>
+                                <!-- Text field for the label type -->
+                                   {{ labelType }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+                
+        <div class="row justify-content-end">
+            <!-- Edit button -->
+            <button *ngIf="!edit" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
+                Edit
+            </button>
+        </div>
+    </div>
 </body>

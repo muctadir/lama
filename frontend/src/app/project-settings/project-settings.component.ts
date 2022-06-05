@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../user';
 
+//Modal for adding users
 @Component({
   selector: 'app-project-settings',
   styleUrls: ['./project-settings.component.scss'],
@@ -31,7 +32,7 @@ import { User } from '../user';
   `
 })
 
-// Content of the modal
+// Content of the modal of adding members
 export class AddUsersModalContent {
   @Input() users: any;
   @Output() newItemEvent = new EventEmitter<any>();
@@ -43,6 +44,7 @@ export class AddUsersModalContent {
   }
 }
 
+//Modal for trying to click "Add Members" while not in edit mode
 @Component({
   selector: 'app-project-settings',
   styleUrls: ['./project-settings.component.scss'],
@@ -59,7 +61,7 @@ export class AddUsersModalContent {
   `
 })
 
-// Content of the modal
+// Content of the modal of trying to click "Add Members" while not in edit mode
 export class AddUsersErrorModalContent {
   @Input() users: any;
   @Output() newItemEvent = new EventEmitter<any>();
@@ -78,40 +80,54 @@ export class AddUsersErrorModalContent {
 })
 
 export class ProjectSettingsComponent implements OnInit {
-
+  //project name
   projectName: string = "project name";
+  //project description
   projectDesc: string = "project description";
+  //project members
   projectMembers: User[] = [];
+  //all members
+  allMembers: User[] = [];
+  adminMember: boolean[] = [];
+  //label criteria for project
   labelCount: string = "2";
+  //label types for project
   labelTypes: string[] = [];
+  //whether the page is in edit mode, default is false
   edit: boolean = false;
 
   constructor(private modalService: NgbModal) { 
+    //Dummy data for initial
     this.projectMembers.push(new User(1, "Linh", "notmail@com.com","They cool"));
     this.projectMembers.push(new User(2, "Jarl", "notmail@com.com","They cool"));
     this.projectMembers.push(new User(3, "Vic", "notmail@com.com","They cool"));
     this.projectMembers.push(new User(4, "Thea", "notmail@com.com","They cool"));
+    //(<HTMLInputElement>document.getElementById("projectAdminCheckBoxHome-" + this.projectMembers[0].getId())).checked = true;
+    //this.allMembers = this.projectMembers;
+    this.allMembers.push(new User(5, "Veerle", "notmail@com.com", "They cool"))
+    this.allMembers.push(new User(6, "Chinno", "notmail@com.com", "They cool"))
+    this.allMembers.push(new User(6, "Bartjan", "notmail@com.com", "They cool"))
   }
 
   ngOnInit(): void {
   }
 
+  //Entering Edit Mode
   clickEdit(): void {
     this.edit = true;
   }
 
+  //Exiting Editing Mode
   unclickEdit(): void {
     this.edit = false;
   }
 
-  addMembers(username: string): void {
-    //this.projectMembers.push(username);
-  }
-
-  addLabelTypes(labelType: string): void {
+  //Adding a label type
+  addLabelType(): void {
     this.labelTypes.push("");
   }
 
+  //Saving changes made to project
   saveEdit(): void {
     this.projectName = (<HTMLInputElement>document.getElementById("projectName")).value;
     this.projectDesc = (<HTMLInputElement>document.getElementById("projectDescriptionForm")).value;
@@ -120,8 +136,15 @@ export class ProjectSettingsComponent implements OnInit {
     const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
     this.labelTypes = this.getLabelTypes(post_form3);
     this.edit = false;
+    for (let i = 0; i < this.projectMembers.length; i++) {
+      let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked; 
+      if (adminBool) {
+        this.adminMember[i] = adminBool;
+      }
+    }
   }
 
+  //Getting label types from form
   getLabelTypes(form:HTMLFormElement): string[]{
     // Make a dictionary for all values
     let params: string[] = [];
@@ -135,28 +158,26 @@ export class ProjectSettingsComponent implements OnInit {
     return params;
   }
 
-  addLabelType(){
-    this.labelTypes.push("");
-  }
-
+  //testing method for placeholder
   test(): void{ 
   }
 
-  // Open the modal and populate it with users
+  // Open the modal for adding users and populate it with users
   openAdd() {
     const modalRef = this.modalService.open(AddUsersModalContent);
-    modalRef.componentInstance.users = this.projectMembers;
+    modalRef.componentInstance.users = this.allMembers;
     // Push the username into the members list 
     modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
       var user = $e;
       //  Checks if the user is already added
-       if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
-         // If not, we add them
+      if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
+        // If not, we add them
         this.projectMembers.push(user);
-       }
+      }
     })
   }
 
+  // Open the modal for adding error
   openAddError() {
     const modalRef = this.modalService.open(AddUsersErrorModalContent);
   }
