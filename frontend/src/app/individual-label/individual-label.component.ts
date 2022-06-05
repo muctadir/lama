@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { LabelingDataService } from '../labeling-data.service';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
+
 import { EditLabelFormComponent } from '../edit-label-form/edit-label-form.component';
 import { Label } from '../label';
 
@@ -18,7 +21,7 @@ type artifact = {
   templateUrl: './individual-label.component.html',
   styleUrls: ['./individual-label.component.scss']
 })
-export class IndividualLabelComponent implements OnInit {
+export class IndividualLabelComponent {
   
   // Dummy data
   labelName: String = 'Label 1';
@@ -46,6 +49,7 @@ export class IndividualLabelComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
     private route: ActivatedRoute,
+    private router: Router,
     private labelingDataService: LabelingDataService) {}
 
     
@@ -62,8 +66,27 @@ export class IndividualLabelComponent implements OnInit {
       this.label = label;
     } 
 
-    // Open the modal and populate it with users
-    openEdit() {
-    const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
-    }
+  /**
+   * Gets the project id from the URL and reroutes to the label management page
+   * of the same project
+   * 
+   * @trigger back button is pressed
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'labelmanagement']);
+  }
+
+  // Open the modal and populate it with users
+  openEdit() {
+  const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
+  }
 }

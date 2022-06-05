@@ -6,8 +6,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from '../label-form/label-form.component';
 import { LabelingDataService } from "app/labeling-data.service";
-import { StringArtifact } from 'app/stringartifact';
-import { LabelType } from 'app/label-type';
+import { StringArtifact } from 'app/classes/stringartifact';
+import { LabelType } from 'app/classes/label-type';
 
 @Component({
   selector: 'app-labelling-page',
@@ -42,7 +42,7 @@ export class LabellingPageComponent implements OnInit{
    */
   ngOnInit(): void {
     // this.getArtifact();
-    // this.getLabels();
+    this.getLabels();
   }
 
   /**
@@ -50,7 +50,7 @@ export class LabellingPageComponent implements OnInit{
    * It waits for a response and when the response arrives it adds Bartjan 
    * as a labeler and then puts the information into this.artifact.
    */
-  getArtifact ():void {
+  getArtifact():void {
     // this.labelingDataService.getArtifact()
     //   .subscribe(artifact => {
     //     artifact.addLabeler("Bartjan");

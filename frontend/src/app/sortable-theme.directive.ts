@@ -1,5 +1,5 @@
 import { EventEmitter, Directive, Input, Output } from '@angular/core';
-import { Theme } from './theme';
+import { Theme } from 'app/classes/theme';
 
 export type sortColumn = keyof Theme | '';
 export type sortDirection = 'asc' | 'desc' | '';

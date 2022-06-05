@@ -4,9 +4,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelingDataService } from 'app/labeling-data.service';
-import { LabelType } from 'app/label-type';
+import { LabelType } from 'app/classes/label-type';
 import { FormControl } from '@angular/forms';
-import { Label } from 'app/label';
+import { Label } from 'app/classes/label';
 @Component({
   selector: 'app-label-form',
   templateUrl: './label-form.component.html',
@@ -41,13 +41,13 @@ export class LabelFormComponent implements OnInit {
       }
       else {
         for (var i: number = 0; i < this.labelTypes.length; i++) {
-          // if (this.labelTypes[i].getLabelTypeName() === this.inputLabelType.getLabelTypeName()) {
-            // this.labelTypes[i].addLabel(new Label(this.inputName, this.inputName, 
-              // this.inputDescription, 0, false));
-              // break;
-          // }
+          if (this.labelTypes[i].getName() === this.inputLabelType.getName()) {
+            this.labelTypes[i].addLabel(new Label(1, this.inputName, this.inputName, 
+              this.inputDescription));
+              break;
+          }
         }
-        this.labelingDataService.pushLabels(this.labelTypes);
+        // this.labelingDataService.pushLabels(this.labelTypes);
       }
     
     this.activeModal.close();

@@ -9,3 +9,14 @@ $offgrey-shade: #1C5858;
     margin: 0px;
     padding: 0px;
 }
+
+// Ensures that there is no padding 
+// around the container holding the navbar and the main page content
+#cont {
+    padding: 0px;
+}
+
+// Ensures that the navbar/content have no padding on the right.
+#row-markup {
+    margin-right: 0px;
+}

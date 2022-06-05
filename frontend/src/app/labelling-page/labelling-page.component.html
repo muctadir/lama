@@ -22,7 +22,7 @@
         <!-- Labeller information -->
         <div class="col-6">
             <div> 
-                Labeled by: <span *ngFor="let labeler of artifact?.getLabelers()!; let last = last">{{ labeler }}<span *ngIf="!last">, </span></span>
+                <!-- Labeled by: <span *ngFor="let labeler of artifact?.getLabelers()!; let last = last">{{ labeler }}<span *ngIf="!last">, </span></span> -->
             </div>
         </div>
 
@@ -42,12 +42,13 @@
                         <div class="col-6">
                             <!-- Title of the labelType -->
                             <div class = "labelTypeTitle">
-                                <!-- <span>{{ labelType?.getLabelTypeName()! }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span> -->
+                                <!-- TODO change -->
+                                <!-- <span>{{ labelType?.getName()! }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span> -->
                             </div> 
                             <!-- List of available labels -->
                             <div>
                                 <select class="form-control" name="labels">
-                                    <!-- <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getLabelName() }}">{{ label.getLabelName() }}</option> -->
+                                    <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getName() }}">{{ label.getName() }}</option>
                                 </select>
                             </div>
                         </div> 
@@ -79,5 +80,4 @@
             </div>
         </div>
     </div>
-
 </div>
