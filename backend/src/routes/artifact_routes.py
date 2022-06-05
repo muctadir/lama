@@ -103,10 +103,8 @@ def add_new_artifacts(*, user):
 
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
-    i = 0
     for artifact in artifact_info:
         artifact_object = artifact_schema.load(artifact)
-        i += 1
 
         # Add the artifact to the database
         db.session.add(artifact_object)
@@ -125,7 +123,7 @@ def single_artifact(*, user):
         select(Artifact).where(Artifact.id == a_id)
     ).scalars().all()[0]
 
-     # Schema to serialize the Project
+     # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
 
     # Convert artifact to JSON
@@ -140,28 +138,12 @@ def single_artifact(*, user):
     # Text of the artifact
     artifact_text = artifact.data
 
-    #     # Put all values into a dictionary
-    #     info = {
-    #         "artifact": artifact_json,
-    #         "artifact_id": artifact_id,
-    #         "artifact_identifier": artifact_identifier,
-    #         "artifact_text": artifact_text,
-    #         "artifact_labellings": labellings
-    #     }
-
-    #     # Append dictionary to list
-    #     artifact_info.append(info)
-
-    # # Convert the list of dictionaries to json
-    # dict_json = jsonify(artifact_info)
-
-    # # Return the list of dictionaries
-    # return make_response(dict_json)
-
-    # Add artifact information to a dictionary
+        # Put all values into a dictionary
     info = {
-        'artifactIdentifier': artifact.identifier,
-        'artifact': artifact.data
+        "artifact": artifact_json,
+        "artifact_id": artifact_id,
+        "artifact_identifier": artifact_identifier,
+        "artifact_text": artifact_text
     }
 
     # Jsonify the dictionary with information
