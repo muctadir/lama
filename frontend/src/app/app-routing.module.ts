@@ -51,7 +51,7 @@ const routes: Routes = [
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]}];
     //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
-    
+
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule]
