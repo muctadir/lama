@@ -169,6 +169,7 @@ export class Project {
      getCriteria(): number | undefined {
         return this.criteria;
     }
+
     /**
      * Function sets project criteria
      * @params criteria
