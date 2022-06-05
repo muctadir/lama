@@ -184,6 +184,7 @@ export class Project {
       getAdmin(): boolean | undefined {
         return this.admin;
     }
+
     /**
      * Function sets project criteria
      * @params criteria
