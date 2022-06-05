@@ -39,10 +39,11 @@
     letter-spacing: 1px;
     border-bottom-color: orange;
 }
-//Labels list from *ngFor
-#allLabels{
+//labels added
+#addedLabels{
     font-size:14px;
     letter-spacing: 1px;
+    padding-left: 10px;
 }
 #allLabelsList{
     padding-top: 10px;
@@ -76,12 +77,12 @@
     border-bottom-color: orange
 }
 //Subthemes list 
-#allSubthemes{
-    padding-left: 0px;
+#addedSubthemes{
+    padding-left: 10px;
     font-size:14px;
     letter-spacing: 1px;
 }
-#allSubthemesList{
+#addedSubthemesList{
     padding-top: 10px;
     overflow-y: scroll;
     height: 10vh;
@@ -102,7 +103,7 @@
 //Add label text
 .addLabelsText{
     font-size: 14px;
-    padding-left: 0px;
+    padding-left: 10px;
     vertical-align: -5px
 }
 //add label button
@@ -169,6 +170,18 @@ p.labelDescriptionText{
     font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: orange;
+}
+//full subtheme list text
+.addSubthemeText{
+    font-size: 14px;
+    padding-left: 10px;
+    vertical-align: -5px
+}
+//added subthemes text
+#addedSubthemeText{
+    font-size: 14px;
+    padding-left: 10px;
+    vertical-align: -5px
 }
 // description box size
 #descriptionArea{

@@ -80,11 +80,11 @@ export class CreateThemeComponent implements OnInit {
     });    
   }
   // Function for removing subtheme
-  removeSubtheme(subthemes:any){
+  removeSubtheme(subtheme:any){
   // Go through all labels
   this.addedSubthemes.forEach((addedSubthemes, index)=>{
     // If clicked cross matches the label, splice them from the labels
-    if(addedSubthemes==subthemes){
+    if(addedSubthemes==subtheme){
       this.addedSubthemes.splice(index,1);
     }
   });    
