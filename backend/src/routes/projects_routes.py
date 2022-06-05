@@ -2,12 +2,13 @@
 # Eduardo Costa Martins
 # Ana-Maria Olteniceanu
 
+from multiprocessing import ProcessError
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
 from src.models.item_models import Artifact, LabelType
-from src.models.project_models import Membership, ProjectSchema
+from src.models.project_models import Membership, Project, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
 from src.app_util import login_required
@@ -166,3 +167,129 @@ def create_project(*, user):
         db.session.add(label_type)
         db.session.commit()
     return make_response('OK', 200)
+
+"""
+For getting data from a single project
+"""
+@project_routes.route("/singleProject", methods=["GET"])
+@login_required
+def single_project(*, user):
+    # Get project id from the request
+    p_id = request.args.get('p_id')
+
+    # Get the project
+    project = db.session.execute(
+        select(Project).where(Project.id==p_id)
+    ).scalars().all()[0]
+
+    # Schema to serialize the Project
+    project_schema = ProjectSchema()
+    # Schema to serialize the User
+    user_schema = UserSchema()
+
+    # Convert project to JSON
+    project_json = project_schema.dump(project)
+
+    # Get the artifacts for each project 
+    project_artifacts_stmt = select(Artifact).where(Artifact.p_id==p_id)
+    project_artifacts = db.session.execute(project_artifacts_stmt).scalars().all()
+    # Get the number of total artifacts
+    project_nr_artifacts = len(project_artifacts)
+    # Get the number of completely labelled artifacts for each project
+    project_nr_cl_artifacts = len(db.session.execute(
+        project_artifacts_stmt.where(Artifact.completed==True)
+    ).scalars().all())
+
+    # Get the users in the project
+    project_users = project.users
+    # Serialize all users
+    users = []  
+    for user in project_users:
+        user_dumped = user_schema.dump(user)
+        user_dumped.pop("password")
+        users.append(user_dumped)
+        
+    # Put all values into a dictonary
+    info = {
+        "project" : project_json,
+        "projectNrArtifacts": project_nr_artifacts,
+        "projectNrCLArtifacts": project_nr_cl_artifacts,
+        "projectUsers": users
+        }
+
+    # Convert dictionary to json
+    dict_json = jsonify(info)
+
+    # Return the list of dictionaries
+    return make_response(dict_json)
+
+"""
+For getting statistics from a single project
+"""
+@project_routes.route("/projectStats", methods=["GET"])
+@login_required
+def project_stats(*, user):
+    # Get project id from request
+    p_id = request.args.get('p_id')
+
+    # Get all the users in the project
+    project = db.session.execute(
+        select(Project).where(Project.id==p_id)
+    ).scalars().all()[0]
+
+    # List of all stats per user
+    stats = []
+    for user in project.users:
+        # Get username
+        username = user.username
+
+        # Set of artifacts user has labelled
+        artifacts = {}
+        # List of themes user has used
+        themes = []
+
+        # Total time spent labelling
+        total_time = 0
+
+        # Loop through each labelling to get the necessary data
+        for labelling in user.labellings:
+            # Add the artifact associated with this labelling to the set of artifacts
+            artifacts.add(labelling.artifact)
+            # Add the themes associated with this labelling to the list of themes
+            themes.append(labelling.label.themes)
+            # Add the time spent labelling to the total time
+            total_time += labelling.time
+
+        # Get number of artifacts
+        artifacts_num = len(artifacts)
+
+        # Get number of themes
+        themes_num = len(list(dict.fromkeys(themes)))
+
+        # Get average time of labelling
+        if len(user.labellings) > 0:
+            avg_time = total_time / len(user.labellings)
+        else:
+            # If there are no labelling set average time to 0
+            avg_time = 0
+
+        # TODO: Get number of conflicts
+        conflicts = 0
+
+        # Add all data to a dictionary
+        info = {
+            "username": username,
+            "nr_labelled": artifacts_num,
+            "time": avg_time,
+            "nr_themes": themes_num,
+            "nr_conflicts": conflicts
+        }
+
+        # Add dictionary to list of dictionaries
+        stats.append(info)
+
+    # Convert the list of dictionaries to json
+    dict_json = jsonify(stats)
+
+    # Return the list of dictionaries
+    return make_response(dict_json)
