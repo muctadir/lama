@@ -1,7 +1,7 @@
 // Veerle Furst
 
 import { Component, OnInit } from '@angular/core';
-import { User } from '../user';
+import { User } from 'app/classes/user';
 import axios from 'axios';
 import {Router} from '@angular/router';
 
@@ -46,10 +46,10 @@ export class AccountComponent {
         // Create a new user with the response data
         this.user = new User(
           accountInformation['id'],
-          accountInformation['username'],
-          accountInformation['email'],
-          accountInformation['description']
+          accountInformation['username']
         )
+        this.user.setEmail(accountInformation['email']);
+        this.user.setDescription(accountInformation['description']);
       })
       .catch(error =>{
         // Show the error 

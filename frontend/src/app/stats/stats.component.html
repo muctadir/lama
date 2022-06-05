@@ -1,5 +1,5 @@
 <!-- Containing holding the statistics page -->
-<div class="container-fluid min-vh-100 d-flex flex-column">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
 
     <!-- Header row holding title of page-->
     <div class="row">
@@ -10,7 +10,7 @@
 
         <!-- Button for going to the labelling page -->  
         <div class="col">            
-            <button type="button" class="btn btn-secondary" id="mergeLabelButton" [routerLink]="['/project/labelling-page']">
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="reRouter()">
                 Start labelling
                 <em class="bi bi-plus"></em>
             </button>                

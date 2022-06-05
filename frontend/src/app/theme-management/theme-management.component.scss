@@ -1,3 +1,8 @@
+#body {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
 #pageTitle {
     padding-top: 10px;
     border-bottom: 1px; 
@@ -27,6 +32,39 @@
 #center-pagination {
     display: flex; 
     justify-content: center;
+}
+
+//Scroll Related Business
+.my-custom-scrollbar {
+    position:relative;
+    height: 80vh;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+// Scroll bar
+#scrolly{
+    padding-right: 40px;
+    height: auto;
 }
 
 

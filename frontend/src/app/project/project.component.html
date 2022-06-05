@@ -1,31 +1,15 @@
 <!-- @author Jarl -->
 
 <!-- Container which will hold the nav menu and main content -->
-<div class="container-fluid min-vh-100 d-flex flex-column">
-    <div class="row">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="cont">
+    <div class="row" id="row-markup">
 
-        <!-- View when nav menu is collapsed -->
-        <ng-container *ngIf="collapsed">
-            <!-- Collapsed nav menu -->
-            <div class="col-1 marg-padd">
-                <router-outlet name="side-nav"></router-outlet>
-            </div>
-            <!-- Main content -->
-            <div class="col-11 marg-padd">
-                <router-outlet></router-outlet>
-            </div>
-        </ng-container>
+        <!-- Places the router outlet with the navigation bar on the page -->
+        <router-outlet name="side-nav"></router-outlet>
 
-        <!-- View when nav menu is expanded -->
-        <ng-container *ngIf="!collapsed">
-            <!-- Expanded nav menu -->
-            <div class="col-3 marg-padd">
-                <router-outlet name="side-nav"></router-outlet>
-            </div>
-            <!-- Main content -->
-            <div class="col-9 marg-padd">
-                <router-outlet></router-outlet>
-            </div>
-        </ng-container>
+        <!-- Places the router outlet with main content on the page -->
+        <div class="col">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>

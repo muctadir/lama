@@ -39,6 +39,8 @@ def home_page(*, user):
 
     # Schema to serialize the Project
     project_schema = ProjectSchema()
+    # Schema to serialize the User
+    user_schema = UserSchema()
 
     # For loop for admin, users, #artifacts
     for membership_project in projects_of_user:
@@ -65,8 +67,14 @@ def home_page(*, user):
             project_artifacts_stmt.where(Artifact.completed==True)
         ).scalars().all())
 
-        # Get the number users from the project
-        project_users = len(project.users)
+        # Get the users in the project
+        project_users = project.users
+        # Serialize all users
+        users = []  
+        for user in project_users:
+            user_dumped = user_schema.dump(user)
+            user_dumped.pop("password")
+            users.append(user_dumped)
         
         # Put all values into a dictonary
         info = {
@@ -74,7 +82,7 @@ def home_page(*, user):
             "projectAdmin": projects_admin,
             "projectNrArtifacts": project_nr_artifacts,
             "projectNrCLArtifacts": project_nr_cl_artifacts,
-            "projectUsers": project_users
+            "projectUsers": users
         }
         # Append the dictionary to the list
         projects_info.append(info)
