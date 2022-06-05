@@ -27,7 +27,7 @@
     </div>
     <!-- Show all projects in divisions -->
     <div class="allProjects">
-        <div class='projectParagraph' *ngFor="let project of projects" [routerLink]="['/project', project.id]">
+        <div class='projectParagraph' *ngFor="let project of projects" [routerLink]="['/project', project.getId()]">
             <div class="container">
                 <!-- Row for each project -->
                 <div class="row align-items-center">
@@ -35,7 +35,7 @@
                     <!-- Column for each project name -->
                     <div class="col" id="projectNameColumn">
                         <!-- Shows project name, artifact progress bar, and number of users -->
-                        <p class="projectName"> {{project.name}} </p>
+                        <p class="projectName"> {{ project.getName() }} </p>
                     </div>
 
                     <!-- Column for progress bar and values-->
@@ -43,20 +43,20 @@
                         <!-- Progress bar -->
                         <div class="progress">
                             <!-- Calculating progress bar and other values -->
-                            <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.numberOfCLArtifacts}}
-                            aria-valuemin="0" attr.aria-valuemax={{project.numberOfArtifacts}} 
-                            [style.width]="(project.numberOfCLArtifacts / project.numberOfArtifacts)*100 + '%'"
+                            <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.getNumberOfCLArtifacts()}}
+                            aria-valuemin="0" attr.aria-valuemax={{project.getNumberOfArtifacts()}} 
+                            [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
                             style="background-color:#ED5A06 !important;"> 
                             </div>
                         </div>
                     </div>
                     <div class="col-2">
-                        {{project.numberOfCLArtifacts}} / {{project.numberOfArtifacts}}
+                        {{ project.getNumberOfCLArtifacts() }} / {{ project.getNumberOfArtifacts() }}
                     </div>
 
                     <!--  Column for whether user is admin or not -->
                     <div class="col-1">
-                        <div *ngIf="project.admin">
+                        <div *ngIf="project.getAdmin()">
                             <i class="bi bi-key"></i> 
                             <!-- Admin -->
                         </div>
@@ -64,7 +64,7 @@
                     
                     <!-- Column for whether project is frozen or not -->
                     <div class="col-1">
-                        <div *ngIf="project.frozen">
+                        <div *ngIf="project.getFrozen()">
                             <!-- Snow icon -->
                             <i class="bi bi-snow"></i>
                         </div>
@@ -74,13 +74,13 @@
                     <div class="col-2">
                         <!-- Member icon -->
                         <i class="bi bi-person"></i>
-                        <span class='numberOfUsers'>{{project.numberOfUsers}}</span>
+                        <span class='numberOfUsers'>{{ project.getNumberOfUsers() }}</span>
                     </div>
 
                     <!-- Row for project description -->
                     <div class="row">
                         <!-- Shows project description -->
-                        {{project.description}}
+                        {{ project.getDescription() }}
                     </div>
                 </div>
             </div>

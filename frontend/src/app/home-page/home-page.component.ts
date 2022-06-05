@@ -4,7 +4,7 @@
 // Eduardo Costa Martins
 
 import { Component, OnInit } from '@angular/core';
-import { Project } from '../project';
+import { Project } from '../classes/project';
 import axios from 'axios';
 
 @Component({
@@ -40,10 +40,22 @@ export class HomePageComponent implements OnInit {
             let projectJson = project["project"];
             projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
             projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
-            projectJson["numberOfUsers"] = project["projectUsers"];
+            projectJson["users"] = project["projectUsers"];
             projectJson["admin"] = project["projectAdmin"];
 
-            let projectNew: Project = projectJson as Project;                
+            // Create the project with constructor
+            let projectNew = new Project(
+              projectJson["id"],
+              projectJson["name"],
+              projectJson["description"]
+            ) 
+            
+            // Set other variables
+            projectNew.setFrozen(projectJson["frozen"]);
+            projectNew.setNumberOfArtifacts(projectJson["numberOfArtifacts"]);
+            projectNew.setNumberOfCLArtifacts(projectJson["numberOfCLArtifacts"]);
+            projectNew.setAdmin(projectJson["admin"]);
+            projectNew.setUsers(projectJson["users"]);
 
             // Add project to list
             this.projects.push(projectNew);

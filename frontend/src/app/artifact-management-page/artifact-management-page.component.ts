@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { AddArtifactComponent } from '../add-artifact/add-artifact.component';
+import { Component } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
@@ -69,10 +68,6 @@ export class ArtifactManagementPageComponent {
    
 
   ];
-
-  open(){
-    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
-  }
 
   /**
    * Constructor passes in the modal service, initializes Router

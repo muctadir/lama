@@ -22,8 +22,8 @@
                 </thead>
                 <tbody (click)="reRouter('singleTheme')">
                     <tr *ngFor="let theme of themes">
-                        <td>{{ theme.getThemeName() }}</td>
-                        <td> {{ theme.getThemeDescription () }}</td>
+                        <td>{{ theme.getName() }}</td>
+                        <td> {{ theme.getDescription () }}</td>
                         <td> 7 </td>
                     </tr>
                 </tbody>

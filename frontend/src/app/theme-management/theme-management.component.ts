@@ -7,7 +7,7 @@
  *    I will come back to this!
  */
 import { Component, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
-import { Theme } from '../theme';
+import { Theme } from 'app/classes/theme';
 import { LoremIpsum } from "lorem-ipsum";
 import { sortEvent, SortableThemeHeader } from '../sortable-theme.directive';
 import { Router } from '@angular/router';
@@ -57,7 +57,7 @@ export class ThemeManagementComponent  {
     this.themes = new Array<Theme>();
     for (var i: number = 0; i < this.randomNumber; i = i + 1){
       var title:string = lorem.generateWords(1);
-      this.themes.push(new Theme((title.charAt(0).toUpperCase() + title.slice(1)), lorem.generateParagraphs(2)));
+      this.themes.push(new Theme(1, (title.charAt(0).toUpperCase() + title.slice(1)), lorem.generateParagraphs(2)));
     }
    }
 

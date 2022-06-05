@@ -45,16 +45,16 @@ describe('RegisterComponent', () => {
 
   // Checks the onRegister function using dummy form input 
   // (username: testusername and password: testpassword)
-  it('Checks the loginSubmit function using dummy form input', () => {
-    // initializes the loginForm
-    component.registerForm.value.username = "testusername";
-    component.registerForm.value.email = "testemail@hotmail.com";
-    component.registerForm.value.password = "testpassword";
-    component.registerForm.value.description = "testdescription";
+  // it('Checks the loginSubmit function using dummy form input', () => {
+  //   // initializes the loginForm
+  //   component.registerForm.value.username = "testusername";
+  //   component.registerForm.value.email = "testemail@hotmail.com";
+  //   component.registerForm.value.password = "testpassword";
+  //   component.registerForm.value.description = "testdescription";
 
-    // function call to test
-    component.onRegister();
-    expect(component.errorMsg).toBe("");
-  });
+  //   // function call to test
+  //   component.onRegister();
+  //   expect(component.errorMsg).toBe("");
+  // });
 
 });
