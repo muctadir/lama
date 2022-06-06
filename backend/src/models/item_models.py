@@ -171,23 +171,31 @@ class Theme(ChangingItem, db.Model):
 
 
 class Labelling(db.Model):
-
+    # Using this model requires a fair bit of input processing which (to my knowledge) cannot
+    # be done so easily on the database side of things. See comments for necessary processing
     __tablename__ = 'labelling'
 
     # The id of the user that labelled the artifact
+    # Input processing: you should check that the user is actually in this project
     u_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     # The id of the artifact that was labelled
     a_id = Column(Integer, ForeignKey('artifact.id'), primary_key=True)
+    # The id of the label_type that the label belongs to
+    # This was chosen as a primary key to enforce that the labels are all of different types
+    # Input processing: you should check that every label type is used when adding labelling objects
+    lt_id = Column(Integer, ForeignKey('label_type.id'), primary_key=True)
     # The id of the label that the artifact was labelled with
-    l_id = Column(Integer, ForeignKey('label.id'), primary_key=True)
+    # Input processing: you should check that lt_id of the label is the same as the lt_id in the labelling
+    l_id = Column(Integer, ForeignKey('label.id'), nullable=False)
     # The id of the project that the label/artifact belong to
-    p_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
+    # Input processing: you should check that label type, label, and artifact, are all from the same project
+    p_id = Column(Integer, ForeignKey('project.id'), nullable=False)
     # Remark on why this label was chosen for this artifact
     remark = Column(Text)
     # How long it took the user to label this artifact
     time = Column(Time)
 
-    # The user, artifact, and label object corresponding to this relationship
+    # The user, artifact, label, and label_type objects corresponding to this relationship
     user = relationship('User', back_populates='labellings')
     artifact = relationship('Artifact', 
             primaryjoin='and_(Artifact.p_id==Labelling.p_id, Artifact.id==Labelling.a_id)',
@@ -195,6 +203,10 @@ class Labelling(db.Model):
     label = relationship('Label', 
             primaryjoin='and_(Label.p_id==Labelling.p_id, Label.id==Labelling.l_id)',
             back_populates='labellings')
+    # I may add a back_populates later, as it could be useful for statistics about a label type
+    # No association proxies for this one as that would just be equivalent to project.label_types
+    label_type = relationship('LabelType',
+            primaryjoin='and_(LabelType.p_id==Labelling.p_id, LabelType.id==Labelling.lt_id)')
 
 class Highlight(db.Model):
 
