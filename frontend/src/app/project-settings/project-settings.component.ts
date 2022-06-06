@@ -90,8 +90,6 @@ export class ProjectSettingsComponent implements OnInit {
   //all members
   allMembers: User[] = [];
   adminMember: boolean[] = [];
-  //label criteria for project
-  labelCount: string = "2";
   //label types for project
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
@@ -166,9 +164,10 @@ export class ProjectSettingsComponent implements OnInit {
 
   //Saving changes made to project
   saveEdit(): void {
+    //Setting name, description, criteria
     this.currentProject.setName((<HTMLInputElement>document.getElementById("projectName")).value);
     this.currentProject.setDescription((<HTMLInputElement>document.getElementById("projectDescriptionForm")).value);
-    this.labelCount = (<HTMLInputElement>document.getElementById("numberOfLabellers")).value;
+    this.currentProject.setCriteria(+(<HTMLInputElement>document.getElementById("numberOfLabellers")).value);
     // For with the label types
     const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
     this.labelTypes = this.getLabelTypes(post_form3);
@@ -207,11 +206,8 @@ export class ProjectSettingsComponent implements OnInit {
     // Push the username into the members list 
     modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
       var user = $e;
-      //  Checks if the user is already added
-      if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
-        // If not, we add them
         this.projectMembers.push(user);
-      }
+      
     })
   }
 
