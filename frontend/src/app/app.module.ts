@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+/* Imports all the different user made pages */
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TestingComponent } from './testing/testing.component';
@@ -10,13 +11,11 @@ import { RegisterComponent } from './register/register.component';
 import { AccountComponent } from './account/account.component';
 import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import { AddUsersModalContent } from './project-creation/project-creation.component';
+import { AddUsersModalContent, ProjectCreationComponent } from './project-creation/project-creation.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { ProjectComponent } from './project/project.component';
 import { StatsComponent } from './stats/stats.component';
-import { ProjectCreationComponent } from './project-creation/project-creation.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from './label-form/label-form.component';
 import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
@@ -24,13 +23,16 @@ import { AddArtifactComponent } from './add-artifact/add-artifact.component';
 import { LabelManagementComponent } from './label-management/label-management.component';
 import { MergeLabelFormComponent } from './merge-label-form/merge-label-form.component';
 import { IndividualLabelComponent } from './individual-label/individual-label.component';
-
 import { ConflictPageComponent } from './conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { SortableThemeHeader } from './sortable-theme.directive';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
+import { EditThemeComponent } from './edit-theme/edit-theme.component';
+
+/* Imports bootstrap */
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.
     ThemeManagementComponent,
     SortableThemeHeader,
     CreateThemeComponent,
-    SingleThemeViewComponent
+    SingleThemeViewComponent,
+    EditThemeComponent
   ],
   imports: [
     BrowserModule,

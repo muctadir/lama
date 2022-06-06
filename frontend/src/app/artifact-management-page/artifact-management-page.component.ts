@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
+import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
 
 
 @Component({
@@ -68,6 +69,10 @@ export class ArtifactManagementPageComponent {
   
   ];
 
+  open(){
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
+  }
+
   /**
    * Constructor passes in the modal service, initializes Router
    * @param modalService instance of NgbModal
@@ -96,10 +101,6 @@ export class ArtifactManagementPageComponent {
 
   notImplemented(): void {
     alert("Button has not been implemented yet.");
-  }
-
-  open(): void {
-    throw Error("Not implemented");
   }
 
 }

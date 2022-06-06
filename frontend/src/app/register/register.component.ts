@@ -1,11 +1,12 @@
 // Veerle Furst
+// Jarl Jansen
 
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import axios from 'axios';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { InputCheckService } from '../input-check.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -38,6 +39,7 @@ export class RegisterComponent {
    * Initializes instance of InputCheckService
    * 
    * @param service instance of InputCheckService
+   * @param route instance of Router
    */
   constructor(private service: InputCheckService, private route: Router) { }
 
@@ -46,28 +48,36 @@ export class RegisterComponent {
    * If input is valid, calls method registering the user.
    * 
    * @modifies errorMsg
+   * @trigger register button is clicked
    */
-  onRegister(){
+  onRegister() : void {
     // Checks input
     let not_empty = this.service.checkFilled(this.username.value) && 
-                this.service.checkFilled(this.password.value) &&
-                this.service.checkFilled(this.passwordR.value) &&
-                this.service.checkEmail(this.email.value);
+      this.service.checkFilled(this.password.value) &&
+      this.service.checkFilled(this.passwordR.value) &&
+      this.service.checkEmail(this.email.value);
 
-    // chooses desired behaviour based on validity of input
+    // Chooses desired behaviour based on validity of input
     if (not_empty){
       // Needed to not show the error
       this.errorMsg = "";
-      // calls method responsible for the actual registering
+      // Calls method responsible for the actual registering
       this.register()
     } else {
-      this.errorMsg = "Fill in username, password and email.";
+      // Case where username, password or email will not filled in / valid
+      this.errorMsg = "Fill in username, password and valid email.";
     }
   }
 
-  /* Register the user */
-  register() {
-
+  /**
+   * Communicates with the backend to register the user, if the user details
+   * do not satisfy requirments an error is returned and displayed to the user.
+   * If the user details are fine, then the user is redirected to the login page.
+   * 
+   * @trigger register button clicked, valid input
+   * @modifies errorMsg
+   */
+  register() : void {
     // Information needed for backend
     let registerInformation = {
       username: this.username.value,
@@ -80,10 +90,11 @@ export class RegisterComponent {
     // Post to backend
     axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
     .then(response =>{
-      this.route.navigate(['/login']);
-
       // Print the created message
       this.errorMsg = response.data;
+
+      // Reroutes the user to the login page
+      this.route.navigate(['/login']);
     })
     .catch(error =>{
       // Print the error message
