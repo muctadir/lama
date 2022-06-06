@@ -49,6 +49,9 @@ export abstract class Artifact {
      * @params id
      */
     setId(id: number): void {
+        if (id == undefined || typeof id != "number") {
+            throw new Error('Artifact ID should be a number');
+        }
         this.id = id;
     }
 

@@ -52,7 +52,36 @@ describe('Artifact', () => {
       .toBe(newIdentifier)
   })
 
-  // Setting and getting of completed
+  // Getting of data
+  it("Should get the data of the artifact", () => {
+    expect(artifact.getData())
+      .toBe(data)
+  })
+
+  // Setting of data
+  it("Should set the data of the artifact", () => {
+    // Create instances
+    const artifact2 = new StringArtifact(id, identifier, data);
+    const newData = "new Data";
+    // Check Identifier
+    artifact2.setData(newData)
+    // Check
+    expect(artifact2.getData())
+      .toBe(newData)
+  })
+
+  // Setting of bad data
+  it("Should set the data of the artifact", () => {
+    // Create instances
+    const artifact2 = new StringArtifact(id, identifier, data);
+    const newData = "";
+    //bad data try
+    try {
+      artifact2.setData(newData)
+    } catch (error) { }
+  })
+
+  // Setting and getting of completed status
   it("Should set and get the completed of the artifact", () => {
     // Create instances
     const artifact2 = new StringArtifact(id, identifier, data);

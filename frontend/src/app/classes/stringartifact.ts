@@ -34,6 +34,9 @@ export class StringArtifact extends Artifact {
      * @param data 
      */
     setData(data: string): void {
+        if (data == undefined || typeof data != "string" || data.length <= 0) {
+            throw new Error("The artifact data should not be of length 0 as an argument in setData())");
+        }
         this.data = data;
     }
 
@@ -60,7 +63,7 @@ export class StringArtifact extends Artifact {
     getEnd(): number | undefined {
         return this.end;
     }
-    
+
     /**
      * sets the end
      * @params end
