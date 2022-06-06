@@ -166,6 +166,8 @@ export class ArtifactDataService {
         result.setId(artifact["artifact_id"]);
         result.setIdentifier(artifact["artifact_identifier"]);
         result.setData(artifact["artifact_text"]);
+        result.setParentId(artifact["artifact_parent"]);
+        result.setChildIds(artifact["artifact_children"]);
 
         // Log the extra data until it can be passed to html componen
         console.log(artifact["artifact_labellings"])
