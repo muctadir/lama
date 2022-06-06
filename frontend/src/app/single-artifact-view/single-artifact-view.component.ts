@@ -103,7 +103,7 @@ export class SingleArtifactViewComponent implements OnInit {
 
     // Get the artifact data from the backend
     this.getArtifact(a_id, p_id)
-    }
+  }
 
   async getArtifact(a_id: number, p_id: number): Promise<void>{
     const artifact = await this.artifactDataService.getArtifact(p_id, a_id);

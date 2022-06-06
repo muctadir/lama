@@ -19,15 +19,17 @@
             <p>{{ artifact.getData() }}</p>
         </div>
         <div class="row" id="editButtonRow">
-            <!-- Edit Button -->
-            <div class="col-6" id="editButtonCol">
-                <button class="btn btn-primary float-start" (click)="notImplemented()"  id="editButton">Edit</button> 
-            </div>
 
             <!-- previous artifacts that it was split from, if any -->
             <div class="col-6" id="names">
                 <p class="float-end">
-                    Artifact was split into <span id="split1">artifact #45</span> and <span id="split2">artifact #190</span>.
+                    Artifact was split into 
+                    <!-- <span *ngIf="artifact.getNumberOfChildIds()" id="split1">artifact</span> -->
+                    <!-- <span *ngIf="artifact.getNumberOfChildIds() => 2" id="split1">artifacts</span> -->
+                    <span id="split1">artifact #{{artifact.getChildIds()}}</span>
+                    <!-- <span *ngIf="artifact.getNumberOfParentId() === 1" id="split2">and</span> -->
+                    <span> and </span>
+                    <span id="split2">artifact #{{artifact.getParentId()}}</span>.
                 </p>
             </div>
         </div>
@@ -48,17 +50,17 @@
                     <div class="row">
                         <!--Labeller Name-->
                         <div class="row">
-                            <div class="col-sm-5">
+                            <div class="col-sm-12">
                                 <p id="labellerName">{{userLabel.labellerName}}</p>
                             </div>
                             <!--Remarks header-->
-                            <div class="col align-self-start">
+                            <!-- <div class="col align-self-start">
                                 <p id="remarks">Remarks:</p>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <!--Label Type and Given Label Section-->
-                            <div class="col-5">
+                            <div class="col-12">
                                 <div class="row">
                                     <div class="col-12" *ngFor="let label of userLabel.labelsGiven">
                                         <div class="row">   
@@ -70,24 +72,24 @@
                                             </div>
                                             <!--Label Given-->  
                                             <div class="col-sm-8">
-                                                    <select class="form-control" name="labels" id="formControl">                                             
-                                                        <option>
-                                                            {{label.labelGiven}}
-                                                        </option>
-                                                        <option *ngFor ="let labels of allLabels">
-                                                            {{labels}}
-                                                        </option>           
-                                                    </select>
-
+                                                <select class="form-control" name="labels" id="formControl">                                             
+                                                    <option>
+                                                        {{label.labelGiven}}
+                                                    </option>
+                                                    <option *ngFor ="let labels of allLabels">
+                                                        {{labels}}
+                                                    </option>           
+                                                </select>
+                                                <!--Label Remark-->
+                                                <div class="col align-self-start">
+                                                    <p id="remarksText">Remark: {{userLabel.labelRemark}}</p>
+                                                </div>
                                             </div>
                                         </div> 
                                     </div>
                                 </div>
                             </div>
-                            <!--Label Remark-->
-                            <div class="col align-self-start">
-                                <p id="remarksText">{{userLabel.labelRemark}}</p>
-                            </div>
+
                         </div>                      
                     </div>    
                     <!--Line Separator-->
