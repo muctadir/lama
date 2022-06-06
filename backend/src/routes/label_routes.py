@@ -1,20 +1,21 @@
 # Author: Eduardo
 # Author: Bartjan
+# Author: Victoria
 from src.app_util import check_args
 from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
 from src.app_util import login_required, in_project
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, Labelling
-
-# Merge labels
+from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
+  Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
 # Author: Eduardo
 @label_routes.route('/create', methods=['POST'])
 @login_required
+@in_project
 def create_label(*, user):
 
     args = request.json
@@ -52,6 +53,7 @@ def create_label(*, user):
 # Author: Bartjan, Victoria
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
+@in_project
 def edit_label(*, user):
     # Get args 
     args = request.json
@@ -83,6 +85,7 @@ def edit_label(*, user):
 # Check whether the pID exists
 @label_routes.route('/getAll', methods=['GET'])
 @login_required
+@in_project
 def get_all_labels(*, user):
     # Get args from request 
     args = request.args
@@ -123,6 +126,7 @@ def get_all_labels(*, user):
 # Author: Bartjan
 @label_routes.route('/get', methods=['GET'])
 @login_required
+@in_project
 def get_single_label(*, user):
     # Get args from request 
     args = request.args
@@ -141,10 +145,12 @@ def get_single_label(*, user):
 
 
     label_schema = LabelSchema()
+    theme_schema = ThemeSchema()
 
     dict_json = jsonify({
         'label': label_schema.dump(label),
-        'label_type': label.label_type.name
+        'label_type': label.label_type.name,
+        'themes': theme_schema.dump(label.themes, many=True)
     })
 
     return make_response(dict_json)
@@ -152,6 +158,7 @@ def get_single_label(*, user):
 # Author: Eduardo
 @label_routes.route('/merge', methods=['POST'])
 @login_required
+@in_project
 def merge(*, user):
     # TODO: Check user in project
     args = request.json

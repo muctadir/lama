@@ -4,6 +4,8 @@ import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import axios from 'axios';
+import { Theme } from './classes/theme';
+import { Labelling } from './classes/labelling';
 @Injectable({
   providedIn: 'root'
 })
@@ -73,9 +75,49 @@ export class LabelingDataService {
         'label_id': label_id
       }
     }).then((response) => {
-      return new Label(response.data.label.id, response.data.label.name,
-        response.data.label.description, response.data.label_type);
+      // Make Label object
+      let label = new Label(response.data.label.id, response.data.label.name,
+      response.data.label.description, response.data.label_type);
+      // Get themes information from response
+      let Themes: Array<any> = response.data.themes;
+      // Prepare empty array for themes
+      let ThemeArray: Array<Theme> = new Array<Theme>();
+      // Process the Themes
+      Themes.forEach((d:any) => {
+        ThemeArray.push(new Theme(d.id, d.name, d.desc))
+      });
+      // Set the themes
+      label.setThemes(ThemeArray);
+      // Return
+      return label;
     });
+  }
+
+  getLabelling(p_id: number, label_id: number): Promise<Array<Labelling>> {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+    // Check if the p_id is larger than 0
+    if (p_id < 0) throw new Error("p_id cannot be less than 0")
+    // Check if label_id larger than 0
+    if (label_id < 0) throw new Error("label_id cannot be less than 0")
+    let result: Label;
+    return axios.get('http://127.0.0.1:5000/labelling/labelling', {
+      headers: {
+        'u_id_token': token
+      },
+      params: {
+        'p_id': p_id,
+        'label_id': label_id
+      }
+    }).then((response) => {
+      console.log(response)
+      let labellings = new Array<Labelling>();
+      response.data.forEach((d:any) => {
+        labellings.push(new Labelling(d.id, d.name, Array<Label>()))
+      })
+      return labellings;
+    }).catch(e => {throw e;});
   }
 
   /**
@@ -97,7 +139,7 @@ export class LabelingDataService {
       }
     }).then((response) => {
       response.data.forEach((d: any) => {
-        result.push(new LabelType(d.id, d.name, new Array<Label>()))
+        result.push(new LabelType(d.a_id, d.remark, new Array<Label>()))
       });
       console.log(result);
       return result;

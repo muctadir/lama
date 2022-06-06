@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
+import { Labelling } from 'app/classes/labelling';
 
 // Type for artifact
 type artifact = {
@@ -23,10 +24,7 @@ export class IndividualLabelComponent {
   routeService: ReroutingService;
   label: Label;
   url: string;
-
-  labelThemes: Array<String> = ['Funny',' Positivity',' Casual']
-  // Dummy data
-
+  labellings: Array<Labelling>;
   // Dummy data
   artifacts: Array<artifact> = [
     {
@@ -52,6 +50,7 @@ export class IndividualLabelComponent {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
+      this.labellings = new Array<Labelling>();
   }
 
   /**
@@ -64,6 +63,7 @@ export class IndividualLabelComponent {
     let p_id = parseInt(this.routeService.getProjectID(this.url));
     let labelID = parseInt(this.routeService.getLabelID(this.url));
     this.getLabel(p_id, labelID);
+    this.getLabellings(p_id, labelID);
   }
 
   /**
@@ -74,6 +74,11 @@ export class IndividualLabelComponent {
     this.label = label;
   }
 
+  async getLabellings(p_id: number, labelID: number): Promise<void> {
+    const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
+    this.labellings = labellings;
+    console.log(labellings);
+  }
   /**
    * Gets the project id from the URL and reroutes to the label management page
    * of the same project
