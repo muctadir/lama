@@ -23,7 +23,6 @@ import { AddArtifactComponent } from './add-artifact/add-artifact.component';
 import { LabelManagementComponent } from './label-management/label-management.component';
 import { MergeLabelFormComponent } from './merge-label-form/merge-label-form.component';
 import { IndividualLabelComponent } from './individual-label/individual-label.component';
-import { EditLabelFormComponent } from './edit-label-form/edit-label-form.component';
 import { ConflictPageComponent } from './conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';

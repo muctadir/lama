@@ -103,8 +103,4 @@ export class ArtifactManagementPageComponent {
     alert("Button has not been implemented yet.");
   }
 
-  open(): void {
-    throw Error("Not implemented");
-  }
-
 }
