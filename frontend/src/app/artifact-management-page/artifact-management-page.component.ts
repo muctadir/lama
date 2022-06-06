@@ -70,6 +70,10 @@ export class ArtifactManagementPageComponent {
 
   ];
 
+  open(){
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
+  }
+
   /**
    * Constructor passes in the modal service, initializes Router
    * @param modalService instance of NgbModal
