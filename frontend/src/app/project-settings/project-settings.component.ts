@@ -206,8 +206,11 @@ export class ProjectSettingsComponent implements OnInit {
     // Push the username into the members list 
     modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
       var user = $e;
+      //  Checks if the user is already added
+      if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
+        // If not, we add them
         this.projectMembers.push(user);
-      
+      }
     })
   }
 
