@@ -98,7 +98,7 @@ export class ProjectCreationComponent implements OnInit {
           for (let user of response.data) {
             let newUser = new User(user.id, user.username);
             newUser.setEmail(user.email);
-            newUser.setDescription(user.description);
+            newUser.setDesc(user.description);
             this.allMembers.push(newUser);
           }
         })

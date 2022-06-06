@@ -52,6 +52,17 @@ describe('LabelType', () => {
       .toBe(newName);
   });
 
+  // Setting a wrong label type name
+  it('should throw error when name length is 0', () => {
+    // Create instances
+    const labelType2 = new LabelType(id, name, labels);
+    const newName = "";
+    // catch wrong name
+    try {
+      labelType2.setName(newName);
+    } catch (error) { }
+  });
+
   // Getting label type labels
   it('should get the labels of the labelType', () => {
     expect(labelType.getLabels())
@@ -104,6 +115,35 @@ describe('LabelType', () => {
     // Check
     expect(labelType2.getLabels())
       .toEqual(labels);
+  });
+
+  // Removing a label when there are none
+  it('should add a label to the labels of the the labelType', () => {
+    // Creating instances
+    const labelType2 = new LabelType(id, name, labels);
+    const idNewLabel = 6
+    //const newLabel3 = new Label(idNewLabel, "Angry", "Angry label", name);
+    // Add and remove the labels
+    //labelType2.addLabel(newLabel3);
+    // Check
+    try {
+      labelType2.removeLabel(idNewLabel);
+    } catch (error) { }
+  });
+
+  // Removing a non-existent label
+  it('should add a label to the labels of the the labelType', () => {
+    // Creating instances
+    const labelType2 = new LabelType(id, name, labels);
+    const idNewLabel = 6
+    const wrongId = 4
+    const newLabel3 = new Label(idNewLabel, "Angry", "Angry label", name);
+    // Add and remove the labels
+    labelType2.addLabel(newLabel3);
+    // Check
+    try {
+      labelType2.removeLabel(wrongId);
+    } catch (error) { }
   });
 
 
