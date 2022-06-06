@@ -6,7 +6,7 @@ from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
 from src.app_util import login_required
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema
+from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, Labelling
 
 # Merge labels
 
@@ -26,10 +26,10 @@ def create_label(*, user):
         return make_response('Bad Request', 400)
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
-        return make_response('Bad request: Label name cannot have size <= 0')
+        return make_response('Bad request: Label name cannot have size <= 0', 400)
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot have size <= 0')
+        return make_response('Bad request: Label description cannot have size <= 0', 400)
     # # Check whether the label type exists
     # if (db.session.get(LabelType, args['labelTypeId']).count()) <= 0:
     #     return make_response('Label type does not exist', 400)
@@ -99,6 +99,9 @@ def get_all_labels(*, user):
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+        
+    # if len(args['labelName']) <= 0:
+    #     return make_response('Bad request: Label name cannot have size <= 0', 400)
     
     # Get all the labels of a labelType
     labels = db.session.execute(
@@ -138,8 +141,7 @@ def get_single_label(*, user):
         return make_response('Bad Request', 400)
     
     # Get label
-    label = db.session.execute(
-            select(Label).where(Label.id==args['label_id'])).scalars().first()
+    label = db.session.get(Label, args['label_id'])
     
     if not label:
         return make_response('Label does not exist', 400)
@@ -153,3 +155,48 @@ def get_single_label(*, user):
     })
 
     return make_response(dict_json)
+
+# Author: Eduardo
+@label_routes.route('/merge', methods=['POST'])
+@login_required
+def merge(*, user):
+    # TODO: Check user in project
+    args = request.json
+    required = ['leftLabelId', 'rightLabelId', 'newLabelName', 'newLabelDescription']
+
+    # Check whether the length of the label name is at least one character long
+    if len(args['newLabelName']) <= 0:
+        return make_response('Bad request: Label name cannot have size <= 0', 400)
+    # Check whether the length of label description is at least one character long
+    if len(args['newLabelDescription']) <= 0:
+        return make_response('Bad request: Label description cannot have size <= 0', 400)    
+    # Check whether the ids are different
+    if len(args['leftLabelId'] == args['rightLabelId']) <= 0:
+        return make_response('Bad request: Cannot merge the same label twice', 400)
+
+    ids = [args['leftLabelId'], args['rightLabelId']]
+    labels = db.session.execute(
+            select(Label).where(Label.id.in_(ids))).scalars.all()
+    
+    # Check that the labels exist
+    if len(labels) != 2:
+        return make_response('Bad request: One or more labels do not exist', 400)
+    # Check labels are in the same project
+    if labels[0].p_id != labels[1].p_id:
+        return make_response('Bad request: Labels must be in the same project', 400)
+    # Check labels are of the same type
+    if labels[0].lt_id != labels[1].lt_id:
+        return make_response('Bad request: Labels must be of the same type', 400)
+    
+    # Create new label
+    new_label = Label(name=args['newLabelName'], 
+            description=args['newLabelDescription'],
+            lt_id=labels[0].lt_id,
+            p_id=labels[0].p_id)
+    db.session.add(new_label)
+    db.session.commit()
+
+    # Update all labellings
+    db.session.execute(
+        update(Labelling).where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
+    db.session.commit()
