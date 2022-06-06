@@ -22,7 +22,7 @@ interface Project {
       <h4 class="modal-title">Choose the users to add to the project</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body row" *ngFor="let user of users" style="padding:2px 16px; max-height: 25px;">
+    <div class="modal-body row" *ngFor="let user of users" (click)="addUser(user)" style="padding:2px 16px; max-height: 35px;">
         <div class="col" style="padding:15 1 1 1px; list-style: none; max-height: 25px;">
           <li> {{ user.getUsername() }}</li>
         </div>
@@ -31,7 +31,7 @@ interface Project {
             <!-- Button for adding new project_members -->
             <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
               <!-- Plus icon -->
-              <i class="bi bi-plus labelType"></i>
+              <i class="bi bi-plus labelType" id="popup-plus"></i>
             </button>
         </div>
         <br>
@@ -88,7 +88,7 @@ export class ProjectCreationComponent implements OnInit {
     let token: string | null  = sessionStorage.getItem('ses_token');
 
     if (typeof token === "string") {
-      const response = axios.get('http://127.0.0.1:5000/project/users', {
+      axios.get('http://127.0.0.1:5000/project/users', {
         headers: {
           'u_id_token': token
         }
@@ -217,7 +217,7 @@ export class ProjectCreationComponent implements OnInit {
 
       if (typeof token === "string") {        
         // Send the data to the database
-        const response = axios.post('http://127.0.0.1:5000/project/creation', projectInformation, {
+        axios.post('http://127.0.0.1:5000/project/creation', projectInformation, {
           headers: {
             'u_id_token': token
           }
