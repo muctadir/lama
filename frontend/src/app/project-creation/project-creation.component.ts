@@ -5,6 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import axios from 'axios';
 import { User } from 'app/classes/user';
+import { Router } from '@angular/router';
 
 // Project object
 interface Project {
@@ -224,6 +225,7 @@ export class ProjectCreationComponent implements OnInit {
         })
         .then(response => { 
           // TODO
+          this.router.navigate(["/home"]);
           p_response.innerHTML = "Project created"
         })
         .catch(error => {
@@ -258,7 +260,7 @@ export class ProjectCreationComponent implements OnInit {
     this.labelTypes.push("");
   }
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal, private router: Router) {}
 
   // Open the modal and populate it with users
   open() {
