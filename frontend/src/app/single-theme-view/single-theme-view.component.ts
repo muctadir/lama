@@ -92,8 +92,8 @@ export class SingleThemeViewComponent {
           // Set the parent
           newTheme.setParent(new Theme(superTheme["id"], superTheme["name"], superTheme["description"]));
 
-          // CHILDS
-          // List for the childs
+          // CHILDREN
+          // List for the children
           let childArray: Array<Theme> = [];
           // For each child make an object
           for (let child of subThemes){
@@ -103,7 +103,7 @@ export class SingleThemeViewComponent {
             childArray.push(newChild);
           }
           // Add the childern to the theme
-          newTheme.setChilds(childArray);
+          newTheme.setChildren(childArray);
 
           // LABELS
           // List for the labels 
