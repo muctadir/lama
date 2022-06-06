@@ -5,7 +5,7 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
-from src.app_util import login_required
+from src.app_util import login_required, in_project
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, Labelling
 
 # Merge labels
@@ -162,7 +162,11 @@ def get_single_label(*, user):
 def merge(*, user):
     # TODO: Check user in project
     args = request.json
-    required = ['leftLabelId', 'rightLabelId', 'newLabelName', 'newLabelDescription']
+    required = ['leftLabelId', 'rightLabelId', 'newLabelName', 'newLabelDescription', 'p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     # Check whether the length of the label name is at least one character long
     if len(args['newLabelName']) <= 0:

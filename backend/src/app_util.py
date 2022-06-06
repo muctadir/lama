@@ -3,6 +3,7 @@ from jwt import decode
 from jwt.exceptions import InvalidSignatureError
 from functools import wraps
 from src.models.auth_models import User
+from src.models.project_models import Membership
 from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request
@@ -101,6 +102,7 @@ def login_required(f):
         def func(<positional arguments>, *, user):
     enforces user to be a keyword argument
     """
+    # TODO: Check user status
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Check that header for token is provided
@@ -169,3 +171,34 @@ def super_admin_required(f):
             # Token is signed incorrectly
             return make_response('3 Unauthorized', 401)
     return decorated_function
+
+def in_project(user):
+    """
+    Decorator that checks if the user is in a certain project. This decorator needs to be placed _below_ the login_required decorator
+    Requires 'p_id' to be in either the request body, or request parameters
+    Requires the decorated function to have user as a keyword argument
+    """
+    # TODO: Check user status
+    # A decorator with parameters is a function that returns a decorator without parameters
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if request.method == 'GET':
+                p_id = request.args['p_id']
+            else:
+                p_id = request.json['p_id']
+            # Check that pId argument was provided
+            if p_id:
+                return make_response('Unauthorized', 401)
+            
+            membership = db.session.get(Membership, {'p_id': p_id, 'u_id': user.id})
+
+            if not membership:
+                return make_response('Unauthorized', 401)
+            
+            kwargs['user'] = user
+            return f(*args, **kwargs)
+
+        return decorated_function
+    
+    return decorator
