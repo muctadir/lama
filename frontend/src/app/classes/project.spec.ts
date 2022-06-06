@@ -45,21 +45,43 @@ describe('Project', () => {
       .toBe(newName)
   })
 
+  // Setting a bad project name
+  it('throw error for bad project name', () => {
+    // Create instances
+    const proj2 = new Project(id, name, desc);
+    const newName = "";
+    // catch wrong name
+    try {
+      proj2.setName(newName);
+    } catch (error) { }
+  });
+
   // Getting the description
   it("Should get the description", () => {
     const testDesc = "Test project";
     const testProject = new Project(id, name, testDesc);
-    expect(testProject.getDescription())
+    expect(testProject.getDesc())
       .toBe(testDesc)
   })
 
   // Setting the description
   it("Should set the description", () => {
     const newDesc = "Test project";
-    project.setDescription(newDesc);
-    expect(project.getDescription())
+    project.setDesc(newDesc);
+    expect(project.getDesc())
       .toBe(newDesc)
   })
+
+  // Setting a bad project description
+  it('throw error for bad project description', () => {
+    // Create instances
+    const proj2 = new Project(id, name, desc);
+    const newDesc = "";
+    // catch wrong name
+    try {
+      proj2.setDesc(newDesc);
+    } catch (error) { }
+  });
 
   // Setting and getting the users
   it("Should set the users", () => {
