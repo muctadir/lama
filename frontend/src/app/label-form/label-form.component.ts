@@ -22,6 +22,13 @@ export class LabelFormComponent implements OnInit {
   url: string;
   labelTypes: Array<LabelType>;
 
+  /**
+   * check the input
+   * @param activeModal
+   * @param labelingDataService
+   * @param router
+   * @param formBuilder
+   */
   constructor(public activeModal: NgbActiveModal,
     private labelingDataService: LabelingDataService,
     private router: Router,
@@ -36,34 +43,58 @@ export class LabelFormComponent implements OnInit {
       })
     }
 
+  /**
+   * On init
+   */
   ngOnInit(): void {
     const p_id = parseInt(this.routeService.getProjectID(this.url));
     this.getLabelTypes(p_id);
+    if(this.label !== undefined){
+      this.labelForm.controls['labelName'].patchValue(this.label.getName());
+      this.labelForm.controls['labelDescription'].patchValue(this.label.getDesc());
+      this.labelForm.controls['labelTypeId'].patchValue(this.label.getType());
+      this.labelForm.controls['labelTypeId'].disable();
+    }
   }
 
+  /**
+   *
+   * @param p_id
+   */
   async getLabelTypes(p_id: number) : Promise<void> {
     const labelTypes = await this.labelingDataService.getLabelTypes(p_id);
     this.labelTypes = labelTypes;
   }
 
+  /**
+   *
+   */
   submit (): void {
     // This is a funky Label object. Why?
     // - labelId = 0 - Since I have no clue what the ID is going to be.
     // - labelType = "" - Since this is not relevant.
-    let label = new Label(0,
-      this.labelForm.controls['labelName'].value,
-      this.labelForm.controls['labelDescription'].value,
-      "");
-    this.submitNew(label);
-    this.activeModal.close();
+    if (this.label === undefined) {
+      let label = new Label(0,
+        this.labelForm.controls['labelName'].value,
+        this.labelForm.controls['labelDescription'].value,
+        "");
+        this.submitToServer(label);
+    }
+    else {
+      this.label.setName(this.labelForm.controls['labelName'].value);
+      this.label.setDesc(this.labelForm.controls['labelDescription'].value);
+      this.submitToServer(this.label);
+    }
   }
 
-  async submitNew(label: Label) : Promise<void> {
+  async submitToServer(label: Label) : Promise<void> {
     const p_id = parseInt(this.routeService.getProjectID(this.url));
-    this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value)
-  }
-
-  async submitEdit() : Promise<void> {
-
+    if (this.label === undefined){
+      await this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
+      window.location.reload();
+    } else {
+      await this.labelingDataService.editLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
+      window.location.reload();
+    }
   }
 }

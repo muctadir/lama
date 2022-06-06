@@ -18,7 +18,7 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 def create_label(*, user):
 
     args = request.json
-    print(args)
+
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
 
     # Check whether the required arguments are delivered
@@ -31,12 +31,12 @@ def create_label(*, user):
     if len(args['labelDescription']) <= 0:
         return make_response('Bad request: Label description cannot have size <= 0', 400)
     # # Check whether the label type exists
-    # if (db.session.get(LabelType, args['labelTypeId']).count()) <= 0:
-    #     return make_response('Label type does not exist', 400)
-
-    # # Check whether the label is part of the project
-    # if label_type.p_id != args['pId']:
-    #     return make_response('Label type not in this project', 400)
+    label_type = db.session.get(LabelType, args['labelTypeId'])
+    if not label_type:
+        return make_response('Label type does not exist', 400)
+    # # Check whether the labeltype is part of the project
+    if label_type.p_id != args['p_id']:
+        return make_response('Label type not in this project', 400)
     # Make the label
     label = Label(name=args['labelName'],
         description=args['labelDescription'],
@@ -53,35 +53,28 @@ def create_label(*, user):
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 def edit_label(*, user):
-
+    # Get args 
     args = request.json
-    required = ('labelId', 'labelTypeId', 'labelName', 'labelDescription', 'pId')
+    # Required args
+    required = ('labelId', 'labelName', 'labelDescription', 'p_id')
 
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
     label = db.session.get(Label, args['labelId'])
-    newLabel = label
     if not label:
         return make_response('Label does not exist', 400)
 
-    if label.p_id != args["pId"]:
+    if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
 
-    if not args['labelTypeId'] != "":
-        newLabel.lt_id = args['labelTypeId']
+    tmp = update(Label).where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
+    print(tmp)
 
-    if not len(args['labelName']) <= 0:
-        newLabel.name = args['labelName']
-
-    if not len(args['labelDescription']) <= 0:
-        newLabel.description = args['labelDescription']
-
-    if newLabel == label:
-        # Returns if the label is not modified
-        return make_response('Not Modified', 204)
-
-    db.session.update(label)
+    db.session.execute(
+        update(Label).where(Label.id == args['labelId']).values(name=args['labelName'],
+        description=args['labelDescription'])
+    )
     db.session.commit()
 
     return make_response('Ok')

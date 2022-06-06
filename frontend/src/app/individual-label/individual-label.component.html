@@ -40,25 +40,26 @@
         <div class="col-2" id="middleRow"></div>
         <div class="col-6" id="rightRow">
             <!-- Description -->
-            <div class="subTitle">    
+            <div class="subTitle">
                 Description
             </div>
             <div class="form-group">
                 <textarea class="form-control" rows="8" placeholder="Description" id="remark" readonly>{{label.getDesc()}}</textarea>
             </div>
             <!-- Part of which Themes -->
-            <div class="subTitle">    
+            <div class="subTitle">
                 Themes
             </div>
             <div *ngFor="let theme of label.getThemes()" class="labelThemes">
                 <p>{{theme.getName()}}</p>
             </div>
         </div>
-    </div> 
+    </div>
 
     <!-- Back and Edit Buttons -->
     <div class="col-10"></div>
     <div class="col-2">
         <button class="btn btn-secondary float-start" (click)="reRouter()" id="btns-cancel-submit">Back</button>
+        <button class="btn btn-secondary float-start" (click)="openEdit()" id="btns-cancel-submit">Edit</button>
     </div>
 </div>

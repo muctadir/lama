@@ -1,6 +1,6 @@
 // <!-- Author: Victoria Bogachenkova -->
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
 import { LabelingDataService } from '../labeling-data.service';
 import { Label } from 'app/classes/label';
@@ -20,7 +20,7 @@ export class LabelManagementComponent {
 
   //Pagination Settings
   page: number = 1;
-  pageSize: number = 4;
+  pageSize: number = 10;
 
 // Contructor with modal
   constructor(private modalService: NgbModal,
