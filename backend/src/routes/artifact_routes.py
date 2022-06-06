@@ -1,6 +1,8 @@
 # Victoria Bogachenkova
 # Ana-Maria Olteniceanu
 
+from importlib.metadata import requires
+from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
@@ -15,16 +17,21 @@ artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 @login_required
 def get_artifacts(*, user):
 
-    # Get the information given by the frontend
-    # artifacts_info = request.json
-    # Get project ID
-    # Hardcoded for now
-    p_id = request.args.get('p_id', '')
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = args['p_id']
 
     # Get membership of the user
     membership = db.session.execute(
         select(Membership).where(Membership.u_id==user.id, Membership.p_id==p_id)
-    ).scalars().all()[0]
+    ).scalars().first()
 
     # Check if user is admin for the project and get artifacts
     if membership.admin == True:
@@ -34,7 +41,7 @@ def get_artifacts(*, user):
         ).scalars().all()
     else:
         # If user isn't admin, then get all artifacts the user has labelled
-        artifacts = []
+        artifacts = {}
 
         # Get all the labellings the user has done in the current project
         labellings = db.session.execute(
@@ -43,8 +50,7 @@ def get_artifacts(*, user):
 
         # Take the artifacts labelled by the user
         for labelling in labellings:
-            if labelling.artifact not in artifacts:
-                artifacts.append(labelling.artifact)
+            artifacts.add(labelling.artifact)
 
     # List of artifacts to be passed to frontend
     artifact_info = []
@@ -98,6 +104,14 @@ def get_artifacts(*, user):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 def add_new_artifacts(*, user):
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 40)
 
     # Get the information given by the frontend
     artifact_info = request.json
@@ -105,6 +119,7 @@ def add_new_artifacts(*, user):
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
     for artifact in artifact_info:
+
         artifact_object = artifact_schema.load(artifact)
 
         # Add the artifact to the database

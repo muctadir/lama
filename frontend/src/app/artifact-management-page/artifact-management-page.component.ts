@@ -1,10 +1,14 @@
+// Ana-Maria Olteniceanu
+// Bartjan Henkemans
+// Victoria Bogachenkova
+
 import { Component } from '@angular/core';
-import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StringArtifact } from 'app/classes/stringartifact';
-import axios from 'axios';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
+import { ArtifactDataService } from 'app/artifact-data.service';
 
 
 @Component({
@@ -13,77 +17,40 @@ import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
   styleUrls: ['./artifact-management-page.component.scss']
 })
 export class ArtifactManagementPageComponent {
+  // Initialize the ReroutingService
+  routeService: ReroutingService;
+  // Initialize the url
+  url: string;
+  // Make list of all artifacts
+  artifacts: StringArtifact[];
+
   //Pagination Settings
   page = 1;
   pageSize = 5;
 
-  // Project id. Currently hardcoded
-  p_id = 0;
+  /**
+     * Constructor passes in the modal service and the artifact service,
+     * initializes Router
+     * @param modalService instance of NgbModal
+     * @param artifactDataService instance of ArtifactDataService
+     * @param router instance of Router
+     */
+  constructor(private modalService: NgbModal,
+    private artifactDataService: ArtifactDataService,
+    private router: Router) {
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.artifacts = new Array<StringArtifact>()
+  }
 
-  // Initialize the ReroutingService
-  routeService: ReroutingService = new ReroutingService();
+  ngOnInit(): void {
+    const p_id = Number(this.routeService.getProjectID(this.url))
+    this.getArtifacts(p_id)
+  }
 
-  // Make list of all artifacts
-  artifacts: StringArtifact[] = [];
-  
-/**
-   * Constructor passes in the modal service, initializes Router
-   * @param modalService instance of NgbModal
-   * @param router instance of Router
-   */
-    constructor(private modalService: NgbModal, private router: Router) { }
-
-    ngOnInit(): void {
-
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
-
-    // Gets the url from the router
-    let url: string = this.router.url
-
-    // Use reroutingService to obtain the project ID
-    this.p_id = Number(this.routeService.getProjectID(url));
-
-      // Get the information needed from the back end
-      axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'p_id' : this.p_id
-        }
-      })
-        // When there is a response get the artifacts
-        .then(response => {
-
-          // For each artifact in the list
-          for (let artifact of response.data){
-
-            // Initialize a new artifact with all values
-            let artifactJson = artifact["artifact"];
-            artifactJson["id"] = artifact["artifact_id"];
-            artifactJson["identifier"] = artifact["artifact_identifier"],
-            artifactJson["data"] = artifact["artifact_text"];
-            artifactJson["labellings"] = artifact["artifact_labellings"];
-
-            // Create an artifact object
-            let artifactNew: StringArtifact = new StringArtifact(
-              artifactJson["id"],
-              artifactJson["identifier"],
-              artifactJson["data"]
-            )
-
-            // Get the number of labellings on this artifact
-            artifactNew.setLabellings(artifactJson["labellings"])
-
-            // Add artifact to list
-            this.artifacts.push(artifactNew);
-          }
-        })
-        // If there is an error
-        // TODO change
-        .catch(error => {console.log(error)});
-    } 
+  async getArtifacts(p_id: number): Promise<void> {
+    const artifacts = await this.artifactDataService.getArtifacts(p_id);
+    this.artifacts = artifacts
   }
 
   /**
@@ -92,15 +59,10 @@ export class ArtifactManagementPageComponent {
    * 
    * @trigger user clicks on artifact
    */
-   reRouter(a_id: number) : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+  reRouter(a_id: number): void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
+    let p_id = this.routeService.getProjectID(this.url);
+
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
@@ -108,8 +70,8 @@ export class ArtifactManagementPageComponent {
   notImplemented(): void {
     alert("Button has not been implemented yet.");
   }
-  open(){
-    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
+  open() {
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
   }
-  
+
 }
