@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 //Test array for label holding artifacts
 
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './single-theme-view.component.html',
   styleUrls: ['./single-theme-view.component.scss']
 })
-export class SingleThemeViewComponent implements OnInit {
+export class SingleThemeViewComponent {
 
   //Theme Name Variable
   themeName: String = 'Theme 1';
@@ -31,13 +33,30 @@ export class SingleThemeViewComponent implements OnInit {
                    {artifactName: "Artifact 3", artifactText: 'The man made a funny joke about a cat', artifactRemark: 'I thought that this made sense.'}]}
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
-  ngOnInit(): void {
-  }
 
   notImplemented(): void {
     alert("Button has not been implemented yet.");
+  }
+
+  /**
+   * Gets the project id from the URL and reroutes to the theme management page
+   * of the same project
+   * 
+   * @trigger back button is pressed
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'thememanagement']);
   }
 
 }

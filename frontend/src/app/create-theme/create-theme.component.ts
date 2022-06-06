@@ -1,11 +1,13 @@
 import { Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 @Component({
   selector: 'app-create-theme',
   templateUrl: './create-theme.component.html',
   styleUrls: ['./create-theme.component.scss']
 })
-export class CreateThemeComponent implements OnInit {
+export class CreateThemeComponent {
 
   //highlight label variable
   highlightedLabel: String = '';
@@ -35,10 +37,8 @@ export class CreateThemeComponent implements OnInit {
   //Hard coded sub-themes
   allSubthemes = ['Happiness','Angriness', 'SupremeSubtheme'];
  
-  constructor() { }
+  constructor(private router: Router) { }
 
-  ngOnInit(): void {
-  }
   //Adds labels to added labels array.
   addLabel(label:any){
     for (var addedLabel of this.addedLabels){
@@ -97,6 +97,25 @@ export class CreateThemeComponent implements OnInit {
   // Filler for TODO functions
   notImplemented(): void {
     alert("Button has not been implemented yet.");
+  }
+
+  /**
+   * Gets the project id from the URL and reroutes to the theme page
+   * of the same project
+   * 
+   * @trigger back button is pressed
+   */
+   reRouter() : void {
+    // Gets the url from the router
+    let url: string = this.router.url
+    
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'thememanagement']);
   }
 
 }

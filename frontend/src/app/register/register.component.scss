@@ -6,21 +6,21 @@ $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
 // Header above the input fields
-#header{
+#header {
     font-size: 22px;
     letter-spacing: 1px;
     text-align: center;
 }
 
 // Styles the link to go back to the login page
-#back-login{
+#back-login {
     font-size: 12px;
     float: right;
     color: #ed5a06;
 }
 
 // the register button at the bottom of the forms
-#register-button{
+#register-button {
     margin-top: 10px;
     padding-left: 50px;
     padding-right: 50px;
@@ -35,19 +35,19 @@ $orange-shade: #ed5a06;
 }
 
 // Ensures that the content is not entirely at the top of the page
-#middle-col{
+#middle-col {
     margin-top: 10vh;
 }
 
 // Styles the link to go back to the login page
-#back-login{
+#back-login {
     font-size: 12px;
     float: right;
     color: #ed5a06;
 }
 
 // Sets layout of the error message that is displayed when register input is incorrect
-#error-msg{
+#error-msg {
     color: $orange-shade;
     font-size: 15px;
 }
