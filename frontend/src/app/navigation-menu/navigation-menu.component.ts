@@ -63,6 +63,10 @@ export class NavigationMenuComponent {
         } else if (new_route.includes("conflict")) {
           // highlights conflict management page icon
           this.page = 5;
+          }
+          else if (new_route.includes("settings")) {
+          // highlights project settings page icon
+          this.page = 6;
         }
       }
     });

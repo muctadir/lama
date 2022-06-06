@@ -23,13 +23,13 @@
                     <!-- Project Name field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        <input id="projectName" name="projectName" class="form-control" type="text" placeholder="Project Name" value={{projectName}} required><br>
+                        <input id="projectName" name="projectName" class="form-control" type="text" placeholder="Project Name" value={{currentProject.getName()}} required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <textarea name="projectDescription" id='projectDescriptionForm' class="form-control" rows="10" placeholder="Project Description" value={{projectDesc}}></textarea>
+                        <textarea name="projectDescription" id="projectDescriptionForm" class="form-control" rows="10" placeholder="Project Description" value={{currentProject.getDescription()}}></textarea>
                     </div>  
                 </form>
 
@@ -70,7 +70,7 @@
                             </div>
                             
                             <!-- Name and checkbox per member of the project -->
-                            <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
+                            <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
                                 <!-- Row for the delete, name and project admin -->
                                 <div class="row align-items-center">
                                     <!-- Column for delete icon -->
@@ -103,7 +103,7 @@
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                <input type="number" class="form-control" name="numberOfLabellers" value={{labelCount}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
+                                <input type="number" class="form-control" name="numberOfLabellers" value={{currentProject.getCriteria()}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
                             </div>
                         </div>
                     </div> 
@@ -166,12 +166,12 @@
                     <!-- Username field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        {{projectName}}
+                        {{currentProject.getName()}}
                     </div>                    
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <p>{{projectDesc}}</p>
+                        <p>{{currentProject.getDescription()}}</p>
                     </div>  
                     <!-- Response division -->
                     <div id="responseDiv">
@@ -240,7 +240,7 @@
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                {{ labelCount }}
+                                {{currentProject.getCriteria()}}
                             </div>
                         </div>
                     </div> 
@@ -267,10 +267,10 @@
                 
         <div class="row justify-content-end">
             <!-- Edit button -->
-            <button *ngIf="!edit && !frozen" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
+            <button *ngIf="!edit && !currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
                 Edit
             </button>
-            <button *ngIf="frozen" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="unfreezeProject()">
+            <button *ngIf="currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="unfreezeProject()">
                 Unfreeze
             </button>
         </div>

@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { User } from '../user';
+import axios from 'axios';
+import { Router } from '@angular/router'
+import { User } from '../classes/user';
+import { Project } from '../classes/project';
 
 //Modal for adding users
 @Component({
@@ -80,10 +83,8 @@ export class AddUsersErrorModalContent {
 })
 
 export class ProjectSettingsComponent implements OnInit {
-  //project name
-  projectName: string = "project name";
-  //project description
-  projectDesc: string = "project description";
+  //Current Project
+  currentProject: Project;
   //project members
   projectMembers: User[] = [];
   //all members
@@ -95,23 +96,57 @@ export class ProjectSettingsComponent implements OnInit {
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
   edit: boolean = false;
-  //Whether the page is frozen, default is not frozen
-  frozen: boolean = false;
 
-  constructor(private modalService: NgbModal) { 
+  constructor(private modalService: NgbModal, private router: Router) { 
     //Dummy data for initial
-    this.projectMembers.push(new User(1, "Linh", "notmail@com.com","They cool"));
-    this.projectMembers.push(new User(2, "Jarl", "notmail@com.com","They cool"));
-    this.projectMembers.push(new User(3, "Vic", "notmail@com.com","They cool"));
-    this.projectMembers.push(new User(4, "Thea", "notmail@com.com","They cool"));
-    //(<HTMLInputElement>document.getElementById("projectAdminCheckBoxHome-" + this.projectMembers[0].getId())).checked = true;
-    //this.allMembers = this.projectMembers;
-    this.allMembers.push(new User(5, "Veerle", "notmail@com.com", "They cool"))
-    this.allMembers.push(new User(6, "Chinno", "notmail@com.com", "They cool"))
-    this.allMembers.push(new User(6, "Bartjan", "notmail@com.com", "They cool"))
+    this.currentProject = new Project(1, "Project Name", "Project Description");
+    this.projectMembers.push(new User(1, "Linh"));
+    this.projectMembers.push(new User(2, "Jarl"));
+    this.projectMembers.push(new User(3, "Vic"));
+    this.projectMembers.push(new User(4, "Thea"));
+    this.currentProject.setUsers(this.projectMembers);
   }
 
   ngOnInit(): void {
+    // Get all users within the tool
+    
+    let token: string | null  = sessionStorage.getItem('ses_token');
+
+    if (typeof token === "string") {
+      const response = axios.get('http://127.0.0.1:5000/project/users', {
+        headers: {
+          'u_id_token': token
+        }
+      })
+        .then(response => { 
+          
+          for (let user of response.data) {
+            let newUser = new User(user.id, user.username);
+            newUser.setEmail(user.email);
+            newUser.setDescription(user.description);
+            this.allMembers.push(newUser);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+        const responseP = axios.get('http://127.0.0.1:5000/project/home', {
+        headers: {
+          'u_id_token': token
+        }
+      })
+        .then(responseP => { 
+          let projectID = +(this.router.url.substring(this.router.url.indexOf("/project/") + 9, this.router.url.indexOf("/settings")))
+          this.currentProject.setName(responseP.data[projectID-1].project.name);
+          this.currentProject.setDescription(responseP.data[projectID-1].project.description);
+          this.currentProject.setCriteria(responseP.data[projectID-1].project.criteria);
+          this.currentProject.setFrozen(responseP.data[projectID-1].project.frozen);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 
   //Entering Edit Mode
@@ -131,8 +166,8 @@ export class ProjectSettingsComponent implements OnInit {
 
   //Saving changes made to project
   saveEdit(): void {
-    this.projectName = (<HTMLInputElement>document.getElementById("projectName")).value;
-    this.projectDesc = (<HTMLInputElement>document.getElementById("projectDescriptionForm")).value;
+    this.currentProject.setName((<HTMLInputElement>document.getElementById("projectName")).value);
+    this.currentProject.setDescription((<HTMLInputElement>document.getElementById("projectDescriptionForm")).value);
     this.labelCount = (<HTMLInputElement>document.getElementById("numberOfLabellers")).value;
     // For with the label types
     const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
@@ -187,15 +222,16 @@ export class ProjectSettingsComponent implements OnInit {
 
   //Freezing the project
   freezeProject() {
-    this.projectName += "- FROZEN";
+    this.currentProject.setName(this.currentProject.getName() + "- FROZEN");
     this.edit = false;
-    this.frozen = true;
+    this.currentProject.setFrozen(true);
   }
 
   //Unfreezing the project
   unfreezeProject() {
-    this.projectName = this.projectName.substring(0,this.projectName.indexOf("- FROZEN"));
-    this.frozen = false;
+    let newName = this.currentProject.getName().substring(0,this.currentProject.getName().indexOf("- FROZEN"));
+    this.currentProject.setName(newName);
+    this.currentProject.setFrozen(false);
   }
 
 }
