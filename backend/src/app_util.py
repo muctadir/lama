@@ -1,3 +1,7 @@
+"""
+Authors: Eduardo Costa Martins
+"""
+
 import re
 from jwt import decode
 from jwt.exceptions import InvalidSignatureError
