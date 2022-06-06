@@ -19,6 +19,7 @@ import { ArtifactManagementPageComponent } from './artifact-management-page/arti
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 import { LabelManagementComponent } from './label-management/label-management.component';
 import { IndividualLabelComponent } from './individual-label/individual-label.component';
+import { EditThemeComponent } from './edit-theme/edit-theme.component';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
@@ -34,7 +35,7 @@ const routes: Routes = [
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
     {path: 'createProject', component: ProjectCreationComponent},
-    {path: 'project', component: ProjectComponent, children: [
+    {path: 'project/:projectId', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
       {path: 'labelling-page', component: LabellingPageComponent},
@@ -46,12 +47,13 @@ const routes: Routes = [
       {path: 'thememanagement', component: ThemeManagementComponent},
       {path: 'createTheme', component: CreateThemeComponent},
       {path: 'singleTheme', component: SingleThemeViewComponent},
+      {path: 'editTheme', component: EditThemeComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: 'settings', component: ProjectSettingsComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
-    ]},
-    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
+    ]}];
+    //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
     
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],

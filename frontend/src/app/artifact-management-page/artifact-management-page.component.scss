@@ -4,6 +4,11 @@
     --main-color-2: #38474e;
 }
 
+#main_body {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
 // TOP BAR
 #topBarRow{
     margin-left: 10px;

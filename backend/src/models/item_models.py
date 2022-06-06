@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db, ma
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table, UniqueConstraint
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -21,6 +21,7 @@ class ProjectItem():
     Abstract class for all entities belonging to a project
     i.e. an item uniquely identified by the project id and its own id
     """
+    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
 
     # Declares existence of p_id : foreign key for project
     @declared_attr
@@ -28,7 +29,7 @@ class ProjectItem():
         return Column(Integer, ForeignKey('project.id'), nullable=False)
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(64))
+    name = Column(String(64), nullable=False)
 
     # Project that item belongs to
     # Backref automatically creates an attribute in project to access the items of this type
@@ -65,12 +66,14 @@ class ChangingItem(ProjectItem):
 class LabelType(ProjectItem, db.Model):
 
     __tablename__ = 'label_type'
+
     # A list of labels that are of this type
     labels = relationship('Label', back_populates='label_type')
 
 class Artifact(ChangingItem, db.Model):
 
     __tablename__ = 'artifact'
+
     # The name (or some other identifier) of the file the artifact originated from
     identifier = Column(String(64), nullable=False)
 
@@ -93,7 +96,6 @@ class Artifact(ChangingItem, db.Model):
             backref=backref('parent', remote_side='[Artifact.p_id, Artifact.id]'))
 
     # Attributes for labelling relationship
-    # List of labellings this artifact is associated with
     labellings = relationship('Labelling', back_populates='artifact')
     # The below attributes are to reduce intermediary access to labellings
     # Do NOT use them to query labellings
@@ -108,13 +110,13 @@ class Artifact(ChangingItem, db.Model):
 class Label(ChangingItem, db.Model):
 
     __tablename__ = 'label'
-    __table__args__ = (
-        ForeignKeyConstraint(['p_id', 'lt_id'], ['label_type.p_id', 'label_type.id'])
-    )
+
     # The id of the label type this label corresponds to
     lt_id = Column(Integer, ForeignKey('label_type.id'), nullable=False)
     # The actual label type object this label corresponds to
-    label_type = relationship('LabelType', back_populates='labels')
+    label_type = relationship('LabelType', 
+            primaryjoin='and_(LabelType.p_id==Label.p_id, LabelType.id==Label.lt_id)',
+            back_populates='labels')
     # Description of meaning of label
     description = Column(Text, nullable=False)
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
@@ -129,7 +131,6 @@ class Label(ChangingItem, db.Model):
             backref=backref('child', remote_side='[Label.p_id, Label.id]'))
 
     # Attributes for labelling relationship
-    # List of labellings this label is associated with
     labellings = relationship('Labelling', back_populates='label')
     # The below attributes are to reduce intermediary access to labellings
     # Do NOT use them to query labellings
@@ -153,14 +154,13 @@ class Theme(ChangingItem, db.Model):
     # Boolean for if the theme was (soft) deleted (can be seen in history, but not used)
     deleted = Column(Boolean, default=False)
 
+    # Attributes for merging relationship
+    # The id of the label that this label was merged into (null if this label was not merged)
+    super_theme_id = Column(Integer, ForeignKey('theme.id'))
     # All sub themes
-    # Backref automatically creates super_themes attribute to access super themes
-    sub_themes = relationship('Theme',
-            secondary='theme_to_theme',
-            primaryjoin='and_(Theme.id==theme_to_theme.c.super_id, Theme.p_id==theme_to_theme.c.p_id)',
-            secondaryjoin='and_(Theme.id==theme_to_theme.c.sub_id, Theme.p_id==theme_to_theme.c.p_id)',
-            backref='super_themes'
-    )
+    # backref creates a super_theme attribute
+    sub_themes = relationship('Theme', 
+            backref=backref('super_theme', remote_side='[Theme.p_id, Theme.id]'))
 
     # Labels assigned to this theme
     labels = relationship('Label',
@@ -171,36 +171,46 @@ class Theme(ChangingItem, db.Model):
 
 
 class Labelling(db.Model):
-
+    # Using this model requires a fair bit of input processing which (to my knowledge) cannot
+    # be done so easily on the database side of things. See comments for necessary processing
     __tablename__ = 'labelling'
-    __table__args__ = (
-        ForeignKeyConstraint(['p_id', 'a_id'], ['artifact.p_id', 'artifact.id']),
-        ForeignKeyConstraint(['p_id', 'l_id'], ['label.p_id', 'label.id']),
-    )
+
     # The id of the user that labelled the artifact
+    # Input processing: you should check that the user is actually in this project
     u_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     # The id of the artifact that was labelled
     a_id = Column(Integer, ForeignKey('artifact.id'), primary_key=True)
+    # The id of the label_type that the label belongs to
+    # This was chosen as a primary key to enforce that the labels are all of different types
+    # Input processing: you should check that every label type is used when adding labelling objects
+    lt_id = Column(Integer, ForeignKey('label_type.id'), primary_key=True)
     # The id of the label that the artifact was labelled with
-    l_id = Column(Integer, ForeignKey('label.id'), primary_key=True)
+    # Input processing: you should check that lt_id of the label is the same as the lt_id in the labelling
+    l_id = Column(Integer, ForeignKey('label.id'), nullable=False)
     # The id of the project that the label/artifact belong to
-    p_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
+    # Input processing: you should check that label type, label, and artifact, are all from the same project
+    p_id = Column(Integer, ForeignKey('project.id'), nullable=False)
     # Remark on why this label was chosen for this artifact
     remark = Column(Text)
     # How long it took the user to label this artifact
     time = Column(Time)
 
-    # The user, artifact, and label object corresponding to this relationship
+    # The user, artifact, label, and label_type objects corresponding to this relationship
     user = relationship('User', back_populates='labellings')
-    artifact = relationship('Artifact', back_populates='labellings')
-    label = relationship('Label', back_populates='labellings')
+    artifact = relationship('Artifact', 
+            primaryjoin='and_(Artifact.p_id==Labelling.p_id, Artifact.id==Labelling.a_id)',
+            back_populates='labellings')
+    label = relationship('Label', 
+            primaryjoin='and_(Label.p_id==Labelling.p_id, Label.id==Labelling.l_id)',
+            back_populates='labellings')
+    # I may add a back_populates later, as it could be useful for statistics about a label type
+    # No association proxies for this one as that would just be equivalent to project.label_types
+    label_type = relationship('LabelType',
+            primaryjoin='and_(LabelType.p_id==Labelling.p_id, LabelType.id==Labelling.lt_id)')
 
 class Highlight(db.Model):
 
     __tablename__ = 'highlight'
-    __table__args__ = (
-        ForeignKeyConstraint(['a_id', 'p_id'], ['artifact.id', 'artifact.p_id'])
-    )
 
     # The id of the user that made the highlight
     u_id = Column(Integer, ForeignKey('user.id'), nullable=False)
@@ -216,17 +226,12 @@ class Highlight(db.Model):
 
     # The user and artifact objects corresponding to this highlight
     user = relationship('User', back_populates='highlights')
-    artifact = relationship('Artifact', back_populates='highlights')
-
-# Table to manage sub theme relationship
-# If you wish to add other attributes, an association class should be used instead
-theme_to_theme = Table('theme_to_theme', db.Model.metadata,
-        Column('p_id', Integer, ForeignKey('project.id')),
-        Column('super_id', Integer, ForeignKey('theme.id')),
-        Column('sub_id', Integer, ForeignKey('theme.id'))
-)
+    artifact = relationship('Artifact',
+            primaryjoin='and_(Highlight.p_id==Artifact.p_id, Highlight.a_id==Artifact.id)',
+            back_populates='highlights')
 
 # Table to manage label to theme relationship
+# A many to many theme to theme hierarchy would work a similar way
 # If you wish to add other attributes, an association class should be used instead
 label_to_theme = Table('label_to_theme', db.Model.metadata,
         Column('p_id', Integer, ForeignKey('project.id')),

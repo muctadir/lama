@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class InputCheckService {
 
-  constructor() { }
-
   /**
    * Checks whether the string input is non-empty
    * 

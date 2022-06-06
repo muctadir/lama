@@ -1,41 +1,71 @@
-import { Component, OnDestroy } from '@angular/core';
-import { NavCollapseService } from '../nav-collapse.service';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, HostBinding } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 @Component({
   selector: 'app-navigation-menu',
   templateUrl: './navigation-menu.component.html',
   styleUrls: ['./navigation-menu.component.scss']
 })
-export class NavigationMenuComponent implements OnDestroy {
+export class NavigationMenuComponent {
+  /**
+   * Changes the sizing of the navigation component 
+   * based on whether the menu should be collapsed or not
+   */
+  @HostBinding('style.width') get className() { 
+    // if the navigation bar is collapsed set size to col-1
+    if (this.collapsed) {
+      return '8.3333333333%';
+    } 
+    // if the navigation bar is not collapsed set size to col-3
+    else {
+      return '25%';
+    }
+  }
 
-  /* Indicates whether the navigation menu is collapsed or not */
+  /* Indicates whether the navigation bar should be expanded or collapsed. */
   collapsed = true;
-  /* Holds the link with the BehaviourSubject, which is used to communicate with the project component */
-  subscription: Subscription;
 
-  /* Indicates what page the user is currently viewing. */
+  /* Indicates the what icon in the navigation bar should be highlighted. */
   page = 0;
 
   /**
-   * Ensures that page holds the value of the current page, and subscribes to the BehaviourSubject
+   * Subscribes to the router events, when the routing changes updates the icon highlighted
+   * in the navigation bar accordingly
    * 
-   * @param commService instance of NavCollapseService used to communicate with project component
-   */
-  constructor(private router: Router, private commService: NavCollapseService) {
-    this.route_det_page();
-    this.subscription = this.commService.currentCollapsed.subscribe(msg => this.collapsed = msg);
-  }
-
-  /**
-   * Destroys the BehaviourSubject used to communicate between the navigation menu and the project component
+   * @param router Instance of the Router class used to get info about the current route
+   * @param 
    * 
-   * @trigger when component gets destroyed
-   * @modifies subscription
+   * @trigger when the route changes
+   * @modifies page 
    */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  constructor(private router: Router) {
+    // subscribes to the router event
+    this.router.events.subscribe((ev) => {
+      if (ev instanceof NavigationEnd) {
+        // code executed when the route changes 
+        let new_route = ev['urlAfterRedirects'];
+        if (new_route.includes("stats")) {
+          // highlights stats page icon
+          this.page = 0;
+        } else if (new_route.includes("labelling")) {
+          // highlights labelling page icon
+          this.page = 1;
+        } else if (new_route.includes("artifact")) {
+          // highlights artifact management page icon
+          this.page = 2;
+        } else if (new_route.includes("label")) {
+          // highlights labelling management page icon
+          this.page = 3;
+        } else if (new_route.includes("theme")) {
+          // highlights theme management page icon
+          this.page = 4;
+        } else if (new_route.includes("conflict")) {
+          // highlights conflict management page icon
+          this.page = 5;
+        }
+      }
+    });
   }
 
   /**
@@ -44,59 +74,22 @@ export class NavigationMenuComponent implements OnDestroy {
    * @trigger when the top most icon is clicked in the navigation menu
    * @modifies collapsed
    */
-  changeSize() {
-    this.commService.modifyCollapsed(this.collapsed);
+  changeSize() : void {
+    this.collapsed = !this.collapsed;
   }
 
 
-  /**
-   * Determines what page the user is on
-   * 
-   * @param navnr the page to which the user is navigating
-   * 
-   * @trigger whenever the component is opened, or when user routes to new page in project
-   * @modifies page
-   */
-  det_page(navnr: number) {
-    this.page = navnr;
-  }
+  changePage(next_page : string) : void  {
+    // Removes the first character from the route
+    let url : string = this.router.url;
 
-  /**
-   * Determines the page that shown be shown based on the current route
-   * 
-   * @trigger when a navigation-menu is initialized
-   */
-  route_det_page() {
-    let route = this.router.url;
-    // if the route contains stats page, should highlight icon 0
-    if (route.includes("stats")){
-      this.page = 0;
-    } 
-    // if the route contains labelling page, should highlight icon 1
-    if (route.includes("labelling")){
-      this.page = 1;
-    }
-    // if the route contains artifact management page, should highlight icon 2
-    if (route.includes("artifact")){
-      this.page = 2;
-    }
-    // if the route contains label management page, should highlight icon 2
-    if (route.includes("labelmanagement")){
-      this.page = 3;
-    }
-    // if the route contains theme management page, should highlight icon 2
-    if (route.includes("theme")){
-      this.page = 4;
-    }
-    // if the route contains conflict page, should highlight icon 2
-    if (route.includes("conflict")){
-      this.page = 5;
-    }
-
-    // if the route contains project settings page, should highlight settings icon
-    if (route.includes("settings")){
-      this.page = 6;
-    }
+    // Initialize the ReroutingService
+    let routeService: ReroutingService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    let p_id = routeService.getProjectID(url);
+    
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, next_page]);
   }
 
 }

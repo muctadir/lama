@@ -4,7 +4,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import axios from 'axios';
-import { User } from '../user';
+import { User } from 'app/classes/user';
 
 
 // Template for the modal
@@ -82,7 +82,9 @@ export class ProjectCreationComponent implements OnInit {
         .then(response => { 
           
           for (let user of response.data) {
-            let newUser = new User(user.id, user.username, user.email, user.description);
+            let newUser = new User(user.id, user.username);
+            newUser.setEmail(user.email);
+            newUser.setDescription(user.description);
             this.allMembers.push(newUser);
           }
         })
