@@ -3,7 +3,7 @@
  * @author T. Bradley
  */
 
-import { Artifact } from './artifact';
+import { StringArtifact } from './stringartifact';
 import { User } from './user';
 import { Theme } from './theme'
 
@@ -22,7 +22,7 @@ export class Label {
     //array of child labels of the label
     private labelChilds: Array<Label> | undefined;
     //array of artifacts using the label
-    private artifacts: Array<Artifact> | undefined;
+    private artifacts: Array<StringArtifact> | undefined;
     //array of users that have used the label
     private users: Array<User> | undefined;
     //array of themes that belong to the label
@@ -56,9 +56,6 @@ export class Label {
      * @param id 
      */
     setId(id: number): void {
-        if ( id == undefined || typeof id != "number" || id == null) {
-            throw new Error('label id should be a number');
-        }
         this.id = id;
     }
 
@@ -75,7 +72,7 @@ export class Label {
      * @param name: string 
      */
     setName(name: string): void {
-        if ( name == undefined || typeof name != "string" ||name.length <= 0) {
+        if (name.length <= 0) {
             throw new Error("The label name should not be of length 0 as an argument in setName()");
         }
         this.name = name;
@@ -94,9 +91,6 @@ export class Label {
      * @param desc
      */
     setDesc(desc: string): void {
-        if ( desc == undefined || typeof desc != "string" || desc.length <= 0) {
-            throw new Error("The label description should not be of length 0 as an argument in setDesc()");
-        }
         this.desc = desc;
     }
 
@@ -113,9 +107,6 @@ export class Label {
      * @param type
      */
     setType(type: string): void {
-        if ( type == undefined || typeof type != "string" || type.length <= 0) {
-            throw new Error("The label type should not be of length 0 as an argument in setType()");
-        }
         this.type = type;
     }
 
@@ -183,7 +174,7 @@ export class Label {
      * Function returns the artifacts of label
      * @returns this.artifacts
      */
-    getArtifacts(): Array<Artifact> | undefined {
+    getArtifacts(): Array<StringArtifact> | undefined {
         return this.artifacts;
     }
 
@@ -191,7 +182,7 @@ export class Label {
      * Sets the artifacts of label 
      * @param artifacts
      */
-    setArtifacts(artifacts: Array<Artifact> | undefined): void {
+    setArtifacts(artifacts: Array<StringArtifact> | undefined): void {
         this.artifacts = artifacts;
     }
 

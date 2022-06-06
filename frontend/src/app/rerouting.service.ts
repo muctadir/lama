@@ -1,3 +1,6 @@
+// Jarl Jansen
+// Veerle Furst
+
 import { Injectable } from '@angular/core';
 
 @Injectable({

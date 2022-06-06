@@ -1,5 +1,5 @@
 <!-- @author: Bartjan Henkemans -->
-<!-- Veerle Furst -->
+<!-- @author: Veerle Furst -->
 
 <!-- big container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
@@ -27,7 +27,7 @@
                 <tbody>
                     <tr *ngFor="let theme of themes" (click)="reRouterTheme('singleTheme', theme.getId())">
                         <td>{{ theme.getName() }}</td>
-                        <td> {{ theme.getDescription () }}</td>
+                        <td> {{ theme.getDesc() }}</td>
                         <td> {{ theme.getNumberOfLabels() }} </td>
                     </tr>
                 </tbody>

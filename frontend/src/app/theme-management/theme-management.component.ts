@@ -1,11 +1,4 @@
-/**
- * What the hell is this?
- * Well - This is some really rough code for the theme management page.
- * Q: Why is it such a mess?
- * A: I suck - partially. @Vic came with this briliant suggestion https://ng-bootstrap.github.io/#/components/table/examples#sortable
- *    It is a good idea, but I had already done a lot of other stuff. I tried to morph my code into that but that turned out to be difficult.
- *    I will come back to this!
- */
+// Veerle Furst
  import { Component, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
  import { Theme } from 'app/classes/theme';
  import { Label } from 'app/classes/label';
@@ -82,10 +75,10 @@
           // Get the response data
           let themes = response.data;
 
-          // For each project in the list
+          // For each theme in the list
           for (let theme of themes){
 
-            // Initialize a new project with all values
+            // Get the theme information
             let themeJson = theme["theme"];
             themeJson["labels"] = theme["labels"];
 
