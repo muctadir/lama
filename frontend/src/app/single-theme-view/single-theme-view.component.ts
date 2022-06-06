@@ -43,14 +43,19 @@ export class SingleThemeViewComponent {
   
   // Function for making sure parent name is not undefined
   getParentName(): string {
+    // Get the parent
     let parent = this.theme.getParent();
+      // Check is parent is undefined
       if(parent != undefined){
         if(parent.getName() != undefined){
+          // If not return the name
           return parent.getName();
         } else {
+          // Otherwise return ""
           return "";
         }
       }   
+      // Otherwise return ""
       return "";
   }
 
