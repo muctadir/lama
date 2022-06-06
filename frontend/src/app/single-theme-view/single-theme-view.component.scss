@@ -98,7 +98,7 @@
 //BOTTOM HALF
 //Bottom Half Container
 #bottomHalfContainer{
-    
+
 }
 //Labels Header 
 #labelsHeader{
@@ -120,7 +120,7 @@
     font-weight: 500;
 }
 //bottom buttons
-#buttonCol{
+#buttonCol, #buttonCol2{
     position: fixed;
 }
 
@@ -147,4 +147,12 @@
     min-height: 50vh;
     overflow-y: scroll;
 }
-
+// Scrolling for the accordion
+#accordionScroll{
+    overflow-y: scroll;
+    height: 30vh;
+}
+// Edit Button
+#editButton{
+    margin-left: 10px;
+}

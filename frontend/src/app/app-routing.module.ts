@@ -19,6 +19,7 @@ import { ArtifactManagementPageComponent } from './artifact-management-page/arti
 import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
 import { LabelManagementComponent } from './label-management/label-management.component';
 import { IndividualLabelComponent } from './individual-label/individual-label.component';
+import { EditThemeComponent } from './edit-theme/edit-theme.component';
 
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
@@ -46,6 +47,7 @@ const routes: Routes = [
       {path: 'thememanagement', component: ThemeManagementComponent},
       {path: 'createTheme', component: CreateThemeComponent},
       {path: 'singleTheme', component: SingleThemeViewComponent},
+      {path: 'editTheme', component: EditThemeComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
