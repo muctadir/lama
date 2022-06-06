@@ -5,13 +5,8 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
-<<<<<<< HEAD
-from src.app_util import login_required
-from src.models.item_models import Label, LabelSchema, LabelType
-=======
 from src.app_util import login_required, in_project
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, Labelling
->>>>>>> c3343efe9d1fb4206a8a0d1c0af6cb4118bf60eb
 
 # Merge labels
 
