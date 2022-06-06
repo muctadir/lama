@@ -12,7 +12,7 @@ export class LabelingDataService {
   /**
    * Function does call to backend to retrieve all labels of a given project.
    * @params p_id: number
-   * @pre p_id => 0
+   * @pre p_id > 0
    * @pre token == null
    * @throws Error if token == null
    * @throws Error if p_id < 0
@@ -114,7 +114,6 @@ export class LabelingDataService {
     if (typeof token !== "string") throw new Error("User is not logged in");
     // Check if the p_id is larger than 0
     if (p_id < 0) throw new Error("p_id cannot be less than 0")
-    let result : boolean;
     return axios.post('http://127.0.0.1:5000/label/create',
      {
        'labelTypeId': labelTypeId,
@@ -122,13 +121,40 @@ export class LabelingDataService {
        'labelDescription': label.getDesc(),
        'p_id': p_id
       },
-      {headers: {
+      {
+        headers: {
         'u_id_token': token
-      }})
+        }
+      })
       .then((response) => {
       return Math.floor(response.status/100) == 2;
     }).catch(err => {
-      result = false;
+      return false;
+    });
+  }
+
+  editLabel(p_id: number, label: Label,
+    labelTypeId: number): Promise<boolean> {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+    // Check if the p_id is larger than 0
+    if (p_id < 0) throw new Error("p_id cannot be less than 0")
+    return axios.patch('http://127.0.0.1:5000/label/edit',
+     {
+       'labelId': label.getId(),
+       'labelName': label.getName(),
+       'labelDescription': label.getDesc(),
+       'p_id': p_id
+      },
+      {
+        headers: {
+        'u_id_token': token
+        }
+      })
+      .then((response) => {
+      return Math.floor(response.status/100) == 2;
+    }).catch(err => {
       return false;
     });
   }

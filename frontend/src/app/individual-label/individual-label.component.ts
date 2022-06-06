@@ -93,5 +93,6 @@ export class IndividualLabelComponent {
    */
   openEdit() {
     const modalRef = this.modalService.open(LabelFormComponent,  { size: 'xl'});
+    modalRef.componentInstance.label = this.label;
   }
 }
