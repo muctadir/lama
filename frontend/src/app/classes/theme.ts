@@ -16,7 +16,7 @@ export class Theme {
     //array of parent themes of the theme
     private themeParent: Theme | undefined;
     //array of child themes of the theme
-    private themeChilds: Array<Theme> | undefined;
+    private themeChildren: Array<Theme> | undefined;
     //array of theme labels
     private labels: Array<Label> | undefined;
     //deletion status of the theme
@@ -63,6 +63,9 @@ export class Theme {
     * @param themeName 
     */
     setName(name: string): void {
+        if ( name == undefined || typeof name != "string" || name.length < 0) {
+            throw new Error("The theme name should not be of length 0 as an argument in setName()");
+        }
         this.name = name;
     }
 
@@ -80,6 +83,9 @@ export class Theme {
     * @param desc 
     */
     setDesc(desc: string): void {
+        if ( desc == undefined || typeof desc != "string" || desc.length < 0) {
+            throw new Error("The theme description should not be of length 0 as an argument in setDesc()");
+        }
         this.desc = desc;
     }
 
@@ -101,29 +107,29 @@ export class Theme {
 
     /**
     * Function returns the child themes
-    * @returns this.themeChilds
+    * @returns this.themeChildren
     */
-    getChilds(): Array<Theme> | undefined {
-        return this.themeChilds;
+    getChildren(): Array<Theme> | undefined {
+        return this.themeChildren;
     }
 
     /**
     * Sets the child themes 
-    * @param themeChilds 
+    * @param themeChildren 
     */
-    setChilds(themeChilds: Array<Theme> | undefined): void {
-        this.themeChilds = themeChilds
+    setChildren(themeChildren: Array<Theme> | undefined): void {
+        this.themeChildren = themeChildren
     }
 
     /**
     * Function get the number of child themes
-    * @return this.themeChilds.length
+    * @return this.themeChildren.length
     */
-    getNumberOfChilds(): number | undefined {
-        let childsVar = this.themeChilds;
-        // Make sure the childs are defined when calling
-        if (childsVar != undefined) {
-            return childsVar.length;
+    getNumberOfChildren(): number | undefined {
+        let childrenVar = this.themeChildren;
+        // Make sure the children are defined when calling
+        if (childrenVar != undefined) {
+            return childrenVar.length;
         } else {
             return 0;
         }

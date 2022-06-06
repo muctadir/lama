@@ -7,7 +7,7 @@ from src.models.item_models import Theme, ThemeSchema, LabelSchema, ArtifactSche
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
-from src.app_util import login_required
+from src.app_util import login_required, check_args
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -15,7 +15,7 @@ theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 For getting the theme information 
 @returns a list of dictionaries of the form:
 {
-    theme : the serialized them
+    theme : the serialized theme
     labels : the labels within the theme
 }
 """
@@ -23,8 +23,15 @@ For getting the theme information
 @login_required
 def get_all_themes(*, user):
 
+    # The required arguments
+    required = ["p_id"]
+
     # Get args
     args = request.json
+
+    # Check if all required arguments are there
+    if not check_args(required, args):
+        return make_response("Not all required arguments supplied")
 
     # Get all themes
     all_themes = db.session.execute(
@@ -82,8 +89,15 @@ For getting the theme information
 @login_required
 def get_info_single_theme(*, user):
 
-    # Get the arguments given
+    # The required arguments
+    required = ["p_id", "t_id"]
+
+    # Get args
     args = request.json
+
+    # Check if all required arguments are there
+    if not check_args(required, args):
+        return make_response("Not all required arguments supplied")
 
     # Schemas to serialize
     theme_schema = ThemeSchema()
@@ -93,7 +107,7 @@ def get_info_single_theme(*, user):
     # Get the theme id
     t_id = args["t_id"]
 
-    # Get the corresponding themes
+    # Get the corresponding theme
     theme = db.session.execute(
         select(Theme).
         where(Theme.id == t_id)
@@ -113,19 +127,14 @@ def get_info_single_theme(*, user):
 
     # SUB THEMES
     # Make list of all sub-themes
-    sub_themes = [sub_theme for sub_theme in theme.sub_themes]
+    sub_themes = theme.sub_themes
 
-    # Make a list ogflabels
-    sub_themes_list_json = []
-
-    # For each sub-theme make get all the data
-    for sub_theme in sub_themes:
-        sub_theme_json = theme_schema.dump(sub_theme)
-        sub_themes_list_json.append(sub_theme_json)
+    # Make a json list of sub-themes
+    sub_themes_list_json = theme_schema.dump(sub_themes, many=True)
 
     # LABELS
     # Make list of all labels
-    labels = [label for label in theme.labels]
+    labels = theme.labels
 
     # Make a list of labels
     labels_list_json = []
