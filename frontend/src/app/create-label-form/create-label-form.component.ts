@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 // Overall Type for labelType
 type labelType = {
@@ -12,7 +12,7 @@ type labelType = {
   templateUrl: './create-label-form.component.html',
   styleUrls: ['./create-label-form.component.scss']
 })
-export class CreateLabelFormComponent implements OnInit {
+export class CreateLabelFormComponent {
   // Dummy Values
   labelTypes: Array<labelType> = [
     {
@@ -29,7 +29,6 @@ export class CreateLabelFormComponent implements OnInit {
   // Constructor with modal
   constructor(public activeModal: NgbActiveModal) {}
 
-  ngOnInit(): void { }
 
   // Not implemented function
   notImplemented() {

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 import { NavigationMenuComponent } from './navigation-menu.component';
 
 describe('NavigationMenuComponent', () => {
@@ -8,7 +10,9 @@ describe('NavigationMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavigationMenuComponent ]
+      declarations: [ NavigationMenuComponent ],
+      // Adding the RouterTestingModule dependency
+      imports: [RouterTestingModule]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('NavigationMenuComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created succesfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });
