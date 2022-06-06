@@ -1,7 +1,7 @@
 //page body
 #body{
     height: 100vh;
-    overflow:auto;
+    overflow: auto;
 }
 
 //Title Header part of the page
@@ -12,8 +12,8 @@
 }
 //Top half part of page
 #topHalf{
-    padding-top:10px;
-    height:50vh; 
+    padding-top: 10px;
+    height: 50vh; 
 }
 //top left section
 #topLeft{
@@ -41,7 +41,7 @@
 }
 //labels added
 #addedLabels{
-    font-size:14px;
+    font-size: 14px;
     letter-spacing: 1px;
     padding-left: 10px;
 }
@@ -52,14 +52,14 @@
 }
 // x icon for removing labels
 #xIcon{
-    float:right
+    float: right
 }
 #nameInputCol{
     padding-top: 10px;
 }
 //Top right of page
 #topRight{
-    padding-left:0px;
+    padding-left: 0px;
 }
 #description{
     font-size: 18px;
@@ -79,7 +79,7 @@
 //Subthemes list 
 #addedSubthemes{
     padding-left: 10px;
-    font-size:14px;
+    font-size: 14px;
     letter-spacing: 1px;
 }
 #addedSubthemesList{
@@ -90,8 +90,9 @@
 
 //Bottom Half
 #bottomHalf{
-    padding-top:10px;
-    padding-left:0px;
+    padding-top: 10px;
+    padding-left: 0px;
+    max-height: 30vh;
 }
 #addLabels{
     border-bottom: 2px; 
@@ -108,7 +109,7 @@
 }
 //add label button
 .btn{
-    float:right
+    float: right
 }
 //Highlight class
 .highlighted{ 
@@ -136,7 +137,7 @@ p.labelDescriptionText{
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background:white; 
+    background:  white; 
     border-radius: 10px;
 }
 // Scrollbar scroller

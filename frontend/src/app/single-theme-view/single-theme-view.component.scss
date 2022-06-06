@@ -118,7 +118,7 @@
     font-weight: 500;
 }
 //bottom buttons
-#buttonCol{
+#buttonCol, #buttonCol2{
     position: fixed;
 }
 
@@ -149,4 +149,8 @@
 #accordionScroll{
     overflow-y: scroll;
     height: 30vh;
+}
+// Edit Button
+#editButton{
+    margin-left: 10px;
 }
