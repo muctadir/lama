@@ -56,6 +56,17 @@ describe('Label', () => {
       .toBe(newName)
   })
 
+  // Setting a bad label name
+  it('throw error for bad label name', () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type);
+    const newName = "";
+    // catch wrong name
+    try {
+      label2.setName(newName);
+    } catch (error) { }
+  });
+
   // Getting the description
   it("should get the description", () => {
     expect(label.getDesc())
@@ -74,6 +85,17 @@ describe('Label', () => {
       .toBe(newDesc)
   })
 
+  // Setting a bad label description
+  it('throw error for bad label description', () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type);
+    const newDesc = "";
+    // catch wrong name
+    try {
+      label2.setDesc(newDesc);
+    } catch (error) { }
+  });
+
   // Getting the type
   it("should get the type", () => {
     expect(label.getType())
@@ -91,6 +113,17 @@ describe('Label', () => {
     expect(label2.getType())
       .toBe(newType)
   })
+
+  // Setting a bad label type
+  it('throw error for bad label description', () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type);
+    const newType = "";
+    // catch wrong name
+    try {
+      label2.setType(newType);
+    } catch (error) { }
+  });
 
   // Setting and getting the parent labels
   it("should set and get parent labels", () => {

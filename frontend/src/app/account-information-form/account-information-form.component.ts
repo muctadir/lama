@@ -36,8 +36,8 @@ export class AccountInformationFormComponent implements OnInit {
       this.email.setValue(this.userInfo.getEmail());
     }
 
-    if (this.userInfo?.getDescription() != undefined){ 
-      this.description.setValue(this.userInfo.getDescription());
+    if (this.userInfo?.getDesc() != undefined){ 
+      this.description.setValue(this.userInfo.getDesc());
     }
   }
 

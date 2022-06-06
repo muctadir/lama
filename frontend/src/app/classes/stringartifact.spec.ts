@@ -52,7 +52,36 @@ describe('Artifact', () => {
       .toBe(newIdentifier)
   })
 
-  // Setting and getting of completed
+  // Getting of data
+  it("Should get the data of the artifact", () => {
+    expect(artifact.getData())
+      .toBe(data)
+  })
+
+  // Setting of data
+  it("Should set the data of the artifact", () => {
+    // Create instances
+    const artifact2 = new StringArtifact(id, identifier, data);
+    const newData = "new Data";
+    // Check Identifier
+    artifact2.setData(newData)
+    // Check
+    expect(artifact2.getData())
+      .toBe(newData)
+  })
+
+  // Setting of bad data
+  it("Should set the data of the artifact", () => {
+    // Create instances
+    const artifact2 = new StringArtifact(id, identifier, data);
+    const newData = "";
+    //bad data try
+    try {
+      artifact2.setData(newData)
+    } catch (error) { }
+  })
+
+  // Setting and getting of completed status
   it("Should set and get the completed of the artifact", () => {
     // Create instances
     const artifact2 = new StringArtifact(id, identifier, data);
@@ -68,9 +97,9 @@ describe('Artifact', () => {
   it("Should set and get the labellings of the artifact", () => {
     // Create instances
     const artifact2 = new StringArtifact(id, identifier, data);
-    const labelling1 = new Labelling(1, "Veerle", ["happy", "sad"]);
-    const labelling2 = new Labelling(1, "Thea", ["sad", "happy"]);
-    const labellings = [labelling1, labelling2];
+    const labelling1 = new Labelling(1, "Veerle", [["happy", "sad"]]);
+    const labelling2 = new Labelling(1, "Thea", [["sad", "happy"]]);
+    const labellings = [[labelling1, labelling2]];
     // Set labellings
     artifact2.setLabellings(labellings)
     // Check
@@ -84,7 +113,7 @@ describe('Artifact', () => {
     const artifact2 = new StringArtifact(id, identifier, data);
     const labelling1 = new Labelling(1, "Veerle", ["happy", "sad"]);
     const labelling2 = new Labelling(1, "Thea", ["sad", "happy"]);
-    const labellings = [labelling1, labelling2];
+    const labellings = [[labelling1, labelling2]];
     // Set labellings
     artifact2.setLabellings(labellings)
     // Check
