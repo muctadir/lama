@@ -186,7 +186,7 @@ body{
 }
 
 // Cancel project creation button
-#freezeProjectButton {
+#freezeProjectButton, #unfreezeProjectButton {
     background-color: $green-shade;
     border: 2px solid;
     border-color: $green-shade;

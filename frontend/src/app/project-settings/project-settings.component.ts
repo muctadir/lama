@@ -95,6 +95,8 @@ export class ProjectSettingsComponent implements OnInit {
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
   edit: boolean = false;
+  //Whether the page is frozen, default is not frozen
+  frozen: boolean = false;
 
   constructor(private modalService: NgbModal) { 
     //Dummy data for initial
@@ -135,12 +137,13 @@ export class ProjectSettingsComponent implements OnInit {
     // For with the label types
     const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
     this.labelTypes = this.getLabelTypes(post_form3);
+    //Change back to non-edit view
     this.edit = false;
+    //Check the checkboxes
     for (let i = 0; i < this.projectMembers.length; i++) {
       let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked; 
-      if (adminBool) {
-        this.adminMember[i] = adminBool;
-      }
+      //Assign the values of the checkboxes according to whether they have been checked during edit mode
+      this.adminMember[i] = adminBool;
     }
   }
 
@@ -181,4 +184,18 @@ export class ProjectSettingsComponent implements OnInit {
   openAddError() {
     const modalRef = this.modalService.open(AddUsersErrorModalContent);
   }
+
+  //Freezing the project
+  freezeProject() {
+    this.projectName += "- FROZEN";
+    this.edit = false;
+    this.frozen = true;
+  }
+
+  //Unfreezing the project
+  unfreezeProject() {
+    this.projectName = this.projectName.substring(0,this.projectName.indexOf("- FROZEN"));
+    this.frozen = false;
+  }
+
 }

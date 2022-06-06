@@ -139,7 +139,7 @@
         <div class="row justify-content-between">
             <div class="col-5">
             <!-- Freeze button -->
-                <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-start" id="freezeProjectButton" (click)="unclickEdit()">
+                <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-start" id="freezeProjectButton" (click)="freezeProject()">
                     Freeze
                 </button>
             </div>
@@ -267,8 +267,11 @@
                 
         <div class="row justify-content-end">
             <!-- Edit button -->
-            <button *ngIf="!edit" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
+            <button *ngIf="!edit && !frozen" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
                 Edit
+            </button>
+            <button *ngIf="frozen" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="unfreezeProject()">
+                Unfreeze
             </button>
         </div>
     </div>
