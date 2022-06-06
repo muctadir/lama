@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoremIpsum } from "lorem-ipsum";
-import { StringArtifact } from 'app/classes/stringartifact';
+import { ArtifactDataService } from 'app/artifact-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import axios from 'axios';
+import { StringArtifact } from 'app/classes/stringartifact';
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -15,11 +17,6 @@ const lorem = new LoremIpsum({
     min: 4
   }
 });
-type labelType = {
-  labelTypeName: String,
-  labelTypeDescription: String,
-  labels: Array<label>
-}
 // For table data of users + labels given
 // TODO: Replace these with classes once those are overhauled 
 type userLabel = {
@@ -46,34 +43,17 @@ type label = {
 export class SingleArtifactViewComponent implements OnInit {
 
   // Initialize the ReroutingService
-  routeService: ReroutingService = new ReroutingService();
+  routeService: ReroutingService;
 
-  // Artifact Data
-  artifactId: Number = 0;
-  artifactIdentifier: String = '';
-  // labelers: Array<String> = []
-  artifact: String = '';
+  // // Artifact Data
+  // artifactId: Number = 0;
+  // artifactIdentifier: String = '';
+  // // labelers: Array<String> = []
+  // artifact: String = '';
+  artifact: StringArtifact;
   allLabels: Array<String> = []
-  p_id = 0;
+  url: string;
 
-  labelTypes: Array<labelType> = [
-    {
-      labelTypeName: "",
-      labelTypeDescription: lorem.generateParagraphs(1),
-      labels: [{ labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
-      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
-      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
-      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },]
-    },
-    {
-      labelTypeName: "",
-      labelTypeDescription: lorem.generateParagraphs(1),
-      labels: [{ labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
-      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
-      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },
-      { labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5) },]
-    },
-  ]
   userLabels: Array<userLabel> = [
     {
       labellerName: "Chinno",
@@ -102,64 +82,31 @@ export class SingleArtifactViewComponent implements OnInit {
   }
 
   /**
-  * Constructor passes in the modal service, initializes Router
-  * @param router instance of Router
-  */
-  constructor(private router: Router) { }
+     * Constructor passes in the modal service and the artifact service,
+     * initializes Router
+     * @param modalService instance of NgbModal
+     * @param artifactDataService instance of ArtifactDataService
+     * @param router instance of Router
+     */
+   constructor(private modalService: NgbModal,
+    private artifactDataService: ArtifactDataService,
+    private router: Router) {
+      this.routeService = new ReroutingService();
+      this.artifact = new StringArtifact(0, 'null', 'null');
+      this.url = this.router.url;
+    }
 
   ngOnInit(): void {
-    // Get artifact object from the artifact management page
+    // Get the ID of the artifact and the project
+    let a_id = Number(this.routeService.getArtifactID(this.url));
+    let p_id = Number(this.routeService.getProjectID(this.url));
 
-    // this.artifactIdentifier = this.message.identifier;
-    // this.labelers = 
-    // artifact: String = '';
-    // allLabels: Array<String> = []
-
-    let token: string | null = sessionStorage.getItem('ses_token');
-    if (typeof token === "string") {
-      // Gets the url from the router
-      let url: string = this.router.url
-      this.artifactId = Number(this.routeService.getArtifactID(url))
-      console.log(this.artifactId)
-
-      // Get the artifact information from the back end
-      axios.get('http://127.0.0.1:5000/artifact/singleArtifact', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'a_id': this.artifactId
-        }
-      })
-
-        // When there is a response get artifact information
-        .then(response => {
-
-          // Get the artifact from the response
-          let artifact = response.data
-
-          // Get the artifact data
-          this.artifactId = artifact["artifact_id"];
-          this.artifactIdentifier = artifact["artifact_identifier"],
-          this.artifact = artifact["artifact_text"];
-
-
-        })
-
-      // Get the labellings of this artifact
-      axios.get('http://127.0.0.1:5000/artifact/artifactLabellings', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'a_id': this.artifactId
-        }
-      })
-
-        // When there is a response get artifact information
-        .then(response => {
-          console.log(response.data)
-        })
+    // Get the artifact data from the backend
+    this.getArtifact(a_id, p_id)
     }
+
+  async getArtifact(a_id: number, p_id: number): Promise<void>{
+    const artifact = await this.artifactDataService.getArtifact(p_id, a_id);
+    this.artifact = artifact
   }
 }

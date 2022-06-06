@@ -18,7 +18,7 @@ export class ArtifactDataService {
    * @pre token != null
    * @throws Error if token == null
    * @throws Error if p_id < 1
-   * @returns Promise<Array<Label>>
+   * @returns Promise<Array<StringArtifact>>
    */
   getArtifacts(p_id: number): Promise<Array<StringArtifact>> {
     // Session token
@@ -86,7 +86,7 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @throws Error if artifacts.length <= 0
    * @throws Error if \exists i; 0 < i < artifacts.length; artifacts[i].length != 4
-   * @returns 
+   * @returns Promise<boolean>
    */
   addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<boolean> {
     let token: string | null = sessionStorage.getItem('ses_token');
@@ -118,6 +118,65 @@ export class ArtifactDataService {
       .catch(error => {
         result = false;
         return false;
+      });
+  }
+
+  /**
+     * Function does call to backend to retrieve a single artifact
+     * 
+     * @params p_id: number
+     * @params a_id: number
+     * @pre p_id => 1
+     * @pre a_id => 1
+     * @pre token != null
+     * @throws Error if token == null
+     * @throws Error if p_id < 1
+     * @throws Error if a_id < 1
+     * @returns Promise<StringArtifact>
+     */
+  getArtifact(p_id: number, a_id: number): Promise<StringArtifact> {
+    // Session token
+    let token: string | null = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+
+    // Check if the p_id is larger than 1
+    if (p_id < 1) throw new Error("p_id cannot be less than 1")
+
+    // Check if the a_id is larger than 1
+    if (a_id < 1) throw new Error("a_id cannot be less than 1")
+
+    // Resulting artifact
+    let result: StringArtifact = new StringArtifact(0, 'null', 'null');
+
+    // Get the artifact information from the back end
+    return axios.get('http://127.0.0.1:5000/artifact/singleArtifact', {
+      headers: {
+        'u_id_token': token
+      },
+      params: {
+        'a_id': a_id,
+        'extended': true
+      }
+    }).then(response => {
+        // Get the artifact from the response
+        let artifact = response.data
+
+        // Get the artifact data
+        result.setId(artifact["artifact_id"]);
+        result.setIdentifier(artifact["artifact_identifier"]);
+        result.setData(artifact["artifact_text"]);
+
+        // Log the extra data until it can be passed to html componen
+        console.log(artifact["artifact_labellings"])
+        console.log(artifact["artifact_parent"])
+        console.log(artifact["artifact_children"])
+
+        // Return the artifact
+        return result;
+      }).catch((err) => {
+        // If there is an error
+        throw new Error(err);
       });
   }
 }

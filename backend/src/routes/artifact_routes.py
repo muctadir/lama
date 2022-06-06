@@ -16,7 +16,6 @@ artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
 def get_artifacts(*, user):
-
     # Get args from request 
     args = request.args
     # What args are required
@@ -131,13 +130,19 @@ def add_new_artifacts(*, user):
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 def single_artifact(*, user):
-    # Get artifact id
-    a_id = request.args.get('a_id', '')
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['a_id', 'extended']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    a_id = args['a_id']
 
     # Get the current artifact
-    artifact = db.session.execute(
-        select(Artifact).where(Artifact.id == a_id)
-    ).scalars().all()[0]
+    artifact = __get_artifact(a_id)
 
      # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
@@ -154,7 +159,7 @@ def single_artifact(*, user):
     # Text of the artifact
     artifact_text = artifact.data
 
-        # Put all values into a dictionary
+    # Put all values into a dictionary
     info = {
         "artifact": artifact_json,
         "artifact_id": artifact_id,
@@ -162,53 +167,73 @@ def single_artifact(*, user):
         "artifact_text": artifact_text
     }
 
+    # If the extended data was requested, append the requested data
+    if args['extended']:
+        info.update(__get_extended(artifact))
+
     # Jsonify the dictionary with information
     dict_json = jsonify(info)
 
     # Return the dictionary
     return make_response(dict_json)
 
-@artifact_routes.route("/artifactLabellings", methods=["GET"])
-@login_required
-def artifact_labellings(*, user):
-    # Get artifact id
-    a_id = request.args.get('a_id', '')
+def __get_extended(artifact):
+    # Parent of the artifact
+    artifact_parent = artifact.parent_id
 
-    # Get all the labellings of this artifact
-    labellings = db.session.execute(
-        select(Labelling).where(Labelling.a_id==a_id)
-    ).scalars().all()
+    # Children of the artifact
+    artifact_children = []
+    for child in artifact.children:
+        artifact_children.append(child.id)
 
-    # List for labelling information
-    labelling_info = []
+    # Formatted labellings of the artifact
+    labellings_formatted = __aggregate_labellings(artifact)
 
-    # For each labelling
-    for labelling in labellings:
-        # Get the username of the labeller
-        labeller_name = labelling.user.username
+    # Return the data
+    return {
+        "artifact_parent": artifact_parent,
+        "artifact_children": artifact_children,
+        "artifact_labellings": labellings_formatted
+    }
 
-        # Get the remark of this label
-        label_remark = labelling.remark
+def __aggregate_labellings(artifact):
+    # Get all the labellings of the artifact
+    labellings = artifact.labellings
 
-        # Get the label type of this label
-        label_type_name = labelling.label.label_type.name
+    # List containing the resulted aggregated labellings
+    result = {}
 
-        # Get the given label
-        label_given = labelling.label.name
+    # Start aggregating labelling only if the artifact has them
+    if len(labellings) > 0:
+        # For each labelling
+        for labelling in labellings:
+            # Get the username of the user who made it
+            user = labelling.user.username
 
-        # Put all values into a dictionary
-        info = {
-            "labellerName": labeller_name,
-            "labelRemark": label_remark,
-            "labelTypeName": label_type_name,
-            "labelGiven": label_given
-        }
+            # What to add to result
+            addition = {
+                'labelTypeName': labelling.label_type.name,
+                'labelGiven': labelling.label.name,
+                'labelRemark': labelling.remark
+            }
 
-        # Append the dictionary to the list
-        labelling_info.append(info)
+            # Add the labelling to the result
+            if user not in result:
+                result[user] = [addition]
+            else:
+                result[user].append(addition)
 
-    # Convert the list of dictionaries to json
-    dict_json = jsonify(labelling_info)
+        # Format result to be compatible with the frontend
+        formatted_result = []
+        for labeller in result:
+                formatted_result.append({
+                'labellerName': labeller,
+                'labelsGiven': result[labeller]
+                })
+        
+        return formatted_result
 
-    # Return the list of dictionaries
-    return make_response(dict_json)
+def __get_artifact(a_id):
+    return db.session.execute(
+        select(Artifact).where(Artifact.id == a_id)
+        ).scalars().first()
