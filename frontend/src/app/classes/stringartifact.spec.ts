@@ -97,9 +97,9 @@ describe('Artifact', () => {
   it("Should set and get the labellings of the artifact", () => {
     // Create instances
     const artifact2 = new StringArtifact(id, identifier, data);
-    const labelling1 = new Labelling(1, "Veerle", ["happy", "sad"]);
-    const labelling2 = new Labelling(1, "Thea", ["sad", "happy"]);
-    const labellings = [labelling1, labelling2];
+    const labelling1 = new Labelling(1, "Veerle", [["happy", "sad"]]);
+    const labelling2 = new Labelling(1, "Thea", [["sad", "happy"]]);
+    const labellings = [[labelling1, labelling2]];
     // Set labellings
     artifact2.setLabellings(labellings)
     // Check
@@ -113,7 +113,7 @@ describe('Artifact', () => {
     const artifact2 = new StringArtifact(id, identifier, data);
     const labelling1 = new Labelling(1, "Veerle", ["happy", "sad"]);
     const labelling2 = new Labelling(1, "Thea", ["sad", "happy"]);
-    const labellings = [labelling1, labelling2];
+    const labellings = [[labelling1, labelling2]];
     // Set labellings
     artifact2.setLabellings(labellings)
     // Check

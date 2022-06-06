@@ -1,8 +1,6 @@
 // Veerle Furst
 // BartJan Henkemans
 
-import { Labelling } from "./labelling"
-
 export abstract class Artifact {
     // Id of artifact 
     private id: number;
@@ -12,8 +10,14 @@ export abstract class Artifact {
     abstract data: any;
     // If the artifact if completelly labelled
     private completed: boolean | undefined;
-    // Labellings of the artifact
-    private labellings: Array<Labelling> | undefined;
+    /** 
+     * Labellings of the artifact
+     * This labellings should include this information PER LABELLING
+     * [username, labelname, labeltype, description, remark]
+     * This is all that is needed for the artifact page
+     * You can put extra/less infromation in here if needed, because its an any type array
+    **/ 
+    private labellings: Array<Array<any>> | undefined;
     // Parent of the artifact (split)
     private parentId: number | undefined;
     // Childern of the artifact (split)
@@ -95,7 +99,7 @@ export abstract class Artifact {
      * gets the labellings
      * @return this.labelling 
      */
-    getLabellings(): Array<Labelling> | undefined {
+    getLabellings(): Array<Array<any>> | undefined {
         return this.labellings;
     }
 
@@ -103,7 +107,7 @@ export abstract class Artifact {
      * sets the labellings
      * @params labellings
      */
-    setLabellings(labellings: Array<Labelling>): void {
+    setLabellings(labellings: Array<Array<any>>): void {
         this.labellings = labellings;
     }
 
@@ -123,13 +127,13 @@ export abstract class Artifact {
 
     /**
      * adds a labellings to the list
-     * @param labeler 
+     * @param newLabelling 
      */
-    addLabelling(labeler: Labelling): void {
+    addLabelling(newLabelling: Array<any>): void {
         const labelling = this.labellings
         // Make sure the list in not undefined
         if (labelling != undefined) {
-            labelling.push(labeler);
+            labelling.push(newLabelling);
         }
     }
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
+import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
 
 
 @Component({
