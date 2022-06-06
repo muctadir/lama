@@ -176,33 +176,28 @@ def super_admin_required(f):
             return make_response('3 Unauthorized', 401)
     return decorated_function
 
-def in_project(user):
+def in_project(f):
     """
     Decorator that checks if the user is in a certain project. This decorator needs to be placed _below_ the login_required decorator
     Requires 'p_id' to be in either the request body, or request parameters
     Requires the decorated function to have user as a keyword argument
     """
     # TODO: Check user status
-    # A decorator with parameters is a function that returns a decorator without parameters
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if request.method == 'GET':
-                p_id = request.args['p_id']
-            else:
-                p_id = request.json['p_id']
-            # Check that pId argument was provided
-            if p_id:
-                return make_response('Unauthorized', 401)
-            
-            membership = db.session.get(Membership, {'p_id': p_id, 'u_id': user.id})
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if request.method == 'GET':
+            p_id = request.args['p_id']
+        else:
+            p_id = request.json['p_id']
+        # Check that pId argument was provided
+        if not p_id:
+            return make_response('Unauthorized', 401)
+        
+        membership = db.session.get(Membership, {'p_id': p_id, 'u_id': kwargs['user'].id})
 
-            if not membership:
-                return make_response('Unauthorized', 401)
-            
-            kwargs['user'] = user
-            return f(*args, **kwargs)
+        if not membership:
+            return make_response('Unauthorized', 401)
 
-        return decorated_function
-    
-    return decorator
+        return f(*args, **kwargs)
+
+    return decorated_function
