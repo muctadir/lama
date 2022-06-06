@@ -224,8 +224,10 @@ export class ProjectCreationComponent implements OnInit {
           }
         })
         .then(response => { 
-          // TODO
+          // Navigates the user back to the home page
           this.router.navigate(["/home"]);
+
+          // TODO
           p_response.innerHTML = "Project created"
         })
         .catch(error => {
