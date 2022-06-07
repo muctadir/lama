@@ -13,6 +13,7 @@ from flask import current_app as app
 from flask import make_response, request
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import select
+from inspect import getfullargspec
 
 def check_args(required, args):
     """
@@ -101,8 +102,8 @@ def login_required(f):
     """
     Decorator that checks to see if the frontend is authorized (sending a valid token)
     and then passes on the corresponding user object to the decorated function
-    Requires the decorated function to have user as a keyword argument
-    You can (optionally) enforce arguments to be keyword arguments by using * e.g.:
+    Optionally passes user as a keyword argument
+    You can enforce arguments to be keyword arguments by using * e.g.:
         def func(<positional arguments>, *, user):
     enforces user to be a keyword argument
     """
@@ -123,7 +124,8 @@ def login_required(f):
                 return make_response('2 Unauthorized', 401)
             # Add the found user as a keyword argument
             # Note, this means every function decorated with this must have user as an argument
-            kwargs['user'] = user
+            if 'user' in getfullargspec(f).kwonlyargs:
+                kwargs['user'] = user
             return f(*args, **kwargs)
         except OperationalError as e:
             # Database error
@@ -138,8 +140,8 @@ def super_admin_required(f):
     """
     Decorator that checks to see if the frontend is authorized (sending a valid token)
     with a super admin.
-    Requires the decorated function to have super_admin as a keyword argument
-    You can (optionally) enforce arguments to be keyword arguments by using * e.g.:
+    Optionally passes super_admin as a keyword argument
+    You can enforce arguments to be keyword arguments by using * e.g.:
         def func(<positional arguments>, *, super_admin):
     enforces user to be a keyword argument
     """
@@ -165,7 +167,8 @@ def super_admin_required(f):
                 return make_response('Forbidden', 403)
             # Add the found admin as a keyword argument
             # Note, this means every function decorated with this must have user as an argument
-            kwargs['super_admin'] = user
+            if 'super_admin' in getfullargspec(f).kwonlyargs:
+                kwargs['super_admin'] = user
             return f(*args, **kwargs)
         except OperationalError as e:
             # Database error
@@ -180,11 +183,11 @@ def in_project(f):
     """
     Decorator that checks if the user is in a certain project. This decorator needs to be placed _below_ the login_required decorator
     Requires 'p_id' to be in either the request body, or request parameters
-    Requires the decorated function to have user as a keyword argument
+    Optionally passes membership and/or user as a keyword argument
     """
     # TODO: Check user status
     @wraps(f)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, user, **kwargs):
         if request.method == 'GET':
             p_id = request.args['p_id']
         else:
@@ -193,12 +196,17 @@ def in_project(f):
         if not p_id:
             return make_response('Unauthorized', 401)
         
-        membership = db.session.get(Membership, {'p_id': p_id, 'u_id': kwargs['user'].id})
+        membership = db.session.get(Membership, {'p_id': p_id, 'u_id': user.id})
 
+        # Check that membership exists
         if not membership:
             return make_response('Unauthorized', 401)
-        
-        kwargs['membership'] = membership
+
+        # Check if function requires certain keyword only arguments
+        if 'user' in getfullargspec(f).kwonlyargs:
+            kwargs['user'] = user
+        if 'membership' in getfullargspec(f).kwonlyargs:
+            kwargs['membership'] = membership
 
         return f(*args, **kwargs)
 
