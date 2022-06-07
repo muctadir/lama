@@ -28,7 +28,7 @@ export class LabelType {
     /**
      * Returns id of the label type
      * @returns this.id
-     */
+    */
     getId(): number {
         return this.id;
     }
@@ -38,6 +38,9 @@ export class LabelType {
      * @param id 
      */
     setId(id: number): void {
+        if (id == undefined || typeof id != "number") {
+            throw new Error('Label ID should be a number');
+        }
         this.id = id;
     }
 
@@ -54,6 +57,9 @@ export class LabelType {
      * @param name 
      */
     setName(name: string): void {
+        if (name == undefined || typeof name != "string" || name.length <= 0) {
+            throw new Error('Label name should be a string');
+        }
         this.name = name;
     }
 
@@ -86,6 +92,9 @@ export class LabelType {
      * @params label 
      */
     addLabel(label: Label): void {
+        if (label == undefined || typeof label == null) {
+            throw new Error('Label needs to be defined');
+        }
         this.labels.push(label);
     }
 

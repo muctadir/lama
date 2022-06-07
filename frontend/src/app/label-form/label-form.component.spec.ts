@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelingDataService } from 'app/labeling-data.service';
+
 import { LabelFormComponent } from './label-form.component';
 
 describe('LabelFormComponent', () => {
@@ -8,7 +11,9 @@ describe('LabelFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LabelFormComponent ]
+      declarations: [ LabelFormComponent ],
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal, LabelingDataService]
     })
     .compileComponents();
   });
@@ -19,6 +24,7 @@ describe('LabelFormComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

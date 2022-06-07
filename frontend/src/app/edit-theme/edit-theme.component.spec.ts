@@ -1,25 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProjectComponent } from './project.component';
+import { EditThemeComponent } from './edit-theme.component';
 
-describe('ProjectComponent', () => {
-  let component: ProjectComponent;
-  let fixture: ComponentFixture<ProjectComponent>;
+describe('EditThemeComponent', () => {
+  let component: EditThemeComponent;
+  let fixture: ComponentFixture<EditThemeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProjectComponent ]
+      declarations: [ EditThemeComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProjectComponent);
+    fixture = TestBed.createComponent(EditThemeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  // Checks whether the project component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

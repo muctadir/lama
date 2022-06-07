@@ -47,6 +47,10 @@ class User(db.Model):
     projects = association_proxy('memberships', 'project')
     # List of labellings the user has made
     labellings = relationship('Labelling', back_populates='user')
+    # List of labels the user has labelled an artifact with (for other changes, use label_changes)
+    labels = association_proxy('labellings', 'label')
+    # List of artifacts the user has labelled (for other changes, use artifact_changes)
+    artifacts = association_proxy('labellings', 'artifact')
     # List of highlights the user has made
     highlights = relationship('Highlight', back_populates='user')
 
