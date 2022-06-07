@@ -28,6 +28,11 @@ body{
     color: $grey-shade;
 }
 
+// Changes the size of the plus icon in the add members popup.
+#popup-plus {
+    font-size: 20px;
+}
+
 // Header of the page
 .header{
     font-size: 35px;

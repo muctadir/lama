@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { CreateLabelFormComponent } from './create-label-form.component';
 
 describe('CreateLabelFormComponent', () => {
@@ -8,7 +10,10 @@ describe('CreateLabelFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateLabelFormComponent ]
+      declarations: [ CreateLabelFormComponent ],
+
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal]
     })
     .compileComponents();
   });
@@ -19,6 +24,7 @@ describe('CreateLabelFormComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created correctly
   it('should create', () => {
     expect(component).toBeTruthy();
   });

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { EditLabelFormComponent } from './edit-label-form.component';
 
 describe('EditLabelFormComponent', () => {
@@ -8,7 +10,9 @@ describe('EditLabelFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditLabelFormComponent ]
+      declarations: [ EditLabelFormComponent ],
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('EditLabelFormComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created correctly.
   it('should create', () => {
     expect(component).toBeTruthy();
   });

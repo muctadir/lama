@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { MergeLabelFormComponent } from './merge-label-form.component';
 
 describe('MergeLabelFormComponent', () => {
@@ -8,7 +10,9 @@ describe('MergeLabelFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MergeLabelFormComponent ]
+      declarations: [ MergeLabelFormComponent ],
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('MergeLabelFormComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });
