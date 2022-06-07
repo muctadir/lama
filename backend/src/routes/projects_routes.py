@@ -1,6 +1,7 @@
 # Veerle Furst
 # Eduardo Costa Martins
 # Ana-Maria Olteniceanu
+# Linh Nguyen
 
 from src.models.project_models import Membership
 from flask import current_app as app
@@ -180,7 +181,7 @@ def edit_project(*, user):
 
     # if not check_args(required, args):
     #     return make_response('Bad Request', 400)
-    print(args['id'])
+
     label = db.session.get(Project, args['id'])
     if not label:
         return make_response('Project does not exist', 400)
@@ -195,6 +196,38 @@ def edit_project(*, user):
     db.session.execute(
         update(Project).where(Project.id == args['id']).values(name=args['name'], 
         description=args['description'], criteria=args["criteria"])
+    )
+    db.session.commit()
+
+    return make_response('Ok')
+
+"""
+For freezing an existing project
+"""
+@project_routes.route("/freeze", methods=["PATCH"])
+@login_required
+def freeze_project(*, user):
+    # Get args 
+    args = request.json
+    # Required args
+    required = ('projectId', 'projectFrozen')
+
+    # if not check_args(required, args):
+    #     return make_response('Bad Request', 400)
+
+    label = db.session.get(Project, args['id'])
+    if not label:
+        return make_response('Project does not exist', 400)
+
+    # TODO Make them check if user a part of the project
+    # if label.p_id != args["p_id"]:
+    #     return make_response('Label not part of project', 400)
+
+    tmp = update(Project).where(Project.id == args['id']).values(frozen=args['frozen'])
+    print(tmp)
+
+    db.session.execute(
+        update(Project).where(Project.id == args['id']).values(frozen=args['frozen'])
     )
     db.session.commit()
 

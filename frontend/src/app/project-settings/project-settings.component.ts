@@ -100,11 +100,9 @@ export class ProjectSettingsComponent implements OnInit {
     //Dummy data for initial
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
-    this.projectMembers.push(new User(1, "Linh"));
-    this.projectMembers.push(new User(2, "Jarl"));
-    this.projectMembers.push(new User(3, "Vic"));
-    this.projectMembers.push(new User(4, "Thea"));
-    this.currentProject.setUsers(this.projectMembers);
+    this.labelTypes.push("Material");
+    this.labelTypes.push("Lamas");
+    this.labelTypes.push("Test");
   }
 
   ngOnInit(): void {
@@ -137,10 +135,16 @@ export class ProjectSettingsComponent implements OnInit {
         }
       })
         .then(responseP => {
+          //console.log(responseP.data);
           this.currentProject.setName(responseP.data[this.currentProject.getId()-1].project.name);
           this.currentProject.setDescription(responseP.data[this.currentProject.getId()-1].project.description);
           this.currentProject.setCriteria(responseP.data[this.currentProject.getId()-1].project.criteria);
           this.currentProject.setFrozen(responseP.data[this.currentProject.getId()-1].project.frozen);
+          let thisProjectUsers = responseP.data[this.currentProject.getId()-1];
+          console.log(thisProjectUsers);
+          for (let i = 0; i < thisProjectUsers.projectUsers.length; i++) {
+            this.projectMembers.push(new User(thisProjectUsers.projectUsers[i].id, thisProjectUsers.projectUsers[i].username));
+          }
         })
         .catch(error => {
           console.log(error);
@@ -156,11 +160,6 @@ export class ProjectSettingsComponent implements OnInit {
   //Exiting Editing Mode
   unclickEdit(): void {
     this.edit = false;
-  }
-
-  //Adding a label type
-  addLabelType(): void {
-    this.labelTypes.push("");
   }
 
   //Saving changes made to project
@@ -188,7 +187,8 @@ export class ProjectSettingsComponent implements OnInit {
       "id": this.currentProject.getId(),
       "name" : this.currentProject.getName(),
       "description" : this.currentProject.getDescription(),
-      "criteria": this.currentProject.getCriteria()
+      "criteria": this.currentProject.getCriteria(),
+      "frozen": this.currentProject.getFrozen()
     };
 
     let token: string | null  = sessionStorage.getItem('ses_token');
@@ -210,7 +210,6 @@ export class ProjectSettingsComponent implements OnInit {
         return;
       });
     }
-   
   }
   //Getting label types from form
   getLabelTypes(form:HTMLFormElement): string[]{
@@ -251,10 +250,11 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   //Freezing the project
-  freezeProject() {
+  async freezeProject(): Promise<void> {
     this.currentProject.setName(this.currentProject.getName() + "- FROZEN");
     this.edit = false;
     this.currentProject.setFrozen(true);
+    this.sendFreezeToBackend(this.currentProject.getId(), this.currentProject.getFrozen());
   }
 
   //Unfreezing the project
@@ -262,6 +262,36 @@ export class ProjectSettingsComponent implements OnInit {
     let newName = this.currentProject.getName().substring(0,this.currentProject.getName().indexOf("- FROZEN"));
     this.currentProject.setName(newName);
     this.currentProject.setFrozen(false);
+    this.sendFreezeToBackend(this.currentProject.getId(), this.currentProject.getFrozen());
   }
 
+  async sendFreezeToBackend(projectId: number, projectFrozen: any): Promise<void> {
+    // Way to get information to backend
+    let projectInformation: Record<string, any> = {};
+    // Project information
+    projectInformation["project"] = {
+      "id": projectId,
+      "frozen": projectFrozen
+    };
+
+    let token: string | null  = sessionStorage.getItem('ses_token');
+
+    if (typeof token === "string") {        
+      // Send the data to the database
+      const response =  await axios.patch('http://127.0.0.1:5000/project/freeze', projectInformation["project"], {
+        headers: {
+          'u_id_token': token
+        }
+      })
+      .then(response => { 
+        // TODO
+        console.log("Done")
+        return Math.floor(response.status/100) == 2;
+      })
+      .catch(error => {
+        // TODO
+        return;
+      });
+    }
+  }
 }
