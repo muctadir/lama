@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 import { ThemeManagementComponent } from './theme-management.component';
 
 describe('ThemeManagementComponent', () => {
@@ -8,7 +10,9 @@ describe('ThemeManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ThemeManagementComponent ]
+      declarations: [ ThemeManagementComponent ],
+      // Adding the RouterTestingModule dependency
+      imports: [RouterTestingModule]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('ThemeManagementComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

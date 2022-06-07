@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { AddArtifactComponent } from './add-artifact.component';
 
 describe('AddArtifactComponent', () => {
@@ -8,7 +10,9 @@ describe('AddArtifactComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddArtifactComponent ]
+      declarations: [ AddArtifactComponent ],
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('AddArtifactComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created succesfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

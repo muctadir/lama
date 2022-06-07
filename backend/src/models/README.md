@@ -97,7 +97,7 @@ this exists mostly to simplify queries or to be extended later <br>
     description <br>
     deleted (soft deleted) <br>
     sub_themes (collection of sub themes) <br>
-    super_themes (collection of super themes) <br>
+    super_theme (super theme object) <br>
     labels (collection of labels assigned to this theme)
 </details>
 
