@@ -11,13 +11,6 @@ import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
 import { Labelling } from 'app/classes/labelling';
 
-// Type for artifact
-type artifact = {
-  artifactId: number,
-  artifactLabeler: string,
-  artifactRemarks: string
-}
-
 @Component({
   selector: 'app-individual-label',
   templateUrl: './individual-label.component.html',
@@ -27,21 +20,7 @@ export class IndividualLabelComponent {
   routeService: ReroutingService;
   label: Label;
   url: string;
-  labellings: Array<Labelling>;
-  admin: boolean;
-  // Dummy data
-  artifacts: Array<artifact> = [
-    {
-      artifactId: 33,
-      artifactLabeler: "Veerle",
-      artifactRemarks: "I thought that this was appropriate because"
-    },
-    {
-      artifactId: 35,
-      artifactLabeler: "Chinno",
-      artifactRemarks: "I thought that this was appropriate because it is cool"
-    }
-  ]
+  labellings: any;
 
   /**
    * Constructor which:
@@ -54,8 +33,7 @@ export class IndividualLabelComponent {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
-      this.labellings = new Array<Labelling>();
-      this.admin = false;
+      this.labellings = {};
   }
 
   /**
@@ -69,7 +47,6 @@ export class IndividualLabelComponent {
     let labelID = parseInt(this.routeService.getLabelID(this.url));
     this.getLabel(p_id, labelID);
     this.getLabellings(p_id, labelID);
-    this.getAdmin(p_id);
   }
 
   /**
@@ -82,13 +59,10 @@ export class IndividualLabelComponent {
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
+    console.log(labellings)
     this.labellings = labellings;
   }
 
-  async getAdmin(p_id: number): Promise<void> {
-    const admin = await this.labelingDataService.getAdminStatus(p_id);
-    this.admin = admin;
-  }
   /**
    * Gets the project id from the URL and reroutes to the label management page
    * of the same project
