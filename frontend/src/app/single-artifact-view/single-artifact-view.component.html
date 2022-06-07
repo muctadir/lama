@@ -23,12 +23,10 @@
             <!-- previous artifacts that it was split from, if any -->
             <div class="col-6" id="names">
                 <p class="float-end">
-                    Artifact was split into 
-                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1">artifact</span>
-                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">artifacts</span>
-                    <span id="split1"> #{{artifact.getChildIds()}}</span>
-                    <span *ngIf="artifact.getParentId() != undefined" id="split2">and</span>
-                    <span *ngIf="artifact.getParentId() != undefined" id="split2">artifact #{{artifact.getParentId()}}</span>.
+                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child artifact</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children artifacts</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}.</span>
+                    <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent artifact #{{artifact.getParentId()}}.</span>
                 </p>
             </div>
         </div>
@@ -71,7 +69,15 @@
                                             </div>
                                             <!--Label Given-->  
                                             <div class="col-sm-8">
-                                                <select class="form-control" name="labels" id="formControl">                                             
+                                                <select class="form-control" name="labels" id="formControl" [disabled]="!admin && username != label.labellerName">   
+                                                    <div> 
+                                                        <option>
+                                                            {{label.labelGiven}}
+                                                        </option>
+                                                        <option *ngFor ="let labels of allLabels">
+                                                            {{labels}}
+                                                        </option>
+                                                    </div>                                          
                                                     <option>
                                                         {{label.labelGiven}}
                                                     </option>
@@ -80,8 +86,8 @@
                                                     </option>           
                                                 </select>
                                                 <!--Label Remark-->
-                                                <div class="col align-self-start">
-                                                    <p id="remarksText">Remark: {{userLabel.labelsGiven.labelRemark}}</p>
+                                                <div class="col align-self-start" >
+                                                    <p id="remarksText">Remark: {{label.labelRemark}}</p>
                                                 </div>
                                             </div>
                                         </div> 

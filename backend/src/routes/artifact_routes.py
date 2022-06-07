@@ -56,9 +56,8 @@ def get_artifacts(*, user):
     # List of artifacts to be passed to frontend
     artifact_info = []
 
-    # Schema to serialize the Project
+    # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
-    labelling_schema = LabellingSchema()
 
     # For each displayed artifact
     for artifact in artifacts:
@@ -75,13 +74,8 @@ def get_artifacts(*, user):
         # Text of the artifact
         artifact_text = artifact.data
 
-        # Get the labellings of this artifact
-        artifact_labellings = artifact.labellings
-        # Serialize all labellings
-        labellings = []
-        for labelling in artifact_labellings:
-            labelling_json = labelling_schema.dump(labelling)
-            labellings.append(labelling_json)
+        # Get the serialized labellings
+        labellings = __get_labellings(artifact)
 
         # Put all values into a dictionary
         info = {
@@ -152,21 +146,10 @@ def single_artifact(*, user):
     # Convert artifact to JSON
     artifact_json = artifact_schema.dump(artifact)
 
-    # Id of the artifact
-    artifact_id = artifact.id
-
-    # Artifact identifier
-    artifact_identifier = artifact.identifier
-
-    # Text of the artifact
-    artifact_text = artifact.data
-
     # Put all values into a dictionary
     info = {
         "artifact": artifact_json,
-        "artifact_id": artifact_id,
-        "artifact_identifier": artifact_identifier,
-        "artifact_text": artifact_text
+        "username": user.username
     }
 
     # If the extended data was requested, append the requested data
@@ -180,11 +163,9 @@ def single_artifact(*, user):
     return make_response(dict_json)
 
 def __get_extended(artifact):
-    # Parent of the artifact
-    artifact_parent = artifact.parent_id
-
     # Children of the artifact
-    artifact_children = []
+    artifact_children = []\
+        
     for child in artifact.children:
         artifact_children.append(child.id)
 
@@ -193,10 +174,25 @@ def __get_extended(artifact):
 
     # Return the data
     return {
-        "artifact_parent": artifact_parent,
         "artifact_children": artifact_children,
         "artifact_labellings": labellings_formatted
     }
+
+def __get_labellings(artifact):
+    # Schema to serialize the labellings
+    labelling_schema = LabellingSchema()
+
+    # Get the labellings of this artifact
+    artifact_labellings = artifact.labellings
+
+    # Serialize all labellings
+    labellings = []
+    for labelling in artifact_labellings:
+        labelling_json = labelling_schema.dump(labelling)
+        labellings.append(labelling_json)
+    
+    # Return labellings
+    return labellings
 
 def __aggregate_labellings(artifact):
     # Get all the labellings of the artifact
@@ -214,6 +210,7 @@ def __aggregate_labellings(artifact):
 
             # What to add to result
             addition = {
+                'labellerName': user,
                 'labelTypeName': labelling.label_type.name,
                 'labelGiven': labelling.label.name,
                 'labelRemark': labelling.remark

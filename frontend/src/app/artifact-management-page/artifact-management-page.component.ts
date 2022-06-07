@@ -44,10 +44,18 @@ export class ArtifactManagementPageComponent {
   }
 
   ngOnInit(): void {
+    // Get the ID of the project
     const p_id = Number(this.routeService.getProjectID(this.url))
+
+    // Get the artifacts from the backend
     this.getArtifacts(p_id)
   }
 
+  /**
+   * Sets the artifacts of a specific project from artifact-data.service
+   * 
+   * @param p_id the id of the project
+   */
   async getArtifacts(p_id: number): Promise<void> {
     const artifacts = await this.artifactDataService.getArtifacts(p_id);
     this.artifacts = artifacts
