@@ -80,6 +80,10 @@ $light-grey-shade: #aaaaaa;
     padding-left: 5px;
     padding-top: 2px;
 }
+// Make childern names hoverable
+#subThemesText:hover, #parentThemesText:hover{
+    cursor: pointer;
+}
 //Sub-ThemesHeader
 #subThemes{
     border-bottom: 1px; 

@@ -38,7 +38,7 @@
                 Parent-Theme
             </div>
             <!--Parent-Themes Content-->
-            <p id="parentThemesText">{{getParentName()}}</p>
+            <p id="parentThemesText" (click)="goToTheme(theme.getParent())">{{getParentName()}}</p>
             <br/>
             <!-- Sub-Themes Header-->
             <div id="subThemes">
@@ -46,7 +46,7 @@
             </div>
             <!--Sub-Themes Content-->
             <div id="subThemesScroll">
-                <div *ngFor="let child of theme.getChildren()">
+                <div *ngFor="let child of theme.getChildren()" (click)="goToTheme(child)">
                     <p id="subThemesText">{{child.getName()}}</p>
                 </div>
             </div>
