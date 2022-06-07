@@ -7,22 +7,60 @@
             Merge Label
         </div>
     </div>
+    
     <div class="row modal-body">
         <div class="col-6">
-            <div>
-                <!-- Heading for merged label -->
-                <div class="subTitle">Label 1</div>
-                <div class="form-group" *ngFor="let label of labels">
-                    <!-- Option selection -->
-                    <select class="form-control" id="label-name" name="labels">
-                        <option  value="{{ label.labelName }}">{{ label.labelName }}</option>
-                    </select>
-                    <div>{{ label.labelType }}</div>
-                    <!-- Input area for the remark -->
-                    <textarea class="form-control" rows="8" value="{{ label.labelDescription }}" id="remark"></textarea>
-                </div>
+            <div class="form-group" >
+                <p class="subTitle">Select Label Type</p>
+                <select class="form-control" id="label-type" name="labels">
+                    <option *ngFor="let label of labels">{{ label.labelType }}</option>
+                </select>
             </div>
+             <!-- Add more labels -->
+             <button type="button" class="btn btn-secondary" id="addLabelButton" style="float:right;">
+                <!-- Plus icon -->
+                <i class="bi bi-plus"></i>
+            </button>
             
+            <div *ngFor="let label of labels | slice:0:2">
+                <div>
+                    <!-- Heading for merged label -->
+                    
+                    <div class="subTitle"> 
+                        <!-- Add more labels -->
+                        <button type="button" class="btn btn-secondary" id="deleteLabelButton" style="background-color: Transparent; border: none; color: black;">
+                            <!-- Plus icon -->
+                            <i class="bi bi-x"></i>
+                        </button>
+                        Label #{{ label.labelId }}
+                    </div>
+
+                    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+                        <ngb-panel title="{{label.labelName}}">
+                            <ng-template ngbPanelContent>
+                                <div>
+                                    <p id="artifactText">{{label.labelDescription}}</p>
+                                </div>
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+                </div>
+                
+                <!-- <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="false" >
+                            {{ label.labelName }}
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {{ label.labelDescription }}
+                        </div>
+                      </div>
+                    </div>
+                </div> -->
+            </div>
         </div>
         <div class="col-6"> 
             <div>
