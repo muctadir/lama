@@ -106,21 +106,13 @@ def get_all_labels():
 
     label_schema = LabelSchema()
 
-    #Make empty array to store our info objects 
-    label_info_array = []
+    # Send the label object, and the name of its type for each label
+    label_data = jsonify([{
+        'label': label_schema.dump(label),
+        'label_type': label.label_type.name
+    } for label in labels])
 
-    # Go through every label, get the information,
-    # append the labeltype 
-    for label in labels:
-        label_json = label_schema.dump(label)        
-        info = {
-            'label': label_json,
-            'label_type': label.label_type.name
-        }
-        label_info_array.append(info)
-    # JSONify and respond
-    dict_json = jsonify(label_info_array)
-    return make_response(dict_json)
+    return make_response(label_data)
 
 
 # Author: Bartjan
