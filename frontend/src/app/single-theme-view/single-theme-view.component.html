@@ -38,7 +38,7 @@
                 Parent-Theme
             </div>
             <!--Parent-Themes Content-->
-            <p id="parentThemesText">{{getParentName()}}</p>
+            <p id="parentThemesText" (click)="goToTheme(theme.getParent())">{{getParentName()}}</p>
             <br/>
             <!-- Sub-Themes Header-->
             <div id="subThemes">
@@ -46,7 +46,7 @@
             </div>
             <!--Sub-Themes Content-->
             <div id="subThemesScroll">
-                <div *ngFor="let child of theme.getChildren()">
+                <div *ngFor="let child of theme.getChildren()" (click)="goToTheme(child)">
                     <p id="subThemesText">{{child.getName()}}</p>
                 </div>
             </div>
@@ -59,7 +59,7 @@
             </div>
             <!--Description Field-->
             <div class="form-group">
-                <textarea class="form-control" [disabled]="true" rows="10" placeholder="Description">{{theme.getDesc()}}</textarea>
+                <textarea class="form-control" id="themeDescription" rows="10" placeholder="Description" disabled>{{theme.getDesc()}}</textarea>
             </div>
         </div>
     </div>

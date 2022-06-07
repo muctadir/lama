@@ -41,24 +41,6 @@ export class SingleThemeViewComponent {
     this.theme = new Theme(0, "", "")
   }
   
-  // Function for making sure parent name is not undefined
-  getParentName(): string {
-    // Get the parent
-    let parent = this.theme.getParent();
-      // Check is parent is undefined
-      if(parent != undefined){
-        if(parent.getName() != undefined){
-          // If not return the name
-          return parent.getName();
-        } else {
-          // Otherwise return ""
-          return "";
-        }
-      }   
-      // Otherwise return ""
-      return "";
-  }
-
   ngOnInit(): void {
 
     // Get the information for the theme
@@ -155,18 +137,50 @@ export class SingleThemeViewComponent {
    * of the same project
    * 
    * @trigger back button is pressed
-   */
-   reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
-    // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
+  */
+  reRouter() : void { 
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'thememanagement']);
+    this.router.navigate(['/project', this.p_id, 'thememanagement']);
+  }
+
+  /**
+   * Reroutes to other pages of the same project
+   * Has the theme id
+   * @trigger a child or parent theme is clicked
+  */
+  reRouterTheme(theme_id: number) : void {
+    // Changes the route accordingly
+    this.router.navigate(['/project', this.p_id, "singleTheme", theme_id])
+    // And reload the page
+    .then(() => {
+      window.location.reload();
+    });
+  }
+   
+
+  // Function for making sure parent name is not undefined
+  getParentName(): string {
+  // Get the parent
+  let parent = this.theme.getParent();
+    // Check is parent is undefined
+    if(parent != undefined){
+      if(parent.getName() != undefined){
+        // If not return the name
+        return parent.getName();
+      } else {
+        // Otherwise return ""
+        return "";
+      }
+    }   
+    // Otherwise return ""
+    return "";
+  }
+
+  // Function to redirect user to theme they clicked on
+  goToTheme(theme: Theme | undefined){
+    if (theme != undefined){
+      this.reRouterTheme(theme.getId());
+    }
   }
 
 }
