@@ -8,8 +8,8 @@ from src.models.auth_models import User
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
-from src.routes import demos, auth_routes, project_routes, account_routes
 from src.routes.artifact_routes import artifact_routes
+from src.routes import demos, auth_routes, project_routes, account_routes, theme_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
@@ -116,7 +116,11 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(demos)
     app.register_blueprint(project_routes)
     app.register_blueprint(account_routes)
+<<<<<<< HEAD
     app.register_blueprint(artifact_routes)
+=======
+    app.register_blueprint(theme_routes)
+>>>>>>> main
 
     # Magic library that makes cross-origin resource sharing work.
     # TODO: Check if we are setting this up correctly.

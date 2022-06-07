@@ -5,7 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelingDataService } from 'app/labeling-data.service';
 import { LabelType } from 'app/classes/label-type';
-import { FormControl } from '@angular/forms';
 import { Label } from 'app/classes/label';
 @Component({
   selector: 'app-label-form',

@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { ProjectCreationComponent } from './project-creation.component';
 
 describe('ProjectCreationComponent', () => {
@@ -8,7 +11,11 @@ describe('ProjectCreationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProjectCreationComponent ]
+      declarations: [ ProjectCreationComponent ],
+      // Adding the RouterTestingModule dependency
+      imports: [RouterTestingModule],
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal]
     })
     .compileComponents();
   });
@@ -19,6 +26,7 @@ describe('ProjectCreationComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

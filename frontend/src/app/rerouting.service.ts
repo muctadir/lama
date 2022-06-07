@@ -1,5 +1,6 @@
 // Jarl Jansen
 // Ana-Maria Olteniceanu
+// Veerle Furst
 
 import { Injectable } from '@angular/core';
 
@@ -13,9 +14,10 @@ export class ReroutingService {
    * @param url_path the url in string format
    * @returns project ID
    */
-  getProjectID(url_path : string) : string {
+  getProjectID(url_path: string): string {
+
     // Removes the first "/" from the string
-    let p_id : string = url_path.substring(1); 
+    let p_id: string = url_path.substring(1);
 
     // Removes everything before the first "/"
     p_id = p_id.substring(p_id.indexOf('/') + 1);
@@ -32,10 +34,23 @@ export class ReroutingService {
    * @param url_path the url in string format
    * @returns artifact ID
    */
-   getArtifactID(url_path : string) : string {
+  getArtifactID(url_path: string): string {
     // Removes the first "/" from the string
-    let pos = url_path.indexOf('singleartifact/') + 15
-    let a_id = url_path.substring(pos, url_path.length) 
+    let pos = url_path.indexOf('singleartifact/') + 15;
+    let a_id = url_path.substring(pos, url_path.length);
     return a_id
   }
-}
+    /** Gets the theme ID from a url string
+     * @param url_path the url in string format
+     * @returns theme ID
+     */
+    getThemeID(url_path : string) : string {
+
+      // Makes a substring of text after the last /
+      let t_id: string = url_path.substring(url_path.lastIndexOf("/"))
+      // Removes the last /
+      t_id = t_id.substring(1);
+
+      return t_id
+    }
+  }

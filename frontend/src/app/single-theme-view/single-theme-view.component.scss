@@ -1,3 +1,9 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #aaaaaa;
+
 //Body
 #body{
     padding-left: 30px;
@@ -17,7 +23,7 @@
     letter-spacing: 1px;
     border-bottom: 1px; 
     border-bottom-style: solid;
-    border-bottom-color: lightgray;
+    border-bottom-color: $light-grey-shade;
 }
 //Top Half container
 #topHalfRow{
@@ -34,7 +40,7 @@
     border-bottom: 1px; 
     border-bottom-style: solid; 
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 
 //Label Count Header
@@ -43,7 +49,7 @@
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 //artifactCount Header
 #artifactCount{
@@ -51,7 +57,7 @@
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 //Parent-Themes Header
 #parentThemes{
@@ -59,7 +65,7 @@
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 //Container for parent theme scroll
 #parentThemesScroll{
@@ -74,13 +80,17 @@
     padding-left: 5px;
     padding-top: 2px;
 }
+// Make childern names hoverable
+#subThemesText:hover, #parentThemesText:hover{
+    cursor: pointer;
+}
 //Sub-ThemesHeader
 #subThemes{
     border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 
 //Container for sub theme scroll
@@ -88,6 +98,11 @@
     overflow-y: scroll;
     height: 10vh;
 }
+// Description area
+#themeDescription{
+    resize: none;
+}
+
 //TOP RIGHT
 //Top right container
 #topRightCol{
@@ -107,7 +122,7 @@
     font-size: 16px;
     font-weight: 450;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 // Artifact text and remarks
 #artifactText ,#artifactRemark{
@@ -134,12 +149,12 @@
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: $white-shade; 
     border-radius: 10px;
 }
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: $grey-shade; 
     border-radius: 10px;
 }
 //Table Scroll
@@ -155,4 +170,9 @@
 // Edit Button
 #editButton{
     margin-left: 10px;
+    border: none;
+}
+// Cancel button
+#btns-cancel-submit{
+    border: none;
 }

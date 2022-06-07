@@ -9,3 +9,17 @@
     padding-bottom: 10px;
 }
 
+// Markup for the message displayed on success
+#success-msg {
+    color: green;
+    font-size: 14px;
+    padding-left: 30px;
+}
+
+// Markup for the message displayed on error
+#error-msg {
+    color: red;
+    font-size: 14px;
+    padding-left: 30px;
+}
+
