@@ -23,11 +23,17 @@
         </div>
     </div>
 
+    <!-- Displays an error message or success message-->
+    <div class="row">
+        <div *ngIf="!error" id="success-msg">{{message}}</div>
+        <div *ngIf="error" id="error-msg">{{message}}</div>
+    </div>
+
     <!-- Button at the bottom to cancel and save -->
     <div class="row" id="buttonRow">
         <div class="form-group" id="buttons">
             <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button> 
-            <button class="btn btn-primary float-end" (click)="fileUpload()">Save</button>
+            <button class="btn btn-primary float-end" (click)="fileUpload()">Upload</button>
         </div>
     </div>
 </div>  

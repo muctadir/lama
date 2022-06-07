@@ -55,9 +55,20 @@ describe('Theme', () => {
       .toBe(newName)
   })
 
+  // Setting a bad theme name
+  it('throw error for bad theme description', () => {
+    // Create instances
+    const theme2 = new Theme(id, name, desc);
+    const newName = "";
+    // catch wrong name
+    try {
+      theme2.setName(newName);
+    } catch (error) { }
+  });
+
   // Getting the description
   it("should get the description", () => {
-    expect(theme.getDescription())
+    expect(theme.getDesc())
       .toBe(desc)
   })
 
@@ -67,11 +78,22 @@ describe('Theme', () => {
     const theme2 = new Theme(id, name, desc)
     const newDesc = "New Theme Description";
     // Set description
-    theme2.setDescription(newDesc)
+    theme2.setDesc(newDesc)
     // Check
-    expect(theme2.getDescription())
+    expect(theme2.getDesc())
       .toBe(newDesc)
   })
+
+  // Setting a bad theme description
+  it('throw error for bad theme description', () => {
+    // Create instances
+    const theme2 = new Theme(id, name, desc);
+    const newDesc = "";
+    // catch wrong name
+    try {
+      theme2.setDesc(newDesc);
+    } catch (error) { }
+  });
 
   // Setting and getting the parent themes
   it("should set and get parent themes", () => {

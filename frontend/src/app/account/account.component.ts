@@ -1,9 +1,8 @@
 // Veerle Furst
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { User } from 'app/classes/user';
 import axios from 'axios';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -21,8 +20,6 @@ export class AccountComponent {
   editPassword: boolean = false;
 
   errorMsg = "";
-
-  constructor(private route: Router){}
 
   ngOnInit(){
     // Get the information of the user on loading the page

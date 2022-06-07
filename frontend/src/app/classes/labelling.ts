@@ -49,6 +49,9 @@ export class Labelling {
      * @param username 
      */
     setUsername(username: string): void {
+        if (username == undefined || typeof username != "string" || username.length <= 0) {
+            throw new Error("The labelling username should not be of length 0 as an argument in setUserame()");
+        }
         this.username = username;
     }
 

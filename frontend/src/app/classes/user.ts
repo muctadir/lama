@@ -47,6 +47,9 @@ export class User {
     * @params username
     */
     setUsername(username: string) {
+        if (username == undefined || typeof username != "string" || username.length <= 0) {
+            throw new Error("The username should not be of length 0 as an argument in setUserame()");
+        }
         this.username = username;
     }
 
@@ -70,7 +73,7 @@ export class User {
     * Gets the description of the user
     * @returns this.description
     */
-    getDescription(): string | undefined {
+    getDesc(): string | undefined {
         return this.description;
     }
 
@@ -78,7 +81,7 @@ export class User {
     * Gets the description of the user
     * @params desc 
     */
-    setDescription(desc: string) {
+    setDesc(desc: string) {
         this.description = desc;
     }
 

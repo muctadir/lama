@@ -9,6 +9,8 @@ All of the *concrete* models contain a \_\_tablename\_\_ attribute
     memberships (collection of memberships the user is associated with) <br>
     projects (collection of projects) <br>
     labellings (collection of labellings (info on how the user has labelled artifacts)) <br>
+    labels (collection of labels the user has labelled an artifact with) <br>
+    artifacts (collection of artifacts the user has labelled) <br>
     highlights (collection of highlights (which artifacts the user has highlighted and how)) <br>
     type (user or super_admin) <br>
     artifact_changes (collection of changes made to artifacts) <br>
@@ -95,20 +97,22 @@ this exists mostly to simplify queries or to be extended later <br>
     description <br>
     deleted (soft deleted) <br>
     sub_themes (collection of sub themes) <br>
-    super_themes (collection of super themes) <br>
+    super_theme (super theme object) <br>
     labels (collection of labels assigned to this theme)
 </details>
 
 <details><summary>Labelling</summary>
     u_id (user id that made this labelling) <br>
     a_id (artifact id that was labelled) <br>
+    lt_id (label type id corresponding to the label used) <br>
     l_id (label id that the artifact was labelled with) <br>
     p_id (project id that the artifact/label) <br>
     remark (why was this artifact labelled with this label?) <br>
     time (how long did it take the user to label this artifact?) <br>
     user (user object that made the labelling) <br>
     artifact (artifact object that was labelled) <br>
-    label (label object that the artifact was labelled with)
+    label (label object that the artifact was labelled with) <br>
+    label_type (short for label.label_type)
 </details>
 
 <details><summary>Highlight</summary>
