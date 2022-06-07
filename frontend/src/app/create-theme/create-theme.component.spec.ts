@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 import { CreateThemeComponent } from './create-theme.component';
 
 describe('CreateThemeComponent', () => {
@@ -8,7 +10,9 @@ describe('CreateThemeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateThemeComponent ]
+      declarations: [ CreateThemeComponent ],
+      // Adding the RouterTestingModule dependency
+      imports: [RouterTestingModule]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('CreateThemeComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

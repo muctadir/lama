@@ -1,4 +1,7 @@
-// <!-- Author: Victoria Bogachenkova -->
+/**
+ * Author: Victoria Bogachenkova
+ * Author: Bartjan Henkemans
+ */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelingDataService } from '../labeling-data.service';
@@ -7,13 +10,6 @@ import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
 import { Labelling } from 'app/classes/labelling';
-
-// Type for artifact
-type artifact = {
-  artifactId: number,
-  artifactLabeler: string,
-  artifactRemarks: string
-}
 
 @Component({
   selector: 'app-individual-label',
@@ -24,20 +20,7 @@ export class IndividualLabelComponent {
   routeService: ReroutingService;
   label: Label;
   url: string;
-  labellings: Array<Labelling>;
-  // Dummy data
-  artifacts: Array<artifact> = [
-    {
-      artifactId: 33,
-      artifactLabeler: "Veerle",
-      artifactRemarks: "I thought that this was appropriate because"
-    },
-    {
-      artifactId: 35,
-      artifactLabeler: "Chinno",
-      artifactRemarks: "I thought that this was appropriate because it is cool"
-    }
-  ]
+  labellings: any;
 
   /**
    * Constructor which:
@@ -50,7 +33,7 @@ export class IndividualLabelComponent {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
-      this.labellings = new Array<Labelling>();
+      this.labellings = {};
   }
 
   /**
@@ -76,9 +59,10 @@ export class IndividualLabelComponent {
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
+    console.log(labellings)
     this.labellings = labellings;
-    console.log(labellings);
   }
+
   /**
    * Gets the project id from the URL and reroutes to the label management page
    * of the same project
@@ -100,4 +84,6 @@ export class IndividualLabelComponent {
     const modalRef = this.modalService.open(LabelFormComponent,  { size: 'xl'});
     modalRef.componentInstance.label = this.label;
   }
+
+
 }

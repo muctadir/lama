@@ -12,7 +12,7 @@ labelling_routes = Blueprint("labelling", __name__, url_prefix="/labelling")
 @labelling_routes.route('/by_label', methods=['GET'])
 @login_required
 @in_project
-def get_labelling(*, user):
+def get_labelling(*, user, membership):
 
     args = request.args
     required = ['p_id', 'label_id']
@@ -21,9 +21,16 @@ def get_labelling(*, user):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     
-    labellings = db.session.execute(
-        select(Labelling).where(Labelling.l_id == args['label_id'], Labelling.p_id == args['p_id'], Labelling.u_id == user.id)
-    ).scalars().all()
+    if membership.admin:
+        labellings = db.session.execute(
+            select(Labelling).where(Labelling.l_id == args['label_id'], 
+            Labelling.p_id == args['p_id'])
+        ).scalars().all()
+    else: 
+        labellings = db.session.execute(
+            select(Labelling).where(Labelling.l_id == args['label_id'],
+             Labelling.p_id == args['p_id'], Labelling.u_id == user.id)
+        ).scalars().all()
     
     labelling_data = jsonify([{
         'a_id' : labelling.a_id,

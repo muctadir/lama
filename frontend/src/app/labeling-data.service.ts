@@ -93,7 +93,7 @@ export class LabelingDataService {
     });
   }
 
-  getLabelling(p_id: number, label_id: number): Promise<Array<Labelling>> {
+  getLabelling(p_id: number, label_id: number): Promise<any> {
     let token: string | null  = sessionStorage.getItem('ses_token');
     // Check if the session token exists
     if (typeof token !== "string") throw new Error("User is not logged in");
@@ -102,7 +102,7 @@ export class LabelingDataService {
     // Check if label_id larger than 0
     if (label_id < 0) throw new Error("label_id cannot be less than 0")
     let result: Label;
-    return axios.get('http://127.0.0.1:5000/labelling/labelling', {
+    return axios.get('http://127.0.0.1:5000/labelling/by_label', {
       headers: {
         'u_id_token': token
       },
@@ -111,12 +111,7 @@ export class LabelingDataService {
         'label_id': label_id
       }
     }).then((response) => {
-      console.log(response)
-      let labellings = new Array<Labelling>();
-      response.data.forEach((d:any) => {
-        labellings.push(new Labelling(d.id, d.name, Array<Label>()))
-      })
-      return labellings;
+      return response.data;
     }).catch(e => {throw e;});
   }
 
