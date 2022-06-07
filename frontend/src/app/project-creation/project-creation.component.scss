@@ -6,15 +6,6 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
-// @import "../../styles.scss";
-
-// General text settings
-body{
-    color: $grey-shade;
-    font-size: 15px;
-    letter-spacing: 1px;
-}
-
 // Top bar row
 #topBarRow{
     margin-left: 10px;
@@ -26,11 +17,6 @@ body{
 .bi.bi-plus{
     font-size: 24px;
     color: $grey-shade;
-}
-
-// Changes the size of the plus icon in the add members popup.
-#popup-plus {
-    font-size: 20px;
 }
 
 // Header of the page
@@ -50,6 +36,7 @@ body{
     font-size: 18px;
     letter-spacing: 1px;
     margin-top: 10px;
+    padding-bottom: 8px;
 }
 // Text inside the forms
 .form-control{
@@ -58,6 +45,11 @@ body{
 // Text above the setting divisions
 .settingsHeader{
     font-size: 18px;
+}
+
+.padd-marg {
+    padding: 0px;
+    margin: 0px;
 }
 
 // Project description
@@ -103,13 +95,6 @@ body{
     margin: 0px;
     cursor: pointer;
 }
-// Button for adding members
-#addMembersButton{
-    background-color: $white-shade;
-    width: 30px;
-    padding:0px;
-    border:none;
-}
 // Plus icon for label types
 .bi.bi-plus.members{
     float: right;
@@ -144,22 +129,6 @@ body{
     margin-top:20px;
 }
 
-// SCROLLBARS
-// Scrollbar
-::-webkit-scrollbar {
-    width: 10px;
-}
-// Scrollbar background
-::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-    border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-    background: #38474e; 
-    border-radius: 10px;
-}
-
 // Space between the two rows
 .top-buffer{
     margin-top: 10px;
@@ -190,4 +159,53 @@ body{
     border: 2px solid;
     border-color: $orange-shade;
     color: $white-shade;
+}
+
+
+/* SCSS related to the add user modal */
+// Row displaying the various users
+#user-modal-rows {
+    padding:2px 16px; 
+    max-height: 35px;
+}
+
+// Column holding the username of the users to be added
+#username-modal-col {
+    padding:15 1 1 1px; 
+    list-style: none; 
+    max-height: 25px;
+}
+
+// Button for adding members
+#addMembersButton{
+    background-color: $white-shade;
+    width: 30px;
+    padding:0px;
+    border:none;
+}
+
+// Changes the size of the plus icon in the add members popup.
+#popup-plus {
+    font-size: 20px;
+}
+
+#labelcount {
+    max-width: 20%;
+}
+
+
+/* Scrollbar related layout */
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
 }
