@@ -1,36 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { LoremIpsum } from "lorem-ipsum";
-
-const lorem = new LoremIpsum({
-  sentencesPerParagraph: {
-    max: 8,
-    min: 4
-  },
-  wordsPerSentence: {
-    max: 16,
-    min: 4
-  }
-});
-type labelType = {
-  labelTypeName: String,
-  labelTypeDescription: String,
-  labels: Array<label>
-}
-// For table data of users + labels given 
-type userLabel = {
-  labellerName: String,
-  labelRemark: String,
-  labelsGiven: Array<labelGroup>
-}
-//For labels given by 1 user
-type labelGroup = {
-  labelTypeName1: String,
-  labelGiven: String,
-}
-type label = {
-  labelName: String,
-  labelDescription: String,
-}
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ArtifactDataService } from 'app/artifact-data.service';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
+import { StringArtifact } from 'app/classes/stringartifact';
 
 @Component({
   selector: 'app-single-artifact-view',
@@ -39,60 +12,63 @@ type label = {
 })
 export class SingleArtifactViewComponent implements OnInit {
 
-  artifactId: Number = 1;
-  artifactIdentifier: String = 'XJY03';
-  labelers: Array<String> = ["Bartjan", "Veerle"]
-  artifact: String = lorem.generateParagraphs(10);
-  allLabels: Array<String> = ['Sad','Ecstatic','Latin','English']
-  labelTypes: Array<labelType> = [
-    {
-      labelTypeName: "Type A",
-      labelTypeDescription: lorem.generateParagraphs(1),
-      labels: [{labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},]
-    },
-    {
-      labelTypeName: "Type B",
-      labelTypeDescription: lorem.generateParagraphs(1),
-      labels: [{labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},
-               {labelName: lorem.generateWords(1), labelDescription: lorem.generateSentences(5)},]
-    },
-  ]
-  userLabels: Array<userLabel> = [
-    {
-      labellerName: "Chinno",
-      labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Happy"},
-                    {labelTypeName1: "Language", labelGiven: "Latin"}]
-    },
-    {
-      labellerName: "Veerle",
-      labelRemark: "Maybe this was suitable because...",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Ecstatic"},
-                    {labelTypeName1: "Language", labelGiven: "Latin"}]
-    },
-    {
-      labellerName: "Jarl Jarl",
-      labelRemark: "I thought that perhaps the blah fitted the bloo",
-      labelsGiven: [{labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows"},
-                    {labelTypeName1: "Language", labelGiven: "Latin"}]
-    },
-    
-  ]
+  // Initialize the ReroutingService
+  routeService: ReroutingService;
+  // Initialize the artifact
+  artifact: StringArtifact;
+  // Will be changed once the route to get labels by label types is merged 
+  allLabels: Array<string> = ['Fakeroonie', ' Truth']
+  // Initialize the url
+  url: string;
+  // Initialize list of labels given + remarks per user
+  userLabels: Array<any> = []
+
+  // Will be changed once @inproject decorator is merged
+  admin: boolean;
+  // Initialize the username of the current user
+  username: string;
 
 
-  notImplemented(){
+  notImplemented() {
     alert("This button is not implemented.");
   }
 
-
-  constructor() { }
-
-  ngOnInit(): void {
+  /**
+     * Constructor passes in the modal service and the artifact service,
+     * initializes Router
+     * @param modalService instance of NgbModal
+     * @param artifactDataService instance of ArtifactDataService
+     * @param router instance of Router
+     */
+  constructor(private modalService: NgbModal,
+    private artifactDataService: ArtifactDataService,
+    private router: Router) {
+    this.routeService = new ReroutingService();
+    this.artifact = new StringArtifact(0, 'null', 'null');
+    this.url = this.router.url;
+    this.admin = false;
+    this.username = '';
   }
 
+  ngOnInit(): void {
+    // Get the ID of the artifact and the project
+    let a_id = Number(this.routeService.getArtifactID(this.url));
+    let p_id = Number(this.routeService.getProjectID(this.url));
+
+    // Get the artifact data from the backend
+    this.getArtifact(a_id, p_id)
+  }
+
+   /**
+   * Sets a specific artifacts and its necessary data from artifact-data.service
+   * 
+   * @param a_id the id of the artifact
+   * @param p_id the id of the project
+   */
+  async getArtifact(a_id: number, p_id: number): Promise<void> {
+    const result = await this.artifactDataService.getArtifact(p_id, a_id);
+    this.artifact = result[0];
+    this.userLabels = result[1];
+    this.username = result[2];
+  }
 }
