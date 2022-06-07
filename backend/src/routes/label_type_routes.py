@@ -5,14 +5,15 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
-from src.app_util import login_required
+from src.app_util import login_required, in_project
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema
 
 label_type_routes = Blueprint("labeltype", __name__, url_prefix="/labeltype")
 
-@label_type_routes.route('/getAll', methods=['GET'])
+@label_type_routes.route('/allLabelTypes', methods=['GET'])
 @login_required
-def get_label_types(*, user): 
+@in_project
+def get_label_types(): 
     args = request.args
     required = ['p_id']
 

@@ -30,7 +30,7 @@ export class LabelingDataService {
     // Array with results
     let result: Array<Label> = new Array<Label>();
     // Actual request
-    return axios.get('http://127.0.0.1:5000/label/getAll', {
+    return axios.get('http://127.0.0.1:5000/label/allLabels', {
       headers: {
         'u_id_token': token
       },
@@ -66,7 +66,7 @@ export class LabelingDataService {
     // Check if label_id larger than 0
     if (label_id < 0) throw new Error("label_id cannot be less than 0")
     let result: Label;
-    return axios.get('http://127.0.0.1:5000/label/get', {
+    return axios.get('http://127.0.0.1:5000/label/singleLabel', {
       headers: {
         'u_id_token': token
       },
@@ -125,7 +125,7 @@ export class LabelingDataService {
     // Check if the p_id is larger than 0
     if (p_id < 0) throw new Error("p_id cannot be less than 0")
     let result: Array<LabelType> = new Array<LabelType>();
-    return axios.get('http://127.0.0.1:5000/labeltype/getAll', {
+    return axios.get('http://127.0.0.1:5000/labeltype/allLabelTypes', {
       headers: {
         'u_id_token': token
       },
@@ -133,8 +133,9 @@ export class LabelingDataService {
         'p_id': p_id,
       }
     }).then((response) => {
+      console.log(response)
       response.data.forEach((d: any) => {
-        result.push(new LabelType(d.a_id, d.remark, new Array<Label>()))
+        result.push(new LabelType(d.id, d.name, new Array<Label>()))
       });
       console.log(result);
       return result;

@@ -7,13 +7,13 @@
             Merge Label
         </div>
     </div>
-    
+
     <div class="row modal-body">
         <div class="col-6">
             <div class="form-group" >
                 <p class="subTitle">Select Label Type</p>
                 <select class="form-control" id="label-type" name="labels">
-                    <option *ngFor="let label of labels">{{ label.labelType }}</option>
+                    <option *ngFor="let labeltype of labelTypes">{{ labeltype.getName()}}</option>
                 </select>
             </div>
              <!-- Add more labels -->
@@ -21,31 +21,38 @@
                 <!-- Plus icon -->
                 <i class="bi bi-plus"></i>
             </button>
-            
-            <div *ngFor="let label of labels | slice:0:2">
+
+            <div *ngFor="let label of labels| slice:0:2">
                 <div>
                     <!-- Heading for merged label -->
-                    
-                    <div class="subTitle"> 
+
+                    <div class="subTitle">
                         <!-- Add more labels -->
                         <button type="button" class="btn btn-secondary" id="deleteLabelButton" style="background-color: Transparent; border: none; color: black;">
                             <!-- Plus icon -->
                             <i class="bi bi-x"></i>
                         </button>
-                        Label #{{ label.labelId }}
+                        Label #{{ label.getId() }}
                     </div>
 
-                    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-                        <ngb-panel title="{{label.labelName}}">
+                    <ngb-accordion #acc="ngbAccordion">
+                        <ngb-panel>
+                            <ng-template ngbPanelTitle>
+                                <div class="form-group" >
+                                    <select class="form-control" id="label-type" name="labels">
+                                        <option *ngFor="let label of labels">{{ label.getName() }}</option>
+                                    </select>
+                                </div>
+                            </ng-template>
                             <ng-template ngbPanelContent>
                                 <div>
-                                    <p id="artifactText">{{label.labelDescription}}</p>
+                                    <p id="artifactText">{{label.getDesc()}}</p>
                                 </div>
                             </ng-template>
                         </ngb-panel>
                     </ngb-accordion>
                 </div>
-                
+
                 <!-- <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne">
@@ -62,17 +69,17 @@
                 </div> -->
             </div>
         </div>
-        <div class="col-6"> 
+        <div class="col-6">
             <div>
                 <!-- Name given to merge -->
-                <div class="subTitle">    
+                <div class="subTitle">
                     Merge Name
                 </div>
                 <input type="text" class="form-control" id="label-name" placeholder="Merge Name">
             </div>
             <div>
                 <!-- Description -->
-                <div class="subTitle">    
+                <div class="subTitle">
                     Description
                 </div>
                 <!-- Input area -->
@@ -86,9 +93,9 @@
     <!-- Buttons for cancelling and submitting -->
     <div class="row" id="buttons-cancel-submit">
         <div class="form-group" id="butt">
-            <button class="btn btn-light float-end"  id="btns-cancel-submit" (click)="activeModal.close('Close click')">Cancel</button> 
+            <button class="btn btn-light float-end"  id="btns-cancel-submit" (click)="activeModal.close('Close click')">Cancel</button>
             <button class="btn btn-primary float-end" (click)="notImplemented()" id="btns-cancel-submit">Submit</button>
         </div>
     </div>
-</div>  
+</div>
 

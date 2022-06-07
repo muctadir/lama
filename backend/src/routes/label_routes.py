@@ -45,8 +45,11 @@ def create_label():
         p_id=args['p_id'])
         
     # Commit the label
-    db.session.add(label)
-    db.session.commit()
+    try:
+        db.session.add(label)
+        db.session.commit() 
+    except:
+        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
     return make_response('Created')
 
@@ -69,21 +72,21 @@ def edit_label():
 
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
-
-    tmp = update(Label).where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
-    print(tmp)
-
-    db.session.execute(
-        update(Label).where(Label.id == args['labelId']).values(name=args['labelName'],
-        description=args['labelDescription'])
-    )
-    db.session.commit()
+    
+    try:
+        db.session.execute(
+            update(Label).where(Label.id == args['labelId']).values(name=args['labelName'],
+            description=args['labelDescription'])
+        )
+        db.session.commit()
+    except:
+        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
     return make_response('Ok')
 
 # Author: Bartjan, Victoria
 # Check whether the pID exists
-@label_routes.route('/getAll', methods=['GET'])
+@label_routes.route('/allLabels', methods=['GET'])
 @login_required
 @in_project
 def get_all_labels():
@@ -95,9 +98,6 @@ def get_all_labels():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-        
-    # if len(args['labelName']) <= 0:
-    #     return make_response('Bad request: Label name cannot have size <= 0', 400)
     
     # Get all the labels of a labelType
     labels = db.session.execute(
@@ -124,7 +124,7 @@ def get_all_labels():
 
 
 # Author: Bartjan
-@label_routes.route('/get', methods=['GET'])
+@label_routes.route('/singleLabel', methods=['GET'])
 @login_required
 @in_project
 def get_single_label():
@@ -160,7 +160,6 @@ def get_single_label():
 @login_required
 @in_project
 def merge_route():
-    # TODO: Check user in project
     args = request.json
     required = ['leftLabelId', 'rightLabelId', 'newLabelName', 'newLabelDescription', 'p_id']
 
@@ -197,10 +196,17 @@ def merge_route():
             description=args['newLabelDescription'],
             lt_id=labels[0].lt_id,
             p_id=labels[0].p_id)
-    db.session.add(new_label)
-    db.session.commit()
+
+    try:
+        db.session.add(new_label)
+        db.session.commit()
+    except:
+        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
     # Update all labellings
-    db.session.execute(
-        update(Labelling).where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
-    db.session.commit()
+    try:
+        db.session.execute(
+            update(Labelling).where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
+        db.session.commit()
+    except:
+        return make_response('Internal Server Error: Commit to database unsuccesful', 500)

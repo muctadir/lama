@@ -12,12 +12,12 @@ labelling_routes = Blueprint("labelling", __name__, url_prefix="/labelling")
 @labelling_routes.route('/by_label', methods=['GET'])
 @login_required
 @in_project
-def get_labelling(*, user, membership):
+def get_labelling_by_label(*, user, membership):
 
     args = request.args
     required = ['p_id', 'label_id']
 
-    # Check if required args are present
+    # Check if required args are presentF
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     

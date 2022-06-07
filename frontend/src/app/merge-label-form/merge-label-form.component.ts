@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelingDataService } from '../labeling-data.service';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
+import { Label } from 'app/classes/label';
+import { Labelling } from 'app/classes/labelling';
+import { LabelType } from 'app/classes/label-type';
 
-// Tyep for label
-type label = {
-  labelId: Number,
-  labelName: String,
-  labelDescription: String,
-  labelType: String
-}
+// // Tyep for label
+// type label = {
+//   labelId: Number,
+//   labelName: String,
+//   labelDescription: String,
+//   labelType: String
+// }
 
 @Component({
   selector: 'app-merge-label-form',
@@ -15,31 +21,55 @@ type label = {
   styleUrls: ['./merge-label-form.component.scss']
 })
 export class MergeLabelFormComponent {
+  routeService: ReroutingService;
+  labels: Array<Label>;
+  url: string;
+  labelTypes: Array<LabelType>
 
-  // Dummy variables
-  labels: Array<label> = [
-    {
-      labelId: 1,
-      labelName: "Type A",
-      labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-      labelType: "Lorem"
-    },
-    {
-      labelId: 2,
-      labelName: "Type B",
-      labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-      labelType: "Ipsum"
-    },
-    {
-      labelId: 3,
-      labelName: "Type C",
-      labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-      labelType: "Lorem"
-    }
-  ]
+  /**
+   * Constructor which:
+   * 1. makes an empty label
+   * 2.
+   */
+   constructor(public activeModal: NgbActiveModal,
+    private router: Router,
+    private labelingDataService: LabelingDataService) {
+      this.labels = new Array<Label>();
+      this.labelTypes = new Array<LabelType>();
+      this.routeService = new ReroutingService();
+      this.url = this.router.url;
+  }
 
-  // Constructor modal
-  constructor(public activeModal: NgbActiveModal) {}
+  /**
+   * OnInit,
+   *  1. the p_id of the project is retrieved
+   *  2. the labelId of the label is retrieved
+   *  3. the label loading is started
+   */
+   ngOnInit(): void {
+    let p_id = parseInt(this.routeService.getProjectID(this.url));
+    let labelID = parseInt(this.routeService.getLabelID(this.url));
+    this.getLabels(p_id);
+    this.getLabelTypes(p_id);
+  }
+
+  /**
+   * Async function which gets the label
+   */
+   async getLabels(p_id: number): Promise<void> {
+    const labels = await this.labelingDataService.getLabels(p_id);
+    this.labels = labels;
+  }
+
+  /**
+   * Async get labelTypes
+   * @param p_id
+   */
+  async getLabelTypes(p_id: number): Promise<void> {
+    const labelTypes = await this.labelingDataService.getLabelTypes(p_id);
+    this.labelTypes = labelTypes;
+    console.log(labelTypes);
+  }
 
   // Not implemented function
   notImplemented() {
