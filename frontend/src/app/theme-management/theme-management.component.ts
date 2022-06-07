@@ -53,6 +53,7 @@ export class ThemeManagementComponent  {
   randomNumber: number = Math.ceil(Math.random() * 9);
 
   themes: Array<Theme>;
+  
   constructor(private router: Router) {
     this.themes = new Array<Theme>();
     for (var i: number = 0; i < this.randomNumber; i = i + 1){

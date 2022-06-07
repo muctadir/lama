@@ -11,6 +11,12 @@ export class AddArtifactComponent {
   /* Stores the file that the user uploads */
   file: File | null = null;
 
+  /* Message displayed to the user, success or failure */
+  message: string = "";
+
+  /* Whether the message is an error */
+  error : boolean = false;
+
   /**
    * Initializes the modal
    * 
@@ -35,7 +41,6 @@ export class AddArtifactComponent {
 
     // stores the file in a the "file" variable
     this.file = input.files[0];
-    console.log(this.file);
   }
 
   /**
@@ -43,7 +48,7 @@ export class AddArtifactComponent {
    * The text file gets parsed based on the newlines.
    * The resulting artifacts gets send to the database.
    * 
-   * @returns nothing
+   * @modifies message, error
    * 
    * @TODO add database connection
    */
@@ -54,12 +59,16 @@ export class AddArtifactComponent {
 
     // Checks whether the file is a text file, if not displays error
     if (this.file?.type != "text/plain") {
+      // Ensures an error message is displayed
+      this.message = "Invalid file type, should be .txt";
+      this.error = true;
+      // Exists function
       return;
     } 
 
     // Crates a FileReader object, will be used to read the content of a file
     var myReader: FileReader = new FileReader();
-
+    
     // Behaviour of what happens when a file is read
     myReader.onloadend = function(){
 
@@ -76,8 +85,17 @@ export class AddArtifactComponent {
 
     }
 
-    // Starts reading the file
-    myReader.readAsText(this.file);
+    try {
+      // Starts reading the file
+      myReader.readAsText(this.file);
+      // Indicates that the uploading was successful
+      this.message = "Upload successful";
+      this.error = false;
+    } catch(e) {
+      // Ensures an error message is displayed
+      this.message = "Invalid file type, should be .txt";
+      this.error = true;
+    }
 
   }
 

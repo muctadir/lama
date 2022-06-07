@@ -19,6 +19,7 @@ describe('ProjectComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the project component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });

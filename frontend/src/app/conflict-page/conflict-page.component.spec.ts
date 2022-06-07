@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 import { ConflictPageComponent } from './conflict-page.component';
 
 describe('ConflictPageComponent', () => {
@@ -8,7 +10,9 @@ describe('ConflictPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConflictPageComponent ]
+      declarations: [ ConflictPageComponent ],
+      // Adding the RouterTestingModule dependency
+      imports: [RouterTestingModule]
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('ConflictPageComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });
