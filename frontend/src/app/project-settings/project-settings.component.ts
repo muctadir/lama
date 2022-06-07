@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Router } from '@angular/router'
 import { User } from '../classes/user';
 import { Project } from '../classes/project';
+import { ReroutingService } from 'app/rerouting.service';
 
 //Modal for adding users
 @Component({
@@ -95,9 +96,10 @@ export class ProjectSettingsComponent implements OnInit {
   //whether the page is in edit mode, default is false
   edit: boolean = false;
 
-  constructor(private modalService: NgbModal, private router: Router) { 
+  constructor(private modalService: NgbModal, private router: Router, private reroutingService: ReroutingService) { 
     //Dummy data for initial
-    this.currentProject = new Project(1, "Project Name", "Project Description");
+    let projectID = +(this.reroutingService.getProjectID(this.router.url));
+    this.currentProject = new Project(projectID, "Project Name", "Project Description");
     this.projectMembers.push(new User(1, "Linh"));
     this.projectMembers.push(new User(2, "Jarl"));
     this.projectMembers.push(new User(3, "Vic"));
@@ -134,12 +136,11 @@ export class ProjectSettingsComponent implements OnInit {
           'u_id_token': token
         }
       })
-        .then(responseP => { 
-          let projectID = +(this.router.url.substring(this.router.url.indexOf("/project/") + 9, this.router.url.indexOf("/settings")))
-          this.currentProject.setName(responseP.data[projectID-1].project.name);
-          this.currentProject.setDescription(responseP.data[projectID-1].project.description);
-          this.currentProject.setCriteria(responseP.data[projectID-1].project.criteria);
-          this.currentProject.setFrozen(responseP.data[projectID-1].project.frozen);
+        .then(responseP => {
+          this.currentProject.setName(responseP.data[this.currentProject.getId()-1].project.name);
+          this.currentProject.setDescription(responseP.data[this.currentProject.getId()-1].project.description);
+          this.currentProject.setCriteria(responseP.data[this.currentProject.getId()-1].project.criteria);
+          this.currentProject.setFrozen(responseP.data[this.currentProject.getId()-1].project.frozen);
         })
         .catch(error => {
           console.log(error);
@@ -163,7 +164,7 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   //Saving changes made to project
-  saveEdit(): void {
+  async saveEdit(): Promise<void> {
     //Setting name, description, criteria
     this.currentProject.setName((<HTMLInputElement>document.getElementById("projectName")).value);
     this.currentProject.setDescription((<HTMLInputElement>document.getElementById("projectDescriptionForm")).value);
@@ -179,8 +180,38 @@ export class ProjectSettingsComponent implements OnInit {
       //Assign the values of the checkboxes according to whether they have been checked during edit mode
       this.adminMember[i] = adminBool;
     }
-  }
 
+    // Way to get information to backend
+    let projectInformation: Record<string, any> = {};
+    // Project information
+    projectInformation["project"] = {
+      "id": this.currentProject.getId(),
+      "name" : this.currentProject.getName(),
+      "description" : this.currentProject.getDescription(),
+      "criteria": this.currentProject.getCriteria()
+    };
+
+    let token: string | null  = sessionStorage.getItem('ses_token');
+
+    if (typeof token === "string") {        
+      // Send the data to the database
+      const response =  await axios.patch('http://127.0.0.1:5000/project/edit', projectInformation["project"], {
+        headers: {
+          'u_id_token': token
+        }
+      })
+      .then(response => { 
+        // TODO
+        console.log("Done")
+        return Math.floor(response.status/100) == 2;
+      })
+      .catch(error => {
+        // TODO
+        return;
+      });
+    }
+   
+  }
   //Getting label types from form
   getLabelTypes(form:HTMLFormElement): string[]{
     // Make a dictionary for all values

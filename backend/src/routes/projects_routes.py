@@ -7,9 +7,9 @@ from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
 from src.models.item_models import Artifact, LabelType
-from src.models.project_models import Membership, ProjectSchema
+from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, update
 from src.app_util import login_required
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
@@ -166,3 +166,36 @@ def create_project(*, user):
         db.session.add(label_type)
         db.session.commit()
     return make_response('OK', 200)
+
+"""
+For editing an existing project
+"""
+@project_routes.route("/edit", methods=["PATCH"])
+@login_required
+def edit_project(*, user):
+    # Get args 
+    args = request.json
+    # Required args
+    required = ('projectId', 'projectName', 'projectDescription', 'projectCriteria')
+
+    # if not check_args(required, args):
+    #     return make_response('Bad Request', 400)
+    print(args['id'])
+    label = db.session.get(Project, args['id'])
+    if not label:
+        return make_response('Project does not exist', 400)
+
+    # TODO Make them check if user a part of the project
+    # if label.p_id != args["p_id"]:
+    #     return make_response('Label not part of project', 400)
+
+    tmp = update(Project).where(Project.id == args['id']).values(name=args['name'], description=args['description'], criteria=args["criteria"])
+    print(tmp)
+
+    db.session.execute(
+        update(Project).where(Project.id == args['id']).values(name=args['name'], 
+        description=args['description'], criteria=args["criteria"])
+    )
+    db.session.commit()
+
+    return make_response('Ok')
