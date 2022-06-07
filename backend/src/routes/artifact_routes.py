@@ -65,24 +65,12 @@ def get_artifacts(*, user):
         # Convert artifact to JSON
         artifact_json = artifact_schema.dump(artifact)
 
-        # Id of the artifact
-        artifact_id = artifact.id
-
-        # Artifact identifier
-        artifact_identifier = artifact.identifier
-
-        # Text of the artifact
-        artifact_text = artifact.data
-
         # Get the serialized labellings
         labellings = __get_labellings(artifact)
 
         # Put all values into a dictionary
         info = {
             "artifact": artifact_json,
-            "artifact_id": artifact_id,
-            "artifact_identifier": artifact_identifier,
-            "artifact_text": artifact_text,
             "artifact_labellings": labellings
         }
 
@@ -106,7 +94,7 @@ def add_new_artifacts(*, user):
 
     # Check if required args are present
     if not check_args(required, args):
-        return make_response('Bad Request', 40)
+        return make_response('Bad Request', 400)
 
     # Get the information given by the frontend
     artifact_info = request.json
@@ -119,7 +107,12 @@ def add_new_artifacts(*, user):
 
         # Add the artifact to the database
         db.session.add(artifact_object)
+    
+    # Try commiting the artifacts
+    try:
         db.session.commit()
+    except:
+        return make_response('Internal Server Error', 500)
 
     return make_response("Route accessed")
 
@@ -233,6 +226,4 @@ def __aggregate_labellings(artifact):
         return formatted_result
 
 def __get_artifact(a_id):
-    return db.session.execute(
-        select(Artifact).where(Artifact.id == a_id)
-        ).scalars().first()
+    return db.session.get(Artifact, a_id)

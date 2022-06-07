@@ -45,11 +45,6 @@ export class ArtifactDataService {
       for (let artifact of response.data) {
         // Initialize a new artifact with all values
         let artifactJson = artifact["artifact"];
-        artifactJson["id"] = artifact["artifact_id"];
-        artifactJson["identifier"] = artifact["artifact_identifier"],
-          artifactJson["data"] = artifact["artifact_text"];
-        // TODO: Change
-        artifactJson["labellings"] = artifact["artifact_labellings"];
 
         // Create an artifact object
         let artifactNew: StringArtifact = new StringArtifact(
@@ -59,7 +54,7 @@ export class ArtifactDataService {
         )
 
         // Set the number of labellings on this artifact
-        artifactNew.setLabellings(artifactJson["labellings"])
+        artifactNew.setLabellings(artifact["artifact_labellings"])
 
         // Add the artifact to the result
         result.push(artifactNew);
