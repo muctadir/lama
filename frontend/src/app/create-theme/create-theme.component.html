@@ -2,14 +2,14 @@
 <!-- big container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
     <!-- Page Header -->
-    <div class="row" >
+    <div class="row header">
         <div class="col-10 header" id="pageTitle"> 
             Create Theme
         </div>
     </div>
 
-    <!-- Page body top half -->
-    <div class="row" id="topHalf">
+    <!-- Row for the name and description -->
+    <div class="row">
         <!-- Left side of top half -->
         <div class="col-6">
             <!-- Row for name and labels -->
@@ -18,7 +18,7 @@
                 <!-- Theme name section -->
                 <div class="col-sm-12">
                     <!-- Name header -->
-                    <div id="name">
+                    <div class="nameHeader">
                         Name
                     </div>
                     <!-- Input form for name -->
@@ -27,27 +27,7 @@
                             <input class="form-control" id="nameForm" type="text" placeholder="Theme name" required><br>
                         </div>
                     </div>
-                </div>
-
-                <!-- Displays all labels section -->
-                <div class="col-sm-12">
-                    <!-- Labels header -->
-                    <div id="labels">                 
-                        Labels
-                    </div>
-                    <!-- List of all labels -->
-                    <div id="allLabelsList">
-                        <div *ngFor="let label of addedLabels">
-                            <span id="addedLabels">{{label}}</span>
-                            <!-- Column for delete icon -->
-                            <button class="btn x" type="button" (click)="removeLabel(label)">
-                                <!-- Plus icon -->
-                                <span class="bi bi-x">                                  
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                </div>   
             </div> 
         </div>
 
@@ -58,44 +38,67 @@
                 <!-- Description section -->
                 <div class="col-sm-12">
                     <!-- Description header -->
-                    <div id="description">
+                    <div class="nameHeader">
                         Description
                     </div>
                     <!-- Input for the description -->
                     <div class="form-group">
                         <textarea class="form-control" placeholder="Description" id="descriptionArea"></textarea>
                     </div>
-                </div>
+                </div>             
+            </div>
+        </div>
+    </div>
 
-                <!-- Sub-themes section -->
-                <div class="col-sm-12">
-                    <!-- Sub-themes header -->
-                    <div id="subThemes">
-                        Sub-Themes
-                    </div>
-                    <!-- Sub-theme list from data -->
-                    <div id="addedSubthemesList">
-                        <div *ngFor="let subtheme of addedSubthemes">
-                            <span id="addedSubthemes">{{subtheme}}</span>
-                             <!-- Column for delete icon -->
-                             <button class="btn x" type="button" (click)="removeSubtheme(subtheme)">
-                                <!-- Plus icon -->
-                                <span class="bi bi-x">                                  
-                                </span>
-                            </button>
-                        </div>
-                    </div>
+    <!-- Row for the list of labels and sub-themes -->
+    <div class="row">
+        <!-- Displays all labels section -->
+        <div class="col-6">
+            <!-- Labels header -->
+            <div class="nameHeader">                 
+                Labels
+            </div>
+            <!-- List of all labels -->
+            <div id="allLabelsList">
+                <div *ngFor="let label of addedLabels">
+                    <span id="addedLabels">{{label}}</span>
+                    <!-- Column for delete icon -->
+                    <button class="btn x" type="button" (click)="removeLabel(label)">
+                        <!-- Plus icon -->
+                        <span class="bi bi-x">                                  
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sub-themes section -->
+        <div class="col-6">
+            <!-- Sub-themes header -->
+            <div class="nameHeader">
+                Sub-Themes
+            </div>
+            <!-- Sub-theme list from data -->
+            <div id="addedSubthemesList">
+                <div *ngFor="let subtheme of addedSubthemes">
+                    <span id="addedSubthemes">{{subtheme}}</span>
+                     <!-- Column for delete icon -->
+                     <button class="btn x" type="button" (click)="removeSubtheme(subtheme)">
+                        <!-- Plus icon -->
+                        <span class="bi bi-x">                                  
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Page Bottom Half -->
-    <div class="row"  id="bottomHalf">
+    <div class="row" id="bottomHalf">
         <div class="col-6">
 
             <!-- Add Labels Section --> 
-            <div id="addLabels">
+            <div class="nameHeader">
                 Add Labels
             </div>
             <div class="row">
@@ -140,7 +143,7 @@
         <div class="col-6"> 
 
             <!-- Add Sub-Themes Section --> 
-            <div id="addSubthemes">
+            <div class="nameHeader">
                 Add Sub-Themes
             </div>
             <div class="row">

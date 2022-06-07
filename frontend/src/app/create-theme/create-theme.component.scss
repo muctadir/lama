@@ -17,33 +17,30 @@ $light-grey-shade: #aaaaaa;
     font-size: 35px;
     letter-spacing: 1px;
 }
+
 //Top half part of page
-#topHalf{
+.row{
     padding-top: 10px;
-    height: 50vh; 
+    padding-bottom: 10px;
+}
+// Row for the header
+.row.header{
+    padding-top: 0px;
 }
 
-//Name Header
-#name{
-    border-bottom: 2px; 
-    border-bottom-style: solid; 
-    font-size: 18px;
-    letter-spacing: 1px;
-    border-bottom-color: $orange-shade;
-}
-//Name input box
+// Name input box
 #nameForm{
     width: auto;
 }
 
-//Labels header
-#labels{
+// Headers for all names of sections
+.nameHeader{
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
-    margin-top: 68px;
+    margin-bottom: 10px;
 }
 
 // Labels added
@@ -73,25 +70,6 @@ $light-grey-shade: #aaaaaa;
 #topRight{
     padding-left: 0px;
 }
-#description{
-    border-bottom: 2px; 
-    border-bottom-style: solid; 
-    font-size: 18px;
-    letter-spacing: 1px;
-    border-bottom-color: $orange-shade;
-    margin-bottom: 10px;
-}
-
-//Subthemes header
-#subThemes{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px; 
-    border-bottom-style: solid; 
-    font-size: 18px;
-    letter-spacing: 1px;
-    border-bottom-color: $orange-shade;
-}
 
 //Subthemes list 
 #addedSubthemes{
@@ -111,15 +89,6 @@ $light-grey-shade: #aaaaaa;
     padding-top: 10px;
     padding-left: 0px;
     max-height: 30vh;
-}
-
-// Add labels header
-#addLabels{
-    border-bottom: 2px; 
-    border-bottom-style: solid; 
-    font-size: 18px;
-    letter-spacing: 1px;
-    border-bottom-color: $orange-shade;
 }
 
 //Add label text
@@ -180,14 +149,7 @@ p.labelDescriptionText{
     overflow-y: scroll;
     height: 30vh;
 }
-// Add subtheme text
-#addSubthemes{
-    border-bottom: 2px; 
-    border-bottom-style: solid; 
-    font-size: 18px;
-    letter-spacing: 1px;
-    border-bottom-color: $orange-shade;
-}
+
 // Full subtheme list text
 .addSubthemeText{
     font-size: 14px;
