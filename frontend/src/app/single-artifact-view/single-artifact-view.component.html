@@ -26,7 +26,7 @@
                     Artifact was split into 
                     <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1">artifact</span>
                     <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">artifacts</span>
-                    <span id="split1"> #{{artifact.getChildIds()}}</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}</span>
                     <span *ngIf="artifact.getParentId() != undefined" id="split2">and</span>
                     <span *ngIf="artifact.getParentId() != undefined" id="split2">artifact #{{artifact.getParentId()}}</span>.
                 </p>
