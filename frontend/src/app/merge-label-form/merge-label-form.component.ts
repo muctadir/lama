@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 // Tyep for label
@@ -14,7 +14,7 @@ type label = {
   templateUrl: './merge-label-form.component.html',
   styleUrls: ['./merge-label-form.component.scss']
 })
-export class MergeLabelFormComponent{
+export class MergeLabelFormComponent {
 
   // Dummy variables
   labels: Array<label> = [

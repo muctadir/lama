@@ -34,7 +34,6 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'createProject', component: ProjectCreationComponent},
     {path: 'project/:projectId', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
@@ -46,7 +45,7 @@ const routes: Routes = [
       {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
       {path: 'createTheme', component: CreateThemeComponent},
-      {path: 'singleTheme', component: SingleThemeViewComponent},
+      {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
       {path: 'editTheme', component: EditThemeComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
