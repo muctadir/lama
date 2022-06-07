@@ -97,9 +97,12 @@ describe('Theme', () => {
 
   // Setting and getting the parent themes
   it("should set and get parent themes", () => {
+    // Create instances
     const theme2 = new Theme(id, name, desc)
     const parent = new Theme(3, "theme1", "themeDesc1");
+    // Set the parent
     theme2.setParent(parent);
+    // Check
     expect(theme2.getParent())
       .toEqual(parent)
   })

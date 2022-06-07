@@ -62,10 +62,12 @@ export class SingleThemeViewComponent {
   ngOnInit(): void {
 
     // Get the information for the theme
+    // TODO put this in a service
     let token: string | null  = sessionStorage.getItem('ses_token');
     if (typeof token === "string"){
 
       // Get the informtion needed from the back end
+      // Todo put this in a service
       axios.get('http://127.0.0.1:5000/theme/single-theme-info', {
         headers: {
           'u_id_token': token
