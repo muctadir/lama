@@ -116,11 +116,8 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(demos)
     app.register_blueprint(project_routes)
     app.register_blueprint(account_routes)
-<<<<<<< HEAD
     app.register_blueprint(artifact_routes)
-=======
     app.register_blueprint(theme_routes)
->>>>>>> main
 
     # Magic library that makes cross-origin resource sharing work.
     # TODO: Check if we are setting this up correctly.
