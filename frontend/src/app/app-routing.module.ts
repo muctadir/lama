@@ -34,7 +34,6 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'createProject', component: ProjectCreationComponent},
     {path: 'project/:projectId', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
@@ -53,7 +52,7 @@ const routes: Routes = [
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]}];
     //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
-    
+
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule]
