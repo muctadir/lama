@@ -34,26 +34,25 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
     {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'createProject', component: ProjectCreationComponent},
     {path: 'project/:projectId', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       {path: 'stats', component: StatsComponent},
       {path: 'labelling-page', component: LabellingPageComponent},
       {path: 'create-label', component: LabelFormComponent},
       {path: 'artifactmanagement', component: ArtifactManagementPageComponent},
-      {path: 'singleartifact', component: SingleArtifactViewComponent},
+      {path: 'singleartifact/:artifactId', component: SingleArtifactViewComponent},
       {path: 'labelmanagement', component: LabelManagementComponent},
       {path: 'singlelabel', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
       {path: 'createTheme', component: CreateThemeComponent},
-      {path: 'singleTheme', component: SingleThemeViewComponent},
+      {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
       {path: 'editTheme', component: EditThemeComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]}];
     //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
-    
+
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule]
