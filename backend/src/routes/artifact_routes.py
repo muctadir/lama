@@ -31,7 +31,7 @@ def get_artifacts(*, user):
     membership = db.session.get(Membership, {'u_id': user.id, 'p_id': p_id})
 
     # Check that the membership exists
-    if (membership == None):
+    if (not membership):
         return make_response('Unauthorized', 401)
     
     # Check if user is admin for the project and get artifacts
@@ -146,7 +146,7 @@ def single_artifact(*, user):
     }
 
     # If the extended data was requested, append the requested data
-    if args['extended']:
+    if args['extended'] == 'true':
         info.update(__get_extended(artifact))
 
     # Jsonify the dictionary with information
