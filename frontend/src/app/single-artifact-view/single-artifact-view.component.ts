@@ -92,7 +92,7 @@ export class SingleArtifactViewComponent implements OnInit {
     // Get the ID of the artifact and the project
     let a_id = Number(this.routeService.getArtifactID(this.url));
     let p_id = Number(this.routeService.getProjectID(this.url));
-
+    
     // Get the artifact data from the backend
     this.getArtifact(a_id, p_id)
   }

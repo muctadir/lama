@@ -24,12 +24,11 @@
             <div class="col-6" id="names">
                 <p class="float-end">
                     Artifact was split into 
-                    <!-- <span *ngIf="artifact.getNumberOfChildIds()" id="split1">artifact</span> -->
-                    <!-- <span *ngIf="artifact.getNumberOfChildIds() => 2" id="split1">artifacts</span> -->
-                    <span id="split1">artifact #{{artifact.getChildIds()}}</span>
-                    <!-- <span *ngIf="artifact.getNumberOfParentId() === 1" id="split2">and</span> -->
-                    <span> and </span>
-                    <span id="split2">artifact #{{artifact.getParentId()}}</span>.
+                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1">artifact</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">artifacts</span>
+                    <span id="split1"> #{{artifact.getChildIds()}}</span>
+                    <span *ngIf="artifact.getParentId() != undefined" id="split2">and</span>
+                    <span *ngIf="artifact.getParentId() != undefined" id="split2">artifact #{{artifact.getParentId()}}</span>.
                 </p>
             </div>
         </div>
