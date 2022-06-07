@@ -1,4 +1,7 @@
-// <!-- Author: Victoria Bogachenkova -->
+/**
+ * Author: Victoria Bogachenkova
+ * Author: Bartjan Henkemans
+ */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelingDataService } from '../labeling-data.service';
@@ -25,6 +28,7 @@ export class IndividualLabelComponent {
   label: Label;
   url: string;
   labellings: Array<Labelling>;
+  admin: boolean;
   // Dummy data
   artifacts: Array<artifact> = [
     {
@@ -51,6 +55,7 @@ export class IndividualLabelComponent {
       this.routeService = new ReroutingService();
       this.url = this.router.url;
       this.labellings = new Array<Labelling>();
+      this.admin = false;
   }
 
   /**
@@ -64,6 +69,7 @@ export class IndividualLabelComponent {
     let labelID = parseInt(this.routeService.getLabelID(this.url));
     this.getLabel(p_id, labelID);
     this.getLabellings(p_id, labelID);
+    this.getAdmin(p_id);
   }
 
   /**
@@ -77,7 +83,11 @@ export class IndividualLabelComponent {
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
     this.labellings = labellings;
-    console.log(labellings);
+  }
+
+  async getAdmin(p_id: number): Promise<void> {
+    const admin = await this.labelingDataService.getAdminStatus(p_id);
+    this.admin = admin;
   }
   /**
    * Gets the project id from the URL and reroutes to the label management page
@@ -100,4 +110,6 @@ export class IndividualLabelComponent {
     const modalRef = this.modalService.open(LabelFormComponent,  { size: 'xl'});
     modalRef.componentInstance.label = this.label;
   }
+
+
 }

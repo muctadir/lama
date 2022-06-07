@@ -25,7 +25,7 @@
                     <p>{{label.getType()}}</p>
                 </div>
             </div>
-            <div>
+            <div *ngIf="admin">
                 <!-- Which artifacts were labelled -->
                 <div class="subTitle">Artifacts Labelled</div>
                 <div class="labeledArtifacts" *ngFor="let artifact of artifacts">

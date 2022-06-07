@@ -200,4 +200,25 @@ export class LabelingDataService {
       return false;
     });
   }
+
+  getAdminStatus(p_id: number): Promise<boolean> {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+    // Check if the p_id is larger than 0
+    if (p_id < 0) throw new Error("p_id cannot be less than 0")
+    return axios.get('http://127.0.0.1:5000/project/isadmin',{
+      headers: {
+        'u_id_token': token
+      },
+      params: {
+        'p_id': p_id,
+      }
+    })
+      .then((response) => {
+      return response.data == "1"
+    }).catch(err => {
+      throw err;
+    });
+  }
 }
