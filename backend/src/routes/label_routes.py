@@ -16,7 +16,7 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
-def create_label(*, user):
+def create_label():
 
     args = request.json
 
@@ -54,7 +54,7 @@ def create_label(*, user):
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
-def edit_label(*, user):
+def edit_label():
     # Get args 
     args = request.json
     # Required args
@@ -86,7 +86,7 @@ def edit_label(*, user):
 @label_routes.route('/getAll', methods=['GET'])
 @login_required
 @in_project
-def get_all_labels(*, user):
+def get_all_labels():
     # Get args from request 
     args = request.args
     # What args are required
@@ -127,7 +127,7 @@ def get_all_labels(*, user):
 @label_routes.route('/get', methods=['GET'])
 @login_required
 @in_project
-def get_single_label(*, user):
+def get_single_label():
     # Get args from request 
     args = request.args
     # What args are required
@@ -159,7 +159,7 @@ def get_single_label(*, user):
 @label_routes.route('/merge', methods=['POST'])
 @login_required
 @in_project
-def merge(*, user):
+def merge_route():
     # TODO: Check user in project
     args = request.json
     required = ['leftLabelId', 'rightLabelId', 'newLabelName', 'newLabelDescription', 'p_id']
