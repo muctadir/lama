@@ -1,7 +1,14 @@
-//page body
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #aaaaaa;
+
+// Page body
 #body{
     height: 100vh;
-    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 //Title Header part of the page
@@ -15,36 +22,37 @@
     padding-top: 10px;
     height: 50vh; 
 }
-//top left section
-#topLeft{
 
-}
 //Name Header
 #name{
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
 //Name input box
 #nameForm{
     width: auto;
 }
+
 //Labels header
 #labels{
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
+    margin-top: 68px;
 }
-//labels added
+
+// Labels added
 #addedLabels{
     font-size: 14px;
     letter-spacing: 1px;
     padding-left: 10px;
 }
+// List of labels
 #allLabelsList{
     padding-top: 10px;
     overflow-y: scroll;
@@ -54,6 +62,10 @@
 #xIcon{
     float: right
 }
+// Hover on x icon
+#xIcon:hover{
+    cursor:pointer;
+}
 #nameInputCol{
     padding-top: 10px;
 }
@@ -62,8 +74,12 @@
     padding-left: 0px;
 }
 #description{
+    border-bottom: 2px; 
+    border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
+    border-bottom-color: $orange-shade;
+    margin-bottom: 10px;
 }
 
 //Subthemes header
@@ -74,18 +90,20 @@
     border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
-    border-bottom-color: orange
+    border-bottom-color: $orange-shade;
 }
+
 //Subthemes list 
 #addedSubthemes{
     padding-left: 10px;
     font-size: 14px;
     letter-spacing: 1px;
 }
+// List of sub-themes
 #addedSubthemesList{
     padding-top: 10px;
     overflow-y: scroll;
-    height: 10vh;
+    height: 20vh;
 }
 
 //Bottom Half
@@ -94,58 +112,56 @@
     padding-left: 0px;
     max-height: 30vh;
 }
+
+// Add labels header
 #addLabels{
     border-bottom: 2px; 
     border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
+
 //Add label text
 .addLabelsText{
     font-size: 14px;
     padding-left: 10px;
     vertical-align: -5px
 }
-//add label button
+
+// Add label button
 .btn{
-    float: right
+    float: right;
+    border: none;
 }
+
+// Remove button
+.btn.x{
+    padding: 0px;
+}
+
 //Highlight class
 .highlighted{ 
-    background-color:#ED5A06; 
-    color: white;
+    background-color: $orange-shade; 
+    color: $white-shade;
     .btn{
-        color: white !important;
+        color: $white-shade !important;
     }      
 }
-// label description header
+
+// Label description header
 #labelDescription{
     font-size: 16px;
     font-weight: 450;
 }
+
 // Label Description text container
 p.labelDescriptionText{
     padding-left: 0px;
     font-size: 14px;
 }
 
-// SCROLLBAR
-// Scrollbar general
-::-webkit-scrollbar {
-    width: 10px;
-}
-// Scrollbar background
-::-webkit-scrollbar-track {
-    background:  white; 
-    border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-    background: grey; 
-    border-radius: 10px;
-}
-// button container for create and cancel
+// Button container for create and cancel
 #createCancelButtons{
     padding-bottom: 10px;
 }
@@ -159,7 +175,7 @@ p.labelDescriptionText{
     overflow-y: scroll;
     height: 30vh;
 }
-//Scroll for description
+// Scroll for description
 #descriptionScroll{
     overflow-y: scroll;
     height: 30vh;
@@ -170,24 +186,41 @@ p.labelDescriptionText{
     border-bottom-style: solid; 
     font-size: 18px;
     letter-spacing: 1px;
-    border-bottom-color: orange;
+    border-bottom-color: $orange-shade;
 }
-//full subtheme list text
+// Full subtheme list text
 .addSubthemeText{
     font-size: 14px;
     padding-left: 10px;
     vertical-align: -5px
 }
-//added subthemes text
+// Added subthemes text
 #addedSubthemeText{
     font-size: 14px;
     padding-left: 10px;
     vertical-align: -5px
 }
-// description box size
+// Description box size
 #descriptionArea{
-    width: 600px;
-    height: 200px;
+    width: 100%;
+    height: 110px;
     resize: none;
 }
+
+// SCROLLBAR
+// Scrollbar general
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background:  $white-shade; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: $grey-shade; 
+    border-radius: 10px;
+}
+
 
