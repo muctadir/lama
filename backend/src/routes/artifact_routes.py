@@ -10,6 +10,7 @@ from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
 from src.app_util import login_required
+from sqlalchemy.exc import  OperationalError
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
@@ -111,8 +112,8 @@ def add_new_artifacts(*, user):
     # Try commiting the artifacts
     try:
         db.session.commit()
-    except:
-        return make_response('Internal Server Error', 500)
+    except OperationalError:
+        return make_response('Internal Server Error', 503)
 
     return make_response("Route accessed")
 
