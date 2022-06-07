@@ -1,5 +1,11 @@
 // BJ
 
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #aaaaaa;
+
 // Body of the page
 #body {
     height: 100vh;
@@ -31,7 +37,7 @@
     margin-bottom: 10px;
     border-bottom: 1px;
     border-bottom-style: solid;
-    border-bottom-color: #38474e;
+    border-bottom-color: $grey-shade;
 }
 
 // Centers the pagination to the middle of the page
@@ -59,12 +65,12 @@
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: $white-shade; 
     border-radius: 10px;
 }
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: $grey-shade; 
     border-radius: 10px;
 }
 // Scroll bar
@@ -72,5 +78,3 @@
     padding-right: 40px;
     height: auto;
 }
-
-
