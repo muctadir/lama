@@ -66,9 +66,13 @@ export class SingleThemeViewComponent {
     if (typeof token === "string"){
 
       // Get the informtion needed from the back end
-      axios.post('http://127.0.0.1:5000/theme/get-single-theme', {"p_id": this.p_id, "t_id":this.themeId}, {
+      axios.get('http://127.0.0.1:5000/theme/single-theme-info', {
         headers: {
-          'u_id_token': token 
+          'u_id_token': token
+        },
+        params: {
+          "p_id": this.p_id, 
+          "t_id":this.themeId
         }
       })
         // When there is a response get the projects
@@ -97,10 +101,8 @@ export class SingleThemeViewComponent {
           let childArray: Array<Theme> = [];
           // For each child make an object
           for (let child of subThemes){
-            // Make a new child a theme
-            let newChild = new Theme(child["id"], child["name"], child["description"]);
             // Add the child to the array
-            childArray.push(newChild);
+            childArray.push(new Theme(child["id"], child["name"], child["description"]));
           }
           // Add the childern to the theme
           newTheme.setChildren(childArray);
@@ -118,10 +120,8 @@ export class SingleThemeViewComponent {
             // List for the artifacts
             let artifactArray: Array<StringArtifact> = [];
             for (let artifact of label["artifacts"]){
-              // Create new artifact object
-              let newArtifact = new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]);
               // Push the new artifact
-              artifactArray.push(newArtifact);
+              artifactArray.push(new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]));
             }
             // Add artifacts to the label
             newLabel.setArtifacts(artifactArray);
@@ -133,7 +133,6 @@ export class SingleThemeViewComponent {
           newTheme.setLabels(labelsArray);
 
           this.theme = newTheme;
-          console.log(this.theme)
           
         })
         // If there is an error

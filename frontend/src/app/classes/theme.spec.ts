@@ -159,6 +159,18 @@ describe('Theme', () => {
       .toBe(labels.length)
   })
 
+  // Getting the number of theme labels
+  it("Should get the number of labels", () => {
+    // Create instances
+    const theme2 = new Theme(id, name, desc)
+    const numberOfLabels = 5;
+    // Set number of labels
+    theme2.setNumberOfLabels(numberOfLabels);
+    // Check
+    expect(theme2.getNumberOfLabels())
+      .toBe(numberOfLabels)
+  })
+
   // Getting and setting the deletion status
   it("should get the deletion status", () => {
     // Create instances

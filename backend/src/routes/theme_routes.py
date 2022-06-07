@@ -1,13 +1,16 @@
 # Veerle Furst
+# Eduardo Costa Martins
 
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User
-from src.models.item_models import Theme, ThemeSchema, LabelSchema, ArtifactSchema
+from src.models.item_models import Theme, ThemeSchema, LabelSchema, ArtifactSchema, label_to_theme, Artifact, Labelling
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.app_util import login_required, check_args
+# TODO uncomment
+# from src.routes.label_routes import get_label_info
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -16,59 +19,36 @@ For getting the theme information
 @returns a list of dictionaries of the form:
 {
     theme : the serialized theme
-    labels : the labels within the theme
+    number_of_labels : the number of labels within the theme
 }
 """
-@theme_routes.route("/get-themes", methods=["POST"])
+@theme_routes.route("/theme-management-info", methods=["GET"])
 @login_required
-def get_all_themes(*, user):
+def theme_management_info(*, user):
 
     # The required arguments
     required = ["p_id"]
 
     # Get args
-    args = request.json
-
+    args = request.args
+    
     # Check if all required arguments are there
     if not check_args(required, args):
-        return make_response("Not all required arguments supplied")
+        return make_response("Not all required arguments supplied", 400)
 
     # Get all themes
     all_themes = db.session.execute(
         select(Theme).where(Theme.p_id == args["p_id"])
     ).scalars().all()
 
-    # List for project information
-    theme_info = []
-
     # Schemas to serialize
     theme_schema = ThemeSchema()
-    label_schema = LabelSchema()
 
-    # For loop for admin, users, #artifacts
-    for theme in all_themes:
-
-        # Convert project to JSON
-        theme_json = theme_schema.dump(theme)
-        # List of labels in the theme
-        list_of_labels = [label for label in theme.labels]
-
-        # Make a list ogflabels
-        label_list_json = []
-
-        # For each label make get all the data
-        for label in list_of_labels:
-            label_json = label_schema.dump(label)
-            label_list_json.append(label_json)
-
-        # Put all values into a dictonary
-        info = {
-            "theme" : theme_json,
-            "labels": label_list_json
-        }
-
-        # Append the dictionary to the list
-        theme_info.append(info)
+    # List for project information
+    theme_info = [{
+        'theme' : theme_schema.dump(theme),
+        'number_of_labels' : get_theme_label_count(theme.id)
+    } for theme in all_themes]
 
     # Convert the list of dictionaries to json
     dict_json = jsonify(theme_info)
@@ -81,54 +61,57 @@ For getting the theme information
 @returns a list of dictionaries of the form:
 {
     theme : the serialized theme
-    sub_theme: the sub themes of the them
+    super_theme: the super theme of the theme
+    sub_theme: the sub themes of the theme
     labels: the labels within the theme
 }
 """
-@theme_routes.route("/get-single-theme", methods=["POST"])
+@theme_routes.route("/single-theme-info", methods=["GET"])
 @login_required
-def get_info_single_theme(*, user):
+#@in_project
+def single_theme_info(*, user):#, membership): TODO uncomment
 
     # The required arguments
     required = ["p_id", "t_id"]
 
     # Get args
-    args = request.json
+    args = request.args
 
     # Check if all required arguments are there
     if not check_args(required, args):
-        return make_response("Not all required arguments supplied")
+        return make_response("Not all required arguments supplied", 400)
 
     # Schemas to serialize
     theme_schema = ThemeSchema()
-    label_schema = LabelSchema()
-    artifact_schema = ArtifactSchema()
 
     # Get the theme id
-    t_id = args["t_id"]
+    t_id = int(args["t_id"])
+    # Get the project id
+    p_id = int(args["p_id"])
 
     # Get the corresponding theme
-    theme = db.session.execute(
-        select(Theme).
-        where(Theme.id == t_id)
-    ).scalars().one()
+    theme = db.session.get(Theme, t_id)
+
+    # Check if the theme exists
+    if not theme:
+        return make_response("Bad request", 400)
+
+    # Check if theme is in given project
+    if theme.p_id != p_id:
+        return make_response("Bad request", 400)
 
     # Convert theme to JSON
     theme_json = theme_schema.dump(theme)
 
     # SUPER THEME
     # Get the super theme
-    super_theme = db.session.execute(
-        select(Theme).
-        where(Theme.id == theme.super_theme_id)
-    ).scalars().first()
-    # Get info
+    super_theme = theme.super_theme
+    # Make a json of the super-theme info
     super_theme_json = theme_schema.dump(super_theme)
 
     # SUB THEMES
     # Make list of all sub-themes
     sub_themes = theme.sub_themes
-
     # Make a json list of sub-themes
     sub_themes_list_json = theme_schema.dump(sub_themes, many=True)
 
@@ -141,27 +124,21 @@ def get_info_single_theme(*, user):
 
     # For each label get all the data
     for label in labels:
-        label_json = label_schema.dump(label)
 
-        # ARTIFACTS
-        # Make list of all artifacts
-        artifacts = [artifact for artifact in label.artifacts]
-        # Make a list to append the artifacts
-        artifacts_list_json = []
+    # TODO uncomment
+    # Then throw this loop in a list comprehension
+    # labels_list_json = [get_label_info(label, user.id, membership.admin) for label in labels]
 
-        # For each artifact get all the data
-        for artifact in artifacts:
-            artifact_json = artifact_schema.dump(artifact)
-            artifacts_list_json.append(artifact_json)
+        # TODO remove
+        admin = db.session.scalar(
+            select(Membership.admin).where(Membership.u_id == user.id, Membership.p_id == p_id)
+        )
 
         # Info of the labels
-        info = {
-            "label" : label_json,
-            "label_type": label.label_type.name,
-            "artifacts" : artifacts_list_json
-        }
+        label_info = get_label_info(label, user.id, admin)
         
-        labels_list_json.append(info)
+        # Append the label to the list
+        labels_list_json.append(label_info)
 
     # INFO
     # Put all values into a dictonary
@@ -172,11 +149,40 @@ def get_info_single_theme(*, user):
         "labels" : labels_list_json
     }
 
-    print(info)
-
     # Convert the list of dictionaries to json
     dict_json = jsonify(info)
 
     # Return the list of dictionaries
     return make_response(dict_json)
 
+# TODO: Move to label_routes
+# Only gets the artifacts that the user with a given id can see
+def get_label_artifacts(label, u_id, admin):
+    if admin:
+        return label.artifacts
+    # Else get the artifacts they may see
+    return db.session.execute(
+        select(Artifact).where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
+    )
+
+# Function for getting the information of a label
+# TODO: Move to label_routes
+def get_label_info(label, u_id, admin):
+    # Schemas
+    label_schema = LabelSchema()
+    artifact_schema = ArtifactSchema()
+    # Info of the label
+    info = {
+        "label" : label_schema.dump(label),
+        "label_type": label.label_type.name,
+        "artifacts" : artifact_schema.dump(get_label_artifacts(label, u_id, admin), many=True)
+    }
+    return info
+
+
+# Function for getting the number of labels in the theme
+def get_theme_label_count(t_id):
+    return db.session.scalar(
+            select(func.count(label_to_theme.c.l_id))
+            .where(label_to_theme.c.t_id==t_id)
+        )

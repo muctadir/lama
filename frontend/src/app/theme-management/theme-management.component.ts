@@ -65,9 +65,12 @@
     if (typeof token === "string"){
 
       // Get the informtion needed from the back end
-      axios.post('http://127.0.0.1:5000/theme/get-themes', {"p_id": this.p_id}, {
+      axios.get('http://127.0.0.1:5000/theme/theme-management-info', {
         headers: {
           'u_id_token': token
+        },
+        params: {
+          "p_id": this.p_id
         }
       })
         // When there is a response get the projects
@@ -80,19 +83,13 @@
 
             // Get the theme information
             let themeJson = theme["theme"];
-            themeJson["labels"] = theme["labels"];
+            themeJson["numberOfLabels"] = theme["number_of_labels"];
 
             // Create a new theme object with all information
             let newTheme: Theme = new Theme(themeJson['id'], themeJson["name"], themeJson["description"]);
 
-            // Making all labels actual labels
-            let labelList: Array<Label> = [];
-            for(let label of themeJson["labels"]){
-              let newLabel: Label = label as Label;
-              labelList.push(newLabel);
-            }
             // Put labels in the theme
-            newTheme.setLabels(labelList) 
+            newTheme.setNumberOfLabels(themeJson["numberOfLabels"]) 
 
             // Add theme to list
             this.themes.push(newTheme);

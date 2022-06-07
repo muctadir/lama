@@ -7,19 +7,21 @@ import { Label } from './label';
 
 export class Theme {
 
-    //ID of the theme
+    // ID of the theme
     private id: number;
-    //name of the theme
+    // Name of the theme
     private name: string;
-    //description of the theme
+    // Description of the theme
     private desc: string;
-    //array of parent themes of the theme
+    // Array of parent themes of the theme
     private themeParent: Theme | undefined;
-    //array of child themes of the theme
+    // Array of child themes of the theme
     private themeChildren: Array<Theme> | undefined;
-    //array of theme labels
+    // Array of theme labels
     private labels: Array<Label> | undefined;
-    //deletion status of the theme
+    // Count of the labels
+    private numberOfLabels: number;
+    // Deletion status of the theme
     private deleted: boolean | undefined;
 
     /**
@@ -32,6 +34,7 @@ export class Theme {
         this.id = id;
         this.name = name;
         this.desc = desc;
+        this.numberOfLabels = 0;
     }
 
     /**
@@ -147,8 +150,11 @@ export class Theme {
     * Sets the theme's labels 
     * @param labels
     */
-    setLabels(labels: Array<Label> | undefined): void {
-        this.labels = labels
+    setLabels(labels: Array<Label> ): void {
+        // Set the labels
+        this.labels = labels;
+        // Change the number of labels to the new length
+        this.numberOfLabels = this.labels.length;
     }
 
     /**
@@ -156,11 +162,15 @@ export class Theme {
     * @returns labels.length
     */
     getNumberOfLabels(): number {
-        if (this.labels == undefined) {
-            return 0;
-        } else {
-            return this.labels.length;
-        }
+        return this.numberOfLabels;
+    }
+
+    /**
+     * Sets the number of labels
+     * @params numberOfLabels
+     */
+    setNumberOfLabels(numberOfLabels: number): void {
+        this.numberOfLabels = numberOfLabels;
     }
 
     /**
