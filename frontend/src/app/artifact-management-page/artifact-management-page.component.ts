@@ -1,8 +1,14 @@
+// Ana-Maria Olteniceanu
+// Bartjan Henkemans
+// Victoria Bogachenkova
+
 import { Component } from '@angular/core';
-import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StringArtifact } from 'app/classes/stringartifact';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
+import { ArtifactDataService } from 'app/artifact-data.service';
 
 
 @Component({
@@ -11,75 +17,49 @@ import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
   styleUrls: ['./artifact-management-page.component.scss']
 })
 export class ArtifactManagementPageComponent {
+  // Initialize the ReroutingService
+  routeService: ReroutingService;
+  // Initialize the url
+  url: string;
+  // Make list of all artifacts
+  artifacts: StringArtifact[];
+
   //Pagination Settings
   page = 1;
   pageSize = 5;
-  //Hard coded artifacts
-  artifacts=[
-    {
-      id:'1',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'7',
-    },
-    {
-      id:'2',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'4',
-    },
-    {
-      id:'3',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'3',
-    },
-    {
-      id:'4',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'5',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'6',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'7',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'8',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'9',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    },
-    {
-      id:'10',
-      text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-      timesLabelled:'1',
-    }
-   
 
-  ];
+  /**
+     * Constructor passes in the modal service and the artifact service,
+     * initializes Router
+     * @param modalService instance of NgbModal
+     * @param artifactDataService instance of ArtifactDataService
+     * @param router instance of Router
+     */
+  constructor(private modalService: NgbModal,
+    private artifactDataService: ArtifactDataService,
+    private router: Router) {
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.artifacts = new Array<StringArtifact>()
+  }
 
-  open(){
-    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg'});
+  ngOnInit(): void {
+    // Get the ID of the project
+    const p_id = Number(this.routeService.getProjectID(this.url))
+
+    // Get the artifacts from the backend
+    this.getArtifacts(p_id)
   }
 
   /**
-   * Constructor passes in the modal service, initializes Router
-   * @param modalService instance of NgbModal
-   * @param router instance of Router
+   * Sets the artifacts of a specific project from artifact-data.service
+   * 
+   * @param p_id the id of the project
    */
-  constructor(private modalService: NgbModal, private router: Router) { }
+  async getArtifacts(p_id: number): Promise<void> {
+    const artifacts = await this.artifactDataService.getArtifacts(p_id);
+    this.artifacts = artifacts
+  }
 
   /**
    * Gets the project id from the URL and reroutes 
@@ -87,24 +67,19 @@ export class ArtifactManagementPageComponent {
    * 
    * @trigger user clicks on artifact
    */
-   reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+  reRouter(a_id: number): void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
+    let p_id = this.routeService.getProjectID(this.url);
+
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'singleartifact']);
+    this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
-
-
 
   notImplemented(): void {
     alert("Button has not been implemented yet.");
   }
-
+  open() {
+    const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
+  }
 
 }
