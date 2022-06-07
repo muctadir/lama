@@ -28,19 +28,21 @@ def get_artifacts(*, user):
     p_id = args['p_id']
 
     # Get membership of the user
-    membership = db.session.execute(
-        select(Membership).where(Membership.u_id==user.id, Membership.p_id==p_id)
-    ).scalars().first()
+    membership = db.session.get(Membership, {'u_id': user.id, 'p_id': p_id})
 
+    # Check that the membership exists
+    if (membership == None):
+        return make_response('Unauthorized', 401)
+    
     # Check if user is admin for the project and get artifacts
-    if membership.admin == True:
+    if membership.admin:
         # If the user is admin, then get all artifacts in the project
         artifacts = db.session.execute(
             select(Artifact).where(Artifact.p_id==p_id)
         ).scalars().all()
     else:
         # If user isn't admin, then get all artifacts the user has labelled
-        artifacts = {}
+        artifacts = set()
 
         # Get all the labellings the user has done in the current project
         labellings = db.session.execute(

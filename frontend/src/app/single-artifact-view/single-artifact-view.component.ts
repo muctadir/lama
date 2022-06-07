@@ -21,12 +21,11 @@ const lorem = new LoremIpsum({
 // TODO: Replace these with classes once those are overhauled 
 type userLabel = {
   labellerName: String,
-  labelRemark: String,
   labelsGiven: Array<labelGroup>
 }
 //For labels given by 1 user
 type labelGroup = {
-  labelTypeName1: String,
+  labelTypeName: String,
   labelGiven: String,
   labelRemark: String
 }
@@ -45,11 +44,7 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the ReroutingService
   routeService: ReroutingService;
 
-  // // Artifact Data
-  // artifactId: Number = 0;
-  // artifactIdentifier: String = '';
-  // // labelers: Array<String> = []
-  // artifact: String = '';
+  // Artifact Data
   artifact: StringArtifact;
   allLabels: Array<String> = []
   url: string;
@@ -57,21 +52,18 @@ export class SingleArtifactViewComponent implements OnInit {
   userLabels: Array<userLabel> = [
     {
       labellerName: "Chinno",
-      labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{ labelTypeName1: "Emotion", labelGiven: "Happy", labelRemark: "I did this because I thought it would fit well." },
-      { labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
+      labelsGiven: [{ labelTypeName: "Emotion", labelGiven: "Happy", labelRemark: "I did this because I thought it would fit well." },
+      { labelTypeName: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
     },
     {
       labellerName: "Veerle",
-      labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{ labelTypeName1: "Emotion", labelGiven: "Ecstatic", labelRemark: "I did this because I thought it would fit well." },
-      { labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
+      labelsGiven: [{ labelTypeName: "Emotion", labelGiven: "Ecstatic", labelRemark: "I did this because I thought it would fit well." },
+      { labelTypeName: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
     },
     {
       labellerName: "Jarl Jarl",
-      labelRemark: "I did this because I thought it would fit well.",
-      labelsGiven: [{ labelTypeName1: "Emotion", labelGiven: "Sunshine and Rainbows", labelRemark: "I did this because I thought it would fit well." },
-      { labelTypeName1: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
+      labelsGiven: [{ labelTypeName: "Emotion", labelGiven: "Sunshine and Rainbows", labelRemark: "I did this because I thought it would fit well." },
+      { labelTypeName: "Language", labelGiven: "Latin", labelRemark: "I did this because I thought it would fit well." }]
     },
 
   ]
