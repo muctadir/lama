@@ -197,6 +197,8 @@ def in_project(f):
 
         if not membership:
             return make_response('Unauthorized', 401)
+        
+        kwargs['membership'] = membership
 
         return f(*args, **kwargs)
 
