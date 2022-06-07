@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Theme } from 'app/classes/theme';
+import { StringArtifact } from 'app/classes/stringartifact';
+import {ActivatedRoute, Router} from "@angular/router";
 import { ReroutingService } from 'app/rerouting.service';
+import axios from 'axios';
+import { Label } from 'app/classes/label';
 
 //Test array for label holding artifacts
 
@@ -11,30 +15,136 @@ import { ReroutingService } from 'app/rerouting.service';
 })
 export class SingleThemeViewComponent {
 
-  //Theme Name Variable
-  themeName: String = 'Theme 1';
+  // Variable for theme id
+  themeId: string;
 
-  themeDescription: String = 'Lorem ipsum dolor sit amet. Et beatae sint ut unde architecto cum esse sequi in sapiente temporibus vel cupiditate amet ut omnis ipsum. 33 eius consequatur aut nemo asperiores et recusandae dolore. Qui voluptatem amet non voluptate error id facilis voluptas ad quod commodi ut rerum officiis eum minus dolores. Et quisquam earum sed quas saepe est nesciunt corporis aut aliquid galisum.';
+  //  Project id
+  p_id: string;
 
-  //HardCoded Parent-Themes
-  parentTheme = ['Emotional'];
+  // Variables for routing
+  url: string;
+  routeService: ReroutingService;
 
-  //HardCoded Sub-Themes
-  subThemes = ['Happiness','Humor'];
+  // List for the theme
+  theme: Theme;
 
-  //Hard Coded Labels
-  allLabels = [{labelName:'Happy',
-  labelDescription:'This label is used for any text that give off a general positive feeling of happiness or anything similar.',
-  labelArtifacts: [{artifactName: 'Artifact 1', artifactText: 'Lorem ipsum dolor sit amet. Et beatae sint ut unde architecto cum esse sequi in sapiente temporibus vel cupiditate amet ut omnis ipsum. 33 eius consequatur aut nemo asperiores et recusandae dolore. Qui voluptatem amet non voluptate error id facilis voluptas ad quod commodi ut rerum officiis eum minus dolores. Et quisquam earum sed quas saepe est nesciunt corporis aut aliquid galisum.', artifactRemark: 'I thought that this is the best thing ever.'},
-                   {artifactName: "Artifact 2", artifactText: 'The quick brown fox jumps over the lazy sleeping dog', artifactRemark: 'I thought that this is the second best thing ever.'}]},
-                   {labelName:'Humor',
-  labelDescription:'This label is used for any text that give off a funny feeling or anything similar.',
-  labelArtifacts: [{artifactName: 'Artifact 1', artifactText: 'Lorem ipsum dolor sit amet. Et beatae sint ut unde architecto cum esse sequi in sapiente temporibus vel cupiditate amet ut omnis ipsum. 33 eius consequatur aut nemo asperiores et recusandae dolore. Qui voluptatem amet non voluptate error id facilis voluptas ad quod commodi ut rerum officiis eum minus dolores. Et quisquam earum sed quas saepe est nesciunt corporis aut aliquid galisum.', artifactRemark: 'I thought that this was suitable because...'},
-                   {artifactName: "Artifact 3", artifactText: 'The man made a funny joke about a cat', artifactRemark: 'I thought that this made sense.'}]}
-  ];
+  constructor(private router: Router) { 
+    // Gets the url from the router
+    this.url = this.router.url
+    // Initialize the ReroutingService
+    this.routeService = new ReroutingService();
+    // Use reroutingService to obtain the project ID
+    this.p_id = this.routeService.getProjectID(this.url);
+    // Use reroutingService to obtain the project ID
+    this.themeId = this.routeService.getThemeID(this.url);
+    // Initialize theme
+    this.theme = new Theme(0, "", "")
+  }
+  
+  // Function for making sure parent name is not undefined
+  getParentName(): string {
+    // Get the parent
+    let parent = this.theme.getParent();
+      // Check is parent is undefined
+      if(parent != undefined){
+        if(parent.getName() != undefined){
+          // If not return the name
+          return parent.getName();
+        } else {
+          // Otherwise return ""
+          return "";
+        }
+      }   
+      // Otherwise return ""
+      return "";
+  }
 
-  constructor(private router: Router) { }
+  ngOnInit(): void {
 
+    // Get the information for the theme
+    // TODO put this in a service
+    let token: string | null  = sessionStorage.getItem('ses_token');
+    if (typeof token === "string"){
+
+      // Get the informtion needed from the back end
+      // Todo put this in a service
+      axios.get('http://127.0.0.1:5000/theme/single-theme-info', {
+        headers: {
+          'u_id_token': token
+        },
+        params: {
+          "p_id": this.p_id, 
+          "t_id":this.themeId
+        }
+      })
+        // When there is a response get the projects
+        .then(response => {
+
+          // Get the response data
+          let themeInfo = response.data;
+
+          // Get the theme data
+          let theme = themeInfo["theme"];
+          // Get the super-theme data
+          let superTheme = themeInfo["super_theme"]
+          // Get the sub-theme data
+          let subThemes = themeInfo["sub_themes"];
+          // Get the label data
+          let labels = themeInfo["labels"]
+
+          // Create a new theme object with all information
+          let newTheme: Theme = new Theme(theme['id'], theme["name"], theme["description"]);
+
+          // Set the parent
+          newTheme.setParent(new Theme(superTheme["id"], superTheme["name"], superTheme["description"]));
+
+          // CHILDREN
+          // List for the children
+          let childArray: Array<Theme> = [];
+          // For each child make an object
+          for (let child of subThemes){
+            // Add the child to the array
+            childArray.push(new Theme(child["id"], child["name"], child["description"]));
+          }
+          // Add the childern to the theme
+          newTheme.setChildren(childArray);
+
+          // LABELS
+          // List for the labels 
+          let labelsArray: Array<Label> = [];
+          // For each label in the list
+          for (let label of labels){
+            let label_info = label["label"]
+            // Make a new label object
+            let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"])
+
+            // ARTIFACTS
+            // List for the artifacts
+            let artifactArray: Array<StringArtifact> = [];
+            for (let artifact of label["artifacts"]){
+              // Push the new artifact
+              artifactArray.push(new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]));
+            }
+            // Add artifacts to the label
+            newLabel.setArtifacts(artifactArray);
+
+            // Add alabel to the labels
+            labelsArray.push(newLabel)
+          }
+          // Add labels to the theme
+          newTheme.setLabels(labelsArray);
+
+          this.theme = newTheme;
+          
+        })
+        // If there is an error
+        // TODO change
+        .catch(error => {
+          console.log(error.response.data)
+        });
+        
+    }
+  }
 
   notImplemented(): void {
     alert("Button has not been implemented yet.");

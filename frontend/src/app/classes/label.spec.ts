@@ -158,10 +158,10 @@ describe('Label', () => {
     const label2 = new Label(id, name, desc, type)
     const child1 = new Label(3, "label1", "labelDesc1", "type");
     const child2 = new Label(4, "label2", "labelDesc2", "type");
-    // Set childs
-    label2.setChilds([child1, child2]);
+    // Set children
+    label2.setChildren([child1, child2]);
     // Check
-    expect(label2.getChilds())
+    expect(label2.getChildren())
       .toEqual([child1, child2])
   })
 
@@ -171,12 +171,12 @@ describe('Label', () => {
     const label2 = new Label(id, name, desc, type)
     const child1 = new Label(3, "label1", "labelDesc1", "type");
     const child2 = new Label(4, "label2", "labelDesc2", "type");
-    const childs = [child1, child2];
-    // Set childs
-    label2.setChilds(childs);
+    const children = [child1, child2];
+    // Set children
+    label2.setChildren(children);
     // Check
-    expect(label2.getNumberOfChilds())
-      .toBe(childs.length)
+    expect(label2.getNumberOfChildren())
+      .toBe(children.length)
   })
 
   // Setting and getting the label artifacts

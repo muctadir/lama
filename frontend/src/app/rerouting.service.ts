@@ -1,3 +1,6 @@
+// Jarl Jansen
+// Veerle Furst
+
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -11,6 +14,7 @@ export class ReroutingService {
    * @returns project ID
    */
   getProjectID(url_path : string) : string {
+    
     // Removes the first "/" from the string
     let p_id : string = url_path.substring(1); 
 
@@ -22,5 +26,20 @@ export class ReroutingService {
 
     // Returns the project ID
     return p_id
+  }
+
+  /**
+   * Gets the theme ID from a url string
+   * @param url_path the url in string format
+   * @returns theme ID
+   */
+   getThemeID(url_path : string) : string {
+
+    // Makes a substring of text after the last /
+    let t_id : string = url_path.substring(url_path.lastIndexOf("/"))
+    // Removes the last /
+    t_id = t_id.substring(1); 
+
+    return t_id
   }
 }

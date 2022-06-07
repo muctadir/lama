@@ -1,8 +1,12 @@
+// BJ
+
+// Body of the page
 #body {
     height: 100vh;
     overflow-y: scroll;
 }
 
+// Header of the page
 #pageTitle {
     padding-top: 10px;
     border-bottom: 1px; 
@@ -11,6 +15,7 @@
     letter-spacing: 1px;
 }
 
+// Button for adding themes
 #addButton {
     padding-top: 10px;
     border-bottom: 1px; 
@@ -28,6 +33,7 @@
     border-bottom-style: solid;
     border-bottom-color: #38474e;
 }
+
 // Centers the pagination to the middle of the page
 #center-pagination {
     display: flex; 

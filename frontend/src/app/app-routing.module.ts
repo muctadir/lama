@@ -46,7 +46,7 @@ const routes: Routes = [
       {path: 'singlelabel', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
       {path: 'createTheme', component: CreateThemeComponent},
-      {path: 'singleTheme', component: SingleThemeViewComponent},
+      {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
       {path: 'editTheme', component: EditThemeComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},

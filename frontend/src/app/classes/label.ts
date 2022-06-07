@@ -3,7 +3,7 @@
  * @author T. Bradley
  */
 
-import { Artifact } from './artifact';
+import { StringArtifact } from './stringartifact';
 import { User } from './user';
 import { Theme } from './theme'
 
@@ -20,9 +20,9 @@ export class Label {
     //array of parent labels of the label
     private labelParents: Array<Label> | undefined;
     //array of child labels of the label
-    private labelChilds: Array<Label> | undefined;
+    private labelChildren: Array<Label> | undefined;
     //array of artifacts using the label
-    private artifacts: Array<Artifact> | undefined;
+    private artifacts: Array<StringArtifact> | undefined;
     //array of users that have used the label
     private users: Array<User> | undefined;
     //array of themes that belong to the label
@@ -56,8 +56,10 @@ export class Label {
      * @param id 
      */
     setId(id: number): void {
-        if ( id == undefined || typeof id != "number" || id == null) {
-            throw new Error('label id should be a number');
+        if ( id == undefined || typeof id != "number" || id == null ) {
+            throw new Error("label id should be a number");
+        } else if ( id <= 0) {
+            throw new Error("label id should be larger or equal to 1")
         }
         this.id = id;
     }
@@ -113,7 +115,7 @@ export class Label {
      * @param type
      */
     setType(type: string): void {
-        if ( type == undefined || typeof type != "string" || type.length <= 0) {
+        if ( type == undefined || typeof type != "string" || type.length < 0) {
             throw new Error("The label type should not be of length 0 as an argument in setType()");
         }
         this.type = type;
@@ -150,30 +152,30 @@ export class Label {
     }
 
     /**
-     * Function returns the child labels
-     * @returns this.labelChilds
+     * Function returns the children labels
+     * @returns this.labelChildren
      */
-    getChilds(): Array<Label> | undefined {
-        return this.labelChilds;
+    getChildren(): Array<Label> | undefined {
+        return this.labelChildren;
     }
 
     /**
-     * Sets the child labels 
-     * @param labelChilds 
+     * Sets the children labels 
+     * @param labelChildren
      */
-    setChilds(labelChilds: Array<Label> | undefined): void {
-        this.labelChilds = labelChilds
+    setChildren(labelChildren: Array<Label> | undefined): void {
+        this.labelChildren = labelChildren
     }
 
     /**
      * Function get the number of child labels
-     * @return this.labelChilds.length
+     * @return this.labelChildren.length
      */
-    getNumberOfChilds(): number | undefined {
-        let childsVar = this.labelChilds;
-        // Make sure the childs are defined when calling
-        if (childsVar != undefined) {
-            return childsVar.length;
+    getNumberOfChildren(): number | undefined {
+        let childrenVar = this.labelChildren;
+        // Make sure the children are defined when calling
+        if (childrenVar != undefined) {
+            return childrenVar.length;
         } else {
             return 0;
         }
@@ -183,7 +185,7 @@ export class Label {
      * Function returns the artifacts of label
      * @returns this.artifacts
      */
-    getArtifacts(): Array<Artifact> | undefined {
+    getArtifacts(): Array<StringArtifact> | undefined {
         return this.artifacts;
     }
 
@@ -191,7 +193,7 @@ export class Label {
      * Sets the artifacts of label 
      * @param artifacts
      */
-    setArtifacts(artifacts: Array<Artifact> | undefined): void {
+    setArtifacts(artifacts: Array<StringArtifact> | undefined): void {
         this.artifacts = artifacts;
     }
 
