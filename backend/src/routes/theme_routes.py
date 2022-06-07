@@ -155,6 +155,53 @@ def single_theme_info(*, user):#, membership): TODO uncomment
     # Return the list of dictionaries
     return make_response(dict_json)
 
+"""
+For getting the all themes without parents 
+@returns a list of themes:
+{
+    themes : the serialized themes without parents
+}
+"""
+@theme_routes.route("/possible-sub-themes", methods=["GET"])
+@login_required
+#@in_project
+def all_themes_no_parents(*, user):#, membership): TODO uncomment
+
+    # The required arguments
+    required = ["p_id"]
+
+    # Get args
+    args = request.args
+
+    # Check if all required arguments are there
+    if not check_args(required, args):
+        return make_response("Not all required arguments supplied", 400)
+
+    # Schemas to serialize
+    theme_schema = ThemeSchema()
+
+    # Get the project id
+    p_id = int(args["p_id"])
+
+    # Get the themes without parents
+    themes = db.session.execute(
+        select(Theme)
+        .where(
+            Theme.p_id == p_id,
+            Theme.super_theme == None
+        )
+    ).scalars().all()
+
+    # Dump the themes to get the info
+    themes_info = theme_schema.dump(themes, many=True)
+    
+    # Convert the list of dictionaries to json
+    list_json = jsonify(themes_info)
+
+    # Return the list of dictionaries
+    return make_response(list_json)
+
+
 # TODO: Move to label_routes
 # Only gets the artifacts that the user with a given id can see
 def get_label_artifacts(label, u_id, admin):

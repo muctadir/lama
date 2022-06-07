@@ -111,7 +111,7 @@ $light-grey-shade: #aaaaaa;
 
 //Highlight class
 .highlighted{ 
-    background-color: $orange-shade; 
+    background-color: $light-grey-shade; 
     color: $white-shade;
     .btn{
         color: $white-shade !important;
@@ -167,6 +167,12 @@ p.labelDescriptionText{
     width: 100%;
     height: 110px;
     resize: none;
+}
+
+// Error message text
+#errorMessage{
+    color: $orange-shade;
+    font-weight: 800;
 }
 
 // SCROLLBAR
