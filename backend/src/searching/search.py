@@ -91,16 +91,17 @@ def search_func_all_res(search_words, data, id_col, data_col):
     param_list = []
     #enter the place we want to analyse the text
     for item in data:
+        #print(type(item))
         #go through each search word
         for search_word in search_words.split():
             #stores the best machtes in artifact for all the search words
             matches = []
             #get best search word result in artifact
-            result = word_match(search_word, data[data_col])
+            result = word_match(search_word, getattr(item, data_col))
             #make sure words are below min letter diff distance
             if len(result) != 0 and result[0] <= MIN_DIST:
                 if len(matches) == 0:
-                    matches.append(data[id_col])
+                    matches.append(getattr(item, id_col))
                 matches.append(result)
                 matches.append(search_word)
                 matches.append(item)
@@ -113,6 +114,9 @@ def search_func_all_res(search_words, data, id_col, data_col):
 
 #groups the param list into a dictionary by ID
 def dickify(param_list, id_col):
+    # define a fuction for key
+    def key_func(k):
+        return k[id_col]
     new_list = []
     for i in param_list:
         #gets all paramlist elements
@@ -127,9 +131,6 @@ def dickify(param_list, id_col):
     new_list = sorted(new_list, key=key_func)
     #store the grouped data
     final = {}
-    # define a fuction for key
-    def key_func(k):
-        return k[id_col]
     #grouping by key (set to ID)
     for key, value in groupby(new_list, key_func):
         listy = list(value)
@@ -156,7 +157,7 @@ def best_search_results(all_search_results, word_count):
             #initiliase list of all the best word matches
             found_words = []
             #intialise dictionary for the item
-            it = {}
+            it = None
             #goes through all values of the dictionary at certain key
             for word in all_search_results[result]:
                 #gets total word distance
@@ -164,7 +165,7 @@ def best_search_results(all_search_results, word_count):
                 #adds corresponding best words to list
                 found_words.append(word['word'])
                 #adds item data once
-                if len(it) == 0:
+                if not it:
                     it = word['item']
             #add all set up variables to the dictionary
             stats['tot_dist'] = tot_dist

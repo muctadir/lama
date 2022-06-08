@@ -32,6 +32,8 @@ def get_artifacts(*, user):
 
     p_id = args['p_id']
 
+    test(p_id, user)
+
     # Get membership of the user
     membership = db.session.get(Membership, {'u_id': user.id, 'p_id': p_id})
 
@@ -176,22 +178,24 @@ def search(*, user, membership):
         return make_response('Bad Request', 400)
     
     p_id = int(args['p_id'])
+    artifact_schema = ArtifactSchema()
     
     if membership.admin:
-        artifacts = db.session.execute(
+        artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id)
-        )
+        ).all()
     else:
-        artifacts = db.session.execute(
+        artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
                 Labelling.a_id == Artifact.a_id,
                 Labelling.u_id == user.id)
-        )
+        ).all()
 
     results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
     clean_results = best_search_results(results, len(args['search_words'].split()))
-    print(clean_results)
-    return ""
+    artifacts_results = [result['item'] for result in clean_results]
+
+    return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
 
 def __get_extended(artifact):
     # Children of the artifact
