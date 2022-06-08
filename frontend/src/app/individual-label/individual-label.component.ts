@@ -1,17 +1,15 @@
-// <!-- Author: Victoria Bogachenkova -->
+/**
+ * Author: Victoria Bogachenkova
+ * Author: Bartjan Henkemans
+ */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelingDataService } from '../labeling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
-
-import { EditLabelFormComponent } from '../edit-label-form/edit-label-form.component';
-
-// Type for artifact
-type artifact = {
-  artifactId: number,
-  artifactLabeler: string,
-  artifactRemarks: string
-}
+import { Label } from 'app/classes/label';
+import { LabelFormComponent } from 'app/label-form/label-form.component';
+import { Labelling } from 'app/classes/labelling';
 
 @Component({
   selector: 'app-individual-label',
@@ -19,51 +17,75 @@ type artifact = {
   styleUrls: ['./individual-label.component.scss']
 })
 export class IndividualLabelComponent {
-  
-  // Dummy data
-  labelName: String = 'Label 1';
-  labelType: Array<String> = ["Emotion", " Positive"];
-  labelDescription: String = 'This is a label description.';
-  labelThemes: Array<String> = ['Funny',' Positivity',' Casual']
+  routeService: ReroutingService;
+  label: Label;
+  url: string;
+  labellings: any;
 
-  // Dummy data
-  artifacts: Array<artifact> = [
-    {
-      artifactId: 33,
-      artifactLabeler: "Veerle",
-      artifactRemarks: "I thought that this was appropriate because"
-    },
-    {
-      artifactId: 35,
-      artifactLabeler: "Chinno",
-      artifactRemarks: "I thought that this was appropriate because it is cool"
-    }
-  ]
+  /**
+   * Constructor which:
+   * 1. makes an empty label
+   * 2. get routerService
+   * 3. get url
+   * 4. initialize labellings variable
+   */
+  constructor(private modalService: NgbModal,
+    private router: Router,
+    private labelingDataService: LabelingDataService) {
+      this.label = new Label(-1,"","","");
+      this.routeService = new ReroutingService();
+      this.url = this.router.url;
+      this.labellings = {};
+  }
 
-  constructor(private modalService: NgbModal, private router: Router) {}
+  /**
+   * OnInit,
+   *  1. the p_id of the project is retrieved
+   *  2. the labelId of the label is retrieved
+   *  3. the label loading is started
+   */
+  ngOnInit(): void {
+    let p_id = parseInt(this.routeService.getProjectID(this.url));
+    let labelID = parseInt(this.routeService.getLabelID(this.url));
+    this.getLabel(p_id, labelID);
+    this.getLabellings(p_id, labelID);
+  }
 
-  // Open the modal and populate it with users
-  openEdit() {
-    const modalRef = this.modalService.open(EditLabelFormComponent,  { size: 'xl'});
+  /**
+   * Async function which gets the label
+   */
+  async getLabel(p_id: number, labelID: number): Promise<void> {
+    const label = await this.labelingDataService.getLabel(p_id, labelID);
+    this.label = label;
+  }
+
+  async getLabellings(p_id: number, labelID: number): Promise<void> {
+    const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
+    console.log(labellings)
+    this.labellings = labellings;
   }
 
   /**
    * Gets the project id from the URL and reroutes to the label management page
    * of the same project
-   * 
+   *
    * @trigger back button is pressed
    */
-   reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+  reRouter() : void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
+    let p_id = this.routeService.getProjectID(this.url);
+
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'labelmanagement']);
   }
+
+  /**
+   * Opens modal to edit label
+   */
+  openEdit() {
+    const modalRef = this.modalService.open(LabelFormComponent,  { size: 'xl'});
+    modalRef.componentInstance.label = this.label;
+  }
+
 
 }

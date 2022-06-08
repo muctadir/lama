@@ -30,6 +30,29 @@ describe('Labelling', () => {
       .toBe(username);
   });
 
+  // Setting the username
+  it("should set the username", () => {
+    // Create instances
+    const labelling2 = new Labelling(2, username, labels);
+    const newUsername = "New Username";
+    // Set name
+    labelling2.setUsername(newUsername)
+    // Check
+    expect(labelling2.getUsername())
+      .toBe(newUsername)
+  })
+
+  // Setting a bad username
+  it('throw error for bad label name', () => {
+    // Create instances
+    const labelling2 = new Labelling(2, username, labels);
+    const newUsername = "";
+    // catch wrong name
+    try {
+      labelling2.setUsername(newUsername);
+    } catch (error) { }
+  });
+
   // Getting labels of labelling
   it('Should get the labels of a labelling an instance', () => {
     expect(labelling.getLabels())

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateLabelFormComponent } from './create-label-form.component';
+import { EditThemeComponent } from './edit-theme.component';
 
-describe('CreateLabelFormComponent', () => {
-  let component: CreateLabelFormComponent;
-  let fixture: ComponentFixture<CreateLabelFormComponent>;
+describe('EditThemeComponent', () => {
+  let component: EditThemeComponent;
+  let fixture: ComponentFixture<EditThemeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateLabelFormComponent ]
+      declarations: [ EditThemeComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateLabelFormComponent);
+    fixture = TestBed.createComponent(EditThemeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

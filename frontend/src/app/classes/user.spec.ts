@@ -28,11 +28,22 @@ describe('User', () => {
             .toBe(email);
     });
 
+    // Setting a bad username
+    it('throw error for bad label name', () => {
+        // Create instances
+        const user2 = new User(2, name);
+        const newUsername = "";
+        // catch wrong name
+        try {
+            user2.setUsername(newUsername);
+        } catch (error) { }
+    });
+
     // Setting and getting the description of the user
     it('Should return the description of the user', () => {
         const desc = "Test"
-        user.setDescription(desc)
-        expect(user.getDescription())
+        user.setDesc(desc)
+        expect(user.getDesc())
             .toBe(desc);
     });
 

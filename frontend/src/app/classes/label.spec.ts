@@ -56,6 +56,17 @@ describe('Label', () => {
       .toBe(newName)
   })
 
+  // Setting a bad label name
+  it('throw error for bad label name', () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type);
+    const newName = "";
+    // catch wrong name
+    try {
+      label2.setName(newName);
+    } catch (error) { }
+  });
+
   // Getting the description
   it("should get the description", () => {
     expect(label.getDesc())
@@ -74,6 +85,17 @@ describe('Label', () => {
       .toBe(newDesc)
   })
 
+  // Setting a bad label description
+  it('throw error for bad label description', () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type);
+    const newDesc = "";
+    // catch wrong name
+    try {
+      label2.setDesc(newDesc);
+    } catch (error) { }
+  });
+
   // Getting the type
   it("should get the type", () => {
     expect(label.getType())
@@ -91,6 +113,17 @@ describe('Label', () => {
     expect(label2.getType())
       .toBe(newType)
   })
+
+  // Setting a bad label type
+  it('throw error for bad label description', () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type);
+    const newType = "";
+    // catch wrong name
+    try {
+      label2.setType(newType);
+    } catch (error) { }
+  });
 
   // Setting and getting the parent labels
   it("should set and get parent labels", () => {
@@ -125,10 +158,10 @@ describe('Label', () => {
     const label2 = new Label(id, name, desc, type)
     const child1 = new Label(3, "label1", "labelDesc1", "type");
     const child2 = new Label(4, "label2", "labelDesc2", "type");
-    // Set childs
-    label2.setChilds([child1, child2]);
+    // Set children
+    label2.setChildren([child1, child2]);
     // Check
-    expect(label2.getChilds())
+    expect(label2.getChildren())
       .toEqual([child1, child2])
   })
 
@@ -138,12 +171,12 @@ describe('Label', () => {
     const label2 = new Label(id, name, desc, type)
     const child1 = new Label(3, "label1", "labelDesc1", "type");
     const child2 = new Label(4, "label2", "labelDesc2", "type");
-    const childs = [child1, child2];
-    // Set childs
-    label2.setChilds(childs);
+    const children = [child1, child2];
+    // Set children
+    label2.setChildren(children);
     // Check
-    expect(label2.getNumberOfChilds())
-      .toBe(childs.length)
+    expect(label2.getNumberOfChildren())
+      .toBe(children.length)
   })
 
   // Setting and getting the label artifacts

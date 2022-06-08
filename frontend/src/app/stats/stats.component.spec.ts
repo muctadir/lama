@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 import { StatsComponent } from './stats.component';
 
 describe('StatsComponent', () => {
@@ -8,7 +10,9 @@ describe('StatsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StatsComponent ]
+      declarations: [ StatsComponent ],
+      // Adding the RouterTestingModule dependency
+      imports: [RouterTestingModule],
     })
     .compileComponents();
   });
@@ -19,6 +23,7 @@ describe('StatsComponent', () => {
     fixture.detectChanges();
   });
 
+  // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });
