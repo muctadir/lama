@@ -9,21 +9,27 @@ import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/rerouting.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+
+
 @Component({
   selector: 'app-label-form',
   templateUrl: './label-form.component.html',
   styleUrls: ['./label-form.component.scss']
 })
+
 export class LabelFormComponent implements OnInit {
   //Optional input in the form of a Label
   @Input() label?: Label;
+  // Label form
   labelForm: FormGroup;
+  // ROuting and url initialising
   routeService: ReroutingService;
   url: string;
+  // Label types initialising
   labelTypes: Array<LabelType>;
 
   /**
-   * check the input
+   * Check the input
    * @param activeModal
    * @param labelingDataService
    * @param router
@@ -45,6 +51,10 @@ export class LabelFormComponent implements OnInit {
 
   /**
    * On init
+   * 1. Get the name 
+   * 2. Get the description
+   * 3. Get the label Type
+   * 4. Disable changing label type
    */
   ngOnInit(): void {
     const p_id = parseInt(this.routeService.getProjectID(this.url));
@@ -58,7 +68,7 @@ export class LabelFormComponent implements OnInit {
   }
 
   /**
-   *
+   * Get the different label types
    * @param p_id
    */
   async getLabelTypes(p_id: number) : Promise<void> {
@@ -67,7 +77,7 @@ export class LabelFormComponent implements OnInit {
   }
 
   /**
-   *
+   * Submit the label form with the changes
    */
   submit (): void {
     // This is a funky Label object. Why?
@@ -87,8 +97,12 @@ export class LabelFormComponent implements OnInit {
     }
   }
 
+  /**
+   * Submit the label form with the changes to server
+   */
   async submitToServer(label: Label) : Promise<void> {
     const p_id = parseInt(this.routeService.getProjectID(this.url));
+    // Label was created or modified
     if (this.label === undefined){
       await this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
       window.location.reload();
