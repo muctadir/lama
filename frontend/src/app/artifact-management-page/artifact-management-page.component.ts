@@ -1,6 +1,7 @@
 // Ana-Maria Olteniceanu
 // Bartjan Henkemans
 // Victoria Bogachenkova
+// Thea Bradley 
 
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/artifact-data.service';
+import { FormBuilder } from '@angular/forms';
 
 
 @Component({
@@ -28,6 +30,11 @@ export class ArtifactManagementPageComponent {
   page = 1;
   pageSize = 5;
 
+  searchForm = this.formBuilder.group({
+    search_term: ''
+  });
+
+
   /**
      * Constructor passes in the modal service and the artifact service,
      * initializes Router
@@ -37,7 +44,7 @@ export class ArtifactManagementPageComponent {
      */
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
-    private router: Router) {
+    private router: Router, private formBuilder: FormBuilder) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
     this.artifacts = new Array<StringArtifact>()
@@ -80,6 +87,12 @@ export class ArtifactManagementPageComponent {
   }
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
+  }
+
+  //gets the search text
+  onEnter() {
+    var text = this.searchForm.value.search_term
+    alert("entered!!"+ text + "");
   }
 
 }

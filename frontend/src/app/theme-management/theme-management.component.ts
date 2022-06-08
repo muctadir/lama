@@ -1,20 +1,21 @@
 // Veerle Furst
- import { Component, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
- import { Theme } from 'app/classes/theme';
- import { Label } from 'app/classes/label';
- import { sortEvent, SortableThemeHeader } from '../sortable-theme.directive';
- import { Router } from '@angular/router';
- import { ReroutingService } from 'app/rerouting.service';
- import axios from 'axios';
- 
- @Component({
-   selector: 'app-theme-management',
-   templateUrl: './theme-management.component.html',
-   styleUrls: ['./theme-management.component.scss']
- })
- 
- export class ThemeManagementComponent  {
- 
+import { Component, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
+import { Theme } from 'app/classes/theme';
+import { Label } from 'app/classes/label';
+import { sortEvent, SortableThemeHeader } from '../sortable-theme.directive';
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
+import axios from 'axios';
+import { FormBuilder } from '@angular/forms';
+
+@Component({
+  selector: 'app-theme-management',
+  templateUrl: './theme-management.component.html',
+  styleUrls: ['./theme-management.component.scss']
+})
+
+export class ThemeManagementComponent {
+
   //Pagination Settings
   page = 1;
   pageSize = 4;
@@ -29,7 +30,12 @@
   url: string;
   routeService: ReroutingService;
 
-  constructor(private router: Router) {
+  // var for getting search text
+  searchForm = this.formBuilder.group({
+    search_term: ''
+  });
+
+  constructor(private router: Router, private formBuilder: FormBuilder) {
     // Initialize the array for the themes
     this.themes = new Array<Theme>();
     // Gets the url from the router
@@ -44,7 +50,7 @@
    * Reroutes to other pages
    * Has the project id
   */
-  reRouter(new_page : string) : void {       
+  reRouter(new_page: string): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, new_page]);
   }
@@ -53,16 +59,16 @@
    * Reroutes to other pages of the same project
    * Has project id and theme id
   */
-  reRouterTheme(new_page : string, theme_id: number) : void {
+  reRouterTheme(new_page: string, theme_id: number): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, new_page, theme_id]);
   }
-   
+
   ngOnInit(): void {
 
     // Get all themes
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
+    let token: string | null = sessionStorage.getItem('ses_token');
+    if (typeof token === "string") {
 
       // Get the informtion needed from the back end
       axios.get('http://127.0.0.1:5000/theme/theme-management-info', {
@@ -79,7 +85,7 @@
           let themes = response.data;
 
           // For each theme in the list
-          for (let theme of themes){
+          for (let theme of themes) {
 
             // Get the theme information
             let themeJson = theme["theme"];
@@ -89,7 +95,7 @@
             let newTheme: Theme = new Theme(themeJson['id'], themeJson["name"], themeJson["description"]);
 
             // Put labels in the theme
-            newTheme.setNumberOfLabels(themeJson["numberOfLabels"]) 
+            newTheme.setNumberOfLabels(themeJson["numberOfLabels"])
 
             // Add theme to list
             this.themes.push(newTheme);
@@ -100,12 +106,18 @@
         .catch(error => {
           console.log(error.response)
         });
-        
-      }   
-    }
- 
-    notImplemented(): void {
-      alert("Button has not been implemented yet.");
+
     }
   }
- 
+
+  notImplemented(): void {
+    alert("Button has not been implemented yet.");
+  }
+
+  //gets the search text
+  onEnter() {
+    var text = this.searchForm.value.search_term
+    alert("entered!!" + text + "");
+  }
+}
+
