@@ -25,7 +25,9 @@ export class IndividualLabelComponent {
   /**
    * Constructor which:
    * 1. makes an empty label
-   * 2.
+   * 2. get routerService
+   * 3. get url
+   * 4. initialize labellings variable
    */
   constructor(private modalService: NgbModal,
     private router: Router,
