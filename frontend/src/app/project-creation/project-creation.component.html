@@ -87,7 +87,7 @@
                                 <!-- Column for delete icon -->
                                 <div class="col-1">
                                     <!-- x icon -->
-                                    <i class="bi bi-x" (click)="removeMember(member.getUsername())"></i>
+                                    <em class="bi bi-x" (click)="removeMember(member.getUsername())"></em>
                                 </div>
 
                                 <!-- Column for username -->
@@ -98,12 +98,11 @@
                                 <!-- Column for checkbox -->
                                 <div class="col-4 checkboxCol">
                                     <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                    <!-- TODO FIX THE ID -->
+                                    <!-- TODO: FIX THE ID -->
                                     <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getUsername() }}">
                                 </div>                                        
                             </div>
                         </label>
-
                     </div>
                 </div>
             </div>

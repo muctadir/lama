@@ -6,19 +6,28 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
-// Top bar row
-#topBarRow{
-    margin-left: 10px;
-    margin-right: 10px;
-    max-width: 98%;
-}
-
+/* Icon related markup */
 // Plus icon
 .bi.bi-plus{
     font-size: 24px;
     color: $grey-shade;
 }
 
+// Cross icon next to member name
+.bi.bi-x{
+    font-size: 20px;
+    color: $grey-shade;
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+}
+
+// Plus icon for label types
+.bi.bi-plus.members{
+    float: right;
+}
+
+/* Project creation page markup */
 // Header of the page
 .header{
     font-size: 35px;
@@ -31,38 +40,27 @@ $orange-shade: #ed5a06;
     height: 90vh;
 }
 
-// Texts above each of the forms indicating what the form is for
-#field_text{
-    font-size: 18px;
-    letter-spacing: 1px;
-    margin-top: 10px;
-    padding-bottom: 8px;
-}
 // Text inside the forms
 .form-control{
     font-size: 15px;
 }
+
 // Text above the setting divisions
 .settingsHeader{
     font-size: 18px;
 }
 
+// Sets the padding and margin to 0 px
 .padd-marg {
     padding: 0px;
     margin: 0px;
 }
 
+// Ensures that the labeltype forms have some space between them
 #labeltype_margin {
     margin-bottom: 10px;
 }
 
-// Project description
-#projectDescription {
-    height:200px;
-    font-size:14pt;
-}
-
-// PROJECT SETTINGS DIVISIONS
 // Project settings divions parent
 .projectSettingsDivParent{
     margin-top:10px;
@@ -73,7 +71,7 @@ $orange-shade: #ed5a06;
     border-top: 2px solid $orange-shade;
     padding: 10px 5px 10px 5px;
 }
-// MEMBER SETTINGS DIVISION
+
 // Member settings division
 #membersDiv{
     height: 25vh;
@@ -99,18 +97,9 @@ $orange-shade: #ed5a06;
 .checkboxCol {  
     text-align: center; 
 }
-// Cross icon next to member name
-.bi.bi-x{
-    font-size: 20px;
-    color: $grey-shade;
-    padding: 0px;
-    margin: 0px;
-    cursor: pointer;
-}
-// Plus icon for label types
-.bi.bi-plus.members{
-    float: right;
-}
+
+
+
 // LABEL TYPE DIVISION
 // Label type settings division
 #labelTypeDiv{
@@ -172,6 +161,9 @@ $orange-shade: #ed5a06;
     border-color: $orange-shade;
     color: $white-shade;
 }
+#labelcount {
+    max-width: 20%;
+}
 
 
 /* SCSS related to the add user modal */
@@ -179,6 +171,13 @@ $orange-shade: #ed5a06;
 #user-modal-rows {
     padding:2px 16px; 
     max-height: 35px;
+}
+
+// ensures that the modal doesnt become too large, does scrolling instead
+#overflow-modal {
+    max-height: 60vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 // Column holding the username of the users to be added
@@ -199,10 +198,6 @@ $orange-shade: #ed5a06;
 // Changes the size of the plus icon in the add members popup.
 #popup-plus {
     font-size: 20px;
-}
-
-#labelcount {
-    max-width: 20%;
 }
 
 

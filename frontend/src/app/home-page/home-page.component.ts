@@ -14,9 +14,17 @@ import axios from 'axios';
 })
 export class HomePageComponent implements OnInit {
 
+  /* Array with the projects that the user can view */
   projects: Project[] = [];
 
-  // On startup we get all information for the projects of the user
+  /**
+   * When the component gets created it gathers all the projects that the user is a member of
+   * 
+   * @trigger on component creation
+   * @modifies projects
+   * 
+   * TODO: Use request factory
+   */
   ngOnInit(): void {
 
     // Make list of all projects
@@ -62,7 +70,7 @@ export class HomePageComponent implements OnInit {
           }
         })
         // If there is an error
-        // TODO change
+        // TODO: change
         .catch(error => {console.log(error)});
         
     }   
