@@ -5,29 +5,28 @@
     <div class="row" id="pageTitle">
         <!-- title name -->
         <div id="artifactId" class="col-10">
-            Artifact {{artifactId}}
+            Artifact {{artifact.getId()}}
         </div> 
         <!-- Artifact Identifier -->
         <div class="col-2" id="artifactIdentifier">
-            {{artifactIdentifier}}
+            {{artifact.getIdentifier()}}
         </div>
     </div>
 
     <!-- Container for Artifact -->
     <div class="row">
         <div class = "artifactContainer" id="artifactContainer">
-            <p>{{ artifact }}</p>
+            <p>{{ artifact.getData() }}</p>
         </div>
         <div class="row" id="editButtonRow">
-            <!-- Edit Button -->
-            <div class="col-6" id="editButtonCol">
-                <button class="btn btn-primary float-start" (click)="notImplemented()"  id="editButton">Edit</button> 
-            </div>
 
             <!-- previous artifacts that it was split from, if any -->
             <div class="col-6" id="names">
                 <p class="float-end">
-                    Artifact was split into <span id="split1">artifact #45</span> and <span id="split2">artifact #190</span>.
+                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child artifact</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children artifacts</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}.</span>
+                    <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent artifact #{{artifact.getParentId()}}.</span>
                 </p>
             </div>
         </div>
@@ -48,46 +47,54 @@
                     <div class="row">
                         <!--Labeller Name-->
                         <div class="row">
-                            <div class="col-sm-5">
+                            <div class="col-sm-12">
                                 <p id="labellerName">{{userLabel.labellerName}}</p>
                             </div>
                             <!--Remarks header-->
-                            <div class="col align-self-start">
+                            <!-- <div class="col align-self-start">
                                 <p id="remarks">Remarks:</p>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <!--Label Type and Given Label Section-->
-                            <div class="col-5">
+                            <div class="col-12">
                                 <div class="row">
                                     <div class="col-12" *ngFor="let label of userLabel.labelsGiven">
                                         <div class="row">   
                                             <div class="col-sm-2">
                                                 <!--Label Type-->                                   
                                                 <p id="labelTypeName1">                                              
-                                                    {{label.labelTypeName1}}:                                              
+                                                    {{label.labelTypeName}}:                                              
                                                 </p>
                                             </div>
                                             <!--Label Given-->  
                                             <div class="col-sm-8">
-                                                    <select class="form-control" name="labels" id="formControl">                                             
+                                                <select class="form-control" name="labels" id="formControl" [disabled]="!admin && username != label.labellerName">   
+                                                    <div> 
                                                         <option>
                                                             {{label.labelGiven}}
                                                         </option>
                                                         <option *ngFor ="let labels of allLabels">
                                                             {{labels}}
-                                                        </option>           
-                                                    </select>
-
+                                                        </option>
+                                                    </div>                                          
+                                                    <option>
+                                                        {{label.labelGiven}}
+                                                    </option>
+                                                    <option *ngFor ="let labels of allLabels">
+                                                        {{labels}}
+                                                    </option>           
+                                                </select>
+                                                <!--Label Remark-->
+                                                <div class="col align-self-start" >
+                                                    <p id="remarksText">Remark: {{label.labelRemark}}</p>
+                                                </div>
                                             </div>
                                         </div> 
                                     </div>
                                 </div>
                             </div>
-                            <!--Label Remark-->
-                            <div class="col align-self-start">
-                                <p id="remarksText">{{userLabel.labelRemark}}</p>
-                            </div>
+
                         </div>                      
                     </div>    
                     <!--Line Separator-->
