@@ -226,5 +226,6 @@ def __aggregate_labellings(artifact):
         
         return formatted_result
 
+# Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)

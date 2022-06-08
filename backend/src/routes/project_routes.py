@@ -2,7 +2,10 @@
 # Eduardo Costa Martins
 # Ana-Maria Olteniceanu
 
+from cProfile import label
+from datetime import datetime
 from multiprocessing import ProcessError
+from backend.src.models.item_models import Labelling
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
@@ -12,6 +15,7 @@ from src.models.project_models import Membership, Project, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
 from src.app_util import login_required
+from datetime import time, timedelta
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -178,9 +182,7 @@ def single_project(*, user):
     p_id = request.args.get('p_id')
 
     # Get the project
-    project = db.session.execute(
-        select(Project).where(Project.id==p_id)
-    ).scalars().all()[0]
+    project = __get_project(p_id)
 
     # Schema to serialize the Project
     project_schema = ProjectSchema()
@@ -232,6 +234,9 @@ def project_stats(*, user):
     # Get project id from request
     p_id = request.args.get('p_id')
 
+    # Count conflicts in the project
+    total_conflicts, user_conflicts = __count_conflicts(p_id)
+
     # Get all the users in the project
     project = db.session.execute(
         select(Project).where(Project.id==p_id)
@@ -244,11 +249,14 @@ def project_stats(*, user):
         username = user.username
 
         # Set of artifacts user has labelled
-        artifacts = {}
+        artifacts = set()
         # List of themes user has used
-        themes = []
+        themes = set()
 
-        # Total time spent labelling
+        # Average time spent labelling
+        # avg_time = __avg_time(user)
+
+        # Total time in seconds spent labelling
         total_time = 0
 
         # Loop through each labelling to get the necessary data
@@ -256,17 +264,17 @@ def project_stats(*, user):
             # Add the artifact associated with this labelling to the set of artifacts
             artifacts.add(labelling.artifact)
             # Add the themes associated with this labelling to the list of themes
-            themes.append(labelling.label.themes)
+            themes.add(theme for theme in labelling.label.themes)
             # Add the time spent labelling to the total time
-            total_time += labelling.time
+            total_time += __time_in_seconds(labelling.time)
 
         # Get number of artifacts
         artifacts_num = len(artifacts)
-
+        
         # Get number of themes
-        themes_num = len(list(dict.fromkeys(themes)))
+        themes_num = len(themes)
 
-        # Get average time of labelling
+        # Get average time of labelling in seconds
         if len(user.labellings) > 0:
             avg_time = total_time / len(user.labellings)
         else:
@@ -293,3 +301,20 @@ def project_stats(*, user):
 
     # Return the list of dictionaries
     return make_response(dict_json)
+
+# Function that gets the project with ID p_id
+def __get_project(p_id):
+    return db.session.get(Project, p_id)
+
+# Function that converts a datetime.time variable into 
+# the number of seconds it's equivalent with
+def __time_in_seconds(time):
+    return (time.hour * 60 + time.minute) * 60 + time.second
+
+# Function that returns the number of conflicts in a project
+# and a dictionary with the number of conflicts each user is involved in
+def __count_conflicts(p_id):
+    # Get artifacts from the current project
+    artifacts = db.session.scalars(
+            select(Labelling.u_id).where(Labelling.p_id==p_id).group_by(Labelling.a_id, Labelling.lt_id, Labelling.l_id)
+            ).all()
