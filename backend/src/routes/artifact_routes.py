@@ -1,5 +1,7 @@
 # Victoria Bogachenkova
 # Ana-Maria Olteniceanu
+# Eduardo Costa Martis
+# Thea Bradley
 
 from importlib.metadata import requires
 from src.app_util import check_args
@@ -9,13 +11,15 @@ from src.models.item_models import Artifact, ArtifactSchema, Labelling, Labellin
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
-from src.app_util import login_required
+from src.app_util import login_required, in_project
 from sqlalchemy.exc import  OperationalError
+from src.searching.search import search_func_all_res, best_search_results
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
+@in_project
 def get_artifacts(*, user):
     # Get args from request 
     args = request.args
@@ -51,6 +55,7 @@ def get_artifacts(*, user):
         ).scalars().all()
 
         # Take the artifacts labelled by the user
+        # TODO: Remove for loop
         for labelling in labellings:
             artifacts.add(labelling.artifact)
 
@@ -61,6 +66,7 @@ def get_artifacts(*, user):
     artifact_schema = ArtifactSchema()
 
     # For each displayed artifact
+    # TODO: Remove for loop
     for artifact in artifacts:
 
         # Convert artifact to JSON
@@ -87,7 +93,8 @@ def get_artifacts(*, user):
 
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
-def add_new_artifacts(*, user):
+@in_project
+def add_new_artifacts():
     # Get args from request 
     args = request.args
     # What args are required
@@ -107,6 +114,7 @@ def add_new_artifacts(*, user):
         artifact_object = artifact_schema.load(artifact)
 
         # Add the artifact to the database
+        # TODO: Use add all
         db.session.add(artifact_object)
     
     # Try commiting the artifacts
@@ -155,6 +163,35 @@ def single_artifact(*, user):
 
     # Return the dictionary
     return make_response(dict_json)
+
+@artifact_routes.route('/search', methods=['GET'])
+@login_required
+@in_project
+def search(*, user, membership):
+    
+    args = request.args
+    required = ('p_id', 'search_words')
+
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    p_id = int(args['p_id'])
+    
+    if membership.admin:
+        artifacts = db.session.execute(
+            select(Artifact).where(Artifact.p_id == p_id)
+        )
+    else:
+        artifacts = db.session.execute(
+            select(Artifact).where(Artifact.p_id == p_id,
+                Labelling.a_id == Artifact.a_id,
+                Labelling.u_id == user.id)
+        )
+
+    results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    clean_results = best_search_results(results, len(args['search_words'].split()))
+    print(clean_results)
+    return ""
 
 def __get_extended(artifact):
     # Children of the artifact
