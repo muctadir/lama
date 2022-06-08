@@ -8,6 +8,7 @@ import axios from 'axios';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { InputCheckService } from '../input-check.service';
 
 // Project object
 interface Project {
@@ -95,6 +96,9 @@ export class ProjectCreationComponent implements OnInit {
     labeltypes: this.formBuilder.array([])
   });
 
+  /* Error message displayed to the user if input is incorrect */
+  errorMsg : string = "";
+
   /**
    * Initializes the modal, router and formbuilder
    * @param modalService instance of modal
@@ -181,8 +185,44 @@ export class ProjectCreationComponent implements OnInit {
     // Adds the labeltypes to the object
     projectInformation["labelTypes"] = labelTypes;
 
-    // Calls function responsible for making the project creation request
-    this.makeRequest(projectInformation);
+    // Checks whether the use input is correct
+    if(this.checkProjectData(projectInformation)){
+      // Calls function responsible for making the project creation request
+      this.makeRequest(projectInformation);
+    } else {
+      // Displays an error that the user input was incorrect
+      this.errorMsg = "Please fill in all forms";
+    }
+  }
+
+  /**
+   * Checks whether the project has a name, a description and atleast 1 label type, 
+   * and whether each label type has a name
+   * 
+   * @param projectInformation the project data that we will use to check these requirements
+   * @returns whether the info satisfies these requirements
+   */
+  checkProjectData(projectInformation: Record<string, any>) : boolean {
+    // Initialize InputCheckService instance 
+    let service: InputCheckService = new InputCheckService();
+
+    // Checks whether the project name/description is non-empty
+    let checkFilled: boolean = service.checkFilled(projectInformation["project"]["name"]) && 
+      service.checkFilled(projectInformation["project"]["description"])
+
+    // checks whether the number of labeltypes is greater than 0
+    let moreThanOneLabelType: boolean = projectInformation["labelTypes"].length > 0;
+
+    // Checks whether all label types are non-empty
+    let labelFilled: boolean = true;
+    for(const labeltype of projectInformation["labelTypes"]) {
+      if(!service.checkFilled(labeltype)) {
+        labelFilled = false;
+      }
+    }
+
+    // Returns true if project name, project desc, label types are all non empty.
+    return checkFilled && labelFilled && moreThanOneLabelType;
   }
 
   /**

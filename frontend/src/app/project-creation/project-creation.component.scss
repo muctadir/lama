@@ -35,6 +35,17 @@ $orange-shade: #ed5a06;
     padding-top: 10px;
 }
 
+// Markup of error message that gets displayed
+#errorMessage {
+    font-size: 18px;
+    color: red;
+}
+
+// Moves the right column up 2 pixes
+#RightColumnMoveUp {
+    margin-top: -2px;
+}
+
 // Container of all elements
 .container.main{
     height: 90vh;
@@ -74,7 +85,7 @@ $orange-shade: #ed5a06;
 
 // Member settings division
 #membersDiv{
-    height: 25vh;
+    height: 20vh;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -191,8 +202,9 @@ $orange-shade: #ed5a06;
 #addMembersButton{
     background-color: $white-shade;
     width: 30px;
-    padding:0px;
-    border:none;
+    padding: 0px;
+    border: none;
+    margin-top: -10px;
 }
 
 // Changes the size of the plus icon in the add members popup.
