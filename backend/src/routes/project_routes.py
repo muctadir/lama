@@ -295,18 +295,19 @@ def project_stats(*, user):
     # Return the list of dictionaries
     return make_response(dict_json)
 
-def number_conflicts(p_id):
-    # Get labellings corresponding to this project
-    labellings = aliased(Labelling, select(Labelling).where(Labelling.p_id == p_id).subquery())
-    # Number of differring labels per label type and artifact
+def nr_project_conflicts(p_id):
+    # Number of differing labels per label type and artifact
     per_label_type = select(
-        labellings.a_id, # Artifact id
-        labellings.lt_id, # Label type id (can get rid of this maybe?)
-        func.count(distinct(labellings.l_id)).label('label_count') # Distinct labels for a label type (renamed to 'label_count')
+        Labelling.a_id, # Artifact id
+        Labelling.lt_id, # Label type id (can get rid of this maybe?)
+        func.count(distinct(Labelling.l_id)).label('label_count') # Distinct labels for a label type (renamed to 'label_count')
+    ).where(
+        Labelling.p_id == p_id # In the given project
     ).group_by(
-        labellings.a_id, # Grouped by artifacts and
-        labellings.lt_id # by label type
+        Labelling.a_id, # Grouped by artifacts and
+        Labelling.lt_id # by label type
     ).subquery()
+
     # Number of conflicts per artifact
     per_artifact = select(
         per_label_type.c.a_id, # Artifact id
@@ -316,7 +317,56 @@ def number_conflicts(p_id):
     ).group_by(
         per_label_type.c.a_id # Grouped by artifact
     ).subquery()
+
     per_project = select(
         func.sum(per_artifact.c.conflict_count) # Sum conflicts across all artifacts
     )
-    return db.session.scalar(per_project)
+
+    result = db.session.scalar(per_project)
+
+    if not result:
+        result = 0
+
+    return result
+
+def nr_user_conflicts(u_id):
+    
+    # Artifacts the user has labelled
+    labelled = select(
+        Labelling.a_id 
+    ).where(
+        Labelling.u_id == u_id
+    ).subquery()
+
+    # Number of differing labels per label type and artifact
+    per_label_type = select(
+        Labelling.a_id, # Artifact id
+        Labelling.lt_id, # Label type id (can get rid of this maybe?)
+        func.count(distinct(Labelling.l_id)).label('label_count') # Distinct labels for a label type (renamed to 'label_count')
+    ).where(
+        Labelling.a_id == labelled.c.a_id # The artifact was labelled by the user
+    ).group_by(
+        Labelling.a_id, # Grouped by artifacts and
+        Labelling.lt_id # by label type
+    ).subquery()
+
+    # Number of conflicts per artifact
+    per_artifact = select(
+        per_label_type.c.a_id, # Artifact id
+        func.count(per_label_type.c.lt_id).label('conflict_count') # Number of conflicts (replace count with a_id?)
+    ).where(
+        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
+    ).group_by(
+        per_label_type.c.a_id # Grouped by artifact
+    ).subquery()
+
+    per_user = select(
+        func.sum(per_artifact.c.conflict_count) # Sum conflicts across all artifacts
+    )
+
+    result = db.session.scalar(per_user)
+
+    if not result:
+        result = 0
+
+    return result
