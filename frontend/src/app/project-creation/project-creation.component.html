@@ -108,33 +108,44 @@
                 </div>
             </div>
 
+            <!-- Creates the box for the labeller count form, adds it to the projectForm -->
             <form [formGroup]="projectForm">
                 <div class="form-group">
+                    <!-- Adds the header to the box -->
                     <label class="settingsHeader">Labeller Count</label>
+                    <!-- Creates the number form for the labeller count -->
                     <div class="projectSettingsDiv">
                         <div id="labellerCountDiv">
+                            <!-- Initializes the labeller count to 2, min 2, max 20 -->
                             <input type="number" class="form-control" id="labelcount" value="2" min="2" max="20" formControlName="labellerCount">
                         </div>
                     </div>
                 </div>
             </form>
 
+            <!-- Creates the box for the adding label types -->
             <div class="projectSettingsDivParent">
+                <!-- Sets the header -->
                 <span class="settingsHeader"> Label Type </span>
-                <div class="projectSettingsDiv">
+                <!-- Creates the box containing the label types and other content, makes it scrollable -->
+                <div class="projectSettingsDiv limit_overflow ">
+                    <!-- Adds the label types to the projectForm -->
                     <div [formGroup]="projectForm">
+                        <!-- Loops through all the label types and adds a form for each -->
                         <ng-container formArrayName="labeltypes">
                             <ng-container *ngFor="let labelTypeForm of labeltypes.controls; let i = index">
                                 <form [formGroupName]="i">
 
                                     <!-- Container holding the form and remove button -->
-                                    <div class="container padd-marg">
+                                    <div class="container padd-marg" id="labeltype_margin">
                                         <div class="row padd-marg">
+                                            <!-- Adds the form input for the label type -->
                                             <div class="col-10 padd-marg">
                                                 <input class="form-control" 
                                                     formControlName="label"
                                                     placeholder="Label type">
                                             </div>
+                                            <!-- Adds the remove button for each label type -->
                                             <div class="col-2">
                                                 <em class="bi bi-x" (click)="deleteLabelType(i)"></em>
                                             </div>
@@ -145,10 +156,11 @@
                         </ng-container>
                     </div>
 
+                    <!-- Button for adding more label types -->
                     <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
                         <span id="addLabelTypeText">Add Label Type</span>
                         <!-- Plus icon -->
-                        <i class="bi bi-plus labelType"></i>
+                        <em class="bi bi-plus labelType"></em>
                     </button>
                 </div>
             </div>

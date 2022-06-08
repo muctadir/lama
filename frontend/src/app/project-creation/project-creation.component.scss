@@ -52,6 +52,10 @@ $orange-shade: #ed5a06;
     margin: 0px;
 }
 
+#labeltype_margin {
+    margin-bottom: 10px;
+}
+
 // Project description
 #projectDescription {
     height:200px;
@@ -76,6 +80,14 @@ $orange-shade: #ed5a06;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+// Ensures that the add labeltype box does not extend beyond its box
+.limit_overflow {
+    height: 25vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 // Span of the "Project admin" word
 .projectAdminSpan{
     text-align: center;

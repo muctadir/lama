@@ -81,10 +81,7 @@ export class ProjectCreationComponent implements OnInit {
   /* Array with all members of the project getting created */
   projectMembers: User[] = [];
 
-  /* Array holding all the different label types */
-  labelTypes: string[] = [];
-
-  projectForm : FormGroup= this.formBuilder.group({
+  projectForm : FormGroup = this.formBuilder.group({
     projectName: '',
     projectDesc: '',
     labellerCount: 2,
@@ -172,15 +169,6 @@ export class ProjectCreationComponent implements OnInit {
       "description" : this.projectForm.value.projectDesc,
       "criteria": this.projectForm.value.labellerCount
     };
-
-
-    
-    // Check validity of filled in form
-    
-
-    // Params of the label types
-    //let params3 = this.getLabelTypes(post_form3);
-
     
     // Users within the project
     projectInformation["users"] = []
@@ -197,9 +185,10 @@ export class ProjectCreationComponent implements OnInit {
         "admin": admin
       })
     }
-    // Label type information
-    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX array with labeltypes
-    projectInformation["labelTypes"] = ["language", "labeltypes"];
+    
+    // gets the labelTypes array
+    let labelTypes = this.labelTypeToArray
+    projectInformation["labelTypes"] = labelTypes;
     
     
     let token: string | null  = sessionStorage.getItem('ses_token');
@@ -242,11 +231,13 @@ export class ProjectCreationComponent implements OnInit {
     this.labeltypes.push(labelTypeForm);
 
     // To be deleted
-    console.log(this.projectForm.value.projectName)
-    console.log(this.projectForm.value.projectDesc)
-    console.log(this.projectForm.value.labellerCount)
-    console.log(this.projectForm.value.labeltypes)
-    console.log(this.projectForm.value.labeltypes[0]["label"])
+    console.log(this.projectForm.value.projectName);
+    console.log(this.projectForm.value.projectDesc);
+    console.log(this.projectForm.value.labellerCount);
+    console.log(this.projectForm.value.labeltypes);
+
+    let labelTypesArray = this.labelTypeToArray();
+    console.log(labelTypesArray);
   }
 
   // Function for removing a label type
@@ -265,19 +256,22 @@ export class ProjectCreationComponent implements OnInit {
     });    
   }
 
-  // Function for getting all form elements
-  getLabelTypes(form: HTMLFormElement): string[]{
-    // Make a dictionary for all values
-    let params: string[] = [];
-    // For loop for adding the params to the list
-    for (let i = 0; i < form.length; i++) { 
-      // Add them to dictionary
-      let param = form[i] as HTMLInputElement; // Typecast
-      params[i] = param.value;
+  labelTypeToArray() : Array<string> {
+    // Gets the iterator of labelTypes
+    let labelTypes = this.projectForm.value.labeltypes.values();
+    // Creates the new array which will will be returned
+    let labelTypesArray = [];
+    // Iterates over the labelTypes, adds each labeltype to the array
+    for(var element of labelTypes) {
+      labelTypesArray.push(element['label']);
     }
-    // Return the dictionary of values
-    return params;
+    // Returns the array
+    return labelTypesArray
   }
+
+
+
+
 
 
   // Open the modal and populate it with users
