@@ -34,23 +34,24 @@
                     <thead>
                         <tr>
                             <!-- ID header -->
-                            <th scope="col" sortable="ID" (sort)="notImplemented();"><p class="idHeader">ID</p></th>
+                            <th scope="col" sortable="ID"><p class="idHeader">ID</p></th>
                             <!-- Artifact header -->
-                            <th scope="col" sortable="Artifact" (sort)="notImplemented();"><p class="artifactHeader">Artifact</p></th>
+                            <th scope="col" sortable="Artifact"><p class="artifactHeader">Artifact</p></th>
                             <!-- # of times labelled header-->
-                            <th scope="col" sortable="timesLabelled" (sort)="notImplemented();"><p class="timeslabelledHeader">Times Labelled</p></th>
+                            <th scope="col" sortable="timesLabelled"><p class="timeslabelledHeader">Times Labelled</p></th>
                         </tr>
                     </thead>
 
                     <!-- Table Content -->
-                    <tbody  (click)="reRouter()">
-                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize">
+                    <tbody>
+                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(artifact.getId())">
                             <!-- Artifact ID -->
-                            <td><p class="artifactID">{{artifact.id}}</p></td>
+                            <td><p class="artifactID">{{artifact.getId()}}</p></td>
                             <!-- Artifact text -->
-                            <td><p class="artifactText">{{artifact.text}}</p></td>
-                            <!-- Time artifact is labelled -->
-                            <td><p class="timesLabelled">{{artifact.timesLabelled}}</p></td>
+                            <td><p class="artifactText">{{artifact.getData()}}</p></td>
+                            <!-- Times artifact is labelled -->
+                            <td><p class="timesLabelled">{{artifact.getNumberOfLabellings()}}</p></td>
+                            
                         </tr>
                     </tbody>
                 </table>

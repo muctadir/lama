@@ -40,7 +40,7 @@ const routes: Routes = [
       {path: 'labelling-page', component: LabellingPageComponent},
       {path: 'create-label', component: LabelFormComponent},
       {path: 'artifactmanagement', component: ArtifactManagementPageComponent},
-      {path: 'singleartifact', component: SingleArtifactViewComponent},
+      {path: 'singleartifact/:artifactId', component: SingleArtifactViewComponent},
       {path: 'labelmanagement', component: LabelManagementComponent},
       {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
