@@ -37,7 +37,7 @@ export class RequestHandler {
    * @param auth : boolean, true means it will authenticate, false means it will not
    * @returns the promise of an object
    */
-  public async get(path: string, params: {}, auth: boolean): Promise<Object> {
+  public async get(path: string, params: {}, auth: boolean): Promise<any> {
     this.verifyAuthentication(auth);
     return this.axiosInstance
       .get(path, { params: params })
@@ -56,7 +56,7 @@ export class RequestHandler {
    * @param auth : boolean, true means it will authenticate, false means it will not
    * @returns the promise of an object
    */
-  public async post(path: string, params: {}, auth: boolean): Promise<Object> {
+  public async post(path: string, params: {}, auth: boolean): Promise<any> {
     this.verifyAuthentication(auth);
     return this.axiosInstance
       .post(path, { params: params })
@@ -75,7 +75,7 @@ export class RequestHandler {
    * @param auth : boolean, true means it will authenticate, false means it will not
    * @returns the promise of an object
    */
-  public async patch(path: string, params: {}, auth: boolean): Promise<Object> {
+  public async patch(path: string, params: {}, auth: boolean): Promise<any> {
     this.verifyAuthentication(auth);
     return this.axiosInstance
       .patch(path, { params: params })
