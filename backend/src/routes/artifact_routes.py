@@ -8,9 +8,10 @@ from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, func, distinct
 from src.app_util import login_required
 from sqlalchemy.exc import  OperationalError
+from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
@@ -102,8 +103,11 @@ def add_new_artifacts(*, user):
 
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
+    identifier = generate_artifact_identifier(args['p_id'])
+
     for artifact in artifact_info:
 
+        artifact['identifier'] = identifier
         artifact_object = artifact_schema.load(artifact)
 
         # Add the artifact to the database
@@ -228,3 +232,30 @@ def __aggregate_labellings(artifact):
 
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
+
+def generate_artifact_identifier(p_id):
+    # Length of the identifier
+    length = 5
+
+    # Position from generated identifier from which we start extracting the
+    # artifact identifier
+    start = 0
+
+    # Create hash object
+    h = blake2b()
+
+    # Seed of the hash
+    identifiers = db.session.scalars(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id)).all()
+
+    # Generate the artifact identifier
+    h.update(bytes([len(identifiers)]))
+
+    # Get the string source of the identifier
+    big_identifier = h.hexdigest().upper()
+
+    # Get a unique identifier
+    while big_identifier[start:length] in identifiers:
+        start += 1
+    
+    # Return the identifier
+    return big_identifier[start:length]
