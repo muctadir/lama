@@ -100,9 +100,6 @@ export class ProjectSettingsComponent implements OnInit {
     //Dummy data for initial
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
-    this.labelTypes.push("Material");
-    this.labelTypes.push("Lamas");
-    this.labelTypes.push("Test");
   }
 
   ngOnInit(): void {
@@ -129,21 +126,28 @@ export class ProjectSettingsComponent implements OnInit {
           console.log(error);
         });
 
-        const responseP = axios.get('http://127.0.0.1:5000/project/home', {
+        const responseP = axios.get('http://127.0.0.1:5000/project/settings', {
         headers: {
           'u_id_token': token
+        },
+        params: {
+          'p_id': this.currentProject.getId()
         }
       })
         .then(responseP => {
           //console.log(responseP.data);
-          this.currentProject.setName(responseP.data[this.currentProject.getId()-1].project.name);
-          this.currentProject.setDescription(responseP.data[this.currentProject.getId()-1].project.description);
-          this.currentProject.setCriteria(responseP.data[this.currentProject.getId()-1].project.criteria);
-          this.currentProject.setFrozen(responseP.data[this.currentProject.getId()-1].project.frozen);
-          let thisProjectUsers = responseP.data[this.currentProject.getId()-1];
-          console.log(thisProjectUsers);
-          for (let i = 0; i < thisProjectUsers.projectUsers.length; i++) {
-            this.projectMembers.push(new User(thisProjectUsers.projectUsers[i].id, thisProjectUsers.projectUsers[i].username));
+          this.currentProject.setName(responseP.data.name);
+          this.currentProject.setDescription(responseP.data.description);
+          this.currentProject.setCriteria(responseP.data.criteria);
+          this.currentProject.setFrozen(responseP.data.frozen);
+          let users_of_project = responseP.data.users;
+          for (let i = 0; i < users_of_project.length; i++) {
+            this.projectMembers.push(new User(users_of_project[i].id, users_of_project[i].username));
+          }
+          this.currentProject.setUsers(this.projectMembers);
+          let labeltypes_of_project = responseP.data.labelType;
+          for (let i = 0; i < labeltypes_of_project.length; i++) {
+            this.labelTypes.push(labeltypes_of_project[i].label_type_name);
           }
         })
         .catch(error => {
@@ -168,9 +172,6 @@ export class ProjectSettingsComponent implements OnInit {
     this.currentProject.setName((<HTMLInputElement>document.getElementById("projectName")).value);
     this.currentProject.setDescription((<HTMLInputElement>document.getElementById("projectDescriptionForm")).value);
     this.currentProject.setCriteria(+(<HTMLInputElement>document.getElementById("numberOfLabellers")).value);
-    // For with the label types
-    const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
-    this.labelTypes = this.getLabelTypes(post_form3);
     //Change back to non-edit view
     this.edit = false;
     //Check the checkboxes
@@ -211,20 +212,7 @@ export class ProjectSettingsComponent implements OnInit {
       });
     }
   }
-  //Getting label types from form
-  getLabelTypes(form:HTMLFormElement): string[]{
-    // Make a dictionary for all values
-    let params: string[] = [];
-    // For loop for adding the params to the list
-    for (let i = 0; i < form.length; i++) { 
-      // Add them to dictionary
-      let param = form[i] as HTMLInputElement; // Typecast
-      params[i] = param.value;
-    }
-    // Return the dictionary of values
-    return params;
-  }
-
+  
   //testing method for placeholder
   test(): void{ 
   }

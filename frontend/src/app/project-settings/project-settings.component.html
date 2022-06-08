@@ -120,7 +120,7 @@
                                 <form id="labelTypeForm">
                                     <div *ngFor="let labelType of labelTypes">
                                         <!-- Text field for the label type -->
-                                        <input type="text" class="form-control labelType" value={{labelType}} placeholder="Label type">
+                                        {{labelType}}
                                     </div>
                                 </form>
                             </div>
@@ -206,7 +206,7 @@
                             </div>
                            
                             <!-- Name and checkbox per member of the project -->
-                            <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
+                            <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
                                <!-- Row for the delete, name and project admin -->
                                 <div class="row align-items-center">
                                     <!-- Column for username -->

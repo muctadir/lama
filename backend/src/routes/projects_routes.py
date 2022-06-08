@@ -7,11 +7,11 @@ from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
-from src.models.item_models import Artifact, LabelType
+from src.models.item_models import Artifact, LabelType, LabelTypeSchema
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, update
-from src.app_util import login_required
+from src.app_util import login_required, check_args
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -169,6 +169,67 @@ def create_project(*, user):
     return make_response('OK', 200)
 
 """
+For getting current project information
+"""
+@project_routes.route("/settings", methods=["GET"])
+@login_required
+#@in_project
+def get_project(*, user):
+    # Get args 
+    args = request.args
+    # Required args
+    required = ('p_id')
+    
+    # if not check_args(required, args):
+    #     print('bad args')
+    #     return make_response('Bad Request', 400)
+
+    project = db.session.get(Project, args['p_id'])
+    if not project:
+        print('No project')
+        return make_response('Project does not exist', 400)
+
+    # Get membership of the user
+    users_of_project = db.session.execute(
+        select(Membership).where(Membership.p_id==args['p_id'])
+    ).scalars().all()
+    
+    # Serialize all users
+    users = []
+    user_schema = UserSchema()
+    for mem_object in users_of_project:
+        user_project = mem_object.user
+        user_dumped = user_schema.dump(user_project)
+        user_dumped.pop("password")
+        users.append(user_dumped)    
+
+    #Get all label types from the project
+    labelTypes = db.session.scalars(
+            select(LabelType).where(LabelType.p_id==args['p_id'])
+        ).all()
+
+    labeltype_schema = LabelTypeSchema()
+
+    # Send the label type object
+    label_type_data = [{
+        'label_type_id': labelType.id,
+        'label_type_name': labelType.name
+    } for labelType in labelTypes]
+
+    project_data = jsonify({
+        "name": project.name,
+        "description": project.description,
+        "criteria": project.criteria,
+        "frozen": project.frozen,
+        "users": users,
+        "labelType": label_type_data
+    })
+
+    return make_response(project_data)
+
+
+
+"""
 For editing an existing project
 """
 @project_routes.route("/edit", methods=["PATCH"])
@@ -177,21 +238,14 @@ def edit_project(*, user):
     # Get args 
     args = request.json
     # Required args
-    required = ('projectId', 'projectName', 'projectDescription', 'projectCriteria')
+    required = ('id', 'name', 'description', 'criteria')
 
-    # if not check_args(required, args):
-    #     return make_response('Bad Request', 400)
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
-    label = db.session.get(Project, args['id'])
-    if not label:
+    project = db.session.get(Project, args['id'])
+    if not project:
         return make_response('Project does not exist', 400)
-
-    # TODO Make them check if user a part of the project
-    # if label.p_id != args["p_id"]:
-    #     return make_response('Label not part of project', 400)
-
-    tmp = update(Project).where(Project.id == args['id']).values(name=args['name'], description=args['description'], criteria=args["criteria"])
-    print(tmp)
 
     db.session.execute(
         update(Project).where(Project.id == args['id']).values(name=args['name'], 
@@ -210,21 +264,18 @@ def freeze_project(*, user):
     # Get args 
     args = request.json
     # Required args
-    required = ('projectId', 'projectFrozen')
+    required = ('id', 'frozen')
 
     # if not check_args(required, args):
     #     return make_response('Bad Request', 400)
 
-    label = db.session.get(Project, args['id'])
-    if not label:
+    project = db.session.get(Project, args['id'])
+    if not project:
         return make_response('Project does not exist', 400)
 
     # TODO Make them check if user a part of the project
     # if label.p_id != args["p_id"]:
     #     return make_response('Label not part of project', 400)
-
-    tmp = update(Project).where(Project.id == args['id']).values(frozen=args['frozen'])
-    print(tmp)
 
     db.session.execute(
         update(Project).where(Project.id == args['id']).values(frozen=args['frozen'])
