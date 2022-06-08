@@ -1,20 +1,12 @@
 // <!-- Author: Victoria Bogachenkova -->
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-import { CreateLabelFormComponent } from '../create-label-form/create-label-form.component';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
-
+import { LabelingDataService } from '../labeling-data.service';
+import { Label } from 'app/classes/label';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
-
-// Type label
-type label = {
-  labelName: string,
-  labelDescription: string,
-  labelType: string,
-  labeledArtifacts: number
-}
+import { LabelFormComponent } from 'app/label-form/label-form.component';
 
 @Component({
   selector: 'app-label-management',
@@ -22,76 +14,27 @@ type label = {
   styleUrls: ['./label-management.component.scss']
 })
 export class LabelManagementComponent {
-  //Pagination Settings
-  page = 1;
-  pageSize = 4;
+  routeService: ReroutingService;
+  url: string;
+  labels: Array<Label>;
 
-  // Dummy data
-  labels: Array<label> = [
-    {
-      labelName: "Label 1",
-      labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-      labelType: "Lorem",
-      labeledArtifacts: 7
-    },
-    {
-      labelName: "Label 2",
-      labelDescription: "Ut ac venenatis dolor, ut malesuada elit. Donec dapibus imperdiet nunc, eget consequat justo. Curabitur id neque quis ante rhoncus dictum non vel tortor. Mauris orci erat, ullamcorper in magna accumsan, vulputate consequat nisi. Nam ac velit sed nunc commodo venenatis et a nisi. In egestas sapien purus, et tincidunt arcu ultricies vitae. Mauris vulputate felis mauris, quis vestibulum leo auctor vel. Mauris gravida ipsum ac congue auctor. Aliquam dictum, est vel malesuada mollis, dolor justo tempus risus, id pharetra felis orci at diam. Nulla semper et nunc at pulvinar. Phasellus id semper risus, vitae vestibulum augue. Praesent rhoncus id orci in gravida. Cras ultrices tincidunt elit, sed mattis elit mattis quis. Duis quis sapien odio. Nulla laoreet tristique lectus sed posuere. Aenean sem nibh, hendrerit ut odio in, fringilla porta nulla.",
-      labelType: "Pellentesque",
-      labeledArtifacts: 2
-    },
-    {
-      labelName: "Label 3",
-      labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-      labelType: "Lorem",
-      labeledArtifacts: 5
-    },
-    {
-      labelName: "Label 4",
-      labelDescription: "Ut ac venenatis dolor, ut malesuada elit. Donec dapibus imperdiet nunc, eget consequat justo. Curabitur id neque quis ante rhoncus dictum non vel tortor. Mauris orci erat, ullamcorper in magna accumsan, vulputate consequat nisi. Nam ac velit sed nunc commodo venenatis et a nisi. In egestas sapien purus, et tincidunt arcu ultricies vitae. Mauris vulputate felis mauris, quis vestibulum leo auctor vel. Mauris gravida ipsum ac congue auctor. Aliquam dictum, est vel malesuada mollis, dolor justo tempus risus, id pharetra felis orci at diam. Nulla semper et nunc at pulvinar. Phasellus id semper risus, vitae vestibulum augue. Praesent rhoncus id orci in gravida. Cras ultrices tincidunt elit, sed mattis elit mattis quis. Duis quis sapien odio. Nulla laoreet tristique lectus sed posuere. Aenean sem nibh, hendrerit ut odio in, fringilla porta nulla.",
-      labelType: "Ipsum",
-      labeledArtifacts: 3
-    },
-    {
-    labelName: "Label 5",
-    labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-    labelType: "Lorem",
-    labeledArtifacts: 7
-    },
-    {
-      labelName: "Label 6",
-      labelDescription: "Ut ac venenatis dolor, ut malesuada elit. Donec dapibus imperdiet nunc, eget consequat justo. Curabitur id neque quis ante rhoncus dictum non vel tortor. Mauris orci erat, ullamcorper in magna accumsan, vulputate consequat nisi. Nam ac velit sed nunc commodo venenatis et a nisi. In egestas sapien purus, et tincidunt arcu ultricies vitae. Mauris vulputate felis mauris, quis vestibulum leo auctor vel. Mauris gravida ipsum ac congue auctor. Aliquam dictum, est vel malesuada mollis, dolor justo tempus risus, id pharetra felis orci at diam. Nulla semper et nunc at pulvinar. Phasellus id semper risus, vitae vestibulum augue. Praesent rhoncus id orci in gravida. Cras ultrices tincidunt elit, sed mattis elit mattis quis. Duis quis sapien odio. Nulla laoreet tristique lectus sed posuere. Aenean sem nibh, hendrerit ut odio in, fringilla porta nulla.",
-      labelType: "Pellentesque",
-      labeledArtifacts: 8
-    },
-    {
-      labelName: "Label 7",
-      labelDescription: "Nullam gravida enim et ipsum feugiat, lobortis tempus quam facilisis. Phasellus neque lacus, tincidunt non sollicitudin at, mattis id ante. Nullam efficitur scelerisque sem, sit amet pharetra orci pellentesque a. Donec ullamcorper leo eu sagittis dictum. Mauris ut est nisi. Sed sed felis justo. Quisque at ligula quis arcu pretium malesuada. Sed a rutrum felis. Quisque finibus ipsum libero, id lacinia enim varius ullamcorper. Nullam scelerisque dolor nulla, in laoreet libero commodo at. Nunc non lacus at felis maximus sodales sed eu lorem. Integer non cursus felis. Cras vel ornare arcu. Pellentesque finibus at metus vel suscipit. Ut dignissim dictum semper. Pellentesque nec dignissim ex.",
-      labelType: "Lorem",
-      labeledArtifacts: 1
-    },
-    {
-      labelName: "Label 8",
-      labelDescription: "Ut ac venenatis dolor, ut malesuada elit. Donec dapibus imperdiet nunc, eget consequat justo. Curabitur id neque quis ante rhoncus dictum non vel tortor. Mauris orci erat, ullamcorper in magna accumsan, vulputate consequat nisi. Nam ac velit sed nunc commodo venenatis et a nisi. In egestas sapien purus, et tincidunt arcu ultricies vitae. Mauris vulputate felis mauris, quis vestibulum leo auctor vel. Mauris gravida ipsum ac congue auctor. Aliquam dictum, est vel malesuada mollis, dolor justo tempus risus, id pharetra felis orci at diam. Nulla semper et nunc at pulvinar. Phasellus id semper risus, vitae vestibulum augue. Praesent rhoncus id orci in gravida. Cras ultrices tincidunt elit, sed mattis elit mattis quis. Duis quis sapien odio. Nulla laoreet tristique lectus sed posuere. Aenean sem nibh, hendrerit ut odio in, fringilla porta nulla.",
-      labelType: "Ipsum",
-      labeledArtifacts: 10
-    },
-    {
-      labelName: "Label 9",
-      labelDescription: "Ut ac venenatis dolor, ut malesuada elit. Donec dapibus imperdiet nunc, eget consequat justo. Curabitur id neque quis ante rhoncus dictum non vel tortor. Mauris orci erat, ullamcorper in magna accumsan, vulputate consequat nisi. Nam ac velit sed nunc commodo venenatis et a nisi. In egestas sapien purus, et tincidunt arcu ultricies vitae. Mauris vulputate felis mauris, quis vestibulum leo auctor vel. Mauris gravida ipsum ac congue auctor. Aliquam dictum, est vel malesuada mollis, dolor justo tempus risus, id pharetra felis orci at diam. Nulla semper et nunc at pulvinar. Phasellus id semper risus, vitae vestibulum augue. Praesent rhoncus id orci in gravida. Cras ultrices tincidunt elit, sed mattis elit mattis quis. Duis quis sapien odio. Nulla laoreet tristique lectus sed posuere. Aenean sem nibh, hendrerit ut odio in, fringilla porta nulla.",
-      labelType: "Lorem",
-      labeledArtifacts: 8
-    },
-    {
-      labelName: "This is a long label name!",
-      labelDescription: "Ut ac venenatis dolor, ut malesuada elit. Donec dapibus imperdiet nunc, eget consequat justo. Curabitur id neque quis ante rhoncus dictum non vel tortor. Mauris orci erat, ullamcorper in magna accumsan, vulputate consequat nisi. Nam ac velit sed nunc commodo venenatis et a nisi. In egestas sapien purus, et tincidunt arcu ultricies vitae. Mauris vulputate felis mauris, quis vestibulum leo auctor vel. Mauris gravida ipsum ac congue auctor. Aliquam dictum, est vel malesuada mollis, dolor justo tempus risus, id pharetra felis orci at diam. Nulla semper et nunc at pulvinar. Phasellus id semper risus, vitae vestibulum augue. Praesent rhoncus id orci in gravida. Cras ultrices tincidunt elit, sed mattis elit mattis quis. Duis quis sapien odio. Nulla laoreet tristique lectus sed posuere. Aenean sem nibh, hendrerit ut odio in, fringilla porta nulla.",
-      labelType: "Ipsum",
-      labeledArtifacts: 1
-    }
-  ]
-  
+  //Pagination Settings
+  page: number = 1;
+  pageSize: number = 10;
+
 // Contructor with modal
-  constructor(private modalService: NgbModal, private router: Router) {}
+  constructor(private modalService: NgbModal,
+    private labelingDataService: LabelingDataService,
+    private router: Router) {
+      this.routeService = new ReroutingService();
+      this.url = this.router.url;
+      this.labels = new Array<Label>();
+  }
+
+  ngOnInit(): void {
+    const p_id = parseInt(this.routeService.getProjectID(this.url));
+    this.getLabels(p_id);
+  }
 
   // Open the modal and merge lables
   openMerge() {
@@ -100,26 +43,25 @@ export class LabelManagementComponent {
 
   // Open the modal and create a new label
   openCreate() {
-    const modalRef = this.modalService.open(CreateLabelFormComponent, { size: 'xl'});
+    const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl'});
+  }
+
+  async getLabels(p_id: number): Promise<void> {
+    const labels = await this.labelingDataService.getLabels(p_id);
+    this.labels = labels;
   }
 
   /**
    * Gets the project id from the URL and reroutes to the single label page
    * of the same project
-   * 
+   *
    * @trigger click on label
    */
-   reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+  reRouter(label_id: number) : void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
-    // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'singlelabel']);
-  }
+    let p_id = this.routeService.getProjectID(this.url);
 
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'singlelabel', label_id]);
+  }
 }

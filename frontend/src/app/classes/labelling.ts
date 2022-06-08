@@ -7,11 +7,21 @@ export class Labelling {
     private username: string;
     // Labels given by this user
     private labels: Array<any>;
+    //
+    // private artifactId: number;
+    //
+
+    // u_id, username - DONE
+    // a_id (_actual_ id), display id (order in which it was created in the project) (not necessary)
+    // l_id, label name
+    // lt_id, label type name
+    // remark
+    // time (to label)
 
     /**
      * Constructor sets id, name and labels
      * @param id
-     * @param name 
+     * @param name
      * @param labels
      */
     constructor(id: number, name: string, labels: Array<any>) {
@@ -30,7 +40,7 @@ export class Labelling {
 
     /**
      * Sets the userId
-     * @param userId 
+     * @param userId
      */
     setUserId(userId: number): void {
         this.userId = userId;
@@ -46,7 +56,7 @@ export class Labelling {
 
     /**
      * Sets the username
-     * @param username 
+     * @param username
      */
     setUsername(username: string): void {
         if (username == undefined || typeof username != "string" || username.length <= 0) {
@@ -65,7 +75,7 @@ export class Labelling {
 
     /**
      * Sets the labels
-     * @param labels 
+     * @param labels
      */
     setLabels(labels: Array<any>): void {
         this.labels = labels;
@@ -73,7 +83,7 @@ export class Labelling {
 
     /**
      * Gets the number of labels given to the artifact
-     * @return this.labels.length 
+     * @return this.labels.length
      */
     getNumberOfLabels(): number {
         return this.labels.length;
