@@ -235,8 +235,8 @@ class Highlight(db.Model):
 # If you wish to add other attributes, an association class should be used instead
 label_to_theme = Table('label_to_theme', db.Model.metadata,
         Column('p_id', Integer, ForeignKey('project.id')),
-        Column('t_id', Integer, ForeignKey('theme.id')),
-        Column('l_id', Integer, ForeignKey('label.id'))
+        Column('t_id', Integer, ForeignKey('theme.id'), primary_key=True),
+        Column('l_id', Integer, ForeignKey('label.id'), primary_key=True)
 )
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
