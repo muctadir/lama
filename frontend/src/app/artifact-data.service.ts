@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
+import { RequestHandler } from './classes/RequestHandler';
 import axios from 'axios';
 
 
@@ -8,6 +9,14 @@ import axios from 'axios';
   providedIn: 'root'
 })
 export class ArtifactDataService {
+  private requestHandler: RequestHandler;
+
+  /**
+   * Constructor instantiates requestHandler
+   */
+  constructor() {
+    this.requestHandler = new RequestHandler()
+  }
 
   /**
    * Function does call to backend to retrieve all artifacts of a given project
@@ -20,7 +29,7 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @returns Promise<Array<StringArtifact>>
    */
-  getArtifacts(p_id: number): Promise<Array<StringArtifact>> {
+  async getArtifacts(p_id: number): Promise<Array<StringArtifact>> {
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');
     // Check if the session token exists
@@ -32,15 +41,11 @@ export class ArtifactDataService {
     // Array with results
     let result: Array<StringArtifact> = new Array<StringArtifact>();
 
+    // Data that needs to be passed to backend
+
     // Actual request
-    return axios.get('http://127.0.0.1:5000/artifact/artifactmanagement', {
-      headers: {
-        'u_id_token': token
-      },
-      params: {
-        'p_id': p_id
-      }
-    }).then((response) => {
+    let response = await this.requestHandler.get('/artifact/artifactmanagement', {'p_id': p_id}, true)
+
       // For each artifact in the list
       for (let artifact of response.data) {
         // Initialize a new artifact with all values
@@ -62,10 +67,6 @@ export class ArtifactDataService {
 
       // Return result
       return result;
-    }).catch((err) => {
-      // If there is an error
-      throw new Error(err);
-    });
 
   }
 
@@ -154,22 +155,22 @@ export class ArtifactDataService {
         'extended': true
       }
     }).then(response => {
-        // Get the artifact from the response
-        let artifact = response.data['artifact'];
+      // Get the artifact from the response
+      let artifact = response.data['artifact'];
 
-        // Get the artifact data
-        result.setId(artifact["id"]);
-        result.setIdentifier(artifact["identifier"]);
-        result.setData(artifact["data"]);
-        result.setParentId(artifact["parent_id"]);
-        result.setChildIds(response.data["artifact_children"]);
+      // Get the artifact data
+      result.setId(artifact["id"]);
+      result.setIdentifier(artifact["identifier"]);
+      result.setData(artifact["data"]);
+      result.setParentId(artifact["parent_id"]);
+      result.setChildIds(response.data["artifact_children"]);
 
-        // Return the record
-        return [result, response.data["artifact_labellings"], response.data["username"]]
-        
-      }).catch((err) => {
-        // If there is an error
-        throw new Error(err);
-      });
+      // Return the record
+      return [result, response.data["artifact_labellings"], response.data["username"]]
+
+    }).catch((err) => {
+      // If there is an error
+      throw new Error(err);
+    });
   }
 }
