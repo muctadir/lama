@@ -7,10 +7,11 @@ from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
-from src.models.item_models import Artifact, LabelType
+from src.models.item_models import Artifact, LabelType, Labelling
 from src.models.project_models import Membership, Project, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, func, distinct
+from sqlalchemy.orm import aliased
 from src.app_util import login_required
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
@@ -293,3 +294,29 @@ def project_stats(*, user):
 
     # Return the list of dictionaries
     return make_response(dict_json)
+
+def number_conflicts(p_id):
+    # Get labellings corresponding to this project
+    labellings = aliased(Labelling, select(Labelling).where(Labelling.p_id == p_id).subquery())
+    # Number of differring labels per label type and artifact
+    per_label_type = select(
+        labellings.a_id, # Artifact id
+        labellings.lt_id, # Label type id (can get rid of this maybe?)
+        func.count(distinct(labellings.l_id)).label('label_count') # Distinct labels for a label type (renamed to 'label_count')
+    ).group_by(
+        labellings.a_id, # Grouped by artifacts and
+        labellings.lt_id # by label type
+    ).subquery()
+    # Number of conflicts per artifact
+    per_artifact = select(
+        per_label_type.c.a_id, # Artifact id
+        func.count(per_label_type.c.lt_id).label('conflict_count') # Number of conflicts (replace count with a_id?)
+    ).where(
+        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
+    ).group_by(
+        per_label_type.c.a_id # Grouped by artifact
+    ).subquery()
+    per_project = select(
+        func.sum(per_artifact.c.conflict_count) # Sum conflicts across all artifacts
+    )
+    return db.session.scalar(per_project)
