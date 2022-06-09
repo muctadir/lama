@@ -14,32 +14,41 @@ import axios from 'axios';
   styleUrls: ['./stats.component.scss']
 })
 export class StatsComponent implements OnInit{
+  // Pagination Settings
+  page = 1;
+  pageSize = 10;
+
+  // Initialize the url
+  url: string;
+    
+  // Initialize the ReroutingService
+  routeService: ReroutingService;
+
+  // Initialize the project ID
+  p_id: number;
+
+  // Initialize the project item
+  project: Project;
+
+  // Initialize the list of user statistics
+  user_contribution: Array<any>;
+
+  // Initialize the number of conflicts in the project
+  conflicts: number
+  
   /**
    * Initializes the router 
    * 
    * @param router instance of router
    */
-   constructor(private router: Router) { }
-
-  // Pagination Settings
-  page = 1;
-  pageSize = 10;
-
-  // Get project ID
-  // Gets the url from the router
-  url: string = this.router.url
-    
-  // Initialize the ReroutingService
-  routeService: ReroutingService = new ReroutingService();
-
-  // Use reroutingService to obtain the project ID
-  p_id = this.routeService.getProjectID(this.url);
-
-  // Project item
-  project: Project = new Project(0, "", "")
-
-  // Dummy data
-  user_contribution: Array<any> = []
+   constructor(private router: Router) { 
+     this.url = this.router.url;
+     this.routeService = new ReroutingService();
+     this.p_id = Number(this.routeService.getProjectID(this.url));
+     this.project = new Project(0, "", "");
+     this.user_contribution = [];
+     this.conflicts = 0;
+   }
 
   ngOnInit(): void {
     let token: string | null  = sessionStorage.getItem('ses_token');
@@ -63,6 +72,8 @@ export class StatsComponent implements OnInit{
           projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
           projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
           projectJson["users"] = project["projectUsers"];
+          this.conflicts = project["conflicts"];
+          console.log(this.conflicts)
 
             // Create the project with constructor
             let projectNew = new Project(

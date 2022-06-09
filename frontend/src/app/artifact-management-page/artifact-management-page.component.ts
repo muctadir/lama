@@ -29,8 +29,8 @@ export class ArtifactManagementPageComponent {
   pageSize = 5;
 
   /**
-     * Constructor passes in the modal service and the artifact service,
-     * initializes Router
+     * Constructor passes in the modal service, the artifact service 
+     * and initializes Router
      * @param modalService instance of NgbModal
      * @param artifactDataService instance of ArtifactDataService
      * @param router instance of Router
@@ -78,6 +78,7 @@ export class ArtifactManagementPageComponent {
   notImplemented(): void {
     alert("Button has not been implemented yet.");
   }
+  
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
   }

@@ -6,8 +6,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { ArtifactDataService } from 'app/artifact-data.service';
-import axios from 'axios';
-import { artifact } from 'app/static-test-info';
 
 @Component({
   selector: 'app-add-artifact',
@@ -113,46 +111,27 @@ export class AddArtifactComponent {
       // Removes the artifacts which are only a newline
       new_artifacts = new_artifacts.filter(e => e);
 
-      // Random identifier
-      function makeid(length: number) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-          result += characters.charAt(Math.floor(Math.random() *
-            charactersLength));
-        }
-        return result;
-      }
-
       async function addArtifacts(pid: number, artifacts: Record<string, any>[]){
         await artifactDataService.addArtifacts(pid, artifacts);
       }
 
-      // Make an identifier
-      // TODO: Make it unique
-      let identifier = makeid(5);
-      console.log(identifier);
-
       // Way to get information to backend
       let allArtifacts: Record<string, any>[] = [];
 
-      for (let i = 0; i < new_artifacts.length; i++) {
+      // Get the information of each artifact
+      for (const element of new_artifacts) {
         let artifactInformation: Record<string, any> = {};
+
         // Artifact information
         artifactInformation = {
-          'name': identifier.concat(i.toString()),
-          'identifier': identifier,
-          'data': new_artifacts[i],
+          'data': element,
           'p_id': p_id
         }
-        console.log(artifactInformation);
+        // Add the info of this artifact to the list of artifact information
         allArtifacts.push(artifactInformation);
       }
-      console.log(allArtifacts);
 
-
-      // Message for confirmation/error
+      // TODO: Change message for confirmation/error
       const p_response: HTMLElement = document.querySelector("#createArtifactResponse")!;
       addArtifacts(p_id, allArtifacts)
       p_response.innerHTML = "Artifacts added"

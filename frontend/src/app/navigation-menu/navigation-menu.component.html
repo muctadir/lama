@@ -147,12 +147,12 @@
 
                 <!-- Logout icon -->
                 <div *ngIf="collapsed" class="text-center">
-                    <a><em class="bi bi-box-arrow-left def"></em></a>
+                    <a><em class="bi bi-box-arrow-left def" (click)="openLogout()"></em></a>
                 </div>
 
                 <!-- Logout written out -->
                 <div *ngIf="!collapsed" class="text-center">
-                    <a class="text-menu">Log out</a>
+                    <a class="text-menu" (click)="openLogout()">Log out</a>
                 </div>
 
                 <!-- Line below the icon -->

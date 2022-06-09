@@ -5,6 +5,7 @@
 from cProfile import label
 from datetime import datetime
 from multiprocessing import ProcessError
+from src.models.item_models import Labelling
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
@@ -12,10 +13,10 @@ from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
 from src.models.item_models import Artifact, LabelType, Labelling
 from src.models.project_models import Membership, Project, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select, func, distinct
+from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from src.app_util import login_required
-from datetime import time, timedelta
+from src.routes.conflict_routes import nr_project_conflicts
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -210,13 +211,17 @@ def single_project(*, user):
         user_dumped = user_schema.dump(user)
         user_dumped.pop("password")
         users.append(user_dumped)
+
+    # Get the number of conflicts in the conflict
+    conflicts = nr_project_conflicts(p_id)
         
     # Put all values into a dictonary
     info = {
         "project" : project_json,
         "projectNrArtifacts": project_nr_artifacts,
         "projectNrCLArtifacts": project_nr_cl_artifacts,
-        "projectUsers": users
+        "projectUsers": users,
+        "conflicts": conflicts
         }
 
     # Convert dictionary to json
@@ -234,13 +239,10 @@ def project_stats(*, user):
     # Get project id from request
     p_id = request.args.get('p_id')
 
-    # Count conflicts in the project
-    total_conflicts, user_conflicts = __count_conflicts(p_id)
-
     # Get all the users in the project
-    project = db.session.execute(
+    project = db.session.scalar(
         select(Project).where(Project.id==p_id)
-    ).scalars().all()[0]
+    )
 
     # List of all stats per user
     stats = []
@@ -276,12 +278,12 @@ def project_stats(*, user):
 
         # Get average time of labelling in seconds
         if len(user.labellings) > 0:
-            avg_time = total_time / len(user.labellings)
+            avg_time = __time_to_string(total_time / len(user.labellings))
         else:
             # If there are no labelling set average time to 0
             avg_time = 0
 
-        # TODO: Get number of conflicts
+        # Get the number of conflicts in the project
         conflicts = 0
 
         # Add all data to a dictionary
@@ -311,101 +313,27 @@ def __get_project(p_id):
 def __time_in_seconds(time):
     return (time.hour * 60 + time.minute) * 60 + time.second
 
-# Function that returns the number of conflicts in a project
-# and a dictionary with the number of conflicts each user is involved in
-def __count_conflicts(p_id):
-    # Get artifacts from the current project
-    artifacts = db.session.scalars(
-            select(Labelling.u_id).where(Labelling.p_id==p_id).group_by(Labelling.a_id, Labelling.lt_id, Labelling.l_id)
-            ).all()
-            
-"""
-Author: Eduardo Costa Martins
-"""
-def nr_project_conflicts(p_id):
-    # Number of differing labels per label type and artifact
-    per_label_type = select(
-        Labelling.a_id, # Artifact id
-        Labelling.lt_id, # Label type id (can get rid of this maybe?)
-        func.count(distinct(Labelling.l_id)).label('label_count') # Distinct labels for a label type (renamed to 'label_count')
-    ).where(
-        Labelling.p_id == p_id # In the given project
-    ).group_by(
-        Labelling.a_id, # Grouped by artifacts and
-        Labelling.lt_id # by label type
-    ).subquery()
+# Function that converts a number of seconds into
+# a string showing the time in h:m:s format
+def __time_to_string(time):
+    # List of time values
+    time_list = [0, 0, 0]
 
-    # Number of conflicts per artifact
-    per_artifact = select(
-        per_label_type.c.a_id, # Artifact id
-        func.count(per_label_type.c.lt_id).label('conflict_count') # Number of conflicts (replace count with a_id?)
-    ).where(
-        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
-    ).group_by(
-        per_label_type.c.a_id # Grouped by artifact
-    ).subquery()
-
-    per_project = select(
-        func.sum(per_artifact.c.conflict_count) # Sum conflicts across all artifacts
-    )
-
-    result = db.session.scalar(per_project)
-
-    if not result:
-        result = 0
-
-    return result
-
-"""
-Author: Eduardo Costa Martins
-@returns a dictionary indexed by user id mapping to the number of conflicts 
-         the user has in the project given by p_id. A user with 0 conflicts
-         is not indexed.
-"""
-def nr_user_conflicts(p_id):
-
-    # Number of differing labels per label type and artifact
-    per_label_type = select(
-        Labelling.a_id, # Artifact id
-        Labelling.lt_id, # Label type id (can get rid of this maybe?)
-        func.count(distinct(Labelling.l_id)).label('label_count') # Distinct labels for a label type (renamed to 'label_count')
-    ).where(
-        Labelling.p_id == p_id
-    ).group_by(
-        Labelling.a_id, # Grouped by artifacts and
-        Labelling.lt_id # by label type
-    ).subquery()
-
-    # Number of conflicts per artifact
-    per_artifact = select(
-        per_label_type.c.a_id, # Artifact id
-        func.count(per_label_type.c.lt_id).label('conflict_count') # Number of conflicts (replace count with a_id?)
-    ).where(
-        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
-    ).group_by(
-        per_label_type.c.a_id # Grouped by artifact
-    ).subquery()
-
-    # Pair each user with artifacts they have labelled and the conflicts for that artifact
-    per_user_artifact = select(
-        Labelling.u_id, Labelling.a_id, per_artifact.c.conflict_count.label('conflict_count')
-    ).where(
-        Labelling.a_id == per_artifact.c.a_id
-    ).group_by(
-        Labelling.a_id, Labelling.u_id
-    ).subquery()
-
-    # Sum the number of conflicts for each user (which is summing the conflicts for each artifact they have labelled)
-    per_user = select(
-        per_user_artifact.c.u_id, func.sum(per_user_artifact.c.conflict_count)
-    ).group_by(
-        per_user_artifact.c.u_id
-    )
-
-    results = db.session.execute(per_user).all()
-
-    results = dict(
-        (u_id, int(conflicts)) for u_id, conflicts in results
-    )
-
-    return results
+    # Number of minutes
+    minutes = int(time / 60)
+    # Number of seconds
+    time_list[2] = int(time % 60)
+    # Number of hours
+    time_list[0] = int(minutes / 60)
+    # Updated number of minutes
+    time_list[1] = int(minutes % 60)
+    # String that shows the time
+    time_string = ''
+    for number in time_list:
+        if number == 0:
+            time_string += '00:'
+        else:
+            time_string += str(number) + ':'
+    
+    # Return the string with the time
+    return time_string[:-1]
