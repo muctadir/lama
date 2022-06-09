@@ -81,7 +81,7 @@
                         </div>
                         
                         <!-- Name and checkbox per member of the project -->
-                        <label *ngFor="let member of projectMembers" for="user" style="display: block;"> 
+                        <label *ngFor="let member of projectMembers" for="user" id="block"> 
 
                             <!-- Row for the delete, name and project admin -->
                             <div class="row align-items-center">
@@ -100,7 +100,6 @@
                                 <!-- Column for checkbox -->
                                 <div class="col-4 checkboxCol">
                                     <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                    <!-- TODO: FIX THE ID -->
                                     <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getUsername() }}">
                                 </div>                                        
                             </div>
@@ -118,7 +117,7 @@
                     <div class="projectSettingsDiv">
                         <div id="labellerCountDiv">
                             <!-- Initializes the labeller count to 2, min 2, max 20 -->
-                            <input type="number" class="form-control" id="labelcount" value="2" min="2" max="20" formControlName="labellerCount">
+                            <input type="number" class="form-control" id="labelcount" value="2" min="2" max="100" formControlName="labellerCount">
                         </div>
                     </div>
                 </div>

@@ -52,7 +52,7 @@ export class AddUsersModalContent {
   // The users that should be displayed in the modal
   @Input() users: any;
   // Events emitting what user is added to the project
-  @Output() newItemEvent = new EventEmitter<any>();
+  @Output() addUserEvent = new EventEmitter<any>();
 
   /**
    * Initializes the modal
@@ -68,7 +68,7 @@ export class AddUsersModalContent {
    * @trigger user is clicked on in the modal
    */
   addUser(user: User) : void {
-    this.newItemEvent.emit(user);
+    this.addUserEvent.emit(user);
   }
 }
 
@@ -196,7 +196,7 @@ export class ProjectCreationComponent implements OnInit {
   }
 
   /**
-   * Checks whether the project has a name, a description and atleast 1 label type, 
+   * Checks whether the project has a name, a description and at least 1 label type, 
    * and whether each label type has a name
    * 
    * @param projectInformation the project data that we will use to check these requirements
@@ -363,7 +363,7 @@ export class ProjectCreationComponent implements OnInit {
     modalRef.componentInstance.users = this.allMembers;
 
     // Push the username into the members list 
-    modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
+    modalRef.componentInstance.addUserEvent.subscribe(($e: User) => {
       let user = $e;
 
       //  Checks if the user is already added
