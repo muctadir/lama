@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { RequestHandler } from './classes/RequestHandler';
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 
 
 @Injectable({
@@ -10,12 +10,14 @@ import axios from 'axios';
 })
 export class ArtifactDataService {
   private requestHandler: RequestHandler;
+  private sessionToken: string | null;
 
   /**
    * Constructor instantiates requestHandler
    */
   constructor() {
-    this.requestHandler = new RequestHandler()
+    this.sessionToken = sessionStorage.getItem('ses_token');
+    this.requestHandler = new RequestHandler(this.sessionToken);
   }
 
   /**
@@ -36,37 +38,35 @@ export class ArtifactDataService {
     if (typeof token !== "string") throw new Error("User is not logged in");
 
     // Check if the p_id is larger than 1
-    if (p_id < 1) throw new Error("p_id cannot be less than 1")
+    if (p_id < 1) throw new Error("p_id cannot be less than 1");
 
     // Array with results
     let result: Array<StringArtifact> = new Array<StringArtifact>();
 
-    // Data that needs to be passed to backend
-
     // Actual request
-    let response = await this.requestHandler.get('/artifact/artifactmanagement', {'p_id': p_id}, true)
+    let response = await this.requestHandler.get('/artifact/artifactmanagement', { 'p_id': p_id }, true);
+    
+    // For each artifact in the list
+    response.forEach((artifact: any) => {
+      // Initialize a new artifact with all values
+      let artifactJson = artifact["artifact"];
 
-      // For each artifact in the list
-      for (let artifact of response.data) {
-        // Initialize a new artifact with all values
-        let artifactJson = artifact["artifact"];
+      // Create an artifact object
+      let artifactNew: StringArtifact = new StringArtifact(
+        artifactJson["id"],
+        artifactJson["identifier"],
+        artifactJson["data"]
+      );
 
-        // Create an artifact object
-        let artifactNew: StringArtifact = new StringArtifact(
-          artifactJson["id"],
-          artifactJson["identifier"],
-          artifactJson["data"]
-        )
+      // Set the number of labellings on this artifact
+      artifactNew.setLabellings(artifact["artifact_labellings"]);
 
-        // Set the number of labellings on this artifact
-        artifactNew.setLabellings(artifact["artifact_labellings"])
+      // Add the artifact to the result
+      result.push(artifactNew);
+    });
 
-        // Add the artifact to the result
-        result.push(artifactNew);
-      }
-
-      // Return result
-      return result;
+    // Return result
+    return result;
 
   }
 
