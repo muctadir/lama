@@ -171,30 +171,43 @@ def single_artifact(*, user):
 @in_project
 def search(*, user, membership):
     
+    # Get arguments
     args = request.args
+    # Required arguments
     required = ('p_id', 'search_words')
 
+    # Check if required agruments are supplied
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     
+    # Get the project id
     p_id = int(args['p_id'])
+
+    # Artifact schema for serializing
     artifact_schema = ArtifactSchema()
     
+    # If the user is a admin
     if membership.admin:
+        # Get all artifact
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id)
         ).all()
     else:
+        # Get all artifacts the user has labelled
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
                 Labelling.a_id == Artifact.a_id,
                 Labelling.u_id == user.id)
         ).all()
 
+    # Getting result of search
     results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
+    # Gets the actual artifact from the search
     artifacts_results = [result['item'] for result in clean_results]
 
+    # Return the list of artifacts from the search
     return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
 
 def __get_extended(artifact):

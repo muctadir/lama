@@ -2,7 +2,7 @@ import json
 import numpy
 from itertools import groupby
 
-from backend.src.searching.eddie import MIN_DIST
+#from backend.src.searching.eddie import MIN_DIST
 
 # Opening JSON file
 f = open('./data.json')
@@ -99,7 +99,7 @@ def search_func_all_res(search_words, data, id_col, data_col):
             #get best search word result in artifact
             result = word_match(search_word, item[data_col])
             #make sure words are below min letter diff distance
-            if len(result) != 0 and result[0] <= minDist:
+            if len(result) != 0 and result[0] <= MIN_DIST:
                 if len(matches) == 0:
                     matches.append(item[id_col])
                 matches.append(result)
@@ -164,7 +164,7 @@ def best_search_results(all_search_results, word_count):
     return sorted_res
     
         
-MIN_DIST = 4
+MIN_DIST = 3
 search_words = "honey bitch"
 search_word_count = len(search_words.split())
 

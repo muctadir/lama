@@ -93,6 +93,10 @@ export class ArtifactManagementPageComponent {
   onEnter() {
     var text = this.searchForm.value.search_term
     alert("entered!!"+ text + "");
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url))
+    // Pass the search word to services
+    let artifacts = this.artifactDataService.search(text, p_id);
   }
 
 }
