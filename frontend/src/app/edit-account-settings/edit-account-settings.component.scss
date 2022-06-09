@@ -1,0 +1,56 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #bfbfbf;
+
+// Header above the input fields
+#header{
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+// Markup of text above form fields
+#field_text{
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+// Orange underlined text
+#orangUnderlinedText {
+    color: $orange-shade;
+    text-decoration: underline;
+}
+
+// Sets layout of the error message that is displayed when register input is incorrect
+#infoMessage{
+    color: $orange-shade;
+    font-size: 15px;
+}
+
+// Buttons
+.editButtons{
+    border: none;
+    float: right;
+    width: 150px;
+}
+
+// Cancel edit button
+#cancelEditButton{
+    margin-right: 20px;
+}
+
+// Columns of the information
+.col-8{
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+// Line between things
+hr {
+    height: 2px;
+    color: $light-grey-shade;
+}
+

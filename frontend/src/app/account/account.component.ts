@@ -1,6 +1,7 @@
 // Veerle Furst
+// Jarl Jansen
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from 'app/classes/user';
 import axios from 'axios';
 
@@ -11,7 +12,6 @@ import axios from 'axios';
 })
 
 export class AccountComponent {
-
   // Placeholder for the current user
   user: any;
 
@@ -24,6 +24,10 @@ export class AccountComponent {
   ngOnInit(){
     // Get the information of the user on loading the page
     this.getInformation()
+  }
+
+  changeEdit(edit: boolean) {
+    this.edit = edit;
   }
 
   // Get the information of the user

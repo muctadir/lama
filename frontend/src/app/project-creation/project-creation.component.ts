@@ -51,7 +51,7 @@ export class AddUsersModalContent {
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  addUser(user:User) {
+  addUser(user: User) {
     this.newItemEvent.emit(user);
   }
 }

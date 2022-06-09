@@ -34,6 +34,7 @@ import { EditThemeComponent } from './edit-theme/edit-theme.component';
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from './logout/logout.component';
+import { EditAccountSettingsComponent } from './edit-account-settings/edit-account-settings.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { LogoutComponent } from './logout/logout.component';
     CreateThemeComponent,
     SingleThemeViewComponent,
     EditThemeComponent,
-    LogoutComponent
+    LogoutComponent,
+    EditAccountSettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -47,60 +47,10 @@
 
 
 <!-- Edit division -->
-<div *ngIf="edit" class="container-fluid min-vh-100 d-flex flex-column">
-    <!-- Row for the header -->
-    <div class="row">
-        <div class="col-8 offset-2 justify-content-center">
-            <div id="header">Changing your account information</div>
-        </div>
-    </div>
-    <!-- Row for the form -->
-    <div class="row">
-        <div class="col-8 offset-2 justify-content-center">
-            <!-- For for user information -->
-            <form id="accountEditForm">
-                <!-- Username field -->
-                <div class="form-group">
-                    <label id="field_text">Username:</label>
-                    <input type="username" class="form-control" id="form-format" placeholder="Username" name="username" value = "{{ user.getUsername() }}">
-                </div>
-                <!-- Email field -->
-                <div class="form-group">
-                    <label id="field_text">Email Address:</label>
-                    <input type="email" class="form-control" placeholder="Email address" name="email" value = "{{ user.getEmail() }}">
-                </div>
-                <!-- Description field -->
-                <div class="form-group">
-                    <label id="field_text">Description:</label>
-                    <textarea id="projectDescriptionForm" class="form-control" rows="4" placeholder="Description" name="description" maxlength="140">{{ user.getDescription() }}</textarea>
-                </div>
-            </form>
+<ng-container *ngIf="edit">
+    <app-edit-account-settings [user]="user" (editEvent)="changeEdit($event)"></app-edit-account-settings>
+</ng-container>
 
-        </div>
-    </div>
-    <!-- Row for changing password -->
-    <div class="row text-end">
-        <div class="col">
-            <a [routerLink]="['/account']" (click)="editPassword = !editPassword; edit=!edit"><span id="orangUnderlinedText">Change password</span></a>
-        </div>
-        <div class="col-2"></div>
-    </div>
-    <!-- Row for the error message -->
-    <div class="row">
-        <div class="col offset-2">
-            <div *ngIf="errorMsg" id="infoMessage">{{errorMsg}}</div>
-        </div>
-    </div>
-    <!-- Row for buttons -->
-    <div class="row">        
-        <div class="col-8 offset-2 text-right">
-            <!-- Edit button -->
-            <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
-            <!-- Cancel button -->
-            <button (click)="edit = !edit" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
-        </div>
-    </div>
-</div>
 
 
 <!-- Edit password division -->
