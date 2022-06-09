@@ -95,10 +95,9 @@ export class ProjectSettingsComponent implements OnInit {
   //Arrays for different actions for users
   removedMembers: number[] = [];
   addedMembers: number[] = [];
-  updatedMembers: number[] = [];
 
-  removed: Record<number, boolean> = {};
-  added: Record<number, boolean> = {};
+  removed: Record<number, number> = {};
+  added: Record<number, number> = {};
   //label types for project
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
@@ -150,9 +149,12 @@ export class ProjectSettingsComponent implements OnInit {
           this.currentProject.setFrozen(responseP.data.frozen);
           let users_of_project = responseP.data.users;
           for (let i = 0; i < users_of_project.length; i++) {
-            this.projectMembers.push(new User(users_of_project[i].id, users_of_project[i].username));
+            if(users_of_project[i].removed != 1) {
+              this.projectMembers.push(new User(users_of_project[i].id, users_of_project[i].username));
+            }
             this.allProjectUsers.push(new User(users_of_project[i].id, users_of_project[i].username));
             this.adminMembers[users_of_project[i].id] = users_of_project[i].admin;
+            this.removed[users_of_project[i].id] = +(users_of_project[i].removed);
           }
           this.currentProject.setUsers(this.projectMembers);
           let labeltypes_of_project = responseP.data.labelType;
@@ -176,15 +178,6 @@ export class ProjectSettingsComponent implements OnInit {
     }
   }
 
-  getUpdatedUsers() {
-    for (let i = 0; i < this.projectMembers.length; i++) {
-      if (!this.addedMembers.includes(this.projectMembers[i].getId())){
-        this.removed[this.projectMembers[i].getId()] = false; 
-        this.updatedMembers.push(this.projectMembers[i].getId());
-      }
-    }
-  }
-
   //Entering Edit Mode
   clickEdit(): void {
     this.edit = true;
@@ -198,7 +191,6 @@ export class ProjectSettingsComponent implements OnInit {
   //Saving changes made to project
   async saveEdit(): Promise<void> {
     //Setting name, description, criteria
-    this.getUpdatedUsers();
     this.currentProject.setName((<HTMLInputElement>document.getElementById("projectName")).value);
     this.currentProject.setDescription((<HTMLInputElement>document.getElementById("projectDescriptionForm")).value);
     this.currentProject.setCriteria(+(<HTMLInputElement>document.getElementById("numberOfLabellers")).value);
@@ -225,18 +217,38 @@ export class ProjectSettingsComponent implements OnInit {
     //All project users
     let updateInfo: Record<string,any> = {};
     this.allProjectUsers.forEach(user => {
-      updateInfo[user.getId()] = {
-        "removed": this.removed[user.getId()],
-        "admin": this.adminMembers[user.getId()]
+      if (!(user.getId() in this.added)) {
+        updateInfo[user.getId()] = {
+          "id": user.getId(),
+          "name": user.getUsername(),
+          "removed": this.removed[user.getId()],
+          "admin": +(this.adminMembers[user.getId()])
+        }
       }
     });
-    console.log(updateInfo);
+
+    //All project users
+    let addedInfo: Record<string,any> = {};
+    this.allProjectUsers.forEach(user => {
+      if (user.getId() in this.added) {
+        addedInfo[user.getId()] = {
+          "id": user.getId(),
+          "name": user.getUsername(),
+          "admin": +(this.adminMembers[user.getId()]),
+          "removed": this.removed[user.getId()]
+        }
+      }
+    });
+
+    projectInformation["update"] = updateInfo;
+    projectInformation["add"] = addedInfo;
+    console.log(projectInformation);
 
     let token: string | null  = sessionStorage.getItem('ses_token');
 
     if (typeof token === "string") {        
       // Send the data to the database
-      const response =  await axios.patch('http://127.0.0.1:5000/project/edit', projectInformation["project"], {
+      const response =  await axios.patch('http://127.0.0.1:5000/project/edit', projectInformation, {
         headers: {
           'u_id_token': token
         }
@@ -265,7 +277,10 @@ export class ProjectSettingsComponent implements OnInit {
     }
     else {
       this.allProjectUsers.push(user);
-      this.added[user.getId()] = true;
+      this.added[user.getId()] = 1;
+      if (!(user.getId() in this.removed)) {
+        this.removed[user.getId()] = 0;
+      }
       this.projectMembers.push(user);
       this.adminMembers[user.getId()] = admin;
       this.addedMembers.push(user.getId());
@@ -282,7 +297,7 @@ export class ProjectSettingsComponent implements OnInit {
     }
     else {
       let index = this.projectMembers.indexOf(user);
-      this.removed[user.getId()] = true;
+      this.removed[user.getId()] = 1;
       this.projectMembers.splice(index,1);
       this.adminMembers[user.getId()] = false;
       this.removedMembers.push(user.getId());

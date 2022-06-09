@@ -8,7 +8,7 @@ from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
 from src.models.item_models import Artifact, LabelType, LabelTypeSchema
-from src.models.project_models import Project, Membership, ProjectSchema
+from src.models.project_models import Project, Membership, ProjectSchema, MembershipSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, update
 from src.app_util import login_required, check_args
@@ -201,7 +201,8 @@ def get_project(*, user):
     users_data = [{
         'id': member.user.id,
         'username': member.user.username,
-        'admin': member.admin
+        'admin': member.admin,
+        'removed': member.deleted
     } for member in users_of_project]    
 
     #Get all label types from the project
@@ -241,17 +242,36 @@ def edit_project(*, user):
     # Required args
     required = ('id', 'name', 'description', 'criteria', 'frozen')
 
-    if not check_args(required, args):
+    if not check_args(required, args['project']):
         return make_response('Bad Request', 400)
 
-    project = db.session.get(Project, args['id'])
+    project = db.session.get(Project, args['project']['id'])
     if not project:
         return make_response('Project does not exist', 400)
 
     db.session.execute(
-        update(Project).where(Project.id == args['id']).values(name=args['name'], 
-        description=args['description'], criteria=args["criteria"])
+        update(Project).where(Project.id == args['project']['id']).values(name=args['project']['name'], 
+        description=args['project']['description'], criteria=args['project']["criteria"])
     )
+
+    updatedMembersList = []
+    for mem in args['update']:
+        updatedMembersList.append({'p_id': args['project']['id'],'u_id': args['update'][mem]['id'],'admin': args['update'][mem]['admin'], 'deleted': args['update'][mem]['removed']})
+    # print(updatedMembersList)
+    db.session.bulk_update_mappings(Membership,updatedMembersList)
+
+    addedMembersList = []
+    addedOldMembersList = []
+
+    for mem in args['add']:
+        if (args['add'][mem]['removed'] == 0):
+            addedMembersList.append({'p_id': args['project']['id'],'u_id': args['add'][mem]['id'],'admin': args['add'][mem]['admin'], 'deleted': 0})
+        else:
+            addedOldMembersList.append({'p_id': args['project']['id'],'u_id': args['add'][mem]['id'],'admin': args['add'][mem]['admin'], 'deleted': 0})
+    print(addedMembersList)
+    db.session.bulk_insert_mappings(Membership, addedMembersList)
+    db.session.bulk_update_mappings(Membership, addedOldMembersList)
+
     db.session.commit()
 
     return make_response('Ok')
