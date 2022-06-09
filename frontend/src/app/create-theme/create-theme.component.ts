@@ -70,7 +70,7 @@ export class CreateThemeComponent {
   }
 
   // Function for creating a theme
-  createTheme(){
+  async createTheme(){
     // Checks input
     let not_empty = this.service.checkFilled(this.themeForm.value.name) && 
       this.service.checkFilled(this.themeForm.value.description);
@@ -79,17 +79,28 @@ export class CreateThemeComponent {
     if (not_empty) {
       this.errorMsg = "";
       // Send the theme information to the backend
-      this.post_theme_info({
+      let response = await this.post_theme_info({
         "name": this.themeForm.value.name,
         "description": this.themeForm.value.description,
         "labels": this.addedLabels,
         "sub_themes": this.addedSubThemes,
         "p_id": this.p_id
-      });   
+      });
+      // Get all possible themes
+      await this.get_themes_without_parents(this.p_id)
+      // Reset the added arrays
+      this.addedLabels = [];
+      this.addedSubThemes = [];
+      // Reset the highlighted strings
+      this.highlightedSubtheme = "";
+      this.highlightedLabel = "";
+      // Reset description
+      this.selectedDescriptionLabel = '';
+      this.selectedDescriptionTheme = '';
       // Reset name and description forms
       this.themeForm.reset();
       // Give succes message
-      this.errorMsg = "Theme succesfully created";
+      this.errorMsg = "Theme succesfully created";     
     } else {
       // Displays error message
       this.errorMsg = "Name or description not filled in";
@@ -109,9 +120,9 @@ export class CreateThemeComponent {
   }
   
   // Async function for posting the new theme info
-  async post_theme_info(theme_info: any) {
+  async post_theme_info(theme_info: any): Promise<string> {
     // Send info to backend
-    this.themeDataService.create_theme(theme_info);
+    return this.themeDataService.create_theme(theme_info);
   }
 
   // ADDING LABELS / THEMES

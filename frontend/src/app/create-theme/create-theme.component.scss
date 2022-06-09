@@ -23,6 +23,7 @@ $light-grey-shade: #aaaaaa;
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
 // Row for the header
 .row.header{
     padding-top: 0px;
@@ -49,23 +50,29 @@ $light-grey-shade: #aaaaaa;
     letter-spacing: 1px;
     padding-left: 10px;
 }
+
 // List of labels
 #allLabelsList{
     padding-top: 10px;
     overflow-y: scroll;
     height: 20vh;
 }
+
 // x icon for removing labels
 #xIcon{
     float: right
 }
+
 // Hover on x icon
 #xIcon:hover{
-    cursor:pointer;
+    cursor: pointer;
 }
+
+// Namw input column
 #nameInputCol{
     padding-top: 10px;
 }
+
 //Top right of page
 #topRight{
     padding-left: 0px;
@@ -134,16 +141,19 @@ p.labelDescriptionText{
 #createCancelButtons{
     padding-bottom: 10px;
 }
+
 // button outline
 .btn:focus {
     outline: none;
     box-shadow: none;
-  }
+}
+
 // Make the subthemes and labels scrollabel
 #divScroll{
     overflow-y: scroll;
     height: 20vh;
 }
+
 // Scroll for description
 #descriptionScroll{
     overflow-y: scroll;
@@ -156,12 +166,14 @@ p.labelDescriptionText{
     padding-left: 10px;
     vertical-align: -5px
 }
+
 // Added subthemes text
 #addedSubthemeText{
     font-size: 14px;
     padding-left: 10px;
     vertical-align: -5px
 }
+
 // Description box size
 #descriptionArea{
     width: 100%;

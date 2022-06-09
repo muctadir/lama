@@ -22,7 +22,12 @@ export class ThemeDataService {
     this.requestHandler = new RequestHandler(this.sessionToken)
   }
 
-  // Function to get the theme management info
+  /**
+   * Function to get the theme management info
+   * 
+   * @param p_id 
+   * @returns themes_list. List of themes. Each theme includes the oject and the number of labels within the theme
+   */
   async theme_management_info(p_id: number): Promise<Array<Theme>> {
     // Get request to the backend
     let response = await this.requestHandler.get('/theme/theme-management-info', {"p_id": p_id}, true);
@@ -53,7 +58,13 @@ export class ThemeDataService {
     return themes_list;
   }
 
-  // Function to get the single theme  info
+  /**
+   * Function to get the single theme info
+   * 
+   * @param p_id 
+   * @param t_id 
+   * @returns newTheme. all information of a single theme
+   */
   async single_theme_info(p_id: number, t_id: number): Promise<Theme> {
     // Get request to the backend
     let response = await this.requestHandler.get('/theme/single-theme-info', {"p_id": p_id, "t_id": t_id}, true);
@@ -115,7 +126,12 @@ export class ThemeDataService {
     return newTheme;
   }
 
-  // Function to get the theme management info
+  /**
+   * Function to get the theme management info
+   * 
+   * @param p_id 
+   * @returns allSubThemes. All sub-themes without parents
+   */
   async themes_without_parents (p_id: number): Promise<Array<Theme>> {
     // Get request to the backend
     let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id}, true);
@@ -132,12 +148,17 @@ export class ThemeDataService {
     return allSubThemes
   }
 
-  // Function to get the theme management info
-  async create_theme (theme_info: any) {
+  /**
+   * Function to get the theme management info
+   * 
+   * @param theme_info 
+   * @returns response
+   */
+  async create_theme (theme_info: any): Promise<string> {
     // Create project in the backend
     let response =  await this.requestHandler.post('/theme/create_theme', theme_info, true);
-    // TODO: do something with response
-    console.log(response);
+    // Return the response
+    return response;
   }
 
 }

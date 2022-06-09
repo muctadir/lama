@@ -37,7 +37,8 @@ def theme_management_info(*, user):
 
     # Get all themes
     all_themes = db.session.execute(
-        select(Theme).where(Theme.p_id == args["p_id"])
+        select(Theme)
+        .where(Theme.p_id == args["p_id"])
     ).scalars().all()
 
     # Schemas to serialize
@@ -157,7 +158,7 @@ def all_themes_no_parents(*, user):
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
 
-    # Schemas to serialize
+    # Schema to serialize
     theme_schema = ThemeSchema()
 
     # Get the project id
