@@ -3,27 +3,26 @@ import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { TestingComponent } from './testing/testing.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { AccountComponent } from './account/account.component';
-import { HomePageComponent } from './home-page/home-page.component';
-import { ProjectCreationComponent } from './project-creation/project-creation.component';
-import { ConflictPageComponent } from './conflict-page/conflict-page.component';
-import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
+import { LoginComponent } from './account-details/login/login.component';
+import { RegisterComponent } from './account-details/register/register.component';
+import { AccountComponent } from './account-details/account/account.component';
+import { HomePageComponent } from './home/home-page/home-page.component';
+import { ProjectCreationComponent } from './home/project-creation/project-creation.component';
+import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.component';
+import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
 import { ProjectComponent} from './project/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { StatsComponent } from './stats/stats.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
-import { LabelFormComponent } from './label-form/label-form.component';
-import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
-import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
-import { LabelManagementComponent } from './label-management/label-management.component';
-import { IndividualLabelComponent } from './individual-label/individual-label.component';
-import { EditThemeComponent } from './edit-theme/edit-theme.component';
-
-import { ThemeManagementComponent } from './theme-management/theme-management.component';
-import { CreateThemeComponent } from './create-theme/create-theme.component';
-import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
+import { LabelFormComponent } from './modals/label-form/label-form.component';
+import { ArtifactManagementPageComponent } from './artifact/artifact-management-page/artifact-management-page.component';
+import { SingleArtifactViewComponent } from './artifact/single-artifact-view/single-artifact-view.component';
+import { LabelManagementComponent } from './label/label-management/label-management.component';
+import { IndividualLabelComponent } from './label/individual-label/individual-label.component';
+import { EditThemeComponent } from './theme/edit-theme/edit-theme.component';
+import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
+import { CreateThemeComponent } from './theme/create-theme/create-theme.component';
+import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 
 /* All the routes within the application */
 const routes: Routes = [
