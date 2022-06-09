@@ -5,7 +5,7 @@ import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Project } from 'app/classes/project';
 import { ReroutingService } from 'app/rerouting.service';
-import axios from 'axios';
+import { StatsDataService } from 'app/stats-data.service';
 
 
 @Component({
@@ -35,13 +35,14 @@ export class StatsComponent implements OnInit{
 
   // Initialize the number of conflicts in the project
   conflicts: number
-  
+
   /**
    * Initializes the router 
    * 
    * @param router instance of router
    */
-   constructor(private router: Router) { 
+   constructor(private router: Router,
+    private statsDataService: StatsDataService) { 
      this.url = this.router.url;
      this.routeService = new ReroutingService();
      this.p_id = Number(this.routeService.getProjectID(this.url));
@@ -51,72 +52,23 @@ export class StatsComponent implements OnInit{
    }
 
   ngOnInit(): void {
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
+      // Get the project statistics from the back end
+      this.getProject(this.p_id);
+      
+      // Get the user statistics from the backend
+      this.getUserStats(this.p_id);
+  }
 
-      // Get the project information needed from the back end
-      axios.get('http://127.0.0.1:5000/project/singleProject', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'p_id': this.p_id
-        }
-      })
-        // When there is a response get the projects
-        .then(response => {
-          // Get project data from response
-          let project = response.data
-          // Initialize a new project with all values
-          let projectJson = project["project"];
-          projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
-          projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
-          projectJson["users"] = project["projectUsers"];
-          this.conflicts = project["conflicts"];
-          console.log(this.conflicts)
+  async getProject(p_id: number): Promise<void>{
+    const data = await this.statsDataService.getArtifact(p_id);
 
-            // Create the project with constructor
-            let projectNew = new Project(
-              projectJson["id"],
-              projectJson["name"],
-              projectJson["description"]
-            ) 
-            
-            // Set other variables
-            projectNew.setNumberOfArtifacts(projectJson["numberOfArtifacts"]);
-            projectNew.setNumberOfCLArtifacts(projectJson["numberOfCLArtifacts"]);
-            projectNew.setUsers(projectJson["users"]);
+    this.project = data['project_data']
+    this.conflicts = data['conflicts']
+  }
 
-            // Pass the project data to the project item
-            this.project = projectNew
-        })
-        // If there is an error
-        // TODO change
-        .catch(error => {console.log(error)});
-
-         // Get the project statistics from the back end
-      axios.get('http://127.0.0.1:5000/project/projectStats', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'p_id': this.p_id
-        }
-      })
-        // When there is a response get the projects
-        .then(response => {
-          // For the statistics of each user in the response
-          for (let stat of response.data){
-           // Add the stats to the list of statistics
-            this.user_contribution.push(stat)
-          }
-          console.log(response.data)
-        })
-        // If there is an error
-        // TODO change
-        .catch(error => {console.log(error)});
-        
-    }   
+  async getUserStats(p_id: number): Promise<void>{
+    const data = await this.statsDataService.getUserStats(p_id)
+    this.user_contribution = data
   }
 
   /**
@@ -124,7 +76,7 @@ export class StatsComponent implements OnInit{
    * of the same project
    * 
    * @trigger start labelling button is pressed
-   */
+   */  
   reRouter() : void {
     // Gets the url from the router
     let url: string = this.router.url
