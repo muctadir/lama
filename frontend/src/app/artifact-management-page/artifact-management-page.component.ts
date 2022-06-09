@@ -85,6 +85,7 @@ export class ArtifactManagementPageComponent {
   notImplemented(): void {
     alert("Button has not been implemented yet.");
   }
+  
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
   }
