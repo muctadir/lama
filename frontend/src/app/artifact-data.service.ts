@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
 import axios from 'axios';
+import { Artifact } from './classes/artifact';
 
 
 @Injectable({
@@ -174,7 +175,7 @@ export class ArtifactDataService {
   }
 
   // Function 
-  async search(searchWords: string, p_id: number){
+  async search(searchWords: string, p_id: number): Promise<Array<StringArtifact>>{
 
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');

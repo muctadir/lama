@@ -24,7 +24,7 @@ export class ArtifactManagementPageComponent {
   // Initialize the url
   url: string;
   // Make list of all artifacts
-  artifacts: StringArtifact[];
+  artifacts: Array<StringArtifact>;
 
   //Pagination Settings
   page = 1;
@@ -90,13 +90,15 @@ export class ArtifactManagementPageComponent {
   }
 
   //gets the search text
-  onEnter() {
+  async onEnter() {
     var text = this.searchForm.value.search_term
     alert("entered!!"+ text + "");
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url))
     // Pass the search word to services
-    let artifacts = this.artifactDataService.search(text, p_id);
+    let artifacts_searched = await this.artifactDataService.search(text, p_id);
+    // TODO: filter the artfacts from this.artifact that resuted from the search
+    // this.artifacts = artifacts_searched
   }
 
 }

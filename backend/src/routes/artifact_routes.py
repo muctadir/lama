@@ -32,8 +32,6 @@ def get_artifacts(*, user):
 
     p_id = args['p_id']
 
-    test(p_id, user)
-
     # Get membership of the user
     membership = db.session.get(Membership, {'u_id': user.id, 'p_id': p_id})
 
@@ -202,10 +200,13 @@ def search(*, user, membership):
 
     # Getting result of search
     results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    print(results)
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
+    print(clean_results)
     # Gets the actual artifact from the search
     artifacts_results = [result['item'] for result in clean_results]
+    print(artifacts_results)
 
     # Return the list of artifacts from the search
     return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
