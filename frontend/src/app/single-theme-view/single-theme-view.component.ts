@@ -3,6 +3,7 @@ import { Theme } from 'app/classes/theme';
 import { StringArtifact } from 'app/classes/stringartifact';
 import {ActivatedRoute, Router} from "@angular/router";
 import { ReroutingService } from 'app/rerouting.service';
+import { ThemeDataService } from 'app/theme-data.service';
 import axios from 'axios';
 import { Label } from 'app/classes/label';
 
@@ -16,116 +17,39 @@ import { Label } from 'app/classes/label';
 export class SingleThemeViewComponent {
 
   // Variable for theme id
-  themeId: string;
-
+  t_id: number;
   //  Project id
-  p_id: string;
+  p_id: number;
 
   // Variables for routing
   url: string;
   routeService: ReroutingService;
 
   // List for the theme
-  theme: Theme;
+  theme: Theme; 
 
-  constructor(private router: Router) { 
+  constructor(private router: Router, private themeDataService: ThemeDataService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = this.routeService.getProjectID(this.url);
+    this.p_id = Number(this.routeService.getProjectID(this.url));
     // Use reroutingService to obtain the project ID
-    this.themeId = this.routeService.getThemeID(this.url);
+    this.t_id = Number(this.routeService.getThemeID(this.url));
     // Initialize theme
     this.theme = new Theme(0, "", "")
   }
   
   ngOnInit(): void {
-
     // Get the information for the theme
-    // TODO put this in a service
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
+    this.get_single_theme_info(this.p_id, this.t_id);
+  }
 
-      // Get the informtion needed from the back end
-      // Todo put this in a service
-      axios.get('http://127.0.0.1:5000/theme/single-theme-info', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          "p_id": this.p_id, 
-          "t_id":this.themeId
-        }
-      })
-        // When there is a response get the projects
-        .then(response => {
-
-          // Get the response data
-          let themeInfo = response.data;
-
-          // Get the theme data
-          let theme = themeInfo["theme"];
-          // Get the super-theme data
-          let superTheme = themeInfo["super_theme"]
-          // Get the sub-theme data
-          let subThemes = themeInfo["sub_themes"];
-          // Get the label data
-          let labels = themeInfo["labels"]
-
-          // Create a new theme object with all information
-          let newTheme: Theme = new Theme(theme['id'], theme["name"], theme["description"]);
-
-          // Set the parent
-          newTheme.setParent(new Theme(superTheme["id"], superTheme["name"], superTheme["description"]));
-
-          // CHILDREN
-          // List for the children
-          let childArray: Array<Theme> = [];
-          // For each child make an object
-          for (let child of subThemes){
-            // Add the child to the array
-            childArray.push(new Theme(child["id"], child["name"], child["description"]));
-          }
-          // Add the childern to the theme
-          newTheme.setChildren(childArray);
-
-          // LABELS
-          // List for the labels 
-          let labelsArray: Array<Label> = [];
-          // For each label in the list
-          for (let label of labels){
-            let label_info = label["label"]
-            // Make a new label object
-            let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"])
-
-            // ARTIFACTS
-            // List for the artifacts
-            let artifactArray: Array<StringArtifact> = [];
-            for (let artifact of label["artifacts"]){
-              // Push the new artifact
-              artifactArray.push(new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]));
-            }
-            // Add artifacts to the label
-            newLabel.setArtifacts(artifactArray);
-
-            // Add alabel to the labels
-            labelsArray.push(newLabel)
-          }
-          // Add labels to the theme
-          newTheme.setLabels(labelsArray);
-
-          this.theme = newTheme;
-          
-        })
-        // If there is an error
-        // TODO change
-        .catch(error => {
-          console.log(error.response.data)
-        });
-        
-    }
+  // Async function for getting the single theme info
+  async get_single_theme_info(p_id: number, t_id: number){
+    // Put the gotten themes into the list of themes
+    this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
   }
 
   notImplemented(): void {
@@ -155,8 +79,7 @@ export class SingleThemeViewComponent {
     .then(() => {
       window.location.reload();
     });
-  }
-   
+  }   
 
   // Function for making sure parent name is not undefined
   getParentName(): string {
@@ -176,7 +99,11 @@ export class SingleThemeViewComponent {
     return "";
   }
 
-  // Function to redirect user to theme they clicked on
+  /**
+   * Function to redirect user to theme they clicked on
+   * 
+   * @trigger a sub or super-theme is pressed
+  */
   goToTheme(theme: Theme | undefined){
     if (theme != undefined){
       this.reRouterTheme(theme.getId());

@@ -8,9 +8,8 @@ from src.models.item_models import Theme, ThemeSchema, LabelSchema, ArtifactSche
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
-from src.app_util import login_required, check_args
-# TODO uncomment
-# from src.routes.label_routes import get_label_info
+from src.app_util import login_required, check_args, in_project
+from src.routes.label_routes import get_label_info
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -68,8 +67,8 @@ For getting the theme information
 """
 @theme_routes.route("/single-theme-info", methods=["GET"])
 @login_required
-#@in_project
-def single_theme_info(*, user):#, membership): TODO uncomment
+@in_project
+def single_theme_info(*, user, membership):
 
     # The required arguments
     required = ["p_id", "t_id"]
@@ -119,26 +118,8 @@ def single_theme_info(*, user):#, membership): TODO uncomment
     # Make list of all labels
     labels = theme.labels
 
-    # Make a list of labels
-    labels_list_json = []
-
-    # For each label get all the data
-    for label in labels:
-
-    # TODO uncomment
     # Then throw this loop in a list comprehension
-    # labels_list_json = [get_label_info(label, user.id, membership.admin) for label in labels]
-
-        # TODO remove
-        admin = db.session.scalar(
-            select(Membership.admin).where(Membership.u_id == user.id, Membership.p_id == p_id)
-        )
-
-        # Info of the labels
-        label_info = get_label_info(label, user.id, admin)
-        
-        # Append the label to the list
-        labels_list_json.append(label_info)
+    labels_list_json = [get_label_info(label, user.id, membership.admin) for label in labels]
 
     # INFO
     # Put all values into a dictonary
@@ -200,32 +181,6 @@ def all_themes_no_parents(*, user):#, membership): TODO uncomment
 
     # Return the list of dictionaries
     return make_response(list_json)
-
-
-# TODO: Move to label_routes
-# Only gets the artifacts that the user with a given id can see
-def get_label_artifacts(label, u_id, admin):
-    if admin:
-        return label.artifacts
-    # Else get the artifacts they may see
-    return db.session.execute(
-        select(Artifact).where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
-    )
-
-# Function for getting the information of a label
-# TODO: Move to label_routes
-def get_label_info(label, u_id, admin):
-    # Schemas
-    label_schema = LabelSchema()
-    artifact_schema = ArtifactSchema()
-    # Info of the label
-    info = {
-        "label" : label_schema.dump(label),
-        "label_type": label.label_type.name,
-        "artifacts" : artifact_schema.dump(get_label_artifacts(label, u_id, admin), many=True)
-    }
-    return info
-
 
 # Function for getting the number of labels in the theme
 def get_theme_label_count(t_id):

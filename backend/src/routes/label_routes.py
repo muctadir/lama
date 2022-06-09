@@ -202,3 +202,26 @@ def merge_route():
         db.session.commit()
     except:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+
+
+# Function for getting the information (label, label_type, and adrtfacts) of a label
+def get_label_info(label, u_id, admin):
+    # Schemas
+    label_schema = LabelSchema()
+    artifact_schema = ArtifactSchema()
+    # Info of the label
+    info = {
+        "label" : label_schema.dump(label),
+        "label_type": label.label_type.name,
+        "artifacts" : artifact_schema.dump(get_label_artifacts(label, u_id, admin), many=True)
+    }
+    return info
+
+# Only gets the artifacts that the user with a given id can see
+def get_label_artifacts(label, u_id, admin):
+    if admin:
+        return label.artifacts
+    # Else get the artifacts they may see
+    return db.session.execute(
+        select(Artifact).where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
+    )
