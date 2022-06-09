@@ -1,14 +1,6 @@
-import json
 import numpy
 from itertools import groupby
 
-# Opening JSON file
-#f = open('./data.json')
-  
-# returns JSON object as 
-# a dictionary
-#data = json.load(f)
-  
 
 #levenstein's algo
 #gets distance value between 2 words
@@ -54,7 +46,7 @@ def levenshtein_dist(tok1, tok2):
 #@returns the best matched word in the string we search
 def word_match(search_word, words):
     #to store result
-    res = []
+    result = []
     #removes punctuation in the words for more accurate comparison
     for i in words.split():
         i = i.replace("!", "")
@@ -63,12 +55,12 @@ def word_match(search_word, words):
         #get distance between search word and all words
         dist = levenshtein_dist(search_word, i)
         #appends (distance, found word)
-        res.append((dist, i))
+        result.append((dist, i))
     #sort on word distance
-    res.sort()
+    result.sort()
     #get best match, ie word will smallest dist to search word
-    res = best_match(res)
-    return res
+    result = best_match(result)
+    return result
 
 #gets best word match and dist from single artifact
 #@param results: list of tuples (distance, word)
@@ -108,12 +100,12 @@ def search_func_all_res(search_words, data, id_col, data_col):
             if len(matches) != 0:
                 param_list.append(matches)
     #turn into a dictionary that is grouped by id
-    dictionary = dickify(param_list, id_col)
+    dictionary = list_to_dictionnary(param_list, id_col)
     return dictionary
             
 
 #groups the param list into a dictionary by ID
-def dickify(param_list, id_col):
+def list_to_dictionnary(param_list, id_col):
     # define a fuction for key
     def key_func(k):
         return k[id_col]
@@ -143,7 +135,7 @@ def dickify(param_list, id_col):
 #returns list of items of form [{},{},{id:, match_count:, tot_dist:, best_words:[], item:{}},{}]
 def best_search_results(all_search_results, word_count):
     #to store all results
-    res = []
+    result = []
     #goes through all items in the dict 
     for result in all_search_results:
         #checks if there is a good result for each word
@@ -172,20 +164,10 @@ def best_search_results(all_search_results, word_count):
             stats['best_words'] = found_words
             stats['item'] = it
             #appends result info to list
-            res.append(stats)
+            result.append(stats)
     #sort on total word distance for best result
-    sorted_res = sorted(res, key=lambda d: d['tot_dist'])
-    return sorted_res
+    sorted_result = sorted(result, key=lambda d: d['tot_dist'])
+    return sorted_result
     
         
 MIN_DIST = 4
-search_words = "honey bitch"
-search_word_count = len(search_words.split())
-
-#results = search_func_all_res(search_words, data['movie'], 'id', 'data')
-#final = best_search_results(results, search_word_count)
-#print(final)
-
-  
-# Closing file
-#f.close()

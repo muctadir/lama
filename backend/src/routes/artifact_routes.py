@@ -178,7 +178,7 @@ def search(*, user, membership):
     # Get arguments
     args = request.args
     # Required arguments
-    required = ('p_id', 'search_words')
+    required = ['p_id', 'search_words']
 
     # Check if required agruments are supplied
     if not check_args(required, args):

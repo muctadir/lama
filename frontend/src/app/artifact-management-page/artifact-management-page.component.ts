@@ -27,12 +27,14 @@ export class ArtifactManagementPageComponent {
   // Make list of all artifacts
   artifacts: Array<StringArtifact> = [];
 
+  //bool on if there is text in the search bar
   search = false;
 
   //Pagination Settings
   page = 1;
   pageSize = 5;
 
+  // gets the search terms
   searchForm = this.formBuilder.group({
     search_term: ''
   });
