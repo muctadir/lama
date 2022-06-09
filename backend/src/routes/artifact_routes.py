@@ -2,15 +2,17 @@
 # Ana-Maria Olteniceanu
 
 from importlib.metadata import requires
+from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.app_util import login_required
 from sqlalchemy.exc import  OperationalError
+from src.models.auth_models import User, UserSchema
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
@@ -228,3 +230,93 @@ def __aggregate_labellings(artifact):
 
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
+
+
+@artifact_routes.route("/randomArtifact", methods=["GET"])
+@login_required
+@in_project
+def random_artifact(*, user):
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = int(args['p_id'])
+
+    # TODO: Change to be an artifact that has not been labelled
+    artifact = db.session.scalar(
+        select(Artifact) 
+        .where(Artifact.p_id == p_id)
+        .order_by(func.rand())
+        .limit(1)
+    )
+
+    childIds = db.session.scalars(
+        select(Artifact.id)
+        .where(artifact.id == Artifact.parent_id)
+    ).all()
+    # Schemas to serialize the artifact 
+    artifact_schema = ArtifactSchema()
+    
+    dict_json = jsonify({
+        'artifact': artifact_schema.dump(artifact),
+        'parentId': artifact.parent_id,
+        'childIds': childIds
+    })
+
+    return make_response(dict_json)
+
+
+@artifact_routes.route("/getLabelers", methods=["GET"])
+@login_required
+@in_project
+def get_labelers():
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id','a_id']
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    labelers = db.session.scalars(
+        select(User)
+        .where(
+            User.id == Labelling.u_id,
+            Labelling.a_id == args['a_id']
+        )
+    ).all()
+    user_schema = UserSchema()
+    json_labellers = jsonify(user_schema.dump(labelers, many=True))
+
+
+    return make_response(json_labellers)
+
+
+@artifact_routes.route("/getLabelers", methods=["GET"])
+@login_required
+@in_project
+def get_labells_by_label_type():
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id','lt_id']
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    labels = db.session.scalars(
+        select(User)
+        .where(
+            User.id == Labelling.u_id,
+            Labelling.a_id == args['a_id']
+        )
+    ).all()
+    user_schema = UserSchema()
+    json_labellers = jsonify(user_schema.dump(labelers, many=True))
+
+
+    return make_response(json_labellers)

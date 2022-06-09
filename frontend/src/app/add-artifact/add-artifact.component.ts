@@ -65,7 +65,6 @@ export class AddArtifactComponent {
 
     // stores the file in a the "file" variable
     this.file = input.files[0];
-    console.log(this.file);
 
     // Use reroutingService to obtain the project ID
     this.p_id = Number(this.routeService.getProjectID(this.url));
@@ -132,7 +131,6 @@ export class AddArtifactComponent {
       // Make an identifier
       // TODO: Make it unique
       let identifier = makeid(5);
-      console.log(identifier);
 
       // Way to get information to backend
       let allArtifacts: Record<string, any>[] = [];
@@ -146,10 +144,8 @@ export class AddArtifactComponent {
           'data': new_artifacts[i],
           'p_id': p_id
         }
-        console.log(artifactInformation);
         allArtifacts.push(artifactInformation);
       }
-      console.log(allArtifacts);
 
 
       // Message for confirmation/error

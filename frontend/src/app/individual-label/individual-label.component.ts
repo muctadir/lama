@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
-import { Labelling } from 'app/classes/labelling';
+import { Theme } from 'app/classes/theme'
 
 @Component({
   selector: 'app-individual-label',
@@ -21,6 +21,7 @@ export class IndividualLabelComponent {
   label: Label;
   url: string;
   labellings: any;
+  themes: Array<Theme>;
 
   /**
    * Constructor which:
@@ -36,6 +37,7 @@ export class IndividualLabelComponent {
       this.routeService = new ReroutingService();
       this.url = this.router.url;
       this.labellings = {};
+      this.themes = new Array<Theme>();
   }
 
   /**
@@ -57,11 +59,14 @@ export class IndividualLabelComponent {
   async getLabel(p_id: number, labelID: number): Promise<void> {
     const label = await this.labelingDataService.getLabel(p_id, labelID);
     this.label = label;
+    const themes = this.label.getThemes()
+    if (themes !== undefined) {
+      this.themes = themes;
+    }
   }
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
-    console.log(labellings)
     this.labellings = labellings;
   }
 

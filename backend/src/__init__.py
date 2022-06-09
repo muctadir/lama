@@ -105,7 +105,7 @@ def create_app(config={'TESTING': False}):
     # TODO: More comments, but this may be changed in the soon future.
 
     # generates a secret key for login use (TODO: Elaborate on this)
-    app.secret_key = token_hex() 
+    app.secret_key =  'test' 
 
     # Allows the Flask CLI to use the `db-opt` commands. I'm not quite sure how
     # it knows about this.
@@ -125,7 +125,7 @@ def create_app(config={'TESTING': False}):
 
     # Magic library that makes cross-origin resource sharing work.
     # TODO: Check if we are setting this up correctly.
-    CORS(app)
+    CORS(app, resources={r"*": {"origins": "*"}})
 
     # For testing apps, additional teardown is required. This code is found in
     # conftest.py

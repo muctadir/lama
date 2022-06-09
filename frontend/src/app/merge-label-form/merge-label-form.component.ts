@@ -4,7 +4,6 @@ import { LabelingDataService } from '../labeling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
-import { Labelling } from 'app/classes/labelling';
 import { LabelType } from 'app/classes/label-type';
 
 // // Tyep for label

@@ -4,10 +4,14 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { LabelFormComponent } from '../label-form/label-form.component';
+import { LabelFormComponent } from 'app/label-form/label-form.component';
 import { LabelingDataService } from "app/labeling-data.service";
+import { ArtifactDataService } from "app/artifact-data.service";
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
+
+import { Router } from '@angular/router';
+import { ReroutingService } from 'app/rerouting.service';
 
 @Component({
   selector: 'app-labelling-page',
@@ -22,11 +26,17 @@ export class LabellingPageComponent implements OnInit{
    * highlightedText contains a selection of the artifact 
    * start and end char are indices for highlighted text
    */
+
   artifact?: StringArtifact;
   labels?: Array<LabelType>;
   hightlightedText: string = "";
   selectionStartChar?: number;
   selectionEndChar?: number;
+  routeService: ReroutingService;
+  url: string;
+  labellers: Array<any>;
+  p_id: number;
+  labelTypes: Array<LabelType>;
 
   /**
    * Constructor passes in the modal service and the labeling data service
@@ -34,15 +44,25 @@ export class LabellingPageComponent implements OnInit{
    * @param labelingDataService 
    */
   constructor(private modalService: NgbModal, 
-    private labelingDataService: LabelingDataService) { }
+    private labelingDataService: LabelingDataService,
+    private artifactDataService: ArtifactDataService, 
+    private router: Router) { 
+      this.routeService = new ReroutingService();
+      this.url = this.router.url;
+      this.artifact = new StringArtifact(-1, "null", "null");
+      this.labellers = new Array();
+      this.p_id = parseInt(this.routeService.getProjectID(this.url));
+      this.labelTypes = new Array<LabelType>();
+    }
+
 
   /**
    * ngOnInit runs after the constructor. When the constructor is executed
    * the artifacts and labels are pulled in
    */
   ngOnInit(): void {
-    // this.getArtifact();
-    this.getLabels();
+    this.getRandomArtifact(this.p_id);
+    this.getLabelTypesWithLabels(this.p_id);
   }
 
   /**
@@ -50,21 +70,16 @@ export class LabellingPageComponent implements OnInit{
    * It waits for a response and when the response arrives it adds Bartjan 
    * as a labeler and then puts the information into this.artifact.
    */
-  getArtifact():void {
-    // this.labelingDataService.getArtifact()
-    //   .subscribe(artifact => {
-    //     artifact.addLabeler("Bartjan");
-    //     this.artifact = artifact;
-    //   });
+  async getRandomArtifact(p_id: number): Promise<void> {
+    const artifact = await this.artifactDataService.getRandomArtifact(p_id);
+    this.artifact = artifact;
+    const labellers = await this.artifactDataService.getLabellers(p_id, artifact.getId());
+    this.labellers = labellers;
   }
 
-  /**
-   * Function which subscribes to the labelingDataService and retrieves labels.
-   * It waits for a response, when the response arrives it puts the information into this.labels.
-   */
-  getLabels (): void {
-    // this.labelingDataService.getLabels()
-    //   .subscribe(labels => this.labels = labels);
+  async getLabelTypesWithLabels(p_id: number): Promise<void> {
+    const labelTypes = await this.labelingDataService.getLabelTypesWithLabels(p_id);
+    this.labelTypes = labelTypes;
   }
 
 
@@ -98,8 +113,15 @@ export class LabellingPageComponent implements OnInit{
   /**
    * Opens modal which contains the create LabelFormComponent.
    */
-  open():void {
-    const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl'});
+  open(): void {
+    this.modalService.open(LabelFormComponent, { size: 'xl'});
+  }
+
+  /**
+   * Skip to another random artifact
+   */
+  skip(): void {
+    this.getRandomArtifact(this.p_id);
   }
 
 
@@ -141,6 +163,20 @@ export class LabellingPageComponent implements OnInit{
     startPos = startPos + 2;
     endPos = endPos - 2;
     return [startPos, endPos]; 
+  }
+
+  /**
+   * Gets the project id from the URL and reroutes to the single label page
+   * of the same project
+   *
+   * @trigger click on label
+   */
+   reRouter() : void {
+    // Use reroutingService to obtain the project ID
+    let p_id = this.routeService.getProjectID(this.url);
+
+    // Changes the route accordingly
+    this.router.navigate(['/project', p_id, 'labelling-page']);
   }
   
 

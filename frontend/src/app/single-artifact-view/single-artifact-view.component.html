@@ -21,7 +21,7 @@
         <div class="row" id="editButtonRow">
 
             <!-- previous artifacts that it was split from, if any -->
-            <div class="col-6" id="names">
+            <div class="col-6" id="split">
                 <p class="float-end">
                     <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child artifact</span>
                     <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children artifacts</span>

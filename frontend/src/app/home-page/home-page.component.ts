@@ -63,7 +63,9 @@ export class HomePageComponent implements OnInit {
         })
         // If there is an error
         // TODO change
-        .catch(error => {console.log(error)});
+        .catch(error => {
+          console.log(error);
+        });
         
     }   
   }

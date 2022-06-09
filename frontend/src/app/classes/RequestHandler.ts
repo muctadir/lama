@@ -37,7 +37,7 @@ export class RequestHandler {
    * @param auth : boolean, true means it will authenticate, false means it will not
    * @returns the promise of an object
    */
-  public async get(path: string, params: {}, auth: boolean): Promise<Object> {
+  public async get(path: string, params: {}, auth: boolean): Promise<any> {
     this.verifyAuthentication(auth);
     return this.axiosInstance
       .get(path, { params: params })

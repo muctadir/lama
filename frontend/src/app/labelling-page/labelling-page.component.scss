@@ -65,7 +65,7 @@ div.artifactContainer{
 
 
 /*TODO: For some reason the variable defined in the root stylesheet is not working*/
-.labelTypeDescription {
+.labelDescription {
     border-left: 2px solid #ed5a06;
     padding-left: 10px;
     padding-bottom: 5px;
@@ -92,4 +92,16 @@ div.artifactContainer{
     float: right;
     float: bottom;
     position: fixed;
+}
+
+#split1, #split2{
+    color: #ed5a06;
+}
+
+#skit-button {
+    margin-left:10px;
+}
+
+#labelling-row {
+    margin-top: 5px;
 }

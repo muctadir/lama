@@ -62,9 +62,9 @@ export class ArtifactDataService {
 
       // Return result
       return result;
-    }).catch((err) => {
+    }).catch((error) => {
       // If there is an error
-      throw new Error(err);
+      throw error;
     });
 
   }
@@ -97,7 +97,6 @@ export class ArtifactDataService {
     }
 
     let result: boolean;
-    console.log(artifacts)
     // Send the data to the database
     return axios.post('http://127.0.0.1:5000/artifact/creation', artifacts, {
       headers: {
@@ -111,8 +110,8 @@ export class ArtifactDataService {
       return Math.floor(response.status / 100) == 2;
     })
       .catch(error => {
-        result = false;
-        return false;
+        // If there is an error
+        throw error;
       });
   }
 
@@ -154,22 +153,83 @@ export class ArtifactDataService {
         'extended': true
       }
     }).then(response => {
-        // Get the artifact from the response
-        let artifact = response.data['artifact'];
+      // Get the artifact from the response
+      let artifact = response.data['artifact'];
 
-        // Get the artifact data
-        result.setId(artifact["id"]);
-        result.setIdentifier(artifact["identifier"]);
-        result.setData(artifact["data"]);
-        result.setParentId(artifact["parent_id"]);
-        result.setChildIds(response.data["artifact_children"]);
+      // Get the artifact data
+      result.setId(artifact["id"]);
+      result.setIdentifier(artifact["identifier"]);
+      result.setData(artifact["data"]);
+      result.setParentId(artifact["parent_id"]);
+      result.setChildIds(response.data["artifact_children"]);
 
-        // Return the record
-        return [result, response.data["artifact_labellings"], response.data["username"]]
-        
-      }).catch((err) => {
-        // If there is an error
-        throw new Error(err);
-      });
+      // Return the record
+      return [result, response.data["artifact_labellings"], response.data["username"]]
+
+    }).catch((error) => {
+      // If there is an error
+      throw error;
+      ;
+    });
+  }
+
+  /**
+     * Function does call to backend to retrieve a single artifact
+     * 
+     * @params p_id: number
+     * @pre p_id => 1
+     * @pre token != null
+     * @throws Error if token == null
+     * @throws Error if p_id < 1
+     * @returns Promise<StringArtifact>
+     */
+  async getRandomArtifact(p_id: number): Promise<StringArtifact> {
+    // Session token
+    let token: string | null = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+
+    // Check if the p_id is larger than 1
+    if (p_id < 1) throw new Error("p_id cannot be less than 1")
+
+    // Get the artifact information from the back end
+    return axios.get('http://127.0.0.1:5000/artifact/randomArtifact', {
+      headers: {
+        'u_id_token': token
+      },
+      params: {
+        'p_id': p_id
+      }
+    }).then(response => {
+      let art = new StringArtifact(response.data.artifact.id, response.data.artifact.identifier, response.data.artifact.data);
+      art.setChildIds(response.data.childIds);
+      art.setParentId(response.data.parentId)
+      return art;
+    }).catch((error) => {
+      // If there is an error
+      throw error;
+    });
+  }
+
+  async getLabellers(p_id:number, a_id: number): Promise<any> {
+    let token: string | null = sessionStorage.getItem('ses_token');
+    // Check if the session token exists
+    if (typeof token !== "string") throw new Error("User is not logged in");
+
+    // Get the artifact information from the back end
+    return axios.get('http://127.0.0.1:5000/artifact/getLabelers', {
+      headers: {
+        'u_id_token': token
+      },
+      params: {
+        'p_id': p_id,
+        'a_id': a_id
+      }
+    }).then(response => {     
+      return response.data;
+    }).catch((err) => {
+      // If there is an error
+      throw new Error(err);
+    });
   }
 }

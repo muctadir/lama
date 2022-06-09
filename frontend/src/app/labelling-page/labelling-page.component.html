@@ -4,7 +4,7 @@
     <!-- contains the page title and little buttons -->
     <div class="row" id="pageTitle">
         <div id="artifactId" class="col-10">
-            Artifact {{ artifact?.getIdentifier()! }} 
+            Artifact {{ artifact?.getId() }} ({{ artifact?.getIdentifier() }})
         </div> 
         <div *ngIf="hightlightedText.length > 0 " class="col-2">
             <div id="artifactButtons">
@@ -21,61 +21,68 @@
         
         <!-- Labeller information -->
         <div class="col-6">
-            <div> 
-                <!-- Labeled by: <span *ngFor="let labeler of artifact?.getLabelers()!; let last = last">{{ labeler }}<span *ngIf="!last">, </span></span> -->
+            <div *ngIf="labellers.length != 0"> 
+                Labeled by: <span *ngFor="let labeler of labellers; let last = last">{{ labeler.username }}<span *ngIf="!last">, </span></span>
             </div>
         </div>
 
         <!-- @TODO Information about the origin of the artifact -->
         <!-- Currently not implemented -->
-        <div class="col-6" id="names">
-            <!-- <p class="float-end">
-                Artifact was split into artifact #45 and artifact #190.
-            </p> -->
+        <div class="col-6" id="split">
+            <p class="float-end">
+                <span *ngIf="artifact!.getNumberOfChildIds() == 0 "></span>
+                <span *ngIf="artifact!.getNumberOfChildIds() === 1" > Artifact was split into child artifact</span>
+                <span *ngIf="artifact!.getNumberOfChildIds() > 1" >Artifact was split into children artifacts</span>
+                <span *ngIf="artifact!.getNumberOfChildIds() > 0" id="split1"> #{{artifact!.getChildIds()}}.</span>
+                <br *ngIf="artifact!.getNumberOfChildIds() > 0">
+                <span *ngIf="artifact!.getParentId() != undefined">Artifact was split from parent artifact</span>
+                <span *ngIf="artifact!.getParentId() != undefined" id="split2"> #{{artifact!.getParentId()}}.</span>
+            </p>
         </div>
 
         <!-- Row containing the labelling tools -->
         <div class="row">
-            <div class="col-8" id="labelThing">
-                <div *ngFor="let labelType of labels">
+            <div class="col-12" id="labelThing">
+                <div *ngFor="let labelType of labelTypes" id="labelling-row">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-4">
                             <!-- Title of the labelType -->
                             <div class = "labelTypeTitle">
-                                <!-- TODO change -->
-                                <!-- <span>{{ labelType?.getName()! }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span> -->
+                                <span>{{ labelType.getName() }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span>
                             </div> 
                             <!-- List of available labels -->
                             <div>
                                 <select class="form-control" name="labels">
-                                    <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getName() }}">{{ label.getName() }}</option>
+                                    <option *ngFor="let label of labelType.getLabels()" value="{{ label.getName() }}">{{ label.getName() }}</option>
                                 </select>
                             </div>
                         </div> 
-                        <div class="col-6" >
+                        <div class="col-4" >
                             <!-- Description of the labelType -->
-                            <!-- @TODO: Should this be the labelType description or the label description? -->
-                            <div class = "labelTypeDescription">
+                            <div class = "labelDescription">
                                 <div class="descriptionTitle">
                                     <p>Description</p>
                                 </div>
                                 <div class="descriptionText">
-                                    <!-- <p>{{ labelType?.getLabelTypeDescription() }}</p> -->
+                                    <!-- <p>{{ label?.getDesc() }}</p> -->
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-4">
+                            <!-- Remark box -->
+                            <textarea class="form-control" rows="4" placeholder="Remark" id="remark"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Remark box and submission buttons -->
-            <div class="col-sm-4 ">
-                <!-- Remark box -->
-                <textarea class="form-control" rows="8" placeholder="Remark" id="remark"></textarea>
+            <!-- Submission buttons -->
+            <div class="col-10"></div>
+            <div class="col-2">
                 <!-- Submission buttons -->
                 <div id="butt">
-                    <button class="form-group btn btn-light float-end" (click)="notImplemented()" style="margin-left:10px;">Skip</button> 
-                    <button class="form-group btn btn-primary float-end" (click)="notImplemented()" >Submit</button>
+                    <button class="form-group btn btn-light float-right" (click)="skip()" id="skip-button">Skip</button> 
+                    <button class="form-group btn btn-primary float-right" (click)="notImplemented()">Submit</button>
                 </div>
             </div>
         </div>
