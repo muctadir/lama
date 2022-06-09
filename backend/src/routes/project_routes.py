@@ -5,7 +5,6 @@
 from cProfile import label
 from datetime import datetime
 from multiprocessing import ProcessError
-from backend.src.models.item_models import Labelling
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
