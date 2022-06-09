@@ -1,4 +1,5 @@
 // BJ
+// Veerle Furst
 
 // Color variables
 $grey-shade: #38474e;
@@ -22,11 +23,25 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Button for adding themes
+#createThemeButton{
+    background-color: $white-shade;
+    border: 2px solid;
+    border-color: $grey-shade;
+    color: black;
+}
+// The plus for creating a theme
+.bi.bi-plus.createTheme{
+    color: black;
+    margin-left: 5px;
+}
+
+// Div for the button for adding themes
 #addButton {
     padding-top: 10px;
     border-bottom: 1px; 
     border-bottom-style: solid; 
 }
+
 .subTitle {
     padding-top: 10px;
     font-size: 25px;
