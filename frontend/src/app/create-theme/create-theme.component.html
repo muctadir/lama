@@ -108,7 +108,7 @@
                     <!-- Table for showing all labels -->
                     <table class="table table-borderless">
                         <tbody>
-                            <div id="labelScroll">
+                            <div id="divScroll">
                                 <!-- Click shows clicked labels description and highlights it-->
                                 <tr *ngFor="let label of allLabels" (click)="displayDescriptionLabel(label)" (click)="highlightLabel(label)"  [class.highlighted]="label.getName() === highlightedLabel">
                                     <td>
@@ -151,7 +151,7 @@
                     <!-- Table for showing all Sub-Themes -->
                     <table class="table table-borderless">
                         <tbody>
-                            <div id="subthemeScroll">
+                            <div id="divScroll">
                                 <!-- Click shows clicked Subtheme and highlights it-->
                                 <tr *ngFor="let subtheme of allSubThemes" (click)="displayDescriptionTheme(subtheme)" (click)="highlightSubtheme(subtheme)" [class.highlighted]="subtheme.getName() === highlightedSubtheme">
                                     <td>

@@ -4,7 +4,7 @@
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User
-from src.models.item_models import Theme, ThemeSchema, LabelSchema, ArtifactSchema, label_to_theme, Artifact, Labelling
+from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
@@ -210,12 +210,12 @@ def create_theme(*, user):
     args = request.json
     # Get the actual info
     theme_info = args['params']
-    print(theme_info)
 
     # Check if all required arguments are there
     if not check_args(required, theme_info):
         return make_response("Not all required arguments supplied", 400)
 
+    # Theme creation info
     theme_creation_info = {
         "name": theme_info["name"],
         "description": theme_info["description"],
@@ -228,7 +228,37 @@ def create_theme(*, user):
 
     # Add the project to the database
     db.session.add(theme)
-    db.session.commit()
+
+    # Add the sub_themes to the theme
+    sub_themes_list = []
+    # Make sub_themes themes
+    for sub_theme in theme_info["sub_themes"]:
+        # Get the theme
+        new_theme = db.session.scalar(
+            select(Theme)
+            .where(Theme.id == sub_theme["id"])
+        )
+        # Append the theme to the list
+        sub_themes_list.append(new_theme)
+    # Make the sub_themes sub_themes of the created theme
+    theme.sub_themes = sub_themes_list
+
+    # Add the labels to the theme
+    labels_list = []
+    # Make sub_themes themes
+    for label in theme_info["labels"]:
+        # Get the theme
+        new_label = db.session.scalar(
+            select(Label)
+            .where(Label.id == label["id"])
+        )
+        # Append the theme to the list
+        labels_list.append(new_label)
+    # Make the sub_themes sub_themes of the created theme
+    theme.labels = labels_list
+
+    # Create the project
+    db.session.commit()        
 
     # Return the conformation
     return make_response("Project created", 200)
