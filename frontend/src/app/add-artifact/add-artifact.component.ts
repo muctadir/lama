@@ -6,8 +6,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { ArtifactDataService } from 'app/artifact-data.service';
-import axios from 'axios';
-import { artifact } from 'app/static-test-info';
 
 @Component({
   selector: 'app-add-artifact',

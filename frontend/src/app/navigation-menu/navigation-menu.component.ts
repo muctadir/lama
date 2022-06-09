@@ -1,6 +1,10 @@
+/* @author Jarl */
+
 import { Component, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogoutComponent } from 'app/logout/logout.component';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -33,13 +37,15 @@ export class NavigationMenuComponent {
    * Subscribes to the router events, when the routing changes updates the icon highlighted
    * in the navigation bar accordingly
    * 
+   * Also creates instance of NgbModal
+   * 
    * @param router Instance of the Router class used to get info about the current route
-   * @param 
+   * @param modalService Instance of the NgbModal 
    * 
    * @trigger when the route changes
    * @modifies page 
    */
-  constructor(private router: Router) {
+  constructor(private router: Router, private modalService: NgbModal) {
     // subscribes to the router event
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
@@ -78,7 +84,12 @@ export class NavigationMenuComponent {
     this.collapsed = !this.collapsed;
   }
 
-
+  /**
+   * Changes the page to the page that the user wants to view.
+   * 
+   * @param next_page new page the user wants to see
+   * @trigger onclick nav menu
+   */
   changePage(next_page : string) : void  {
     // Removes the first character from the route
     let url : string = this.router.url;
@@ -90,6 +101,15 @@ export class NavigationMenuComponent {
     
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, next_page]);
+  }
+
+  /**
+   * Opens the logout modal
+   * 
+   * @trigger logout button clicked
+   */
+  openLogout() : void {
+    this.modalService.open(LogoutComponent, {});
   }
 
 }
