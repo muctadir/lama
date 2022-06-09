@@ -6,7 +6,7 @@ from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, Highlight, HighlightSchema
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
@@ -308,6 +308,7 @@ def get_labells_by_label_type():
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    # Get all the labels of a specifc label type
     labels = db.session.scalars(
         select(User)
         .where(
@@ -315,8 +316,41 @@ def get_labells_by_label_type():
             Labelling.a_id == args['a_id']
         )
     ).all()
+    # Schema to serialize the User
     user_schema = UserSchema()
+    # Jsonify the result
     json_labellers = jsonify(user_schema.dump(labelers, many=True))
 
-
     return make_response(json_labellers)
+
+artifact_routes.route("/newHighlights", methods=["POST"])
+@login_required
+@in_project
+def add_new_highlights(*, user):
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id', 'a_id', 'u_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    # Get the information given by the frontend
+    highlight_info = request.json
+
+    # Schema to serialize the Highlight
+    artifact_schema = HighlightSchema()
+
+    highlight_object = artifact_schema.load(highlight_info["highlight"])
+
+    # Add the highligh to the database
+    db.session.add(highlight_object)
+    
+    # Try commiting the artifacts
+    try:
+        db.session.commit()
+    except OperationalError:
+        return make_response('Internal Server Error', 503)
+
+    return make_response("Route accessed")
