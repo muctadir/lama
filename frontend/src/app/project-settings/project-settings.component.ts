@@ -37,7 +37,7 @@ import { ReroutingService } from 'app/rerouting.service';
 })
 
 // Content of the modal of adding members
-export class AddUsersModalContent {
+export class AddUsersModalContent1 {
   @Input() users: any;
   @Output() newItemEvent = new EventEmitter<any>();
 
@@ -90,7 +90,11 @@ export class ProjectSettingsComponent implements OnInit {
   projectMembers: User[] = [];
   //all members
   allMembers: User[] = [];
-  adminMember: boolean[] = [];
+  adminMembers: boolean[] = [];
+  //Arrays for different actions for users
+  removedMembers: User[] = [];
+  addedMembers: User[] = [];
+  updatedMembers: User[] = [];
   //label types for project
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
@@ -143,6 +147,7 @@ export class ProjectSettingsComponent implements OnInit {
           let users_of_project = responseP.data.users;
           for (let i = 0; i < users_of_project.length; i++) {
             this.projectMembers.push(new User(users_of_project[i].id, users_of_project[i].username));
+            this.adminMembers.push(users_of_project[i].admin);
           }
           this.currentProject.setUsers(this.projectMembers);
           let labeltypes_of_project = responseP.data.labelType;
@@ -153,6 +158,18 @@ export class ProjectSettingsComponent implements OnInit {
         .catch(error => {
           console.log(error);
         });
+    }
+  }
+
+  getAdmin(user: User) {
+    return this.adminMembers[this.projectMembers.indexOf(user)];
+  }
+
+  getUpdatedUsers() {
+    for (let i = 0; i < this.projectMembers.length; i++) {
+      if (!this.addedMembers.includes(this.projectMembers[i])){
+        this.updatedMembers.push(this.projectMembers[i]);
+      }
     }
   }
 
@@ -169,16 +186,18 @@ export class ProjectSettingsComponent implements OnInit {
   //Saving changes made to project
   async saveEdit(): Promise<void> {
     //Setting name, description, criteria
+    this.getUpdatedUsers();
     this.currentProject.setName((<HTMLInputElement>document.getElementById("projectName")).value);
     this.currentProject.setDescription((<HTMLInputElement>document.getElementById("projectDescriptionForm")).value);
     this.currentProject.setCriteria(+(<HTMLInputElement>document.getElementById("numberOfLabellers")).value);
+    this.currentProject.setUsers(this.projectMembers);
     //Change back to non-edit view
     this.edit = false;
     //Check the checkboxes
     for (let i = 0; i < this.projectMembers.length; i++) {
       let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked; 
       //Assign the values of the checkboxes according to whether they have been checked during edit mode
-      this.adminMember[i] = adminBool;
+      this.adminMembers[i] = adminBool;
     }
 
     // Way to get information to backend
@@ -191,6 +210,15 @@ export class ProjectSettingsComponent implements OnInit {
       "criteria": this.currentProject.getCriteria(),
       "frozen": this.currentProject.getFrozen()
     };
+    //Project users
+    projectInformation["udaptedUsers"] = {
+      "users": this.currentProject.getUsers(),
+      "admin": this.adminMembers
+    }
+
+    console.log(this.removedMembers)
+    console.log(this.addedMembers)
+    console.log(this.updatedMembers)
 
     let token: string | null  = sessionStorage.getItem('ses_token');
 
@@ -212,14 +240,46 @@ export class ProjectSettingsComponent implements OnInit {
       });
     }
   }
-  
+
   //testing method for placeholder
   test(): void{ 
   }
 
+  addMember(user: User, admin: boolean) {
+    if (this.removedMembers.includes(user)) {
+      console.log("here if a")
+      this.removedMembers.splice(this.removedMembers.indexOf(user),1);
+      this.projectMembers.push(user);
+      this.adminMembers.push(admin);
+    }
+    else {
+      console.log("here else a")
+      this.projectMembers.push(user);
+      this.adminMembers.push(admin);
+      this.addedMembers.push(user);
+    }
+  }
+
+  removeMember(user: User) {
+    if (this.addedMembers.includes(user)) {
+      console.log("here if r")
+      this.addedMembers.splice(this.addedMembers.indexOf(user),1);
+      let index = this.projectMembers.indexOf(user);
+      this.projectMembers.splice(index,1);
+      this.adminMembers.splice(index,1);
+    }
+    else {
+      console.log("here else r")
+      let index = this.projectMembers.indexOf(user);
+      this.projectMembers.splice(index,1);
+      this.adminMembers.splice(index,1);
+      this.removedMembers.push(user);
+    }
+  }
+
   // Open the modal for adding users and populate it with users
   openAdd() {
-    const modalRef = this.modalService.open(AddUsersModalContent);
+    const modalRef = this.modalService.open(AddUsersModalContent1);
     modalRef.componentInstance.users = this.allMembers;
     // Push the username into the members list 
     modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
@@ -227,7 +287,7 @@ export class ProjectSettingsComponent implements OnInit {
       //  Checks if the user is already added
       if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
         // If not, we add them
-        this.projectMembers.push(user);
+        this.addMember(user, false);
       }
     })
   }

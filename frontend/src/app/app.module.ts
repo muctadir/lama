@@ -31,7 +31,7 @@ import { ThemeManagementComponent } from './theme-management/theme-management.co
 import { SortableThemeHeader } from './sortable-theme.directive';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
-import { ProjectSettingsComponent } from './project-settings/project-settings.component';
+import { AddUsersModalContent1, ProjectSettingsComponent } from './project-settings/project-settings.component';
 import { EditThemeComponent } from './edit-theme/edit-theme.component';
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -52,7 +52,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NavigationMenuComponent,
     ProjectComponent,
     StatsComponent,
-    AddUsersModalContent,
+    AddUsersModalContent1,
     LabellingPageComponent,
     LabelFormComponent,
     ArtifactManagementPageComponent,

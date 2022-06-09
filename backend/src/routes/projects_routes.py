@@ -195,13 +195,14 @@ def get_project(*, user):
     ).scalars().all()
     
     # Serialize all users
-    users = []
     user_schema = UserSchema()
-    for mem_object in users_of_project:
-        user_project = mem_object.user
-        user_dumped = user_schema.dump(user_project)
-        user_dumped.pop("password")
-        users.append(user_dumped)    
+
+    # Send the label type object
+    users_data = [{
+        'id': member.user.id,
+        'username': member.user.username,
+        'admin': member.admin
+    } for member in users_of_project]    
 
     #Get all label types from the project
     labelTypes = db.session.scalars(
@@ -221,7 +222,7 @@ def get_project(*, user):
         "description": project.description,
         "criteria": project.criteria,
         "frozen": project.frozen,
-        "users": users,
+        "users": users_data,
         "labelType": label_type_data
     })
 
@@ -238,7 +239,7 @@ def edit_project(*, user):
     # Get args 
     args = request.json
     # Required args
-    required = ('id', 'name', 'description', 'criteria')
+    required = ('id', 'name', 'description', 'criteria', 'frozen')
 
     if not check_args(required, args):
         return make_response('Bad Request', 400)
