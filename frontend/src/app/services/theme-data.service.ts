@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import axios from 'axios';
-import { Theme } from './classes/theme';
-import { Label } from './classes/label';
-import { StringArtifact } from './classes/stringartifact';
+import { Theme } from 'app/classes/theme';
+import { Label } from 'app/classes/label';
+import { StringArtifact } from 'app/classes/stringartifact';
 
 @Injectable({
   providedIn: 'root'
