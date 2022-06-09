@@ -35,6 +35,8 @@ import { EditThemeComponent } from './edit-theme/edit-theme.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from './logout/logout.component';
 import { EditAccountSettingsComponent } from './edit-account-settings/edit-account-settings.component';
+import { AccountChangePasswordComponent } from './account-change-password/account-change-password.component';
+import { AccountInformationComponent } from './account-information/account-information.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { EditAccountSettingsComponent } from './edit-account-settings/edit-accou
     SingleThemeViewComponent,
     EditThemeComponent,
     LogoutComponent,
-    EditAccountSettingsComponent
+    EditAccountSettingsComponent,
+    AccountChangePasswordComponent,
+    AccountInformationComponent
   ],
   imports: [
     BrowserModule,

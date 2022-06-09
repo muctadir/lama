@@ -41,6 +41,7 @@ def editUserInformation(*, user):
 
     # Get the information needed
     args = request.json
+    args = args['params']
 
     # Take the username, email and description
     newUsername = args["username"]
@@ -85,7 +86,7 @@ def editUserPassword(*, user):
 
     # Get the information needed
     args = request.json
-    print(args)
+    args = args['params']
 
     # Required arguments
     required = ["password", "newPassword"] 
