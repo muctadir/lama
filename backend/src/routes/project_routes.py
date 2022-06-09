@@ -318,6 +318,10 @@ def __count_conflicts(p_id):
     artifacts = db.session.scalars(
             select(Labelling.u_id).where(Labelling.p_id==p_id).group_by(Labelling.a_id, Labelling.lt_id, Labelling.l_id)
             ).all()
+            
+"""
+Author: Eduardo Costa Martins
+"""
 def nr_project_conflicts(p_id):
     # Number of differing labels per label type and artifact
     per_label_type = select(
@@ -353,6 +357,7 @@ def nr_project_conflicts(p_id):
     return result
 
 """
+Author: Eduardo Costa Martins
 @returns a dictionary indexed by user id mapping to the number of conflicts 
          the user has in the project given by p_id. A user with 0 conflicts
          is not indexed.
@@ -381,6 +386,7 @@ def nr_user_conflicts(p_id):
         per_label_type.c.a_id # Grouped by artifact
     ).subquery()
 
+    # Pair each user with artifacts they have labelled and the conflicts for that artifact
     per_user_artifact = select(
         Labelling.u_id, Labelling.a_id, per_artifact.c.conflict_count.label('conflict_count')
     ).where(
@@ -389,6 +395,7 @@ def nr_user_conflicts(p_id):
         Labelling.a_id, Labelling.u_id
     ).subquery()
 
+    # Sum the number of conflicts for each user (which is summing the conflicts for each artifact they have labelled)
     per_user = select(
         per_user_artifact.c.u_id, func.sum(per_user_artifact.c.conflict_count)
     ).group_by(
@@ -397,7 +404,6 @@ def nr_user_conflicts(p_id):
 
     results = db.session.execute(per_user).all()
 
-    # TODO: Add zeros automatically
     results = dict(
         (u_id, int(conflicts)) for u_id, conflicts in results
     )
