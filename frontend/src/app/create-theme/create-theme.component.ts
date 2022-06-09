@@ -2,6 +2,8 @@ import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { InputCheckService } from '../input-check.service';
+import { ThemeDataService } from 'app/theme-data.service';
+import { LabelingDataService } from 'app/labeling-data.service';
 import { FormBuilder } from '@angular/forms';
 import axios from 'axios';
 import { Theme } from 'app/classes/theme';
@@ -24,7 +26,7 @@ export class CreateThemeComponent {
   });
 
   //  Project id
-  p_id: string;
+  p_id: number;
 
   // Variables for routing
   url: string;
@@ -32,7 +34,6 @@ export class CreateThemeComponent {
 
   //highlight label variable
   highlightedLabel: String = '';
-
   //highlight subtheme variable
   highlightedSubtheme: String = "";
 
@@ -42,31 +43,30 @@ export class CreateThemeComponent {
   selectedDescriptionTheme: String = '';
 
   // Labels Added
-  addedLabels: String[] = [];
-
+  addedLabels: Label[] = [];
   // All labels
   allLabels: Array<Label> = [];
 
   //Subthemes Added
-  addedSubthemes: Array<Theme> = []
-
+  addedSubThemes: Array<Theme> = [];
   //Hard coded sub-themes
-  allSubthemes: Array<Theme> = [];
+  allSubThemes: Array<Theme> = [];
  
-  constructor(private formBuilder: FormBuilder, private service: InputCheckService, private router: Router) { 
+  constructor(private formBuilder: FormBuilder, private service: InputCheckService, 
+        private router: Router, private themeDataService: ThemeDataService, private labelDataService: LabelingDataService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = this.routeService.getProjectID(this.url);
+    this.p_id = Number(this.routeService.getProjectID(this.url));
   }
 
   ngOnInit(){
     // Get all possible themes
-    this.getAllThemes();
+    this.get_themes_without_parents(this.p_id);
     // Get all possible labels
-    // this.getAllLabels();
+    this.get_labels(this.p_id);
   }
 
   // Function for creating a theme
@@ -78,90 +78,66 @@ export class CreateThemeComponent {
     // Chooses desired behaviour based on validity of input
     if (not_empty) {
       this.errorMsg = "";
-      // Check the login credentials
-      
+      // Send the theme information to the backend
+      this.post_theme_info({
+        "name": this.themeForm.value.name,
+        "description": this.themeForm.value.description,
+        "labels": this.addedLabels,
+        "sub_themes": this.addedSubThemes,
+        "p_id": this.p_id
+      });   
+      // Reset name and description forms
+      this.themeForm.reset();
+      // Give succes message
+      this.errorMsg = "Theme succesfully created";
     } else {
       // Displays error message
       this.errorMsg = "Name or description not filled in";
     }
   }
 
-  // Function for getting all themes that have no parents
-  getAllThemes(){
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
-      // Get the themes that we need
-      axios.get("http://127.0.0.1:5000/theme/possible-sub-themes", {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'p_id': this.p_id
-        }
-      })
-        .then(response =>{   
-          for (let subtheme of response.data){
-            let newTheme = new Theme (subtheme['id'], subtheme['name'], subtheme['description'])
-            this.allSubthemes.push(newTheme)
-          }
-          console.log(this.allSubthemes)
-        })
-        .catch(error => {
-          console.log(error.response.data);
-        })  
-    }
+  // Async function for getting all themes that have no parents
+  async get_themes_without_parents(p_id: number) {
+    // Put the gotten themes into the list of themes
+    this.allSubThemes = await this.themeDataService.themes_without_parents(p_id);
   }
 
-  // Function for getting all themes that have no parents
-  getAllLabels(){
-    let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
-      // Get the themes that we need
-      axios.get("http://127.0.0.1:5000/theme/all-labels", {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          'p_id': this.p_id
-        }
-      })
-        .then(response =>{   
-          // for (let subtheme of response.data){
-          //   let newTheme = new Theme (subtheme['id'], subtheme['name'], subtheme['description'])
-          //   this.allSubthemes.push(newTheme)
-          // }
-          // console.log(this.allSubthemes)
-        })
-        .catch(error => {
-          console.log(error.response.data);
-        })  
-    }
+  // Async function for getting all labels in the project
+  async get_labels(p_id: number) {
+    // Put the gotten themes into the list of themes
+    this.allLabels = await this.labelDataService.getLabels(p_id);
+  }
+  
+  // Async function for posting the new theme info
+  async post_theme_info(theme_info: any) {
+    // Send info to backend
+    this.themeDataService.create_theme(theme_info);
   }
 
   // ADDING LABELS / THEMES
   //Adds labels to added labels array.
-  addLabel(label:any){
+  addLabel(label: Label){
     // Check if the label was already added
     for (var addedLabel of this.addedLabels){
-      if (addedLabel == label.labelName){
+      if (addedLabel.getName() == label.getName()){
         // Then return
         return;
       }
     }
     // Otherwise add the label
-    this.addedLabels.push(label.labelName);
+    this.addedLabels.push(label);
   }
   //Function for adding subtheme to added subthemes array
-  addSubtheme(subtheme:any){
+  addSubtheme(subTheme:any){
     // Check if the sub-theme was already added
-    for (var addedSubtheme of this.addedSubthemes){
-      if (addedSubtheme == subtheme){
+    for (var addedSubTheme of this.addedSubThemes){
+      if (addedSubTheme == subTheme){
         // Then return
         return;
       }
     }
     // Otherwise add the theme
-    this.addedSubthemes.push(subtheme);
+    this.addedSubThemes.push(subTheme);
   }
 
   // REMOVING LABELS / THEMES
@@ -176,12 +152,12 @@ export class CreateThemeComponent {
     });    
   }
   // Function for removing subtheme
-  removeSubtheme(subtheme:any){
+  removeSubtheme(subTheme:any){
   // Go through all labels
-  this.addedSubthemes.forEach((addedSubthemes, index)=>{
+  this.addedSubThemes.forEach((addedSubThemes, index)=>{
     // If clicked cross matches the label, splice them from the labels
-    if(addedSubthemes==subtheme){
-      this.addedSubthemes.splice(index,1);
+    if(addedSubThemes==subTheme){
+      this.addedSubThemes.splice(index,1);
     }
   });    
   }

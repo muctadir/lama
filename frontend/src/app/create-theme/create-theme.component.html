@@ -61,7 +61,7 @@
             <!-- List of all labels -->
             <div id="allLabelsList">
                 <div *ngFor="let label of addedLabels">
-                    <span id="addedLabels">{{label}}</span>
+                    <span id="addedLabels">{{label.getName()}}</span>
                     <!-- Column for delete icon -->
                     <button class="btn x" type="button" (click)="removeLabel(label)">
                         <!-- Plus icon -->
@@ -80,7 +80,7 @@
             </div>
             <!-- Sub-theme list from data -->
             <div id="addedSubthemesList">
-                <div *ngFor="let subtheme of addedSubthemes">
+                <div *ngFor="let subtheme of addedSubThemes">
                     <span id="addedSubthemes">{{subtheme.getName()}}</span>
                      <!-- Column for delete icon -->
                      <button class="btn x" type="button" (click)="removeSubtheme(subtheme)">
@@ -153,7 +153,7 @@
                         <tbody>
                             <div id="subthemeScroll">
                                 <!-- Click shows clicked Subtheme and highlights it-->
-                                <tr *ngFor="let subtheme of allSubthemes" (click)="displayDescriptionTheme(subtheme)" (click)="highlightSubtheme(subtheme)" [class.highlighted]="subtheme.getName() === highlightedSubtheme">
+                                <tr *ngFor="let subtheme of allSubThemes" (click)="displayDescriptionTheme(subtheme)" (click)="highlightSubtheme(subtheme)" [class.highlighted]="subtheme.getName() === highlightedSubtheme">
                                     <td>
                                         <span class="addSubthemeText">
                                             {{ subtheme.getName() }}

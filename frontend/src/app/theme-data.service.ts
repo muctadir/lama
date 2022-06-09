@@ -114,4 +114,30 @@ export class ThemeDataService {
 
     return newTheme;
   }
+
+  // Function to get the theme management info
+  async themes_without_parents (p_id: number): Promise<Array<Theme>> {
+    // Get request to the backend
+    let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id}, true);
+
+    // List for all subthemes
+    let allSubThemes: Array<Theme> = [];
+    // For each subtheme make a Theme object
+    for (let subtheme of response){
+      let newTheme = new Theme (subtheme['id'], subtheme['name'], subtheme['description']);
+      // Push the subthemes to a list
+      allSubThemes.push(newTheme);
+    }
+    // Return the list of subThemes
+    return allSubThemes
+  }
+
+  // Function to get the theme management info
+  async create_theme (theme_info: any) {
+    // Create project in the backend
+    let response =  await this.requestHandler.post('/theme/create_theme', theme_info, true);
+    // TODO: do something with response
+    console.log(response);
+  }
+
 }

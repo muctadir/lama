@@ -145,8 +145,7 @@ For getting the all themes without parents
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
-#@in_project
-def all_themes_no_parents(*, user):#, membership): TODO uncomment
+def all_themes_no_parents(*, user):
 
     # The required arguments
     required = ["p_id"]
@@ -188,3 +187,48 @@ def get_theme_label_count(t_id):
             select(func.count(label_to_theme.c.l_id))
             .where(label_to_theme.c.t_id==t_id)
         )
+
+
+"""
+For creating a new theme 
+@params a list of theme information:
+{
+    name: name of new theme
+    description: description of new theme
+    labels: list of labels inside the theme
+    sub_themes: list of sub_themes
+}
+"""
+@theme_routes.route("/create_theme", methods=["POST"])
+@login_required
+def create_theme(*, user):
+
+    # The required arguments
+    required = ["name", "description", "labels", "sub_themes", "p_id"]
+
+    # Get args
+    args = request.json
+    # Get the actual info
+    theme_info = args['params']
+    print(theme_info)
+
+    # Check if all required arguments are there
+    if not check_args(required, theme_info):
+        return make_response("Not all required arguments supplied", 400)
+
+    theme_creation_info = {
+        "name": theme_info["name"],
+        "description": theme_info["description"],
+        "p_id": theme_info["p_id"]
+    }
+
+    # Load the project data into a project object
+    thema_schema = ThemeSchema()
+    theme = thema_schema.load(theme_creation_info)
+
+    # Add the project to the database
+    db.session.add(theme)
+    db.session.commit()
+
+    # Return the conformation
+    return make_response("Project created", 200)
