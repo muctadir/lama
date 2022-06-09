@@ -101,6 +101,9 @@ def add_new_artifacts(*, user):
     # Get the information given by the frontend
     artifact_info = request.json
 
+    # List of artifacts to be added
+    artifact_object = []
+
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
     identifier = generate_artifact_identifier(args['p_id'])
@@ -108,10 +111,10 @@ def add_new_artifacts(*, user):
     for artifact in artifact_info:
 
         artifact['identifier'] = identifier
-        artifact_object = artifact_schema.load(artifact)
+        artifact_object.append(artifact_schema.load(artifact))
 
-        # Add the artifact to the database
-        db.session.add(artifact_object)
+    # Add the artifact to the database
+    db.session.add_all(artifact_object)
     
     # Try commiting the artifacts
     try:
