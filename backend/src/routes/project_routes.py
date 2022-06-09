@@ -327,7 +327,6 @@ def __time_to_string(time):
     time_list[0] = int(minutes / 60)
     # Updated number of minutes
     time_list[1] = int(minutes % 60)
-
     # String that shows the time
     time_string = ''
     for number in time_list:
