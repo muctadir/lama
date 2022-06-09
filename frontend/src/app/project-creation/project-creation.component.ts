@@ -1,11 +1,14 @@
 // Victoria Bogachenkova
 // Veerle Fürst
+// Jarl Jansen
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import axios from 'axios';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { InputCheckService } from '../input-check.service';
 
 // Project object
 interface Project {
@@ -13,49 +16,64 @@ interface Project {
   projectDescription: string;
 }
 
-
-// Template for the modal
+/* Component of the add user modal */
 @Component({
   selector: 'app-project-creation',
   styleUrls: ['./project-creation.component.scss'],
   template: `
-    <div class="modal-header">
-      <h4 class="modal-title">Choose the users to add to the project</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body row" *ngFor="let user of users" (click)="addUser(user)" style="padding:2px 16px; max-height: 35px;">
-        <div class="col" style="padding:15 1 1 1px; list-style: none; max-height: 25px;">
-          <li> {{ user.getUsername() }}</li>
+      <div class="modal-header">
+        <h4 class="modal-title">Choose the users to add to the project</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+      </div>
+      <div id="overflow-modal">
+        <div class="modal-body row" *ngFor="let user of users" (click)="addUser(user)" id="user-modal-rows">
+            <div class="col" id="username-modal-col">
+              <li> {{ user.getUsername() }}</li>
+            </div>
+            <!-- Col for adding users button -->
+            <div class="col-2">
+                <!-- Button for adding new project_members -->
+                <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
+                  <!-- Plus icon -->
+                  <i class="bi bi-plus labelType" id="popup-plus"></i>
+                </button>
+            </div>
+            <br>
         </div>
-        <!-- Col for adding users button -->
-        <div class="col-2">
-            <!-- Button for adding new project_members -->
-            <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
-              <!-- Plus icon -->
-              <i class="bi bi-plus labelType" id="popup-plus"></i>
-            </button>
-        </div>
-        <br>
-    </div>
-    
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+      </div>
   `
 })
 
 // Content of the modal
 export class AddUsersModalContent {
+  // The users that should be displayed in the modal
   @Input() users: any;
-  @Output() newItemEvent = new EventEmitter<any>();
+  // Events emitting what user is added to the project
+  @Output() addUserEvent = new EventEmitter<any>();
 
+  /**
+   * Initializes the modal
+   * 
+   * @param activeModal instance of NgbActiveModal
+   */
   constructor(public activeModal: NgbActiveModal) {}
 
-  addUser(user:User) {
-    this.newItemEvent.emit(user);
+  /**
+   * Function which emits the user clicked on by the user
+   * 
+   * @param user that has been clicked on
+   * @trigger user is clicked on in the modal
+   */
+  addUser(user: User) : void {
+    this.addUserEvent.emit(user);
   }
 }
 
+
+/* Project creation component */
 @Component({
   selector: 'app-project-creation',
   templateUrl: './project-creation.component.html',
@@ -63,190 +81,265 @@ export class AddUsersModalContent {
 })
 
 export class ProjectCreationComponent implements OnInit {
-
-  // Functions for adding values
-  addValuesProject(name:string, desc:string):Project {
-    var projectName = name;
-    var projectDescription = desc;
-    // Return the given values
-    return {projectName, projectDescription};
-  }
-
-  
-  // Array of all possible members
+  /* Array of holding all possible members which can be added */
   allMembers: User[] = [];
  
-  // Array of members in the project
-  projectMembers: User[] = []
+  /* Array with all members of the project getting created */
+  projectMembers: User[] = [];
 
-  // Label types
-  labelTypes: string[] = [];
+  /* FormGroup which will hold the different information of the project */
+  projectForm : FormGroup = this.formBuilder.group({
+    projectName: '',
+    projectDesc: '',
+    labellerCount: 2,
+    // Array containing the different label types
+    labeltypes: this.formBuilder.array([])
+  });
 
+  /* Error message displayed to the user if input is incorrect */
+  errorMsg : string = "";
+
+  /**
+   * Initializes the modal, router and formbuilder
+   * @param modalService instance of modal
+   * @param router instance of router
+   * @param formBuilder instance of formbuilder
+   */
+  constructor(private modalService: NgbModal, private router: Router, private formBuilder: FormBuilder) {}
+
+  /**
+   * Gets all the users within the application from the backend
+   * Stores the users in the allMembers array
+   * 
+   * @modifies allMembers
+   * @trigger on creation of component
+   */
   ngOnInit(): void { 
-
-    // Get all users within the tool
-    
+    // Gets the authentication token from the session storage
     let token: string | null  = sessionStorage.getItem('ses_token');
 
+    // Get all users within the tool
+    this.requestUsers(token);
+  }
+
+  /**
+   * Gets all the users in the application from the backend
+   * 
+   * @param token used for authenticating the user to the backend
+   * 
+   * @trigger on component load
+   * @modifies allMembers
+   * 
+   * TODO: Use the request factory to make the axios request
+   */
+  requestUsers(token : string | null) : void {
+    // Checks whether the token is valid
     if (typeof token === "string") {
+      // Requests all users in the application from the backend
       axios.get('http://127.0.0.1:5000/project/users', {
         headers: {
           'u_id_token': token
         }
       })
         .then(response => { 
-          
+          // parses the database response for all the different users
           for (let user of response.data) {
+            // creates the object
             let newUser = new User(user.id, user.username);
+            // passes additional data to the newly created user object
             newUser.setEmail(user.email);
             newUser.setDesc(user.description);
+            // pushes the new user to the array of all users
             this.allMembers.push(newUser);
           }
         })
+        // Logs the error if an error occurs during communication with backend
         .catch(error => {
           console.log(error);
         });
     }
-
-    // TODO
-    // Get the person who is creating the project
-    // Add that person to this project
-    // addUser(user.userName);
-    // Give that user the admin role
-    // Get the checkbox of the current user
-    // let currentUserCheckbox = document.getElementById("projectAdminCheckBox'+Jarl'") as HTMLInputElement;
-    // Make the checkbox checked
-    // if (currentUserCheckbox != null) {
-    //   currentUserCheckbox.checked = true;
-    // }
-
   }
 
-  // Function for getting all form elements
-  getFormElements(form:HTMLFormElement): Record<string, string>{
-    // Make a dictionary for all values
-    let params: Record<string, string> = {};
-    // For loop for adding the params to the list
-    for (let i = 0; i < form.length; i++) { 
-      // Add them to dictionary
-      let param = form[i] as HTMLInputElement; // Typecast
-      params[param.name] = param.value;
-    }
-    // Return the dictionary of values
-    return params;
-  }
-
-  // Function for getting all form elements
-  getLabelTypes(form:HTMLFormElement): string[]{
-    // Make a dictionary for all values
-    let params: string[] = [];
-    // For loop for adding the params to the list
-    for (let i = 0; i < form.length; i++) { 
-      // Add them to dictionary
-      let param = form[i] as HTMLInputElement; // Typecast
-      params[i] = param.value;
-    }
-    // Return the dictionary of values
-    return params;
-  }
-
-  // Function for creating the project
-  createProject():void { 
-    // Get the forms
-    // For with name and description
-    const post_form1: HTMLFormElement = (document.querySelector("#projectCreationForm")!);
-    // Form with the number of labellers
-    const post_form2: HTMLFormElement = (document.querySelector("#constraintForm")!);
-    // For with the label types
-    const post_form3: HTMLFormElement = (document.querySelector("#labelTypeForm")!);
-
-    // Message for confirmation/error
-    const p_response: HTMLElement = document.querySelector("#createProjectResponse")!;
-
-    // Get all input fields
-    const inputFeilds = document.querySelectorAll("input");
-    // Check if the input fields are filled in
-    const validInputs = Array.from(inputFeilds).filter( input => input.value == "");
-    // Get the description field
-    const descField = document.getElementById("projectDescriptionForm") as HTMLInputElement;
-    // Check if its filled in
-    if(descField != null){
-      if(descField.value == ""){
-        // Otherwise push it
-        validInputs.push(descField);
-      }
-    }
+  /**
+   * Responsible for creating a new project. Gathers the data from the various forms,
+   * creates a projectInformation record holding this information, which is then send to
+   * the backend for creation. 
+   * 
+   * @trigger Create project button is clicked
+   */
+  createProject() : void { 
+    // Creates object which will be returned to the backend
+    let projectInformation: Record<string, any> = {};
+    // Adds the projectname, project description and nr of labellers to the object
+    projectInformation["project"] = {
+      "name" : this.projectForm.value.projectName,
+      "description" : this.projectForm.value.projectDesc,
+      "criteria": this.projectForm.value.labellerCount
+    };
     
-    // Check validity of filled in form
-    if (validInputs.length == 0) {
+    // Adds the users of the project to the object
+    this.addUsers(projectInformation)
+    
+    // Gets the array containing the different label types
+    let labelTypes = this.labelTypeToArray();
+    // Adds the labeltypes to the object
+    projectInformation["labelTypes"] = labelTypes;
 
-      // Params of the name and description
-      let params1 = this.getFormElements(post_form1);
-      // Params of the number of labellers
-      let params2 = this.getFormElements(post_form2);
-      // Params of the label types
-      let params3 = this.getLabelTypes(post_form3);
-
-      // Way to get information to backend
-      let projectInformation: Record<string, any> = {};
-      // Project information
-      projectInformation["project"] = {
-        "name" : params1['projectName'],
-        "description" : params1['projectDescription'],
-        "criteria": params2["numberOfLabellers"]
-      };
-      // Users within the project
-      projectInformation["users"] = []
-      // For each user get the admin status
-      for(let i=0; i< this.projectMembers.length; i++){
-        let admin;
-        let adminCheckbox = document.getElementById("projectAdminCheckBox-"+this.projectMembers[i].getUsername()) as HTMLInputElement;
-        if(adminCheckbox!=null){
-          admin = adminCheckbox?.checked;
-        }
-        // Push the user ids and admin status to list
-        projectInformation["users"].push({
-          "u_id": this.projectMembers[i].getId(),
-          "admin": admin
-        })
-      }
-      // Label type information
-      projectInformation["labelTypes"] = params3;
-      
-      
-      let token: string | null  = sessionStorage.getItem('ses_token');
-
-      if (typeof token === "string") {        
-        // Send the data to the database
-        axios.post('http://127.0.0.1:5000/project/creation', projectInformation, {
-          headers: {
-            'u_id_token': token
-          }
-        })
-        .then(response => { 
-          // Navigates the user back to the home page
-          this.router.navigate(["/home"]);
-
-          // TODO
-          p_response.innerHTML = "Project created"
-        })
-        .catch(error => {
-          // TODO
-        });
-      }
-     
+    // Checks whether the use input is correct
+    if(this.checkProjectData(projectInformation)){
+      // Calls function responsible for making the project creation request
+      this.makeRequest(projectInformation);
     } else {
-      // Send error message
-      p_response.innerHTML = "Fill in all fields!";
-      // Make the error message red
-      let responseObject = document.getElementById("createProjectResponse");
-      if(responseObject != null){
-        responseObject.style.color = 'red';
-        }
+      // Displays an error that the user input was incorrect
+      this.errorMsg = "Please fill in all forms";
     }
   }
 
-  // Function for removing users
+  /**
+   * Checks whether the project has a name, a description and at least 1 label type, 
+   * and whether each label type has a name
+   * 
+   * @param projectInformation the project data that we will use to check these requirements
+   * @returns whether the info satisfies these requirements
+   */
+  checkProjectData(projectInformation: Record<string, any>) : boolean {
+    // Initialize InputCheckService instance 
+    let service: InputCheckService = new InputCheckService();
+
+    // Checks whether the project name/description is non-empty
+    let checkFilled: boolean = service.checkFilled(projectInformation["project"]["name"]) && 
+      service.checkFilled(projectInformation["project"]["description"])
+
+    // checks whether the number of labeltypes is greater than 0
+    let moreThanOneLabelType: boolean = projectInformation["labelTypes"].length > 0;
+
+    // Checks whether all label types are non-empty
+    let labelFilled: boolean = true;
+    for(const labeltype of projectInformation["labelTypes"]) {
+      if(!service.checkFilled(labeltype)) {
+        labelFilled = false;
+      }
+    }
+
+    // Returns true if project name, project desc, label types are all non empty.
+    return checkFilled && labelFilled && moreThanOneLabelType;
+  }
+
+  /**
+   * Makes the project creation request to the backend
+   * 
+   * @param projectInformation Record holding the different parameters of the project to be created
+   * @trigger Create project button is clicked
+   * 
+   * TODO: Use the request factory to make the axios request
+   */
+  makeRequest(projectInformation: Record<string, any> ) : void {
+    let token: string | null  = sessionStorage.getItem('ses_token');
+
+    if (typeof token === "string") {        
+      // Send the data to the database
+      axios.post('http://127.0.0.1:5000/project/creation', projectInformation, {
+        headers: {
+          'u_id_token': token
+        }
+      })
+      .then(() => { 
+        // Navigates the user back to the home page
+        this.router.navigate(["/home"]);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  }
+
+  /**
+   * Adds the users which the user has selected to add to the new project
+   * to the projectInformation, so that the backend knows which users to add.
+   * 
+   * @param projectInformation Record holding the project information
+   * @modifies projectInformation
+   */
+  addUsers(projectInformation : Record<string, any>) : void {
+    // Users within the project
+    projectInformation["users"] = []
+
+    // For each user get the admin status
+    for(let i=0; i< this.projectMembers.length; i++) {
+      // Boolean indicating whether the user is an admin
+      let admin: boolean = false;
+      let adminCheckbox = document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getUsername()) as HTMLInputElement;
+      if (adminCheckbox != null) {
+        admin = adminCheckbox?.checked;
+      }
+      // Push the user ids and admin status to list
+      projectInformation["users"].push({
+        "u_id": this.projectMembers[i].getId(),
+        "admin": admin
+      })
+    }
+  }
+
+  /**
+   * Getter function returning the FormArray of the label types
+   * 
+   * @returns FormArray with the different label types
+   */
+  get labeltypes() : FormArray {
+    return this.projectForm.controls["labeltypes"] as FormArray;
+  }
+
+  /**
+   * Function creating a new label type, and put this in the projectForm.
+   * 
+   * @modifies projectForm
+   */
+  addLabelType() : void {
+    // Create the new formGroup
+    const labelTypeForm : FormGroup = this.formBuilder.group({
+      label: ''
+    });
+    // Adds the formGroup to the formArray containing the different label types.
+    this.labeltypes.push(labelTypeForm);
+  }
+
+  /**
+   * Function responsible for removing the labeltype at index: labelTypeIndex 
+   * from the formArray of label types
+   * 
+   * @param labelTypeIndex the index of the label type which should be removed
+   * @trigger remove button of the labelTypeIndex is clicked
+   */
+  deleteLabelType(labelTypeIndex: number) : void {
+    this.labeltypes.removeAt(labelTypeIndex);
+  }
+
+  /**
+   * Transforms the formArray of the labeltypes into a regular array.
+   * So that it can be used in the request to the backend.
+   * 
+   * @returns Array containing the different labeltypes.
+   * @trigger Create project button is clicked
+   */
+  labelTypeToArray() : Array<string> {
+    // Gets the iterator of labelTypes
+    let labelTypes = this.projectForm.value.labeltypes.values();
+    // Creates the new array which will will be returned
+    let labelTypesArray = [];
+    // Iterates over the labelTypes, adds each labeltype to the array
+    for(var element of labelTypes) {
+      labelTypesArray.push(element['label']);
+    }
+    // Returns the array
+    return labelTypesArray
+  }
+
+  /**
+   * Removes a member from the list of members to be added to the project
+   * 
+   * @param id the id of the member that should be removed from the project
+   * @modifes projectMembers
+   */
   removeMember(id:any){
     // Go through all members
     this.projectMembers.forEach((projectMembers, index)=>{
@@ -257,20 +350,22 @@ export class ProjectCreationComponent implements OnInit {
     });    
   }
 
-  // Function for adding a new label type input
-  addLabelType(){
-    this.labelTypes.push("");
-  }
-
-  constructor(private modalService: NgbModal, private router: Router) {}
-
-  // Open the modal and populate it with users
-  open() {
+  /**
+   * Opens the add user modal, and displays all the users in the application in the modal.
+   * 
+   * @modifies projectMembers
+   */
+  open() : void {
+    // opens the AddUsersModal
     const modalRef = this.modalService.open(AddUsersModalContent);
+
+    // passes all the users in the application to the modal
     modalRef.componentInstance.users = this.allMembers;
+
     // Push the username into the members list 
-    modalRef.componentInstance.newItemEvent.subscribe(($e: User) => {
-       var user = $e;
+    modalRef.componentInstance.addUserEvent.subscribe(($e: User) => {
+      let user = $e;
+
       //  Checks if the user is already added
        if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
          // If not, we add them
