@@ -169,34 +169,16 @@ export class ArtifactDataService {
       return [result, response["artifact_labellings"], response["username"]]
   }
 
-  // Function 
+  // Function for searching in backend
   async search(searchWords: string, p_id: number): Promise<Array<StringArtifact>>{
 
-    // Session token
-    let token: string | null = sessionStorage.getItem('ses_token');
-    // Check if the session token exists
-    if (typeof token !== "string") throw new Error("User is not logged in");
     // Get the artifact information from the back end
-    return axios.get('http://127.0.0.1:5000/artifact/search', {
-      headers: {
-        'u_id_token': token
-      },
-      params: {
-        'search_words': searchWords,
-        'p_id': p_id
-      }
-    }).then(response => {
-        // Get the artifact from the response
-        let artifacts = response.data;
-        console.log(artifacts);
+    let response = await this.requestHandler.get('/artifact/search', { 'p_id': p_id, "search_words": searchWords}, true);
+    
+    // Get the artifact from the response
+    let artifacts = response;
 
-        // Return the record
-        return (artifacts);
-        
-      }).catch((err) => {
-        // If there is an error
-        throw new Error(err);
-      });
-
+    // Return the record
+    return (artifacts);
   }
 }

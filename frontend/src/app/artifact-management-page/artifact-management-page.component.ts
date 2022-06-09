@@ -11,6 +11,7 @@ import { ReroutingService } from 'app/rerouting.service';
 import { AddArtifactComponent } from 'app/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/artifact-data.service';
 import { FormBuilder } from '@angular/forms';
+import { Artifact } from 'app/classes/artifact';
 
 
 @Component({
@@ -24,7 +25,9 @@ export class ArtifactManagementPageComponent {
   // Initialize the url
   url: string;
   // Make list of all artifacts
-  artifacts: Array<StringArtifact>;
+  artifacts: Array<StringArtifact> = [];
+
+  search = false;
 
   //Pagination Settings
   page = 1;
@@ -47,7 +50,7 @@ export class ArtifactManagementPageComponent {
     private router: Router, private formBuilder: FormBuilder) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
-    this.artifacts = new Array<StringArtifact>()
+    this.artifacts = new Array<StringArtifact>();
   }
 
   ngOnInit(): void {
@@ -55,7 +58,7 @@ export class ArtifactManagementPageComponent {
     const p_id = Number(this.routeService.getProjectID(this.url))
 
     // Get the artifacts from the backend
-    this.getArtifacts(p_id)
+    this.getArtifacts(p_id);
   }
 
   /**
@@ -65,7 +68,7 @@ export class ArtifactManagementPageComponent {
    */
   async getArtifacts(p_id: number): Promise<void> {
     const artifacts = await this.artifactDataService.getArtifacts(p_id);
-    this.artifacts = artifacts
+    this.artifacts = artifacts;
   }
 
   /**
@@ -89,17 +92,38 @@ export class ArtifactManagementPageComponent {
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
   }
-
+  
   //gets the search text
   async onEnter() {
-    var text = this.searchForm.value.search_term
-    alert("entered!!"+ text + "");
+
     // Get p_id
-    let p_id = Number(this.routeService.getProjectID(this.url))
-    // Pass the search word to services
-    let artifacts_searched = await this.artifactDataService.search(text, p_id);
-    // TODO: filter the artfacts from this.artifact that resuted from the search
-    // this.artifacts = artifacts_searched
+    let p_id = Number(this.routeService.getProjectID(this.url));
+
+    // Search text
+    var text = this.searchForm.value.search_term;
+
+    // If nothing was searched
+    if(text.length == 0){
+      // Show all artifacts
+      await this.getArtifacts(p_id);
+    } else {
+      // Otherwise search
+    
+      // Pass the search word to services
+      let artifacts_searched = await this.artifactDataService.search(text, p_id);
+
+      // List for the artifacts resulting from the search
+      let artifact_list: Array<StringArtifact> = [];
+      // For loop through all searched artifacts
+      for (let search_artifact of artifacts_searched){
+        // Make it an artifact object
+        let newArtifact = new StringArtifact(search_artifact["id"], search_artifact["identifier"], search_artifact['data']);
+        // Append artifact to list
+        artifact_list.push(newArtifact);
+      }
+      // Only show the resulting artifacts from the search
+      this.artifacts = artifact_list;
+    }
   }
 
 }
