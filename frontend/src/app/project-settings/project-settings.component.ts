@@ -92,9 +92,11 @@ export class ProjectSettingsComponent implements OnInit {
   allMembers: User[] = [];
   adminMembers: boolean[] = [];
   //Arrays for different actions for users
-  removedMembers: User[] = [];
-  addedMembers: User[] = [];
-  updatedMembers: User[] = [];
+  removedMembers: number[] = [];
+  addedMembers: number[] = [];
+  updatedMembers: number[] = [];
+
+  removed: Record<string, number>;
   //label types for project
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
@@ -104,6 +106,7 @@ export class ProjectSettingsComponent implements OnInit {
     //Dummy data for initial
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
+    this.removed = {};
   }
 
   ngOnInit(): void {
@@ -167,8 +170,9 @@ export class ProjectSettingsComponent implements OnInit {
 
   getUpdatedUsers() {
     for (let i = 0; i < this.projectMembers.length; i++) {
-      if (!this.addedMembers.includes(this.projectMembers[i])){
-        this.updatedMembers.push(this.projectMembers[i]);
+      if (!this.addedMembers.includes(this.projectMembers[i].getId())){
+        this.removed[this.projectMembers[i].getId().toString()] = 0; 
+        this.updatedMembers.push(this.projectMembers[i].getId());
       }
     }
   }
@@ -216,10 +220,6 @@ export class ProjectSettingsComponent implements OnInit {
       "admin": this.adminMembers
     }
 
-    console.log(this.removedMembers)
-    console.log(this.addedMembers)
-    console.log(this.updatedMembers)
-
     let token: string | null  = sessionStorage.getItem('ses_token');
 
     if (typeof token === "string") {        
@@ -246,34 +246,31 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   addMember(user: User, admin: boolean) {
-    if (this.removedMembers.includes(user)) {
-      console.log("here if a")
-      this.removedMembers.splice(this.removedMembers.indexOf(user),1);
+    if (this.removedMembers.includes(user.getId())) {
+      this.removedMembers.splice(this.removedMembers.indexOf(user.getId()),1);
       this.projectMembers.push(user);
       this.adminMembers.push(admin);
     }
     else {
-      console.log("here else a")
       this.projectMembers.push(user);
       this.adminMembers.push(admin);
-      this.addedMembers.push(user);
+      this.addedMembers.push(user.getId());
     }
   }
 
   removeMember(user: User) {
-    if (this.addedMembers.includes(user)) {
-      console.log("here if r")
-      this.addedMembers.splice(this.addedMembers.indexOf(user),1);
+    if (this.addedMembers.includes(user.getId())) {
+      this.addedMembers.splice(this.addedMembers.indexOf(user.getId()),1);
       let index = this.projectMembers.indexOf(user);
       this.projectMembers.splice(index,1);
       this.adminMembers.splice(index,1);
     }
     else {
-      console.log("here else r")
       let index = this.projectMembers.indexOf(user);
+      this.removed[user.getId().toString()] = 1;
       this.projectMembers.splice(index,1);
       this.adminMembers.splice(index,1);
-      this.removedMembers.push(user);
+      this.removedMembers.push(user.getId());
     }
   }
 
