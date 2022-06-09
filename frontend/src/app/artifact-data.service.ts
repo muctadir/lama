@@ -2,12 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
 import axios from 'axios';
+import { RequestHandler } from 'app/classes/RequestHandler';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArtifactDataService {
+  // Initialise the Request handler
+  requestHandler: RequestHandler;
+
+  // Constructors for the request handler
+  constructor() {
+    this.requestHandler = new RequestHandler(sessionStorage.getItem('ses_token'));
+  }
 
   /**
    * Function does call to backend to retrieve all artifacts of a given project
@@ -169,12 +177,11 @@ export class ArtifactDataService {
     }).catch((error) => {
       // If there is an error
       throw error;
-      ;
     });
   }
 
   /**
-     * Function does call to backend to retrieve a single artifact
+     * Function gets a single random artifact
      * 
      * @params p_id: number
      * @pre p_id => 1
@@ -184,52 +191,43 @@ export class ArtifactDataService {
      * @returns Promise<StringArtifact>
      */
   async getRandomArtifact(p_id: number): Promise<StringArtifact> {
-    // Session token
-    let token: string | null = sessionStorage.getItem('ses_token');
-    // Check if the session token exists
-    if (typeof token !== "string") throw new Error("User is not logged in");
+    // Response from the request handler
+    const response = await this.requestHandler.get('/artifact/randomArtifact', { 'p_id': p_id }, true);
 
-    // Check if the p_id is larger than 1
-    if (p_id < 1) throw new Error("p_id cannot be less than 1")
+    // Get a new artifact
+    const result = new StringArtifact(response.artifact.id, response.artifact.identifier, response.artifact.data);
 
-    // Get the artifact information from the back end
-    return axios.get('http://127.0.0.1:5000/artifact/randomArtifact', {
-      headers: {
-        'u_id_token': token
-      },
-      params: {
-        'p_id': p_id
-      }
-    }).then(response => {
-      let art = new StringArtifact(response.data.artifact.id, response.data.artifact.identifier, response.data.artifact.data);
-      art.setChildIds(response.data.childIds);
-      art.setParentId(response.data.parentId)
-      return art;
-    }).catch((error) => {
-      // If there is an error
-      throw error;
-    });
+    // Set the child IDs and the parent ID
+    result.setChildIds(response.childIds);
+    result.setParentId(response.parentId);
+
+    return result;
   }
 
+  /**
+   * Function gets all the labellers of a specific artifact
+   * 
+   * @param p_id: number - project id
+   * @param a_id: number - artifact id
+   * @returns Promise<any>
+   */
   async getLabellers(p_id:number, a_id: number): Promise<any> {
-    let token: string | null = sessionStorage.getItem('ses_token');
-    // Check if the session token exists
-    if (typeof token !== "string") throw new Error("User is not logged in");
+    return this.requestHandler.get('/artifact/getLabelers', { 'p_id': p_id, 'a_id': a_id }, true);
+  }
 
-    // Get the artifact information from the back end
-    return axios.get('http://127.0.0.1:5000/artifact/getLabelers', {
-      headers: {
-        'u_id_token': token
-      },
-      params: {
-        'p_id': p_id,
-        'a_id': a_id
-      }
-    }).then(response => {     
-      return response.data;
-    }).catch((err) => {
-      // If there is an error
-      throw new Error(err);
-    });
+  /**
+   * Function posts all the highlights of a specific artifact from a specific user
+   * 
+   * @param p_id: number - project id
+   * @param a_id: number - artifact id
+   * @param u_id: number - user id
+   * @returns Promise<any>
+   */
+  async postHighlights(p_id:number, a_id: number, u_id:  number): Promise<any> {
+    await this.requestHandler.post('/artifact/newHighlights', {
+      'p_id': p_id,
+      'a_id': a_id,
+      'u_id': u_id
+    }, true)
   }
 }
