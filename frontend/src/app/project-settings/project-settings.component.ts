@@ -90,13 +90,15 @@ export class ProjectSettingsComponent implements OnInit {
   projectMembers: User[] = [];
   //all members
   allMembers: User[] = [];
-  adminMembers: boolean[] = [];
+  allProjectUsers: User[] = [];
+  adminMembers: Record<number,boolean> = [];
   //Arrays for different actions for users
   removedMembers: number[] = [];
   addedMembers: number[] = [];
   updatedMembers: number[] = [];
 
-  removed: Record<string, number>;
+  removed: Record<number, boolean> = {};
+  added: Record<number, boolean> = {};
   //label types for project
   labelTypes: string[] = [];
   //whether the page is in edit mode, default is false
@@ -106,7 +108,6 @@ export class ProjectSettingsComponent implements OnInit {
     //Dummy data for initial
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
-    this.removed = {};
   }
 
   ngOnInit(): void {
@@ -150,7 +151,8 @@ export class ProjectSettingsComponent implements OnInit {
           let users_of_project = responseP.data.users;
           for (let i = 0; i < users_of_project.length; i++) {
             this.projectMembers.push(new User(users_of_project[i].id, users_of_project[i].username));
-            this.adminMembers.push(users_of_project[i].admin);
+            this.allProjectUsers.push(new User(users_of_project[i].id, users_of_project[i].username));
+            this.adminMembers[users_of_project[i].id] = users_of_project[i].admin;
           }
           this.currentProject.setUsers(this.projectMembers);
           let labeltypes_of_project = responseP.data.labelType;
@@ -165,13 +167,19 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   getAdmin(user: User) {
-    return this.adminMembers[this.projectMembers.indexOf(user)];
+    let projMembers = this.currentProject.getUsers();
+    if( projMembers != undefined ) {
+      return this.adminMembers[projMembers.indexOf(user)];
+    }
+    else {
+      return 0;
+    }
   }
 
   getUpdatedUsers() {
     for (let i = 0; i < this.projectMembers.length; i++) {
       if (!this.addedMembers.includes(this.projectMembers[i].getId())){
-        this.removed[this.projectMembers[i].getId().toString()] = 0; 
+        this.removed[this.projectMembers[i].getId()] = false; 
         this.updatedMembers.push(this.projectMembers[i].getId());
       }
     }
@@ -201,7 +209,7 @@ export class ProjectSettingsComponent implements OnInit {
     for (let i = 0; i < this.projectMembers.length; i++) {
       let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked; 
       //Assign the values of the checkboxes according to whether they have been checked during edit mode
-      this.adminMembers[i] = adminBool;
+      this.adminMembers[this.projectMembers[i].getId()] = adminBool;
     }
 
     // Way to get information to backend
@@ -214,11 +222,15 @@ export class ProjectSettingsComponent implements OnInit {
       "criteria": this.currentProject.getCriteria(),
       "frozen": this.currentProject.getFrozen()
     };
-    //Project users
-    projectInformation["udaptedUsers"] = {
-      "users": this.currentProject.getUsers(),
-      "admin": this.adminMembers
-    }
+    //All project users
+    let updateInfo: Record<string,any> = {};
+    this.allProjectUsers.forEach(user => {
+      updateInfo[user.getId()] = {
+        "removed": this.removed[user.getId()],
+        "admin": this.adminMembers[user.getId()]
+      }
+    });
+    console.log(updateInfo);
 
     let token: string | null  = sessionStorage.getItem('ses_token');
 
@@ -249,27 +261,30 @@ export class ProjectSettingsComponent implements OnInit {
     if (this.removedMembers.includes(user.getId())) {
       this.removedMembers.splice(this.removedMembers.indexOf(user.getId()),1);
       this.projectMembers.push(user);
-      this.adminMembers.push(admin);
+      this.adminMembers[user.getId()] = admin;
     }
     else {
+      this.allProjectUsers.push(user);
+      this.added[user.getId()] = true;
       this.projectMembers.push(user);
-      this.adminMembers.push(admin);
+      this.adminMembers[user.getId()] = admin;
       this.addedMembers.push(user.getId());
     }
   }
 
   removeMember(user: User) {
     if (this.addedMembers.includes(user.getId())) {
+      this.allProjectUsers.splice(this.allProjectUsers.indexOf(user),1);
       this.addedMembers.splice(this.addedMembers.indexOf(user.getId()),1);
       let index = this.projectMembers.indexOf(user);
       this.projectMembers.splice(index,1);
-      this.adminMembers.splice(index,1);
+      this.adminMembers[user.getId()] = false;
     }
     else {
       let index = this.projectMembers.indexOf(user);
-      this.removed[user.getId().toString()] = 1;
+      this.removed[user.getId()] = true;
       this.projectMembers.splice(index,1);
-      this.adminMembers.splice(index,1);
+      this.adminMembers[user.getId()] = false;
       this.removedMembers.push(user.getId());
     }
   }

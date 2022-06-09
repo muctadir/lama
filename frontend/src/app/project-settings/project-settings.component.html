@@ -88,7 +88,7 @@
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user (userName) connected to the checkbox-->
                                         <!-- TODO FIX THE ID -->
-                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="getAdmin(member)">
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMembers[member.getId()]">
                                     </div>                                        
                                 </div>
                             </label>
@@ -218,7 +218,7 @@
                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
                                        <!-- Checkbox disabled since not in edit mode-->
                                        <!-- TODO FIX THE ID -->
-                                       <input type="checkbox" id="{{ 'projectAdminCheckBoxHome-' + member.getId()}}" [checked]="getAdmin(member)" disabled="true">
+                                       <input type="checkbox" id="{{ 'projectAdminCheckBoxHome-' + member.getId()}}" [checked]="adminMembers[member.getId()]" disabled="true">
                                     </div>                                        
                                 </div>
                             </label>
