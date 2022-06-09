@@ -50,21 +50,21 @@ export class LabellingPageComponent implements OnInit{
    * It waits for a response and when the response arrives it adds Bartjan 
    * as a labeler and then puts the information into this.artifact.
    */
-  // getArtifact ():void {
-  //   this.labelingDataService.getArtifact()
-  //     .subscribe(artifact => {
-  //       artifact.addLabeler("Bartjan");
-  //       this.artifact = artifact;
-  //     });
-  // }
+  getArtifact():void {
+    // this.labelingDataService.getArtifact()
+    //   .subscribe(artifact => {
+    //     artifact.addLabeler("Bartjan");
+    //     this.artifact = artifact;
+    //   });
+  }
 
   /**
    * Function which subscribes to the labelingDataService and retrieves labels.
    * It waits for a response, when the response arrives it puts the information into this.labels.
    */
   getLabels (): void {
-    this.labelingDataService.getLabels()
-      .subscribe(labels => this.labels = labels);
+    // this.labelingDataService.getLabels()
+    //   .subscribe(labels => this.labels = labels);
   }
 
 

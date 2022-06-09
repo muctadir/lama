@@ -10,7 +10,7 @@ p.header{
 .subTitle {
     padding-top: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px; 
+    border-bottom: 1px;
     border-bottom-style: solid;
     border-color: #ed5a06;
     font-size: 25px;
@@ -46,3 +46,10 @@ p.header{
 #remarksArtifactsContent {
     margin-left: 15px;
 }
+
+// Color of edit button
+#btn-edit {
+    background-color: #ed5a06;
+    margin-left: 3px;
+}
+

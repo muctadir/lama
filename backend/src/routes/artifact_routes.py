@@ -9,6 +9,7 @@ from src.models.item_models import Artifact, ArtifactSchema, Labelling, Labellin
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
+from sqlalchemy.orm import aliased
 from src.app_util import login_required
 from sqlalchemy.exc import  OperationalError
 
@@ -152,7 +153,7 @@ def single_artifact(*, user):
 
     # Jsonify the dictionary with information
     dict_json = jsonify(info)
-    
+
     # Return the dictionary
     return make_response(dict_json)
 
@@ -229,11 +230,3 @@ def __aggregate_labellings(artifact):
 # Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
-
-def test_queries(a_id):
-    stmt = select(Labelling.lt_id, func.count(distinct(Labelling.l_id))).where(Labelling.a_id == a_id).group_by(Labelling.lt_id)
-    print(stmt)
-    print(db.session.execute(stmt).all())
-    stmt = select(Labelling.a_id, Labelling.lt_id, func.count(distinct(Labelling.l_id))).group_by(Labelling.lt_id, Labelling.a_id)
-    print(stmt)
-    print(db.session.execute(stmt).all())
