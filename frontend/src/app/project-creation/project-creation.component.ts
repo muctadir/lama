@@ -2,76 +2,20 @@
 // Veerle Fürst
 // Jarl Jansen
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit} from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import axios from 'axios';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { InputCheckService } from '../input-check.service';
+import { AddUsersModalComponent } from '../add-users-modal/add-users-modal.component';
 
 // Project object
 interface Project {
   projectName: string,
   projectDescription: string;
 }
-
-/* Component of the add user modal */
-@Component({
-  selector: 'app-project-creation',
-  styleUrls: ['./project-creation.component.scss'],
-  template: `
-      <div class="modal-header">
-        <h4 class="modal-title">Choose the users to add to the project</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
-      </div>
-      <div id="overflow-modal">
-        <div class="modal-body row" *ngFor="let user of users" (click)="addUser(user)" id="user-modal-rows">
-            <div class="col" id="username-modal-col">
-              <li> {{ user.getUsername() }}</li>
-            </div>
-            <!-- Col for adding users button -->
-            <div class="col-2">
-                <!-- Button for adding new project_members -->
-                <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
-                  <!-- Plus icon -->
-                  <i class="bi bi-plus labelType" id="popup-plus"></i>
-                </button>
-            </div>
-            <br>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-      </div>
-  `
-})
-
-// Content of the modal
-export class AddUsersModalContent {
-  // The users that should be displayed in the modal
-  @Input() users: any;
-  // Events emitting what user is added to the project
-  @Output() addUserEvent = new EventEmitter<any>();
-
-  /**
-   * Initializes the modal
-   * 
-   * @param activeModal instance of NgbActiveModal
-   */
-  constructor(public activeModal: NgbActiveModal) {}
-
-  /**
-   * Function which emits the user clicked on by the user
-   * 
-   * @param user that has been clicked on
-   * @trigger user is clicked on in the modal
-   */
-  addUser(user: User) : void {
-    this.addUserEvent.emit(user);
-  }
-}
-
 
 /* Project creation component */
 @Component({
@@ -357,7 +301,7 @@ export class ProjectCreationComponent implements OnInit {
    */
   open() : void {
     // opens the AddUsersModal
-    const modalRef = this.modalService.open(AddUsersModalContent);
+    const modalRef = this.modalService.open(AddUsersModalComponent);
 
     // passes all the users in the application to the modal
     modalRef.componentInstance.users = this.allMembers;
