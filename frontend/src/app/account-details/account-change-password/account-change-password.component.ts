@@ -4,7 +4,7 @@ import { Component, Input, Output, EventEmitter, } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
-import { InputCheckService } from 'app/input-check.service';
+import { InputCheckService } from 'app/services/input-check.service';
 
 @Component({
   selector: 'app-account-change-password',

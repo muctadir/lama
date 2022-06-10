@@ -5,7 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
-import { InputCheckService } from '../input-check.service';
+import { InputCheckService } from 'app/services/input-check.service';
 
 @Component({
   selector: 'app-edit-account-settings',

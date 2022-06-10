@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { User } from 'app/classes/user';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutComponent } from 'app/logout/logout.component';
+import { LogoutComponent } from 'app/modals/logout/logout.component';
 
 @Component({
   selector: 'app-account',
