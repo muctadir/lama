@@ -6,7 +6,7 @@ from src.app_util import check_args, check_email, check_password, check_username
 from src.models.auth_models import User, UserSchema
 from flask import current_app as app
 from flask import make_response, request, Blueprint
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -116,7 +116,7 @@ def create_user(args):
 
 # If there already exists a User with given username or email
 def taken(username, email):
-    violation = db.session.query(User).filter(User.username == username or User.email == email).first()
+    violation = db.session.query(User).filter(or_(User.username == username, User.email == email)).first()
     return bool(violation)
 
 # Checks validity of all required fields for User creation

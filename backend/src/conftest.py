@@ -4,69 +4,24 @@ from src import db
 from src.models.auth_models import User, UserStatus
 from src.models.item_models import Artifact
 from src.models.project_models import Project, Membership
+from werkzeug.security import generate_password_hash
 
 @fixture
 def app():
     app = create_app({'TESTING': True})
 
-    # Make mock data for testing
-    # Create some new users
-    for i in range(3):
-        user = User(username = "User" + str(i),
-            password = "idkman",
-            email = "someemail" + str(i) + "@gmail.com",
-            status = UserStatus.approved,
-            description = "something"
-            )
+    with app.app_context():
 
-        db.session.add(user)
+        users = [User(
+            username=f"Test{i}",
+            password=generate_password_hash("1234"),
+            email=f"test{i}@test.com",
+            description=f"Description for test user {i}",
+            status=UserStatus((i - 1) % 4 - 2)
+        ) for i in range(1, 11)]
+
+        db.session.add_all(users)
         db.session.commit()
-
-    # Make some projects
-    for i in range(4):
-        project = Project(name = "Project " + str(i),
-            description = "something",
-            criteria = 1,
-            frozen = i % 2 == 0
-            )
-
-        db.session.add(project)
-        db.session.commit()
-
-    # Get lists of the ids of all users and projects
-    user_ids = [id for id in db.session.query(User.id)]
-    project_ids = [id for id in db.session.query(Project.id)]
-
-    # Make relationships between the users and the projects
-    for u in range(3):
-        for p in range(4):
-            # Get the user and the project that are part of this membership
-            this_user = User.get(user_ids[u])
-            this_project = Project.get(project_ids[p])
-
-            # Create the membership
-            membership = Membership(pId = this_project.id,
-                uId = this_user.id,
-                admin = (u == 0 and p < 2) or (u == 1 and p > 1),
-                deleted = p == 3,
-                project = [this_project],
-                user = [this_user]
-                )
-
-            db.session.add(membership)
-            db.session.commit()
-
-            # Make artifacts for this project
-            for a in range(2):
-                artifact = Artifact(p_id = this_project.id,
-                    name = "Artifact " + str(a),
-                    project = this_project,
-                    identifier = 'Something',
-                    data = "blablahblahblah",
-                    completed = a == 0)
-
-                db.session.add(artifact)
-                db.session.commit()
 
     yield app
     # Tear-down goes here.
