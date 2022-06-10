@@ -135,7 +135,7 @@ def list_to_dictionnary(param_list, id_col):
 #returns list of items of form [{},{},{id:, match_count:, tot_dist:, best_words:[], item:{}},{}]
 def best_search_results(all_search_results, word_count):
     #to store all results
-    result = []
+    sorted_result = []
     #goes through all items in the dict 
     for result in all_search_results:
         #checks if there is a good result for each word
@@ -164,10 +164,10 @@ def best_search_results(all_search_results, word_count):
             stats['best_words'] = found_words
             stats['item'] = it
             #appends result info to list
-            result.append(stats)
+            sorted_result.append(stats)
     #sort on total word distance for best result
-    sorted_result = sorted(result, key=lambda d: d['tot_dist'])
+    sorted_result = sorted(sorted_result, key=lambda d: d['tot_dist'])
     return sorted_result
     
         
-MIN_DIST = 4
+MIN_DIST = 3
