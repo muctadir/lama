@@ -7,7 +7,7 @@ from src.models.auth_models import User
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select, func
+from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
 
@@ -198,9 +198,11 @@ For creating a new theme
     description: description of new theme
     labels: list of labels inside the theme
     sub_themes: list of sub_themes
+    p_id: project id
 }
 """
 @theme_routes.route("/create_theme", methods=["POST"])
+# TODO: add @in_project
 @login_required
 def create_theme(*, user):
 
@@ -230,24 +232,91 @@ def create_theme(*, user):
     # Add the project to the database
     db.session.add(theme)
 
-    # Add the sub_themes to the theme
-    sub_themes_list = []
-    # Make sub_themes themes
-    for sub_theme in theme_info["sub_themes"]:
-        # Get the theme
-        new_theme = db.session.scalar(
-            select(Theme)
-            .where(Theme.id == sub_theme["id"])
-        )
-        # Append the theme to the list
-        sub_themes_list.append(new_theme)
-    # Make the sub_themes sub_themes of the created theme
-    theme.sub_themes = sub_themes_list
+    # Make the sub_themes the sub_themes of the created theme
+    theme.sub_themes = make_sub_themes(theme_info["sub_themes"])
 
+    # Make the labels the labels of the created theme
+    theme.labels = make_labels(theme_info["labels"])
+
+    # Create the project
+    db.session.commit()        
+
+    # Return the conformation
+    return make_response("Project created", 200)
+
+"""
+For editing a theme 
+@params a list of theme information:
+{
+    id: id of the theme
+    name: name of new theme
+    description: description of new theme
+    labels: list of labels inside the theme
+    sub_themes: list of sub_themes
+    p_id: project id
+}
+"""
+@theme_routes.route("/edit_theme", methods=["POST"])
+# TODO: add @in_project
+@login_required
+def edit_theme(*, user):
+
+    # The required arguments
+    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
+
+    # Get args
+    args = request.json
+
+    # # Get the actual info
+    theme_info = args['params']
+
+    # Check if all required arguments are there
+    if not check_args(required, theme_info):
+        print("ello")
+        return make_response("Not all required arguments supplied", 400)
+    
+    # Get theme id
+    t_id = theme_info["id"]
+    # Project id
+    p_id = theme_info["p_id"]
+
+    # Get the corresponding theme
+    theme = db.session.get(Theme, t_id)
+
+    # Check if the theme exists
+    if not theme:
+        return make_response("Bad request", 400)
+
+    # Check if theme is in given project
+    if theme.p_id != p_id:
+        return make_response("Bad request", 400)
+        
+    # Change the theme information
+    db.session.execute(
+        update(Theme).
+        where(Theme.id == t_id).
+        values(
+            name = theme_info["name"],
+            description = theme_info["description"]
+        )
+    )
+
+    # Set the sub_themes of the theme
+    theme.sub_themes = make_sub_themes(theme_info["sub_themes"])
+    # Set the labels of the theme
+    theme.labels = make_labels(theme_info["labels"])
+
+    # Create the project
+    db.session.commit()        
+
+    # Return the conformation
+    return make_response("Project created", 200)
+
+def make_labels(labels_info):
     # Add the labels to the theme
     labels_list = []
     # Make sub_themes themes
-    for label in theme_info["labels"]:
+    for label in labels_info:
         # Get the theme
         new_label = db.session.scalar(
             select(Label)
@@ -255,11 +324,18 @@ def create_theme(*, user):
         )
         # Append the theme to the list
         labels_list.append(new_label)
-    # Make the sub_themes sub_themes of the created theme
-    theme.labels = labels_list
+    return labels_list
 
-    # Create the project
-    db.session.commit()        
-
-    # Return the conformation
-    return make_response("Project created", 200)
+def make_sub_themes(sub_themes_info):
+    # Add the sub_themes to the theme
+    sub_themes_list = []
+    # Make sub_themes themes
+    for sub_theme in sub_themes_info:
+        # Get the theme
+        new_theme = db.session.scalar(
+            select(Theme)
+            .where(Theme.id == sub_theme["id"])
+        )
+        # Append the theme to the list
+        sub_themes_list.append(new_theme)
+    return sub_themes_list

@@ -81,7 +81,7 @@ export class ReroutingService {
     let t_id: string = url_path.substring(url_path.lastIndexOf("/"))
     // Removes the last /
     t_id = t_id.substring(1);
-
-    return t_id
+    // Return the t_id
+    return t_id;
   }
 }

@@ -28,13 +28,12 @@ import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.co
 import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SortableThemeHeader } from './sortable-theme.directive';
-import { CreateThemeComponent } from './theme/create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
-import { EditThemeComponent } from './theme/edit-theme/edit-theme.component';
+import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { LogoutComponent } from './modals/logout/logout.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutComponent } from './modals/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -62,11 +61,10 @@ import { LogoutComponent } from './modals/logout/logout.component';
     IndividualLabelComponent,
     ThemeManagementComponent,
     SortableThemeHeader,
-    CreateThemeComponent,
     SingleThemeViewComponent,
-    EditThemeComponent,
     AddUsersModalComponent,
-    LogoutComponent
+    LogoutComponent,
+    ThemeInfoComponent
   ],
   imports: [
     BrowserModule,

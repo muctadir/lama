@@ -122,7 +122,6 @@ export class ThemeDataService {
     }
     // Add labels to the theme
     newTheme.setLabels(labelsArray);
-
     return newTheme;
   }
 
@@ -149,7 +148,7 @@ export class ThemeDataService {
   }
 
   /**
-   * Function to get the theme management info
+   * Function to create a theme
    * 
    * @param theme_info 
    * @returns response
@@ -157,6 +156,19 @@ export class ThemeDataService {
   async create_theme (theme_info: any): Promise<string> {
     // Create project in the backend
     let response =  await this.requestHandler.post('/theme/create_theme', theme_info, true);
+    // Return the response
+    return response;
+  }
+
+  /**
+   * Function to edit a theme
+   * 
+   * @param theme_info 
+   * @returns response
+   */
+   async edit_theme (theme_info: any): Promise<string> {
+    // Create project in the backend
+    let response =  await this.requestHandler.post('/theme/edit_theme', theme_info, true);
     // Return the response
     return response;
   }
