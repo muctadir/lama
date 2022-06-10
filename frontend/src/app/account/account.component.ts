@@ -1,9 +1,10 @@
 // Veerle Furst
 // Jarl Jansen
-
 import { Component } from '@angular/core';
 import { User } from 'app/classes/user';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogoutComponent } from 'app/logout/logout.component';
 
 @Component({
   selector: 'app-account',
@@ -21,6 +22,13 @@ export class AccountComponent {
 
   /* Error message that is displayed to the user */
   errorMsg: string = "";
+
+  /**
+   * Initializes the modalService 
+   * 
+   * @param modalService instance of modal service
+   */
+  constructor(private modalService: NgbModal) { }
 
   /**
    * Calls function responsible for getting the user data from the backend
@@ -77,6 +85,16 @@ export class AccountComponent {
       // Displays error message to the user if anything goes wrong.
       this.errorMsg = "An error occured when requesting the server for user data.";
     }
+  }
+
+  /**
+   * Opens the logout modal asking confirmation for logging out
+   * 
+   * @trigger click on logout button
+   */
+  openLogout() : void {
+    // opens logout modal
+    this.modalService.open(LogoutComponent, {});
   }
 
 }
