@@ -1,5 +1,6 @@
 # Author: Victoria
 # Author: Bartjan
+# Author: Eduardo Costa Martins
 from src.app_util import check_args
 from src import db # need this in every route
 from flask import current_app as app
@@ -59,6 +60,7 @@ def get_label_types_wl():
     
     return make_response(dict_json)
 
+# Author: Eduardo Costa Martins
 @label_type_routes.route("/labelsByType", methods=["GET"])
 @login_required
 @in_project
@@ -83,6 +85,7 @@ def get_labels_by_label_type():
     return jsonify(as_list)
 
 """
+Author: Eduardo Costa Martins
 @params p_id : int|string the project id for which you want the label types and labels
 @returns a dictionary indexed by label type _objects_, mapping to a list of labels of that type
 """
