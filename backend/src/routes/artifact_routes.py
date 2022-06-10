@@ -92,9 +92,8 @@ def add_new_artifacts():
 
     # Check if required args are present
     if not check_args(required, args):
-        print('HERE BITCH')
         return make_response('Bad Request', 400)
-
+        
     # Get the information given by the frontend
     artifact_info = args['artifacts']['array']
 
