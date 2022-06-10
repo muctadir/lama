@@ -38,7 +38,7 @@ def home_page(*, user):
             Membership.u_id==user.id,
             Membership.deleted==False
         )
-    ).scalars()
+    ).all()
 
     # List for project information
     projects_info = []
