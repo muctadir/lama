@@ -149,7 +149,7 @@ export class LabellingDataService {
     // Array of label types
     let labelTypes: Array<LabelType> = new Array<LabelType>();
     // Response from the request handler
-    const response = await this.requestHandler.get('/labeltype/allLabelTypesWL', { 'p_id': p_id }, true);
+    const response = await this.requestHandler.get('/labeltype/allWithLabels', { 'p_id': p_id }, true);
 
     // Get the label types with their labels
     response.forEach((r: any) => {

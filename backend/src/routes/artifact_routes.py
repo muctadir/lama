@@ -296,34 +296,6 @@ def get_labellers():
 
     return make_response(json_labellers)
 
-
-@artifact_routes.route("/getLabelers", methods=["GET"])
-@login_required
-@in_project
-def get_labells_by_label_type():
-    # Get args from request 
-    args = request.args
-    # What args are required
-    required = ['p_id','lt_id']
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
-
-    # Get all the labels of a specifc label type
-    labels = db.session.scalars(
-        select(User)
-        .where(
-            User.id == Labelling.u_id,
-            Labelling.a_id == args['a_id']
-        )
-    ).all()
-    # Schema to serialize the User
-    user_schema = UserSchema()
-    # Jsonify the result
-    json_labellers = jsonify(user_schema.dump(labelers, many=True))
-
-    return make_response(json_labellers)
-
 artifact_routes.route("/newHighlights", methods=["POST"])
 @login_required
 @in_project
