@@ -191,7 +191,7 @@ def in_project(f):
         if request.method == 'GET':
             p_id = request.args['p_id']
         else:
-            p_id = request.json['p_id']
+            p_id = request.json['params']['p_id']
         # Check that pId argument was provided
         if not p_id:
             return make_response('Unauthorized', 401)
