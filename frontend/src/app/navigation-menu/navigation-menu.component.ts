@@ -46,32 +46,45 @@ export class NavigationMenuComponent {
    * @modifies page 
    */
   constructor(private router: Router, private modalService: NgbModal) {
-    // subscribes to the router event
+    // Ensures that the currently highlighted icon is correct
+    this.evalURL(this.router.url);
+
+    // Subscribes to the router event
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
         // code executed when the route changes 
         let new_route = ev['urlAfterRedirects'];
-        if (new_route.includes("stats")) {
-          // highlights stats page icon
-          this.page = 0;
-        } else if (new_route.includes("labelling")) {
-          // highlights labelling page icon
-          this.page = 1;
-        } else if (new_route.includes("artifact")) {
-          // highlights artifact management page icon
-          this.page = 2;
-        } else if (new_route.includes("label")) {
-          // highlights labelling management page icon
-          this.page = 3;
-        } else if (new_route.includes("theme")) {
-          // highlights theme management page icon
-          this.page = 4;
-        } else if (new_route.includes("conflict")) {
-          // highlights conflict management page icon
-          this.page = 5;
-        }
+        this.evalURL(new_route);
       }
     });
+  }
+
+  /**
+   * Uses the new_route to determine what icon should be coloured.
+   * 
+   * @param new_route the url
+   * @modifies page
+   */
+  evalURL(new_route: string) : void {
+    if (new_route.includes("stats")) {
+      // highlights stats page icon
+      this.page = 0;
+    } else if (new_route.includes("labelling")) {
+      // highlights labelling page icon
+      this.page = 1;
+    } else if (new_route.includes("artifact")) {
+      // highlights artifact management page icon
+      this.page = 2;
+    } else if (new_route.includes("label")) {
+      // highlights labelling management page icon
+      this.page = 3;
+    } else if (new_route.includes("theme")) {
+      // highlights theme management page icon
+      this.page = 4;
+    } else if (new_route.includes("conflict")) {
+      // highlights conflict management page icon
+      this.page = 5;
+    }
   }
 
   /**
