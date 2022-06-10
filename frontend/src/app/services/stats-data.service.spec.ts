@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { StatsDataService } from './stats-data.service';
 
 describe('StatsDataService', () => {

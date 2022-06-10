@@ -5,6 +5,7 @@
 from cProfile import label
 from datetime import datetime
 from multiprocessing import ProcessError
+from src.app_util import in_project
 from src.models.item_models import Labelling
 from src.models.project_models import Membership
 from flask import current_app as app
@@ -15,7 +16,7 @@ from src.models.project_models import Membership, Project, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
 from sqlalchemy.orm import aliased
-from src.app_util import login_required
+from src.app_util import login_required, check_args
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
@@ -178,9 +179,18 @@ For getting data from a single project
 """
 @project_routes.route("/singleProject", methods=["GET"])
 @login_required
+@in_project
 def single_project(*, user):
-    # Get project id from the request
-    p_id = request.args.get('p_id')
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = args['p_id']
 
     # Get the project
     project = __get_project(p_id)
@@ -236,8 +246,16 @@ For getting statistics from a single project
 @project_routes.route("/projectStats", methods=["GET"])
 @login_required
 def project_stats(*, user):
-    # Get project id from request
-    p_id = request.args.get('p_id')
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = args['p_id']
 
     # Get all the users in the project
     project = db.session.scalar(
@@ -266,12 +284,13 @@ def project_stats(*, user):
 
         # Loop through each labelling to get the necessary data
         for labelling in user.labellings:
-            # Add the artifact associated with this labelling to the set of artifacts
-            artifacts.add(labelling.artifact)
-            # Add the themes associated with this labelling to the list of themes
-            themes.add(theme for theme in labelling.label.themes)
-            # Add the time spent labelling to the total time
-            total_time += __time_in_seconds(labelling.time)
+            if labelling.p_id == p_id:
+                # Add the artifact associated with this labelling to the set of artifacts
+                artifacts.add(labelling.artifact)
+                # Add the themes associated with this labelling to the list of themes
+                themes.add(theme for theme in labelling.label.themes)
+                # Add the time spent labelling to the total time
+                total_time += __time_in_seconds(labelling.time)
 
         # Get number of artifacts
         artifacts_num = len(artifacts)
