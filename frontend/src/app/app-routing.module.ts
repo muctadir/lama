@@ -19,10 +19,9 @@ import { ArtifactManagementPageComponent } from './artifact/artifact-management-
 import { SingleArtifactViewComponent } from './artifact/single-artifact-view/single-artifact-view.component';
 import { LabelManagementComponent } from './label/label-management/label-management.component';
 import { IndividualLabelComponent } from './label/individual-label/individual-label.component';
-import { EditThemeComponent } from './theme/edit-theme/edit-theme.component';
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
-import { CreateThemeComponent } from './theme/create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
+import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -43,9 +42,9 @@ const routes: Routes = [
       {path: 'labelmanagement', component: LabelManagementComponent},
       {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
-      {path: 'createTheme', component: CreateThemeComponent},
+      {path: 'createTheme', component: ThemeInfoComponent},
       {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
-      {path: 'editTheme', component: EditThemeComponent},
+      {path: 'editTheme/:themeId', component: ThemeInfoComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}

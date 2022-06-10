@@ -81,6 +81,15 @@ export class SingleThemeViewComponent {
     });
   }   
 
+  /**
+   * Reroutes to other edit page of the theme
+   * @trigger the edit button is clicked
+  */
+   reRouterEdit() : void {
+    // Changes the route accordingly
+    this.router.navigate(['/project', this.p_id, "editTheme", this.routeService.getThemeID(this.url)]);
+  }  
+
   // Function for making sure parent name is not undefined
   getParentName(): string {
   // Get the parent
