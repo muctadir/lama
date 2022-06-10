@@ -114,7 +114,7 @@ export class LabellingDataService {
       'p_id': p_id
     }
 
-    await this.requestHandler.post('/labeltype/all', content, true)
+    await this.requestHandler.post('/label/create', content, true)
   }
 
   /**
