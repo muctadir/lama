@@ -3,33 +3,33 @@
  * @author T. Bradley
  */
 import { Component, OnInit } from '@angular/core';
-import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
-import { LabelingDataService } from "app/labeling-data.service";
-import { ArtifactDataService } from "app/artifact-data.service";
+import { LabelingDataService } from 'app/labeling-data.service';
+import { ArtifactDataService } from 'app/artifact-data.service';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-labelling-page',
   templateUrl: './labelling-page.component.html',
-  styleUrls: ['./labelling-page.component.scss']
+  styleUrls: ['./labelling-page.component.scss'],
 })
-export class LabellingPageComponent implements OnInit{
-
+export class LabellingPageComponent implements OnInit {
   /**
    * artifact contains the artifact
    * labels contains the label(types) connected to this project
-   * highlightedText contains a selection of the artifact 
+   * highlightedText contains a selection of the artifact
    * start and end char are indices for highlighted text
    */
 
   artifact?: StringArtifact;
   labels?: Array<LabelType>;
-  hightlightedText: string = "";
+  hightlightedText: string = '';
   selectionStartChar?: number;
   selectionEndChar?: number;
   routeService: ReroutingService;
@@ -37,25 +37,32 @@ export class LabellingPageComponent implements OnInit{
   labellers: Array<any>;
   p_id: number;
   labelTypes: Array<LabelType>;
+  labellingForm: FormGroup;
 
   /**
    * Constructor passes in the modal service and the labeling data service
-   * @param modalService 
-   * @param labelingDataService 
+   * @param modalService
+   * @param labelingDataService
    */
-  constructor(private modalService: NgbModal, 
+  constructor(
+    private modalService: NgbModal,
     private labelingDataService: LabelingDataService,
-    private artifactDataService: ArtifactDataService, 
-    private router: Router) { 
-      this.routeService = new ReroutingService();
-      this.url = this.router.url;
-      this.artifact = new StringArtifact(-1, "null", "null");
-      this.labellers = new Array();
-      this.p_id = parseInt(this.routeService.getProjectID(this.url));
-      this.labelTypes = new Array<LabelType>();
-    }
+    private artifactDataService: ArtifactDataService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) {
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.artifact = new StringArtifact(-1, 'null', 'null');
+    this.labellers = new Array();
+    this.p_id = parseInt(this.routeService.getProjectID(this.url));
+    this.labelTypes = new Array<LabelType>();
+    this.labellingForm = this.formBuilder.group({});
+  }
 
-
+  /**
+   * We are going to send an array to the backend
+   */
   /**
    * ngOnInit runs after the constructor. When the constructor is executed
    * the artifacts and labels are pulled in
@@ -63,32 +70,39 @@ export class LabellingPageComponent implements OnInit{
   ngOnInit(): void {
     this.getRandomArtifact(this.p_id);
     this.getLabelTypesWithLabels(this.p_id);
+    this.labelTypes.forEach((l: LabelType) => {
+
+    });
   }
 
   /**
    * Function which subscribes to the labelingDataService and retrieves the artifact.
-   * It waits for a response and when the response arrives it adds Bartjan 
+   * It waits for a response and when the response arrives it adds Bartjan
    * as a labeler and then puts the information into this.artifact.
    */
   async getRandomArtifact(p_id: number): Promise<void> {
     const artifact = await this.artifactDataService.getRandomArtifact(p_id);
     this.artifact = artifact;
-    const labellers = await this.artifactDataService.getLabellers(p_id, artifact.getId());
+    const labellers = await this.artifactDataService.getLabellers(
+      p_id,
+      artifact.getId()
+    );
     this.labellers = labellers;
   }
 
   async getLabelTypesWithLabels(p_id: number): Promise<void> {
-    const labelTypes = await this.labelingDataService.getLabelTypesWithLabels(p_id);
+    const labelTypes = await this.labelingDataService.getLabelTypesWithLabels(
+      p_id
+    );
     this.labelTypes = labelTypes;
   }
 
-
   /**
    * Function is ran on mouseDown or mouseUp and updates the current selection
-   * of the artifact. If the selection is null or empty, the selection is set 
+   * of the artifact. If the selection is null or empty, the selection is set
    * to ""
    */
-  selectedText():void {
+  selectedText(): void {
     let hightlightedText: Selection | null = document.getSelection();
     //gets the start and end indices of the highlighted bit
     let startCharacter: number = hightlightedText?.anchorOffset!;
@@ -103,18 +117,17 @@ export class LabellingPageComponent implements OnInit{
     this.selectionEndChar = endCharacter;
     //this is so the buttons still pop up, idk if we need it so ill ask bartgang
     if (hightlightedText == null || hightlightedText.toString().length <= 0) {
-      this.hightlightedText = "";
+      this.hightlightedText = '';
     } else {
       this.hightlightedText = hightlightedText.toString();
     }
   }
 
-  
   /**
    * Opens modal which contains the create LabelFormComponent.
    */
   open(): void {
-    this.modalService.open(LabelFormComponent, { size: 'xl'});
+    this.modalService.open(LabelFormComponent, { size: 'xl' });
   }
 
   /**
@@ -124,7 +137,6 @@ export class LabellingPageComponent implements OnInit{
     this.getRandomArtifact(this.p_id);
   }
 
-
   /**
    * Splitting function, gets text without splitting words and gets start and end char
    */
@@ -133,15 +145,24 @@ export class LabellingPageComponent implements OnInit{
     let lastCharacter = this.selectionEndChar!;
     firstCharacter = this.posFixer(firstCharacter, lastCharacter)[0];
     lastCharacter = this.posFixer(firstCharacter, lastCharacter)[1] + 1;
-    let splitText = this.artifact?.data.substring(firstCharacter, lastCharacter);
-    alert("The text is: '" + splitText + "'\nThe start is at: "
-     + firstCharacter + "\nThe end is at: " + lastCharacter);
+    let splitText = this.artifact?.data.substring(
+      firstCharacter,
+      lastCharacter
+    );
+    alert(
+      "The text is: '" +
+        splitText +
+        "'\nThe start is at: " +
+        firstCharacter +
+        '\nThe end is at: ' +
+        lastCharacter
+    );
   }
 
   /**
    * Gets the correct indices so that words aren't split
    */
-  posFixer(startPos:number, endPos:number) {
+  posFixer(startPos: number, endPos: number) {
     //get the chars at index
     let chart = this.artifact?.data.charAt(startPos);
     let chend = this.artifact?.data.charAt(endPos - 1);
@@ -150,19 +171,19 @@ export class LabellingPageComponent implements OnInit{
       return [startPos, endPos];
     }
     //else we move until we hit a space
-    while ( chart!= ' ' && startPos != -1) {
+    while (chart != ' ' && startPos != -1) {
       chart = this.artifact?.data.charAt(startPos);
       startPos = startPos - 1;
     }
     while (chend != ' ' && endPos != this.artifact?.data.length) {
       chend = this.artifact?.data.charAt(endPos);
       endPos++;
-      console.log(chend,endPos);
+      console.log(chend, endPos);
     }
     //last adjustements from going too far
     startPos = startPos + 2;
     endPos = endPos - 2;
-    return [startPos, endPos]; 
+    return [startPos, endPos];
   }
 
   /**
@@ -171,19 +192,18 @@ export class LabellingPageComponent implements OnInit{
    *
    * @trigger click on label
    */
-   reRouter() : void {
+  reRouter(): void {
     // Use reroutingService to obtain the project ID
     let p_id = this.routeService.getProjectID(this.url);
 
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'labelling-page']);
   }
-  
 
   /**
    * Error function for unimplemented features.
    */
-  notImplemented(): void{
-    throw new Error("This function has not been implemented yet.");
+  notImplemented(): void {
+    throw new Error('This function has not been implemented yet.');
   }
 }

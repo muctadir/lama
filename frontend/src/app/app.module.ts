@@ -33,6 +33,7 @@ import { EditThemeComponent } from './edit-theme/edit-theme.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LabellingTypeComponent } from './labelling-type/labelling-type.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SortableThemeHeader,
     CreateThemeComponent,
     SingleThemeViewComponent,
-    EditThemeComponent
+    EditThemeComponent,
+    LabellingTypeComponent
   ],
   imports: [
     BrowserModule,

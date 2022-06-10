@@ -5,7 +5,7 @@
     <div class="row" id="pageTitle">
         <div id="artifactId" class="col-10">
             Artifact {{ artifact?.getId() }} ({{ artifact?.getIdentifier() }})
-        </div> 
+        </div>
         <div *ngIf="hightlightedText.length > 0 " class="col-2">
             <div id="artifactButtons">
                 <i (click)="split()" class="bi bi-scissors"></i><i (click)="notImplemented()" class="bi bi-brush"></i>
@@ -18,10 +18,10 @@
         <div class = "artifactContainer" id="artifactContainer">
             <p (mouseup)="selectedText()" (mousedown)="selectedText()">{{ artifact?.getData()! }}</p>
         </div>
-        
+
         <!-- Labeller information -->
         <div class="col-6">
-            <div *ngIf="labellers.length != 0"> 
+            <div *ngIf="labellers.length != 0">
                 Labeled by: <span *ngFor="let labeler of labellers; let last = last">{{ labeler.username }}<span *ngIf="!last">, </span></span>
             </div>
         </div>
@@ -44,44 +44,16 @@
         <div class="row">
             <div class="col-12" id="labelThing">
                 <div *ngFor="let labelType of labelTypes" id="labelling-row">
-                    <div class="row">
-                        <div class="col-4">
-                            <!-- Title of the labelType -->
-                            <div class = "labelTypeTitle">
-                                <span>{{ labelType.getName() }}</span> <span (click)="open()" class="float-end"><i class="bi bi-plus-lg"></i></span>
-                            </div> 
-                            <!-- List of available labels -->
-                            <div>
-                                <select class="form-control" name="labels">
-                                    <option *ngFor="let label of labelType.getLabels()" value="{{ label.getName() }}">{{ label.getName() }}</option>
-                                </select>
-                            </div>
-                        </div> 
-                        <div class="col-4" >
-                            <!-- Description of the labelType -->
-                            <div class = "labelDescription">
-                                <div class="descriptionTitle">
-                                    <p>Description</p>
-                                </div>
-                                <div class="descriptionText">
-                                    <!-- <p>{{ label?.getDesc() }}</p> -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <!-- Remark box -->
-                            <textarea class="form-control" rows="4" placeholder="Remark" id="remark"></textarea>
-                        </div>
-                    </div>
+                    <app-labelling-type [labelType]="labelType"></app-labelling-type>
                 </div>
             </div>
-            
+
             <!-- Submission buttons -->
             <div class="col-10"></div>
             <div class="col-2">
                 <!-- Submission buttons -->
                 <div id="butt">
-                    <button class="form-group btn btn-light float-right" (click)="skip()" id="skip-button">Skip</button> 
+                    <button class="form-group btn btn-light float-right" (click)="skip()" id="skip-button">Skip</button>
                     <button class="form-group btn btn-primary float-right" (click)="notImplemented()">Submit</button>
                 </div>
             </div>
