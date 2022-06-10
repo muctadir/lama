@@ -63,6 +63,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MergeLabelFormComponent,
     IndividualLabelComponent,
     ThemeManagementComponent,
+    ThemeInfoComponent,
     SortableThemeHeader,
     SingleThemeViewComponent,
     AddUsersModalComponent,
