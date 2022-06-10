@@ -125,6 +125,8 @@ def create_project(*, user):
     # Get the information given by the frontend
     project_info = request.json
 
+    project_info = project_info["params"]
+
     # Load the project data into a project object
     project_schema = ProjectSchema()
     project = project_schema.load(project_info["project"])
