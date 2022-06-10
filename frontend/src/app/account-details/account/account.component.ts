@@ -1,8 +1,10 @@
 // Veerle Furst
-
+// Jarl Jansen
 import { Component } from '@angular/core';
 import { User } from 'app/classes/user';
-import axios from 'axios';
+import { RequestHandler } from 'app/classes/RequestHandler';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogoutComponent } from 'app/logout/logout.component';
 
 @Component({
   selector: 'app-account',
@@ -12,163 +14,87 @@ import axios from 'axios';
 
 export class AccountComponent {
 
-  // Placeholder for the current user
+  /* Account data of the user */
   user: any;
 
-  edit: boolean = false;
+  /* Page currently getting viewed, 0 = info page, 1 = edit page, 2 = edit password page */
+  mode: number = 0;
 
-  editPassword: boolean = false;
+  /* Error message that is displayed to the user */
+  errorMsg: string = "";
 
-  errorMsg = "";
+  /**
+   * Initializes the modalService 
+   * 
+   * @param modalService instance of modal service
+   */
+  constructor(private modalService: NgbModal) { }
 
+  /**
+   * Calls function responsible for getting the user data from the backend
+   * 
+   * @trigger on component load
+   */
   ngOnInit(){
-    // Get the information of the user on loading the page
     this.getInformation()
   }
 
-  // Get the information of the user
-  getInformation(){
-    // Get the token of the session
+  /**
+   * Changes the page that is getting displayed to the user
+   * And reloads user data
+   * 
+   * @param newMode new page to displayed
+   * @modifies mode
+   */
+  modeChange(newMode: number) {
+    // Changes page
+    this.mode = newMode;
+    // Reloads user data
+    this.getInformation();
+  }
+
+  /**
+   * Queries backend for the user account details
+   * 
+   * @modifies user
+   * 
+   * TODO: error handling code
+   */
+  async getInformation(){
+    // Get the user authentication token
     let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
-      // Get from the backend
-      const response = axios.get("http://127.0.0.1:5000/account/information", {
-        headers: {
-          'u_id_token': token
-        }
-      })
-      .then(response =>{
-        // Get the response data
-        let accountInformation = response.data;
-        // Create a new user with the response data
-        this.user = new User(
-          accountInformation['id'],
-          accountInformation['username']
-        )
-        this.user.setEmail(accountInformation['email']);
-        this.user.setDescription(accountInformation['description']);
-      })
-      .catch(error =>{
-        // Show the error 
-        this.errorMsg = error.response.data
-      })
+
+    // Initializes the request handler
+    let requestHandler: RequestHandler = new RequestHandler(token);
+    
+    try {
+      // Creates a request for the account information
+      let response: any = requestHandler.get("/account/information", {}, true);
+
+      // Waits on the request
+      let result = await response;
+
+      // Gets the user data from the database response and stores the data
+      this.user = new User(result['id'], result['username']);
+      this.user.setEmail(result['email']);
+      this.user.setDesc(result['description']);
+
+      // Resets error message
+      this.errorMsg = ""
+    } catch (e) {
+      // Displays error message to the user if anything goes wrong.
+      this.errorMsg = "An error occured when requesting the server for user data.";
     }
   }
 
-
-  // Function for getting all form elements
-  getFormElements(form:HTMLFormElement): Record<string, string>{
-    // Make a dictionary for all values
-    let params: Record<string, string> = {};
-    // For loop for adding the params to the list
-    for (let i = 0; i < form.length; i++) { 
-      // Add them to dictionary
-      let param = form[i] as HTMLInputElement; // Typecast
-      params[param.name] = param.value;
-    }
-    // Return the dictionary of values
-    return params;
+  /**
+   * Opens the logout modal asking confirmation for logging out
+   * 
+   * @trigger click on logout button
+   */
+  openLogout() : void {
+    // opens logout modal
+    this.modalService.open(LogoutComponent, {});
   }
 
-  // Function for changing the information when edited
-  changeInformation(){
-
-    // Get the form with all information
-    const post_form: HTMLFormElement = (document.querySelector("#accountEditForm")!);
-
-    // Get all input fields
-    const inputFields = document.querySelectorAll("input");
-    // Check if the input fields are filled in
-    const validInputs = Array.from(inputFields).filter( input => input.value == "");
-
-     // Check validity of filled in form
-     if (validInputs.length == 0) {
-
-      // Params of the name, email and description
-      let params = this.getFormElements(post_form);
-
-      // Way to get information to backend
-      let accountInformation: Record<string, any> = {};
-      // Project information
-      accountInformation = {
-        "username" : params['username'],
-        "description" : params['description'],
-        "email": params["email"]
-      };
-
-      // Get the session token
-      let token: string | null  = sessionStorage.getItem('ses_token');
-      if (typeof token === "string"){
-        // Post to the backend
-        const response = axios.post("http://127.0.0.1:5000/account/edit", accountInformation, {
-          headers: {
-            'u_id_token': token
-          }
-        })
-        .then(response => {          
-          // Reloads the page
-          window.location.reload();
-        })
-        .catch(error => {
-          // Show the error
-          this.errorMsg = error.response.data
-        })
-      }
-    } else {
-      this.errorMsg = "Fill in all fields"
-    }
-  }
-
-
-  editPasswordF(){
-    // Get the form with all information
-    const post_form: HTMLFormElement = (document.querySelector("#passwordEditForm")!);
-
-    // Get all input fields
-    const inputFields = document.querySelectorAll("input");
-    // Check if the input fields are filled in
-    const validInputs = Array.from(inputFields).filter( input => input.value == "");
-
-     // Check validity of filled in form
-     if (validInputs.length == 0) {
-
-      // Params of the name, email and description
-      let params = this.getFormElements(post_form);
-
-      // Check if passwords are equal
-      if(params["newPassword"]==params["newPasswordR"]){
-
-        // Way to get information to backend
-        let passwordInformation: Record<string, any> = {};
-        // Project information
-        passwordInformation = {
-          "password" : params['password'],
-          "newPassword": params["newPassword"]
-        };
-
-        // Get the session token
-        let token: string | null  = sessionStorage.getItem('ses_token');
-        if (typeof token === "string"){
-          // Post to the backend
-          const response = axios.post("http://127.0.0.1:5000/account/editPassword", passwordInformation, {
-            headers: {
-              'u_id_token': token
-            }
-          })
-          .then(response => {          
-            // Reloads the page
-            window.location.reload();
-          })
-          .catch(error => {
-            // Show the error
-            this.errorMsg = error.response.data
-          })
-        }
-      } else {
-        this.errorMsg = "Passwords are not equal";
-      }
-    } else {
-      this.errorMsg = "Fill in all fields";
-    }
-  }
 }

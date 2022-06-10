@@ -1,5 +1,4 @@
 /* @author Jarl */
-
 import { Component, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
