@@ -50,8 +50,11 @@ def nr_project_conflicts(p_id):
         func.sum(per_artifact.c.conflict_count)
     )
 
+    # Make the per_project query to the database
     result = db.session.scalar(per_project)
 
+    # If the query didn't come up with anything,
+    #  then there are 0 conflicts
     if not result:
         result = 0
 
@@ -96,15 +99,18 @@ def nr_user_conflicts(p_id):
         Labelling.a_id, Labelling.u_id
     ).subquery()
 
-    # Sum the number of conflicts for each user (which is summing the conflicts for each artifact they have labelled)
+    # Sum the number of conflicts for each user 
+    # (which is summing the conflicts for each artifact the user has labelled)
     per_user = select(
         per_user_artifact.c.u_id, func.sum(per_user_artifact.c.conflict_count)
     ).group_by(
         per_user_artifact.c.u_id
     )
 
+    # Make the per_user query to the database
     results = db.session.execute(per_user).all()
 
+    # Put the results of the query in a dictionary
     results = dict(
         (u_id, int(conflicts)) for u_id, conflicts in results
     )

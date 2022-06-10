@@ -59,15 +59,35 @@ export class StatsComponent implements OnInit{
       this.getUserStats(this.p_id);
   }
 
+  /**
+   * Gets the data of a single project from the backend
+   * 
+   * @param p_id number, id of the project 
+   * @modifies this.project, such that this.project contains the details of the project
+   * @modifies this.conflicts, such that this.conflicts' value is equal to 
+   * the number of conflicts in the project
+   */
   async getProject(p_id: number): Promise<void>{
+    // Make request to the backend
     const data = await this.statsDataService.getArtifact(p_id);
 
+    // Pass the project data
     this.project = data['project_data']
+    // Pass the number of conflicts
     this.conflicts = data['conflicts']
   }
 
+  /**
+   * Gets the statistics for each user
+   * 
+   * @param p_id number, id of the project
+   * @modifies this.user_contribution, such that this.user_contribution contains an array of statistics
+   * where each element has the statistics for one user
+   */
   async getUserStats(p_id: number): Promise<void>{
+    // Make request to the backend
     const data = await this.statsDataService.getUserStats(p_id)
+    // Pass the user statistics
     this.user_contribution = data
   }
 

@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-1"></div>
         <div class="col-10">
-            <div id="project_title">Project {{project.getId()}}</div>
+            <div id="project_title"> {{project.getName()}}</div>
         </div>
     </div>
 
@@ -83,9 +83,13 @@
                     <!--Table Headers-->
                     <thead>
                         <tr>
+                            <!-- Column with usernames -->
                             <th scope="col"><p class="tableheader">User</p></th>
+                            <!-- Column with number of artifacts labelled by user -->
                             <th scope="col"><p class="tableheader"># Labelled artifacts</p></th>
+                            <!-- Column with average time spent labelling by user -->
                             <th scope="col"><p class="tableheader">Avg time per artifact</p></th>
+                            <!-- Column with number of conflicts user is involved in -->
                             <th scope="col"><p class="tableheader"># Conflicts</p></th>
                         </tr>
                     </thead>

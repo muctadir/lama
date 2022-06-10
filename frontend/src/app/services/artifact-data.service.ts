@@ -77,50 +77,22 @@ export class ArtifactDataService {
    * @returns Promise<boolean>
    */
   async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<void> {
-    // TODO: Uncomment when handler can handle arrays 
-    // // Check if the p_id is larger than 0
-    // if (p_id < 1) throw new Error("p_id cannot be less than 1")
-    // // Check if the list of artifacts is empty
-    // if (artifacts.length <= 0) throw new Error("No artifacts have been submitted")
-    // // Check if the artifacts are empty
-    // for (const element of artifacts) {
-    //   if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
-    // }
-
-    // // Send the data to the database
-    // await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts }, true);
-
-    let token: string | null = sessionStorage.getItem('ses_token');
-    // Check if the session token exists
-    if (typeof token !== "string") throw new Error("User is not logged in");
     // Check if the p_id is larger than 0
-    if (p_id < 0) throw new Error("p_id cannot be less than 0")
+    if (p_id < 1) throw new Error("p_id cannot be less than 1")
     // Check if the list of artifacts is empty
     if (artifacts.length <= 0) throw new Error("No artifacts have been submitted")
-    // Check if the artifacts are empty
+
+    // Check if the artifact has any data
     for (const element of artifacts) {
       if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
     }
 
-    let result: boolean;
-    console.log(artifacts)
-    // Send the data to the database
-    axios.post('http://127.0.0.1:5000/artifact/creation', artifacts, {
-      headers: {
-        'u_id_token': token
-      },
-      params: {
-        'p_id': p_id
-      }
-    }).then(response => {
-      // p_response.innerHTML = "Artifacts added"
-      return Math.floor(response.status / 100) == 2;
-    })
-      .catch(error => {
-        result = false;
-        return false;
-      });
+    let artifacts_rec = {
+      'array': artifacts
+    }
 
+    // Send the data to the database
+    await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
   }
 
   /**
@@ -153,18 +125,17 @@ export class ArtifactDataService {
 
     // Get the artifact information from the back end
     let response = await this.requestHandler.get('/artifact/singleArtifact', { 'a_id': a_id, 'extended': true }, true);
-    console.log(response)
-      // Get the artifact from the response
-      let artifact = response['artifact'];
+    // Get the artifact from the response
+    let artifact = response['artifact'];
 
-      // Get the artifact data
-      result.setId(artifact["id"]);
-      result.setIdentifier(artifact["identifier"]);
-      result.setData(artifact["data"]);
-      result.setParentId(artifact["parent_id"]);
-      result.setChildIds(response["artifact_children"]);
+    // Get the artifact data
+    result.setId(artifact["id"]);
+    result.setIdentifier(artifact["identifier"]);
+    result.setData(artifact["data"]);
+    result.setParentId(artifact["parent_id"]);
+    result.setChildIds(response["artifact_children"]);
 
-      // Return the record
-      return [result, response["artifact_labellings"], response["username"]]
+    // Return the record
+    return [result, response["artifact_labellings"], response["username"]]
   }
 }

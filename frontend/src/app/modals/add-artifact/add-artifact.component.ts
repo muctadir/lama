@@ -111,6 +111,12 @@ export class AddArtifactComponent {
       // Removes the artifacts which are only a newline
       new_artifacts = new_artifacts.filter(e => e);
 
+      /**
+       * Makes a request to the backend to add artifacts
+       * 
+       * @param pid number, the id of the project
+       * @param artifacts record, has the data of all the artifacts that need to be added
+       */
       async function addArtifacts(pid: number, artifacts: Record<string, any>[]){
         await artifactDataService.addArtifacts(pid, artifacts);
       }
@@ -119,19 +125,19 @@ export class AddArtifactComponent {
       let allArtifacts: Record<string, any>[] = [];
 
       // Get the information of each artifact
-      for (const element of new_artifacts) {
+      for (const data of new_artifacts) {
+        // Record with all the artifact information
         let artifactInformation: Record<string, any> = {};
 
         // Artifact information
         artifactInformation = {
-          'data': element,
+          'data': data,
           'p_id': p_id
         }
         // Add the info of this artifact to the list of artifact information
         allArtifacts.push(artifactInformation);
       }
 
-      // TODO: Change message for confirmation/error
       const p_response: HTMLElement = document.querySelector("#createArtifactResponse")!;
       addArtifacts(p_id, allArtifacts)
       p_response.innerHTML = "Artifacts added"
