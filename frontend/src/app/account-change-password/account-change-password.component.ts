@@ -89,21 +89,27 @@ export class AccountChangePasswordComponent {
     // Get the session token
     let token: string | null  = sessionStorage.getItem('ses_token');
 
-    // Initializes request handler and makes request
+    // Initializes request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
-    let response: any = requestHandler.post("/account/editPassword", passwordInformation, true);
 
-    // Waits on the request
-    let result = await response;
+    try {
+      // Makes request
+      let response: any = requestHandler.post("/account/editPassword", passwordInformation, true);
 
-    // Displays the response message
-    this.errorMsg = result;
+      // Waits on the request
+      let result = await response;
 
-    // Executed if password update was successful
-    if (result.includes("Updated succesfully")) {
-      // Reloads the page, goes back to the info page
-      this.modeChangeEvent.emit(0);
+      // Executed if password update was successful
+      if (result.includes("Updated succesfully")) {
+        // Reloads the page, goes back to the info page
+        this.modeChangeEvent.emit(0);
+      }
+      
+      // Resets the error message 
+      this.errorMsg = "";
+    } catch(e) {
+      // Displays an error to the user if anything goes wrong
+      this.errorMsg = "Please enter correct details";
     }
   }
-
 }

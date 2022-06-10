@@ -50,8 +50,8 @@ const routes: Routes = [
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
-    ]}];
-    //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
+    ]},
+    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],

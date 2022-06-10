@@ -109,18 +109,25 @@ export class EditAccountSettingsComponent {
 
     // Initializes request handler and makes request
     let requestHandler: RequestHandler = new RequestHandler(token);
-    let response: any = requestHandler.post("/account/edit", accountInformation, true);
+    try {
+      let response: any = requestHandler.post("/account/edit", accountInformation, true);
 
-    // Waits on the request
-    let result = await response;
+      // Waits on the request
+      let result = await response;
 
-    // Displays the response message
-    this.errorMsg = result;
-
-    if (result.includes("Updated succesfully")) {
-      // Reloads the page, goes back to the info page
-      this.modeChangeEvent.emit(0);
+      if (result.includes("Updated succesfully")) {
+        // Reloads the page, goes back to the info page
+        this.modeChangeEvent.emit(0);
+      }
+      
+      // Resets error message
+      this.errorMsg = "";
+    } catch(e) {
+      // Displays the error message
+      this.errorMsg = "Please enter valid details";
     }
+
+    
   }
 
 }

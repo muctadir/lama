@@ -58,18 +58,23 @@ export class AccountComponent {
 
     // Initializes the request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
-    // Creates a request for the account information
-    let response: any = requestHandler.get("/account/information", {}, true);
-
-    // Waits on the request
-    let result = await response;
-
-    // Gets the user data from the database response and stores the data
+    
     try {
+      // Creates a request for the account information
+      let response: any = requestHandler.get("/account/information", {}, true);
+
+      // Waits on the request
+      let result = await response;
+
+      // Gets the user data from the database response and stores the data
       this.user = new User(result['id'], result['username']);
       this.user.setEmail(result['email']);
       this.user.setDesc(result['description']);
+
+      // Resets error message
+      this.errorMsg = ""
     } catch (e) {
+      // Displays error message to the user if anything goes wrong.
       this.errorMsg = "An error occured when requesting the server for user data.";
     }
   }
