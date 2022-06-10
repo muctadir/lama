@@ -57,6 +57,7 @@ p.artifactText{
     letter-spacing: 1px;
     text-align: justify;
     padding-left: 20px;
+    overflow-wrap: break-word;
 }
 p.timesLabelled{
     font-size: 17px;
@@ -143,4 +144,9 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 #center-pagination {
     display: flex; 
     justify-content: center;
+}
+
+//Artifacts Table test
+#artifactsTable{
+    table-layout: fixed;
 }

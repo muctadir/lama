@@ -74,7 +74,6 @@ export class ArtifactDataService {
    * @returns Promise<boolean>
    */
   async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<void> {
-    // TODO: Uncomment when handler can handle arrays 
     // Check if the p_id is larger than 0
     if (p_id < 1) throw new Error("p_id cannot be less than 1")
     // Check if the list of artifacts is empty
