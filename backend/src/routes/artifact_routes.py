@@ -2,6 +2,7 @@
 # Ana-Maria Olteniceanu
 
 from importlib.metadata import requires
+from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
@@ -17,7 +18,8 @@ artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
-def get_artifacts(*, user):
+@in_project
+def get_artifacts(*, user, membership):
     # Get args from request 
     args = request.args
     # What args are required
@@ -28,13 +30,6 @@ def get_artifacts(*, user):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
-
-    # Get membership of the user
-    membership = db.session.get(Membership, {'u_id': user.id, 'p_id': p_id})
-
-    # Check that the membership exists
-    if (not membership):
-        return make_response('Unauthorized', 401)
     
     # Check if user is admin for the project and get artifacts
     if membership.admin:
@@ -88,7 +83,8 @@ def get_artifacts(*, user):
 
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
-def add_new_artifacts(*, user):
+@in_project
+def add_new_artifacts():
     # Get args from request 
     args = request.json['params']
     # What args are required
@@ -127,11 +123,12 @@ def add_new_artifacts(*, user):
 
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
-def single_artifact(*, user):
+@in_project
+def single_artifact(*, user, membership):
     # Get args from request 
     args = request.args
     # What args are required
-    required = ['a_id', 'extended']
+    required = ['p_id', 'a_id', 'extended']
 
     # Check if required args are present
     if not check_args(required, args):
@@ -151,7 +148,8 @@ def single_artifact(*, user):
     # Put all values into a dictionary
     info = {
         "artifact": artifact_json,
-        "username": user.username
+        "username": user.username,
+        "admin": membership.admin
     }
 
     # If the extended data was requested, append the requested data

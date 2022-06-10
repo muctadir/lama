@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
-import { RequestHandler } from './classes/RequestHandler';
-import axios, { Axios } from 'axios';
-
+import { RequestHandler } from 'app/classes/RequestHandler';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +81,7 @@ export class ArtifactDataService {
     if (artifacts.length <= 0) throw new Error("No artifacts have been submitted")
 
     // Check if the artifact has any data
-    for (const element of artifacts) { 
+    for (const element of artifacts) {
       if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
     }
 
@@ -110,7 +107,8 @@ export class ArtifactDataService {
      * @throws Error if a_id < 1
      * @returns Promise<StringArtifact>
      */
-  async getArtifact(p_id: number, a_id: number): Promise<Array<any>> {
+  async getArtifact(p_id: number, a_id: number): Promise<Record<string, any>> {
+    
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');
     // Check if the session token exists
@@ -121,24 +119,30 @@ export class ArtifactDataService {
 
     // Check if the a_id is larger than 1
     if (a_id < 1) throw new Error("a_id cannot be less than 1")
-
+    
     // Resulting artifact
     let result: StringArtifact = new StringArtifact(0, 'null', 'null');
-
+    
     // Get the artifact information from the back end
-    let response = await this.requestHandler.get('/artifact/singleArtifact', { 'a_id': a_id, 'extended': true }, true);
+    console.log("AAAAAA")
+    let response = await this.requestHandler.get('/artifact/singleArtifact', { 'p_id': p_id, 'a_id': a_id, 'extended': true }, true);
     console.log(response)
-      // Get the artifact from the response
-      let artifact = response['artifact'];
+    // Get the artifact from the response
+    let artifact = response['artifact'];
 
-      // Get the artifact data
-      result.setId(artifact["id"]);
-      result.setIdentifier(artifact["identifier"]);
-      result.setData(artifact["data"]);
-      result.setParentId(artifact["parent_id"]);
-      result.setChildIds(response["artifact_children"]);
-
-      // Return the record
-      return [result, response["artifact_labellings"], response["username"]]
+    // Get the artifact data
+    result.setId(artifact["id"]);
+    result.setIdentifier(artifact["identifier"]);
+    result.setData(artifact["data"]);
+    result.setParentId(artifact["parent_id"]);
+    result.setChildIds(response["artifact_children"]);
+    
+    // Return the record
+    return {
+      "result": result,
+      "labellings": response["artifact_labellings"],
+      "username": response["username"],
+      "admin": response["admin"]
+    }
   }
 }
