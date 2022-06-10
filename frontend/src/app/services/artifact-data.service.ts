@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
-import { RequestHandler } from './classes/RequestHandler';
+import { RequestHandler } from 'app/classes/RequestHandler';
 import axios, { Axios } from 'axios';
 
 

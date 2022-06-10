@@ -16,7 +16,7 @@ from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from src.app_util import login_required
-from src.routes.conflict_routes import nr_project_conflicts
+from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -244,6 +244,9 @@ def project_stats(*, user):
         select(Project).where(Project.id==p_id)
     )
 
+    # Get all user with conflicts and the number of conflicts they have
+    user_conflicts = nr_user_conflicts(p_id)
+
     # List of all stats per user
     stats = []
     for user in project.users:
@@ -281,10 +284,13 @@ def project_stats(*, user):
             avg_time = __time_to_string(total_time / len(user.labellings))
         else:
             # If there are no labelling set average time to 0
-            avg_time = 0
+            avg_time = "00:00:00"
 
         # Get the number of conflicts in the project
-        conflicts = 0
+        if user.id in user_conflicts:
+            conflicts = user_conflicts[user.id]
+        else:
+             conflicts = 0
 
         # Add all data to a dictionary
         info = {
