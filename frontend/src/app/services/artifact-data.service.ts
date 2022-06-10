@@ -88,7 +88,7 @@ export class ArtifactDataService {
     let artifacts_rec = {
       'array': artifacts
     }
-    console.log(artifacts_rec)
+
     // Send the data to the database
     await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
 
@@ -124,9 +124,8 @@ export class ArtifactDataService {
     let result: StringArtifact = new StringArtifact(0, 'null', 'null');
     
     // Get the artifact information from the back end
-    console.log("AAAAAA")
     let response = await this.requestHandler.get('/artifact/singleArtifact', { 'p_id': p_id, 'a_id': a_id, 'extended': true }, true);
-    console.log(response)
+
     // Get the artifact from the response
     let artifact = response['artifact'];
 

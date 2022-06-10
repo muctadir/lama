@@ -66,7 +66,6 @@ export class SingleArtifactViewComponent implements OnInit {
    * @param p_id the id of the project
    */
   async getArtifact(a_id: number, p_id: number): Promise<void> {
-    console.log("YEET")
     const result = await this.artifactDataService.getArtifact(p_id, a_id);
     this.artifact = result["result"];
     this.userLabels = result["labellings"];
