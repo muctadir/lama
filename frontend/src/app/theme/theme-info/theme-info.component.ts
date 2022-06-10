@@ -25,17 +25,18 @@ export class ThemeInfoComponent implements OnInit {
   // Error message string
   errorMsg = "";
 
-  // Form
+  // Form for name and description
   themeForm = this.formBuilder.group({
     name: "",
     description: ""
   });
 
+  // Variable for the current theme
   theme: Theme;
 
   //  Project id
   p_id: number;
-  // Theme if
+  // Theme id
   t_id: number;
 
   // Variables for routing
@@ -82,24 +83,15 @@ export class ThemeInfoComponent implements OnInit {
     // Get all possible labels
     this.get_labels(this.p_id);
 
-    // Set the booleans accordingly
-    if (this.url.indexOf("create") > -1){
-      this.edit = false;
-      this.create = true;
-    } else {
-      this.edit = true;
-      this.create = false;
-    }
+    // Set the create/edit booleans
+    this.setBooleans();
 
-    // Get the header based on the url
-    if (this.create){
-      this.createEditThemeHeader = "Create";
-    } else {
-      this.createEditThemeHeader = "Edit";
-    }
+    // Set the header of the page
+    this.setHeader();  
 
     // If were in edit mode we get the information, and set values
     if(this.edit){
+      // Get theme id
       this.t_id = Number(this.routeService.getThemeID(this.url));
       // Get the current theme
       this.get_single_theme_info()
@@ -111,13 +103,35 @@ export class ThemeInfoComponent implements OnInit {
     }
   }
 
+  // Function for setting the edit/create booleans
+  setBooleans(): void {
+    // Set the booleans accordingly
+    if (this.url.indexOf("create") > -1){
+      this.edit = false;
+      this.create = true;
+    } else {
+      this.edit = true;
+      this.create = false;
+    }
+  }
+
+  // Function for setting the header of the page
+  setHeader(): void {
+    // Get the header based on the booleans
+    if (this.create){
+      this.createEditThemeHeader = "Create";
+    } else {
+      this.createEditThemeHeader = "Edit";
+    }
+  }
+
   // Function for getting the theme info
-  async get_single_theme_info(){
+  async get_single_theme_info(): Promise<void> {
     this.theme = await this.themeDataService.single_theme_info(this.p_id, this.t_id);
   }
 
   // Function for setting the theme info
-  insertThemeInfo(){
+  insertThemeInfo(): void {
     // Get the labels of the theme
     let labels = this.theme.getLabels()
     // Set the labels of the theme in the page
@@ -138,7 +152,7 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   // Function for creating a theme
-  async createTheme(){
+  async createTheme(): Promise<void> {
     // Checks input
     let not_empty = this.service.checkFilled(this.themeForm.value.name) && 
       this.service.checkFilled(this.themeForm.value.description);
@@ -180,7 +194,7 @@ export class ThemeInfoComponent implements OnInit {
       // Reset name and description forms
       this.themeForm.reset();
       // Give succes message
-      this.errorMsg = "Theme succesfully saved";  
+      this.errorMsg = response;  
       // Rerouter to the correct page
       this.reRouter();   
     } else {
@@ -190,13 +204,13 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   // Async function for getting all themes that have no parents
-  async get_themes_without_parents(p_id: number) {
+  async get_themes_without_parents(p_id: number): Promise<void> {
     // Put the gotten themes into the list of themes
     this.allSubThemes = await this.themeDataService.themes_without_parents(p_id);
   }
 
   // Async function for getting all labels in the project
-  async get_labels(p_id: number) {
+  async get_labels(p_id: number): Promise<void> {
     // Put the gotten themes into the list of themes
     this.allLabels = await this.labelDataService.getLabels(p_id);
   }
@@ -215,7 +229,7 @@ export class ThemeInfoComponent implements OnInit {
 
   // ADDING LABELS / THEMES
   //Adds labels to added labels array.
-  addLabel(label: Label){
+  addLabel(label: Label): void {
     // Check if the label was already added
     for (var addedLabel of this.addedLabels){
       if (addedLabel.getName() == label.getName()){
@@ -228,7 +242,7 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   //Function for adding subtheme to added subthemes array
-  addSubtheme(subTheme:any){
+  addSubtheme(subTheme:any): void {
     // Check if the sub-theme was already added
     for (var addedSubTheme of this.addedSubThemes){
       if (addedSubTheme == subTheme){
@@ -242,7 +256,7 @@ export class ThemeInfoComponent implements OnInit {
 
   // REMOVING LABELS / THEMES
   // Function for removing label
-  removeLabel(label:any){
+  removeLabel(label:any): void {
     
     // Go through all labels
     this.addedLabels.forEach((addedLabels, index)=>{
@@ -254,7 +268,7 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   // Function for removing subtheme
-  removeSubtheme(subTheme:any){
+  removeSubtheme(subTheme:any): void {
     // Go through all labels
     this.addedSubThemes.forEach((addedSubThemes, index)=>{
       // If clicked cross matches the label, splice them from the labels
@@ -270,27 +284,22 @@ export class ThemeInfoComponent implements OnInit {
 
   // HIGHLIGHTING
   // Function for highlighting selected label
-  highlightLabel(label:any){
+  highlightLabel(label:any): void {
     this.highlightedLabel = label.getName();
   }
   //Function for highlighting selected sub-theme
-  highlightSubtheme(subtheme:any){
+  highlightSubtheme(subtheme:any): void {
     this.highlightedSubtheme = subtheme.getName();
   }
 
   // DISPLAY DESCRIPTIONS
   //Displays the description for selected label
-  displayDescriptionLabel(label:any){
+  displayDescriptionLabel(label:any): void {
     this.selectedDescriptionLabel = label.getDesc();
   }
   //Displays the description for selected theme
-  displayDescriptionTheme(theme:any){
+  displayDescriptionTheme(theme:any): void {
     this.selectedDescriptionTheme = theme.getDesc();
-  }
-
-  // Filler for TODO functions
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
   }
 
   /**
