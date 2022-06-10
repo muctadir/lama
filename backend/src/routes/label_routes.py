@@ -75,8 +75,8 @@ def edit_label():
     
     try:
         db.session.execute(
-            update(Label).where(Label.id == args['labelId']).values(name=args['labelName'],
-            description=args['labelDescription'])
+            update(Label)
+            .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
         )
         db.session.commit()
     except:
@@ -101,7 +101,8 @@ def get_all_labels():
     
     # Get all the labels of a labelType
     labels = db.session.execute(
-            select(Label).where(Label.p_id==args['p_id'])
+            select(Label)
+            .where(Label.p_id==args['p_id'])
         ).scalars().all()
 
     label_schema = LabelSchema()
@@ -171,7 +172,8 @@ def merge_route():
 
     ids = [args['leftLabelId'], args['rightLabelId']]
     labels = db.session.execute(
-            select(Label).where(Label.id.in_(ids))).scalars.all()
+            select(Label)
+            .where(Label.id.in_(ids))).scalars.all()
     
     # Check that the labels exist
     if len(labels) != 2:
@@ -198,7 +200,33 @@ def merge_route():
     # Update all labellings
     try:
         db.session.execute(
-            update(Labelling).where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
+            update(Labelling)
+            .where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
         db.session.commit()
     except:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+
+# Author: Veerle Furst
+# Function for getting the information (label, label_type, and artifacts) of a label
+def get_label_info(label, u_id, admin):
+    # Schemas
+    label_schema = LabelSchema()
+    artifact_schema = ArtifactSchema()
+    # Info of the label
+    info = {
+        "label" : label_schema.dump(label),
+        "label_type": label.label_type.name,
+        "artifacts" : artifact_schema.dump(get_label_artifacts(label, u_id, admin), many=True)
+    }
+    return info
+
+# Author: Veerle Furst
+# Only gets the artifacts that the user with a given id can see
+def get_label_artifacts(label, u_id, admin):
+    if admin:
+        return label.artifacts
+    # Else get the artifacts they may see
+    return db.session.execute(
+        select(Artifact)
+        .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
+    )

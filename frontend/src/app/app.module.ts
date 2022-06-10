@@ -6,34 +6,35 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TestingComponent } from './testing/testing.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { AccountComponent } from './account/account.component';
-import { AccountInformationFormComponent } from './account-information-form/account-information-form.component';
-import { HomePageComponent } from './home-page/home-page.component';
-import { AddUsersModalContent, ProjectCreationComponent } from './project-creation/project-creation.component';
+import { LoginComponent } from './account-details/login/login.component';
+import { RegisterComponent } from './account-details/register/register.component';
+import { AccountComponent } from './account-details/account/account.component';
+import { AccountInformationFormComponent } from './account-details/account-information-form/account-information-form.component';
+import { HomePageComponent } from './home/home-page/home-page.component';
+import { ProjectCreationComponent } from './home/project-creation/project-creation.component';
+import { AddUsersModalComponent } from './modals/add-users-modal/add-users-modal.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { ProjectComponent } from './project/project.component';
 import { StatsComponent } from './stats/stats.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
-import { LabelFormComponent } from './label-form/label-form.component';
-import { ArtifactManagementPageComponent } from './artifact-management-page/artifact-management-page.component';
-import { SingleArtifactViewComponent } from './single-artifact-view/single-artifact-view.component';
-import { AddArtifactComponent } from './add-artifact/add-artifact.component';
-import { LabelManagementComponent } from './label-management/label-management.component';
-import { MergeLabelFormComponent } from './merge-label-form/merge-label-form.component';
-import { IndividualLabelComponent } from './individual-label/individual-label.component';
-import { ConflictPageComponent } from './conflict-page/conflict-page.component';
-import { ConflictResolutionComponent } from './conflict-resolution/conflict-resolution.component';
-import { ThemeManagementComponent } from './theme-management/theme-management.component';
+import { LabelFormComponent } from './modals/label-form/label-form.component';
+import { ArtifactManagementPageComponent } from './artifact/artifact-management-page/artifact-management-page.component';
+import { SingleArtifactViewComponent } from './artifact/single-artifact-view/single-artifact-view.component';
+import { AddArtifactComponent } from './modals/add-artifact/add-artifact.component';
+import { LabelManagementComponent } from './label/label-management/label-management.component';
+import { MergeLabelFormComponent } from './modals/merge-label-form/merge-label-form.component';
+import { IndividualLabelComponent } from './label/individual-label/individual-label.component';
+import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.component';
+import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
+import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SortableThemeHeader } from './sortable-theme.directive';
-import { CreateThemeComponent } from './create-theme/create-theme.component';
-import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
-import { EditThemeComponent } from './edit-theme/edit-theme.component';
+import { CreateThemeComponent } from './theme/create-theme/create-theme.component';
+import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
+import { EditThemeComponent } from './theme/edit-theme/edit-theme.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutComponent } from './logout/logout.component';
+import { LogoutComponent } from './modals/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -45,13 +46,12 @@ import { LogoutComponent } from './logout/logout.component';
     AccountInformationFormComponent,
     HomePageComponent,
     ProjectCreationComponent,
-    AddUsersModalContent,
+    AddUsersModalComponent,
     ConflictPageComponent,
     ConflictResolutionComponent,
     NavigationMenuComponent,
     ProjectComponent,
     StatsComponent,
-    AddUsersModalContent,
     LabellingPageComponent,
     LabelFormComponent,
     ArtifactManagementPageComponent,
@@ -65,6 +65,7 @@ import { LogoutComponent } from './logout/logout.component';
     CreateThemeComponent,
     SingleThemeViewComponent,
     EditThemeComponent,
+    AddUsersModalComponent,
     LogoutComponent
   ],
   imports: [

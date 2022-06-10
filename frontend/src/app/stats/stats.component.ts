@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReroutingService } from 'app/rerouting.service';
+import { ReroutingService } from 'app/services/rerouting.service';
 
 type user = {
   username: string,

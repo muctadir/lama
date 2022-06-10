@@ -2,9 +2,9 @@
 
 import { Component, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { ReroutingService } from 'app/rerouting.service';
+import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutComponent } from 'app/logout/logout.component';
+import { LogoutComponent } from 'app/modals/logout/logout.component';
 
 @Component({
   selector: 'app-navigation-menu',
