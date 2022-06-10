@@ -65,12 +65,13 @@ export class AccountComponent {
     let result = await response;
 
     // Gets the user data from the database response and stores the data
-    this.user = new User(
-      result['id'],
-      result['username']
-    )
-    this.user.setEmail(result['email']);
-    this.user.setDesc(result['description']);
+    try {
+      this.user = new User(result['id'], result['username']);
+      this.user.setEmail(result['email']);
+      this.user.setDesc(result['description']);
+    } catch (e) {
+      this.errorMsg = "An error occured when requesting the server for user data.";
+    }
   }
 
 }

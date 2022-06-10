@@ -1,6 +1,7 @@
+<!-- @Author Jarl Jansen -->
+<!-- Account information -->
 <ng-container *ngIf="mode==0">
-    <app-account-information [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
-    <div *ngIf="errorMsg">{{errorMsg}}</div>
+    <app-account-information [errorM]="errorMsg" [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
 </ng-container>
 
 <!-- Edit division -->

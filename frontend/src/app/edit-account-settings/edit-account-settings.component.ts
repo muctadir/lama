@@ -1,3 +1,5 @@
+//@Author Jarl Jansen
+
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { RequestHandler } from 'app/classes/RequestHandler';
@@ -100,8 +102,6 @@ export class EditAccountSettingsComponent {
    * 
    * @param accountInformation object containing account info
    * @trigger on click of change button
-   * 
-   * TODO: Add better refresh than refreshing page
    */
   async makeRequest(accountInformation: Record<string, any>) {
     // Gets the authentication toekn

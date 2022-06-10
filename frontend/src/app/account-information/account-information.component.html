@@ -1,3 +1,4 @@
+<!-- @Author Jarl Jansen, Veerle Furst -->
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <!-- Row for account details-->
     <div class="row">
@@ -7,10 +8,17 @@
             </div>
         </div>
     </div>
+    <!-- Displays an error message if data could not be gathered from the server -->
+    <div class="row">
+        <div class="col text-center">
+            <!-- Only displays message when it is non-empty -->
+            <div *ngIf="errorM" id="error-message">{{errorM}}</div>
+        </div>
+    </div>
     <!-- Row for username -->
     <div class="row">
         <div class="col-8 offset-2">
-            <b id="boldText">Username:</b>
+            <strong id="boldText">Username:</strong>
             <hr>
             <span *ngIf="userAccount" id="infoText">{{userAccount.getUsername()}}</span>
         </div>
@@ -18,7 +26,7 @@
     <!-- Row for user email -->
     <div class="row">
         <div class="col-8 offset-2">
-            <b id="boldText">Email:</b>
+            <strong id="boldText">Email:</strong>
             <hr>
             <span *ngIf="userAccount" id="infoText">{{userAccount.getEmail()}}</span>
         </div>
@@ -26,7 +34,7 @@
     <!-- Row for user description -->
     <div class="row">
         <div class="col-8 offset-2">
-            <b id="boldText">Description:</b>
+            <strong id="boldText">Description:</strong>
             <hr>
             <span *ngIf="userAccount" id="infoText">{{userAccount.getDesc()}}</span>
         </div>

@@ -11,20 +11,20 @@ $light-grey-shade: #bfbfbf;
     text-align: center;
 }
 
-// INFORMATION PAGE
-
-// TEXT
+/* INFORMATION PAGE */
 // texts above each of the forms indicating what the form is for
 #field_text{
     font-size: 12px;
     letter-spacing: 1px;
     margin-top: 10px;
 }
-// Text with bold text
+
+// Boldfaced txt
 #boldText{
     font-size: 15px;
     letter-spacing: 1px;
 }
+
 // Text with account information
 #infoText{
     font-size: 14px;
@@ -32,27 +32,14 @@ $light-grey-shade: #bfbfbf;
     margin-left: 25px;
     text-indent:0;
 }
-// Orange underlined text
-#orangUnderlinedText {
-    color: $orange-shade;
-    text-decoration: underline;
-}
-// Sets layout of the error message that is displayed when register input is incorrect
-#infoMessage{
-    color: $orange-shade;
-    font-size: 15px;
-  }
 
-// Buttons
+// Markup of buttons
 .infoButtons{
     border: none;
     float: right;
     width: 150px;
 }
-// Button for editing information
-#editInformationButton{
-    border: none;
-}
+
 // Cancel edit button
 #backButton{
     margin-right: 20px;
@@ -63,23 +50,15 @@ $light-grey-shade: #bfbfbf;
     padding-top: 2%;
     padding-bottom: 2%;
 }
+
 // Line between things
 hr{
     height: 2px;
     color: $light-grey-shade;
 }
 
-
-// EDIT PAGE
-
-// Buttons
-.editButtons{
-    border: none;
-    float: right;
-    width: 150px;
-}
-
-// Cancel edit button
-#cancelEditButton{
-    margin-right: 20px;
+// Markup of error text
+#error-message {
+    color: red;
+    font-size: 17px;
 }
