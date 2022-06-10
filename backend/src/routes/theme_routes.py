@@ -239,7 +239,10 @@ def create_theme(*, user):
     theme.labels = make_labels(theme_info["labels"])
 
     # Create the project
-    db.session.commit()        
+    try:
+        db.session.commit()   
+    except OperationalError:
+        return make_response("internal Server Error", 503) 
 
     # Return the conformation
     return make_response("Project created", 200)
@@ -306,8 +309,11 @@ def edit_theme(*, user):
     # Set the labels of the theme
     theme.labels = make_labels(theme_info["labels"])
 
-    # Create the project
-    db.session.commit()        
+    # Edit the project
+    try:
+        db.session.commit()   
+    except OperationalError:
+        return make_response("internal Server Error", 503)       
 
     # Return the conformation
     return make_response("Project created", 200)
