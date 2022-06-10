@@ -90,16 +90,17 @@ def get_artifacts(*, user):
 @login_required
 def add_new_artifacts(*, user):
     # Get args from request 
-    args = request.args
+    args = request.json['params']
     # What args are required
-    required = ['p_id']
+    required = ['p_id', 'artifacts']
 
     # Check if required args are present
     if not check_args(required, args):
+        print('HERE BITCH')
         return make_response('Bad Request', 400)
 
     # Get the information given by the frontend
-    artifact_info = request.json
+    artifact_info = args['artifacts']['array']
 
     # List of artifacts to be added
     artifact_object = []
