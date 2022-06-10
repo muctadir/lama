@@ -7,7 +7,7 @@ from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, Highlight, HighlightSchema
-from src.models.project_models import Membership
+from src.models.project_models import Membership, Project
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
@@ -254,6 +254,7 @@ def random_artifact(*, user):
         .order_by(func.rand())
         .limit(1)
     )
+    # artifact = get_random_artifact(user.id, p_id)
 
     childIds = db.session.scalars(
         select(Artifact.id)
@@ -354,3 +355,24 @@ def add_new_highlights(*, user):
         return make_response('Internal Server Error', 503)
 
     return make_response("Route accessed")
+
+def get_random_artifact(u_id, p_id):
+    # Criteria for artifact completion
+    criteria = db.session.get(Project.criteria, p_id)
+    # Artifact ids that have been labelled by enough people
+    # NB: Even with conflicts, it still should not be seen by more people
+    completed = select(
+        Labelling.a_id
+    ).where(
+        func.count(Labelling.l_id) >= criteria
+    ).subquery()
+    # Artifact ids that the user has already labelled
+    labelled = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
+    artifact = db.session.scalar(
+        select(Artifact)
+        .where(Artifact.p_id == p_id)
+        .except_(completed, labelled)
+        .order_by(func.rand())
+        .limit(1)
+    )
+    return artifact
