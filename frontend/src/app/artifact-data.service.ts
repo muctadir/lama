@@ -212,7 +212,7 @@ export class ArtifactDataService {
    * @returns Promise<any>
    */
   async getLabellers(p_id:number, a_id: number): Promise<any> {
-    return this.requestHandler.get('/artifact/getLabelers', { 'p_id': p_id, 'a_id': a_id }, true);
+    return this.requestHandler.get('/artifact/getLabellers', { 'p_id': p_id, 'a_id': a_id }, true);
   }
 
   /**

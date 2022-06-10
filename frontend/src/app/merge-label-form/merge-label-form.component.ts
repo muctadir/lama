@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from '../labeling-data.service';
+import { LabellingDataService } from '../labelling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
@@ -32,7 +32,7 @@ export class MergeLabelFormComponent {
    */
    constructor(public activeModal: NgbActiveModal,
     private router: Router,
-    private labelingDataService: LabelingDataService) {
+    private labellingDataService: LabellingDataService) {
       this.labels = new Array<Label>();
       this.labelTypes = new Array<LabelType>();
       this.routeService = new ReroutingService();
@@ -56,7 +56,7 @@ export class MergeLabelFormComponent {
    * Async function which gets the label
    */
    async getLabels(p_id: number): Promise<void> {
-    const labels = await this.labelingDataService.getLabels(p_id);
+    const labels = await this.labellingDataService.getLabels(p_id);
     this.labels = labels;
   }
 
@@ -65,7 +65,7 @@ export class MergeLabelFormComponent {
    * @param p_id
    */
   async getLabelTypes(p_id: number): Promise<void> {
-    const labelTypes = await this.labelingDataService.getLabelTypes(p_id);
+    const labelTypes = await this.labellingDataService.getLabelTypes(p_id);
     this.labelTypes = labelTypes;
     console.log(labelTypes);
   }

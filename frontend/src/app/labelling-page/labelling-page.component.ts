@@ -5,7 +5,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
-import { LabelingDataService } from 'app/labeling-data.service';
+import { LabellingDataService } from 'app/labelling-data.service';
 import { ArtifactDataService } from 'app/artifact-data.service';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
@@ -41,13 +41,13 @@ export class LabellingPageComponent implements OnInit {
   labellings: FormArray;
 
   /**
-   * Constructor passes in the modal service and the labeling data service
+   * Constructor passes in the modal service and the labelling data service
    * @param modalService
-   * @param labelingDataService
+   * @param labellingDataService
    */
   constructor(
     private modalService: NgbModal,
-    private labelingDataService: LabelingDataService,
+    private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
     private router: Router,
     private formBuilder: FormBuilder
@@ -81,7 +81,7 @@ export class LabellingPageComponent implements OnInit {
   }
 
   /**
-   * Function which subscribes to the labelingDataService and retrieves the artifact.
+   * Function which subscribes to the labellingDataService and retrieves the artifact.
    * It waits for a response and when the response arrives it adds Bartjan
    * as a labeler and then puts the information into this.artifact.
    */
@@ -96,7 +96,7 @@ export class LabellingPageComponent implements OnInit {
   }
 
   async getLabelTypesWithLabels(p_id: number): Promise<void> {
-    const labelTypes = await this.labelingDataService.getLabelTypesWithLabels(
+    const labelTypes = await this.labellingDataService.getLabelTypesWithLabels(
       p_id
     );
     this.labelTypes = labelTypes;

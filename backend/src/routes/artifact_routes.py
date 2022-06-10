@@ -7,7 +7,7 @@ from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, Highlight, HighlightSchema
-from src.models.project_models import Membership
+from src.models.project_models import Membership, Project
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
@@ -254,6 +254,7 @@ def random_artifact(*, user):
         .order_by(func.rand())
         .limit(1)
     )
+    # artifact = get_random_artifact(user.id, p_id)
 
     childIds = db.session.scalars(
         select(Artifact.id)
@@ -271,10 +272,10 @@ def random_artifact(*, user):
     return make_response(dict_json)
 
 
-@artifact_routes.route("/getLabelers", methods=["GET"])
+@artifact_routes.route("/getLabellers", methods=["GET"])
 @login_required
 @in_project
-def get_labelers():
+def get_labellers():
     # Get args from request 
     args = request.args
     # What args are required
@@ -282,7 +283,7 @@ def get_labelers():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    labelers = db.session.scalars(
+    labellers = db.session.scalars(
         select(User)
         .where(
             User.id == Labelling.u_id,
@@ -290,36 +291,8 @@ def get_labelers():
         )
     ).all()
     user_schema = UserSchema()
-    json_labellers = jsonify(user_schema.dump(labelers, many=True))
+    json_labellers = jsonify(user_schema.dump(labellers, many=True))
 
-
-    return make_response(json_labellers)
-
-
-@artifact_routes.route("/getLabelers", methods=["GET"])
-@login_required
-@in_project
-def get_labells_by_label_type():
-    # Get args from request 
-    args = request.args
-    # What args are required
-    required = ['p_id','lt_id']
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
-
-    # Get all the labels of a specifc label type
-    labels = db.session.scalars(
-        select(User)
-        .where(
-            User.id == Labelling.u_id,
-            Labelling.a_id == args['a_id']
-        )
-    ).all()
-    # Schema to serialize the User
-    user_schema = UserSchema()
-    # Jsonify the result
-    json_labellers = jsonify(user_schema.dump(labelers, many=True))
 
     return make_response(json_labellers)
 
@@ -354,3 +327,24 @@ def add_new_highlights(*, user):
         return make_response('Internal Server Error', 503)
 
     return make_response("Route accessed")
+
+def get_random_artifact(u_id, p_id):
+    # Criteria for artifact completion
+    criteria = db.session.get(Project.criteria, p_id)
+    # Artifact ids that have been labelled by enough people
+    # NB: Even with conflicts, it still should not be seen by more people
+    completed = select(
+        Labelling.a_id
+    ).where(
+        func.count(Labelling.l_id) >= criteria
+    ).subquery()
+    # Artifact ids that the user has already labelled
+    labelled = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
+    artifact = db.session.scalar(
+        select(Artifact)
+        .where(Artifact.p_id == p_id)
+        .except_(completed, labelled)
+        .order_by(func.rand())
+        .limit(1)
+    )
+    return artifact

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/labeling-data.service';
+import { LabellingDataService } from 'app/labelling-data.service';
 
 import { LabelFormComponent } from './label-form.component';
 
@@ -13,7 +13,7 @@ describe('LabelFormComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ LabelFormComponent ],
       // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal, LabelingDataService]
+      providers: [NgbActiveModal, LabellingDataService]
     })
     .compileComponents();
   });

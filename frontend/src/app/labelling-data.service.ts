@@ -9,7 +9,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
   providedIn: 'root'
 })
 
-export class LabelingDataService {
+export class LabellingDataService {
   // Initialise the Request handler
   requestHandler: RequestHandler;
 
@@ -114,7 +114,7 @@ export class LabelingDataService {
       'p_id': p_id
     }
 
-    await this.requestHandler.post('/labeltype/all', content, true)
+    await this.requestHandler.post('/label/create', content, true)
   }
 
   /**
@@ -149,7 +149,7 @@ export class LabelingDataService {
     // Array of label types
     let labelTypes: Array<LabelType> = new Array<LabelType>();
     // Response from the request handler
-    const response = await this.requestHandler.get('/labeltype/allLabelTypesWL', { 'p_id': p_id }, true);
+    const response = await this.requestHandler.get('/labeltype/allWithLabels', { 'p_id': p_id }, true);
 
     // Get the label types with their labels
     response.forEach((r: any) => {
