@@ -5,14 +5,14 @@ $orange-shade: #ed5a06;
 $light-grey-shade: #bfbfbf;
 
 // Header above the input fields
-#header{
+#header {
     font-size: 22px;
     letter-spacing: 1px;
     text-align: center;
 }
 
 // Markup of text above form fields
-#field_text{
+#field_text {
     font-size: 12px;
     letter-spacing: 1px;
     margin-top: 10px;
@@ -26,25 +26,25 @@ $light-grey-shade: #bfbfbf;
 }
 
 // Sets layout of the error message that is displayed when register input is incorrect
-#infoMessage{
+#infoMessage {
     color: $orange-shade;
     font-size: 15px;
 }
 
 // Buttons
-.editButtons{
+.editButtons {
     border: none;
     float: right;
     width: 150px;
 }
 
 // Cancel edit button
-#cancelEditButton{
+#cancelEditButton {
     margin-right: 20px;
 }
 
 // Columns of the information
-.col-8{
+.col-8 {
     padding-top: 2%;
     padding-bottom: 2%;
 }

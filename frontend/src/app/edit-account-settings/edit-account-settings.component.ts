@@ -115,19 +115,18 @@ export class EditAccountSettingsComponent {
       // Waits on the request
       let result = await response;
 
+      // Reloads the page, goes back to the info page
       if (result.includes("Updated succesfully")) {
-        // Reloads the page, goes back to the info page
         this.modeChangeEvent.emit(0);
       }
       
       // Resets error message
       this.errorMsg = "";
+
     } catch(e) {
       // Displays the error message
       this.errorMsg = "Please enter valid details";
     }
-
-    
   }
 
 }

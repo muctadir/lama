@@ -5,7 +5,7 @@ $orange-shade: #ed5a06;
 $light-grey-shade: #bfbfbf;
 
 // Header above the input fields
-#header{
+#header {
     font-size: 22px;
     letter-spacing: 1px;
     text-align: center;
@@ -13,20 +13,20 @@ $light-grey-shade: #bfbfbf;
 
 /* INFORMATION PAGE */
 // texts above each of the forms indicating what the form is for
-#field_text{
+#field_text {
     font-size: 12px;
     letter-spacing: 1px;
     margin-top: 10px;
 }
 
 // Boldfaced txt
-#boldText{
+#boldText {
     font-size: 15px;
     letter-spacing: 1px;
 }
 
 // Text with account information
-#infoText{
+#infoText {
     font-size: 14px;
     letter-spacing: 1px;
     margin-left: 25px;
@@ -34,25 +34,25 @@ $light-grey-shade: #bfbfbf;
 }
 
 // Markup of buttons
-.infoButtons{
+.infoButtons {
     border: none;
     float: right;
     width: 150px;
 }
 
 // Cancel edit button
-#backButton{
+#backButton {
     margin-right: 20px;
 }
 
 // Columns of the information
-.col-8{
+.col-8 {
     padding-top: 2%;
     padding-bottom: 2%;
 }
 
 // Line between things
-hr{
+hr {
     height: 2px;
     color: $light-grey-shade;
 }
