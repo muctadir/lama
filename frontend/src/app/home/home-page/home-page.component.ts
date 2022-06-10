@@ -2,10 +2,11 @@
 // Veerle Fürst
 // Ana-Maria Olteniceanu
 // Eduardo Costa Martins
+// Jarl Jansen
 
 import { Component, OnInit } from '@angular/core';
 import { Project } from 'app/classes/project';
-import axios from 'axios';
+import { RequestHandler } from 'app/classes/RequestHandler';
 
 @Component({
   selector: 'app-home-page',
@@ -13,67 +14,86 @@ import axios from 'axios';
   styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
-
   /* Array with the projects that the user can view */
   projects: Project[] = [];
 
+  /* Error message that is displayed to the user */
+  errorMsg: string = "";
+
   /**
-   * When the component gets created it gathers all the projects that the user is a member of
+   * When the component gets created calls function to gather all the projects that the user is a member of
    * 
    * @trigger on component creation
    * @modifies projects
-   * 
-   * TODO: Use request factory
    */
   ngOnInit(): void {
+    // Makes the request to the backend for the projects
+    this.makeRequest();
+  }
 
-    // Make list of all projects
-
+  /**
+   * Function which makes the request to the backend for all project of which the user is a member
+   * Religates the parsing of the response to a different function. 
+   * (uses requesthandler for communication with the backend)
+   * 
+   * @trigger on component creation
+   * @modifies projects
+   */
+  async makeRequest() : Promise<void> {
+    // Get the user authentication token
     let token: string | null  = sessionStorage.getItem('ses_token');
-    if (typeof token === "string"){
 
-      // Get the informtion needed from the back end
-      axios.get('http://127.0.0.1:5000/project/home', {
-        headers: {
-          'u_id_token': token
-        }
-      })
-        // When there is a response get the projects
-        .then(response => {
+    // Initializes the request handler
+    let requestHandler: RequestHandler = new RequestHandler(token);
 
-          // For each project in the list
-          for (let project of response.data){
+    try {
+      // Makes the backend request to get the projects of which the user is a member
+      let response: any = requestHandler.get("/project/home", {}, true);
 
-            // Initialize a new project with all values
-            let projectJson = project["project"];
-            projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
-            projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
-            projectJson["users"] = project["projectUsers"];
-            projectJson["admin"] = project["projectAdmin"];
+      // Waits on the request
+      let result = await response;
 
-            // Create the project with constructor
-            let projectNew = new Project(
-              projectJson["id"],
-              projectJson["name"],
-              projectJson["description"]
-            ) 
-            
-            // Set other variables
-            projectNew.setFrozen(projectJson["frozen"]);
-            projectNew.setNumberOfArtifacts(projectJson["numberOfArtifacts"]);
-            projectNew.setNumberOfCLArtifacts(projectJson["numberOfCLArtifacts"]);
-            projectNew.setAdmin(projectJson["admin"]);
-            projectNew.setUsers(projectJson["users"]);
+      // Parses the response of the backend with all projects
+      this.parseResponse(result)
 
-            // Add project to list
-            this.projects.push(projectNew);
-          }
-        })
-        // If there is an error
-        // TODO: change
-        .catch(error => {console.log(error)});
-        
-    }   
+      // Resets error message
+      this.errorMsg = "";
+    } catch(e) {
+      // Displays error message
+      this.errorMsg = "An error occured when getting data from the server.";
+    }
+  }
+
+  /**
+   * Parses the response from the backend and adds the projects into project array
+   * 
+   * @param data the response from the backend
+   * @modifies project
+   * @trigger on component load
+   */
+  parseResponse(data: any) : void {
+    // For each project in the list
+    for (let project of data) {
+      // Initialize a new project with all values
+      let projectJson = project["project"];
+      projectJson["numberOfArtifacts"] = project["projectNrArtifacts"];
+      projectJson["numberOfCLArtifacts"] = project["projectNrCLArtifacts"];
+      projectJson["users"] = project["projectUsers"];
+      projectJson["admin"] = project["projectAdmin"];
+
+      // Create the project with constructor
+      let projectNew = new Project(projectJson["id"], projectJson["name"], projectJson["description"]);
+      
+      // Set other variables
+      projectNew.setFrozen(projectJson["frozen"]);
+      projectNew.setNumberOfArtifacts(projectJson["numberOfArtifacts"]);
+      projectNew.setNumberOfCLArtifacts(projectJson["numberOfCLArtifacts"]);
+      projectNew.setAdmin(projectJson["admin"]);
+      projectNew.setUsers(projectJson["users"]);
+
+      // Add project to list
+      this.projects.push(projectNew);
+    }
   }
 
 }
