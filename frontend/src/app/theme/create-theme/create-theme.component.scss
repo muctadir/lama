@@ -1,0 +1,206 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #aaaaaa;
+
+// Page body
+#body{
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+//Title Header part of the page
+#pageTitle {
+    padding-top: 10px;
+    font-size: 35px;
+    letter-spacing: 1px;
+}
+
+//Top half part of page
+.row{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+// Row for the header
+.row.header{
+    padding-top: 0px;
+}
+
+// Name input box
+#nameForm{
+    width: auto;
+}
+
+// Headers for all names of sections
+.nameHeader{
+    border-bottom: 2px; 
+    border-bottom-style: solid; 
+    font-size: 18px;
+    letter-spacing: 1px;
+    border-bottom-color: $orange-shade;
+    margin-bottom: 10px;
+}
+
+// Labels added
+#addedLabels{
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding-left: 10px;
+}
+
+// List of labels
+#allLabelsList{
+    padding-top: 10px;
+    overflow-y: scroll;
+    height: 20vh;
+}
+
+// x icon for removing labels
+#xIcon{
+    float: right
+}
+
+// Hover on x icon
+#xIcon:hover{
+    cursor: pointer;
+}
+
+// Namw input column
+#nameInputCol{
+    padding-top: 10px;
+}
+
+//Top right of page
+#topRight{
+    padding-left: 0px;
+}
+
+//Subthemes list 
+#addedSubthemes{
+    padding-left: 10px;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+// List of sub-themes
+#addedSubthemesList{
+    padding-top: 10px;
+    overflow-y: scroll;
+    height: 20vh;
+}
+
+//Bottom Half
+#bottomHalf{
+    padding-top: 10px;
+    padding-left: 0px;
+    max-height: 30vh;
+}
+
+//Add label text
+.addLabelsText{
+    font-size: 14px;
+    padding-left: 10px;
+    vertical-align: -5px
+}
+
+// Add label button
+.btn{
+    float: right;
+    border: none;
+}
+
+// Remove button
+.btn.x{
+    padding: 0px;
+}
+
+//Highlight class
+.highlighted{ 
+    background-color: $light-grey-shade; 
+    color: $white-shade;
+    .btn{
+        color: $white-shade !important;
+    }      
+}
+
+// Label description header
+#labelDescription{
+    font-size: 16px;
+    font-weight: 450;
+}
+
+// Label Description text container
+p.labelDescriptionText{
+    padding-left: 0px;
+    font-size: 14px;
+}
+
+// Button container for create and cancel
+#createCancelButtons{
+    padding-bottom: 10px;
+}
+
+// button outline
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+// Make the subthemes and labels scrollabel
+#divScroll{
+    overflow-y: scroll;
+    height: 20vh;
+}
+
+// Scroll for description
+#descriptionScroll{
+    overflow-y: scroll;
+    height: 20vh;
+}
+
+// Full subtheme list text
+.addSubthemeText{
+    font-size: 14px;
+    padding-left: 10px;
+    vertical-align: -5px
+}
+
+// Added subthemes text
+#addedSubthemeText{
+    font-size: 14px;
+    padding-left: 10px;
+    vertical-align: -5px
+}
+
+// Description box size
+#descriptionArea{
+    width: 100%;
+    height: 110px;
+    resize: none;
+}
+
+// Error message text
+#errorMessage{
+    color: $orange-shade;
+    font-weight: 800;
+}
+
+// SCROLLBAR
+// Scrollbar general
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background:  $white-shade; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: $grey-shade; 
+    border-radius: 10px;
+}
+
+

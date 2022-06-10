@@ -4,8 +4,8 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { LabelFormComponent } from '../label-form/label-form.component';
-import { LabelingDataService } from "app/labeling-data.service";
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { LabelingDataService } from "app/services/labeling-data.service";
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 

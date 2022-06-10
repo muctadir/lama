@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Project } from 'app/classes/project';
-import { ReroutingService } from 'app/rerouting.service';
+import { ReroutingService } from 'app/services/rerouting.service';
 import { StatsDataService } from 'app/stats-data.service';
 
 
