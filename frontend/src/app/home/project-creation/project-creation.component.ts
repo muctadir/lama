@@ -4,12 +4,12 @@
 
 import { Component, OnInit} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import axios from 'axios';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { InputCheckService } from 'app/services/input-check.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
+import { RequestHandler } from 'app/classes/RequestHandler';
 
 // Project object
 interface Project {
@@ -73,34 +73,32 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @trigger on component load
    * @modifies allMembers
-   * 
-   * TODO: Use the request factory to make the axios request
    */
-  requestUsers(token : string | null) : void {
-    // Checks whether the token is valid
-    if (typeof token === "string") {
-      // Requests all users in the application from the backend
-      axios.get('http://127.0.0.1:5000/project/users', {
-        headers: {
-          'u_id_token': token
-        }
-      })
-        .then(response => { 
-          // parses the database response for all the different users
-          for (let user of response.data) {
-            // creates the object
-            let newUser = new User(user.id, user.username);
-            // passes additional data to the newly created user object
-            newUser.setEmail(user.email);
-            newUser.setDesc(user.description);
-            // pushes the new user to the array of all users
-            this.allMembers.push(newUser);
-          }
-        })
-        // Logs the error if an error occurs during communication with backend
-        .catch(error => {
-          console.log(error);
-        });
+  async requestUsers(token : string | null) : Promise<void> {
+    // Initializes the request handler
+    let requestHandler: RequestHandler = new RequestHandler(token);
+
+    // Makes the request and handles response
+    try {
+      // Makes the request to the backend for all users in the application
+      let response: any = requestHandler.get("/project/users", {}, true);
+
+      // Waits on the request
+      let result = await response;
+
+      // Loops over the response of the server and parses the response into the allMembers array
+      for (let user of result) {
+        // creates the object
+        let newUser = new User(user.id, user.username);
+        // passes additional data to the newly created user object
+        newUser.setEmail(user.email);
+        newUser.setDesc(user.description);
+        // pushes the new user to the array of all users
+        this.allMembers.push(newUser);
+      }
+    } catch(e) {
+      // Outputs an error
+      console.log("An error occured when loading data from the server");
     }
   }
 
@@ -174,26 +172,27 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @param projectInformation Record holding the different parameters of the project to be created
    * @trigger Create project button is clicked
-   * 
-   * TODO: Use the request factory to make the axios request
    */
-  makeRequest(projectInformation: Record<string, any> ) : void {
+  async makeRequest(projectInformation: Record<string, any> ) : Promise<void> {
     let token: string | null  = sessionStorage.getItem('ses_token');
 
-    if (typeof token === "string") {        
-      // Send the data to the database
-      axios.post('http://127.0.0.1:5000/project/creation', projectInformation, {
-        headers: {
-          'u_id_token': token
-        }
-      })
-      .then(() => { 
-        // Navigates the user back to the home page
-        this.router.navigate(["/home"]);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // Initializes the request handler
+    let requestHandler: RequestHandler = new RequestHandler(token);
+
+    try {
+      // Makes the backend request to get the projects of which the user is a member
+      let response: any = requestHandler.post("/project/creation", projectInformation, true);
+
+      // Waits on the request
+      await response;
+
+      // Navigates the user back to the home page
+      this.router.navigate(["/home"]);
+
+      // Resets error message
+      this.errorMsg = "";
+    } catch(e) {
+      this.errorMsg = "An error occured when trying to create the project.";
     }
   }
 

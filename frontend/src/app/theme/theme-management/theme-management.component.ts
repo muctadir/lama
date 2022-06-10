@@ -1,12 +1,10 @@
 // Veerle Furst
-import { Component, OnInit, Query, QueryList, ViewChildren } from '@angular/core';
+import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
-import { Label } from 'app/classes/label';
 import { sortEvent, SortableThemeHeader } from 'app/sortable-theme.directive';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import axios from 'axios';
 
 @Component({
   selector: 'app-theme-management',

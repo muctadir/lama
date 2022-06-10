@@ -1,32 +1,43 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { InputCheckService } from 'app/services/input-check.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { LabelingDataService } from 'app/services/labeling-data.service';
 import { FormBuilder } from '@angular/forms';
-import axios from 'axios';
-import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
+import { Theme } from 'app/classes/theme';
 
 @Component({
-  selector: 'app-create-theme',
-  templateUrl: './create-theme.component.html',
-  styleUrls: ['./create-theme.component.scss']
+  selector: 'app-theme-info',
+  templateUrl: './theme-info.component.html',
+  styleUrls: ['./theme-info.component.scss']
 })
-export class CreateThemeComponent {
+export class ThemeInfoComponent implements OnInit {
 
+  // Boolean for create
+  create = false;
+  // Boolean for edit
+  edit = false;
+  // Header of the page
+  createEditThemeHeader: string = "";
+   
   // Error message string
   errorMsg = "";
 
-  // Form
+  // Form for name and description
   themeForm = this.formBuilder.group({
     name: "",
     description: ""
   });
 
+  // Variable for the current theme
+  theme: Theme;
+
   //  Project id
   p_id: number;
+  // Theme id
+  t_id: number;
 
   // Variables for routing
   url: string;
@@ -59,7 +70,11 @@ export class CreateThemeComponent {
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = Number(this.routeService.getProjectID(this.url));
+    this.p_id = Number(this.routeService.getProjectID(this.url));    
+    // Initialize theme
+    this.theme = new Theme(0, "", "");
+    // Initialize themeId
+    this.t_id = 0;
   }
 
   ngOnInit(){
@@ -67,25 +82,104 @@ export class CreateThemeComponent {
     this.get_themes_without_parents(this.p_id);
     // Get all possible labels
     this.get_labels(this.p_id);
+
+    // Set the create/edit booleans
+    this.setBooleans();
+
+    // Set the header of the page
+    this.setHeader();  
+
+    // If were in edit mode we get the information, and set values
+    if(this.edit){
+      // Get theme id
+      this.t_id = Number(this.routeService.getThemeID(this.url));
+      // Get the current theme
+      this.get_single_theme_info()
+      .then(() => {
+        // Set the values of the page
+        this.insertThemeInfo();
+      })
+      
+    }
+  }
+
+  // Function for setting the edit/create booleans
+  setBooleans(): void {
+    // Set the booleans accordingly
+    if (this.url.indexOf("create") > -1){
+      this.edit = false;
+      this.create = true;
+    } else {
+      this.edit = true;
+      this.create = false;
+    }
+  }
+
+  // Function for setting the header of the page
+  setHeader(): void {
+    // Get the header based on the booleans
+    if (this.create){
+      this.createEditThemeHeader = "Create";
+    } else {
+      this.createEditThemeHeader = "Edit";
+    }
+  }
+
+  // Function for getting the theme info
+  async get_single_theme_info(): Promise<void> {
+    this.theme = await this.themeDataService.single_theme_info(this.p_id, this.t_id);
+  }
+
+  // Function for setting the theme info
+  insertThemeInfo(): void {
+    // Get the labels of the theme
+    let labels = this.theme.getLabels()
+    // Set the labels of the theme in the page
+    if(labels != undefined){
+      this.addedLabels = labels;
+    }
+    // Get the children of the theme
+    let children = this.theme.getChildren()
+    // Set the children of the theme in the page
+    if(children != undefined){
+      this.addedSubThemes = children;
+    }
+    // Set the name and description
+    this.themeForm.setValue({
+      "name": this.theme.getName(),
+      "description": this.theme.getDesc()
+    })
   }
 
   // Function for creating a theme
-  async createTheme(){
+  async createTheme(): Promise<void> {
     // Checks input
     let not_empty = this.service.checkFilled(this.themeForm.value.name) && 
       this.service.checkFilled(this.themeForm.value.description);
                 
     // Chooses desired behaviour based on validity of input
     if (not_empty) {
-      this.errorMsg = "";
+      let themeInfo;
+      if(this.create){
+        themeInfo = {
+          "name": this.themeForm.value.name,
+          "description": this.themeForm.value.description,
+          "labels": this.addedLabels,
+          "sub_themes": this.addedSubThemes,
+          "p_id": this.p_id
+        }
+      } else {
+        themeInfo = {
+          "id": this.theme.getId(),
+          "name": this.themeForm.value.name,
+          "description": this.themeForm.value.description,
+          "labels": this.addedLabels,
+          "sub_themes": this.addedSubThemes,
+          "p_id": this.p_id
+        }
+      }
       // Send the theme information to the backend
-      let response = await this.post_theme_info({
-        "name": this.themeForm.value.name,
-        "description": this.themeForm.value.description,
-        "labels": this.addedLabels,
-        "sub_themes": this.addedSubThemes,
-        "p_id": this.p_id
-      });
+      let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
       await this.get_themes_without_parents(this.p_id)
       // Reset the added arrays
@@ -100,7 +194,9 @@ export class CreateThemeComponent {
       // Reset name and description forms
       this.themeForm.reset();
       // Give succes message
-      this.errorMsg = "Theme succesfully created";     
+      this.errorMsg = response;  
+      // Rerouter to the correct page
+      this.reRouter();   
     } else {
       // Displays error message
       this.errorMsg = "Name or description not filled in";
@@ -108,26 +204,32 @@ export class CreateThemeComponent {
   }
 
   // Async function for getting all themes that have no parents
-  async get_themes_without_parents(p_id: number) {
+  async get_themes_without_parents(p_id: number): Promise<void> {
     // Put the gotten themes into the list of themes
     this.allSubThemes = await this.themeDataService.themes_without_parents(p_id);
   }
 
   // Async function for getting all labels in the project
-  async get_labels(p_id: number) {
+  async get_labels(p_id: number): Promise<void> {
     // Put the gotten themes into the list of themes
     this.allLabels = await this.labelDataService.getLabels(p_id);
   }
   
   // Async function for posting the new theme info
   async post_theme_info(theme_info: any): Promise<string> {
+    if(this.create){
     // Send info to backend
     return this.themeDataService.create_theme(theme_info);
+    } else if (this.edit){
+      return this.themeDataService.edit_theme(theme_info);
+    } else {
+      return "";
+    }
   }
 
   // ADDING LABELS / THEMES
   //Adds labels to added labels array.
-  addLabel(label: Label){
+  addLabel(label: Label): void {
     // Check if the label was already added
     for (var addedLabel of this.addedLabels){
       if (addedLabel.getName() == label.getName()){
@@ -138,8 +240,9 @@ export class CreateThemeComponent {
     // Otherwise add the label
     this.addedLabels.push(label);
   }
+
   //Function for adding subtheme to added subthemes array
-  addSubtheme(subTheme:any){
+  addSubtheme(subTheme:any): void {
     // Check if the sub-theme was already added
     for (var addedSubTheme of this.addedSubThemes){
       if (addedSubTheme == subTheme){
@@ -153,49 +256,50 @@ export class CreateThemeComponent {
 
   // REMOVING LABELS / THEMES
   // Function for removing label
-  removeLabel(label:any){
+  removeLabel(label:any): void {
+    
     // Go through all labels
     this.addedLabels.forEach((addedLabels, index)=>{
       // If clicked cross matches the label, splice them from the labels
       if(addedLabels==label){
         this.addedLabels.splice(index,1);
       }
-    });    
+    });
   }
+
   // Function for removing subtheme
-  removeSubtheme(subTheme:any){
-  // Go through all labels
-  this.addedSubThemes.forEach((addedSubThemes, index)=>{
-    // If clicked cross matches the label, splice them from the labels
-    if(addedSubThemes==subTheme){
-      this.addedSubThemes.splice(index,1);
-    }
-  });    
+  removeSubtheme(subTheme:any): void {
+    // Go through all labels
+    this.addedSubThemes.forEach((addedSubThemes, index)=>{
+      // If clicked cross matches the label, splice them from the labels
+      if(addedSubThemes==subTheme){
+        this.addedSubThemes.splice(index,1);
+      }
+    });   
+    // Put the sub-theme back into the allSubThemes list
+    if(this.edit){
+      this.allSubThemes.push(subTheme);
+    } 
   }
 
   // HIGHLIGHTING
   // Function for highlighting selected label
-  highlightLabel(label:any){
+  highlightLabel(label:any): void {
     this.highlightedLabel = label.getName();
   }
   //Function for highlighting selected sub-theme
-  highlightSubtheme(subtheme:any){
+  highlightSubtheme(subtheme:any): void {
     this.highlightedSubtheme = subtheme.getName();
   }
 
   // DISPLAY DESCRIPTIONS
   //Displays the description for selected label
-  displayDescriptionLabel(label:any){
+  displayDescriptionLabel(label:any): void {
     this.selectedDescriptionLabel = label.getDesc();
   }
   //Displays the description for selected theme
-  displayDescriptionTheme(theme:any){
+  displayDescriptionTheme(theme:any): void {
     this.selectedDescriptionTheme = theme.getDesc();
-  }
-
-  // Filler for TODO functions
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
   }
 
   /**
@@ -204,18 +308,13 @@ export class CreateThemeComponent {
    * 
    * @trigger back button is pressed
   */
-  reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
-    // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
-    // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'thememanagement']);
+  reRouter() : void {    
+    if(this.create){
+      // Changes the route accordingly
+      this.router.navigate(['/project', this.p_id, 'thememanagement']);
+    } else {
+      this.router.navigate(['/project', this.p_id, 'singleTheme', this.t_id]);
+    }
   }
 
 }
-
