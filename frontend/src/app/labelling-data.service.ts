@@ -9,7 +9,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
   providedIn: 'root'
 })
 
-export class LabelingDataService {
+export class LabellingDataService {
   // Initialise the Request handler
   requestHandler: RequestHandler;
 

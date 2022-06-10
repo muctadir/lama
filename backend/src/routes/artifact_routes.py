@@ -272,10 +272,10 @@ def random_artifact(*, user):
     return make_response(dict_json)
 
 
-@artifact_routes.route("/getLabelers", methods=["GET"])
+@artifact_routes.route("/getLabellers", methods=["GET"])
 @login_required
 @in_project
-def get_labelers():
+def get_labellers():
     # Get args from request 
     args = request.args
     # What args are required
@@ -283,7 +283,7 @@ def get_labelers():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    labelers = db.session.scalars(
+    labellers = db.session.scalars(
         select(User)
         .where(
             User.id == Labelling.u_id,
@@ -291,7 +291,7 @@ def get_labelers():
         )
     ).all()
     user_schema = UserSchema()
-    json_labellers = jsonify(user_schema.dump(labelers, many=True))
+    json_labellers = jsonify(user_schema.dump(labellers, many=True))
 
 
     return make_response(json_labellers)

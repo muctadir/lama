@@ -2,7 +2,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
-import { LabelingDataService } from '../labeling-data.service';
+import { LabellingDataService } from '../labelling-data.service';
 import { Label } from 'app/classes/label';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
@@ -24,7 +24,7 @@ export class LabelManagementComponent {
 
 // Contructor with modal
   constructor(private modalService: NgbModal,
-    private labelingDataService: LabelingDataService,
+    private labellingDataService: LabellingDataService,
     private router: Router) {
       this.routeService = new ReroutingService();
       this.url = this.router.url;
@@ -47,7 +47,7 @@ export class LabelManagementComponent {
   }
 
   async getLabels(p_id: number): Promise<void> {
-    const labels = await this.labelingDataService.getLabels(p_id);
+    const labels = await this.labellingDataService.getLabels(p_id);
     this.labels = labels;
   }
 

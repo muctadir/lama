@@ -3,7 +3,7 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/labeling-data.service';
+import { LabellingDataService } from 'app/labelling-data.service';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/rerouting.service';
@@ -31,12 +31,12 @@ export class LabelFormComponent implements OnInit {
   /**
    * Check the input
    * @param activeModal
-   * @param labelingDataService
+   * @param labellingDataService
    * @param router
    * @param formBuilder
    */
   constructor(public activeModal: NgbActiveModal,
-    private labelingDataService: LabelingDataService,
+    private labellingDataService: LabellingDataService,
     private router: Router,
     private formBuilder: FormBuilder) {
       this.labelTypes = new Array<LabelType>();
@@ -72,7 +72,7 @@ export class LabelFormComponent implements OnInit {
    * @param p_id
    */
   async getLabelTypes(p_id: number) : Promise<void> {
-    const labelTypes = await this.labelingDataService.getLabelTypes(p_id);
+    const labelTypes = await this.labellingDataService.getLabelTypes(p_id);
     this.labelTypes = labelTypes;
   }
 
@@ -104,10 +104,10 @@ export class LabelFormComponent implements OnInit {
     const p_id = parseInt(this.routeService.getProjectID(this.url));
     // Label was created or modified
     if (this.label === undefined){
-      await this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
+      await this.labellingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
       window.location.reload();
     } else {
-      await this.labelingDataService.editLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
+      await this.labellingDataService.editLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
       window.location.reload();
     }
   }

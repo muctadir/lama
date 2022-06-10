@@ -4,7 +4,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from '../labeling-data.service';
+import { LabellingDataService } from '../labelling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
@@ -32,7 +32,7 @@ export class IndividualLabelComponent {
    */
   constructor(private modalService: NgbModal,
     private router: Router,
-    private labelingDataService: LabelingDataService) {
+    private labellingDataService: LabellingDataService) {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
@@ -57,7 +57,7 @@ export class IndividualLabelComponent {
    * Async function which gets the label
    */
   async getLabel(p_id: number, labelID: number): Promise<void> {
-    const label = await this.labelingDataService.getLabel(p_id, labelID);
+    const label = await this.labellingDataService.getLabel(p_id, labelID);
     this.label = label;
     const themes = this.label.getThemes()
     if (themes !== undefined) {
@@ -66,7 +66,7 @@ export class IndividualLabelComponent {
   }
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
-    const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
+    const labellings = await this.labellingDataService.getLabelling(p_id, labelID);
     this.labellings = labellings;
   }
 
