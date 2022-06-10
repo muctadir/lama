@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
 
@@ -9,12 +9,13 @@ import { LabelType } from 'app/classes/label-type';
   styleUrls: ['./labelling-type.component.scss']
 })
 export class LabellingTypeComponent implements OnInit {
-  @Input() labelType?: LabelType = new LabelType(1, "Emotion", new Array<Label>(new Label(1, "Happy", "This is when someone is happy", "Emotion"),
-  new Label(2, "Sad", "This is when someone is sad", "Emotion")));
+  @Input() labelType?: LabelType;
+  @Input() parentForm?: FormArray;
   selectedDesc: string | undefined;
   labelForm: FormGroup;
   constructor(private formBuilder: FormBuilder) {
     this.labelForm = this.formBuilder.group({
+      labelType: [undefined],
       label: [undefined],
       remark: [undefined]
     });
@@ -27,7 +28,11 @@ export class LabellingTypeComponent implements OnInit {
           this.selectedDesc = l.getDesc();
         }
       });
-    })
+    });
+
+    this.labelForm.controls['labelType'].patchValue(this.labelType?.getId())
+
+    this.parentForm?.push(this.labelForm);
   }
 
 }

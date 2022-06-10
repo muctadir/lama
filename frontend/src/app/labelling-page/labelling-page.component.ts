@@ -12,7 +12,7 @@ import { LabelType } from 'app/classes/label-type';
 
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-labelling-page',
@@ -37,7 +37,8 @@ export class LabellingPageComponent implements OnInit {
   labellers: Array<any>;
   p_id: number;
   labelTypes: Array<LabelType>;
-  labellingForm: FormGroup;
+  form: FormGroup;
+  labellings: FormArray;
 
   /**
    * Constructor passes in the modal service and the labeling data service
@@ -57,7 +58,10 @@ export class LabellingPageComponent implements OnInit {
     this.labellers = new Array();
     this.p_id = parseInt(this.routeService.getProjectID(this.url));
     this.labelTypes = new Array<LabelType>();
-    this.labellingForm = this.formBuilder.group({});
+    this.labellings = new FormArray([]);
+    this.form = new FormGroup({
+      labellings: this.labellings
+    });
   }
 
   /**
@@ -70,9 +74,10 @@ export class LabellingPageComponent implements OnInit {
   ngOnInit(): void {
     this.getRandomArtifact(this.p_id);
     this.getLabelTypesWithLabels(this.p_id);
-    this.labelTypes.forEach((l: LabelType) => {
+    this.labelTypes.forEach(() => {
+      console.log("ff")
 
-    });
+    })
   }
 
   /**
@@ -205,5 +210,17 @@ export class LabellingPageComponent implements OnInit {
    */
   notImplemented(): void {
     throw new Error('This function has not been implemented yet.');
+  }
+
+  submit() : void {
+    let resultArray: Array<Object> = Array<Object>();
+    this.labellings.controls.forEach((el: any) => {
+      resultArray.push({
+        'labelTypeID': el.get('labelType')?.value,
+        'labelId': el.get('label')?.value,
+        'remark': el.get('remark')?.value
+      });
+      console.log(resultArray)
+    });
   }
 }
