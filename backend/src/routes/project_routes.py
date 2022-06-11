@@ -194,6 +194,14 @@ def create_project(*, user):
 """
 Author: Ana-Maria Olteniceanu
 Gets data from a single project
+@returns a dictionary of the form 
+{
+    "project" : the serialized project
+    "projectNrArtifacts": the number of artifacts in the project
+    "projectNrCLArtifacts": the number of completed artifacts in the project
+    "projectUsers": a serialized list of the users in the project
+    "conflicts": the number of conflicts in the project
+}
 """
 @project_routes.route("/singleProject", methods=["GET"])
 @login_required
@@ -255,12 +263,19 @@ def single_project(*, user):
     # Convert dictionary to json
     dict_json = jsonify(info)
 
-    # Return the list of dictionaries
+    # Return the dictionary
     return make_response(dict_json)
 
 """
 Author: Ana-Maria Olteniceanu
 Gets user statistics for a single project
+@returns a list of dictionaries of the form 
+{
+    "username": the username of the user
+    "nr_labelled": the number of artifacts the user has labelled
+    "time": the average time the user takes to label an artifact
+    "nr_conflicts": the number of conflicts the user is involved in
+}
 """
 @project_routes.route("/projectStats", methods=["GET"])
 @login_required
@@ -292,8 +307,6 @@ def project_stats(*, user):
 
         # Set of artifacts user has labelled
         artifacts = set()
-        # List of themes user has used
-        themes = set()
 
         # Total time in seconds spent labelling
         total_time = 0
@@ -306,8 +319,6 @@ def project_stats(*, user):
                 print("uwu")
                 # Add the artifact associated with this labelling to the set of artifacts
                 artifacts.add(labelling.artifact)
-                # Add the themes associated with this labelling to the list of themes
-                themes.add(theme for theme in labelling.label.themes)
                 # Add the time spent labelling to the total time
                 total_time += __time_in_seconds(labelling.time)
 
@@ -315,15 +326,12 @@ def project_stats(*, user):
         artifacts_num = len(artifacts)
         print(artifacts)
         print(artifacts_num)
-        
-        # Get number of themes
-        themes_num = len(themes)
 
         # Get average time of labelling in seconds
         if len(user.labellings) > 0:
             avg_time = __time_to_string(total_time / len(user.labellings))
         else:
-            # If there are no labelling set average time to 0
+            # If there are no labellings set average time to 0
             avg_time = "00:00:00"
 
         # Get the number of conflicts in the project
@@ -337,7 +345,6 @@ def project_stats(*, user):
             "username": username,
             "nr_labelled": artifacts_num,
             "time": avg_time,
-            "nr_themes": themes_num,
             "nr_conflicts": conflicts
         }
 
