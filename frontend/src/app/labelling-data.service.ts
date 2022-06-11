@@ -20,8 +20,8 @@ export class LabellingDataService {
 
   /**
    * Function to get all the labels from a project
-   * 
-   * @param p_id: number - project id 
+   *
+   * @param p_id: number - project id
    * @returns all the labels
    */
   async getLabels(p_id: number): Promise<Array<Label>> {
@@ -31,7 +31,7 @@ export class LabellingDataService {
     // New array of labels
     const result = new Array<Label>();
 
-    // Filling in the array of labels 
+    // Filling in the array of labels
     response.forEach((r: any) => {
       result.push(new Label(r.label.id, r.label.name, r.label.desc, r.label_type));
     });
@@ -41,7 +41,7 @@ export class LabellingDataService {
 
   /**
    * Function gets a specific label from a project with its themes
-   * 
+   *
    * @param p_id: number - project id
    * @param label_id: number - label id
    * @returns label from a project with its themes
@@ -61,7 +61,7 @@ export class LabellingDataService {
       ThemeArray.push(new Theme(r.id, r.name, r.description));
     });
 
-    // Set the themes 
+    // Set the themes
     result.setThemes(ThemeArray);
 
     return result;
@@ -69,7 +69,7 @@ export class LabellingDataService {
 
   /**
    * Function to get the labellings per label
-   * 
+   *
    * @param p_id: number - project id
    * @param label_id: number - label id
    * @returns the labelling per label
@@ -80,7 +80,7 @@ export class LabellingDataService {
 
   /**
    * Function to get all the label types withub a project
-   * 
+   *
    * @param p_id: number - project id
    * @returns all the label ypes in a project
    */
@@ -98,10 +98,10 @@ export class LabellingDataService {
 
   /**
    * Function to submit the label
-   * 
+   *
    * @param p_id: number - project id
-   * @param label: Label 
-   * @param labelTypeId: number 
+   * @param label: Label
+   * @param labelTypeId: number
    */
   async submitLabel(p_id: number, label: Label,
     labelTypeId: number): Promise<void> {
@@ -119,10 +119,10 @@ export class LabellingDataService {
 
   /**
    * Function to edit the label
-   * 
+   *
    * @param p_id: number - project id
-   * @param label: Label 
-   * @param labelTypeId: number 
+   * @param label: Label
+   * @param labelTypeId: number
    */
   async editLabel(p_id: number, label: Label,
     labelTypeId: number): Promise<void> {
@@ -132,7 +132,7 @@ export class LabellingDataService {
       'labelId': label.getId(),
       'labelName': label.getName(),
       'labelDescription': label.getDesc(),
-      'p_id': p_id 
+      'p_id': p_id
     }
 
     // Response from the request handler
@@ -141,7 +141,7 @@ export class LabellingDataService {
 
   /**
    * Function to get the label types with their labels within a project
-   * 
+   *
    * @param p_id: number - project id
    * @returns label types with their labels within a project
    */
@@ -161,5 +161,9 @@ export class LabellingDataService {
     })
 
     return labelTypes;
+  }
+
+  async postLabelling(dict: Object) : Promise<void> {
+    await this.requestHandler.post('/labelling/create', dict, true);
   }
 }

@@ -20,25 +20,33 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./labelling-page.component.scss'],
 })
 export class LabellingPageComponent implements OnInit {
-  /**
-   * artifact contains the artifact
-   * labels contains the label(types) connected to this project
-   * highlightedText contains a selection of the artifact
-   * start and end char are indices for highlighted text
-   */
 
-  artifact?: StringArtifact;
-  labels?: Array<LabelType>;
+  /**
+   * Information for the screen
+   */
+  artifact: StringArtifact;
+  labelTypes: Array<LabelType>;
+  labellers: Array<any>;
+
+  /**
+   * Forms for the labelling
+   */
+  labellings: FormArray;
+  form: FormGroup;
+
+  /**
+   * Information concerning the highlighting and cutting
+   */
   hightlightedText: string = '';
   selectionStartChar?: number;
   selectionEndChar?: number;
+
+  /**
+   * Routing
+   */
   routeService: ReroutingService;
   url: string;
-  labellers: Array<any>;
   p_id: number;
-  labelTypes: Array<LabelType>;
-  form: FormGroup;
-  labellings: FormArray;
 
   /**
    * Constructor passes in the modal service and the labelling data service
@@ -49,83 +57,64 @@ export class LabellingPageComponent implements OnInit {
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
-    private router: Router,
-    private formBuilder: FormBuilder
+    private router: Router
   ) {
-    this.routeService = new ReroutingService();
-    this.url = this.router.url;
+    /**
+     * Preparing variables for information
+     */
     this.artifact = new StringArtifact(-1, 'null', 'null');
     this.labellers = new Array();
-    this.p_id = parseInt(this.routeService.getProjectID(this.url));
     this.labelTypes = new Array<LabelType>();
+
+    /**
+     * Setting up forms
+     */
     this.labellings = new FormArray([]);
     this.form = new FormGroup({
       labellings: this.labellings
+
     });
+    /**
+     * Setting up routing
+     */
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.p_id = parseInt(this.routeService.getProjectID(this.url));
   }
 
-  /**
-   * We are going to send an array to the backend
-   */
-  /**
-   * ngOnInit runs after the constructor. When the constructor is executed
-   * the artifacts and labels are pulled in
-   */
   ngOnInit(): void {
+    /**
+     * Getting information from the backend
+     * TODO: If any of this fails we should probably deal with it
+     */
     this.getRandomArtifact(this.p_id);
     this.getLabelTypesWithLabels(this.p_id);
-    this.labelTypes.forEach(() => {
-      console.log("ff")
-
-    })
   }
 
   /**
-   * Function which subscribes to the labellingDataService and retrieves the artifact.
-   * It waits for a response and when the response arrives it adds Bartjan
-   * as a labeler and then puts the information into this.artifact.
+   * Gets a random artifact from project p_id
+   * 1. Awaits response from the backend
+   * 2. Puts artifact in the right variable
+   * 3. Only then gets the labellers
+   * 4. Awaits response
+   * 5. Puts labellers into variable
+   * @param p_id
    */
   async getRandomArtifact(p_id: number): Promise<void> {
     const artifact = await this.artifactDataService.getRandomArtifact(p_id);
     this.artifact = artifact;
-    const labellers = await this.artifactDataService.getLabellers(
-      p_id,
-      artifact.getId()
-    );
+
+    const labellers = await this.artifactDataService.getLabellers(p_id, artifact.getId());
     this.labellers = labellers;
   }
 
-  async getLabelTypesWithLabels(p_id: number): Promise<void> {
-    const labelTypes = await this.labellingDataService.getLabelTypesWithLabels(
-      p_id
-    );
-    this.labelTypes = labelTypes;
-  }
-
   /**
-   * Function is ran on mouseDown or mouseUp and updates the current selection
-   * of the artifact. If the selection is null or empty, the selection is set
-   * to ""
+   * Function for getting the label and labeltypes
+   * @param p_id
    */
-  selectedText(): void {
-    let hightlightedText: Selection | null = document.getSelection();
-    //gets the start and end indices of the highlighted bit
-    let startCharacter: number = hightlightedText?.anchorOffset!;
-    let endCharacter: number = hightlightedText?.focusOffset!;
-    //make sure they in the right order
-    if (startCharacter > endCharacter) {
-      startCharacter = hightlightedText?.focusOffset!;
-      endCharacter = hightlightedText?.anchorOffset!;
-    }
-    //put into global variable
-    this.selectionStartChar = startCharacter;
-    this.selectionEndChar = endCharacter;
-    //this is so the buttons still pop up, idk if we need it so ill ask bartgang
-    if (hightlightedText == null || hightlightedText.toString().length <= 0) {
-      this.hightlightedText = '';
-    } else {
-      this.hightlightedText = hightlightedText.toString();
-    }
+  async getLabelTypesWithLabels(p_id: number): Promise<void> {
+    const labelTypes = await this.labellingDataService.getLabelTypesWithLabels(p_id);
+    this.labelTypes = labelTypes;
   }
 
   /**
@@ -143,55 +132,6 @@ export class LabellingPageComponent implements OnInit {
   }
 
   /**
-   * Splitting function, gets text without splitting words and gets start and end char
-   */
-  split(): void {
-    let firstCharacter = this.selectionStartChar!;
-    let lastCharacter = this.selectionEndChar!;
-    firstCharacter = this.posFixer(firstCharacter, lastCharacter)[0];
-    lastCharacter = this.posFixer(firstCharacter, lastCharacter)[1] + 1;
-    let splitText = this.artifact?.data.substring(
-      firstCharacter,
-      lastCharacter
-    );
-    alert(
-      "The text is: '" +
-        splitText +
-        "'\nThe start is at: " +
-        firstCharacter +
-        '\nThe end is at: ' +
-        lastCharacter
-    );
-  }
-
-  /**
-   * Gets the correct indices so that words aren't split
-   */
-  posFixer(startPos: number, endPos: number) {
-    //get the chars at index
-    let chart = this.artifact?.data.charAt(startPos);
-    let chend = this.artifact?.data.charAt(endPos - 1);
-    //if you just select the space
-    if (startPos - endPos == 1) {
-      return [startPos, endPos];
-    }
-    //else we move until we hit a space
-    while (chart != ' ' && startPos != -1) {
-      chart = this.artifact?.data.charAt(startPos);
-      startPos = startPos - 1;
-    }
-    while (chend != ' ' && endPos != this.artifact?.data.length) {
-      chend = this.artifact?.data.charAt(endPos);
-      endPos++;
-      console.log(chend, endPos);
-    }
-    //last adjustements from going too far
-    startPos = startPos + 2;
-    endPos = endPos - 2;
-    return [startPos, endPos];
-  }
-
-  /**
    * Gets the project id from the URL and reroutes to the single label page
    * of the same project
    *
@@ -206,21 +146,33 @@ export class LabellingPageComponent implements OnInit {
   }
 
   /**
+   *
+   */
+  submit() : void {
+    let p_id = this.routeService.getProjectID(this.url);
+    let resultArray: Array<Object> = Array<Object>();
+
+    this.labellings.controls.forEach((el: any) => {
+      resultArray.push({
+        'a_id': this.artifact?.getId(),
+        'lt_id': el.get('labelType')?.value,
+        'l_id': el.get('label')?.value,
+        'remark': el.get('remark')?.value
+      });
+    });
+
+    const dict = {
+      'p_id': parseInt(p_id),
+      "resultArray": resultArray,
+    }
+    console.log(dict)
+    this.labellingDataService.postLabelling(dict);
+  }
+
+  /**
    * Error function for unimplemented features.
    */
   notImplemented(): void {
     throw new Error('This function has not been implemented yet.');
-  }
-
-  submit() : void {
-    let resultArray: Array<Object> = Array<Object>();
-    this.labellings.controls.forEach((el: any) => {
-      resultArray.push({
-        'labelTypeID': el.get('labelType')?.value,
-        'labelId': el.get('label')?.value,
-        'remark': el.get('remark')?.value
-      });
-      console.log(resultArray)
-    });
   }
 }

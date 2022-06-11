@@ -49,7 +49,7 @@ def create_label():
         db.session.add(label)
         db.session.commit() 
     except:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response('Created')
 

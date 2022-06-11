@@ -2,7 +2,7 @@ from src.app_util import check_args
 from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func
 from src.app_util import login_required, in_project
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
@@ -39,3 +39,35 @@ def get_labelling_by_label(*, user, membership):
     } for labelling in labellings])
 
     return make_response(labelling_data)
+
+
+@labelling_routes.route('/create', methods=['POST'])
+@login_required
+@in_project
+def post_labelling(*, user):
+    args = request.json['params']
+    required = ['p_id', 'resultArray']
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    for labelling in args['resultArray']:
+        labelling_ = Labelling(u_id=user.id, 
+            a_id=labelling['a_id'], 
+            lt_id=labelling['lt_id'], 
+            l_id=labelling['l_id'], 
+            p_id=args['p_id'], 
+            remark=labelling['remark'],
+            time=func.current_timestamp()
+        )
+        try:
+            db.session.add(labelling_)
+        except:
+            return make_response('Internal Server Error: Adding to database unsuccessful', 500)
+    
+    try:
+        db.session.commit()
+    except:
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
+
+    return make_response()
