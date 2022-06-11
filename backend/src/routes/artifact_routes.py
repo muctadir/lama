@@ -305,11 +305,11 @@ def generate_artifact_identifier(p_id):
     h.update(bytes([len(identifiers)]))
 
     # Get the string source of the identifier
-    big_identifier = h.hexdigest().upper()
+    identifier_upper = h.hexdigest().upper()
 
     # Get a unique identifier
-    while big_identifier[start:length] in identifiers:
+    while identifier_upper[start:length] in identifiers:
         start += 1
     
     # Return the identifier
-    return big_identifier[start:length]
+    return identifier_upper[start:length]

@@ -4,6 +4,8 @@ from itertools import groupby
 
 #levenstein's algo
 #gets distance value between 2 words
+#@param tok1, tok2: two string words
+#@returns letter distance between both words
 def levenshtein_dist(tok1, tok2):
     distances = numpy.zeros((len(tok1) + 1, len(tok2) + 1))
 
@@ -12,6 +14,7 @@ def levenshtein_dist(tok1, tok2):
     token1 = tok1.lower()
     token2 = tok2.lower()
 
+    #initialise distance matrix
     for t1 in range(len(token1) + 1):
         distances[t1][0] = t1
 
@@ -22,6 +25,7 @@ def levenshtein_dist(tok1, tok2):
     b = 0
     c = 0
     
+    #filling in distance matrix
     for t1 in range(1, len(token1) + 1):
         for t2 in range(1, len(token2) + 1):
             if (token1[t1-1] == token2[t2-1]):
@@ -38,6 +42,7 @@ def levenshtein_dist(tok1, tok2):
                 else:
                     distances[t1][t2] = c + 1
 
+    #get final distance between words
     return distances[len(token1)][len(token2)]
 
 
@@ -105,6 +110,8 @@ def search_func_all_res(search_words, data, id_col, data_col):
             
 
 #groups the param list into a dictionary by ID
+#@param the list of arrays of type [id, [dist, word], search_word, item]
+# there is an entry in the list for each best word of the search words in each artifact
 def list_to_dictionnary(param_list, id_col):
     # define a fuction for key
     def key_func(k):
@@ -132,6 +139,7 @@ def list_to_dictionnary(param_list, id_col):
 
 #takes the big dictionary of results per artifact and
 #  gets the best search results by min total word distance
+#@param list of the return type of search_func_all_res()
 #returns list of items of form [{},{},{id:, match_count:, tot_dist:, best_words:[], item:{}},{}]
 def best_search_results(all_search_results, word_count):
     #to store all results
