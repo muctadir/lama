@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormBuilder } from '@angular/forms';
 import { AccountChangePasswordComponent } from './account-change-password.component';
 
 describe('AccountChangePasswordComponent', () => {
@@ -8,7 +8,9 @@ describe('AccountChangePasswordComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountChangePasswordComponent ]
+      declarations: [ AccountChangePasswordComponent ],
+      // Adds FormBuilder dependency
+      providers: [FormBuilder]
     })
     .compileComponents();
   });

@@ -12,7 +12,7 @@ describe('IndividualLabelComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ IndividualLabelComponent ],
-      // Adding the RouterTestingModule dependency
+      // Addis RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbActiveModal dependency
       providers: [NgbActiveModal]

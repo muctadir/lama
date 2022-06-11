@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -11,8 +10,10 @@ describe('LogoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      // Adds the RouterTestingModule dependency
       imports: [RouterTestingModule],
       declarations: [ LogoutComponent ],
+      // Adds NgbActiveModal dependency
       providers: [NgbActiveModal]
     })
     .compileComponents();
