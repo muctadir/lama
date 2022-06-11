@@ -32,9 +32,14 @@ For getting the project information
 def home_page(*, user):
 
     # Get membership of the user
-    projects_of_user = db.session.execute(
-        select(Membership).where(Membership.u_id==user.id)
-    ).scalars().all()
+    projects_of_user = db.session.scalars(
+        select(
+            Membership
+        ).where(
+            Membership.u_id==user.id,
+            Membership.deleted==False
+        )
+    ).all()
 
     # List for project information
     projects_info = []
