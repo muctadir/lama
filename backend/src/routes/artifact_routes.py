@@ -289,6 +289,7 @@ def get_labellers():
             User.id == Labelling.u_id,
             Labelling.a_id == args['a_id']
         )
+        .distinct()
     ).all()
     user_schema = UserSchema()
     json_labellers = jsonify(user_schema.dump(labellers, many=True))
