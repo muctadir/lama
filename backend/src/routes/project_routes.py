@@ -124,7 +124,7 @@ def create_project(*, user):
     
     # Get the ids of all users 
     users = project_info["users"]
-    # Append the user to the project users attribute
+    # Append the users to the project users attribute
     project.users.extend(users)
     # Also append the user that created the project as an admin
     project.users.append({
@@ -132,13 +132,11 @@ def create_project(*, user):
         'admin' : True
     })
     # Get the ids of all super_admins
-    # For some reason returns a tuple with one element, so we need to get the first element
-    super_admin_ids = db.session.execute(select(SuperAdmin.id))
-    # Each element in the collection is a tuple (one tuple in this case)
+    super_admin_ids = db.session.scalars(select(SuperAdmin.id)).all()
     # Add all super admins as admins
     for super_admin_id in super_admin_ids:
         project.users.append({
-            'u_id' : super_admin_id[0],
+            'u_id' : super_admin_id,
             'admin' : True
         })
 
