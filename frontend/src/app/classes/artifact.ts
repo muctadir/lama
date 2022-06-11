@@ -17,7 +17,7 @@ export abstract class Artifact {
      * This is all that is needed for the artifact page
      * You can put extra/less infromation in here if needed, because its an any type array
     **/ 
-    private labellings: Array<Array<any>> | undefined;
+    private labellings: Array<Array<string>> | undefined;
     // Parent of the artifact (split)
     private parentId: number | undefined;
     // Childern of the artifact (split)
@@ -53,6 +53,9 @@ export abstract class Artifact {
      * @params id
      */
     setId(id: number): void {
+        if (id == undefined || typeof id != "number") {
+            throw new Error('Artifact ID should be a number');
+        }
         this.id = id;
     }
 
@@ -96,7 +99,7 @@ export abstract class Artifact {
      * gets the labellings
      * @return this.labelling 
      */
-    getLabellings(): Array<Array<any>> | undefined {
+    getLabellings(): Array<Array<string>> | undefined {
         return this.labellings;
     }
 

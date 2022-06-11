@@ -1,0 +1,92 @@
+<!-- Victoria Bogachenkova -->
+<!-- Veerle Fürst -->
+
+<!-- Top bar of the page -->
+<div class="container" id="topBarRow">
+    <div class="row">
+        <!-- Column for the header -->
+        <div class="col">
+            <!-- Header saying "Projects" -->
+            <p class="header"> Projects </p>
+        </div>
+        <!-- Column for the adding project button -->
+        <div class="col">
+            <!-- Settings icon -->
+            <a [href]="['\account']">
+                <em class="bi bi-person-circle" ></em>
+            </a>
+            <!-- Create project button -->
+            <button type="button" class="btn btn-secondary" id="createProjectButton" routerLink="/createProject">
+                <span id="createProjectText">Create project</span>
+                <!-- Plus icon -->
+                <em class="bi bi-plus"></em>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div *ngIf="errorMsg">{{errorMsg}}</div>
+        </div>
+    </div>
+</div>
+<!-- Show all projects in divisions -->
+<div class="allProjects">
+    <div class='projectParagraph' *ngFor="let project of projects" [routerLink]="['/project', project.getId()]">
+        <div class="container">
+            <!-- Row for each project -->
+            <div class="row align-items-center">
+
+                <!-- Column for each project name -->
+                <div class="col" id="projectNameColumn">
+                    <!-- Shows project name, artifact progress bar, and number of users -->
+                    <p class="projectName"> {{ project.getName() }} </p>
+                </div>
+
+                <!-- Column for progress bar and values-->
+                <div class="col">
+                    <!-- Progress bar -->
+                    <div class="progress">
+                        <!-- Calculating progress bar and other values -->
+                        <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.getNumberOfCLArtifacts()}}
+                        aria-valuemin="0" attr.aria-valuemax={{project.getNumberOfArtifacts()}} 
+                        [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
+                        style="background-color:#ED5A06 !important;"> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    {{ project.getNumberOfCLArtifacts() }} / {{ project.getNumberOfArtifacts() }}
+                </div>
+
+                <!--  Column for whether user is admin or not -->
+                <div class="col-1">
+                    <div *ngIf="project.getAdmin()">
+                        <em class="bi bi-key"></em> 
+                        <!-- Admin -->
+                    </div>
+                </div>
+                
+                <!-- Column for whether project is frozen or not -->
+                <div class="col-1">
+                    <div *ngIf="project.getFrozen()">
+                        <!-- Snow icon -->
+                        <em class="bi bi-snow"></em>
+                    </div>
+                </div>
+
+                <!-- Column for number of users -->
+                <div class="col-2">
+                    <!-- Member icon -->
+                    <em class="bi bi-person"></em>
+                    <span class='numberOfUsers'>{{ project.getNumberOfUsers() }}</span>
+                </div>
+
+                <!-- Row for project description -->
+                <div class="row">
+                    <!-- Shows project description -->
+                    {{ project.getDesc() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -41,11 +41,12 @@ def editUserInformation(*, user):
 
     # Get the information needed
     args = request.json
+    args = args['params']
 
     # Take the username, email and description
-    newUsername = args["username"]
-    newEmail = args["email"]
-    newDescription = args["description"]
+    new_username = args["username"]
+    new_email = args["email"]
+    new_description = args["description"]
 
     # Required arguments
     required = ["username", "email", "description"] 
@@ -55,7 +56,7 @@ def editUserInformation(*, user):
         return make_response(("Bad Request", 400))
 
     # Check required arguments are valid
-    if not check_format(newUsername, newEmail, newDescription):
+    if not check_format(new_username, new_email, new_description)[0]:
         return make_response(("Bad Request", 400))
     
     # Change the users information
@@ -63,9 +64,9 @@ def editUserInformation(*, user):
         update(User).
         where(User.id == user.id).
         values(
-            username=newUsername,
-            email=newEmail,
-            description=newDescription
+            username=new_username,
+            email=new_email,
+            description=new_description
         )
     )
     # Commit the new information
@@ -85,7 +86,7 @@ def editUserPassword(*, user):
 
     # Get the information needed
     args = request.json
-    print(args)
+    args = args['params']
 
     # Required arguments
     required = ["password", "newPassword"] 

@@ -1,0 +1,38 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// Markup of the logout header
+#logout-header {
+    text-align: center;
+    padding-top: 10px;
+    font-size: 20px;
+}
+
+// Row with buttons
+#secondary-row {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+// align elements in the center
+.center-colu {
+    text-align: center;
+}
+
+// markup of no button
+#noButton {
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 16px;
+    border: none;
+}
+
+// markup of yes button
+#yesButton {
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 16px;
+    border: none;
+}

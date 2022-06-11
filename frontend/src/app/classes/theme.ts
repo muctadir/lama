@@ -7,19 +7,21 @@ import { Label } from './label';
 
 export class Theme {
 
-    //ID of the theme
+    // ID of the theme
     private id: number;
-    //name of the theme
+    // Name of the theme
     private name: string;
-    //description of the theme
+    // Description of the theme
     private desc: string;
-    //array of parent themes of the theme
-    private themeParents: Array<Theme> | undefined;
-    //array of child themes of the theme
-    private themeChilds: Array<Theme> | undefined;
-    //array of theme labels
+    // Array of parent themes of the theme
+    private themeParent: Theme | undefined;
+    // Array of child themes of the theme
+    private themeChildren: Array<Theme> | undefined;
+    // Array of theme labels
     private labels: Array<Label> | undefined;
-    //deletion status of the theme
+    // Count of the labels
+    private numberOfLabels: number;
+    // Deletion status of the theme
     private deleted: boolean | undefined;
 
     /**
@@ -32,6 +34,7 @@ export class Theme {
         this.id = id;
         this.name = name;
         this.desc = desc;
+        this.numberOfLabels = 0;
     }
 
     /**
@@ -63,6 +66,9 @@ export class Theme {
     * @param themeName 
     */
     setName(name: string): void {
+        if ( name == undefined || typeof name != "string" || name.length < 0) {
+            throw new Error("The theme name should not be of length 0 as an argument in setName()");
+        }
         this.name = name;
     }
 
@@ -71,7 +77,7 @@ export class Theme {
     * Function returns the theme description
     * @returns this.desc
     */
-    getDescription(): string {
+    getDesc(): string {
         return this.desc;
     }
 
@@ -79,7 +85,10 @@ export class Theme {
     * Sets the theme description
     * @param desc 
     */
-    setDescription(desc: string): void {
+    setDesc(desc: string): void {
+        if ( desc == undefined || typeof desc != "string" || desc.length < 0) {
+            throw new Error("The theme description should not be of length 0 as an argument in setDesc()");
+        }
         this.desc = desc;
     }
 
@@ -87,57 +96,43 @@ export class Theme {
     * Function returns the parent themes
     * @returns this.themeParents
     */
-    getParents(): Array<Theme> | undefined {
-        return this.themeParents;
+    getParent(): Theme | undefined {
+        return this.themeParent;
     }
 
     /**
     * Sets the parent themes 
     * @param themeParents 
     */
-    setParents(themeParents: Array<Theme> | undefined): void {
-        this.themeParents = themeParents
-    }
-
-    /**
-    * Function get the number of parent themes
-    * @return this.themeParents.length
-    */
-    getNumberOfParents(): number | undefined {
-        let parentsVar = this.themeParents;
-        // Make sure the parents are defined when calling
-        if (parentsVar != undefined) {
-            return parentsVar.length;
-        } else {
-            return 0;
-        }
+    setParent(themeParent: Theme | undefined): void {
+        this.themeParent = themeParent
     }
 
     /**
     * Function returns the child themes
-    * @returns this.themeChilds
+    * @returns this.themeChildren
     */
-    getChilds(): Array<Theme> | undefined {
-        return this.themeChilds;
+    getChildren(): Array<Theme> | undefined {
+        return this.themeChildren;
     }
 
     /**
     * Sets the child themes 
-    * @param themeChilds 
+    * @param themeChildren 
     */
-    setChilds(themeChilds: Array<Theme> | undefined): void {
-        this.themeChilds = themeChilds
+    setChildren(themeChildren: Array<Theme> | undefined): void {
+        this.themeChildren = themeChildren
     }
 
     /**
     * Function get the number of child themes
-    * @return this.themeChilds.length
+    * @return this.themeChildren.length
     */
-    getNumberOfChilds(): number | undefined {
-        let childsVar = this.themeChilds;
-        // Make sure the childs are defined when calling
-        if (childsVar != undefined) {
-            return childsVar.length;
+    getNumberOfChildren(): number | undefined {
+        let childrenVar = this.themeChildren;
+        // Make sure the children are defined when calling
+        if (childrenVar != undefined) {
+            return childrenVar.length;
         } else {
             return 0;
         }
@@ -155,8 +150,11 @@ export class Theme {
     * Sets the theme's labels 
     * @param labels
     */
-    setLabels(labels: Array<Label> | undefined): void {
-        this.labels = labels
+    setLabels(labels: Array<Label> ): void {
+        // Set the labels
+        this.labels = labels;
+        // Change the number of labels to the new length
+        this.numberOfLabels = this.labels.length;
     }
 
     /**
@@ -164,11 +162,15 @@ export class Theme {
     * @returns labels.length
     */
     getNumberOfLabels(): number {
-        if (this.labels == undefined) {
-            return 0;
-        } else {
-            return this.labels.length;
-        }
+        return this.numberOfLabels;
+    }
+
+    /**
+     * Sets the number of labels
+     * @params numberOfLabels
+     */
+    setNumberOfLabels(numberOfLabels: number): void {
+        this.numberOfLabels = numberOfLabels;
     }
 
     /**

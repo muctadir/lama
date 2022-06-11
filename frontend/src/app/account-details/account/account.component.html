@@ -1,0 +1,24 @@
+<!-- @Author Jarl Jansen -->
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <!-- Account information -->
+    <ng-container *ngIf="mode==0">
+        <app-account-information [errorM]="errorMsg" [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
+    </ng-container>
+    
+    <!-- Edit division -->
+    <ng-container *ngIf="mode==1">
+        <app-edit-account-settings [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-edit-account-settings>
+    </ng-container>
+    
+    <!-- Change password -->
+    <ng-container *ngIf="mode==2">
+        <app-account-change-password [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
+    </ng-container>
+
+    <!-- Logout icon -->
+    <div id="logout-icon">
+        <a><em class="bi bi-box-arrow-left def" (click)="openLogout()"></em></a>
+    </div>
+</div>
+
+
