@@ -8,9 +8,10 @@ from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, func, distinct
 from src.app_util import login_required
 from sqlalchemy.exc import  OperationalError
+from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
@@ -89,25 +90,35 @@ def get_artifacts(*, user):
 @login_required
 def add_new_artifacts(*, user):
     # Get args from request 
-    args = request.args
+    args = request.json['params']
     # What args are required
-    required = ['p_id']
+    required = ['p_id', 'artifacts']
 
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
     # Get the information given by the frontend
-    artifact_info = request.json
+    artifact_info = args['artifacts']['array']
+
+    # List of artifacts to be added
+    artifact_object = []
 
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
+
+    # Generate a unique identifier
+    identifier = generate_artifact_identifier(args['p_id'])
+
+    # Set the identifier for each artifact and add them to the list of artifact data
     for artifact in artifact_info:
+        # Give artifact the identifier
+        artifact['identifier'] = identifier
+        # Add artifact to the list
+        artifact_object.append(artifact_schema.load(artifact))
 
-        artifact_object = artifact_schema.load(artifact)
-
-        # Add the artifact to the database
-        db.session.add(artifact_object)
+    # Add the artifact to the database
+    db.session.add_all(artifact_object)
     
     # Try commiting the artifacts
     try:
@@ -226,5 +237,39 @@ def __aggregate_labellings(artifact):
         
         return formatted_result
 
+# Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
+
+"""
+Generates a unique (in a project) artifact identifier
+Author: Ana-Maria Olteniceanu
+@params p_id: int, the project id for which you want to generate an identifier
+@returns a string which is a unique (within the project) artifact identifier f
+"""
+def generate_artifact_identifier(p_id):
+    # Length of the identifier
+    length = 5
+
+    # Position from generated identifier from which we start extracting the
+    # artifact identifier
+    start = 0
+
+    # Create hash object
+    h = blake2b()
+
+    # Seed of the hash
+    identifiers = db.session.scalar(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id))
+    print(identifiers)
+    # Generate the artifact identifier
+    h.update(bytes([len(identifiers)]))
+
+    # Get the string source of the identifier
+    big_identifier = h.hexdigest().upper()
+
+    # Get a unique identifier
+    while big_identifier[start:length] in identifiers:
+        start += 1
+    
+    # Return the identifier
+    return big_identifier[start:length]

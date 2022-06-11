@@ -29,8 +29,8 @@ export class ArtifactManagementPageComponent {
   pageSize = 5;
 
   /**
-     * Constructor passes in the modal service and the artifact service,
-     * initializes Router
+     * Constructor passes in the modal service, the artifact service 
+     * and initializes Router
      * @param modalService instance of NgbModal
      * @param artifactDataService instance of ArtifactDataService
      * @param router instance of Router

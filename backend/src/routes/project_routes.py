@@ -2,15 +2,18 @@
 # Eduardo Costa Martins
 # Ana-Maria Olteniceanu
 
+from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
-from src.models.item_models import Artifact, LabelType
-from src.models.project_models import Membership, ProjectSchema
+from src.models.item_models import Artifact, LabelType, Labelling
+from src.models.project_models import Membership, Project, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
-from src.app_util import check_args, login_required
+from sqlalchemy.orm import aliased
+from src.app_util import login_required, check_args
+from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -187,3 +190,203 @@ def create_project(*, user):
         db.session.add(label_type)
         db.session.commit()
     return make_response('OK', 200)
+
+"""
+Author: Ana-Maria Olteniceanu
+Gets data from a single project
+@returns a dictionary of the form 
+{
+    "project" : the serialized project
+    "projectNrArtifacts": the number of artifacts in the project
+    "projectNrCLArtifacts": the number of completed artifacts in the project
+    "projectUsers": a serialized list of the users in the project
+    "conflicts": the number of conflicts in the project
+}
+"""
+@project_routes.route("/singleProject", methods=["GET"])
+@login_required
+@in_project
+def single_project(*, user):
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = args['p_id']
+
+    # Get the project
+    project = __get_project(p_id)
+
+    # Schema to serialize the Project
+    project_schema = ProjectSchema()
+    # Schema to serialize the User
+    user_schema = UserSchema()
+
+    # Convert project to JSON
+    project_json = project_schema.dump(project)
+
+    # Get the artifacts for each project 
+    project_artifacts_stmt = select(func.count(Artifact.id)).where(Artifact.p_id==p_id)
+    project_artifacts = db.session.scalar(project_artifacts_stmt)
+    # Get the number of total artifacts
+    project_nr_artifacts = project_artifacts
+    # Get the number of completely labelled artifacts for each project
+    project_nr_cl_artifacts = db.session.scalar(
+        project_artifacts_stmt.where(Artifact.completed==True)
+    )
+
+    # Get the users in the project
+    project_users = project.users
+    # Serialize all users
+    users = []  
+    for user in project_users:
+        user_dumped = user_schema.dump(user)
+        user_dumped.pop("password")
+        users.append(user_dumped)
+
+    # Get the number of conflicts in the conflict
+    conflicts = nr_project_conflicts(p_id)
+        
+    # Put all values into a dictonary
+    info = {
+        "project" : project_json,
+        "projectNrArtifacts": project_nr_artifacts,
+        "projectNrCLArtifacts": project_nr_cl_artifacts,
+        "projectUsers": users,
+        "conflicts": conflicts
+        }
+
+    # Convert dictionary to json
+    dict_json = jsonify(info)
+
+    # Return the dictionary
+    return make_response(dict_json)
+
+"""
+Author: Ana-Maria Olteniceanu
+Gets user statistics for a single project
+@returns a list of dictionaries of the form 
+{
+    "username": the username of the user
+    "nr_labelled": the number of artifacts the user has labelled
+    "time": the average time the user takes to label an artifact
+    "nr_conflicts": the number of conflicts the user is involved in
+}
+"""
+@project_routes.route("/projectStats", methods=["GET"])
+@login_required
+def project_stats(*, user):
+    # Get args from request 
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = int(args['p_id'])
+
+    # Get all the users in the project
+    project = db.session.scalar(
+        select(Project).where(Project.id==p_id)
+    )
+
+    # Get all user with conflicts and the number of conflicts they have
+    user_conflicts = nr_user_conflicts(p_id)
+
+    # List of all stats per user
+    stats = []
+    for user in project.users:
+        # Get username
+        username = user.username
+
+        # Set of artifacts user has labelled
+        artifacts = set()
+
+        # Total time in seconds spent labelling
+        total_time = 0
+
+        # Loop through each labelling to get the necessary data
+        for labelling in user.labellings:
+            print(labelling.p_id == p_id)
+            print(str(p_id) + ", " + str(labelling.p_id))
+            if labelling.p_id == p_id:
+                print("uwu")
+                # Add the artifact associated with this labelling to the set of artifacts
+                artifacts.add(labelling.artifact)
+                # Add the time spent labelling to the total time
+                total_time += __time_in_seconds(labelling.time)
+
+        # Get number of artifacts
+        artifacts_num = len(artifacts)
+        print(artifacts)
+        print(artifacts_num)
+
+        # Get average time of labelling in seconds
+        if len(user.labellings) > 0:
+            avg_time = __time_to_string(total_time / len(user.labellings))
+        else:
+            # If there are no labellings set average time to 0
+            avg_time = "00:00:00"
+
+        # Get the number of conflicts in the project
+        if user.id in user_conflicts:
+            conflicts = user_conflicts[user.id]
+        else:
+             conflicts = 0
+
+        # Add all data to a dictionary
+        info = {
+            "username": username,
+            "nr_labelled": artifacts_num,
+            "time": avg_time,
+            "nr_conflicts": conflicts
+        }
+
+        # Add dictionary to list of dictionaries
+        stats.append(info)
+
+    # Convert the list of dictionaries to json
+    dict_json = jsonify(stats)
+
+    # Return the list of dictionaries
+    return make_response(dict_json)
+
+# Function that gets the project with ID p_id
+def __get_project(p_id):
+    return db.session.get(Project, p_id)
+
+# Function that converts a datetime.time variable into 
+# the number of seconds it's equivalent with
+def __time_in_seconds(time):
+    return (time.hour * 60 + time.minute) * 60 + time.second
+
+# Function that converts a number of seconds into
+# a string showing the time in h:m:s format
+def __time_to_string(time):
+    # List of time values
+    time_list = [0, 0, 0]
+
+    # Number of minutes
+    minutes = int(time / 60)
+    # Number of seconds
+    time_list[2] = int(time % 60)
+    # Number of hours
+    time_list[0] = int(minutes / 60)
+    # Updated number of minutes
+    time_list[1] = int(minutes % 60)
+    # String that shows the time
+    time_string = ''
+    for number in time_list:
+        if number == 0:
+            time_string += '00:'
+        else:
+            time_string += str(number) + ':'
+    
+    # Return the string with the time
+    return time_string[:-1]

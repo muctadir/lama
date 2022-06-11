@@ -21,7 +21,6 @@ class ProjectItem():
     Abstract class for all entities belonging to a project
     i.e. an item uniquely identified by the project id and its own id
     """
-    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
 
     # Declares existence of p_id : foreign key for project
     @declared_attr
@@ -29,7 +28,6 @@ class ProjectItem():
         return Column(Integer, ForeignKey('project.id'), nullable=False)
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(64), nullable=False)
 
     # Project that item belongs to
     # Backref automatically creates an attribute in project to access the items of this type
@@ -66,6 +64,9 @@ class ChangingItem(ProjectItem):
 class LabelType(ProjectItem, db.Model):
 
     __tablename__ = 'label_type'
+    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
+    
+    name = Column(String(64), nullable=False)
 
     # A list of labels that are of this type
     labels = relationship('Label', back_populates='label_type')
@@ -110,6 +111,9 @@ class Artifact(ChangingItem, db.Model):
 class Label(ChangingItem, db.Model):
 
     __tablename__ = 'label'
+    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
+    
+    name = Column(String(64), nullable=False)
 
     # The id of the label type this label corresponds to
     lt_id = Column(Integer, ForeignKey('label_type.id'), nullable=False)
@@ -149,6 +153,10 @@ class Label(ChangingItem, db.Model):
 class Theme(ChangingItem, db.Model):
 
     __tablename__ = 'theme'
+    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
+
+    name = Column(String(64), nullable=False)
+
     # Description of meaning of theme
     description = Column(Text)
     # Boolean for if the theme was (soft) deleted (can be seen in history, but not used)
