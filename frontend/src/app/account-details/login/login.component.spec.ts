@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { FormBuilder } from '@angular/forms';
-import { InputCheckService } from '../input-check.service';
+import { InputCheckService } from 'app/services/input-check.service';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LoginComponent', () => {

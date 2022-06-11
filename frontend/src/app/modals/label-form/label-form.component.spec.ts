@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/labeling-data.service';
+import { LabelingDataService } from 'app/services/labeling-data.service';
 
 import { LabelFormComponent } from './label-form.component';
 

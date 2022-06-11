@@ -2,7 +2,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
-import { InputCheckService } from '../input-check.service';
+import { InputCheckService } from 'app/services/input-check.service';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
