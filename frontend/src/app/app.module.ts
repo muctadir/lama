@@ -28,16 +28,15 @@ import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.co
 import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SortableThemeHeader } from './sortable-theme.directive';
-import { CreateThemeComponent } from './theme/create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
-import { EditThemeComponent } from './theme/edit-theme/edit-theme.component';
-
-/* Imports bootstrap */
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { LogoutComponent } from './modals/logout/logout.component';
 import { EditAccountSettingsComponent } from './account-details/edit-account-settings/edit-account-settings.component';
 import { AccountChangePasswordComponent } from './account-details/account-change-password/account-change-password.component';
 import { AccountInformationComponent } from './account-details/account-information/account-information.component';
+
+/* Imports bootstrap */
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -64,10 +63,9 @@ import { AccountInformationComponent } from './account-details/account-informati
     MergeLabelFormComponent,
     IndividualLabelComponent,
     ThemeManagementComponent,
+    ThemeInfoComponent,
     SortableThemeHeader,
-    CreateThemeComponent,
     SingleThemeViewComponent,
-    EditThemeComponent,
     AddUsersModalComponent,
     LogoutComponent,
     EditAccountSettingsComponent,
