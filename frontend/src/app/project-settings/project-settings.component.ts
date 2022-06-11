@@ -90,7 +90,7 @@ export class ProjectSettingsComponent implements OnInit {
   projectMembers: User[] = [];
   //all members
   allMembers: User[] = [];
-  allProjectUsers: User[] = [];
+  allProjectUsers: Record<number, User> = {};
   adminMembers: Record<number,boolean> = [];
   //Arrays for different actions for users
   removedMembers: number[] = [];
@@ -152,10 +152,11 @@ export class ProjectSettingsComponent implements OnInit {
             if(users_of_project[i].removed != 1) {
               this.projectMembers.push(new User(users_of_project[i].id, users_of_project[i].username));
             }
-            this.allProjectUsers.push(new User(users_of_project[i].id, users_of_project[i].username));
+            this.allProjectUsers[users_of_project[i].id] = new User(users_of_project[i].id, users_of_project[i].username);
             this.adminMembers[users_of_project[i].id] = users_of_project[i].admin;
             this.removed[users_of_project[i].id] = +(users_of_project[i].removed);
           }
+          console.log(this.projectMembers)
           this.currentProject.setUsers(this.projectMembers);
           let labeltypes_of_project = responseP.data.labelType;
           for (let i = 0; i < labeltypes_of_project.length; i++) {
@@ -216,29 +217,30 @@ export class ProjectSettingsComponent implements OnInit {
     };
     //All project users
     let updateInfo: Record<string,any> = {};
-    this.allProjectUsers.forEach(user => {
-      if (!(user.getId() in this.added)) {
-        updateInfo[user.getId()] = {
-          "id": user.getId(),
-          "name": user.getUsername(),
-          "removed": this.removed[user.getId()],
-          "admin": +(this.adminMembers[user.getId()])
+    for (let key in this.allProjectUsers) {
+      if (!(this.allProjectUsers[key].getId() in this.added)) {
+        updateInfo[this.allProjectUsers[key].getId()] = {
+          "id": this.allProjectUsers[key].getId(),
+          "name": this.allProjectUsers[key].getUsername(),
+          "removed": this.removed[this.allProjectUsers[key].getId()],
+          "admin": +(this.adminMembers[this.allProjectUsers[key].getId()])
         }
       }
-    });
+    }
 
+    console.log(this.added);
     //All project users
     let addedInfo: Record<string,any> = {};
-    this.allProjectUsers.forEach(user => {
-      if (user.getId() in this.added) {
-        addedInfo[user.getId()] = {
-          "id": user.getId(),
-          "name": user.getUsername(),
-          "admin": +(this.adminMembers[user.getId()]),
-          "removed": this.removed[user.getId()]
+    for (let key in this.allProjectUsers) {
+      if (this.allProjectUsers[key].getId() in this.added) {
+          addedInfo[this.allProjectUsers[key].getId()] = {
+          "id": this.allProjectUsers[key].getId(),
+          "name": this.allProjectUsers[key].getUsername(),
+          "removed": this.removed[this.allProjectUsers[key].getId()],
+          "admin": +(this.adminMembers[this.allProjectUsers[key].getId()])
         }
       }
-    });
+    }
 
     projectInformation["update"] = updateInfo;
     projectInformation["add"] = addedInfo;
@@ -255,6 +257,21 @@ export class ProjectSettingsComponent implements OnInit {
       })
       .then(response => { 
         // TODO
+        console.log(this.added)
+        for (let key in this.allProjectUsers) {
+          console.log(this.allProjectUsers[key].getId() in projectInformation["add"])
+          if (this.allProjectUsers[key].getId() in this.added && this.removed[this.allProjectUsers[key].getId()] == 1) {
+            console.log(this.allProjectUsers[key].getId())
+            this.removed[this.allProjectUsers[key].getId()] = 0
+          }
+          else {
+            console.log("Else")
+            console.log(this.allProjectUsers[key].getId())
+          }
+        }
+        this.removedMembers = []
+        this.addedMembers = []
+        this.added = []
         console.log("Done")
         return Math.floor(response.status/100) == 2;
       })
@@ -269,14 +286,17 @@ export class ProjectSettingsComponent implements OnInit {
   test(): void{ 
   }
 
+
   addMember(user: User, admin: boolean) {
     if (this.removedMembers.includes(user.getId())) {
+      console.log("Here ir" + user.getUsername());
       this.removedMembers.splice(this.removedMembers.indexOf(user.getId()),1);
       this.projectMembers.push(user);
       this.adminMembers[user.getId()] = admin;
+      this.removed[user.getId()] = 0
     }
     else {
-      this.allProjectUsers.push(user);
+      this.allProjectUsers[user.getId()] = user;
       this.added[user.getId()] = 1;
       if (!(user.getId() in this.removed)) {
         this.removed[user.getId()] = 0;
@@ -289,7 +309,8 @@ export class ProjectSettingsComponent implements OnInit {
 
   removeMember(user: User) {
     if (this.addedMembers.includes(user.getId())) {
-      this.allProjectUsers.splice(this.allProjectUsers.indexOf(user),1);
+      // this.allProjectUsers.splice(this.allProjectUsers.indexOf(user),1);
+      delete this.allProjectUsers[user.getId()]
       this.addedMembers.splice(this.addedMembers.indexOf(user.getId()),1);
       let index = this.projectMembers.indexOf(user);
       this.projectMembers.splice(index,1);

@@ -12,6 +12,7 @@ from src.models.project_models import Project, Membership, ProjectSchema, Member
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, update
 from src.app_util import login_required, check_args
+from sqlalchemy.exc import OperationalError, IntegrityError
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -269,10 +270,16 @@ def edit_project(*, user):
         else:
             addedOldMembersList.append({'p_id': args['project']['id'],'u_id': args['add'][mem]['id'],'admin': args['add'][mem]['admin'], 'deleted': 0})
     print(addedMembersList)
+    print(addedOldMembersList)
     db.session.bulk_insert_mappings(Membership, addedMembersList)
     db.session.bulk_update_mappings(Membership, addedOldMembersList)
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except OperationalError:
+        return make_response('Internal Server Error', 503)
+    except IntegrityError:
+        return make_response('Duplicates')
 
     return make_response('Ok')
 
