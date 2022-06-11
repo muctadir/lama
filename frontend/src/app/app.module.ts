@@ -14,7 +14,7 @@ import { HomePageComponent } from './home/home-page/home-page.component';
 import { ProjectCreationComponent } from './home/project-creation/project-creation.component';
 import { AddUsersModalComponent } from './modals/add-users-modal/add-users-modal.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
-import { ProjectComponent } from './project/project.component';
+import { ProjectComponent } from './project/project-page/project.component';
 import { StatsComponent } from './stats/stats.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
 import { LabelFormComponent } from './modals/label-form/label-form.component';
@@ -34,7 +34,7 @@ import { LogoutComponent } from './modals/logout/logout.component';
 import { EditAccountSettingsComponent } from './account-details/edit-account-settings/edit-account-settings.component';
 import { AccountChangePasswordComponent } from './account-details/account-change-password/account-change-password.component';
 import { AccountInformationComponent } from './account-details/account-information/account-information.component';
-import { AddUsersModalContent1, ProjectSettingsComponent } from './project-settings/project-settings.component';
+import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -54,7 +54,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NavigationMenuComponent,
     ProjectComponent,
     StatsComponent,
-    AddUsersModalContent1,
     LabellingPageComponent,
     LabelFormComponent,
     ArtifactManagementPageComponent,
@@ -68,7 +67,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SortableThemeHeader,
     SingleThemeViewComponent,
     ProjectSettingsComponent,
-    AddUsersModalComponent,
     LogoutComponent,
     EditAccountSettingsComponent,
     AccountChangePasswordComponent,

@@ -9,7 +9,7 @@
     </div>
 
     <!--Container if in edit mode-->
-    <div *ngIf="edit" class="container main">
+    <div *ngIf="isInEditMode" class="container main">
 
         <!-- Row for all settings -->
         <div class="row justify-content-between">
@@ -18,18 +18,18 @@
             <div class="col-5">
 
                 <!-- Filling in Project information -->
-                <form id="projectEditingForm" method="post">
+                <form id="projectEditingForm" method="post" [formGroup]="projectForm">
 
                     <!-- Project Name field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        <input id="projectName" name="projectName" class="form-control" type="text" placeholder="Project Name" value={{currentProject.getName()}} required><br>
+                        <input id="projectName" formControlName="projectName" class="form-control" type="text" placeholder="Project Name" value={{currentProject.getName()}} required><br>
                     </div>
                     
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <textarea name="projectDescription" id="projectDescriptionForm" class="form-control" rows="10" placeholder="Project Description" value={{currentProject.getDescription()}}></textarea>
+                        <textarea formControlName="projectDesc" id="projectDescriptionForm" class="form-control" rows="10" placeholder="Project Description" value={{currentProject.getDesc()}}></textarea>
                     </div>  
                 </form>
 
@@ -52,7 +52,7 @@
                         <!-- Col for adding users button -->
                         <div class="col-2">
                             <!-- Button for adding new members -->
-                            <button class="btn" type="button" id="addMembersButton" (click)="openAdd()">
+                            <button class="btn" type="button" id="addMembersButton" (click)="open()">
                                 <!-- Members icon -->
                                 <i class="bi bi-plus members"></i>
                             </button>
@@ -96,14 +96,14 @@
                     </div>
                 </div>
                 <!-- Division around the labeller count -->
-                <form id="constraintForm">      
+                <form id="constraintForm" [formGroup]="projectForm" >      
                     <div class="form-group projectSettingsDivParent">
                         <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
                         <!-- Division around the input -->
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                <input type="number" class="form-control" name="numberOfLabellers" value={{currentProject.getCriteria()}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
+                                <input type="number" class="form-control" formControlName="numberOfLabellers" value={{currentProject.getCriteria()}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
                             </div>
                         </div>
                     </div> 
@@ -133,18 +133,18 @@
         <div class="row justify-content-between">
             <div class="col-5">
             <!-- Freeze button -->
-                <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-start" id="freezeProjectButton" (click)="freezeProject()">
+                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-start" id="freezeProjectButton" (click)="changeFreezeProject(true, false)">
                     Freeze
                 </button>
             </div>
             <!-- Division for save & cancel button -->
             <div class="col-6">
                 <!-- Save button -->
-                <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-end" id="saveProjectButton" (click)="saveEdit()">
+                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-end" id="saveProjectButton" (click)="saveEdit()">
                     Save
                 </button>
                 <!-- Cancel button -->
-                <button *ngIf="edit" type="button" class="btn btn-secondary text-nowrap float-end" id="cancelProjectEditButton" (click)="unclickEdit()">
+                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-end" id="cancelProjectEditButton" (click)="unclickEdit()">
                     Cancel
                 </button>
             </div>
@@ -152,7 +152,7 @@
     </div>
     
     <!--Container if not in edit mode-->
-    <div *ngIf="!edit" class="container main">
+    <div *ngIf="!isInEditMode" class="container main">
         <!-- Row for all settings -->
         <div class="row justify-content-between">
             <!-- Left side of the page (project name and description) -->
@@ -165,7 +165,7 @@
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <p>{{currentProject.getDescription()}}</p>
+                        <p>{{currentProject.getDesc()}}</p>
                     </div>  
                     <!-- Response division -->
                     <div id="responseDiv">
@@ -185,7 +185,7 @@
                        <!-- Col for adding users button -->
                        <div class="col-2">
                            <!-- Button for adding new members, show error since not in edit mode -->
-                           <button class="btn" type="button" id="addMembersButton" (click)="openAddError()">
+                           <button class="btn" type="button" id="addMembersButton">
                                <!-- Members icon -->
                                <i class="bi bi-plus members"></i>
                            </button>
@@ -261,10 +261,10 @@
                 
         <div class="row justify-content-end">
             <!-- Edit button -->
-            <button *ngIf="!edit && !currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
+            <button *ngIf="!isInEditMode && !currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
                 Edit
             </button>
-            <button *ngIf="currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="unfreezeProject()">
+            <button *ngIf="currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="changeFreezeProject(false, true)">
                 Unfreeze
             </button>
         </div>
