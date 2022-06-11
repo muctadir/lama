@@ -9,7 +9,7 @@ from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
 from src.models.item_models import Artifact, LabelType
 from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.app_util import check_args, login_required
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
@@ -57,15 +57,12 @@ def home_page(*, user):
         # Get admin status 
         projects_admin = membership_project.admin
 
-        # Get the artifacts for each project 
-        project_artifacts_stmt = select(Artifact).where(Artifact.p_id==project_id)
-        project_artifacts = db.session.execute(project_artifacts_stmt).scalars().all()
-        # Get the number of total artifacts
-        project_nr_artifacts = len(project_artifacts)
+        # Get the number of artifacts for each project 
+        project_artifacts_stmt = select(func.count(Artifact.id)).where(Artifact.p_id==project_id)
+        project_nr_artifacts = db.session.scalar(project_artifacts_stmt)
         # Get the number of completely labelled artifacts for each project
-        project_nr_cl_artifacts = len(db.session.execute(
-            project_artifacts_stmt.where(Artifact.completed==True)
-        ).scalars().all())
+        project_nr_cl_artifacts_stmt = select(func.count(Artifact.id)).where(Artifact.completed==True, Artifact.p_id==project_id)
+        project_nr_cl_artifacts = db.session.scalar(project_nr_cl_artifacts_stmt)
 
         # Get the users in the project
         project_users = project.users
@@ -117,6 +114,15 @@ def get_users(*, user):
 
 """
 For creating a new project
+@params a dictionary of the form: {
+    project: dictionary with project information:{
+        name: name of project
+        description: description of project
+        criteria: number of people that have to label an artifact
+    }
+    labelTypes: list of labeltypes in the project
+    users: list of users in the project
+}
 """
 @project_routes.route("/creation", methods=["POST"])
 @login_required
@@ -124,6 +130,21 @@ def create_project(*, user):
 
     # Get the information given by the frontend
     project_info = request.json
+
+    # Get the actual information
+    project_info = project_info["params"]
+
+    # Required fields
+    required = ["project", "labelTypes", "users"]
+    # Check if all required arguments are there
+    if not check_args(required, project_info):
+        return make_response("Not all required arguments supplied", 400)
+
+    # Required fields inside the project dictionary
+    required = ["name", "description", "criteria"]
+    # Check if all required arguments are there
+    if not check_args(required, project_info["project"]):
+        return make_response("Not all required arguments supplied", 400)
 
     # Load the project data into a project object
     project_schema = ProjectSchema()

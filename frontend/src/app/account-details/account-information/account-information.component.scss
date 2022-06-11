@@ -1,0 +1,64 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #bfbfbf;
+
+// Header above the input fields
+#header {
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* INFORMATION PAGE */
+// texts above each of the forms indicating what the form is for
+#field_text {
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+// Boldfaced txt
+#boldText {
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+// Text with account information
+#infoText {
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-left: 25px;
+    text-indent:0;
+}
+
+// Markup of buttons
+.infoButtons {
+    border: none;
+    float: right;
+    width: 150px;
+}
+
+// Cancel edit button
+#backButton {
+    margin-right: 20px;
+}
+
+// Columns of the information
+.col-8 {
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+// Line between things
+hr {
+    height: 2px;
+    color: $light-grey-shade;
+}
+
+// Markup of error text
+#error-message {
+    color: red;
+    font-size: 17px;
+}

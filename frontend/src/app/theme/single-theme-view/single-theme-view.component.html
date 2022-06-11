@@ -110,10 +110,12 @@
 
     </div>
     <!-- Back and Edit Buttons -->
-    <div class="col-10">
-        <div class="col-2" id="buttonCol">
-            <button class="btn btn-secondary float-start" (click)="reRouter()" id="btns-cancel-submit">Back</button> 
-            <button class="btn btn-primary float-start" routerLink="/project/editTheme" id="editButton">Edit</button> 
+    <div class="col-6 align-self-end" id="createCancelButtons">
+        <div>
+            <!-- Create button --> 
+            <button class="btn btn-primary float-end" (click)="reRouterEdit()" id="editButton">Edit</button> 
+            <!-- Cancel button -->
+            <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
         </div>
     </div>
 </div>
