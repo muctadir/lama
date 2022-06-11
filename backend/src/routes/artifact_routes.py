@@ -1,5 +1,7 @@
 # Victoria Bogachenkova
 # Ana-Maria Olteniceanu
+# Eduardo Costa Martis
+# Thea Bradley
 
 from importlib.metadata import requires
 from src.app_util import check_args
@@ -8,14 +10,17 @@ from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select
-from src.app_util import login_required
+from sqlalchemy import select, func, distinct
+from src.app_util import login_required, in_project
 from sqlalchemy.exc import  OperationalError
+from src.searching.search import search_func_all_res, best_search_results
+from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
+@in_project
 def get_artifacts(*, user):
     # Get args from request 
     args = request.args
@@ -51,6 +56,7 @@ def get_artifacts(*, user):
         ).scalars().all()
 
         # Take the artifacts labelled by the user
+        # TODO: Remove for loop
         for labelling in labellings:
             artifacts.add(labelling.artifact)
 
@@ -61,6 +67,7 @@ def get_artifacts(*, user):
     artifact_schema = ArtifactSchema()
 
     # For each displayed artifact
+    # TODO: Remove for loop
     for artifact in artifacts:
 
         # Convert artifact to JSON
@@ -87,7 +94,8 @@ def get_artifacts(*, user):
 
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
-def add_new_artifacts(*, user):
+@in_project
+def add_new_artifacts():
     # Get args from request 
     args = request.args
     # What args are required
@@ -100,14 +108,20 @@ def add_new_artifacts(*, user):
     # Get the information given by the frontend
     artifact_info = request.json
 
+    # List of artifacts to be added
+    artifact_object = []
+
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
+    identifier = generate_artifact_identifier(args['p_id'])
+
     for artifact in artifact_info:
 
-        artifact_object = artifact_schema.load(artifact)
+        artifact['identifier'] = identifier
+        artifact_object.append(artifact_schema.load(artifact))
 
-        # Add the artifact to the database
-        db.session.add(artifact_object)
+    # Add the artifact to the database
+    db.session.add_all(artifact_object)
     
     # Try commiting the artifacts
     try:
@@ -155,6 +169,50 @@ def single_artifact(*, user):
 
     # Return the dictionary
     return make_response(dict_json)
+
+@artifact_routes.route('/search', methods=['GET'])
+@login_required
+@in_project
+def search(*, user, membership):
+    
+    # Get arguments
+    args = request.args
+    # Required arguments
+    required = ['p_id', 'search_words']
+
+    # Check if required agruments are supplied
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Get the project id
+    p_id = int(args['p_id'])
+
+    # Artifact schema for serializing
+    artifact_schema = ArtifactSchema()
+    
+    # If the user is a admin
+    if membership.admin:
+        # Get all artifact
+        artifacts = db.session.scalars(
+            select(Artifact).where(Artifact.p_id == p_id)
+        ).all()
+    else:
+        # Get all artifacts the user has labelled
+        artifacts = db.session.scalars(
+            select(Artifact).where(Artifact.p_id == p_id,
+                Labelling.a_id == Artifact.a_id,
+                Labelling.u_id == user.id)
+        ).all()
+
+    # Getting result of search
+    results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    # Take the best results
+    clean_results = best_search_results(results, len(args['search_words'].split()))
+    # Gets the actual artifact from the search
+    artifacts_results = [result['item'] for result in clean_results]
+
+    # Return the list of artifacts from the search
+    return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
 
 def __get_extended(artifact):
     # Children of the artifact
@@ -228,3 +286,30 @@ def __aggregate_labellings(artifact):
 
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
+
+def generate_artifact_identifier(p_id):
+    # Length of the identifier
+    length = 5
+
+    # Position from generated identifier from which we start extracting the
+    # artifact identifier
+    start = 0
+
+    # Create hash object
+    h = blake2b()
+
+    # Seed of the hash
+    identifiers = db.session.scalars(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id)).all()
+
+    # Generate the artifact identifier
+    h.update(bytes([len(identifiers)]))
+
+    # Get the string source of the identifier
+    identifier_upper = h.hexdigest().upper()
+
+    # Get a unique identifier
+    while identifier_upper[start:length] in identifiers:
+        start += 1
+    
+    # Return the identifier
+    return identifier_upper[start:length]

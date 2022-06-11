@@ -1,6 +1,7 @@
 // Ana-Maria Olteniceanu
 // Bartjan Henkemans
 // Victoria Bogachenkova
+// Thea Bradley 
 
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +10,8 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
+import { FormBuilder } from '@angular/forms';
+import { Artifact } from 'app/classes/artifact';
 
 
 @Component({
@@ -22,11 +25,20 @@ export class ArtifactManagementPageComponent {
   // Initialize the url
   url: string;
   // Make list of all artifacts
-  artifacts: StringArtifact[];
+  artifacts: Array<StringArtifact> = [];
+
+  //bool on if there is text in the search bar
+  search = false;
 
   //Pagination Settings
   page = 1;
   pageSize = 5;
+
+  // gets the search terms
+  searchForm = this.formBuilder.group({
+    search_term: ''
+  });
+
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -37,10 +49,10 @@ export class ArtifactManagementPageComponent {
      */
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
-    private router: Router) {
+    private router: Router, private formBuilder: FormBuilder) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
-    this.artifacts = new Array<StringArtifact>()
+    this.artifacts = new Array<StringArtifact>();
   }
 
   ngOnInit(): void {
@@ -48,7 +60,7 @@ export class ArtifactManagementPageComponent {
     const p_id = Number(this.routeService.getProjectID(this.url))
 
     // Get the artifacts from the backend
-    this.getArtifacts(p_id)
+    this.getArtifacts(p_id);
   }
 
   /**
@@ -58,7 +70,7 @@ export class ArtifactManagementPageComponent {
    */
   async getArtifacts(p_id: number): Promise<void> {
     const artifacts = await this.artifactDataService.getArtifacts(p_id);
-    this.artifacts = artifacts
+    this.artifacts = artifacts;
   }
 
   /**
@@ -81,6 +93,39 @@ export class ArtifactManagementPageComponent {
   
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
+  }
+  
+  //gets the search text
+  async onEnter() {
+
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
+
+    // Search text
+    var text = this.searchForm.value.search_term;
+
+    // If nothing was searched
+    if(text.length == 0){
+      // Show all artifacts
+      await this.getArtifacts(p_id);
+    } else {
+      // Otherwise search
+    
+      // Pass the search word to services
+      let artifacts_searched = await this.artifactDataService.search(text, p_id);
+
+      // List for the artifacts resulting from the search
+      let artifact_list: Array<StringArtifact> = [];
+      // For loop through all searched artifacts
+      for (let search_artifact of artifacts_searched){
+        // Make it an artifact object
+        let newArtifact = new StringArtifact(search_artifact["id"], search_artifact["identifier"], search_artifact['data']);
+        // Append artifact to list
+        artifact_list.push(newArtifact);
+      }
+      // Only show the resulting artifacts from the search
+      this.artifacts = artifact_list;
+    }
   }
 
 }

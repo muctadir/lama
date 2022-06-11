@@ -12,3 +12,4 @@ src/models/__pycache__/*
 src/tests/__pycache__/*
 migrations/*
 migrations-test/*
+src/searching/__pycache__/*

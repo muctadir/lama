@@ -1,5 +1,6 @@
 <!-- @author: Bartjan Henkemans -->
 <!-- @author: Veerle Furst -->
+<!-- @author: Thea Bradley -->
 
 <!-- big container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
@@ -10,6 +11,17 @@
         <!-- Create theme button -->
         <div class="col-2" id="addButton">
             <button class="form-control btn btn-secondary" id="createThemeButton" (click)="reRouter('createTheme')">Create Theme<i class="bi bi-plus createTheme"></i></button>   
+        </div>
+    </div>
+
+    <!-- row containing the search bar -->
+    <div class="row">
+        <div class="col-5">
+            <div class="search__container">
+                <form [formGroup]="searchForm">
+                    <input class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                </form>
+            </div>
         </div>
     </div>
 
