@@ -3,6 +3,7 @@
 # Ana-Maria Olteniceanu
 # Linh Nguyen
 
+from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
@@ -11,7 +12,7 @@ from src.models.item_models import Artifact, LabelType, LabelTypeSchema
 from src.models.project_models import Project, Membership, ProjectSchema, MembershipSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
-from src.app_util import login_required, check_args
+from src.app_util import login_required, check_args, in_project
 from sqlalchemy.exc import OperationalError, IntegrityError
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
@@ -222,7 +223,7 @@ def get_project(*, user):
     args = request.args
 
     # Required args
-    required = ('id')
+    required = ['p_id']
 
     if not check_args(required, args):
         return make_response('Bad Request', 400)
@@ -237,9 +238,6 @@ def get_project(*, user):
     users_of_project = db.session.scalars(
         select(Membership).where(Membership.p_id==args['p_id'])
     ).all()
-    
-    # Serialize all users
-    user_schema = UserSchema()
 
     # Send the user object
     users_data = [{
@@ -253,9 +251,6 @@ def get_project(*, user):
     labelTypes = db.session.scalars(
             select(LabelType).where(LabelType.p_id==args['p_id'])
         ).all()
-
-    #Serialize all label types
-    labeltype_schema = LabelTypeSchema()
 
     # Send the label type object
     label_type_data = [{
@@ -302,39 +297,45 @@ For editing an existing project
 """
 @project_routes.route("/edit", methods=["PATCH"])
 @login_required
-def edit_project(*, user):
+@in_project
+def edit_project(*, user, membership):
+    # Check if the current user is project admin
+    if (not membership.admin):
+        return make_response('This member is not admin', 401)
+
     # Get args 
     args = request.json
     # Required args
-    required = ('id', 'name', 'description', 'criteria', 'frozen')
+    required = ["p_id", "project", "add", "update"]
+    required_project = ['id', 'name', 'description', 'criteria', 'frozen']
 
-    #Checking if the information supplied from front end meets all the required fields
-    if not check_args(required, args['params']['project']):
+    # Checking if the information supplied from front end meets all the required fields
+    if not check_args(required_project, args['params']['project']) or not check_args(required, args['params']):
         return make_response('Bad Request', 400)
 
-    #Get project with supplied project ID from args
+    # Get project with supplied project ID from args
     project = db.session.get(Project, args['params']['project']['id'])
     if not project:
         return 400
 
-    #Updating project information
+    # Updating project information
     projectUpdated = updateProject(args['params']['project'])
-    #Updating members admin status or removing members
+    # Updating members admin status or removing members
     projectMembersUpdated = updateMembersInProject(project.id, args['params']['update'], 1)
-    #Adding old members back to the project
+    # Adding old members back to the project
     projectOldMembersAdded = updateMembersInProject(project.id, args['params']['add'], 0)
-    #Adding new members to the project
+    # Adding new members to the project
     projectNewMembersAdded = addMembers(project.id, args['params']['add'])
-    #Checks if everything went well
+    # Checks if everything went well
     if projectUpdated == 200 & projectMembersUpdated == 200 & projectNewMembersAdded == 200 & projectOldMembersAdded == 200:
-        #Committing the updates/additions to the databse
+        # Committing the updates/additions to the databse
         try:
             db.session.commit()
         except OperationalError:
             return make_response('Internal Server Error', 503)
         except IntegrityError:
             return make_response('Integrity Error')
-        #Returning a response
+        # Returning a response
         return make_response('Ok')
     else:
         return make_response('Error with saving')
@@ -436,23 +437,28 @@ For freezing a project
 """
 @project_routes.route("/freeze", methods=["PATCH"])
 @login_required
-def freeze_project(*, user):
+@in_project
+def freeze_project(*, user, membership):
+    if not membership.admin:
+        return make_response('This member is not admin', 401)
+
     # Get args 
     args = request.json
+    print(args)
     # Required args
-    required = ('id', 'frozen')
+    required = ['p_id', 'frozen']
 
-    if not check_args(required, args):
+    if not check_args(required, args['params']):
         return make_response('Bad Request', 400)
 
     #Get project with supplied ID
-    project = db.session.get(Project, args['params']['id'])
+    project = db.session.get(Project, args['params']['p_id'])
     if not project:
         return make_response('Project does not exist', 400)
 
     #Updating the frozen status of the project
     db.session.execute(
-        update(Project).where(Project.id == args['params']['id']).values(frozen=args['params']['frozen'])
+        update(Project).where(Project.id == args['params']['p_id']).values(frozen=args['params']['frozen'])
     )
 
     #Committing the information to the backend

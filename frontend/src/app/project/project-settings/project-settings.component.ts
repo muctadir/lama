@@ -204,7 +204,8 @@ export class ProjectSettingsComponent implements OnInit {
       // Makes the request and handles response
       // Makes the request to the backend for current project information
       let response: any = requestHandler.patch("/project/edit", 
-      {'project': sendingInfo["project"], 'add': sendingInfo["add"], 'update': sendingInfo["update"]}, true);
+      {'p_id': this.currentProject.getId(), 'project': sendingInfo["project"],
+       'add': sendingInfo["add"], 'update': sendingInfo["update"]}, true);
 
       // Waits on the request
       let result = await response;
@@ -434,7 +435,7 @@ export class ProjectSettingsComponent implements OnInit {
     this.currentProject.setFrozen(frozenStatus);
     this.editModeService.isInEditMode.next(editMode);
     //Update the frozen status to the back-end
-    this.sendFreezeRequest(token, {"id": this.currentProject.getId(),"frozen": frozenStatus});
+    this.sendFreezeRequest(token, {"p_id": this.currentProject.getId(),"frozen": frozenStatus});
   }
 
   /**
@@ -451,7 +452,7 @@ export class ProjectSettingsComponent implements OnInit {
     try {
       // Makes the request and handles response
       // Makes the request to the backend for current project information
-      let response: any = requestHandler.patch("/project/freeze", {'id': sendingInfo["id"], 'frozen': sendingInfo["frozen"]}, true);
+      let response: any = requestHandler.patch("/project/freeze", {'p_id': sendingInfo["p_id"], 'frozen': sendingInfo["frozen"]}, true);
 
       // Waits on the request
       let result = await response;
