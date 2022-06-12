@@ -148,7 +148,7 @@ export class LabellingPageComponent implements OnInit {
   /**
    *
    */
-  submit() : void {
+  async submit(): Promise<void> {
     let p_id = this.routeService.getProjectID(this.url);
     let resultArray: Array<Object> = Array<Object>();
 
@@ -166,7 +166,8 @@ export class LabellingPageComponent implements OnInit {
       "resultArray": resultArray,
     }
     console.log(dict)
-    this.labellingDataService.postLabelling(dict);
+    await this.labellingDataService.postLabelling(dict);
+    window.location.reload();
   }
 
   /**

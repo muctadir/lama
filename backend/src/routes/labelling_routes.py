@@ -43,10 +43,11 @@ def get_labelling_by_label(*, user, membership):
 
 @labelling_routes.route('/create', methods=['POST'])
 @login_required
-@in_project
+# @in_project
 def post_labelling(*, user):
     args = request.json['params']
     required = ['p_id', 'resultArray']
+
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
