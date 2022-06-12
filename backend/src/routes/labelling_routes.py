@@ -3,6 +3,7 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func
+from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
@@ -43,7 +44,7 @@ def get_labelling_by_label(*, user, membership):
 
 @labelling_routes.route('/create', methods=['POST'])
 @login_required
-# @in_project
+@in_project
 def post_labelling(*, user):
     args = request.json['params']
     required = ['p_id', 'resultArray']
@@ -63,12 +64,12 @@ def post_labelling(*, user):
         )
         try:
             db.session.add(labelling_)
-        except:
+        except OperationalError:
             return make_response('Internal Server Error: Adding to database unsuccessful', 500)
     
     try:
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response()
