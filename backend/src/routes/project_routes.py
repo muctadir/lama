@@ -73,12 +73,9 @@ def home_page(*, user):
         project_nr_cl_artifacts_stmt = select(func.count(Artifact.id)).where(Artifact.completed==True, Artifact.p_id==project_id)
         project_nr_cl_artifacts = db.session.scalar(project_nr_cl_artifacts_stmt)
         # Get the users still in each project
-        project_users_stmt = select(Membership).where(Membership.deleted==False, Membership.p_id==project_id)
-        project_users = membership_schema.dump(db.session.scalars(project_users_stmt).all(), many=True)
+        project_users_stmt = select(Membership.u_id).where(Membership.deleted==False, Membership.p_id==project_id)
         #Getting ids of member still in project
-        project_members_id = []
-        for pUser in project_users:
-            project_members_id.append(pUser['u_id'])
+        project_members_id = db.session.scalars(project_users_stmt).all()
 
         # Get the users in the project
         project_users = project.users
@@ -219,10 +216,16 @@ For getting the information in a project's settings page
 """
 @project_routes.route("/settings", methods=["GET"])
 @login_required
-# @in_project
+@in_project
 def get_project(*, user):
     # Get args 
     args = request.args
+
+    # Required args
+    required = ('id')
+
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     #Get project with supplied project ID
     project = db.session.get(Project, args['p_id'])
@@ -231,9 +234,9 @@ def get_project(*, user):
         return make_response('Project does not exist', 400)
 
     # Get all users from the project
-    users_of_project = db.session.execute(
+    users_of_project = db.session.scalars(
         select(Membership).where(Membership.p_id==args['p_id'])
-    ).scalars().all()
+    ).all()
     
     # Serialize all users
     user_schema = UserSchema()
@@ -439,8 +442,8 @@ def freeze_project(*, user):
     # Required args
     required = ('id', 'frozen')
 
-    # if not check_args(required, args):
-    #     return make_response('Bad Request', 400)
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     #Get project with supplied ID
     project = db.session.get(Project, args['params']['id'])
