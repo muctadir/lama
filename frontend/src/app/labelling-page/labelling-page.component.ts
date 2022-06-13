@@ -20,7 +20,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./labelling-page.component.scss'],
 })
 export class LabellingPageComponent implements OnInit {
-
   /**
    * Information for the screen
    */
@@ -71,8 +70,7 @@ export class LabellingPageComponent implements OnInit {
      */
     this.labellings = new FormArray([]);
     this.form = new FormGroup({
-      labellings: this.labellings
-
+      labellings: this.labellings,
     });
     /**
      * Setting up routing
@@ -101,11 +99,26 @@ export class LabellingPageComponent implements OnInit {
    * @param p_id
    */
   async getRandomArtifact(p_id: number): Promise<void> {
-    const artifact = await this.artifactDataService.getRandomArtifact(p_id);
-    this.artifact = artifact;
+    try {
+      const artifact = await this.artifactDataService.getRandomArtifact(p_id);
+      this.artifact = artifact;
+    } catch {
+      this.router.navigate(['/project', p_id]);
+    }
 
-    const labellers = await this.artifactDataService.getLabellers(p_id, artifact.getId());
-    this.labellers = labellers;
+    try {
+      const labellers = await this.artifactDataService.getLabellers(
+        p_id,
+        this.artifact.getId()
+      );
+      this.labellers = labellers;
+    } catch {
+      this.router.navigate(['/project', p_id]);
+    }
+
+    if (this.artifact.getId() === -1) {
+      this.router.navigate(['/project', p_id]);
+    }
   }
 
   /**
@@ -113,8 +126,13 @@ export class LabellingPageComponent implements OnInit {
    * @param p_id
    */
   async getLabelTypesWithLabels(p_id: number): Promise<void> {
-    const labelTypes = await this.labellingDataService.getLabelTypesWithLabels(p_id);
-    this.labelTypes = labelTypes;
+    try {
+      const labelTypes =
+        await this.labellingDataService.getLabelTypesWithLabels(p_id);
+      this.labelTypes = labelTypes;
+    } catch {
+      this.router.navigate(['/project', p_id]);
+    }
   }
 
   /**
@@ -154,18 +172,18 @@ export class LabellingPageComponent implements OnInit {
 
     this.labellings.controls.forEach((el: any) => {
       resultArray.push({
-        'a_id': this.artifact?.getId(),
-        'lt_id': el.get('labelType')?.value,
-        'l_id': el.get('label')?.value,
-        'remark': el.get('remark')?.value
+        a_id: this.artifact?.getId(),
+        lt_id: el.get('labelType')?.value,
+        l_id: el.get('label')?.value,
+        remark: el.get('remark')?.value,
       });
     });
 
     const dict = {
-      'p_id': parseInt(p_id),
-      "resultArray": resultArray,
-    }
-    console.log(dict)
+      p_id: parseInt(p_id),
+      resultArray: resultArray,
+    };
+    console.log(dict);
     await this.labellingDataService.postLabelling(dict);
     window.location.reload();
   }
