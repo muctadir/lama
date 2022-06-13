@@ -1,5 +1,7 @@
 # Victoria Bogachenkova
 # Ana-Maria Olteniceanu
+# Eduardo Costa Martis
+# Thea Bradley
 
 from importlib.metadata import requires
 from src.app_util import in_project
@@ -10,8 +12,9 @@ from src.models.item_models import Artifact, ArtifactSchema, Labelling, Labellin
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
-from src.app_util import login_required
+from src.app_util import login_required, in_project
 from sqlalchemy.exc import  OperationalError
+from src.searching.search import search_func_all_res, best_search_results
 from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
@@ -47,6 +50,7 @@ def get_artifacts(*, user, membership):
         ).scalars().all()
 
         # Take the artifacts labelled by the user
+        # TODO: Remove for loop
         for labelling in labellings:
             artifacts.add(labelling.artifact)
 
@@ -57,6 +61,7 @@ def get_artifacts(*, user, membership):
     artifact_schema = ArtifactSchema()
 
     # For each displayed artifact
+    # TODO: Remove for loop
     for artifact in artifacts:
 
         # Convert artifact to JSON
@@ -102,11 +107,15 @@ def add_new_artifacts():
 
     # Schema to serialize the Artifact
     artifact_schema = ArtifactSchema()
+
+    # Generate a unique identifier
     identifier = generate_artifact_identifier(args['p_id'])
 
+    # Set the identifier for each artifact and add them to the list of artifact data
     for artifact in artifact_info:
-
+        # Give artifact the identifier
         artifact['identifier'] = identifier
+        # Add artifact to the list
         artifact_object.append(artifact_schema.load(artifact))
 
     # Add the artifact to the database
@@ -160,6 +169,50 @@ def single_artifact(*, user, membership):
 
     # Return the dictionary
     return make_response(dict_json)
+
+@artifact_routes.route('/search', methods=['GET'])
+@login_required
+@in_project
+def search(*, user, membership):
+    
+    # Get arguments
+    args = request.args
+    # Required arguments
+    required = ['p_id', 'search_words']
+
+    # Check if required agruments are supplied
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Get the project id
+    p_id = int(args['p_id'])
+
+    # Artifact schema for serializing
+    artifact_schema = ArtifactSchema()
+    
+    # If the user is a admin
+    if membership.admin:
+        # Get all artifact
+        artifacts = db.session.scalars(
+            select(Artifact).where(Artifact.p_id == p_id)
+        ).all()
+    else:
+        # Get all artifacts the user has labelled
+        artifacts = db.session.scalars(
+            select(Artifact).where(Artifact.p_id == p_id,
+                Labelling.a_id == Artifact.a_id,
+                Labelling.u_id == user.id)
+        ).all()
+
+    # Getting result of search
+    results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    # Take the best results
+    clean_results = best_search_results(results, len(args['search_words'].split()))
+    # Gets the actual artifact from the search
+    artifacts_results = [result['item'] for result in clean_results]
+
+    # Return the list of artifacts from the search
+    return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
 
 def __get_extended(artifact):
     # Children of the artifact
@@ -231,9 +284,16 @@ def __aggregate_labellings(artifact):
         
         return formatted_result
 
+# Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
 
+"""
+Generates a unique (in a project) artifact identifier
+Author: Ana-Maria Olteniceanu
+@params p_id: int, the project id for which you want to generate an identifier
+@returns a string which is a unique (within the project) artifact identifier f
+"""
 def generate_artifact_identifier(p_id):
     # Length of the identifier
     length = 5
@@ -246,17 +306,17 @@ def generate_artifact_identifier(p_id):
     h = blake2b()
 
     # Seed of the hash
-    identifiers = db.session.scalars(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id)).all()
-
+    identifiers = db.session.scalar(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id))
+    print(identifiers)
     # Generate the artifact identifier
     h.update(bytes([len(identifiers)]))
 
     # Get the string source of the identifier
-    big_identifier = h.hexdigest().upper()
+    identifier_upper = h.hexdigest().upper()
 
     # Get a unique identifier
-    while big_identifier[start:length] in identifiers:
+    while identifier_upper[start:length] in identifiers:
         start += 1
     
     # Return the identifier
-    return big_identifier[start:length]
+    return identifier_upper[start:length]

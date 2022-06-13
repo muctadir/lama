@@ -90,7 +90,6 @@ export class ArtifactDataService {
 
     // Send the data to the database
     await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
-
   }
 
   /**

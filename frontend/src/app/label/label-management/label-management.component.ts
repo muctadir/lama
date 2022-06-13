@@ -1,4 +1,4 @@
-// <!-- Author: Victoria Bogachenkova -->
+// <!-- Author: Victoria Bogachenkova, Thea Bradley -->
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from 'app/modals/merge-label-form/merge-label-form.component';
@@ -7,6 +7,7 @@ import { Label } from 'app/classes/label';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-label-management',
@@ -22,10 +23,16 @@ export class LabelManagementComponent {
   page: number = 1;
   pageSize: number = 10;
 
+  //text from the search bar
+  searchForm = this.formBuilder.group({
+    search_term: ''
+  });
+
 // Contructor with modal
   constructor(private modalService: NgbModal,
     private labelingDataService: LabelingDataService,
-    private router: Router) {
+    private router: Router,
+    private formBuilder: FormBuilder) {
       this.routeService = new ReroutingService();
       this.url = this.router.url;
       this.labels = new Array<Label>();
@@ -63,5 +70,11 @@ export class LabelManagementComponent {
 
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singlelabel', label_id]);
+  }
+
+  //gets the search text
+  onEnter() {
+    var text = this.searchForm.value.search_term
+    alert("entered!!"+ text + "");
   }
 }
