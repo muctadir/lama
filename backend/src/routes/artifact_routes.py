@@ -4,6 +4,7 @@
 # Thea Bradley
 
 from importlib.metadata import requires
+from types import NoneType
 from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
@@ -302,20 +303,29 @@ def generate_artifact_identifier(p_id):
     # artifact identifier
     start = 0
 
+    # Position from generated identifier at which we stop extracting
+    # the artifact identifier
+    stop = start + length
+
     # Create hash object
     h = blake2b()
 
     # Seed of the hash
-    identifiers = db.session.scalar(select(func.count(distinct(Artifact.identifier))).where(Artifact.p_id==p_id))
+    identifiers = db.session.scalar(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id))
+    # If no identifiers were found, then
+    # make identifiers an empty list
+    if identifiers is None:
+        identifiers = []
+
     # Generate the artifact identifier
-    h.update(bytes([identifiers]))
+    h.update(bytes([len(identifiers)]))
 
     # Get the string source of the identifier
     identifier_upper = h.hexdigest().upper()
-
     # Get a unique identifier
-    while identifier_upper[start:length + start] in identifiers:
+    while identifier_upper[start:stop] in identifiers:
         start += 1
+        stop += 1
     
     # Return the identifier
     return identifier_upper[start:length]
