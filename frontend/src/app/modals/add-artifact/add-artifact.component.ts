@@ -63,7 +63,6 @@ export class AddArtifactComponent {
 
     // stores the file in a the "file" variable
     this.file = input.files[0];
-    console.log(this.file);
 
     // Use reroutingService to obtain the project ID
     this.p_id = Number(this.routeService.getProjectID(this.url));

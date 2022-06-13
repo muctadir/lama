@@ -61,7 +61,6 @@ export class IndividualLabelComponent {
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
-    console.log(labellings)
     this.labellings = labellings;
   }
 
