@@ -5,7 +5,8 @@ $orange-shade: #ed5a06;
 
 #main-cont {
     height: 100vh;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 // Sets the layout of the header saying Statistics

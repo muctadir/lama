@@ -22,6 +22,7 @@ import { IndividualLabelComponent } from './label/individual-label/individual-la
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { LoginGuardService } from './login-guard.service';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -29,24 +30,24 @@ const routes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
     {path: 'testing', component: TestingComponent},
-    {path: 'account', component: AccountComponent},
-    {path: 'home', component: HomePageComponent},
-    {path: 'createProject', component:ProjectCreationComponent},
-    {path: 'project/:projectId', component: ProjectComponent, children: [
+    {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
+    {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
+    {path: 'createProject', component:ProjectCreationComponent, canActivate: [LoginGuardService]},
+    {path: 'project/:projectId', component: ProjectComponent, canActivate: [LoginGuardService], children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
-      {path: 'stats', component: StatsComponent},
-      {path: 'labelling-page', component: LabellingPageComponent},
-      {path: 'create-label', component: LabelFormComponent},
-      {path: 'artifactmanagement', component: ArtifactManagementPageComponent},
-      {path: 'singleartifact/:artifactId', component: SingleArtifactViewComponent},
-      {path: 'labelmanagement', component: LabelManagementComponent},
-      {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
-      {path: 'thememanagement', component: ThemeManagementComponent},
-      {path: 'createTheme', component: ThemeInfoComponent},
-      {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
-      {path: 'editTheme/:themeId', component: ThemeInfoComponent},
-      {path: 'conflict', component: ConflictPageComponent},
-      {path: 'conflictResolution', component: ConflictResolutionComponent},
+      {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
+      {path: 'labelling-page', component: LabellingPageComponent, canActivate: [LoginGuardService]},
+      {path: 'create-label', component: LabelFormComponent, canActivate: [LoginGuardService]},
+      {path: 'artifactmanagement', component: ArtifactManagementPageComponent, canActivate: [LoginGuardService]},
+      {path: 'singleartifact/:artifactId', component: SingleArtifactViewComponent, canActivate: [LoginGuardService]},
+      {path: 'labelmanagement', component: LabelManagementComponent, canActivate: [LoginGuardService]},
+      {path: 'singlelabel/:labelId', component: IndividualLabelComponent, canActivate: [LoginGuardService]},
+      {path: 'thememanagement', component: ThemeManagementComponent, canActivate: [LoginGuardService]},
+      {path: 'createTheme', component: ThemeInfoComponent, canActivate: [LoginGuardService]},
+      {path: 'singleTheme/:themeId', component: SingleThemeViewComponent, canActivate: [LoginGuardService]},
+      {path: 'editTheme/:themeId', component: ThemeInfoComponent, canActivate: [LoginGuardService]},
+      {path: 'conflict', component: ConflictPageComponent, canActivate: [LoginGuardService]},
+      {path: 'conflictResolution', component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
     {path: '**', redirectTo: 'login', pathMatch: 'full'}];
