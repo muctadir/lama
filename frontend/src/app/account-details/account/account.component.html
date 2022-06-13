@@ -14,11 +14,6 @@
     <ng-container *ngIf="mode==2">
         <app-account-change-password [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
     </ng-container>
-
-    <!-- Logout icon -->
-    <div id="logout-icon">
-        <a><em class="bi bi-box-arrow-left def" (click)="openLogout()"></em></a>
-    </div>
 </div>
 
 

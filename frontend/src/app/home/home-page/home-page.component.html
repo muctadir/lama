@@ -11,10 +11,15 @@
         </div>
         <!-- Column for the adding project button -->
         <div class="col">
-            <!-- Settings icon -->
-            <a [routerLink]="['/account']">
-                <em class="bi bi-person-circle" ></em>
-            </a>
+
+            <div ngbDropdown>
+                <em class="bi bi-person-circle" ngbDropdownToggle></em>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <button class="button-layout" ngbDropdownItem [routerLink]="['/account']">Account Settings</button>
+                  <button class="button-layout" ngbDropdownItem (click)="openLogout()">Log out</button>
+                </div>
+            </div>
+
             <!-- Create project button -->
             <button type="button" class="btn btn-secondary" id="createProjectButton" routerLink="/createProject">
                 <span id="createProjectText">Create project</span>
