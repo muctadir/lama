@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { RequestHandler } from 'app/classes/RequestHandler';
-import axios, { Axios } from 'axios';
-
 
 @Injectable({
   providedIn: 'root'
@@ -108,7 +105,8 @@ export class ArtifactDataService {
      * @throws Error if a_id < 1
      * @returns Promise<StringArtifact>
      */
-  async getArtifact(p_id: number, a_id: number): Promise<Array<any>> {
+  async getArtifact(p_id: number, a_id: number): Promise<Record<string, any>> {
+    
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');
     // Check if the session token exists
@@ -119,12 +117,13 @@ export class ArtifactDataService {
 
     // Check if the a_id is larger than 1
     if (a_id < 1) throw new Error("a_id cannot be less than 1")
-
+    
     // Resulting artifact
     let result: StringArtifact = new StringArtifact(0, 'null', 'null');
-
+    
     // Get the artifact information from the back end
-    let response = await this.requestHandler.get('/artifact/singleArtifact', { 'a_id': a_id, 'extended': true }, true);
+    let response = await this.requestHandler.get('/artifact/singleArtifact', { 'p_id': p_id, 'a_id': a_id, 'extended': true }, true);
+
     // Get the artifact from the response
     let artifact = response['artifact'];
 
@@ -134,8 +133,27 @@ export class ArtifactDataService {
     result.setData(artifact["data"]);
     result.setParentId(artifact["parent_id"]);
     result.setChildIds(response["artifact_children"]);
+    
+    // Return the record
+    return {
+      "result": result,
+      "labellings": response["artifact_labellings"],
+      "username": response["username"],
+      "admin": response["admin"]
+    }
+  }
+
+  // Function for searching in backend
+  async search(searchWords: string, p_id: number): Promise<Array<StringArtifact>>{
+
+    // Get the artifact information from the back end
+    let response = await this.requestHandler.get('/artifact/search', { 'p_id': p_id, "search_words": searchWords}, true);
+    
+    // Get the artifact from the response
+    let artifacts = response;
 
     // Return the record
-    return [result, response["artifact_labellings"], response["username"]]
+    return (artifacts);
   }
+
 }

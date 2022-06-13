@@ -12,3 +12,4 @@ click
 python-dotenv
 pytest
 coverage
+numpy
