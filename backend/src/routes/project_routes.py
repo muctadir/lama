@@ -593,10 +593,7 @@ def project_stats(*, user):
 
         # Loop through each labelling to get the necessary data
         for labelling in user.labellings:
-            print(labelling.p_id == p_id)
-            print(str(p_id) + ", " + str(labelling.p_id))
             if labelling.p_id == p_id:
-                print("uwu")
                 # Add the artifact associated with this labelling to the set of artifacts
                 artifacts.add(labelling.artifact)
                 # Add the time spent labelling to the total time
@@ -604,8 +601,6 @@ def project_stats(*, user):
 
         # Get number of artifacts
         artifacts_num = len(artifacts)
-        print(artifacts)
-        print(artifacts_num)
 
         # Get average time of labelling in seconds
         if len(user.labellings) > 0:
