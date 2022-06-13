@@ -14,7 +14,7 @@ import { ProjectCreationComponent } from './home/project-creation/project-creati
 import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
 // Navigation menu imports
-import { ProjectComponent} from './project/project.component';
+import { ProjectComponent} from './project/project-page/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 // Stats page imports
 import { StatsComponent } from './stats/stats.component';
@@ -31,7 +31,7 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
-
+import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 /* All the routes within the application */
 const routes: Routes = [
   // Default path to login
@@ -39,6 +39,7 @@ const routes: Routes = [
   // Authentication routes
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  // Account route
   {path: 'account', component: AccountComponent},
   // Home page route
   {path: 'home', component: HomePageComponent},

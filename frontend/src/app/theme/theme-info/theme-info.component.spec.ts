@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormBuilder } from '@angular/forms';
 import { ThemeInfoComponent } from './theme-info.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ThemeInfoComponent', () => {
   let component: ThemeInfoComponent;
@@ -8,7 +9,11 @@ describe('ThemeInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ThemeInfoComponent ]
+      // Adds the RouterTestingModule dependency
+      imports: [RouterTestingModule],
+      declarations: [ ThemeInfoComponent ],
+      // Adds FormBuilder dependency
+      providers: [FormBuilder]
     })
     .compileComponents();
   });

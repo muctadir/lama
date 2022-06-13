@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +16,7 @@ describe('ArtifactManagementPageComponent', () => {
       // Adding the RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal]
+      providers: [NgbActiveModal, FormBuilder]
     })
     .compileComponents();
   });

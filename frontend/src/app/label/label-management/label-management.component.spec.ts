@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { LabelManagementComponent } from './label-management.component';
+import { FormBuilder } from '@angular/forms';
 
 describe('LabelManagementComponent', () => {
   let component: LabelManagementComponent;
@@ -15,7 +16,7 @@ describe('LabelManagementComponent', () => {
       // Adding the RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbModal dependency
-      providers: [NgbModal]
+      providers: [NgbModal, FormBuilder]
     })
     .compileComponents();
   });

@@ -34,7 +34,7 @@ export class IndividualLabelComponent {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
-      this.labellings = {};
+      this.labellings = [];
   }
 
   /**

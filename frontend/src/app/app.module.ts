@@ -20,9 +20,10 @@ import { AccountInformationComponent } from './account-details/account-informati
 import { HomePageComponent } from './home/home-page/home-page.component';
 import { ProjectCreationComponent } from './home/project-creation/project-creation.component';
 import { AddUsersModalComponent } from './modals/add-users-modal/add-users-modal.component';
+import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 // Navigation menu import
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
-import { ProjectComponent } from './project/project.component';
+import { ProjectComponent } from './project/project-page/project.component';
 // Statistic page import
 import { StatsComponent } from './stats/stats.component';
 // Labelling page import
@@ -65,6 +66,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HomePageComponent,
     ProjectCreationComponent,
     AddUsersModalComponent,
+    ProjectSettingsComponent,
     // Conflic page components
     ConflictPageComponent,
     ConflictResolutionComponent,

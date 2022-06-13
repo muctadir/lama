@@ -98,7 +98,7 @@ export class Project {
 
     /**
      * Function sets project users
-     * @params userss
+     * @params users
      */
     setUsers(users: Array<User>): void {
         this.users = users;

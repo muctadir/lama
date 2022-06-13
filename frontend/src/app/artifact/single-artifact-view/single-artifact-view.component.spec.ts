@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
 import { SingleArtifactViewComponent } from './single-artifact-view.component';
 
 describe('SingleArtifactViewComponent', () => {
@@ -8,6 +8,8 @@ describe('SingleArtifactViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      // Adds the RouterTestingModule dependency
+      imports: [RouterTestingModule],
       declarations: [ SingleArtifactViewComponent ]
     })
     .compileComponents();

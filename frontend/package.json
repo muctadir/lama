@@ -43,6 +43,7 @@
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "moxios": "^0.4.0",
     "tslib": "^2.4.0",
     "typescript": "~4.6.2"
   }
