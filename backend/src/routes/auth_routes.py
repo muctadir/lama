@@ -2,10 +2,9 @@
 # Jarl Jansen
 # Eduardo Costa Martins
 
-from backend.src.models.auth_models import UserStatus
 from src import db # need this in every route
 from src.app_util import check_args, check_email, check_password, check_username, super_admin_required
-from src.models.auth_models import User, UserSchema
+from src.models.auth_models import User, UserSchema, UserStatus
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select

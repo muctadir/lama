@@ -72,7 +72,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     status = fields.Method("get_approval", deserialize="load_approval")
     # The functions below describe how to serialize/deserialize enums
     def get_approval(self, obj):
-        return obj.type
+        return obj.status.name
     
     def load_approval(self, value):
         return UserStatus[value]

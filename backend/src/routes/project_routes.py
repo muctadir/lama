@@ -156,22 +156,20 @@ def create_project(*, user):
     db.session.add(project)
     
     # Get the ids of all users 
-    users = project_info["users"]
-    # Append the users to the project users attribute
-    project.users.extend(users)
+    users = {user['u_id'] : user['admin'] for user in project_info['users']}
+
     # Also append the user that created the project as an admin
-    project.users.append({
-        'u_id' : user.id,
-        'admin' : True
-    })
+    users[user.id] = True
+
     # Get the ids of all super_admins
     super_admin_ids = db.session.scalars(select(User.id).where(User.super_admin == True)).all()
     # Add all super admins as admins
     for super_admin_id in super_admin_ids:
-        project.users.append({
-            'u_id' : super_admin_id,
-            'admin' : True
-        })
+        users[super_admin_id] = True
+
+    memberships = [Membership(p_id=project.id, u_id=k, admin=v) for k, v in users.items()]
+
+    db.session.add_all(memberships)
 
     # Get the label types from frontend
     type_names = project_info["labelTypes"]
