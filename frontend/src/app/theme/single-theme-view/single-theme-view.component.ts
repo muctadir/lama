@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Theme } from 'app/classes/theme';
-import { StringArtifact } from 'app/classes/stringartifact';
-import {ActivatedRoute, Router} from "@angular/router";
+import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import axios from 'axios';
-import { Label } from 'app/classes/label';
 
 //Test array for label holding artifacts
 
@@ -77,7 +74,8 @@ export class SingleThemeViewComponent {
     this.router.navigate(['/project', this.p_id, "singleTheme", theme_id])
     // And reload the page
     .then(() => {
-      window.location.reload();
+      // Get the information for the theme
+      this.get_single_theme_info(this.p_id, theme_id);
     });
   }   
 

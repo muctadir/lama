@@ -133,11 +133,9 @@ export class LabelingDataService {
         'p_id': p_id,
       }
     }).then((response) => {
-      console.log(response)
       response.data.forEach((d: any) => {
         result.push(new LabelType(d.id, d.name, new Array<Label>()))
       });
-      console.log(result);
       return result;
     }).catch(err => {
       throw err;

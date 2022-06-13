@@ -54,7 +54,7 @@
     <div class="col-8 offset-2 text-right">
         <!-- Edit button, emits modeChangeEvent when clicked -->
         <button (click)="modeChangeEvent.emit(1)" class="btn btn-primary infoButtons">Edit information</button>
-        <!-- Back button, rerouting to home page when clicked -->
-        <button [routerLink]="['/home']" class="btn btn-danger infoButtons" id="backButton">Back</button>
+        <!-- Back button -->
+        <button [routerLink]="['/home']" class="btn btn-secondary infoButtons" id="backButton">Back</button>
     </div>
 </div>

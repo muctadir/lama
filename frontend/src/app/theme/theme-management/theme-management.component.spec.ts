@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
 
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -12,7 +13,8 @@ describe('ThemeManagementComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ ThemeManagementComponent ],
       // Adding the RouterTestingModule dependency
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule],
+      providers: [FormBuilder]
     })
     .compileComponents();
   });

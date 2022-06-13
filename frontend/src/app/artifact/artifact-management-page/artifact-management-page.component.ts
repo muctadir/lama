@@ -11,7 +11,6 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { FormBuilder } from '@angular/forms';
-import { Artifact } from 'app/classes/artifact';
 
 
 @Component({
@@ -86,14 +85,13 @@ export class ArtifactManagementPageComponent {
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
-
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
-  }
   
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
-  }
+    // When the modal closes, call the getArtifact function to update the displayed artifacts
+    modalRef.result.then( async () => {
+      this.getArtifacts(Number(this.routeService.getProjectID(this.url))) });
+    }
   
   //gets the search text
   async onEnter() {

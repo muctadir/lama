@@ -69,7 +69,7 @@ export class StatsComponent implements OnInit{
    */
   async getProject(p_id: number): Promise<void>{
     // Make request to the backend
-    const data = await this.statsDataService.getArtifact(p_id);
+    const data = await this.statsDataService.getProject(p_id);
 
     // Pass the project data
     this.project = data['project_data']

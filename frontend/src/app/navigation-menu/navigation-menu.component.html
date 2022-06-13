@@ -138,11 +138,16 @@
 
                 <!-- Settings icon, displayed when navmenu is collapsed  -->
                 <div *ngIf="collapsed" class="text-center">
-                    <a><em class="bi bi-gear def"></em></a>
+                    <a>
+                        <em [ngClass]="{'bi': true, 'bi bi-gear': true, 'def': page!=6, 'alt': page==6}"
+                        (click)="changePage('settings')">
+                        </em>
+                    </a>
                 </div>
                 <!-- Settings written out, displayed when navmenu is not collapsed -->
                 <div *ngIf="!collapsed" class="text-center">
-                    <a class="text-menu">Settings</a>
+                    <a [ngClass]="{'text-menu': page!=6, 'text-menu-alt': page==6}"
+                    (click)="changePage('settings')">Settings</a>
                 </div>
 
                 <!-- Line below the icon -->

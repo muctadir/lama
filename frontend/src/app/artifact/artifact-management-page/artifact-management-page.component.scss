@@ -1,8 +1,9 @@
 // Color variables
-:root {
-    --main-color-1: #ED5A06;
-    --main-color-2: #38474e;
-}
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #bfbfbf;
 
 #main_body {
     height: 100vh;
@@ -15,12 +16,14 @@
     margin-right: 10px;
     max-width: 98%;
 }
+
 // Header saying "Artifact Management"
 p.header{
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
+
 // Add Artifact button 
 #addArtifactButton{
     float: right;
@@ -28,21 +31,19 @@ p.header{
     margin-top: 10px;
     background-color: white;
     border: 2px solid;
-    border-color: var(--main-color-2);
+    border-color: $grey-shade;
     color: black;
 }
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // Add Artifact button plus
 svg.bi.bi-plus{
     width: 22px;
     height: 22px;
-}
-#horizontalLineRow{
-    padding-top: 10px;
-    padding-bottom: 30px;
-    padding-right: 0px;
-}
-#horizontalLineColumn{
-    padding-right: 0px;
 }
 
 //New Table version styles
@@ -52,17 +53,24 @@ p.artifactID{
     text-align: center;
     font-weight: 480;
 }
+
+// Artifact text
 p.artifactText{
     font-size: 14px;
     letter-spacing: 1px;
     text-align: justify;
     padding-left: 20px;
+    overflow-wrap: break-word;
 }
+
+// Number for times labelled
 p.timesLabelled{
     font-size: 17px;
     letter-spacing: 1px;
     text-align: center;
 }
+
+// Text for id header
 p.idHeader{
     font-size: 20px;
     letter-spacing: 1px;
@@ -70,6 +78,8 @@ p.idHeader{
     white-space:nowrap;
     font-weight: 500;
 }
+
+// Text for artifact header
 p.artifactHeader{
     font-size: 20px;
     letter-spacing: 1px;
@@ -79,6 +89,8 @@ p.artifactHeader{
     font-weight: 500;
     
 }
+
+// Number of times labelled header
 p.timeslabelledHeader{
     font-size: 20px;
     letter-spacing: 1px;
@@ -86,23 +98,20 @@ p.timeslabelledHeader{
     white-space:nowrap;
     font-weight: 500;
 }
-//table hovering color
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color:#ed5b0637;
-  }
+
 // Pagination Color
 ngb-pagination ::ng-deep a {
-    color:#ED5A06 !important;
+    color:$orange-shade !important;
 }  
 ngb-pagination ::ng-deep .page-item.active .page-link {
-border-color: #1C5858;
-background-color: white;
+border-color: $grey-shade;
+background-color: $white-shade;
 }
 ngb-pagination ::ng-deep .page-item.active .page-link:focus, .page-link:not(:disabled):not(.disabled):active:focus {
-box-shadow: 0 0 0 0.1rem dimgrey;
+box-shadow: 0 0 0 0.1rem $light-grey-shade;
 }
 ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
-box-shadow: 0 0 0 0.1rem dimgrey;
+box-shadow: 0 0 0 0.1rem $light-grey-shade;
 }
 #paginationCol{
     padding-top: 20px;
@@ -111,12 +120,13 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 //Scroll Related Business
 .my-custom-scrollbar {
     position:relative;
-    height: 80vh;
+    height: 75vh;
     overflow: auto;
-    }
+}
 .table-wrapper-scroll-y {
     display: block;
-    }
+}
+
 //Scroll Bar 
 ::-webkit-scrollbar {
     width: 10px;
@@ -127,12 +137,12 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: $white-shade; 
     border-radius: 10px;
 }
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: $grey-shade; 
     border-radius: 10px;
 }
 #scrolly{
@@ -165,17 +175,17 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 
         //TODO: replace with icon
         //background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
-        //background-image: url(../search_heart.svg);background-repeat: no-repeat;
+        background-image: url(search_heart.svg);background-repeat: no-repeat;
         background-size: 18px 18px;
         background-position: 95% center;
         border-radius: 50px;
-        border: 1px solid #575756;
+        border: 1px solid $grey-shade;
         transition: all 250ms ease-in-out;
         backface-visibility: hidden;
         transform-style: preserve-3d;
         
         &::placeholder {
-            color: color(#575756 a(0.8));
+            color: color($grey-shade a(0.8));
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
@@ -185,7 +195,7 @@ box-shadow: 0 0 0 0.1rem dimgrey;
             padding: 12px 0;
             outline: 0;
             border: 1px solid transparent;
-            border-bottom: 1px solid #575756;
+            border-bottom: 1px solid $grey-shade;
             border-radius: 0;
             background-position: 100% center;
         }

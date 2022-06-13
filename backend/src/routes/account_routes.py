@@ -14,7 +14,7 @@ account_routes = Blueprint("account", __name__, url_prefix="/account")
 # Function to register a user
 @account_routes.route("/information", methods=["GET"])
 @login_required
-def getUserInformation(*, user):
+def get_user_information(*, user):
     """
     Get the user object of the logged in user
     """
@@ -34,7 +34,7 @@ def getUserInformation(*, user):
 # Function to edit the information of a user a user
 @account_routes.route("/edit", methods=["POST"])
 @login_required
-def editUserInformation(*, user):
+def edit_user_information(*, user):
     """
         Edit the user information
     """
@@ -79,9 +79,9 @@ def editUserInformation(*, user):
 # Function to edit the information of a user a user
 @account_routes.route("/editPassword", methods=["POST"])
 @login_required
-def editUserPassword(*, user):
+def edit_user_password(*, user):
     """
-        Edit the user information
+        Edit the user password
     """
 
     # Get the information needed
@@ -95,7 +95,7 @@ def editUserPassword(*, user):
     password = db.session.execute(select(User.password).where(User.id == user.id)).one()
 
     # Hash new password
-    hashedPassword = generate_password_hash(args["password"])
+    hashed_password = generate_password_hash(args["password"])
 
     # Check correct password
     if not check_password_hash(password[0], args["password"]):
@@ -110,14 +110,14 @@ def editUserPassword(*, user):
         return make_response(("Invalid password", 400))
     
     # Hash new password
-    hashedPassword = generate_password_hash(args["newPassword"])
+    hashed_password = generate_password_hash(args["newPassword"])
     
     # Change the users information
     db.session.execute(
         update(User).
         where(User.id == user.id).
         values(
-            password = hashedPassword
+            password = hashed_password
         )
     )
     # Commit the new information

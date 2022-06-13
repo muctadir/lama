@@ -37,7 +37,7 @@
             <div class="form-group">
                 <label id="field_text">Description:</label>
                 <!-- Input field for description, only displays if description is non-empty, max 140 characters -->
-                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description"></textarea>
+                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description" id="description"></textarea>
             </div>
         </form>
     </div>
@@ -58,7 +58,7 @@
         <!-- Edit button, when clicked calls the changeInformation function -->
         <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
         <!-- Cancel button, when clicked moves to the account information page due to modeChangeEvent emitted -->
-        <button (click)="modeChangeEvent.emit(0)" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
+        <button (click)="modeChangeEvent.emit(0)" class="btn btn-secondary editButtons" id="cancelEditButton">Cancel</button>
     </div>
 </div>
 
