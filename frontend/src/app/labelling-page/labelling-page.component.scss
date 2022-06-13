@@ -1,6 +1,6 @@
 #pageTitle {
     padding-top: 10px;
-    border-bottom: 1px; 
+    border-bottom: 1px;
     border-bottom-style: solid;
 }
 
@@ -31,7 +31,7 @@
 
 .artifactContainer {
     max-height: 30vh;
-    border-bottom: 1px; 
+    border-bottom: 1px;
     border-bottom-style: solid;
 }
 
@@ -54,12 +54,12 @@ div.artifactContainer{
 }
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 10px;
 }
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }
 
@@ -104,4 +104,10 @@ div.artifactContainer{
 
 #labelling-row {
     margin-top: 5px;
+}
+
+#LabellingTitle {
+  font-size: 19px;
+  padding-bottom: 2px;
+  height: 28px;
 }

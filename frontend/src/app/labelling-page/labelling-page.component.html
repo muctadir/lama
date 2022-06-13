@@ -42,6 +42,10 @@
 
         <!-- Row containing the labelling tools -->
         <div class="row">
+            <div class="col-3">
+              <span id="LabellingTitle">Labelling</span>
+              <span (click)="openCreateForm()" class=""><i class="bi bi-plus-lg"></i></span>
+            </div>
             <div class="col-12" id="labelThing">
                 <div *ngFor="let labelType of labelTypes" id="labelling-row">
                     <app-labelling-type [labelType]="labelType"

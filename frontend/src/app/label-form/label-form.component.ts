@@ -51,7 +51,7 @@ export class LabelFormComponent implements OnInit {
 
   /**
    * On init
-   * 1. Get the name 
+   * 1. Get the name
    * 2. Get the description
    * 3. Get the label Type
    * 4. Disable changing label type
@@ -105,10 +105,10 @@ export class LabelFormComponent implements OnInit {
     // Label was created or modified
     if (this.label === undefined){
       await this.labellingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
-      window.location.reload();
+      this.activeModal.close();
     } else {
       await this.labellingDataService.editLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
-      window.location.reload();
+      this.activeModal.close();
     }
   }
 }
