@@ -149,7 +149,7 @@ export class LabellingPageComponent implements OnInit {
    * Skip to another random artifact
    */
   skip(): void {
-    this.getRandomArtifact(this.p_id);
+    this.ngOnInit();
   }
 
   /**
@@ -186,9 +186,13 @@ export class LabellingPageComponent implements OnInit {
       p_id: parseInt(p_id),
       resultArray: resultArray,
     };
-    console.log(dict);
-    await this.labellingDataService.postLabelling(dict);
-    this.ngOnInit();
+    try {
+      await this.labellingDataService.postLabelling(dict);
+      this.ngOnInit();
+    } catch (err) {
+      console.log(err)
+      this.router.navigate(['project', this.p_id]);
+    }
   }
   /**
    * Error function for unimplemented features.
