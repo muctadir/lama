@@ -76,10 +76,3 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     
     def load_approval(self, value):
         return UserStatus[value]
-
-class SuperAdminSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = SuperAdmin
-        include_fk = True
-        load_instance = True
