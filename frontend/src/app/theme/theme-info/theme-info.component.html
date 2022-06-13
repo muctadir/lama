@@ -4,7 +4,7 @@
     <!-- Page Header -->
     <div class="row header">
         <div class="col-10 header" id="pageTitle"> 
-            Create Theme
+            {{createEditThemeHeader}} Theme
         </div>
     </div>
 
@@ -13,7 +13,7 @@
         <!-- Left side of top half -->
         <div class="col-6">
             <!-- Row for name and labels -->
-            <div class="row" id="topLeft">
+            <div class="row">
 
                 <!-- Theme name section -->
                 <div class="col-sm-12">
@@ -24,7 +24,7 @@
                     <!-- Input form for name -->
                     <div id="nameInputCol">
                         <form [formGroup]="themeForm">
-                            <input class="form-control" formControlName="name" id="nameForm" type="text" placeholder="Theme name" required><br>
+                            <input class="form-control" formControlName="name" id="nameForm" type="text" placeholder="Name" required><br>
                         </form>
                     </div>
                 </div>   
@@ -194,7 +194,7 @@
         <div class="col-6 align-self-end" id="createCancelButtons">
             <div>
                 <!-- Create button -->
-                <button class="form-group btn btn-primary float-end" (click)="createTheme()" style="margin-left:10px;">Create</button> 
+                <button class="form-group btn btn-primary float-end" (click)="createTheme()" id="saveButton">Save</button> 
                 <!-- Cancel button -->
                 <button class="form-group btn btn-secondary float-end" id="cancelButton" (click)="reRouter()">Cancel</button>
             </div>

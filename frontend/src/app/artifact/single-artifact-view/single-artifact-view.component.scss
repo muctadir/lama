@@ -1,19 +1,22 @@
-//page header title
+// Page header title
 #pageTitle {
     padding-top: 10px;
     border-bottom: 0px; 
     border-bottom-style: solid;
 }
-//artifact header part
+
+// Artifact header part
 #artifactId, #artifactIdentifier {
     font-size: 36px;
     letter-spacing: 1px;
 }
+
 //Labelled by text
 #labelledBy{
     font-size: 18px;
     letter-spacing: 1px;
 }
+
 // Container for the artifact
 .artifactContainer {
     max-height: 35vh;
@@ -25,7 +28,7 @@
     min-height: 30vh;
     overflow-y: scroll;
 }
-//Section right below "labelled by"
+// Section right below "labelled by"
 #names{
     padding-top: 3px;
     padding-bottom: 5px;
@@ -58,34 +61,20 @@ div.allUserLabels{
     padding-bottom: 5px;
     padding-top: 5px;
 }
-// margins for whole page
-#body{
-    margin: 0px;
-    height: 100%;
-    padding-left: 30px;
-    padding-right: 50px;
-}
-//edit button
-#editButton{
-    height: 38px;
-    width: 150px;
-    border: none;
-}
-//edit button container row
-#editButtonRow{
-    padding-top: 10px;
-}
-//artifact identifier
+
+// Artifact identifier
 #artifactIdentifier{
     text-align: right
 }
-//labeltype names
+
+// Labeltype names
 #labelTypeName1{
     font-size: 15px;
     letter-spacing: 1px;
     font-weight: 450;
 }
-//remark given for each user
+
+// Remark given for each user
 #remarks{
     font-size: 17px;
     letter-spacing: 1px;
@@ -97,7 +86,8 @@ div.allUserLabels{
     letter-spacing: 1px;
     text-align: left;
 }
-//name of labeller
+
+//Name of labeller
 #labellerName{
     font-size: 17px;
     letter-spacing: 1px;
@@ -106,7 +96,15 @@ div.allUserLabels{
 #split1, #split2{
     color: #ed5a06;
 }
-//labels input box
+
+// Labels input box
 #formControl{
     width:auto;
+}
+
+// Horizontal line between the labellers
+.horizontalLine{
+    height:1px; 
+    width:80%; 
+    border-width:0px;
 }

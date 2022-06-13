@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditThemeComponent } from './edit-theme.component';
+import { AccountInformationComponent } from './account-information.component';
 
-describe('EditThemeComponent', () => {
-  let component: EditThemeComponent;
-  let fixture: ComponentFixture<EditThemeComponent>;
+describe('AccountInformationComponent', () => {
+  let component: AccountInformationComponent;
+  let fixture: ComponentFixture<AccountInformationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditThemeComponent ]
+      declarations: [ AccountInformationComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditThemeComponent);
+    fixture = TestBed.createComponent(AccountInformationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

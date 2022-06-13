@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { Labelling } from 'app/classes/labelling';
 
 @Component({
   selector: 'app-individual-label',
@@ -35,7 +34,7 @@ export class IndividualLabelComponent {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;
-      this.labellings = {};
+      this.labellings = [];
   }
 
   /**
@@ -61,7 +60,6 @@ export class IndividualLabelComponent {
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     const labellings = await this.labelingDataService.getLabelling(p_id, labelID);
-    console.log(labellings)
     this.labellings = labellings;
   }
 

@@ -36,12 +36,23 @@
 // Bottom buttons
 #btns-cancel-submit {
     margin-left: 10px;
+    border: none;
+    width: 150px;
 }
 
+// Add labels button
 #addLabelButton {
     margin-top: 5px;
     background-color: #ed5a06;
     border: none;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
 
+// Description textarea
+#description{
+    resize: none;
+}

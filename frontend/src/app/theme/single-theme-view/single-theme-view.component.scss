@@ -4,18 +4,12 @@ $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
 
-//Body
-#body{
-    padding-left: 30px;
-    padding-right: 30px;
-    height: 100vh;
-    overflow-y: scroll;
-}
-//Page Header container
+// Page Header container
 #titleRow{
     padding-bottom: 20px;
 }
-//Page Title
+
+// Page Title
 #pageTitle{
     font-size: 35px;
     padding-top: 10px;
@@ -25,17 +19,19 @@ $light-grey-shade: #aaaaaa;
     border-bottom-style: solid;
     border-bottom-color: $light-grey-shade;
 }
-//Top Half container
+
+// Top Half container
 #topHalfRow{
     padding-left: 10px;
 }
 
-//TOP LEFT
-//Top left container
+// TOP LEFT
+// Top left container
 #topLeftCol{
     padding-right: 200px;
 }
-//Name Column
+
+// Name Column
 #name{
     border-bottom: 1px; 
     border-bottom-style: solid; 
@@ -43,7 +39,7 @@ $light-grey-shade: #aaaaaa;
     border-bottom-color: $orange-shade;
 }
 
-//Label Count Header
+// Label Count Header
 #labelCount{
     border-bottom: 1px; 
     border-bottom-style: solid; 
@@ -51,7 +47,8 @@ $light-grey-shade: #aaaaaa;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
 }
-//artifactCount Header
+
+// ArtifactCount Header
 #artifactCount{
     border-bottom: 1px; 
     border-bottom-style: solid; 
@@ -59,7 +56,8 @@ $light-grey-shade: #aaaaaa;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
 }
-//Parent-Themes Header
+
+// Parent-Themes Header
 #parentThemes{
     border-bottom: 1px; 
     border-bottom-style: solid; 
@@ -67,11 +65,13 @@ $light-grey-shade: #aaaaaa;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
 }
+
 //Container for parent theme scroll
 #parentThemesScroll{
     overflow-y: scroll;
     height: 10vh;
 }
+
 //Content text of multipl sections in top left part
 #parentThemesText, #themeNameText, #labelCountText, #artifactCountText, #subThemesText{
     font-size: 14px;
@@ -80,10 +80,12 @@ $light-grey-shade: #aaaaaa;
     padding-left: 5px;
     padding-top: 2px;
 }
+
 // Make childern names hoverable
 #subThemesText:hover, #parentThemesText:hover{
     cursor: pointer;
 }
+
 //Sub-ThemesHeader
 #subThemes{
     border-bottom: 1px; 
@@ -98,6 +100,7 @@ $light-grey-shade: #aaaaaa;
     overflow-y: scroll;
     height: 10vh;
 }
+
 // Description area
 #themeDescription{
     resize: none;
@@ -110,11 +113,6 @@ $light-grey-shade: #aaaaaa;
     padding-right: 50px;
 }
 
-//BOTTOM HALF
-//Bottom Half Container
-#bottomHalfContainer{
-
-}
 //Labels Header 
 #labelsHeader{
     border-bottom: 1px; 
@@ -124,19 +122,17 @@ $light-grey-shade: #aaaaaa;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
 }
+
 // Artifact text and remarks
 #artifactText ,#artifactRemark{
     font-size: 14px;
     font-weight: 400;
 }
+
 //Artifact Remark Header
 #artifactRemarkHeader{
     font-size: 15px;
     font-weight: 500;
-}
-//bottom buttons
-#buttonCol, #buttonCol2{
-    position: fixed;
 }
 
 //Scroll Bar 
@@ -157,22 +153,34 @@ $light-grey-shade: #aaaaaa;
     background: $grey-shade; 
     border-radius: 10px;
 }
+
 //Table Scroll
 #tableScroll{
     min-height: 50vh;
     overflow-y: scroll;
 }
+
 // Scrolling for the accordion
 #accordionScroll{
     overflow-y: scroll;
     height: 30vh;
 }
+
 // Edit Button
 #editButton{
+    background-color: $orange-shade;
     margin-left: 10px;
     border: none;
+    width: 150px;
 }
+
 // Cancel button
 #btns-cancel-submit{
     border: none;
+    width: 150px;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }

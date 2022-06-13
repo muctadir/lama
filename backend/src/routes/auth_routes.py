@@ -2,7 +2,7 @@
 # Jarl Jansen
 
 from src import db # need this in every route
-from src.app_util import check_args, check_email, check_password, check_username
+from src.app_util import check_args, check_email, check_password, check_username, login_required
 from src.models.auth_models import User, UserSchema
 from flask import current_app as app
 from flask import make_response, request, Blueprint
@@ -83,6 +83,15 @@ def login():
     except NoResultFound:
         # User not found
         return make_response(("Invalid username or password", 400))
+
+# Function for checking whether user has logged in before correctly
+@auth_routes.route("/check_login", methods=["GET"])
+@login_required
+def check_login():
+    """
+    Checks whether the user has already logged in
+    """
+    return make_response(("Success", 200))
 
 def login_user(u_id):
     # Encode user id

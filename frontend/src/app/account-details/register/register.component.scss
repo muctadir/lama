@@ -34,6 +34,11 @@ $orange-shade: #ed5a06;
     background-color: $orange-shade !important;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // Ensures that the content is not entirely at the top of the page
 #middle-col {
     margin-top: 10vh;

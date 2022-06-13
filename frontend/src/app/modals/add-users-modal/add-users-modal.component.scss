@@ -54,3 +54,8 @@ $orange-shade: #ed5a06;
 #popup-plus {
     font-size: 20px;
 }
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}

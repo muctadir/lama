@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LogoutComponent } from './logout.component';
 
@@ -8,14 +10,16 @@ describe('LogoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutComponent ]
+      // Adds the RouterTestingModule dependency
+      imports: [RouterTestingModule],
+      declarations: [ LogoutComponent ],
+      // Adds NgbActiveModal dependency
+      providers: [NgbActiveModal]
     })
     .compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(LogoutComponent);
     component = fixture.componentInstance;
+    // component.activeModal = new NgbActiveModal();
     fixture.detectChanges();
   });
 

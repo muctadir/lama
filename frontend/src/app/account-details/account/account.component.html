@@ -1,153 +1,22 @@
-<!-- Account information division -->
-<div *ngIf="!edit && !editPassword" class="container-fluid min-vh-100 d-flex flex-column">
-    <div class="container">
-        <!-- Row for account details-->
-        <div class="row">
-            <div class="col-8 offset-2">
-                <div id="header">
-                    Account details
-                </div>
-            </div>
-        </div>
-        <!-- Row for username -->
-        <div class="row">
-            <div class="col-8 offset-2">
-                <b id="boldText">Username:</b>
-                <hr>
-                <span id="infoText">{{ user.getUsername() }}</span>
-            </div>
-        </div>
-        <!-- Row for user email -->
-        <div class="row">
-            <div class="col-8 offset-2">
-                <b id="boldText">Email:</b>
-                <hr>
-                <span id="infoText">{{ user.getEmail() }}</span>
-            </div>
-        </div>
-        <!-- Row for user description -->
-        <div class="row">
-            <div class="col-8 offset-2">
-                <b id="boldText">Description:</b>
-                <hr>
-                <span id="infoText">{{ user.getDescription() }}</span>
-            </div>
-        </div>
-        <!-- Row for edit button -->
-        <div class="row">
-            <div class="col-8 offset-2 text-right">
-                <!-- Edit button -->
-                <button (click)="edit = !edit" class="btn btn-primary infoButtons">Edit information</button>
-                <!-- Back button -->
-                <button [routerLink]="['/home']" class="btn btn-danger infoButtons" id="backButton">Back</button>
-            </div>
-        </div>
-    </div>
+<!-- @Author Jarl Jansen -->
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <!-- Account information -->
+    <ng-container *ngIf="mode==0">
+        <!-- Create app-account-information component, passes errorMsg, user data and listens for modeChange events -->
+        <app-account-information [errorM]="errorMsg" [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
+    </ng-container>
+    
+    <!-- Edit division -->
+    <ng-container *ngIf="mode==1">
+        <!-- Create app-edit-account-settings component, passes user data and listens for modeChange events -->
+        <app-edit-account-settings [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-edit-account-settings>
+    </ng-container>
+    
+    <!-- Change password -->
+    <ng-container *ngIf="mode==2">
+        <!-- Create app-account-change-password component, passes user data and listens for modeChange events -->
+        <app-account-change-password [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
+    </ng-container>
 </div>
 
 
-<!-- Edit division -->
-<div *ngIf="edit" class="container-fluid min-vh-100 d-flex flex-column">
-    <!-- Row for the header -->
-    <div class="row">
-        <div class="col-8 offset-2 justify-content-center">
-            <div id="header">Changing your account information</div>
-        </div>
-    </div>
-    <!-- Row for the form -->
-    <div class="row">
-        <div class="col-8 offset-2 justify-content-center">
-            <!-- For for user information -->
-            <form id="accountEditForm">
-                <!-- Username field -->
-                <div class="form-group">
-                    <label id="field_text">Username:</label>
-                    <input type="username" class="form-control" id="form-format" placeholder="Username" name="username" value = "{{ user.getUsername() }}">
-                </div>
-                <!-- Email field -->
-                <div class="form-group">
-                    <label id="field_text">Email Address:</label>
-                    <input type="email" class="form-control" placeholder="Email address" name="email" value = "{{ user.getEmail() }}">
-                </div>
-                <!-- Description field -->
-                <div class="form-group">
-                    <label id="field_text">Description:</label>
-                    <textarea id="projectDescriptionForm" class="form-control" rows="4" placeholder="Description" name="description" maxlength="140">{{ user.getDescription() }}</textarea>
-                </div>
-            </form>
-
-        </div>
-    </div>
-    <!-- Row for changing password -->
-    <div class="row text-end">
-        <div class="col">
-            <a [routerLink]="['/account']" (click)="editPassword = !editPassword; edit=!edit"><span id="orangUnderlinedText">Change password</span></a>
-        </div>
-        <div class="col-2"></div>
-    </div>
-    <!-- Row for the error message -->
-    <div class="row">
-        <div class="col offset-2">
-            <div *ngIf="errorMsg" id="infoMessage">{{errorMsg}}</div>
-        </div>
-    </div>
-    <!-- Row for buttons -->
-    <div class="row">        
-        <div class="col-8 offset-2 text-right">
-            <!-- Edit button -->
-            <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
-            <!-- Cancel button -->
-            <button (click)="edit = !edit" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
-        </div>
-    </div>
-</div>
-
-
-<!-- Edit password division -->
-<div *ngIf="editPassword" class="container-fluid min-vh-100 d-flex flex-column">
-    <!-- Row for the header -->
-    <div class="row">
-        <div class="col-8 offset-2 justify-content-center">
-            <div id="header">Changing your password</div>
-        </div>
-    </div>
-    <!-- Row for the form -->
-    <div class="row">
-        <div class="col-8 offset-2 justify-content-center">
-            <!-- For for user information -->
-            <form id="passwordEditForm">
-                <!-- Password field -->
-                <div class="form-group">
-                    <label id="field_text">Password:</label>
-                    <input type="password" class="form-control" placeholder="Password" name="password">
-                </div>
-                <!-- New password field -->
-                <div class="form-group">
-                    <label id="field_text"> New password:</label>
-                    <input type="password" class="form-control" placeholder="New password" name="newPassword">
-                </div>
-                <!-- Repeat new password field -->
-                <div class="form-group">
-                    <label id="field_text"> Repeat new password:</label>
-                    <input type="password" class="form-control" placeholder="Repeat new password" name="newPasswordR">
-                </div>
-            </form>
-
-        </div>
-    </div>
-    <!-- Row for the error message -->
-    <div class="row">
-        <div class="col offset-2">
-            <div *ngIf="errorMsg" id="infoMessage">{{errorMsg}}</div>
-        </div>
-    </div>
-    <!-- Row for buttons -->
-    <div class="row">        
-        <div class="col-8 offset-2 text-right">
-            <!-- Edit button -->
-            <button (click)="editPasswordF()" type="submit" class="btn btn-primary editButtons">Change</button>
-            <!-- Cancel button -->
-            <button (click)="editPassword = !editPassword" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
-        </div>
-    </div>
-</div>

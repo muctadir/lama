@@ -6,13 +6,6 @@ $grey-shade: #38474e;
 $light-grey-shade: #aaaaaa;
 $white-shade: #FFFFFF;
 
-// Body
-body{
-    color: $grey-shade;
-    font-size: 15px;
-    letter-spacing: 1px;
-}
-
 // Container
 #topBarContainer{
     margin-left: 10px;
@@ -81,6 +74,11 @@ body{
     margin: 10px;
     background-color: $main-color-1;
     border: none;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }
 
 // CONFLICTING LABELS SECTION

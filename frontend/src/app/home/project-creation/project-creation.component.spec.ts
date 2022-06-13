@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -12,10 +13,10 @@ describe('ProjectCreationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ ProjectCreationComponent ],
-      // Adding the RouterTestingModule dependency
+      // Adds RouterTestingModule dependency
       imports: [RouterTestingModule],
-      // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal]
+      // Adds NgbActiveModal and FormBuilder dependencies
+      providers: [NgbActiveModal, FormBuilder]
     })
     .compileComponents();
   });

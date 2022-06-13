@@ -1,6 +1,6 @@
 /* @author Jarl */
  
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.scss']
 })
+
 export class LogoutComponent {
 
   /**

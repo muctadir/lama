@@ -1,10 +1,10 @@
-<!--Author: Chinno Lavin, Jarl Jansen-->
+<!--Author: Chinno Lavin, Jarl Jansen, Thea Bradley-->
 
 <!-- Main bootstrap container covering the page -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="main_body">
 
     <!-- Title Row, holds Artifact management text and add artifact button -->
-    <div class="row" id="topRow">
+    <div class="row">
 
         <!-- Title text -->
         <div class="col">
@@ -22,13 +22,24 @@
             </span>
         </div>
 
+        <!-- row containing the search bar -->
+        <div class="row">
+            <div class="col-5">
+                <div class="search__container">
+                    <form [formGroup]="searchForm">
+                        <input class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                    </form>
+                </div>
+            </div>
+        </div>
+
     <!--Row containing Artifacts Table-->
-    <div class="row justify-content-sm-center" id="tableRow">
+    <div class="row justify-content-sm-center">
         <div class="col-9">
             <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
 
                 <!-- Table displaying the artifacts -->
-                <table class="table table-hover" id="artifactsTable">
+                <table class="table table-hover">
 
                     <!--Table Headers-->
                     <thead>
@@ -51,7 +62,6 @@
                             <td><p class="artifactText">{{artifact.getData()}}</p></td>
                             <!-- Times artifact is labelled -->
                             <td><p class="timesLabelled">{{artifact.getNumberOfLabellings()}}</p></td>
-                            
                         </tr>
                     </tbody>
                 </table>

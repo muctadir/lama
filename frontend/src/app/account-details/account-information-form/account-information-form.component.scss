@@ -8,20 +8,31 @@ $orange-shade: #ed5a06;
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: $orange-shade !important;
 }
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // texts above each of the forms indicating what the form is for
-#field_text{
+#field_text {
     font-size: 12px;
     letter-spacing: 1px;
     margin-top: 10px;
 }
 
+// Description field of the user
+#description{
+    resize: none;
+}
+
 // Ensures that the content is not entirely at the top of the page
-.middle-col{
+.middle-col {
     margin-top: 10vh;
 }
 
 // Sets layout of the error message that is displayed when register input is incorrect
-#error-msg{
+#error-msg {
   color: $orange-shade;
   font-size: 15px;
 }

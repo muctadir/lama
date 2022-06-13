@@ -26,6 +26,7 @@ $orange-shade: #ed5a06;
     padding-left: 30px;
     padding-right: 30px;
     font-size: 16px;
+    border: none;
 }
 
 // markup of yes button
@@ -33,4 +34,10 @@ $orange-shade: #ed5a06;
     padding-left: 30px;
     padding-right: 30px;
     font-size: 16px;
+    border: none;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }
