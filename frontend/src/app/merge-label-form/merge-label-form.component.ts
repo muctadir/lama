@@ -5,57 +5,53 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
-
-// // Tyep for label
-// type label = {
-//   labelId: Number,
-//   labelName: String,
-//   labelDescription: String,
-//   labelType: String
-// }
+import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-merge-label-form',
   templateUrl: './merge-label-form.component.html',
-  styleUrls: ['./merge-label-form.component.scss']
+  styleUrls: ['./merge-label-form.component.scss'],
 })
 export class MergeLabelFormComponent {
   routeService: ReroutingService;
   labels: Array<Label>;
   url: string;
-  labelTypes: Array<LabelType>
-
-  /**
-   * Constructor which:
-   * 1. makes an empty label
-   * 2.
-   */
-   constructor(public activeModal: NgbActiveModal,
+  labelTypes: Array<LabelType>;
+  form: FormGroup;
+  p_id: number;
+  constructor(
+    public activeModal: NgbActiveModal,
     private router: Router,
-    private labellingDataService: LabellingDataService) {
-      this.labels = new Array<Label>();
-      this.labelTypes = new Array<LabelType>();
-      this.routeService = new ReroutingService();
-      this.url = this.router.url;
+    private labellingDataService: LabellingDataService,
+    private formBuilder: FormBuilder
+  ) {
+    this.labels = new Array<Label>();
+    this.labelTypes = new Array<LabelType>();
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.form = this.formBuilder.group({
+      toBeMergedLabels: this.formBuilder.array([]),
+    });
+    this.p_id = parseInt(this.routeService.getProjectID(this.url));
   }
-
+  get toBeMergedLabels() {
+    return this.form.controls['toBeMergedLabels'] as FormArray;
+  }
   /**
    * OnInit,
    *  1. the p_id of the project is retrieved
    *  2. the labelId of the label is retrieved
    *  3. the label loading is started
    */
-   ngOnInit(): void {
-    let p_id = parseInt(this.routeService.getProjectID(this.url));
-    let labelID = parseInt(this.routeService.getLabelID(this.url));
-    this.getLabels(p_id);
-    this.getLabelTypes(p_id);
+  ngOnInit(): void {
+    this.getLabels(this.p_id);
+    this.getLabelTypes(this.p_id);
   }
 
   /**
    * Async function which gets the label
    */
-   async getLabels(p_id: number): Promise<void> {
+  async getLabels(p_id: number): Promise<void> {
     const labels = await this.labellingDataService.getLabels(p_id);
     this.labels = labels;
   }
@@ -70,9 +66,18 @@ export class MergeLabelFormComponent {
     console.log(labelTypes);
   }
 
-  // Not implemented function
-  notImplemented() {
-    alert("Not implemented");
+  add(): void {
+    const labelForm = this.formBuilder.group({
+      label: [undefined, Validators.required]
+    });
+    this.toBeMergedLabels.push(labelForm);
   }
 
+  rem(i: number): void {
+    this.toBeMergedLabels.removeAt(i);
+  }
+  // Not implemented function
+  notImplemented() {
+    alert('Not implemented');
+  }
 }
