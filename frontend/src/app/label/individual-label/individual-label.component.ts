@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { Labelling } from 'app/classes/labelling';
 
 @Component({
   selector: 'app-individual-label',

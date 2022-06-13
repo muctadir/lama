@@ -8,7 +8,7 @@ import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({

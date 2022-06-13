@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+// Component for project
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
