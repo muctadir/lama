@@ -61,6 +61,26 @@ $light-grey-shade: #aaaaaa;
     justify-content: center;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
+// Pagination Color
+ngb-pagination ::ng-deep a {
+    color:$orange-shade !important;
+}  
+ngb-pagination ::ng-deep .page-item.active .page-link {
+border-color: $grey-shade;
+background-color: white;
+}
+ngb-pagination ::ng-deep .page-item.active .page-link:focus, .page-link:not(:disabled):not(.disabled):active:focus {
+box-shadow: 0 0 0 0.1rem $light-grey-shade;
+}
+ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
+box-shadow: 0 0 0 0.1rem $light-grey-shade;
+}
+
 //Scroll Related Business
 .my-custom-scrollbar {
     position:relative;

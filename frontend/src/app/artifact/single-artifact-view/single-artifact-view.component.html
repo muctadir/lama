@@ -1,6 +1,6 @@
 <!-- @author: Chinno Lavin -->
 <!-- big container -->
-<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+<div class="container-fluid min-vh-100 d-flex flex-column">
     <!-- contains the page title and Artifact Identifier -->
     <div class="row" id="pageTitle">
         <!-- title name -->
@@ -15,10 +15,10 @@
 
     <!-- Container for Artifact -->
     <div class="row">
-        <div class = "artifactContainer" id="artifactContainer">
+        <div class="artifactContainer" id="artifactContainer">
             <p>{{ artifact.getData() }}</p>
         </div>
-        <div class="row" id="editButtonRow">
+        <div class="row">
 
             <!-- previous artifacts that it was split from, if any -->
             <div class="col-6" id="names">
@@ -98,8 +98,8 @@
                         </div>                      
                     </div>    
                     <!--Line Separator-->
-                    <div class="col-12" id="horizontalLineMain">
-                        <hr class="horizontalLine" style="height:1px; width:80%; border-width:0px;">    
+                    <div class="col-12">
+                        <hr class="horizontalLine">    
                     </div>           
                 </div>
             </div>

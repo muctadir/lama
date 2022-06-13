@@ -35,7 +35,7 @@
                 <div>
                     <textarea class="form-control" rows="8"
                               placeholder="Description"
-                              id="remark"
+                              id="description"
                               formControlName = "labelDescription">
                     </textarea>
                 </div>
@@ -44,10 +44,12 @@
 
     </div>
     <div class="row" style="margin-top: 10px;">
-        <div class="form-group" id="butt">
-            <button class="btn btn-light float-end" (click)="activeModal.close()" style="margin-left:10px;">Cancel</button>
-            <button *ngIf="label === undefined" class="btn btn-primary float-end" (click)="submit()" >Submit</button>
-            <button *ngIf="label !== undefined" class="btn btn-primary float-end" (click)="submit()" >Edit</button>
+        <div class="form-group">
+            <!-- Edit/submit button -->
+            <button *ngIf="label === undefined" class="btn btn-primary float-end" (click)="submit()" id="btn-submit">Submit</button>
+            <button *ngIf="label !== undefined" class="btn btn-primary float-end" (click)="submit()" id="btn-edit">Edit</button>
+            <!-- Cancel button -->
+            <button class="btn btn-secondary float-end" (click)="activeModal.close()" style="margin-left:10px;" id="btn-cancel">Cancel</button>
         </div>
     </div>
 </form>

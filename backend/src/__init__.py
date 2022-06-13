@@ -3,12 +3,12 @@ import click
 from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
-from src.models import db, ma
+from src.models import db
 from src.models.auth_models import User
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
-from src.routes import demos, auth_routes, project_routes, account_routes, label_routes, \
+from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
 label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes
 from flask_cors import CORS
 from os import environ
@@ -113,7 +113,7 @@ def create_app(config={'TESTING': False}):
     # The endpoints for the API are defined in blueprints. These are imported
     # and hooked to the app object.
     app.register_blueprint(auth_routes)
-    app.register_blueprint(demos)
+    app.register_blueprint(util_routes)
     app.register_blueprint(project_routes)
     app.register_blueprint(account_routes)
     app.register_blueprint(label_routes)

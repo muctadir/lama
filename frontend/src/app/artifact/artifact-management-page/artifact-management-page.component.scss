@@ -15,12 +15,14 @@
     margin-right: 10px;
     max-width: 98%;
 }
+
 // Header saying "Artifact Management"
 p.header{
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
+
 // Add Artifact button 
 #addArtifactButton{
     float: right;
@@ -31,6 +33,12 @@ p.header{
     border-color: var(--main-color-2);
     color: black;
 }
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // Add Artifact button plus
 svg.bi.bi-plus{
     width: 22px;
@@ -87,10 +95,12 @@ p.timeslabelledHeader{
     white-space:nowrap;
     font-weight: 500;
 }
-//table hovering color
+
+// Table hovering color
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
     background-color:#ed5b0637;
-  }
+}
+
 // Pagination Color
 ngb-pagination ::ng-deep a {
     color:#ED5A06 !important;

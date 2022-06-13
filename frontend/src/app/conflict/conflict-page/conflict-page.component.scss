@@ -59,6 +59,11 @@ body{
     width: 125px;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // SCROLLBAR
 // Scrollbar general
 ::-webkit-scrollbar {

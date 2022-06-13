@@ -103,6 +103,11 @@ p.header{
     font-size: 15px;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 //Scroll Related Business
 .my-custom-scrollbar {
     position:relative;

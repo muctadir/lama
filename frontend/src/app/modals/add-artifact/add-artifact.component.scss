@@ -23,3 +23,8 @@
     padding-left: 30px;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+

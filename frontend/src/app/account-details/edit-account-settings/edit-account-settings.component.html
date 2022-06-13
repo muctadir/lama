@@ -32,7 +32,7 @@
             <!-- Description field -->
             <div class="form-group">
                 <label id="field_text">Description:</label>
-                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description"></textarea>
+                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description" id="description"></textarea>
             </div>
         </form>
 
@@ -53,7 +53,7 @@
         <!-- Edit button -->
         <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
         <!-- Cancel button -->
-        <button (click)="modeChangeEvent.emit(0)" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
+        <button (click)="modeChangeEvent.emit(0)" class="btn btn-secondary editButtons" id="cancelEditButton">Cancel</button>
     </div>
 </div>
 

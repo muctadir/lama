@@ -69,6 +69,7 @@ $orange-shade: #ed5a06;
     padding-right: 45px;
     letter-spacing: 1px;
     font-size: 17px;
+    border: none;
 }
 
 // Sets layout of the error message that is displayed when login input is incorrect
@@ -80,6 +81,11 @@ $orange-shade: #ed5a06;
 // Changes the color of the button to orange
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
      background-color: $orange-shade !important;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }
 
 #create-account {
