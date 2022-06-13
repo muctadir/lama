@@ -83,7 +83,12 @@ export class LabellingPageComponent implements OnInit {
   ngOnInit(): void {
     /**
      * Getting information from the backend
-     * TODO: If any of this fails we should probably deal with it
+     * This page has a couple of preconditions. These are checked at various points
+     * in the initialization process. Namely:
+     * 1. An artifact is loaded
+     * 2. The labellers is loaded
+     * 3. The labels and their types are loaded.
+     * If any of this fails the user is redirected back to the stats page.
      */
     this.getRandomArtifact(this.p_id);
     this.getLabelTypesWithLabels(this.p_id);
