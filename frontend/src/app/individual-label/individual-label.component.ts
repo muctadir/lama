@@ -63,6 +63,8 @@ export class IndividualLabelComponent {
     if (themes !== undefined) {
       this.themes = themes;
     }
+
+    console.log(this.label)
   }
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
