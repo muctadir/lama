@@ -23,8 +23,8 @@ export class LabelManagementComponent {
   labels: Array<Label>;
 
   //Pagination Settings
-  page: number = 1;
-  pageSize: number = 10;
+  page: number;
+  pageSize: number;
 
 // Contructor with modal
   constructor(private modalService: NgbModal,
@@ -34,10 +34,12 @@ export class LabelManagementComponent {
       this.url = this.router.url;
       this.p_id = parseInt(this.routeService.getProjectID(this.url));
       this.labels = new Array<Label>();
+      this.page = 1;
+      this.pageSize = 10;
   }
 
   ngOnInit(): void {
-    this.getLabels(this.p_id);
+    this.getLabels();
   }
 
   // Open the modal and merge lables
@@ -56,7 +58,7 @@ export class LabelManagementComponent {
     });
   }
 
-  async getLabels(p_id: number): Promise<void> {
+  async getLabels(): Promise<void> {
     try {
       const labels = await this.labellingDataService.getLabels(this.p_id);
       this.labels = labels;
@@ -72,10 +74,7 @@ export class LabelManagementComponent {
    * @trigger click on label
    */
   reRouter(label_id: number) : void {
-    // Use reroutingService to obtain the project ID
-    let p_id = this.routeService.getProjectID(this.url);
-
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'singlelabel', label_id]);
+    this.router.navigate(['/project', this.p_id, 'singlelabel', label_id]);
   }
 }
