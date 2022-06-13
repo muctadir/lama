@@ -1,11 +1,13 @@
 # Veerle Furst
 # Jarl Jansen
+# Eduardo Costa Martins
 
+from backend.src.models.auth_models import UserStatus
 from src import db # need this in every route
-from src.app_util import check_args, check_email, check_password, check_username
+from src.app_util import check_args, check_email, check_password, check_username, super_admin_required
 from src.models.auth_models import User, UserSchema
 from flask import current_app as app
-from flask import make_response, request, Blueprint
+from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
@@ -44,18 +46,24 @@ def register():
 
 # Function to get all users who are pending
 @auth_routes.route("/pending", methods=["GET"])
+@super_admin_required
 def pending():
     """
     Returns list of all users that are pending approval from the super-admin
     """
-    if not request.args: # only if there are no arguments
-        try:
-            pending = db.session.query(User).filter(User.status == 'pending')
-        except OperationalError:
-            return make_response(("Service Unavailable", 503))
-        user_schema = UserSchema(many=True) # many is for serializing lists
-        pending = user_schema.dumps(pending) # dumps automatically converts to json, as opposed to dump
-        return make_response(pending) # default code is 200
+    args = request.args
+    required = ()
+    # Check that all (no) arguments are provided
+    if not check_args(required, args):
+        return make_response("Bad Request", 400)
+    
+    user_schema = UserSchema()
+    # Get all users with pending status
+    users = db.session.scalars(select(User).where(User.status == UserStatus.pending))
+    # Convert to json format
+    json_users = jsonify(user_schema.dump(users, many=True))
+    
+    return make_response(json_users)
 
 # Function to make a user login
 @auth_routes.route("/login", methods=["POST"])
