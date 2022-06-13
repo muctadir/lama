@@ -59,7 +59,7 @@ def create_label():
 @in_project
 def edit_label():
     # Get args 
-    args = request.json
+    args = request.json['params']
     # Required args
     required = ('labelId', 'labelName', 'labelDescription', 'p_id')
 
