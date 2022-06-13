@@ -6,7 +6,7 @@ import { LabelType } from 'app/classes/label-type';
 @Component({
   selector: 'app-individual-labelling-form',
   templateUrl: './individual-labelling-form.component.html',
-  styleUrls: ['./individual-labelling-form.component.scss']
+  styleUrls: ['./individual-labelling-form.component.scss'],
 })
 export class IndividualLabellingForm implements OnInit {
   @Input() labelType?: LabelType;
@@ -17,22 +17,28 @@ export class IndividualLabellingForm implements OnInit {
     this.labelForm = this.formBuilder.group({
       labelType: [undefined],
       label: [undefined],
-      remark: [undefined]
+      remark: [undefined],
     });
   }
 
   ngOnInit(): void {
-    this.labelForm.get("label")?.valueChanges.subscribe(val => {
-      this.labelType?.getLabels().forEach((l:Label) => {
+    if (typeof this.labelType === 'undefined') {
+      this.selectedDesc = 'Something went wrong while getting the labels.';
+    }
+
+    if (typeof this.parentForm === 'undefined') {
+      this.selectedDesc = 'Something went wrong while preparing the form.';
+    }
+    this.labelForm.get('label')?.valueChanges.subscribe((val) => {
+      this.labelType?.getLabels().forEach((l: Label) => {
         if (l.getId() == val) {
           this.selectedDesc = l.getDesc();
         }
       });
     });
 
-    this.labelForm.controls['labelType'].patchValue(this.labelType?.getId())
+    this.labelForm.controls['labelType'].patchValue(this.labelType?.getId());
 
     this.parentForm?.push(this.labelForm);
   }
-
 }
