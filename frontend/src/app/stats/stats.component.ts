@@ -1,7 +1,6 @@
 // Ana-Maria Olteniceanu
 
 import { Component, OnInit } from '@angular/core';
-import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Project } from 'app/classes/project';
 import { ReroutingService } from 'app/services/rerouting.service';
@@ -43,13 +42,14 @@ export class StatsComponent implements OnInit{
    */
    constructor(private router: Router,
     private statsDataService: StatsDataService) { 
-     this.url = this.router.url;
-     this.routeService = new ReroutingService();
-     this.p_id = Number(this.routeService.getProjectID(this.url));
-     this.project = new Project(0, "", "");
-     this.user_contribution = [];
-     this.conflicts = 0;
-   }
+      this.url = this.router.url;
+      this.routeService = new ReroutingService();
+      this.p_id = Number(this.routeService.getProjectID(this.url));
+      this.project = new Project(0, "", "");
+      this.user_contribution = [];
+      this.conflicts = 0;
+  }
+
 
   ngOnInit(): void {
       // Get the project statistics from the back end

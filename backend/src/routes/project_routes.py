@@ -3,7 +3,6 @@
 # Ana-Maria Olteniceanu
 # Linh Nguyen
 
-from asyncio.windows_events import NULL
 from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
@@ -653,7 +652,7 @@ def __time_to_string(time):
     # List of time values
     time_list = [0, 0, 0]
     # If the time has a null value, return 0
-    if time == NULL:
+    if time == None:
         return "00:00:00"
     # Number of minutes
     minutes = int(time / 60)
