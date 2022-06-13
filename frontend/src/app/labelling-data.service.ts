@@ -6,16 +6,17 @@ import { Theme } from 'app/classes/theme';
 import { RequestHandler } from 'app/classes/RequestHandler';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class LabellingDataService {
   // Initialise the Request handler
   requestHandler: RequestHandler;
 
   // Constructors for the request handler
   constructor() {
-    this.requestHandler = new RequestHandler(sessionStorage.getItem('ses_token'));
+    this.requestHandler = new RequestHandler(
+      sessionStorage.getItem('ses_token')
+    );
   }
 
   /**
@@ -26,14 +27,20 @@ export class LabellingDataService {
    */
   async getLabels(p_id: number): Promise<Array<Label>> {
     // Response from the request handler
-    const response = await this.requestHandler.get('/label/allLabels', { 'p_id': p_id }, true);
+    const response = await this.requestHandler.get(
+      '/label/allLabels',
+      { p_id: p_id },
+      true
+    );
 
     // New array of labels
     const result = new Array<Label>();
 
     // Filling in the array of labels
     response.forEach((r: any) => {
-      result.push(new Label(r.label.id, r.label.name, r.label.desc, r.label_type));
+      result.push(
+        new Label(r.label.id, r.label.name, r.label.desc, r.label_type)
+      );
     });
 
     return result;
@@ -48,10 +55,19 @@ export class LabellingDataService {
    */
   async getLabel(p_id: number, label_id: number): Promise<Label> {
     // Response from the request handler
-    const response = await this.requestHandler.get('/label/singleLabel', { 'p_id': p_id, 'label_id': label_id }, true);
+    const response = await this.requestHandler.get(
+      '/label/singleLabel',
+      { p_id: p_id, label_id: label_id },
+      true
+    );
 
     // Get the new label
-    const result = new Label(response.label.id, response.label.name, response.label.desc, response.label_type);
+    const result = new Label(
+      response.label.id,
+      response.label.name,
+      response.label.desc,
+      response.label_type
+    );
 
     // New array of themes
     let ThemeArray = new Array<Theme>();
@@ -75,7 +91,11 @@ export class LabellingDataService {
    * @returns the labelling per label
    */
   async getLabelling(p_id: number, label_id: number): Promise<any> {
-    return this.requestHandler.get('/labelling/by_label', { 'p_id': p_id, 'label_id': label_id }, true);
+    return this.requestHandler.get(
+      '/labelling/by_label',
+      { p_id: p_id, label_id: label_id },
+      true
+    );
   }
 
   /**
@@ -89,9 +109,13 @@ export class LabellingDataService {
     let result = new Array<LabelType>();
 
     // Response from the request handler
-    let response = await this.requestHandler.get('/labeltype/all', { 'p_id': p_id }, true)
+    let response = await this.requestHandler.get(
+      '/labeltype/all',
+      { p_id: p_id },
+      true
+    );
     response.forEach((d: any) => {
-      result.push(new LabelType(d.id, d.name, new Array<Label>()))
+      result.push(new LabelType(d.id, d.name, new Array<Label>()));
     });
     return result;
   }
@@ -103,18 +127,20 @@ export class LabellingDataService {
    * @param label: Label
    * @param labelTypeId: number
    */
-  async submitLabel(p_id: number, label: Label,
-    labelTypeId: number): Promise<void> {
-
+  async submitLabel(
+    p_id: number,
+    label: Label,
+    labelTypeId: number
+  ): Promise<void> {
     // The content of the response
     let content: Object = {
-      'labelTypeId': labelTypeId,
-      'labelName': label.getName(),
-      'labelDescription': label.getDesc(),
-      'p_id': p_id
-    }
+      labelTypeId: labelTypeId,
+      labelName: label.getName(),
+      labelDescription: label.getDesc(),
+      p_id: p_id,
+    };
 
-    await this.requestHandler.post('/label/create', content, true)
+    await this.requestHandler.post('/label/create', content, true);
   }
 
   /**
@@ -124,19 +150,21 @@ export class LabellingDataService {
    * @param label: Label
    * @param labelTypeId: number
    */
-  async editLabel(p_id: number, label: Label,
-    labelTypeId: number): Promise<void> {
-
+  async editLabel(
+    p_id: number,
+    label: Label,
+    labelTypeId: number
+  ): Promise<void> {
     // Content of the patch
     let content: Object = {
-      'labelId': label.getId(),
-      'labelName': label.getName(),
-      'labelDescription': label.getDesc(),
-      'p_id': p_id
-    }
+      labelId: label.getId(),
+      labelName: label.getName(),
+      labelDescription: label.getDesc(),
+      p_id: p_id,
+    };
 
     // Response from the request handler
-    await this.requestHandler.patch('/label/edit', content, true)
+    await this.requestHandler.patch('/label/edit', content, true);
   }
 
   /**
@@ -149,21 +177,29 @@ export class LabellingDataService {
     // Array of label types
     let labelTypes: Array<LabelType> = new Array<LabelType>();
     // Response from the request handler
-    const response = await this.requestHandler.get('/labeltype/allWithLabels', { 'p_id': p_id }, true);
+    const response = await this.requestHandler.get(
+      '/labeltype/allWithLabels',
+      { p_id: p_id },
+      true
+    );
 
     // Get the label types with their labels
     response.forEach((r: any) => {
       let labelArray: Array<Label> = new Array<Label>();
       r.labels.forEach((l: any) => {
-        labelArray.push(new Label(l.id, l.name, l.description, r.label_type.name))
-      })
-      labelTypes.push(new LabelType(r.label_type.id, r.label_type.name, labelArray))
-    })
+        labelArray.push(
+          new Label(l.id, l.name, l.description, r.label_type.name)
+        );
+      });
+      labelTypes.push(
+        new LabelType(r.label_type.id, r.label_type.name, labelArray)
+      );
+    });
 
     return labelTypes;
   }
 
-  async postLabelling(dict: Object) : Promise<void> {
+  async postLabelling(dict: Object): Promise<void> {
     await this.requestHandler.post('/labelling/create', dict, true);
   }
 }

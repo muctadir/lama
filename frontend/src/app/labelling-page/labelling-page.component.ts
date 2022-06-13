@@ -190,7 +190,6 @@ export class LabellingPageComponent implements OnInit {
       await this.labellingDataService.postLabelling(dict);
       this.ngOnInit();
     } catch (err) {
-      console.log(err)
       this.router.navigate(['project', this.p_id]);
     }
   }
