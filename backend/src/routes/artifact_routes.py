@@ -11,15 +11,16 @@ from src.models.project_models import Membership, Project
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
-from sqlalchemy.exc import  OperationalError
+from sqlalchemy.exc import OperationalError
 from src.models.auth_models import User, UserSchema
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
+
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
 def get_artifacts(*, user):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id']
@@ -36,12 +37,12 @@ def get_artifacts(*, user):
     # Check that the membership exists
     if (not membership):
         return make_response('Unauthorized', 401)
-    
+
     # Check if user is admin for the project and get artifacts
     if membership.admin:
         # If the user is admin, then get all artifacts in the project
         artifacts = db.session.execute(
-            select(Artifact).where(Artifact.p_id==p_id)
+            select(Artifact).where(Artifact.p_id == p_id)
         ).scalars().all()
     else:
         # If user isn't admin, then get all artifacts the user has labelled
@@ -49,7 +50,8 @@ def get_artifacts(*, user):
 
         # Get all the labellings the user has done in the current project
         labellings = db.session.execute(
-            select(Labelling).where(Labelling.u_id==user.id, Labelling.p_id==p_id)
+            select(Labelling).where(Labelling.u_id ==
+                                    user.id, Labelling.p_id == p_id)
         ).scalars().all()
 
         # Take the artifacts labelled by the user
@@ -90,7 +92,7 @@ def get_artifacts(*, user):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 def add_new_artifacts(*, user):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id']
@@ -110,7 +112,7 @@ def add_new_artifacts(*, user):
 
         # Add the artifact to the database
         db.session.add(artifact_object)
-    
+
     # Try commiting the artifacts
     try:
         db.session.commit()
@@ -119,10 +121,11 @@ def add_new_artifacts(*, user):
 
     return make_response("Route accessed")
 
+
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 def single_artifact(*, user):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['a_id', 'extended']
@@ -136,7 +139,7 @@ def single_artifact(*, user):
     # Get the current artifact
     artifact = __get_artifact(a_id)
 
-     # Schema to serialize the artifact
+    # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
 
     # Convert artifact to JSON
@@ -158,10 +161,11 @@ def single_artifact(*, user):
     # Return the dictionary
     return make_response(dict_json)
 
+
 def __get_extended(artifact):
     # Children of the artifact
     artifact_children = []\
-        
+
     for child in artifact.children:
         artifact_children.append(child.id)
 
@@ -173,6 +177,7 @@ def __get_extended(artifact):
         "artifact_children": artifact_children,
         "artifact_labellings": labellings_formatted
     }
+
 
 def __get_labellings(artifact):
     # Schema to serialize the labellings
@@ -186,9 +191,10 @@ def __get_labellings(artifact):
     for labelling in artifact_labellings:
         labelling_json = labelling_schema.dump(labelling)
         labellings.append(labelling_json)
-    
+
     # Return labellings
     return labellings
+
 
 def __aggregate_labellings(artifact):
     # Get all the labellings of the artifact
@@ -221,12 +227,13 @@ def __aggregate_labellings(artifact):
         # Format result to be compatible with the frontend
         formatted_result = []
         for labeller in result:
-                formatted_result.append({
+            formatted_result.append({
                 'labellerName': labeller,
                 'labelsGiven': result[labeller]
-                })
-        
+            })
+
         return formatted_result
+
 
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
@@ -236,7 +243,7 @@ def __get_artifact(a_id):
 @login_required
 @in_project
 def random_artifact(*, user):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id']
@@ -249,20 +256,23 @@ def random_artifact(*, user):
 
     # TODO: Change to be an artifact that has not been labelled
     artifact = db.session.scalar(
-        select(Artifact) 
+        select(Artifact)
         .where(Artifact.p_id == p_id)
         .order_by(func.rand())
         .limit(1)
     )
+
+    if not artifact:
+        return make_response('No artifact')
     # artifact = get_random_artifact(user.id, p_id)
 
     childIds = db.session.scalars(
         select(Artifact.id)
         .where(artifact.id == Artifact.parent_id)
     ).all()
-    # Schemas to serialize the artifact 
+    # Schemas to serialize the artifact
     artifact_schema = ArtifactSchema()
-    
+
     dict_json = jsonify({
         'artifact': artifact_schema.dump(artifact),
         'parentId': artifact.parent_id,
@@ -276,10 +286,10 @@ def random_artifact(*, user):
 @login_required
 @in_project
 def get_labellers():
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
-    required = ['p_id','a_id']
+    required = ['p_id', 'a_id']
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
@@ -294,17 +304,17 @@ def get_labellers():
     user_schema = UserSchema()
     json_labellers = jsonify(user_schema.dump(labellers, many=True))
 
-
     return make_response(json_labellers)
+
 
 @artifact_routes.route("/getLabelers", methods=["GET"])
 @login_required
 @in_project
 def get_labells_by_label_type():
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
-    required = ['p_id','a_id']
+    required = ['p_id', 'a_id']
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
@@ -324,11 +334,14 @@ def get_labells_by_label_type():
 
     return make_response(json_labellers)
 
+
 artifact_routes.route("/newHighlights", methods=["POST"])
+
+
 @login_required
 @in_project
 def add_new_highlights(*, user):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id', 'a_id', 'u_id']
@@ -347,7 +360,7 @@ def add_new_highlights(*, user):
 
     # Add the highligh to the database
     db.session.add(highlight_object)
-    
+
     # Try commiting the artifacts
     try:
         db.session.commit()
@@ -355,6 +368,7 @@ def add_new_highlights(*, user):
         return make_response('Internal Server Error', 503)
 
     return make_response("Route accessed")
+
 
 def get_random_artifact(u_id, p_id):
     # Criteria for artifact completion
