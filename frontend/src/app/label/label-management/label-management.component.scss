@@ -122,11 +122,6 @@ p.artifactsLabelledHeader{
     box-shadow: none;
 }
 
-//table hovering color
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color:#ed5b0637;
-  }
-
 // Pagination Color
 ngb-pagination ::ng-deep a {
     color:#ED5A06 !important;
