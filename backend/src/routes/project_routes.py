@@ -8,7 +8,7 @@ from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
+from src.models.auth_models import User, UserSchema, UserStatus
 from src.models.item_models import Artifact, LabelType
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
@@ -105,7 +105,7 @@ def get_users(*, user):
 
     # Make a list of all approved users
     all_users = db.session.scalars(select(User).where(User.status==UserStatus.approved,
-            User.type != 'super_admin',
+            User.super_admin == False,
             User.id != user.id)).all()
 
     # Convert the list of users to json
@@ -165,7 +165,7 @@ def create_project(*, user):
         'admin' : True
     })
     # Get the ids of all super_admins
-    super_admin_ids = db.session.scalars(select(SuperAdmin.id)).all()
+    super_admin_ids = db.session.scalars(select(User.id).where(User.super_admin == True)).all()
     # Add all super admins as admins
     for super_admin_id in super_admin_ids:
         project.users.append({
