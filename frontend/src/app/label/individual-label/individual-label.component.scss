@@ -28,8 +28,9 @@ p.header{
 }
 
 // Bottom buttons
-#btns-cancel-submit {
-    margin-left: 10px;
+#btn-back {
+    border: none;
+    width: 150px;
 }
 
 // Row with better margins
@@ -47,9 +48,21 @@ p.header{
     margin-left: 15px;
 }
 
+// Textarea for description
+#description{
+    resize: none;
+}
+
 // Color of edit button
 #btn-edit {
     background-color: #ed5a06;
-    margin-left: 3px;
+    margin-left: 10px;
+    border: none;
+    width: 150px;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }
 

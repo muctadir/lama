@@ -11,7 +11,6 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { FormBuilder } from '@angular/forms';
-import { Artifact } from 'app/classes/artifact';
 
 
 @Component({

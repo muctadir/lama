@@ -2,10 +2,10 @@
 <!-- @author: Veerle Furst -->
 
 <!-- big container -->
-<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+<div class="container-fluid min-vh-100 d-flex flex-column">
 
     <!-- Page Header -->
-    <div class="row"  id="titleRow">
+    <div class="row" id="titleRow">
         <div class="col-12 header" id="pageTitle"> 
             {{theme.getName()}}
         </div>
@@ -65,7 +65,7 @@
     </div>
 
     <!--Bottom Half-->
-    <div class="row justify-content-md-center" id="bottomHalfContainer">
+    <div class="row justify-content-md-center">
         <div class="col-12">
             <!--Table to display labels and their artifacts TODO add to style sheet-->
             <table class="table table-borderless">
@@ -75,7 +75,7 @@
                         <th scope="col" id="labelsHeader">Labels</th>
                     </tr>
                 </thead>
-                <div  id="accordionScroll">
+                <div id="accordionScroll">
                     <tbody>
                         <!--List of Label dropdowns accordion-->
                         <tr *ngFor="let label of theme.getLabels()">
@@ -110,10 +110,10 @@
 
     </div>
     <!-- Back and Edit Buttons -->
-    <div class="col-6 align-self-end" id="createCancelButtons">
+    <div class="col-6 align-self-end">
         <div>
             <!-- Create button --> 
-            <button class="btn btn-primary float-end" (click)="reRouterEdit()" id="editButton">Edit</button> 
+            <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton">Edit</button> 
             <!-- Cancel button -->
             <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
         </div>

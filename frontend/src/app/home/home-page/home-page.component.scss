@@ -6,13 +6,6 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
-// Body
-body{
-    color: $grey-shade;
-    font-size: 15px;
-    letter-spacing: 1px;
-}
-
 // TOP BAR
 // Row of the top bar
 #topBarRow{
@@ -20,11 +13,13 @@ body{
     margin-right: 10px;
     max-width: 98%;
 }
+
 // Header saying "Projects"
 .header{
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
+    padding-left: 10px;
 }
 
 // CREATE PROJECT
@@ -38,10 +33,17 @@ body{
     border-color: $grey-shade;
     color: $grey-shade;
 }
+
 // Create project button on hover
 #createProjectButton:hover, #createProjectButton:focus, #createProjectButton:active{
     background-color: $white-shade;
 }
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // Create project text within button
 #createProjectText{
     float:left;

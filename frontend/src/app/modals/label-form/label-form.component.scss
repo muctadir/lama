@@ -19,3 +19,26 @@
 .container {
     margin-bottom: 10px;
 }
+
+// Edit button
+#btn-edit, #btn-submit{
+    border: none;
+    width: 150px;
+}
+
+// Cancel button
+#btn-cancel{
+    margin-right: 10px;
+    border: none;
+    width: 150px;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
+// Description text area
+#description{
+    resize: none;
+}

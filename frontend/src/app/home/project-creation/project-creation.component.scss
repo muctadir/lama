@@ -129,6 +129,7 @@ $orange-shade: #ed5a06;
 
 // Button for adding label types
 #addLabelTypeButton{
+    width: 200px;
     border: 2px solid $grey-shade;
     background-color: $white-shade;
     color: $grey-shade;
@@ -158,19 +159,14 @@ $orange-shade: #ed5a06;
     margin-right: 15px;
     margin-bottom: 15px;
 }
+
 // Both buttons
 .btn.btn-secondary{
-    width: 200px;
+    width: 150px;
     margin-left: 10px;
     margin-right: 10px;
 }
-// Cancel project creation button
-#cancelProjectCreationButton{
-    background-color: $white-shade;
-    border: 2px solid;
-    border-color: $grey-shade;
-    color: $grey-shade;
-}
+
 // Cancel project creation button
 #createProjectButton{
     background-color: $orange-shade;
@@ -178,8 +174,19 @@ $orange-shade: #ed5a06;
     border-color: $orange-shade;
     color: $white-shade;
 }
+
 #labelcount {
     max-width: 20%;
+}
+
+// Project description text area
+#projectDescriptionForm{
+    resize: none;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }
 
 

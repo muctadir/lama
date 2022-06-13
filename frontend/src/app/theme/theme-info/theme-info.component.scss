@@ -137,9 +137,15 @@ p.labelDescriptionText{
     font-size: 14px;
 }
 
-// Button container for create and cancel
+// Button to save
 #saveButton{
     margin-left: 10px;
+    width: 150px;
+}
+
+// Button to cancel
+#cancelButton{
+    width: 150px;
 }
 
 // button outline
