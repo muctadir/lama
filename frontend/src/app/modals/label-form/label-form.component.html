@@ -14,7 +14,7 @@
             <div>
                 <div class="subTitle">Label type</div>
                 <div *ngIf="label === undefined" class="form-group">
-                    <select class="form-control" formControlName="labelTypeId">
+                    <select class="form-select" formControlName="labelTypeId">
                         <option *ngFor="let labelType of labelTypes" [ngValue]="labelType.getId()">{{labelType.getName()}}</option>
                     </select>
                 </div>

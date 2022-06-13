@@ -47,7 +47,7 @@
                             </div> 
                             <!-- List of available labels -->
                             <div>
-                                <select class="form-control" name="labels">
+                                <select class="form-select" name="labels">
                                     <option *ngFor="let label of labelType?.getLabels()!" value="{{ label.getName() }}">{{ label.getName() }}</option>
                                 </select>
                             </div>

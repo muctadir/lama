@@ -12,7 +12,7 @@
         <div class="col-6">
             <div class="form-group" >
                 <p class="subTitle">Select Label Type</p>
-                <select class="form-control" id="label-type" name="labels">
+                <select class="form-select" id="label-type" name="labels">
                     <option *ngFor="let labeltype of labelTypes">{{ labeltype.getName()}}</option>
                 </select>
             </div>
@@ -39,7 +39,7 @@
                         <ngb-panel>
                             <ng-template ngbPanelTitle>
                                 <div class="form-group" >
-                                    <select class="form-control" id="label-type" name="labels">
+                                    <select class="form-select" id="label-type" name="labels">
                                         <option *ngFor="let label of labels">{{ label.getName() }}</option>
                                     </select>
                                 </div>
