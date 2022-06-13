@@ -32,6 +32,7 @@ export class LabellingPageComponent implements OnInit {
    */
   labellings: FormArray;
   form: FormGroup;
+  submitMessage: string;
 
   /**
    * Information concerning the highlighting and cutting
@@ -72,6 +73,7 @@ export class LabellingPageComponent implements OnInit {
     this.form = new FormGroup({
       labellings: this.labellings,
     });
+    this.submitMessage = '';
     /**
      * Setting up routing
      */
@@ -105,7 +107,9 @@ export class LabellingPageComponent implements OnInit {
    */
   async getRandomArtifact(): Promise<void> {
     try {
-      const artifact = await this.artifactDataService.getRandomArtifact(this.p_id);
+      const artifact = await this.artifactDataService.getRandomArtifact(
+        this.p_id
+      );
       this.artifact = artifact;
     } catch {
       this.router.navigate(['/project', this.p_id]);
@@ -154,6 +158,7 @@ export class LabellingPageComponent implements OnInit {
    * Skip to another random artifact
    */
   skip(): void {
+    this.submitMessage = '';
     this.ngOnInit();
   }
 
@@ -171,10 +176,27 @@ export class LabellingPageComponent implements OnInit {
   /**
    *
    */
-  async submit(): Promise<void> {
+  submit(): void {
+    try {
+      let resultArray: Array<Object> = this.createResponse();
+      const dict = {
+        p_id: this.p_id,
+        resultArray: resultArray,
+      };
+      this.submitMessage = '';
+      this.sendSubmission(dict);
+    } catch (e) {
+      this.submitMessage = 'Submission invalid';
+    }
+  }
+
+  createResponse(): Array<Object> {
     let resultArray: Array<Object> = Array<Object>();
 
     this.labellings.controls.forEach((el: any) => {
+      if (el.status != 'VALID') {
+        throw 'Submission invalid';
+      }
       resultArray.push({
         a_id: this.artifact?.getId(),
         lt_id: el.get('labelType')?.value,
@@ -182,11 +204,10 @@ export class LabellingPageComponent implements OnInit {
         remark: el.get('remark')?.value,
       });
     });
+    return resultArray;
+  }
 
-    const dict = {
-      p_id: this.p_id,
-      resultArray: resultArray,
-    };
+  async sendSubmission(dict: Object): Promise<void> {
     try {
       await this.labellingDataService.postLabelling(dict);
       this.ngOnInit();

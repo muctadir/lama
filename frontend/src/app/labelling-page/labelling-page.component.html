@@ -46,6 +46,10 @@
               <span id="LabellingTitle">Labelling</span>
               <span (click)="openCreateForm()" class=""><i class="bi bi-plus-lg"></i></span>
             </div>
+            <div class="col-9"></div>
+            <div class="col-3">
+              {{ submitMessage }}
+            </div>
             <div class="col-12" id="labelThing">
                 <div *ngFor="let labelType of labelTypes" id="labelling-row">
                     <app-individual-labelling-form [labelType]="labelType"

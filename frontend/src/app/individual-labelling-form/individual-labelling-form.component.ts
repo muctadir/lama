@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
 
@@ -15,9 +15,9 @@ export class IndividualLabellingForm implements OnInit {
   labelForm: FormGroup;
   constructor(private formBuilder: FormBuilder) {
     this.labelForm = this.formBuilder.group({
-      labelType: [undefined],
-      label: [undefined],
-      remark: [undefined],
+      labelType: [undefined, [Validators.required]],
+      label: [undefined, [Validators.required]],
+      remark: [undefined, [Validators.required, Validators.minLength(1)]],
     });
   }
 
