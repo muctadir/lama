@@ -1,4 +1,7 @@
-// <!-- Author: Victoria Bogachenkova -->
+/**
+ * @author Bartjan Henkemans
+ * @author Victoria Boganchenkova
+ */
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from '../merge-label-form/merge-label-form.component';
@@ -15,6 +18,7 @@ import { LabelFormComponent } from 'app/label-form/label-form.component';
 })
 export class LabelManagementComponent {
   routeService: ReroutingService;
+  p_id: number;
   url: string;
   labels: Array<Label>;
 
@@ -28,12 +32,12 @@ export class LabelManagementComponent {
     private router: Router) {
       this.routeService = new ReroutingService();
       this.url = this.router.url;
+      this.p_id = parseInt(this.routeService.getProjectID(this.url));
       this.labels = new Array<Label>();
   }
 
   ngOnInit(): void {
-    const p_id = parseInt(this.routeService.getProjectID(this.url));
-    this.getLabels(p_id);
+    this.getLabels(this.p_id);
   }
 
   // Open the modal and merge lables
@@ -53,8 +57,12 @@ export class LabelManagementComponent {
   }
 
   async getLabels(p_id: number): Promise<void> {
-    const labels = await this.labellingDataService.getLabels(p_id);
-    this.labels = labels;
+    try {
+      const labels = await this.labellingDataService.getLabels(this.p_id);
+      this.labels = labels;
+    } catch (e) {
+      this.router.navigate(['project', this.p_id]);
+    }
   }
 
   /**
