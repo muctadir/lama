@@ -85,7 +85,8 @@ def create_change_table(cls):
     change_class = type(
             cls.__name__ + 'Change',  # Class name
             (Change, db.Model),  # Base classes
-            {'__tablename__': cls.__tablename__ + '_change'} # Added attributes/methods
+            {'__tablename__': cls.__tablename__ + '_change',
+             '__item_class__': cls} # Added attributes/methods
             )
     setattr(cls, "__change__", change_class)
     return change_class
@@ -108,8 +109,17 @@ class ChangeType(Enum):
     split = 3
     # Merging a label
     merge = 4
-    # TODO: Add others? Like making a subtheme
+    # Adding/removing labels from a theme
+    label_theme = 5
+    # Adding/removing subthemes
+    theme_theme = 6
+    # Labelled
+    labelled = 7
 
+
+# For project-wide history, consider changing this to an Abstract Concrete Class
+# See: https://docs.sqlalchemy.org/en/14/orm/inheritance.html#abstract-concrete-classes
+# This way one can query this class and receive all changes, instead of changes linked to a specific item
 @declarative_mixin
 class Change():
     """
