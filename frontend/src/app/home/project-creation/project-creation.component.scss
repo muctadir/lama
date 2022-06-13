@@ -129,6 +129,7 @@ $orange-shade: #ed5a06;
 
 // Button for adding label types
 #addLabelTypeButton{
+    width: 200px;
     border: 2px solid $grey-shade;
     background-color: $white-shade;
     color: $grey-shade;
@@ -161,17 +162,9 @@ $orange-shade: #ed5a06;
 
 // Both buttons
 .btn.btn-secondary{
-    width: 200px;
+    width: 150px;
     margin-left: 10px;
     margin-right: 10px;
-}
-
-// Cancel project creation button
-#cancelProjectCreationButton{
-    background-color: $white-shade;
-    border: 2px solid;
-    border-color: $grey-shade;
-    color: $grey-shade;
 }
 
 // Cancel project creation button

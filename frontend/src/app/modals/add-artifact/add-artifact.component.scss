@@ -28,3 +28,20 @@
     box-shadow: none;
 }
 
+// Upload file input
+#customFile:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+// Upload button
+#btn-upload{
+    border: none;
+    margin-left:10px;
+}
+
+// Width of the buttonspython --version
+.btn{
+    width: 150px;
+}
+
