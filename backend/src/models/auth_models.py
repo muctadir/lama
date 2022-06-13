@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db, ma # need this in every model
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from enum import Enum
@@ -40,6 +40,8 @@ class User(db.Model):
     status = Column(db.Enum(UserStatus), default=UserStatus.approved, nullable=False)
     # Personal description
     description = Column(Text, default="") 
+    # If the user is a super admin
+    super_admin = Column(Boolean, default=False)
 
     # List of memberships the user is involved in
     memberships = relationship('Membership', back_populates='user')
@@ -53,29 +55,6 @@ class User(db.Model):
     artifacts = association_proxy('labellings', 'artifact')
     # List of highlights the user has made
     highlights = relationship('Highlight', back_populates='user')
-
-    # The discriminator column for the subtypes
-    type = Column(String(32))
-    # Enables polymorphic loading
-    __mapper_args__ = {
-        'polymorphic_identity':'user',
-        'polymorphic_on':type
-    }
-
-
-class SuperAdmin(User):
-    """
-    All super admins are also included in the user table.
-    """
-
-    __tablename__ = 'super_admin'
-    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-
-    # Add more data to super admin class if ever needed:
-
-    __mapper_args__ = {
-        'polymorphic_identity':'super_admin',
-    }
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
 # i.e., do not use this package at the top level
@@ -93,14 +72,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     status = fields.Method("get_approval", deserialize="load_approval")
     # The functions below describe how to serialize/deserialize enums
     def get_approval(self, obj):
-        return obj.type
+        return obj.status.name
     
     def load_approval(self, value):
         return UserStatus[value]
-
-class SuperAdminSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = SuperAdmin
-        include_fk = True
-        load_instance = True

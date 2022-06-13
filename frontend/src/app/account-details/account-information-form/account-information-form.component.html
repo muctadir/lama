@@ -1,28 +1,33 @@
+<!-- Form holding the 5 input fields: username, email, password, password repeated, description -->
 <form>
     <!-- Username field -->
     <div class="form-group">
         <label id="field_text">Username:</label>
+        <!-- The action field, has username filled in if defined and non-empty -->
         <input type="username" class="form-control" id="form-format" placeholder="Username" [formControl]="username" value = "{{ username }}">
     </div>
     <!-- Email field -->
     <div class="form-group">
         <label id="field_text">Email Address:</label>
+        <!-- The email field, has email filled in, if it is defined -->
         <input type="email" class="form-control" placeholder="Email address" [formControl]="email" value = "{{ email }}">
     </div>
     <!-- Password field -->
     <div class="form-group">
         <label id="field_text">Password:</label>
+        <!-- Password field, always empty -->
         <input type="password" class="form-control" placeholder="Password" [formControl]="password">
     </div>
     <!-- Password Verify field -->
     <div class="form-group">
         <label id="field_text">Repeat Password:</label>
+        <!-- Repeated password field, always empty -->
         <input type="password" class="form-control" placeholder="Password" [formControl]="passwordVerify">
     </div>
     <!-- Description field -->
     <div class="form-group">
         <label id="field_text">Description:</label>
-        <textarea class="form-control" rows="4" placeholder="Description" [formControl]="description" maxlength="140">{{ description }}</textarea>
+        <!-- Description field, filled in if the description is non-empty, max 140 characters -->
+        <textarea class="form-control" rows="4" placeholder="Description" [formControl]="description" maxlength="140" id="description">{{ description }}</textarea>
     </div>
-
 </form>

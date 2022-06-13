@@ -7,9 +7,9 @@ from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
-from src.models.item_models import Artifact, LabelType, LabelTypeSchema
-from src.models.project_models import Project, Membership, ProjectSchema, MembershipSchema
+from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.item_models import Artifact, LabelType
+from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
@@ -104,7 +104,7 @@ def get_users(*, user):
 
     # Make a list of all approved users
     all_users = db.session.scalars(select(User).where(User.status==UserStatus.approved,
-            User.type != 'super_admin',
+            User.super_admin == False,
             User.id != user.id)).all()
 
     # Convert the list of users to json
@@ -155,22 +155,20 @@ def create_project(*, user):
     db.session.add(project)
     
     # Get the ids of all users 
-    users = project_info["users"]
-    # Append the users to the project users attribute
-    project.users.extend(users)
+    users = {user['u_id'] : user['admin'] for user in project_info['users']}
+
     # Also append the user that created the project as an admin
-    project.users.append({
-        'u_id' : user.id,
-        'admin' : True
-    })
+    users[user.id] = True
+
     # Get the ids of all super_admins
-    super_admin_ids = db.session.scalars(select(SuperAdmin.id)).all()
+    super_admin_ids = db.session.scalars(select(User.id).where(User.super_admin == True)).all()
     # Add all super admins as admins
     for super_admin_id in super_admin_ids:
-        project.users.append({
-            'u_id' : super_admin_id,
-            'admin' : True
-        })
+        users[super_admin_id] = True
+
+    memberships = [Membership(p_id=project.id, u_id=k, admin=v) for k, v in users.items()]
+
+    db.session.add_all(memberships)
 
     # Get the label types from frontend
     type_names = project_info["labelTypes"]
@@ -649,11 +647,13 @@ def __time_in_seconds(time):
     return (time.hour * 60 + time.minute) * 60 + time.second
 
 # Function that converts a number of seconds into
-# a string showing the time in h:m:s format
+# a string showing the time in hh:mm:ss format
 def __time_to_string(time):
     # List of time values
     time_list = [0, 0, 0]
-
+    # If the time has a null value, return 0
+    if time == None:
+        return "00:00:00"
     # Number of minutes
     minutes = int(time / 60)
     # Number of seconds

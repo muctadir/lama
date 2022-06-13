@@ -2,6 +2,7 @@
 
 <!-- Row for the header -->
 <div class="row">
+    <!-- Places column in the center of the page -->
     <div class="col-8 offset-2 justify-content-center">
         <div id="header">Changing your account information</div>
     </div>
@@ -10,6 +11,7 @@
 <!-- Row for the error message -->
 <div class="row">
     <div class="col offset-2">
+        <!-- Displays the error message, only done when errorMsg is non-empty -->
         <div *ngIf="errorMsg" id="infoMessage">{{errorMsg}}</div>
     </div>
 </div>
@@ -22,26 +24,29 @@
             <!-- Username field -->
             <div class="form-group">
                 <label id="field_text">Username:</label>
-                <input *ngIf="userAccount" type="username" class="form-control" id="form-format" placeholder="Username"  formControlName="username">
+                <!-- Input field for username, only displays if username is non-empty -->
+                <input *ngIf="userAccount" type="username" class="form-control" id="form-format" placeholder="Username" formControlName="username">
             </div>
             <!-- Email field -->
             <div class="form-group">
                 <label id="field_text">Email Address:</label>
+                <!-- Input field for email, only displays if email is non-empty -->
                 <input *ngIf="userAccount" type="email" class="form-control" placeholder="Email address" formControlName="email">
             </div>
             <!-- Description field -->
             <div class="form-group">
                 <label id="field_text">Description:</label>
-                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description"></textarea>
+                <!-- Input field for description, only displays if description is non-empty, max 140 characters -->
+                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description" id="description"></textarea>
             </div>
         </form>
-
     </div>
 </div>
 
 <!-- Row for changing password -->
 <div class="row text-end">
     <div class="col">
+        <!-- Displays change password text, when clicked moves to the change password page through emitting modeChangeEvent -->
         <a (click)="modeChangeEvent.emit(2)"><span id="orangUnderlinedText">Change password</span></a>
     </div>
     <div class="col-2"></div>
@@ -50,10 +55,10 @@
 <!-- Row for buttons -->
 <div class="row">        
     <div class="col-8 offset-2 text-right">
-        <!-- Edit button -->
+        <!-- Edit button, when clicked calls the changeInformation function -->
         <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
-        <!-- Cancel button -->
-        <button (click)="modeChangeEvent.emit(0)" class="btn btn-danger editButtons" id="cancelEditButton">Cancel</button>
+        <!-- Cancel button, when clicked moves to the account information page due to modeChangeEvent emitted -->
+        <button (click)="modeChangeEvent.emit(0)" class="btn btn-secondary editButtons" id="cancelEditButton">Cancel</button>
     </div>
 </div>
 
