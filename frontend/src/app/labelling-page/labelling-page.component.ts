@@ -188,9 +188,8 @@ export class LabellingPageComponent implements OnInit {
     };
     console.log(dict);
     await this.labellingDataService.postLabelling(dict);
-    window.location.reload();
+    this.ngOnInit();
   }
-
   /**
    * Error function for unimplemented features.
    */
