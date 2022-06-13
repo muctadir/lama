@@ -1,4 +1,6 @@
 # Author: Eduardo Costa Martins
+from pydoc import describe
+from backend.src.models.change_models import Change
 from src import db
 from src.exc import ChangeSyntaxError
 from src.models.item_models import Artifact, Theme, Label
@@ -88,13 +90,62 @@ def __parse_merge(change, username):
 
 """
 A label_theme string should be of the format:
-"'added'|'removed' ; "
+"'added'|'removed' ; <comma separated label/theme ids>"
 """
 def __parse_label_theme(change, username):
-    pass
+    item_type = change.item_class_name
+    description = change.description.split(' ; ')
+    if len(description) != 2:
+        raise ChangeSyntaxError
+    ids = description[1].split(', ')
+    if ids[0].strip() == "":
+        raise ChangeSyntaxError
+    match description[0]:
+        case 'added':
+            if item_type == 'Label':
+                return f"{username} added Label {change.i_id} to theme{'s' if len(ids[1]) > 1 else ''} {description[1]}"
+            else:
+                return f"{username} added Label{'s' if len(ids[1]) > 1 else ''} {description[1]} to theme {change.i_id}"
+        case 'removed':
+            if item_type == 'Label':
+                return f"{username} removed Label {change.i_id} from theme{'s' if len(ids[1]) > 1 else ''} {description[1]}"
+            else:
+                return f"{username} removed Label{'s' if len(ids[1]) > 1 else ''} {description[1]} from theme {change.i_id}"
+        case _:
+            raise ChangeSyntaxError
 
+"""
+A theme_theme string should be of the format:
+'sub'|'super' ; <comma separated theme ids>
+"""
 def __parse_theme_theme(change, username):
-    pass
+    description = change.description.split(' ; ')
+    if len(description) != 2:
+        raise ChangeSyntaxError
+    ids = description[1].split(', ')
+    if ids[0].strip() == "":
+        raise ChangeSyntaxError
+    return f"{username} made Theme {change.i_id} a {description[0]}theme of theme{'s' if len(ids[1]) > 1 else ''} {description[1]}"
 
+"""
+A labelled string should be of the format:
+'label' ; label_type_name ; label_id
+'edit'|'merge' ; label_type_name ; old_label_id ; new_label_id
+"""
 def __parse_labelled(change, username):
-    pass
+    description = change.description.split(' ; ')
+    match description[0]:
+        case 'label':
+            if len(description) != 3:
+                raise ChangeSyntaxError
+            return f"{username} labelled Artifact {change.i_id} with Label {description[2]} of type {description[1]}"
+        case 'edit':            
+            if len(description) != 4:
+                raise ChangeSyntaxError
+            return f"{username} changed Artifact {change.i_id}'s Label of type {description[1]} from {description[2]} to {description[3]}"
+        case 'merge':
+            if len(description) != 4:
+                raise ChangeSyntaxError
+            return f"Artifact {change.i_id}'s Label of type {description[1]} changed from {description[2]} to {description[3]} as a result of a merge {username} made"
+        case _:
+            raise ChangeSyntaxError
