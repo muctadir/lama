@@ -152,3 +152,18 @@ $orange-shade: #ed5a06;
     color: $orange-shade;   
     font-size: 30px;
 }
+
+// Removes the arrow from the dropdown
+.dropdown-toggle::after {
+    display:none;
+}
+
+// Sets the layout of the buttons in the dropdown menu for account settings
+.button-layout {
+    font-size: 17px;
+}
+
+// When hovering the account settings icon, cursor changes 
+#account-icon {
+    cursor: pointer;
+}
