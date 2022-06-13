@@ -6,3 +6,5 @@ from src.routes.label_type_routes import label_type_routes
 from src.routes.labelling_routes import labelling_routes
 from src.routes.account_routes import account_routes
 from src.routes.theme_routes import theme_routes
+from src.routes.artifact_routes import artifact_routes
+from src.routes.conflict_routes import conflict_routes

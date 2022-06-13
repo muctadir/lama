@@ -10,7 +10,7 @@ import { HomePageComponent } from './home/home-page/home-page.component';
 import { ProjectCreationComponent } from './home/project-creation/project-creation.component';
 import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
-import { ProjectComponent} from './project/project.component';
+import { ProjectComponent} from './project/project-page/project.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { StatsComponent } from './stats/stats.component';
 import { LabellingPageComponent } from './labelling-page/labelling-page.component';
@@ -19,11 +19,10 @@ import { ArtifactManagementPageComponent } from './artifact/artifact-management-
 import { SingleArtifactViewComponent } from './artifact/single-artifact-view/single-artifact-view.component';
 import { LabelManagementComponent } from './label/label-management/label-management.component';
 import { IndividualLabelComponent } from './label/individual-label/individual-label.component';
-import { EditThemeComponent } from './theme/edit-theme/edit-theme.component';
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
-import { CreateThemeComponent } from './theme/create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
-
+import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 /* All the routes within the application */
 const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -43,14 +42,15 @@ const routes: Routes = [
       {path: 'labelmanagement', component: LabelManagementComponent},
       {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
       {path: 'thememanagement', component: ThemeManagementComponent},
-      {path: 'createTheme', component: CreateThemeComponent},
+      {path: 'createTheme', component: ThemeInfoComponent},
       {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
-      {path: 'editTheme', component: EditThemeComponent},
+      {path: 'editTheme/:themeId', component: ThemeInfoComponent},
       {path: 'conflict', component: ConflictPageComponent},
       {path: 'conflictResolution', component: ConflictResolutionComponent},
+      {path: 'settings', component: ProjectSettingsComponent},
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
-    ]}];
-    //{path: '**', redirectTo: 'login', pathMatch: 'full'}];
+    ]},
+    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
