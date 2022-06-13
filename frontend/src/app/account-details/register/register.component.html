@@ -1,20 +1,20 @@
 <!-- Jarl Jansen -->
-
 <!-- Main container holding all the register page content-->
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <div class="row">
-        <!-- filler column -->
+        <!-- Filler column -->
         <div class="col-2"></div>
-        <!-- column with main content -->
+        <!-- Column with main content -->
         <div class="col-8 d-flex justify-content-center" id="middle-col">
             <div>
                 <!-- Form fields -->
                 <div id="header">Please enter your info down below:</div>
+                <!-- Component with 5 input fields, username, email, password, repeated password, description -->
                 <app-account-information-form></app-account-information-form>
 
-                <!-- Potential error messages that should be displayed -->
+                <!-- Potential error messages that should be displayed, only displayed when non-empty -->
                 <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
-                <!-- Button -->
+                <!-- Button for registering calls onRegister function when clicked-->
                 <div>
                     <button type="submit" class="btn btn-primary" id="register-button" (click)="onRegister()">Register</button>
                     <!-- Link to the login page -->
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <!-- filler column -->
+        <!-- Filler column -->
         <div class="col-2 offset-2 justify-content-center">
         </div>
     </div>

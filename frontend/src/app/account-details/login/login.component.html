@@ -5,7 +5,9 @@
 
     <!-- Row which will fill the space above the content -->
     <div class="row flex-grow-1">
+        <!-- Fills leftmost column -->
         <div class="col-5" id="left_fill"></div>
+        <!-- fills rightmost column -->
         <div class="col-7" id="right_fill"></div>
     </div>
   
@@ -28,34 +30,35 @@
             <div class="container">
                 <div class="row">
                     <div class="col-2"></div>
-
                     <!-- Column with the actual content -->
                     <div class="col-6">
-
                         <!-- Text above the text-fields -->
                         <div id="user_login">User Login</div>
-                        <!-- Forms for log-in information -->
+                        <!-- Forms for log-in information into a formGroup -->
                         <form [formGroup]="loginForm">
                             <!-- Username field -->
                             <div class="form-group">
                                 <label id="field_text">Username:</label>
+                                <!-- Input field for the username -->
                                 <input type="username" class="form-control" placeholder="Username" formControlName="username">
                             </div>
                             <!-- Password field -->
                             <div class="form-group">
                                 <label id="field_text">Password:</label>
+                                <!-- Input field for the password -->
                                 <input type="password" class="form-control" placeholder="Password" formControlName="password">
                             </div>
-                            <!-- Potential error messages that should be displayed -->
+                            <!-- Potential error messages that should be displayed, displayed if non-empty -->
                             <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
-                            <!-- Button -->
+                            <!-- Button for loggin in, calls loginSubmit on click -->
                             <button type="submit" class="btn btn-primary" id="login_button" (click)="loginSubmit()">Login</button>
                         </form>
                         
-                        <!-- Link to registration page -->
+                        <!-- Displays create an account text, when clicked redirects to register page -->
                         <div><a [routerLink]="['/register']" id="create-account">Create an account</a></div>
 
                     </div>
+                    <!-- Column for spacing -->
                     <div class="col-4"></div>
                 </div>
             </div>
@@ -64,7 +67,9 @@
   
     <!-- Row which will fill the space below the content -->
     <div class="row flex-grow-1">
+        <!-- Fills leftmost column -->
         <div class="col-5" id="left_fill"></div>
+        <!-- Fills rightmost column -->
         <div class="col-7" id="right_fill"></div>
     </div>
   </div>

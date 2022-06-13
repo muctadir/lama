@@ -160,3 +160,8 @@ body{
 .button-layout {
     font-size: 17px;
 }
+
+// When hovering the account settings icon, cursor changes 
+#account-icon {
+    cursor: pointer;
+}
