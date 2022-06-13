@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
-import axios from 'axios';
+import { ThemeDataService } from 'app/services/theme-data.service';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -22,7 +22,7 @@ export class ThemeManagementComponent {
   themes: Array<Theme>;
 
   //  Project id
-  p_id: string;
+  p_id: number;
 
   // Variables for routing
   url: string;
@@ -33,7 +33,7 @@ export class ThemeManagementComponent {
     search_term: ''
   });
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {
+  constructor(private router: Router, private formBuilder: FormBuilder, private themeDataService: ThemeDataService) {
     // Initialize the array for the themes
     this.themes = new Array<Theme>();
     // Gets the url from the router
@@ -41,7 +41,7 @@ export class ThemeManagementComponent {
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = this.routeService.getProjectID(this.url);
+    this.p_id = Number(this.routeService.getProjectID(this.url));
   }
 
   /**
@@ -63,49 +63,13 @@ export class ThemeManagementComponent {
   }
 
   ngOnInit(): void {
+    // Get the theme information from the request handler
+    this.get_theme_management_info();
+  }
 
-    // Get all themes
-    let token: string | null = sessionStorage.getItem('ses_token');
-    if (typeof token === "string") {
-
-      // Get the informtion needed from the back end
-      axios.get('http://127.0.0.1:5000/theme/theme-management-info', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          "p_id": this.p_id
-        }
-      })
-        // When there is a response get the projects
-        .then(response => {
-          // Get the response data
-          let themes = response.data;
-
-          // For each theme in the list
-          for (let theme of themes) {
-
-            // Get the theme information
-            let themeJson = theme["theme"];
-            themeJson["numberOfLabels"] = theme["number_of_labels"];
-
-            // Create a new theme object with all information
-            let newTheme: Theme = new Theme(themeJson['id'], themeJson["name"], themeJson["description"]);
-
-            // Put labels in the theme
-            newTheme.setNumberOfLabels(themeJson["numberOfLabels"])
-
-            // Add theme to list
-            this.themes.push(newTheme);
-          }
-        })
-        // If there is an error
-        // TODO change
-        .catch(error => {
-          console.log(error.response)
-        });
-
-    }
+  // Function for getting the theme info
+  async get_theme_management_info(): Promise<void> {
+    this.themes = await this.themeDataService.theme_management_info(this.p_id);
   }
 
   notImplemented(): void {

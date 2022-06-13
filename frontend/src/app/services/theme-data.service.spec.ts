@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Theme } from 'app/classes/theme';
 
 import { ThemeDataService } from './theme-data.service';
 

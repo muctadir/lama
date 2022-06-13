@@ -232,7 +232,7 @@ export class ThemeInfoComponent implements OnInit {
   addLabel(label: Label): void {
     // Check if the label was already added
     for (var addedLabel of this.addedLabels){
-      if (addedLabel.getName() == label.getName()){
+      if (addedLabel.getId() == label.getId()){
         // Then return
         return;
       }
@@ -245,7 +245,7 @@ export class ThemeInfoComponent implements OnInit {
   addSubtheme(subTheme:any): void {
     // Check if the sub-theme was already added
     for (var addedSubTheme of this.addedSubThemes){
-      if (addedSubTheme == subTheme){
+      if (addedSubTheme.getId() == subTheme.getId()){
         // Then return
         return;
       }
