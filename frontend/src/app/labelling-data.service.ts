@@ -65,10 +65,9 @@ export class LabellingDataService {
     const result = new Label(
       response.label.id,
       response.label.name,
-      response.label.desc,
+      response.label.description,
       response.label_type
     );
-
     // New array of themes
     let ThemeArray = new Array<Theme>();
 
