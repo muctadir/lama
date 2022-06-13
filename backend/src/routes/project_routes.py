@@ -3,13 +3,14 @@
 # Ana-Maria Olteniceanu
 # Linh Nguyen
 
+from asyncio.windows_events import NULL
 from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus, SuperAdmin
-from src.models.item_models import Artifact, LabelType, LabelTypeSchema
-from src.models.project_models import Project, Membership, ProjectSchema, MembershipSchema
+from src.models.item_models import Artifact, LabelType
+from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
@@ -649,11 +650,13 @@ def __time_in_seconds(time):
     return (time.hour * 60 + time.minute) * 60 + time.second
 
 # Function that converts a number of seconds into
-# a string showing the time in h:m:s format
+# a string showing the time in hh:mm:ss format
 def __time_to_string(time):
     # List of time values
     time_list = [0, 0, 0]
-
+    # If the time has a null value, return 0
+    if time == NULL:
+        return "00:00:00"
     # Number of minutes
     minutes = int(time / 60)
     # Number of seconds
