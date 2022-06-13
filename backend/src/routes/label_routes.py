@@ -18,7 +18,7 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @in_project
 def create_label():
 
-    args = request.json
+    args = request.json['params']
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
 
