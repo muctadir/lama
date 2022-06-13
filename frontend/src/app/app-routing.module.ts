@@ -9,7 +9,10 @@ import { RegisterComponent } from './account-details/register/register.component
 import { AccountComponent } from './account-details/account/account.component';
 // Home page imports
 import { HomePageComponent } from './home/home-page/home-page.component';
+// Project creation imports
 import { ProjectCreationComponent } from './home/project-creation/project-creation.component';
+// Project edit imports
+import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 // Conflict page imports
 import { ConflictPageComponent } from './conflict/conflict-page/conflict-page.component';
 import { ConflictResolutionComponent } from './conflict/conflict-resolution/conflict-resolution.component';
@@ -31,7 +34,6 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
-import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 /* All the routes within the application */
 const routes: Routes = [
   // Default path to login
@@ -49,6 +51,8 @@ const routes: Routes = [
   {path: 'project/:projectId', component: ProjectComponent, children: [
     // Default is stats page
     {path: '', redirectTo: 'stats', pathMatch: 'full'},
+    // Project settings page
+    {path: 'settings', component: ProjectSettingsComponent},
     // Stats page route
     {path: 'stats', component: StatsComponent},
     // Labelling page route
