@@ -39,11 +39,17 @@ export class LabelManagementComponent {
   // Open the modal and merge lables
   openMerge() {
     const modalRef = this.modalService.open(MergeLabelFormComponent,  { size: 'xl'});
+    modalRef.result.then(() => {
+      this.ngOnInit();
+    });
   }
 
   // Open the modal and create a new label
   openCreate() {
     const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl'});
+    modalRef.result.then(() => {
+      this.ngOnInit();
+    });
   }
 
   async getLabels(p_id: number): Promise<void> {
