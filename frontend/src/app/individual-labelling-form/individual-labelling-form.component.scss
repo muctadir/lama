@@ -1,18 +1,3 @@
-#pageTitle {
-  padding-top: 10px;
-  border-bottom: 1px;
-  border-bottom-style: solid;
-}
-
-#artifactId, #artifactButtons {
-  font-size: 36px;
-  letter-spacing: 1px;
-}
-#artifactButtons {
-  text-align: right;
-}
-
-
 .labelTypeTitle {
   font-size: 17px;
   letter-spacing: 1px;
@@ -29,41 +14,6 @@
   overflow-y: scroll;
 }
 
-.artifactContainer {
-  max-height: 30vh;
-  border-bottom: 1px;
-  border-bottom-style: solid;
-}
-
-div.artifactContainer{
-  //margin: 4px 120px 4px 4px;
-  padding-bottom: 4px;
-  min-height: 40vh;
-  overflow-y: scroll;
-}
-
-#names{
-  padding-top: 3px;
-  padding-bottom: 5px;
-}
-
-
-// Scrollbar
-::-webkit-scrollbar {
-  width: 10px;
-}
-// Scrollbar background
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-  background: #38474e;
-  border-radius: 10px;
-}
-
-
 /*TODO: For some reason the variable defined in the root stylesheet is not working*/
 .labelDescription {
   border-left: 2px solid #ed5a06;
@@ -77,29 +27,8 @@ div.artifactContainer{
   max-height: 40vh;
 }
 
-#body{
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
 #remark{
   max-height: 29vh;
-}
-
-#butt{
-  margin-top: 5px;
-  float: right;
-  float: bottom;
-  position: fixed;
-}
-
-#split1, #split2{
-  color: #ed5a06;
-}
-
-#skit-button {
-  margin-left:10px;
 }
 
 #labelling-row {
