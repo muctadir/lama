@@ -128,7 +128,7 @@ def add_new_artifacts():
     except OperationalError:
         return make_response('Internal Server Error', 503)
 
-    return make_response("Route accessed")
+    return make_response(identifier)
 
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
