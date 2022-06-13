@@ -4,7 +4,8 @@
     <!-- Conatiner for the top row -->
     <div class="container" id="topBarRow"> 
         <div class="row">
-            <p class="header"> Edit Project </p>
+            <p *ngIf="!isInEditMode" class="header"> Project Settings </p>
+            <p *ngIf="isInEditMode" class="header"> Edit Project </p>
         </div>
     </div>
 
@@ -69,10 +70,27 @@
                                 </div>
                             </div>
                             
-                            <!-- Name and checkbox per member of the project -->
+                            <!-- Row for the current user on top-->
+                            <div class="row align-items-center">
+                                <!-- Column for delete icon -->
+                                <div class="col-1"></div>
+
+                                <!-- Column for username -->
+                                <div class="col-7">
+                                    {{ allProjectMembers[currentUserId].getUsername() }}
+                                </div>
+
+                                <!-- Column for checkbox -->
+                                <div class="col-4 checkboxCol">
+                                    <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + currentUserId }}" [checked]="adminMembers[currentUserId]" disabled="true">
+                                </div>                                        
+                            </div>
+
+                            <!-- Name and checkbox per member (other than current user) of the project -->
                             <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
-                                <!-- Row for the delete, name and project admin -->
-                                <div class="row align-items-center">
+                                <!-- Row for the delete, name and project admin of other users -->
+                                <div *ngIf="member.getId() != currentUserId" class="row align-items-center">
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
                                         <!-- x icon -->
@@ -87,8 +105,7 @@
                                     <!-- Column for checkbox -->
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                        <!-- TODO FIX THE ID -->
-                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMembers[member.getId()]">
+                                        <input *ngIf="member.getId() != currentUserId" type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMembers[member.getId()]">
                                     </div>                                        
                                 </div>
                             </label>
@@ -184,11 +201,6 @@
                        </div>
                        <!-- Col for adding users button -->
                        <div class="col-2">
-                           <!-- Button for adding new members, show error since not in edit mode -->
-                           <button class="btn" type="button" id="addMembersButton">
-                               <!-- Members icon -->
-                               <i class="bi bi-plus members"></i>
-                           </button>
                        </div>
                    </div>
 
@@ -205,10 +217,24 @@
                                 </div>
                             </div>
                            
-                            <!-- Name and checkbox per member of the project -->
+                            <!-- Row for the current user on top-->
+                            <div class="row align-items-center">
+                                <!-- Column for username -->
+                                <div class="col-8">
+                                    {{ allProjectMembers[currentUserId].getUsername() }}
+                                </div>
+
+                                <!-- Column for checkbox -->
+                                <div class="col-4 checkboxCol">
+                                    <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + currentUserId }}" [checked]="adminMembers[currentUserId]" disabled="true">
+                                </div>                                        
+                            </div>
+
+                            <!-- Name and checkbox per other members of the project -->
                             <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
-                               <!-- Row for the delete, name and project admin -->
-                                <div class="row align-items-center">
+                               <!-- Row for the delete, name and project admin of other members-->
+                                <div *ngIf="member.getId() != currentUserId" class="row align-items-center">
                                     <!-- Column for username -->
                                     <div class="col-8">
                                         {{ member.getUsername() }}
@@ -217,7 +243,6 @@
                                    <div class="col-4 checkboxCol">
                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
                                        <!-- Checkbox disabled since not in edit mode-->
-                                       <!-- TODO FIX THE ID -->
                                        <input type="checkbox" id="{{ 'projectAdminCheckBoxHome-' + member.getId()}}" [checked]="adminMembers[member.getId()]" disabled="true">
                                     </div>                                        
                                 </div>
@@ -261,7 +286,7 @@
                 
         <div class="row justify-content-end">
             <!-- Edit button -->
-            <button *ngIf="!isInEditMode && !currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
+            <button *ngIf="!isInEditMode && !currentProject.getFrozen() && adminMembers[currentUserId]" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
                 Edit
             </button>
             <button *ngIf="currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="changeFreezeProject(false, true)">
