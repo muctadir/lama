@@ -22,7 +22,7 @@ import { IndividualLabelComponent } from './label/individual-label/individual-la
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
-import { LoginGuardService } from './login-guard.service';
+import { LoginGuardService } from './services/login-guard.service';
 
 /* All the routes within the application */
 const routes: Routes = [

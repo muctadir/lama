@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { RequestHandler } from './classes/RequestHandler';
+import { RequestHandler } from '../classes/RequestHandler';
 
 @Injectable({
   providedIn: 'root'
