@@ -90,8 +90,8 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
-    this.getRandomArtifact(this.p_id);
-    this.getLabelTypesWithLabels(this.p_id);
+    this.getRandomArtifact();
+    this.getLabelTypesWithLabels();
   }
 
   /**
@@ -103,26 +103,26 @@ export class LabellingPageComponent implements OnInit {
    * 5. Puts labellers into variable
    * @param p_id
    */
-  async getRandomArtifact(p_id: number): Promise<void> {
+  async getRandomArtifact(): Promise<void> {
     try {
-      const artifact = await this.artifactDataService.getRandomArtifact(p_id);
+      const artifact = await this.artifactDataService.getRandomArtifact(this.p_id);
       this.artifact = artifact;
     } catch {
-      this.router.navigate(['/project', p_id]);
+      this.router.navigate(['/project', this.p_id]);
     }
 
     try {
       const labellers = await this.artifactDataService.getLabellers(
-        p_id,
+        this.p_id,
         this.artifact.getId()
       );
       this.labellers = labellers;
     } catch {
-      this.router.navigate(['/project', p_id]);
+      this.router.navigate(['/project', this.p_id]);
     }
 
     if (this.artifact.getId() === -1) {
-      this.router.navigate(['/project', p_id]);
+      this.router.navigate(['/project', this.p_id]);
     }
   }
 
@@ -130,13 +130,13 @@ export class LabellingPageComponent implements OnInit {
    * Function for getting the label and labeltypes
    * @param p_id
    */
-  async getLabelTypesWithLabels(p_id: number): Promise<void> {
+  async getLabelTypesWithLabels(): Promise<void> {
     try {
       const labelTypes =
-        await this.labellingDataService.getLabelTypesWithLabels(p_id);
+        await this.labellingDataService.getLabelTypesWithLabels(this.p_id);
       this.labelTypes = labelTypes;
     } catch {
-      this.router.navigate(['/project', p_id]);
+      this.router.navigate(['/project', this.p_id]);
     }
   }
 
@@ -146,7 +146,7 @@ export class LabellingPageComponent implements OnInit {
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modal.result.then((data) => {
-      this.getLabelTypesWithLabels(this.p_id);
+      this.getLabelTypesWithLabels();
     });
   }
 
@@ -164,18 +164,14 @@ export class LabellingPageComponent implements OnInit {
    * @trigger click on label
    */
   reRouter(): void {
-    // Use reroutingService to obtain the project ID
-    let p_id = this.routeService.getProjectID(this.url);
-
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'labelling-page']);
+    this.router.navigate(['/project', this.p_id, 'labelling-page']);
   }
 
   /**
    *
    */
   async submit(): Promise<void> {
-    let p_id = this.routeService.getProjectID(this.url);
     let resultArray: Array<Object> = Array<Object>();
 
     this.labellings.controls.forEach((el: any) => {
@@ -188,7 +184,7 @@ export class LabellingPageComponent implements OnInit {
     });
 
     const dict = {
-      p_id: parseInt(p_id),
+      p_id: this.p_id,
       resultArray: resultArray,
     };
     try {
