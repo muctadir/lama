@@ -16,6 +16,9 @@ from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
+from src.routes.change_routes import artifact_changes
+
+
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
 HOST = environ.get("HOST")
@@ -56,6 +59,16 @@ def db_init():
         description="Auto-generated super admin"
     ))
     db.session.commit()
+
+# TODO: Add db reset (this always breaks the migrations in my experience)
+
+# Fills the user table with a bunch of random users.
+# TODO: Update this to match the new database models. Also, this should probably
+# be defined in another file. (Testing setup needs to reuse it as well.)
+@db_opt.command("test")
+def test(): 
+    artifact_changes(1)
+
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing

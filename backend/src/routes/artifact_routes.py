@@ -10,7 +10,7 @@ from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
-from src.models.project_models import Membership
+from src.models.change_models import ChangeType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
 from src.app_util import login_required, in_project
@@ -90,7 +90,7 @@ def get_artifacts(*, user, membership):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 @in_project
-def add_new_artifacts():
+def add_new_artifacts(*, user):
     # Get args from request 
     args = request.json['params']
     # What args are required
@@ -121,11 +121,16 @@ def add_new_artifacts():
 
     # Add the artifact to the database
     db.session.add_all(artifact_object)
+
+    artifact_ids = db.session.scalars(select(Artifact.id).where(Artifact.identifier == identifier)).all()
+
+    __add_artifact_creations(artifact_ids, user.id, args['p_id'])
     
     # Try commiting the artifacts
     try:
         db.session.commit()
-    except OperationalError:
+    except OperationalError as e:
+        print(e)
         return make_response('Internal Server Error', 503)
 
     return make_response("Route accessed")
@@ -329,3 +334,17 @@ def generate_artifact_identifier(p_id):
     
     # Return the identifier
     return identifier_upper[start:length]
+
+def __add_artifact_creations(artifact_ids, u_id, p_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+    
+    creations = [ArtifactChange(
+        u_id=u_id,
+        p_id=p_id,
+        i_id=a_id,
+        change_type=ChangeType.create,
+        description=''
+    ) for a_id in artifact_ids]
+    
+    db.session.add_all(creations)
