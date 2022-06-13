@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LabellingTypeComponent } from './labelling-type.component';
+import { IndividualLabellingForm } from './individual-labelling-form.component';
 
 describe('LabellingTypeComponent', () => {
-  let component: LabellingTypeComponent;
-  let fixture: ComponentFixture<LabellingTypeComponent>;
+  let component: IndividualLabellingForm;
+  let fixture: ComponentFixture<IndividualLabellingForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LabellingTypeComponent ]
+      declarations: [ IndividualLabellingForm ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LabellingTypeComponent);
+    fixture = TestBed.createComponent(IndividualLabellingForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

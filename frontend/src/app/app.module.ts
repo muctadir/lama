@@ -33,7 +33,7 @@ import { EditThemeComponent } from './edit-theme/edit-theme.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LabellingTypeComponent } from './labelling-type/labelling-type.component';
+import { IndividualLabellingForm } from './individual-labelling-form/individual-labelling-form.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +65,7 @@ import { LabellingTypeComponent } from './labelling-type/labelling-type.componen
     CreateThemeComponent,
     SingleThemeViewComponent,
     EditThemeComponent,
-    LabellingTypeComponent
+    IndividualLabellingForm
   ],
   imports: [
     BrowserModule,

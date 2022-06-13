@@ -4,11 +4,11 @@ import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
 
 @Component({
-  selector: 'app-labelling-type',
-  templateUrl: './labelling-type.component.html',
-  styleUrls: ['./labelling-type.component.scss']
+  selector: 'app-individual-labelling-form',
+  templateUrl: './individual-labelling-form.component.html',
+  styleUrls: ['./individual-labelling-form.component.scss']
 })
-export class LabellingTypeComponent implements OnInit {
+export class IndividualLabellingForm implements OnInit {
   @Input() labelType?: LabelType;
   @Input() parentForm?: FormArray;
   selectedDesc: string | undefined;

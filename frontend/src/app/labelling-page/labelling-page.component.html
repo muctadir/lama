@@ -48,9 +48,9 @@
             </div>
             <div class="col-12" id="labelThing">
                 <div *ngFor="let labelType of labelTypes" id="labelling-row">
-                    <app-labelling-type [labelType]="labelType"
+                    <app-individual-labelling-form [labelType]="labelType"
                                         [parentForm]="labellings">
-                    </app-labelling-type>
+                    </app-individual-labelling-form>
                 </div>
             </div>
 

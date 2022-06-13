@@ -24,7 +24,6 @@ import { EditThemeComponent } from './edit-theme/edit-theme.component';
 import { ThemeManagementComponent } from './theme-management/theme-management.component';
 import { CreateThemeComponent } from './create-theme/create-theme.component';
 import { SingleThemeViewComponent } from './single-theme-view/single-theme-view.component';
-import { LabellingTypeComponent } from './labelling-type/labelling-type.component';
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -34,7 +33,6 @@ const routes: Routes = [
     {path: 'testing', component: TestingComponent},
     {path: 'account', component: AccountComponent},
     {path: 'home', component: HomePageComponent},
-    {path: 'lt', component: LabellingTypeComponent},
     {path: 'createProject', component:ProjectCreationComponent},
     {path: 'project/:projectId', component: ProjectComponent, children: [
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
