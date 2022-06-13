@@ -142,4 +142,18 @@ export class ArtifactDataService {
       "admin": response["admin"]
     }
   }
+
+  // Function for searching in backend
+  async search(searchWords: string, p_id: number): Promise<Array<StringArtifact>>{
+
+    // Get the artifact information from the back end
+    let response = await this.requestHandler.get('/artifact/search', { 'p_id': p_id, "search_words": searchWords}, true);
+    
+    // Get the artifact from the response
+    let artifacts = response;
+
+    // Return the record
+    return (artifacts);
+  }
+
 }

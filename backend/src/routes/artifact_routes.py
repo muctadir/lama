@@ -200,7 +200,7 @@ def search(*, user, membership):
         # Get all artifacts the user has labelled
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
-                Labelling.a_id == Artifact.a_id,
+                Labelling.a_id == Artifact.id,
                 Labelling.u_id == user.id)
         ).all()
 
@@ -306,16 +306,15 @@ def generate_artifact_identifier(p_id):
     h = blake2b()
 
     # Seed of the hash
-    identifiers = db.session.scalar(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id))
-    print(identifiers)
+    identifiers = db.session.scalar(select(func.count(distinct(Artifact.identifier))).where(Artifact.p_id==p_id))
     # Generate the artifact identifier
-    h.update(bytes([len(identifiers)]))
+    h.update(bytes([identifiers]))
 
     # Get the string source of the identifier
     identifier_upper = h.hexdigest().upper()
 
     # Get a unique identifier
-    while identifier_upper[start:length] in identifiers:
+    while identifier_upper[start:length + start] in identifiers:
         start += 1
     
     # Return the identifier
