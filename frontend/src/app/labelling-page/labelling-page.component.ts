@@ -212,7 +212,7 @@ export class LabellingPageComponent implements OnInit {
       await this.labellingDataService.postLabelling(dict);
       this.ngOnInit();
     } catch (err) {
-      this.router.navigate(['project', this.p_id]);
+      this.submitMessage = 'Database error while submitting labelling.';
     }
   }
   /**
