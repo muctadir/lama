@@ -9,19 +9,21 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelFormComponent } from 'app/label-form/label-form.component';
-import { Theme } from 'app/classes/theme'
+import { Theme } from 'app/classes/theme';
 
 @Component({
   selector: 'app-individual-label',
   templateUrl: './individual-label.component.html',
-  styleUrls: ['./individual-label.component.scss']
+  styleUrls: ['./individual-label.component.scss'],
 })
 export class IndividualLabelComponent {
   routeService: ReroutingService;
   label: Label;
   url: string;
-  labellings: any;
+  labellings: Array<any>;
   themes: Array<Theme>;
+  p_id: number;
+  label_id: number;
 
   /**
    * Constructor which:
@@ -30,14 +32,18 @@ export class IndividualLabelComponent {
    * 3. get url
    * 4. initialize labellings variable
    */
-  constructor(private modalService: NgbModal,
+  constructor(
+    private modalService: NgbModal,
     private router: Router,
-    private labellingDataService: LabellingDataService) {
-      this.label = new Label(-1,"","","");
-      this.routeService = new ReroutingService();
-      this.url = this.router.url;
-      this.labellings = {};
-      this.themes = new Array<Theme>();
+    private labellingDataService: LabellingDataService
+  ) {
+    this.label = new Label(-1, '', '', '');
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.labellings = new Array<any>();
+    this.themes = new Array<Theme>();
+    this.p_id = parseInt(this.routeService.getProjectID(this.url));
+    this.label_id = parseInt(this.routeService.getLabelID(this.url));
   }
 
   /**
@@ -47,29 +53,40 @@ export class IndividualLabelComponent {
    *  3. the label loading is started
    */
   ngOnInit(): void {
-    let p_id = parseInt(this.routeService.getProjectID(this.url));
-    let labelID = parseInt(this.routeService.getLabelID(this.url));
-    this.getLabel(p_id, labelID);
-    this.getLabellings(p_id, labelID);
+    this.getLabel(this.p_id, this.label_id);
+    this.getLabellings(this.p_id, this.label_id);
   }
 
   /**
    * Async function which gets the label
    */
   async getLabel(p_id: number, labelID: number): Promise<void> {
-    const label = await this.labellingDataService.getLabel(p_id, labelID);
-    this.label = label;
-    const themes = this.label.getThemes()
-    if (themes !== undefined) {
-      this.themes = themes;
+    try {
+      const label = await this.labellingDataService.getLabel(p_id, labelID);
+      this.label = label;
+    } catch (e) {
+      this.router.navigate(['project', this.p_id]);
     }
-
-    console.log(this.label)
+    try {
+      const themes = this.label.getThemes();
+      if (themes !== undefined) {
+        this.themes = themes;
+      }
+    } catch (e) {
+      this.router.navigate(['project', this.p_id]);
+    }
   }
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
-    const labellings = await this.labellingDataService.getLabelling(p_id, labelID);
-    this.labellings = labellings;
+    try {
+      const labellings = await this.labellingDataService.getLabelling(
+        p_id,
+        labelID
+      );
+      this.labellings = labellings;
+    } catch (edit) {
+      this.router.navigate(['project', this.p_id]);
+    }
   }
 
   /**
@@ -78,21 +95,19 @@ export class IndividualLabelComponent {
    *
    * @trigger back button is pressed
    */
-  reRouter() : void {
-    // Use reroutingService to obtain the project ID
-    let p_id = this.routeService.getProjectID(this.url);
-
+  reRouter(): void {
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'labelmanagement']);
+    this.router.navigate(['/project', this.p_id, 'labelmanagement']);
   }
 
   /**
    * Opens modal to edit label
    */
   openEdit() {
-    const modalRef = this.modalService.open(LabelFormComponent,  { size: 'xl'});
+    const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modalRef.componentInstance.label = this.label;
+    modalRef.result.then(() => {
+      this.ngOnInit();
+    });
   }
-
-
 }
