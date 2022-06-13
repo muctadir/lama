@@ -22,7 +22,7 @@ export class SortableThemeHeader {
   @Input() sortable: sortColumn = '';
   @Input() direction: sortDirection = '';
   @Output() sort = new EventEmitter<sortEvent>();
-  
+
   rotate() {
     this.direction = rotate[this.direction];
     this.sort.emit({column: this.sortable, direction: this.direction})

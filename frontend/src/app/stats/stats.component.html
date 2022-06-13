@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-1"></div>
         <div class="col-10">
-            <div id="project_title">Project 1</div>
+            <div id="project_title"> {{project.getName()}}</div>
         </div>
     </div>
 
@@ -42,19 +42,19 @@
             <!-- Progress bar -->
             <div class="progress">
                 <!-- Calculating progress bar and other values -->
-                <div class="progress-bar" role="progressbar" attr.aria-valuenow = 5
-                aria-valuemin="0" attr.aria-valuemax=5
-                [style.width]="(2 / 5)*100 + '%'"
+                <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.getNumberOfCLArtifacts()}}
+                aria-valuemin="0" attr.aria-valuemax={{project.getNumberOfArtifacts()}}
+                [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
                 style="background-color:#ED5A06 !important;"> 
                 </div>
             </div>
         </div>
 
         <!-- Conflicts stuff -->
-        <div class="col-2">2 / 5</div>
+        <div class="col-2">{{ project.getNumberOfCLArtifacts() }} / {{ project.getNumberOfArtifacts() }}</div>
         <div class="col">
             <div>
-                <p class="left">3</p> 
+                <p class="left">{{ conflicts }}</p> 
                 <em class="left bi bi-binoculars" id="bino-icon"></em>
             </div>
         </div>
@@ -68,7 +68,7 @@
                 <!--  -->
                 <div class="left page-splitter">User stats</div>
                 <em class="left bi bi-person" id="person-icon"></em>
-                <p class="left text-margin">5</p>
+                <p class="left text-margin">{{ project.getNumberOfUsers() }}</p>
             </div>
         </div>
     </div>
@@ -83,10 +83,13 @@
                     <!--Table Headers-->
                     <thead>
                         <tr>
+                            <!-- Column with usernames -->
                             <th scope="col"><p class="tableheader">User</p></th>
+                            <!-- Column with number of artifacts labelled by user -->
                             <th scope="col"><p class="tableheader"># Labelled artifacts</p></th>
+                            <!-- Column with average time spent labelling by user -->
                             <th scope="col"><p class="tableheader">Avg time per artifact</p></th>
-                            <th scope="col"><p class="tableheader"># Themes</p></th>
+                            <!-- Column with number of conflicts user is involved in -->
                             <th scope="col"><p class="tableheader"># Conflicts</p></th>
                         </tr>
                     </thead>
@@ -96,7 +99,6 @@
                             <td><p class="tablecontent">{{user.username}}</p></td>
                             <td><p class="tablecontent">{{user.nr_labelled}}</p></td>
                             <td><p class="tablecontent">{{user.time}}</p></td>
-                            <td><p class="tablecontent">{{user.nr_themes}}</p></td>
                             <td><p class="tablecontent">{{user.nr_conflicts}}</p></td>
                         </tr>
                     </tbody>
