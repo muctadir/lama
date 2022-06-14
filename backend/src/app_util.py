@@ -128,8 +128,9 @@ def login_required(f):
             if 'user' in getfullargspec(f).kwonlyargs:
                 kwargs['user'] = user
             return f(*args, **kwargs)
-        except OperationalError:
+        except OperationalError as e:
             # Database error
+            print(e)
             return make_response('Service Unavailable', 503)
         except InvalidSignatureError:
             # Token is signed incorrectly
@@ -237,35 +238,40 @@ def parse_change(change, username):
             return __parse_labelled(change, username)
         
 """
-A creation string should be blank
+A creation string should be of the format
+"label_type_name" if a label was created
+or null otherwise
 """
 def __parse_creation(change, username):
     item_type = change.item_class_name
-    description = change.description.split(' ; ')
-    if len(description) > 1 or description[0] != '':
+    if item_type == 'Label':
+        description = change.description.split(' ; ')
+        if len(description) != 1:
+            raise ChangeSyntaxError
+        return f"{username} created {item_type} \"{change.name}\" of type \"{change.description}\""
+    if change.description:
         raise ChangeSyntaxError
-    return f"{username} created {item_type} {change.i_id}"
+    return f"{username} created {item_type} \"{change.name}\""
 
 """
 A name edit string should be of the format:
-"old_name ; new_name"
+"new_name"
 """
 def __parse_name_edit(change, username):
     item_type = change.item_class_name
     description = change.description.split(' ; ')
-    if len(description) != 2:
+    if len(description) != 1:
         raise ChangeSyntaxError
-    return f"{username} renamed {item_type} {change.i_id} from {description[0]} to {description[1]}"
+    return f"{username} renamed {item_type} \"{change.name}\" to \"{description[0]}\""
 
 """
-A description edit string should be blank
+A description edit string should be null
 """
 def __parse_desc_edit(change, username):
     item_type = change.item_class_name
-    description = change.description.split(' ; ')
-    if len(description):
+    if change.description:
         raise ChangeSyntaxError
-    return f"{username} changed the description of {item_type} {change.i_id}"
+    return f"{username} changed the description of {item_type} \"{change.name}\""
 
 """
 A split string should be of the format:
@@ -275,59 +281,59 @@ def __parse_split(change, username):
     description = change.description.split(' ; ')
     if len(description) != 2:
         raise ChangeSyntaxError
-    return f"{username} split Artifact {change.i_id} {description[0]} Artifact {description[1]}"
+    return f"{username} split Artifact \"{change.name}\" {description[0]} Artifact \"{description[1]}\""
 
 """
 A merge string should be of the format:
-"child_id"
+"child_name"
 """
 def __parse_merge(change, username):
     description = change.description.split(' ; ')
     if len(description) != 1:
         raise ChangeSyntaxError
-    return f"{username} merged Label {change.i_id} into Label {change.description}"
+    return f"{username} merged Label \"{change.name}\" into Label \"{change.description}\""
 
 """
 A label_theme string should be of the format:
-"'added'|'removed' ; <comma separated label/theme ids>"
+"'added'|'removed' ; <comma separated label/theme names>"
 """
 def __parse_label_theme(change, username):
     item_type = change.item_class_name
     description = change.description.split(' ; ')
     if len(description) != 2:
         raise ChangeSyntaxError
-    ids = description[1].split(', ')
-    if ids[0].strip() == "":
+    names = description[1].split(', ')
+    if names[0].strip() == "":
         raise ChangeSyntaxError
     match description[0]:
         case 'added':
             if item_type == 'Label':
-                return f"{username} added Label {change.i_id} to theme{'s' if len(ids[1]) > 1 else ''} {description[1]}"
-            return f"{username} added Label{'s' if len(ids[1]) > 1 else ''} {description[1]} to theme {change.i_id}"
+                return f"{username} added Label \"{change.name}\" to theme{'s' if len(names[1]) > 1 else ''} \"{description[1]}\""
+            return f"{username} added Label{'s' if len(names[1]) > 1 else ''} \"{description[1]}\" to theme \"{change.name}\""
         case 'removed':
             if item_type == 'Label':
-                return f"{username} removed Label {change.i_id} from theme{'s' if len(ids[1]) > 1 else ''} {description[1]}"
-            return f"{username} removed Label{'s' if len(ids[1]) > 1 else ''} {description[1]} from theme {change.i_id}"
+                return f"{username} removed Label \"{change.name}\" from theme{'s' if len(names[1]) > 1 else ''} \"{description[1]}\""
+            return f"{username} removed Label{'s' if len(names[1]) > 1 else ''} \"{description[1]}\" from theme \"{change.name}\""
         case _:
             raise ChangeSyntaxError
 
 """
 A theme_theme string should be of the format:
-'sub'|'super' ; <comma separated theme ids>
+'sub'|'super' ; <comma separated theme names>
 """
 def __parse_theme_theme(change, username):
     description = change.description.split(' ; ')
     if len(description) != 2:
         raise ChangeSyntaxError
-    ids = description[1].split(', ')
-    if ids[0].strip() == "":
+    names = description[1].split(', ')
+    if names[0].strip() == "":
         raise ChangeSyntaxError
-    return f"{username} made Theme {change.i_id} a {description[0]}theme of theme{'s' if len(ids[1]) > 1 else ''} {description[1]}"
+    return f"{username} made Theme \"{change.name}\" a {description[0]}theme of theme{'s' if len(names[1]) > 1 else ''} \"{description[1]}\""
 
 """
 A labelled string should be of the format:
-'label' ; label_type_name ; label_id
-'edit'|'merge' ; label_type_name ; old_label_id ; new_label_id
+'label' ; label_type_name ; label_name
+'edit'|'merge' ; label_type_name ; old_label_name ; new_label_name
 """
 def __parse_labelled(change, username):
     description = change.description.split(' ; ')
@@ -335,14 +341,14 @@ def __parse_labelled(change, username):
         case 'label':
             if len(description) != 3:
                 raise ChangeSyntaxError
-            return f"{username} labelled Artifact {change.i_id} with Label {description[2]} of type {description[1]}"
+            return f"{username} labelled Artifact \"{change.name}\" with Label \"{description[2]}\" of type \"{description[1]}\""
         case 'edit':            
             if len(description) != 4:
                 raise ChangeSyntaxError
-            return f"{username} changed Artifact {change.i_id}'s Label of type {description[1]} from {description[2]} to {description[3]}"
+            return f"{username} changed Artifact \"{change.name}'s\" Label of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
         case 'merge':
             if len(description) != 4:
                 raise ChangeSyntaxError
-            return f"Artifact {change.i_id}'s Label of type {description[1]} changed from {description[2]} to {description[3]} as a result of a merge {username} made"
+            return f"Artifact \"{change.name}'s\" Label of type \"{description[1]}\" changed from \"{description[2]}\" to \"{description[3]}\" as a result of a merge {username} made"
         case _:
             raise ChangeSyntaxError

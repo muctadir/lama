@@ -6,7 +6,9 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
+from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
+from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
 
@@ -16,14 +18,15 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
-def create_label():
+def create_label(*, user):
 
     args = request.json
 
-    required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
+    required = ['labelTypeId', 'labelName', 'labelDescription', 'labelTypeName', 'p_id']
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
+        print(args)
         return make_response('Bad Request', 400)
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
@@ -47,9 +50,11 @@ def create_label():
     # Commit the label
     try:
         db.session.add(label)
+        db.session.flush()
+        __add_label_creation(label.id, label.name, args['labelTypeName'], args['p_id'], user.id)
         db.session.commit() 
-    except:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+    except OperationalError:
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response('Created')
 
@@ -79,8 +84,8 @@ def edit_label():
             .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
         )
         db.session.commit()
-    except:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+    except OperationalError:
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response('Ok')
 
@@ -194,8 +199,8 @@ def merge_route():
     try:
         db.session.add(new_label)
         db.session.commit()
-    except:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+    except OperationalError:
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     # Update all labellings
     try:
@@ -203,8 +208,8 @@ def merge_route():
             update(Labelling)
             .where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
         db.session.commit()
-    except:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+    except OperationalError:
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
 # Author: Veerle Furst
 # Function for getting the information (label, label_type, and artifacts) of a label
@@ -230,3 +235,18 @@ def get_label_artifacts(label, u_id, admin):
         select(Artifact)
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
     )
+
+def __add_label_creation(l_id, l_name, lt_name, p_id, u_id):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        change_type=ChangeType.create,
+        name=l_name,
+        description=lt_name
+    )
+
+    db.session.add(change)

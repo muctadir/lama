@@ -46,7 +46,7 @@ def get_changes(ChangeClass, p_id):
     )).all()
 
     processed_changes = [{
-        'a_id': change[0].i_id,
+        'i_id': change[0].i_id,
         'timestamp': change[0].timestamp.strftime("%Y/%m/%d, %H:%M:%S"),
         'username': change[1],
         'description': parse_change(change[0], change[1])

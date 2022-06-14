@@ -45,7 +45,7 @@ export class LabelFormComponent implements OnInit {
       this.labelForm = this.formBuilder.group({
         labelName: [undefined],
         labelDescription: [undefined],
-        labelTypeId: [undefined]
+        labelType: [undefined]
       })
     }
 
@@ -104,10 +104,10 @@ export class LabelFormComponent implements OnInit {
     const p_id = parseInt(this.routeService.getProjectID(this.url));
     // Label was created or modified
     if (this.label === undefined){
-      await this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
+      await this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelType'].value);
       window.location.reload();
     } else {
-      await this.labelingDataService.editLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
+      await this.labelingDataService.editLabel(p_id, label, this.labelForm.controls['labelType'].value);
       window.location.reload();
     }
   }

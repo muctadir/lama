@@ -144,7 +144,7 @@ export class LabelingDataService {
   }
 
   submitLabel(p_id: number, label: Label,
-    labelTypeId: number): Promise<boolean> {
+    labelType: LabelType): Promise<boolean> {
     let token: string | null  = sessionStorage.getItem('ses_token');
     // Check if the session token exists
     if (typeof token !== "string") throw new Error("User is not logged in");
@@ -152,9 +152,10 @@ export class LabelingDataService {
     if (p_id < 0) throw new Error("p_id cannot be less than 0")
     return axios.post('http://127.0.0.1:5000/label/create',
      {
-       'labelTypeId': labelTypeId,
+       'labelTypeId': labelType.getId(),
        'labelName': label.getName(),
        'labelDescription': label.getDesc(),
+       'labelTypeName': labelType.getName(),
        'p_id': p_id
       },
       {
@@ -170,7 +171,7 @@ export class LabelingDataService {
   }
 
   editLabel(p_id: number, label: Label,
-    labelTypeId: number): Promise<boolean> {
+    labelType: LabelType): Promise<boolean> {
     let token: string | null  = sessionStorage.getItem('ses_token');
     // Check if the session token exists
     if (typeof token !== "string") throw new Error("User is not logged in");

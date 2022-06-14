@@ -180,6 +180,8 @@ class Change():
     change_type = Column(db.Enum(ChangeType), nullable=False)
     # A description of the change that was made. This should be parsed based on change_type
     description = Column(Text)
+    # The name used for the item that was changed (before the change)
+    name = Column(Text, nullable=False)
 
     # Date and time when change was made
     timestamp = Column(DateTime, default=func.now())

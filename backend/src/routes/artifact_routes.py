@@ -344,7 +344,7 @@ def __add_artifact_creations(artifact_ids, u_id, p_id):
         p_id=p_id,
         i_id=a_id,
         change_type=ChangeType.create,
-        description=''
+        name=a_id
     ) for a_id in artifact_ids]
     
     db.session.add_all(creations)
