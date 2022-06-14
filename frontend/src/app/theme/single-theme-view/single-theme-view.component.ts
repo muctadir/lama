@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
@@ -85,7 +85,7 @@ export class SingleThemeViewComponent {
   */
    reRouterEdit() : void {
     // Changes the route accordingly
-    this.router.navigate(['/project', this.p_id, "editTheme", this.routeService.getThemeID(this.url)]);
+    this.router.navigate(['/project', this.p_id, "editTheme", this.t_id]);
   }  
 
   // Function for making sure parent name is not undefined
