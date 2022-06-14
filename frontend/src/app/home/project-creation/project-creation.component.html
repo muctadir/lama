@@ -16,38 +16,29 @@
 
     <!-- Row for all settings -->
     <div class="row justify-content-between">
-
         <!-- Left side of the page (project name and description) -->
         <div class="col-5">
-
-            <!-- Filling in Project information -->
+            <!-- Filling in Project information all info placed in projectForm -->
             <form [formGroup]="projectForm">
-
                 <!-- Username field -->
                 <div class="form-group">
                     <label class="settingsHeader">Project Name:</label>
+                    <!-- input field for the project name Addsit to the projectForm -->
                     <div class="projectSettingsDiv">
-                        <input class="form-control" 
-                            placeholder="Project Name" 
-                            formControlName="projectName" 
-                            required>
+                        <input class="form-control" placeholder="Project Name" formControlName="projectName" required>
                     </div>
                 </div>
                 
                 <!-- Description field -->
                 <div class="form-group">
                     <label class="settingsHeader">Description:</label>
+                    <!-- Input field for the project description, adds the project description to the projectForm, large text box -->
                     <div class="projectSettingsDiv">
-                        <textarea id="projectDescriptionForm" 
-                            class="form-control" 
-                            rows="10" 
-                            placeholder="Description" 
-                            formControlName="projectDesc">
+                        <textarea id="projectDescriptionForm" class="form-control" rows="10" placeholder="Description" formControlName="projectDesc">
                         </textarea>
                     </div>
                 </div>
             </form>
-
         </div>
 
         <!-- Right side of the page (members, labeller count, label types) -->
@@ -57,12 +48,13 @@
             <div class="projectSettingsDivParent" id="RightColumnMoveUp">
                 <!-- "Members" header -->
                 <div class="row">
+                    <!-- Header for the adding members section -->
                     <div class="col">
                         <span class="settingsHeader">Members</span>
                     </div>
                     <!-- Col for adding users button -->
                     <div class="col-2">
-                        <!-- Button for adding new members -->
+                        <!-- Button for adding new members, on click calls function open() -->
                         <button class="btn" type="button" id="addMembersButton" (click)="open()">
                             <!-- Members icon -->
                             <em class="bi bi-plus members"></em>
@@ -81,6 +73,7 @@
                         </div>
                         
                         <!-- Name and checkbox per member of the project -->
+                        <!-- Loops throught the projectMembers and does the following for each member -->
                         <label *ngFor="let member of projectMembers" for="user" id="block"> 
 
                             <!-- Row for the delete, name and project admin -->
@@ -88,12 +81,13 @@
 
                                 <!-- Column for delete icon -->
                                 <div class="col-1">
-                                    <!-- x icon -->
+                                    <!-- x icon, when clicked removes the member from the project -->
                                     <em class="bi bi-x" (click)="removeMember(member.getUsername())"></em>
                                 </div>
 
                                 <!-- Column for username -->
                                 <div class="col-7">
+                                    <!-- Gets the username of the member and displays it -->
                                     {{ member.getUsername() }}
                                 </div>
 
@@ -134,6 +128,7 @@
                         <!-- Loops through all the label types and adds a form for each -->
                         <ng-container formArrayName="labeltypes">
                             <ng-container *ngFor="let labelTypeForm of labeltypes.controls; let i = index">
+                                <!-- Links the form to the formGroup with index i in the formArray -->
                                 <form [formGroupName]="i">
 
                                     <!-- Container holding the form and remove button -->
@@ -141,12 +136,12 @@
                                         <div class="row padd-marg">
                                             <!-- Adds the form input for the label type -->
                                             <div class="col-10 padd-marg">
-                                                <input class="form-control" 
-                                                    formControlName="label"
-                                                    placeholder="Label type">
+                                                <!-- Input field for the label type -->
+                                                <input class="form-control" formControlName="label" placeholder="Label type">
                                             </div>
                                             <!-- Adds the remove button for each label type -->
                                             <div class="col-2">
+                                                <!-- displays the bootstrap icon, and when clicked calls function deleteLabelType -->
                                                 <em class="bi bi-x" (click)="deleteLabelType(i)"></em>
                                             </div>
                                         </div>
@@ -159,7 +154,7 @@
                     <!-- Button for adding more label types -->
                     <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
                         <span id="addLabelTypeText">Add Label Type</span>
-                        <!-- Plus icon -->
+                        <!-- Plus icon is displayed -->
                         <em class="bi bi-plus labelType"></em>
                     </button>
                 </div>
@@ -170,12 +165,12 @@
 
     <!-- Buttons row (cancel and submit button) -->
     <div class="row justify-content-end fixed-bottom top-buffer">
-        <!-- Cancel button -->
+        <!-- Cancel button, routes to the homepage when clicked -->
         <button type="button" class="btn btn-secondary text-nowrap" routerLink="/home">
             Cancel
         </button>
     
-        <!-- Submit button -->
+        <!-- Submit button, calls the createProject function when clicked -->
         <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">
             Create Project
         </button>

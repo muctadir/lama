@@ -7,6 +7,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from 'app/classes/project';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogoutComponent } from 'app/modals/logout/logout.component';
 
 @Component({
   selector: 'app-home-page',
@@ -19,6 +21,14 @@ export class HomePageComponent implements OnInit {
 
   /* Error message that is displayed to the user */
   errorMsg: string = "";
+
+  /**
+   * Initializes the modal service provided by bootstrap
+   * 
+   * @param modalService instance of modal
+   * @trigger on loads
+   */
+  constructor(private modalService: NgbModal) {}
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of
@@ -94,6 +104,16 @@ export class HomePageComponent implements OnInit {
       // Add project to list
       this.projects.push(projectNew);
     }
+  }
+
+  /**
+   * Opens the logout modal asking confirmation for logging out
+   * 
+   * @trigger click on logout button
+   */
+   openLogout() : void {
+    // opens logout modal
+    this.modalService.open(LogoutComponent, {});
   }
 
 }

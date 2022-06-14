@@ -163,7 +163,7 @@ def super_admin_required(f):
             if not user:
                 return make_response('Unauthorized', 401)
             # Check to see if user is a super_admin
-            if user.type != 'super_admin':
+            if not user.super_admin:
                 return make_response('Forbidden', 403)
             # Add the found admin as a keyword argument
             # Note, this means every function decorated with this must have user as an argument

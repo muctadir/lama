@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LoginGuardService } from './services/login-guard.service';
 
 // Authentication imports
 import { LoginComponent } from './account-details/login/login.component';
@@ -34,55 +35,57 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+
+
 /* All the routes within the application */
 const routes: Routes = [
-  // Default path to login
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
-  // Authentication routes
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  // Account route
-  {path: 'account', component: AccountComponent},
-  // Home page route
-  {path: 'home', component: HomePageComponent},
-  // Project creation route
-  {path: 'createProject', component:ProjectCreationComponent},
-  // Inside the project routes
-  {path: 'project/:projectId', component: ProjectComponent, children: [
-    // Default is stats page
-    {path: '', redirectTo: 'stats', pathMatch: 'full'},
-    // Project settings page
-    {path: 'settings', component: ProjectSettingsComponent},
-    // Stats page route
-    {path: 'stats', component: StatsComponent},
-    // Labelling page route
-    {path: 'labelling-page', component: LabellingPageComponent},
-    // Create label route
-    {path: 'create-label', component: LabelFormComponent},
-    // Artifact management route
-    {path: 'artifactmanagement', component: ArtifactManagementPageComponent},
-    // Single artifact route
-    {path: 'singleartifact/:artifactId', component: SingleArtifactViewComponent},
-    // Label manegement route
-    {path: 'labelmanagement', component: LabelManagementComponent},
-    // Single label route
-    {path: 'singlelabel/:labelId', component: IndividualLabelComponent},
-    // Theme manegement route
-    {path: 'thememanagement', component: ThemeManagementComponent},
-    // Create theme route
-    {path: 'createTheme', component: ThemeInfoComponent},
-    // Single theme route
-    {path: 'singleTheme/:themeId', component: SingleThemeViewComponent},
-    // Edit theme route
-    {path: 'editTheme/:themeId', component: ThemeInfoComponent},
-    // Conflict route
-    {path: 'conflict', component: ConflictPageComponent},
-    // Conflict resolution route
-    {path: 'conflictResolution', component: ConflictResolutionComponent},
-    // Load navigarion menu for every link in project
-    {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
-  ]},
-  {path: '**', redirectTo: 'login', pathMatch: 'full'}];
+    // Default path to login
+    {path: '', redirectTo: 'login', pathMatch: 'full'},
+    // Authentication routes
+    {path: 'login', component: LoginComponent},
+    {path: 'register', component: RegisterComponent},
+    // Account route
+    {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
+    // Home page route
+    {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
+    // Project creation route
+    {path: 'createProject', component:ProjectCreationComponent, canActivate: [LoginGuardService]},
+    // Inside the project routes
+    {path: 'project/:projectId', component: ProjectComponent, canActivate: [LoginGuardService], children: [
+      // Default is stats page
+      {path: '', redirectTo: 'stats', pathMatch: 'full'},
+      // Project settings page
+      {path: 'settings', component: ProjectSettingsComponent},
+      // Stats page route
+      {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
+      // Labelling page route
+      {path: 'labelling-page', component: LabellingPageComponent, canActivate: [LoginGuardService]},
+      // Create label route
+      {path: 'create-label', component: LabelFormComponent, canActivate: [LoginGuardService]},
+      // Artifact management route
+      {path: 'artifactmanagement', component: ArtifactManagementPageComponent, canActivate: [LoginGuardService]},
+      // Single artifact route
+      {path: 'singleartifact/:artifactId', component: SingleArtifactViewComponent, canActivate: [LoginGuardService]},
+      // Label management route
+      {path: 'labelmanagement', component: LabelManagementComponent, canActivate: [LoginGuardService]},
+      // Single label route
+      {path: 'singlelabel/:labelId', component: IndividualLabelComponent, canActivate: [LoginGuardService]},
+      // Theme management route
+      {path: 'thememanagement', component: ThemeManagementComponent, canActivate: [LoginGuardService]},
+      // Create theme route
+      {path: 'createTheme', component: ThemeInfoComponent, canActivate: [LoginGuardService]},
+      // Single theme route
+      {path: 'singleTheme/:themeId', component: SingleThemeViewComponent, canActivate: [LoginGuardService]},
+      // Edit theme route
+      {path: 'editTheme/:themeId', component: ThemeInfoComponent, canActivate: [LoginGuardService]},
+      // Conflict route
+      {path: 'conflict', component: ConflictPageComponent, canActivate: [LoginGuardService]},
+      // Conflict resolution route
+      {path: 'conflictResolution', component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
+      // Load navigarion menu for every link in project
+      {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
+    ]},
+    {path: '**', redirectTo: 'login', pathMatch: 'full'}];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
