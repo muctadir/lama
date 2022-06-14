@@ -146,6 +146,7 @@ For getting the all themes without parents
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
+@in_project
 def all_themes_no_parents(*, user):
 
     # The required arguments
@@ -202,8 +203,8 @@ For creating a new theme
 }
 """
 @theme_routes.route("/create_theme", methods=["POST"])
-# TODO: add @in_project
 @login_required
+@in_project
 def create_theme(*, user):
 
     # The required arguments
@@ -260,8 +261,8 @@ For editing a theme
 }
 """
 @theme_routes.route("/edit_theme", methods=["POST"])
-# TODO: add @in_project
 @login_required
+@in_project
 def edit_theme(*, user):
 
     # The required arguments
@@ -318,6 +319,12 @@ def edit_theme(*, user):
     # Return the conformation
     return make_response("Project created", 200)
 
+"""
+For getting the labels from the passed data
+@params labels_info includes: {
+    id: id of the label
+}
+"""
 def make_labels(labels_info):
     # Add the labels to the theme
     labels_list = []
@@ -332,6 +339,12 @@ def make_labels(labels_info):
         labels_list.append(new_label)
     return labels_list
 
+"""
+For getting the themes from the passed data
+@params sub_themes_info includes: {
+    id: id of the theme
+}
+"""
 def make_sub_themes(sub_themes_info):
     # Add the sub_themes to the theme
     sub_themes_list = []
