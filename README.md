@@ -1,3 +1,5 @@
+# Group 2 
+
 ![LaMa logo](/frontend/assets/lama_nobg.png)
 
 ## Part 1: First-time setup
