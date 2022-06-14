@@ -202,8 +202,6 @@ def get_serialized_users(users):
     for user in users:
         # Serialize the user
         user_dumped = user_schema.dump(user)
-        # Pop the password of the user
-        user_dumped.pop("password")
         # Add the serialized user to the list of serialized users
         users_list.append(user_dumped)
     
@@ -531,7 +529,6 @@ def single_project(*, user):
     users = []  
     for user in project_users:
         user_dumped = user_schema.dump(user)
-        user_dumped.pop("password")
         users.append(user_dumped)
 
     # Get the number of conflicts in the conflict

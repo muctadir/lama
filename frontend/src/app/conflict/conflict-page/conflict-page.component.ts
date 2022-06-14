@@ -10,12 +10,13 @@ interface Artifact {
 }
 
 // Functions for adding values
-function addValues(name:string, descr:string):Artifact {
-  var conflictName = name;
-  var conflictDescription = descr;
-  // Return the given values
-  return {conflictName, conflictDescription};
-} 
+// function addValues(name:string, descr:string, users: Array<string>):Artifact {
+//   var conflictName = name;
+//   var conflictDescription = descr;
+//   var users = users;
+//   // Return the given values
+//   return {conflictName, conflictDescription, users};
+// } 
 
 @Component({
   selector: 'app-conflict-page',
@@ -45,15 +46,17 @@ export class ConflictPageComponent implements OnInit {
     if (typeof token === "string") {
       // Get all users within the tool
       this.requestConflicts(token, projectID);
+
+
     }
   }
 
   // Hardcoding some conflicts
-  conflict1 = addValues("Artifact 1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
-  conflict2 = addValues("Artifact 35", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
-  conflict3 = addValues("Artifact 104", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
+  // conflict1 = addValues("Artifact 1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
+  // conflict2 = addValues("Artifact 35", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
+  // conflict3 = addValues("Artifact 104", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
   // List of the projects
-  conflicts: Artifact[] = [this.conflict1, this.conflict2, this.conflict3];
+  conflicts: any[] = [];
 
 
   /**
@@ -72,7 +75,7 @@ export class ConflictPageComponent implements OnInit {
     let p_id = routeService.getProjectID(url);
     
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'conflictResolution']);
+    this.router.navigate(['/conflictmanagement', p_id, 'conflictResolution']);
   }
 
   /**
@@ -90,23 +93,21 @@ export class ConflictPageComponent implements OnInit {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
-      let response: any = requestHandler.get("/conflict/home", {'p_id': p_id}, true);
+      let response: any = requestHandler.get("/conflict/conflictmanagement", {'p_id': p_id}, true);
 
       // Waits on the request
       let result = await response;
 
-      console.log(result)
+      for(let conflict of result) {
+        this.conflicts.push({
+          'conflictName': conflict.a_id,
+          'conflictData': conflict.a_data,
+          'conflictLT': conflict.lt_name,
+          'conflictUsers': conflict.users
+        })
+      }
 
-      // // Loops over the response of the server and parses the response into the allMembers array
-      // for (let user of result) {
-      //   // creates the object
-      //   let newUser = new User(user.id, user.username);
-      //   // passes additional data to the newly created user object
-      //   newUser.setEmail(user.email);
-      //   newUser.setDesc(user.description);
-      //   // pushes the new user to the array of all users
-      //   this.allMembers.push(newUser);
-      // }
+      console.log(this.conflicts)
     } catch(e) {
       // Outputs an error
       console.log("An error occured when loading data from the server");

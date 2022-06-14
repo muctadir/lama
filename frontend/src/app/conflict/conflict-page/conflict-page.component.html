@@ -13,13 +13,13 @@
             <div *ngFor="let conflict of conflicts" class="conflictDivs">
                 <!-- Row with name of artifact -->
                 <div class="row">
-                    <p class="artifactName">{{conflict.conflictName}}</p>
+                    <p class="artifactName">{{"Artifact " + conflict.conflictName + " - " + conflict.conflictLT}}</p>
                 </div>
                 <!-- Row with description of artifact and resolve button -->
                 <div class="row">
                     <!-- Column for artifact description -->
                     <div class="col">
-                        {{conflict.conflictDescription}}
+                        {{conflict.conflictData}}
                     </div>
                     <!-- Column with resolve button -->
                     <div class="col-3 text-center">
@@ -29,10 +29,11 @@
                     </div>
                 </div>
                 <!-- Row for the users within the conflict -->
-                <div class="row">
-                    <div class="col text-end">
-                        Conflicting users: Veerle and Chinno
-                    </div>
+                <div class="col-12">
+                    <span class="col text-end" id="users"> Conflicting users: </span>
+                    <span  *ngFor="let user of conflict.conflictUsers; last as isLast">
+                        {{user.username}}<span *ngIf="!isLast">,</span>
+                    </span>
                 </div>
             </div>
         </div>

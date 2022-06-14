@@ -1,8 +1,12 @@
 # Ana-Maria Olteniceanu
+# Linh Nguyen
+# Eduardo Costa Martins
 
+from src.models.item_models import Artifact, LabelType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
 from src.models.item_models import Labelling
+from src.models.auth_models import UserSchema
 from src.models import db
 from src.app_util import login_required, check_args, in_project
 
@@ -68,7 +72,6 @@ Author: Eduardo Costa Martins
          is not indexed.
 """
 def nr_user_conflicts(p_id):
-
     # Number of differing labels per label type and artifact
     per_label_type = select(
         Labelling.a_id, # Artifact id
@@ -118,71 +121,84 @@ def nr_user_conflicts(p_id):
 
     return results
 
-@conflict_routes.route("/home", methods=["GET"])
+def project_conflicts(p_id):
+    # Number of differing labels per label type and artifact
+    per_label_type = select(
+        # Artifact id
+        Labelling.a_id,
+        # Label type id (can get rid of this maybe?)
+        Labelling.lt_id,
+        # Distinct labels for a label type (renamed to 'label_count')
+        func.count(distinct(Labelling.l_id)).label('label_count')
+    # In the given project
+    ).where(
+        Labelling.p_id == p_id
+    # Grouped by artifacts and by label type
+    ).group_by(
+        Labelling.a_id,
+        Labelling.lt_id
+    ).subquery()
+
+    # Number of conflicts per artifact
+    per_artifact = select(
+        per_label_type.c.a_id, # Artifact id
+        per_label_type.c.lt_id # Label type id of the conflict
+    ).where(
+        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
+    )
+
+    # Artifacts with conflicts
+    artifacts_with_conflicts = select(
+        per_label_type.c.a_id, # Artifact id
+    ).where(
+        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
+    ).subquery()
+
+    # Artifacts with conflicts
+    label_types_with_conflicts = select(
+        per_label_type.c.lt_id, # Label type id
+    ).where(
+        per_label_type.c.label_count > 1 # Counts as a conflict if there is more than one distinct label for a label type
+    ).subquery()
+
+    conflicts = db.session.execute(per_artifact).all()
+    artifacts = set(db.session.scalars(select(Artifact).where(Artifact.id.in_(artifacts_with_conflicts))).all())
+    label_types = set(db.session.scalars(select(LabelType).where(LabelType.id.in_(label_types_with_conflicts))).all())
+
+    # Dictionary mapping all ids of artifacts with 
+    conflict_artifacts = {}
+    for artifact in artifacts:
+        conflict_artifacts[artifact.id] = artifact
+
+    conflict_label_types = {}
+    for label_type in label_types:
+        conflict_label_types[label_type.id] = label_type
+
+    info_list = []
+
+    user_schema = UserSchema()
+
+    for conflict in conflicts:
+        # Get the users involved in this conflicts
+        users = set(conflict_artifacts[conflict[0]].users)
+        info = {
+            "a_id": conflict[0],
+            "a_data": conflict_artifacts[conflict[0]].data,
+            "lt_name": conflict_label_types[conflict[1]].name,
+            "users": user_schema.dump(users, many=True)
+            }
+        info_list.append(info)
+
+    json_list = jsonify(info_list)
+    return make_response(json_list)
+
+@conflict_routes.route("/conflictmanagement", methods=["GET"])
 @login_required
-def conflicts_home_page(*, user):
+@in_project
+def conflict_management_page():
     # Get args 
     args = request.args
 
-    print(nr_project_conflicts(args['p_id']))
-
-    # # Get membership of the user
-    # projects_of_user = db.session.scalars(
-    #     select(
-    #         Membership
-    #     ).where(
-    #         Membership.u_id==user.id,
-    #         Membership.deleted==0
-    #     )
-    # ).all()
-
-    # # List for project information
-    # projects_info = []
-
-    # # Schema to serialize the Project
-    # project_schema = ProjectSchema()
-
-    # # For loop for admin, users, #artifacts
-    # for membership_project in projects_of_user:
-
-    #     # Make project variable 
-    #     project = membership_project.project
-
-    #     # Convert project to JSON
-    #     project_json = project_schema.dump(project)
-        
-    #     # Get the project id
-    #     project_id = project.id
-
-    #     # Get admin status 
-    #     projects_admin = membership_project.admin
-
-    #     # Get the artifacts for each project 
-    #     project_artifacts_stmt = select(func.count(Artifact.id)).where(Artifact.p_id==project_id)
-    #     project_artifacts = db.session.scalar(project_artifacts_stmt)
-    #     # Get the number of total artifacts
-    #     project_nr_artifacts = project_artifacts
-    #     # Get the number of completely labelled artifacts for each project
-    #     project_nr_cl_artifacts = db.session.scalar(
-    #         project_artifacts_stmt.where(Artifact.completed==True)
-    #     )
-
-    #     # Get the serialized users in the project
-    #     users = get_serialized_users(project.users)
-        
-    #     # Put all values into a dictonary
-    #     info = {
-    #         "project" : project_json,
-    #         "projectAdmin": projects_admin,
-    #         "projectNrArtifacts": project_nr_artifacts,
-    #         "projectNrCLArtifacts": project_nr_cl_artifacts,
-    #         "projectUsers": users
-    #     }
-    #     # Append the dictionary to the list
-    #     projects_info.append(info)
-
-    # # Convert the list of dictionaries to json
-    # dict_json = jsonify(projects_info)
-
-    # Return the list of dictionaries
-    return make_response("Ok")
+    # TODO: Check that required args are passed
+    
+    return project_conflicts(args['p_id'])
