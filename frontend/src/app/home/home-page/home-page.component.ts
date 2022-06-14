@@ -52,7 +52,6 @@ export class HomePageComponent implements OnInit {
   async makeRequest() : Promise<void> {
     // Get the user authentication token
     let token: string | null  = sessionStorage.getItem('ses_token');
-
     // Initializes the request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
 
