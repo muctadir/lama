@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
 
-fdescribe('ThemeInfoComponent', () => {
+describe('ThemeInfoComponent', () => {
+  // Initializing variables
   let component: ThemeInfoComponent;
   let fixture: ComponentFixture<ThemeInfoComponent>;
   let router: Router;
@@ -29,6 +30,7 @@ fdescribe('ThemeInfoComponent', () => {
     fixture.detectChanges();
   });
 
+  // Test for creating the components
   it('should create', () => {
     expect(component).toBeTruthy();
   });
