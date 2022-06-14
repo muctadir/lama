@@ -23,7 +23,6 @@ export class ArtifactDataService {
    * 
    * @params p_id: numberF
    * @pre p_id => 1
-   * @throws Error if token == null
    * @throws Error if p_id < 1
    * @returns Promise<Array<StringArtifact>>
    */

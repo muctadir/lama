@@ -12,7 +12,6 @@ import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.compo
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { FormBuilder } from '@angular/forms';
 
-
 @Component({
   selector: 'app-artifact-management-page',
   templateUrl: './artifact-management-page.component.html',

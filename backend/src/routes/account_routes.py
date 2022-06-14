@@ -24,8 +24,6 @@ def get_user_information(*, user):
     # Get the information
     user_schema = UserSchema()
     response = user_schema.dump(user[0])
-    # Remove the password
-    response.pop("password")
 
     # Respond the information
     return make_response(response)
