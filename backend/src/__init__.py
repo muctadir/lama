@@ -5,18 +5,19 @@ from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
 from src.models import db
 from src.models.auth_models import User, UserStatus
+from src.models.item_models import Artifact
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
 from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
-label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes
+label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes, change_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
-from src.routes.change_routes import artifact_changes
+from src.routes.change_routes import get_changes
 
 
 
@@ -67,7 +68,9 @@ def db_init():
 # be defined in another file. (Testing setup needs to reuse it as well.)
 @db_opt.command("test")
 def test(): 
-    artifact_changes(1)
+    changes = get_changes(Artifact.__change__, 1)
+    for change in changes:
+        print(str(change))
 
 
 # This method returns a Flask application object, based on the given config
@@ -128,7 +131,7 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(labelling_routes)
     app.register_blueprint(artifact_routes)
     app.register_blueprint(theme_routes)
-
+    app.register_blueprint(change_routes)
 
     # Magic library that makes cross-origin resource sharing work.
     CORS(app)

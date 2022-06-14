@@ -128,9 +128,8 @@ def login_required(f):
             if 'user' in getfullargspec(f).kwonlyargs:
                 kwargs['user'] = user
             return f(*args, **kwargs)
-        except OperationalError as e:
+        except OperationalError:
             # Database error
-            print(e)
             return make_response('Service Unavailable', 503)
         except InvalidSignatureError:
             # Token is signed incorrectly

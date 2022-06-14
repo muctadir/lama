@@ -28,22 +28,21 @@ def get_artifact_changes(membership):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
-    changes = jsonify(artifact_changes(args['p_id']))
+    changes = jsonify(get_changes(Artifact.__change__, args['p_id']))
 
     return make_response(changes)
 
-def artifact_changes(p_id):
+def get_changes(ChangeClass, p_id):
     # PascalCase because this is a class
-    ArtifactChange = Artifact.__change__
 
     changes = db.session.execute(select(
-        ArtifactChange,
+        ChangeClass,
         User.username
     ).where(
-        User.id == ArtifactChange.u_id,
-        ArtifactChange.p_id == p_id,
+        User.id == ChangeClass.u_id,
+        ChangeClass.p_id == p_id,
     ).order_by(
-        ArtifactChange.timestamp.desc()
+        ChangeClass.timestamp.desc()
     )).all()
 
     processed_changes = [{
