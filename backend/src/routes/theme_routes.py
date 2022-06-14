@@ -11,6 +11,7 @@ from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
+from sqlalchemy.exc import OperationalError
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -203,8 +204,8 @@ For creating a new theme
 }
 """
 @theme_routes.route("/create_theme", methods=["POST"])
-# TODO: add @in_project
 @login_required
+@in_project
 def create_theme(*, user):
 
     # The required arguments
@@ -261,28 +262,25 @@ For editing a theme
 }
 """
 @theme_routes.route("/edit_theme", methods=["POST"])
-# TODO: add @in_project
 @login_required
+@in_project
 def edit_theme(*, user):
 
     # The required arguments
     required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
 
     # Get args
-    args = request.json
-
-    # # Get the actual info
-    theme_info = args['params']
+    args = request.json['params']
 
     # Check if all required arguments are there
-    if not check_args(required, theme_info):
+    if not check_args(required, args):
         print("ello")
         return make_response("Not all required arguments supplied", 400)
     
     # Get theme id
-    t_id = theme_info["id"]
+    t_id = args["id"]
     # Project id
-    p_id = theme_info["p_id"]
+    p_id = args["p_id"]
 
     # Get the corresponding theme
     theme = db.session.get(Theme, t_id)
@@ -294,21 +292,27 @@ def edit_theme(*, user):
     # Check if theme is in given project
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
-        
+    
+    if theme.name != args['name']:
+        __record_name_edit(theme.id, theme.name, p_id, user.id, args['name'])
+    
+    if theme.description != args['description']:
+        __record_description_edit(theme.id, args['name'], p_id, user.id)
+
     # Change the theme information
     db.session.execute(
         update(Theme).
         where(Theme.id == t_id).
         values(
-            name = theme_info["name"],
-            description = theme_info["description"]
+            name = args["name"],
+            description = args["description"]
         )
     )
 
     # Set the sub_themes of the theme
-    theme.sub_themes = make_sub_themes(theme_info["sub_themes"])
+    theme.sub_themes = make_sub_themes(args["sub_themes"])
     # Set the labels of the theme
-    theme.labels = make_labels(theme_info["labels"])
+    theme.labels = make_labels(args["labels"])
 
     # Edit the project
     try:
@@ -316,8 +320,8 @@ def edit_theme(*, user):
     except OperationalError:
         return make_response("internal Server Error", 503)       
 
-    # Return the conformation
-    return make_response("Project created", 200)
+    # Return the confirmation
+    return make_response("Project edited", 200)
 
 def make_labels(labels_info):
     # Add the labels to the theme
@@ -357,6 +361,35 @@ def __record_creation(t_id, name, p_id, u_id):
         u_id=u_id,
         name=name,
         change_type=ChangeType.create
+    )
+
+    db.session.add(change)
+
+def __record_name_edit(t_id, old_name, p_id, u_id, new_name):
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    change = ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=old_name,
+        description=new_name,
+        change_type=ChangeType.name
+    )
+
+    db.session.add(change)
+
+def __record_description_edit(t_id, old_name, p_id, u_id):
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    change = ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=old_name,
+        change_type=ChangeType.description
     )
 
     db.session.add(change)

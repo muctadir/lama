@@ -42,7 +42,7 @@ def get_changes(ChangeClass, p_id):
         User.id == ChangeClass.u_id,
         ChangeClass.p_id == p_id,
     ).order_by(
-        ChangeClass.timestamp.desc()
+        ChangeClass.timestamp.asc()
     )).all()
 
     processed_changes = [{
