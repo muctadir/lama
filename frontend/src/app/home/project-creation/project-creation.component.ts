@@ -10,6 +10,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { InputCheckService } from 'app/services/input-check.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastGlobalComponent } from 'app/modals/toast-global/toast-global.component';
 
 // Project object
 interface Project {
@@ -49,7 +50,8 @@ export class ProjectCreationComponent implements OnInit {
    * @param router instance of router
    * @param formBuilder instance of formbuilder
    */
-  constructor(private modalService: NgbModal, private router: Router, private formBuilder: FormBuilder) {}
+  constructor(private modalService: NgbModal, private router: Router,
+     private formBuilder: FormBuilder) {}
 
   /**
    * Gets all the users within the application from the backend
@@ -134,6 +136,7 @@ export class ProjectCreationComponent implements OnInit {
     } else {
       // Displays an error that the user input was incorrect
       this.errorMsg = "Please fill in all forms";
+      // this.toastGlobalComponent.showDanger()
     }
   }
 
