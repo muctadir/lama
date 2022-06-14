@@ -295,10 +295,9 @@ def __parse_merge(change, username):
 
 """
 A label_theme string should be of the format:
-"'added'|'removed' ; <comma separated label/theme names>"
+"'added'|'removed' ; <comma separated label names>"
 """
 def __parse_label_theme(change, username):
-    item_type = change.item_class_name
     description = change.description.split(' ; ')
     if len(description) != 2:
         raise ChangeSyntaxError
@@ -308,19 +307,16 @@ def __parse_label_theme(change, username):
     parsed_names = '"' + '", "'.join(names) + '"'
     match description[0]:
         case 'added':
-            if item_type == 'Label':
-                return f"{username} added Label \"{change.name}\" to theme{'s' if len(names[1]) > 1 else ''} {parsed_names}"
-            return f"{username} added Label{'s' if len(names[1]) > 1 else ''} {parsed_names} to theme \"{change.name}\""
+            return f"{username} added label{'s' if len(names[1]) > 1 else ''} {parsed_names} to Theme \"{change.name}\""
         case 'removed':
-            if item_type == 'Label':
-                return f"{username} removed Label \"{change.name}\" from theme{'s' if len(names[1]) > 1 else ''} {parsed_names}"
-            return f"{username} removed Label{'s' if len(names[1]) > 1 else ''} {parsed_names} from theme \"{change.name}\""
+            return f"{username} removed label{'s' if len(names[1]) > 1 else ''} {parsed_names} from Theme \"{change.name}\""
         case _:
             raise ChangeSyntaxError
 
+
 """
 A theme_theme string should be of the format:
-'sub'|'super' ; <comma separated theme names>
+'added'|'removed' ; <comma separated theme names>
 """
 def __parse_theme_theme(change, username):
     description = change.description.split(' ; ')
@@ -330,8 +326,13 @@ def __parse_theme_theme(change, username):
     if names[0].strip() == "":
         raise ChangeSyntaxError
     parsed_names = '"' + '", "'.join(names) + '"'
-
-    return f"{username} made Theme \"{change.name}\" a {description[0]}theme of theme{'s' if len(names[1]) > 1 else ''} {parsed_names}"
+    match description[0]:
+        case 'added':
+            return f"{username} added subtheme{'s' if len(names[1]) > 1 else ''} {parsed_names} to Theme \"{change.name}\""
+        case 'removed':
+            return f"{username} removed subtheme{'s' if len(names[1]) > 1 else ''} {parsed_names} from Theme \"{change.name}\""
+        case _:
+            raise ChangeSyntaxError
 
 """
 A labelled string should be of the format:
