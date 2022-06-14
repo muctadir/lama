@@ -266,6 +266,7 @@ def get_project(*, user):
 
     # Convert the list of dictionaries containing project information to json
     project_data = jsonify({
+        "u_id": user.id,
         "name": project.name,
         "description": project.description,
         "criteria": project.criteria,

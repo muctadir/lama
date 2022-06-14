@@ -21,6 +21,9 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 export class ProjectSettingsComponent implements OnInit {
   /* Current project */
   currentProject: Project;
+
+  /* Current user ID */
+  currentUserId: number = 0;
   
   /* Array of current members of the project */
   projectMembers: User[] = [];
@@ -149,6 +152,9 @@ export class ProjectSettingsComponent implements OnInit {
 
       // Waits on the request
       let result = await response;
+
+      //Setting user ID
+      this.currentUserId = result.u_id
 
       //Setting project name, description, criteria, and frozen status
       this.setCurrenProjectInfo(result.name, result.description, result.criteria, result.frozen, undefined)
