@@ -35,6 +35,7 @@ describe('ThemeInfoComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // REROUTER FUNCTIONS
   // Test the reRouter function when in creation
   it('Tests the reRouter function to theme management page', () => {
     // Set p_id in component
@@ -69,6 +70,7 @@ describe('ThemeInfoComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/project', component.p_id, 'singleTheme', component.t_id]);
   });
 
+  // HIGHLIGHTED DESCRIPTIONS FUNCTION
   // Test whether the highlighted theme description is correctly set
   it('Tests the displayDescriptionTheme function', () => {
     // Create the description
@@ -99,6 +101,7 @@ describe('ThemeInfoComponent', () => {
     expect(component.selectedDescriptionLabel).toEqual(labelDesc);
   });
 
+  // HIGHLIGHTED THEME/LABEL FUNCTION
   // Test whether the highlighted sub-theme is correctly set
   it('Tests the highlightSubtheme function', () => {
     // Create the description
@@ -129,7 +132,7 @@ describe('ThemeInfoComponent', () => {
     expect(component.highlightedLabel).toEqual(labelName);
   });
 
-  // SUBTHEME REMOVAL
+  // SUBTHEME REMOVAL FUNCTION
   // Test whether removing subthemes works for creation
   it('Tests the removeSubtheme function for creation', () => {
     // Create two themes
@@ -199,7 +202,7 @@ describe('ThemeInfoComponent', () => {
     expect(component.addedSubThemes).toEqual([theme2]);
   });
 
-  // LABEL REMOVAL
+  // LABEL REMOVAL FUNCTION
   // Test whether removing labels works for creation
   it('Tests the removeLabel function for creation', () => {
     // Create two themes
@@ -247,8 +250,8 @@ describe('ThemeInfoComponent', () => {
     expect(component.allLabels).toEqual(allLabels);
   });
 
-  // Test whether removing subthemes works for edit
-  it('Tests the removeSubtheme function for edit', () => {
+  // Test whether removing labels works for edit
+  it('Tests the removeLabel function for edit', () => {
     // Create two themes
     let label1 = new Label(1, "", "", "");
     let label2 = new Label(2, "", "", "");
@@ -271,6 +274,7 @@ describe('ThemeInfoComponent', () => {
     expect(component.allLabels).toEqual(allLabels);
   });
 
+  // ADDING SUBTHEMES FUNCTION
   // Test whether adding subthemes works for creation
   it('Tests the addSubtheme function for creation', () => {
     // Create two themes
@@ -316,6 +320,7 @@ describe('ThemeInfoComponent', () => {
     expect(component.allSubThemes).toEqual(allSubThemes);
   });
 
+  // ADDING LABELS FUNCTION
   // Test whether adding labels works for creation
   it('Tests the addLabel function for creation', () => {
     // Create two themes
@@ -362,6 +367,7 @@ describe('ThemeInfoComponent', () => {
     expect(component.allLabels).toEqual(allLabels);
   });
 
+  // NGONINIT FUNCTION
   // Test the ngOnInit function
   it('Tests if the ngOnInit function calls all correct functions', () => {    
     // Spy on getting the themes without parents
@@ -405,15 +411,16 @@ describe('ThemeInfoComponent', () => {
     expect(spy5).toHaveBeenCalled();
   });
 
+  // SET BOOLEANS FUNCTION
   // Test the setBooleans function for create
   it('Tests if the setBooleans function sets the create value correctly', () => {
     // Set the component url
     component.url = "/project/3/createTheme";
     // Create spy for function
     let spy = spyOn(component, "setBooleans").and.callThrough();
-    // Set the boolean
+    // Call the function
     component.setBooleans();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy).toHaveBeenCalled()
     expect(component.create).toEqual(true);
     expect(component.edit).toEqual(false);
@@ -425,14 +432,15 @@ describe('ThemeInfoComponent', () => {
     component.url = "/project/3/editTheme/1";
     // Create spy for function
     let spy = spyOn(component, "setBooleans").and.callThrough();
-    // Set the boolean
+    // Call the function
     component.setBooleans();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy).toHaveBeenCalled()
     expect(component.edit).toEqual(true);
     expect(component.create).toEqual(false);
   });
 
+  // SET HEADER FUNCTION
   // Test the setHeader function for creation
   it('Tests if the setHeader function sets the create value correctly', () => {    
     // Set the component edit
@@ -441,9 +449,9 @@ describe('ThemeInfoComponent', () => {
     component.create = true;
     // Create spy for function
     let spy = spyOn(component, "setHeader").and.callThrough();
-    // Set the boolean
+    // Call the function
     component.setHeader();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy).toHaveBeenCalled()
     expect(component.createEditThemeHeader).toEqual("Create");
   });
@@ -456,13 +464,14 @@ describe('ThemeInfoComponent', () => {
     component.create = false;
     // Create spy for function
     let spy = spyOn(component, "setHeader").and.callThrough();
-    // Set the boolean
+    // Call the function
     component.setHeader();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy).toHaveBeenCalled()
     expect(component.createEditThemeHeader).toEqual("Edit");
   });
 
+  // GET_SINGLE_THEME_INFO FUNCTION
   // Test the get_single_theme_info function
   it('Tests if the get_single_theme_info function calls single_theme_info correctly', () => {  
     let theme1 = new Theme(0, "", "");
@@ -470,11 +479,12 @@ describe('ThemeInfoComponent', () => {
     let spy = spyOn(component['themeDataService'], "single_theme_info").and.returnValue(Promise.resolve(theme1));
     // Call the function
     component.get_single_theme_info();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy).toHaveBeenCalled();
     expect(component.theme).toEqual(theme1);
   });
 
+  // INSERT THEME INFO FUNCTION
   // Test the insertThemeInfo function
   it('Tests if the insertThemeInfo function calls its functions correctly', () => {  
     // Set the theme
@@ -488,7 +498,7 @@ describe('ThemeInfoComponent', () => {
     let spy3 = spyOn(component['themeForm'], "setValue");
     // Call the function
     component.insertThemeInfo();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
     expect(spy3).toHaveBeenCalled();
@@ -506,13 +516,14 @@ describe('ThemeInfoComponent', () => {
     component.theme.setLabels([label]);
     // Call the function
     component.insertThemeInfo();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(component.addedSubThemes).toEqual([child]);
     expect(component.addedLabels).toEqual([label]);
     expect(component.themeForm.value.name).toEqual("Name");
     expect(component.themeForm.value.description).toEqual("Description");
   });
 
+  // CREATE THEME FUNCTION
   // Test the createTheme function
   it('Tests if the createTheme function calls its functions correctly', async () => {  
     // Make sure the form is not empty
@@ -530,13 +541,14 @@ describe('ThemeInfoComponent', () => {
     let spy4 = spyOn(component, "reRouter");
     // Call the function
     await component.createTheme();
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
     expect(spy3).toHaveBeenCalled();
     expect(spy4).toHaveBeenCalled();
   });
 
+  // GET_THEMES_WITHOUT_PARENTS FUNTION
   // Test the get_themes_without_parents function
   it('Tests if the get_themes_without_parents function calls its functions correctly', async () => {  
     // Set the component pid
@@ -545,10 +557,11 @@ describe('ThemeInfoComponent', () => {
     let spy = spyOn(component['themeDataService'], "themes_without_parents").and.returnValue(Promise.resolve([]));
     // Call the function
     await component.get_themes_without_parents(component.p_id);
-    // Check is function works correctly
+    // Check if function works correctly
     expect(spy).toHaveBeenCalled();
   });
 
+  // GET LABELS FUNCTION
   // Test the get_labels function
   it('Tests if the get_labels function calls its functions correctly', async () => {  
     // Set the component pid
@@ -557,10 +570,11 @@ describe('ThemeInfoComponent', () => {
     let spy = spyOn(component['labelDataService'], "getLabels").and.returnValue(Promise.resolve([]));
     // Call the function
     await component.get_labels(component.p_id);
-    // Check is function works correctly    
+    // Check if function works correctly    
     expect(spy).toHaveBeenCalled();
   });
 
+  // POST_THEME_INFO FUNCTION
   // Test the post_theme_info function for creation
   it('Tests if the post_theme_info function calls its functions correctly for creation', async () => {  
     // Set the create and edit booleans
@@ -570,7 +584,7 @@ describe('ThemeInfoComponent', () => {
     let spy = spyOn(component['themeDataService'], "create_theme")
     // Call the function
     await component.post_theme_info({});
-    // Check is function works correctly    
+    // Check if function works correctly    
     expect(spy).toHaveBeenCalled();
   });
 
@@ -583,7 +597,7 @@ describe('ThemeInfoComponent', () => {
     let spy = spyOn(component['themeDataService'], "edit_theme")
     // Call the function
     await component.post_theme_info({});
-    // Check is function works correctly    
+    // Check if function works correctly    
     expect(spy).toHaveBeenCalled();
   });
 

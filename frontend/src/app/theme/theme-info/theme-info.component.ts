@@ -34,9 +34,9 @@ export class ThemeInfoComponent implements OnInit {
   // Variable for the current theme
   theme: Theme;
 
-  //  Project id
+  // Variable for the project id
   p_id: number;
-  // Theme id
+  // Variable for the theme id
   t_id: number;
 
   // Variables for routing
@@ -85,7 +85,6 @@ export class ThemeInfoComponent implements OnInit {
 
     // Set the create/edit booleans
     this.setBooleans();
-
     // Set the header of the page
     this.setHeader();  
 
