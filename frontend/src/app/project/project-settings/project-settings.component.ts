@@ -24,6 +24,9 @@ export class ProjectSettingsComponent implements OnInit {
 
   /* Current user ID */
   currentUserId: number = 0;
+
+  /* Super admin ID */
+  superAdminID: number = 0;
   
   /* Array of current members of the project */
   projectMembers: User[] = [];
@@ -161,10 +164,14 @@ export class ProjectSettingsComponent implements OnInit {
 
       //Setting project users
       let members_of_project = result.users;
-      for (let i = 0; i < members_of_project.length; i++) {
+      for (let i = 0; i < members_of_project.length; i++) {        
         //Adding only current members of the project to projectMembers
-        if(members_of_project[i].removed != 1) {
+        if (members_of_project[i].removed != 1) {
           this.projectMembers.push(new User(members_of_project[i].id, members_of_project[i].username));
+        }
+        //Setting the super admin ID
+        if (members_of_project[i].super_admin == true) {
+          this.superAdminID = members_of_project[i].id;
         }
         //Adding all members (old and current) of the project to allProjectMembers
         this.allProjectMembers[members_of_project[i].id] = new User(members_of_project[i].id, members_of_project[i].username);
@@ -246,7 +253,12 @@ export class ProjectSettingsComponent implements OnInit {
    * Exiting edit mode on frontend
    */
   unclickEdit(): void {
-    location.reload();
+    //Change back to non-edit view
+    this.editModeService.isInEditMode.next(false);
+    //Reinitializing arrays and original user list
+    this.projectMembers = [];
+    this.labelTypes = [];
+    this.ngOnInit();
   }
 
   /**
