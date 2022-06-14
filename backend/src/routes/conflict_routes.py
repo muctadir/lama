@@ -116,3 +116,68 @@ def nr_user_conflicts(p_id):
     )
 
     return results
+
+@conflict_routes.route("/home", methods=["GET"])
+@login_required
+def conflicts_home_page(*, user):
+
+    # Get membership of the user
+    projects_of_user = db.session.scalars(
+        select(
+            Membership
+        ).where(
+            Membership.u_id==user.id,
+            Membership.deleted==0
+        )
+    ).all()
+
+    # List for project information
+    projects_info = []
+
+    # Schema to serialize the Project
+    project_schema = ProjectSchema()
+
+    # For loop for admin, users, #artifacts
+    for membership_project in projects_of_user:
+
+        # Make project variable 
+        project = membership_project.project
+
+        # Convert project to JSON
+        project_json = project_schema.dump(project)
+        
+        # Get the project id
+        project_id = project.id
+
+        # Get admin status 
+        projects_admin = membership_project.admin
+
+        # Get the artifacts for each project 
+        project_artifacts_stmt = select(func.count(Artifact.id)).where(Artifact.p_id==project_id)
+        project_artifacts = db.session.scalar(project_artifacts_stmt)
+        # Get the number of total artifacts
+        project_nr_artifacts = project_artifacts
+        # Get the number of completely labelled artifacts for each project
+        project_nr_cl_artifacts = db.session.scalar(
+            project_artifacts_stmt.where(Artifact.completed==True)
+        )
+
+        # Get the serialized users in the project
+        users = get_serialized_users(project.users)
+        
+        # Put all values into a dictonary
+        info = {
+            "project" : project_json,
+            "projectAdmin": projects_admin,
+            "projectNrArtifacts": project_nr_artifacts,
+            "projectNrCLArtifacts": project_nr_cl_artifacts,
+            "projectUsers": users
+        }
+        # Append the dictionary to the list
+        projects_info.append(info)
+
+    # Convert the list of dictionaries to json
+    dict_json = jsonify(projects_info)
+
+    # Return the list of dictionaries
+    return make_response(dict_json)
