@@ -78,11 +78,6 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   ngOnInit(){
-    // Get all possible themes
-    this.get_themes_without_parents(this.p_id);
-    // Get all possible labels
-    this.get_labels(this.p_id);
-
     // Set the create/edit booleans
     this.setBooleans();
     // Set the header of the page
@@ -92,13 +87,21 @@ export class ThemeInfoComponent implements OnInit {
     if(this.edit){
       // Get theme id
       this.t_id = Number(this.routeService.getThemeID(this.url));
+      // Get all possible themes
+      this.get_themes_without_parents(this.p_id, this.t_id);
+      // Get all possible labels
+      this.get_labels(this.p_id);
       // Get the current theme
       this.get_single_theme_info()
       .then(() => {
         // Set the values of the page
         this.insertThemeInfo();
-      })
-      
+      })      
+    } else {
+      // Get all possible themes
+      this.get_themes_without_parents(this.p_id, 0);
+      // Get all possible labels
+      this.get_labels(this.p_id);
     }
   }
 
@@ -180,7 +183,7 @@ export class ThemeInfoComponent implements OnInit {
       // Send the theme information to the backend
       let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
-      await this.get_themes_without_parents(this.p_id)
+      await this.get_themes_without_parents(this.p_id, 0);
       // Reset the added arrays
       this.addedLabels = [];
       this.addedSubThemes = [];
@@ -203,9 +206,9 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   // Async function for getting all themes that have no parents
-  async get_themes_without_parents(p_id: number): Promise<void> {
+  async get_themes_without_parents(p_id: number, t_id: number): Promise<void> {
     // Put the gotten themes into the list of themes
-    this.allSubThemes = await this.themeDataService.themes_without_parents(p_id);
+    this.allSubThemes = await this.themeDataService.themes_without_parents(p_id, t_id);
   }
 
   // Async function for getting all labels in the project
@@ -241,7 +244,7 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   //Function for adding subtheme to added subthemes array
-  addSubtheme(subTheme:any): void {
+  addSubtheme(subTheme: Theme): void {
     // Check if the sub-theme was already added
     for (var addedSubTheme of this.addedSubThemes){
       if (addedSubTheme.getId() == subTheme.getId()){
@@ -255,7 +258,7 @@ export class ThemeInfoComponent implements OnInit {
 
   // REMOVING LABELS / THEMES
   // Function for removing label
-  removeLabel(label:any): void {
+  removeLabel(label: Label): void {
     
     // Go through all labels
     this.addedLabels.forEach((addedLabels, index)=>{
@@ -267,7 +270,7 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   // Function for removing subtheme
-  removeSubtheme(subTheme:any): void {
+  removeSubtheme(subTheme: Theme): void {
     // Go through all labels
     this.addedSubThemes.forEach((addedSubThemes, index)=>{
       // If clicked cross matches the label, splice them from the labels
@@ -283,21 +286,21 @@ export class ThemeInfoComponent implements OnInit {
 
   // HIGHLIGHTING
   // Function for highlighting selected label
-  highlightLabel(label:any): void {
+  highlightLabel(label: Label): void {
     this.highlightedLabel = label.getName();
   }
   //Function for highlighting selected sub-theme
-  highlightSubtheme(subtheme:any): void {
+  highlightSubtheme(subtheme: Theme): void {
     this.highlightedSubtheme = subtheme.getName();
   }
 
   // DISPLAY DESCRIPTIONS
   //Displays the description for selected label
-  displayDescriptionLabel(label:any): void {
+  displayDescriptionLabel(label: Label): void {
     this.selectedDescriptionLabel = label.getDesc();
   }
   //Displays the description for selected theme
-  displayDescriptionTheme(theme:any): void {
+  displayDescriptionTheme(theme: Theme): void {
     this.selectedDescriptionTheme = theme.getDesc();
   }
 
