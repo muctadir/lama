@@ -24,7 +24,7 @@ function addValues(name:string, descr:string):Artifact {
 })
 export class ConflictPageComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private reroutingService: ReroutingService) { }
 
   /**
    * Gets all the users within the application from the backend
@@ -44,7 +44,7 @@ export class ConflictPageComponent implements OnInit {
 
     if (typeof token === "string") {
       // Get all users within the tool
-      this.requestConflicts(token);
+      this.requestConflicts(token, projectID);
     }
   }
 
@@ -83,14 +83,14 @@ export class ConflictPageComponent implements OnInit {
    * @trigger on component load
    * @modifies allMembers
    */
-   async requestConflicts(token : string | null) : Promise<void> {
+   async requestConflicts(token : string | null, p_id: number) : Promise<void> {
     // Initializes the request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
 
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
-      let response: any = requestHandler.get("/conflict/home", {}, true);
+      let response: any = requestHandler.get("/conflict/home", {'p_id': p_id}, true);
 
       // Waits on the request
       let result = await response;
