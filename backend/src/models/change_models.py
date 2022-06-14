@@ -115,6 +115,8 @@ class ChangeType(Enum):
     theme_theme = 6
     # Labelled
     labelled = 7
+    # Soft deleted
+    deleted = 8
 
 
 # For project-wide history, consider changing this to an Abstract Concrete Class

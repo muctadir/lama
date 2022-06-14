@@ -394,12 +394,30 @@ def __record_description_edit(t_id, old_name, p_id, u_id):
 
     db.session.add(change)
 
-def __record_subthemes(t_id, name, p_id, u_id, added, removed):
-    # Sub themes added to this theme
-    # Sub themes removed from this theme
-    # Made sub theme of this theme
-    # Unmade sub theme of this theme
-    pass
+def __record_adding(t_id, name, p_id, u_id, added, change_type):
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
 
-def __record_labels(t_id, name, p_id, u_id, added, removed):
-    pass
+    change = ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=name,
+        description="added" + ','.join(added),
+        change_type=change_type
+    )
+    db.session.add(change)
+
+def __record_removing(t_id, name, p_id, u_id, removed, change_type):
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    change = ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=name,
+        description="removed" + ','.join(removed),
+        change_type=change_type     
+    )
+    db.session.add(change)
