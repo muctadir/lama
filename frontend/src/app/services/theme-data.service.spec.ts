@@ -4,7 +4,7 @@ import { Label } from 'app/classes/label';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { ThemeDataService } from './theme-data.service';
 
-fdescribe('ThemeDataService', () => {
+describe('ThemeDataService', () => {
   let service: ThemeDataService;
 
   beforeEach(() => {
