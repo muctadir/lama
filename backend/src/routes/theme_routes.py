@@ -3,9 +3,7 @@
 
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
-from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
