@@ -218,8 +218,8 @@ export class ThemeInfoComponent implements OnInit {
   // Async function for posting the new theme info
   async post_theme_info(theme_info: any): Promise<string> {
     if(this.create){
-    // Send info to backend
-    return this.themeDataService.create_theme(theme_info);
+      // Send info to backend
+      return this.themeDataService.create_theme(theme_info);
     } else if (this.edit){
       return this.themeDataService.edit_theme(theme_info);
     } else {
