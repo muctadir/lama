@@ -105,7 +105,7 @@
                                     <!-- Column for checkbox -->
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                        <input *ngIf="member.getId() != currentUserId" type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMembers[member.getId()]">
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMembers[member.getId()]">
                                     </div>                                        
                                 </div>
                             </label>
