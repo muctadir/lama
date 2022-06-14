@@ -6,6 +6,7 @@ from src.models import db
 from src.models.auth_models import User
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from src.models.project_models import Membership, ProjectSchema
+from src.models.change_models import ChangeType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
@@ -210,19 +211,17 @@ def create_theme(*, user):
     required = ["name", "description", "labels", "sub_themes", "p_id"]
 
     # Get args
-    args = request.json
-    # Get the actual info
-    theme_info = args['params']
+    args = request.json['params']
 
     # Check if all required arguments are there
-    if not check_args(required, theme_info):
+    if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
 
     # Theme creation info
     theme_creation_info = {
-        "name": theme_info["name"],
-        "description": theme_info["description"],
-        "p_id": theme_info["p_id"]
+        "name": args["name"],
+        "description": args["description"],
+        "p_id": args["p_id"]
     }
 
     # Load the project data into a project object
@@ -231,12 +230,14 @@ def create_theme(*, user):
 
     # Add the project to the database
     db.session.add(theme)
+    db.session.flush()
+    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
-    theme.sub_themes = make_sub_themes(theme_info["sub_themes"])
+    theme.sub_themes = make_sub_themes(args["sub_themes"])
 
     # Make the labels the labels of the created theme
-    theme.labels = make_labels(theme_info["labels"])
+    theme.labels = make_labels(args["labels"])
 
     # Create the project
     try:
@@ -345,3 +346,17 @@ def make_sub_themes(sub_themes_info):
         # Append the theme to the list
         sub_themes_list.append(new_theme)
     return sub_themes_list
+
+def __record_creation(t_id, name, p_id, u_id):
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    change = ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=name,
+        change_type=ChangeType.create
+    )
+
+    db.session.add(change)

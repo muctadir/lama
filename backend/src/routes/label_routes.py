@@ -51,7 +51,7 @@ def create_label(*, user):
     try:
         db.session.add(label)
         db.session.flush()
-        __add_label_creation(label.id, label.name, args['labelTypeName'], args['p_id'], user.id)
+        __record_creation(label.id, label.name, args['labelTypeName'], args['p_id'], user.id)
         db.session.commit() 
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
@@ -236,7 +236,7 @@ def get_label_artifacts(label, u_id, admin):
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
     )
 
-def __add_label_creation(l_id, l_name, lt_name, p_id, u_id):
+def __record_creation(l_id, l_name, lt_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
 

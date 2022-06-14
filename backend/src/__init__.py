@@ -5,7 +5,7 @@ from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
 from src.models import db
 from src.models.auth_models import User, UserStatus
-from src.models.item_models import Artifact, Label
+from src.models.item_models import Artifact, Label, Theme
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
@@ -70,6 +70,7 @@ def db_init():
 def test(): 
     changes = get_changes(Artifact.__change__, 1)
     changes.extend(get_changes(Label.__change__, 1))
+    changes.extend(get_changes(Theme.__change__, 1))
     for change in changes:
         print(str(change))
 

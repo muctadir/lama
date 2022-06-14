@@ -124,7 +124,7 @@ def add_new_artifacts(*, user):
 
     artifact_ids = db.session.scalars(select(Artifact.id).where(Artifact.identifier == identifier)).all()
 
-    __add_artifact_creations(artifact_ids, user.id, args['p_id'])
+    __record_creations(artifact_ids, user.id, args['p_id'])
     
     # Try commiting the artifacts
     try:
@@ -335,7 +335,7 @@ def generate_artifact_identifier(p_id):
     # Return the identifier
     return identifier_upper[start:length]
 
-def __add_artifact_creations(artifact_ids, u_id, p_id):
+def __record_creations(artifact_ids, u_id, p_id):
     # PascalCase because it is a class
     ArtifactChange = Artifact.__change__
     
