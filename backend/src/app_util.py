@@ -302,18 +302,19 @@ def __parse_label_theme(change, username):
     description = change.description.split(' ; ')
     if len(description) != 2:
         raise ChangeSyntaxError
-    names = description[1].split(', ')
+    names = description[1].split(',')
     if names[0].strip() == "":
         raise ChangeSyntaxError
+    parsed_names = '"' + '", "'.join(names) + '"'
     match description[0]:
         case 'added':
             if item_type == 'Label':
-                return f"{username} added Label \"{change.name}\" to theme{'s' if len(names[1]) > 1 else ''} \"{description[1]}\""
-            return f"{username} added Label{'s' if len(names[1]) > 1 else ''} \"{description[1]}\" to theme \"{change.name}\""
+                return f"{username} added Label \"{change.name}\" to theme{'s' if len(names[1]) > 1 else ''} {parsed_names}"
+            return f"{username} added Label{'s' if len(names[1]) > 1 else ''} {parsed_names} to theme \"{change.name}\""
         case 'removed':
             if item_type == 'Label':
-                return f"{username} removed Label \"{change.name}\" from theme{'s' if len(names[1]) > 1 else ''} \"{description[1]}\""
-            return f"{username} removed Label{'s' if len(names[1]) > 1 else ''} \"{description[1]}\" from theme \"{change.name}\""
+                return f"{username} removed Label \"{change.name}\" from theme{'s' if len(names[1]) > 1 else ''} {parsed_names}"
+            return f"{username} removed Label{'s' if len(names[1]) > 1 else ''} {parsed_names} from theme \"{change.name}\""
         case _:
             raise ChangeSyntaxError
 
@@ -328,7 +329,9 @@ def __parse_theme_theme(change, username):
     names = description[1].split(', ')
     if names[0].strip() == "":
         raise ChangeSyntaxError
-    return f"{username} made Theme \"{change.name}\" a {description[0]}theme of theme{'s' if len(names[1]) > 1 else ''} \"{description[1]}\""
+    parsed_names = '"' + '", "'.join(names) + '"'
+
+    return f"{username} made Theme \"{change.name}\" a {description[0]}theme of theme{'s' if len(names[1]) > 1 else ''} {parsed_names}"
 
 """
 A labelled string should be of the format:

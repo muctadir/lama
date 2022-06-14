@@ -62,7 +62,7 @@ def create_label(*, user):
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
-def edit_label():
+def edit_label(*, user):
     # Get args 
     args = request.json
     # Required args
@@ -78,11 +78,18 @@ def edit_label():
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
     
+    if label.name != args['name']:
+        __record_name_edit(label.id, label.name, args['p_id'], label.id, args['name'])
+    
+    if label.description != args['description']:
+        __record_description_edit(label.id, args['name'], args['p_id'], user.id)
+
+    db.session.execute(
+        update(Label)
+        .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
+    )
+    
     try:
-        db.session.execute(
-            update(Label)
-            .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
-        )
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
@@ -247,6 +254,35 @@ def __record_creation(l_id, l_name, lt_name, p_id, u_id):
         change_type=ChangeType.create,
         name=l_name,
         description=lt_name
+    )
+
+    db.session.add(change)
+
+def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=old_name,
+        description=new_name,
+        change_type=ChangeType.name
+    )
+
+    db.session.add(change)
+
+def __record_description_edit(l_id, old_name, p_id, u_id):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=old_name,
+        change_type=ChangeType.description
     )
 
     db.session.add(change)
