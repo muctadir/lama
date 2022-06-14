@@ -286,3 +286,6 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
     )
 
     db.session.add(change)
+
+def __record_merge():
+    pass

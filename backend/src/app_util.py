@@ -244,14 +244,15 @@ or null otherwise
 """
 def __parse_creation(change, username):
     item_type = change.item_class_name
+    parsed_name = f'"{change.name}"' if item_type != 'Artifact' else change.name
     if item_type == 'Label':
         description = change.description.split(' ; ')
         if len(description) != 1:
             raise ChangeSyntaxError
-        return f"{username} created {item_type} \"{change.name}\" of type \"{change.description}\""
+        return f"{username} created {item_type} {parsed_name} of type \"{change.description}\""
     if change.description:
         raise ChangeSyntaxError
-    return f"{username} created {item_type} \"{change.name}\""
+    return f"{username} created {item_type} {parsed_name}"
 
 """
 A name edit string should be of the format:
@@ -275,23 +276,23 @@ def __parse_desc_edit(change, username):
 
 """
 A split string should be of the format:
-"'into'|'from' ; parent_id|child_id"
+"parent_id"
 """
 def __parse_split(change, username):
     description = change.description.split(' ; ')
-    if len(description) != 2:
+    if len(description) != 1:
         raise ChangeSyntaxError
-    return f"{username} split Artifact \"{change.name}\" {description[0]} Artifact \"{description[1]}\""
+    return f"{username} created Artifact {change.name} by splitting from Artifact {change.description}"
 
 """
 A merge string should be of the format:
-"child_name"
+"left_label_name ; right_label_name"
 """
 def __parse_merge(change, username):
     description = change.description.split(' ; ')
-    if len(description) != 1:
+    if len(description) != 2:
         raise ChangeSyntaxError
-    return f"{username} merged Label \"{change.name}\" into Label \"{change.description}\""
+    return f"{username} created Label \"{change.name}\" by merging Label \"{description[0]}\" and Label \"{description[1]}\""
 
 """
 A label_theme string should be of the format:

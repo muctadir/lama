@@ -348,3 +348,6 @@ def __record_creations(artifact_ids, u_id, p_id):
     ) for a_id in artifact_ids]
     
     db.session.add_all(creations)
+
+def __record_split():
+    pass
