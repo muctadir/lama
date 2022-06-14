@@ -9,7 +9,7 @@ import { Project } from 'app/classes/project';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from 'app/modals/logout/logout.component';
-
+import { ToastGlobalComponent } from 'app/modals/toast-global/toast-global.component';
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
@@ -28,7 +28,7 @@ export class HomePageComponent implements OnInit {
    * @param modalService instance of modal
    * @trigger on loads
    */
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal){}//, private toastGlobalComponent: ToastGlobalComponent) {}
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of
@@ -70,7 +70,8 @@ export class HomePageComponent implements OnInit {
       this.errorMsg = "";
     } catch(e) {
       // Displays error message
-      this.errorMsg = "An error occured when getting data from the server.";
+      // this.errorMsg = "An error occured when getting data from the server.";
+      // this.toastGlobalComponent.showDanger();
     }
   }
 

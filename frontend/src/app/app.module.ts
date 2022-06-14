@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -47,6 +47,8 @@ import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
+import { ToastsContainer } from './modals/toast-global/toast-container.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +91,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     // Theme page component
     ThemeManagementComponent,
     ThemeInfoComponent,
-    SingleThemeViewComponent
+    SingleThemeViewComponent,
+    ToastGlobalComponent,
+    ToastsContainer
   ],
   imports: [
     BrowserModule,
@@ -100,6 +104,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   providers: [],
   bootstrap: [
-    AppComponent]
+    AppComponent
+  ]
 })
 export class AppModule { }
