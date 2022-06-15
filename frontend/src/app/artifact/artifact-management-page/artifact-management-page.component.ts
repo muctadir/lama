@@ -71,16 +71,19 @@ export class ArtifactManagementPageComponent {
    */
   async getArtifacts(): Promise<void> {
 
+    // If we do not already have the artifacts for this page cached
     if (!this.artifacts.hasOwnProperty(this.page)) {
       // Get the ID of the project
       const p_id = Number(this.routeService.getProjectID(this.url))
+      // Get the artifacts for this page
       const result = await this.artifactDataService.getArtifacts(p_id, this.page, this.pageSize);
+      // If the number of artifacts changed, then we need to reset the cache.
       if (result[0] != this.nArtifacts) {
         this.nArtifacts = result[0];
         this.artifacts = {};
       }
+      // Cache artifacts for this page
       this.artifacts[this.page] = result[1];
-      console.log(this.artifacts)
     }
 
   }
@@ -117,7 +120,8 @@ export class ArtifactManagementPageComponent {
 
     // If nothing was searched
     if(text.length == 0){
-      // Show all artifacts
+      // Clear cache and show all artifacts
+      this.artifacts = {};
       await this.getArtifacts();
     } else {
       // Otherwise search
@@ -135,7 +139,13 @@ export class ArtifactManagementPageComponent {
         artifact_list.push(newArtifact);
       }
       // Only show the resulting artifacts from the search
+      // Update length and clear cache
+      this.nArtifacts = artifact_list.length;
+      this.artifacts = {};
+      // Slice the resulting artifacts into pages
       for (let i: number = 1; i <= Math.ceil(artifact_list.length / this.pageSize); i++) {
+        // Each page gets as many artifacts as can fit in a page
+        // Last page may not have that many artifacts, hence Math.min to choose remaining artifacts instead
         this.artifacts[i] = artifact_list.slice((i - 1) * this.pageSize, Math.min(
           artifact_list.length,
           i * this.pageSize
