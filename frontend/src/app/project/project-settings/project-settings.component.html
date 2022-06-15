@@ -89,7 +89,7 @@
 
                             <!-- Name and checkbox per member (other than current user) of the project -->
                             <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
-                                <!-- Row for the delete, name and project admin of other users -->
+                                <!-- Row for the delete, name and project admin of users who are not the current user or the super admin -->
                                 <div *ngIf="member.getId() != currentUserId && member.getId() != superAdminID" class="row align-items-center">
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
@@ -217,7 +217,7 @@
                                 </div>
                             </div>
                            
-                            <!-- Row for the current user on top-->
+                            <!-- Row for the current user (who is not a super admin) on top-->
                             <div class="row align-items-center" *ngIf="currentUserId != superAdminID">
                                 <!-- Column for username -->
                                 <div class="col-8">
@@ -231,10 +231,10 @@
                                 </div>                                        
                             </div>
 
-                            <!-- Name and checkbox per other members of the project -->
+                            <!-- Name and checkbox per other members (non-admin and not current users) of the project -->
                             <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
-                               <!-- Row for the delete, name and project admin of other members-->
-                                <div *ngIf="member.getId() != currentUserId  && member.getId() != 1" class="row align-items-center">
+                               <!-- Row for the delete, name and project admin of other members (non-admin and not current users)-->
+                                <div *ngIf="member.getId() != currentUserId  && member.getId() != superAdminID" class="row align-items-center">
                                     <!-- Column for username -->
                                     <div class="col-8">
                                         {{ member.getUsername() }}
