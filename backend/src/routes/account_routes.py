@@ -38,18 +38,21 @@ def edit_user_information(*, user):
     """
         Edit the user information
     """
+    print("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
+    print(user)
 
     # Get the information needed
     args = request.json
     args = args['params']
 
     # Take the username, email and description
+    edit_id = args["id"]
     new_username = args["username"]
     new_email = args["email"]
     new_description = args["description"]
 
     # Required arguments
-    required = ["username", "email", "description"] 
+    required = ["username", "email", "description", "id"] 
 
     # Check required arguments are supplied
     if not check_args(required, args):
@@ -59,16 +62,37 @@ def edit_user_information(*, user):
     if not check_format(new_username, new_email, new_description)[0]:
         return make_response(("Bad Request", 400))
     
-    # Change the users information
-    db.session.execute(
-        update(User).
-        where(User.id == user.id).
-        values(
-            username=new_username,
-            email=new_email,
-            description=new_description
+    if user.super_admin:
+        db.session.execute(
+            update(User).
+            where(User.id == edit_id).
+            values(
+                username=new_username,
+                email=new_email,
+                description=new_description
+            )
         )
-    )
+    else:
+        db.session.execute(
+            update(User).
+            where(User.id == user.id).
+            values(
+                username=new_username,
+                email=new_email,
+                description=new_description
+            )
+        )
+
+    # Change the users information
+    # db.session.execute(
+    #     update(User).
+    #     where(User.id == user.id).
+    #     values(
+    #         username=new_username,
+    #         email=new_email,
+    #         description=new_description
+    #     )
+    # )
     # Commit the new information
     db.session.commit()
     

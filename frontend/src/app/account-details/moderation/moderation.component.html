@@ -22,17 +22,20 @@
                         <thead>
                             <tr>
                                 <!-- Column with usernames -->
-                                <th scope="col" style="width: 25%;"><p class="tableheader">User</p></th>
+                                <th scope="col" class="col-3"><p class="tableheader">User</p></th>
+                                <!-- Column with email -->
+                                <th scope="col" class="col-3"><p class="tableheader">Email</p></th>
                                 <!-- Column with description of the users -->
-                                <th scope="col" style="width: 45%;"><p class="tableheader">Description</p></th>
+                                <th scope="col" class="col-3"><p class="tableheader">Description</p></th>
                                 <!-- Column edit and delete button-->
-                                <th scope="col" style="width: 30%;"><p class="tableheader">Modification</p></th>
+                                <th scope="col" class="col-3"><p class="tableheader">Modification</p></th>
                             </tr>
                         </thead>
                         <!--Table Content-->
                         <tbody>
                             <tr *ngFor="let user of users">
                                 <td><p class="tablecontent">{{user.getUsername()}}</p></td>
+                                <td><p class="tablecontent">{{user.getEmail()}}</p></td>
                                 <td><p class="tablecontent">{{user.getDesc()}}</p></td>
                                 <td>
                                     <button class="btn btn-primary text-nowrap padd" (click)="editUser(user)">Edit</button>

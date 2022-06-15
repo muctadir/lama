@@ -32,6 +32,8 @@ export class ModerationComponent {
    modeChange(newMode: number) : void {
     // Changes page
     this.mode = newMode;
+    // Updates the user data
+    this.getAllUsers();
   }
 
   async getAllUsers() : Promise<void> {
