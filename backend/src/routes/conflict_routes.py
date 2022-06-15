@@ -146,7 +146,8 @@ Author: Linh Nguyen
 """
 def project_conflicts(p_id, admin, u_id):
     # Artifact IDs involved with this users
-    a_per_user = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
+    a_per_user = select(distinct(Labelling.a_id)).where(Labelling.u_id == u_id).subquery()
+    print(u_id)
     # Number of differing labels per label type and artifact
     per_label_type = select(
         # Artifact id
@@ -157,10 +158,12 @@ def project_conflicts(p_id, admin, u_id):
         func.count(distinct(Labelling.l_id)).label('label_count')
     # In the given project
     ).where(
-        Labelling.p_id == p_id,
-        Labelling.a_id.in_(a_per_user)
+        Labelling.p_id == p_id)
+    if not admin:
+        per_label_type = per_label_type.where(Labelling.a_id.in_(a_per_user))
+    
     # Grouped by artifacts and by label type
-    ).group_by(
+    per_label_type = per_label_type.group_by(
         Labelling.a_id,
         Labelling.lt_id
     ).subquery()
@@ -266,5 +269,4 @@ def conflict_management_page(*, user, membership):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
-    
     return make_response(project_conflicts(p_id, membership.admin, user.id))
