@@ -59,11 +59,9 @@ export class ArtifactManagementPageComponent {
   }
 
   ngOnInit(): void {
-    // Get the ID of the project
-    const p_id = Number(this.routeService.getProjectID(this.url))
 
     // Get the artifacts from the backend
-    this.getArtifacts(p_id, this.page, this.pageSize);
+    this.getArtifacts();
   }
 
   /**
@@ -71,17 +69,20 @@ export class ArtifactManagementPageComponent {
    * 
    * @param p_id the id of the project
    */
-  async getArtifacts(p_id: number, page: number, pageSize: number): Promise<Array<StringArtifact>> {
-    if (!this.artifacts.hasOwnProperty(page)) {
-      const result = await this.artifactDataService.getArtifacts(p_id, page, pageSize);
+  async getArtifacts(): Promise<void> {
+
+    if (!this.artifacts.hasOwnProperty(this.page)) {
+      // Get the ID of the project
+      const p_id = Number(this.routeService.getProjectID(this.url))
+      const result = await this.artifactDataService.getArtifacts(p_id, this.page, this.pageSize);
       if (result[0] != this.nArtifacts) {
         this.nArtifacts = result[0];
         this.artifacts = {};
       }
-      this.artifacts[page] = result[1];
+      this.artifacts[this.page] = result[1];
       console.log(this.artifacts)
     }
-    return this.artifacts[page];
+
   }
 
   /**
@@ -102,7 +103,7 @@ export class ArtifactManagementPageComponent {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
     // When the modal closes, call the getArtifact function to update the displayed artifacts
     modalRef.result.then( async () => {
-      this.getArtifacts(Number(this.routeService.getProjectID(this.url)), this.page, this.pageSize) });
+      this.getArtifacts() });
     }
   
   //gets the search text
@@ -117,7 +118,7 @@ export class ArtifactManagementPageComponent {
     // If nothing was searched
     if(text.length == 0){
       // Show all artifacts
-      await this.getArtifacts(p_id, this.page, this.pageSize);
+      await this.getArtifacts();
     } else {
       // Otherwise search
     

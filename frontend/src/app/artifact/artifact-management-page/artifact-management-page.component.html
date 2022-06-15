@@ -72,7 +72,8 @@
                 <ngb-pagination
                     [(page)]="page"
                     [pageSize]="pageSize"
-                    [collectionSize]="nArtifacts">
+                    [collectionSize]="nArtifacts"
+                    (pageChange)="getArtifacts()">
                 </ngb-pagination>
             </div>        
             
