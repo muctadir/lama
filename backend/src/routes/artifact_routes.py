@@ -27,33 +27,51 @@ def get_artifacts(*, user, membership):
     # Get args from request 
     args = request.args
     # What args are required
-    required = ['p_id']
+    required = ('p_id', 'page', 'page_size')
 
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
+    page = args['page'] - 1
+    page_size = args['page_size']
     
     # Check if user is admin for the project and get artifacts
     if membership.admin:
-        # If the user is admin, then get all artifacts in the project
-        artifacts = db.session.execute(
-            select(Artifact).where(Artifact.p_id==p_id)
-        ).scalars().all()
+        # If the user is admin, then get any artifact in the project for a certain page
+        artifacts = db.session.scalars(
+            select(Artifact)
+            .where(Artifact.p_id == p_id)
+            .offset(page * page_size)
+            .limit(page_size)
+        ).all()
+        # Get the number of artifacts in the project
+        n_artifacts = db.session.scalar(
+            select(func.count(Artifact.id))
+            .where(Artifact.p_id == p_id)
+        )
     else:
         # If user isn't admin, then get all artifacts the user has labelled
-        artifacts = set()
 
-        # Get all the labellings the user has done in the current project
-        labellings = db.session.execute(
-            select(Labelling).where(Labelling.u_id==user.id, Labelling.p_id==p_id)
-        ).scalars().all()
-
-        # Take the artifacts labelled by the user
-        # TODO: Remove for loop
-        for labelling in labellings:
-            artifacts.add(labelling.artifact)
+        # Get only the artifacts the user has labelled in the current project (for a certain page)
+        artifacts = db.session.scalars(
+            select(Artifact)
+            .where(
+                Artifact.a_id == Labelling.a_id,
+                Labelling.u_id == user.id, 
+                Labelling.p_id == p_id)
+            .offset(page * page_size)
+            .limit(page_size)
+        ).all()
+        # Get the number of artifacts the user has labelled
+        n_artifacts = db.session.scalar(
+            select(func.count(Artifact.id))
+            .where(
+                Artifact.a_id == Labelling.a_id,
+                Labelling.u_id == user.id, 
+                Labelling.p_id == p_id)
+        )
 
     # List of artifacts to be passed to frontend
     artifact_info = []
@@ -80,11 +98,13 @@ def get_artifacts(*, user, membership):
         # Append dictionary to list
         artifact_info.append(info)
 
-    # Convert the list of dictionaries to json
-    dict_json = jsonify(artifact_info)
+    response = {
+        'info': artifact_info,
+        'nArtifacts': n_artifacts
+    }
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(jsonify(response))
 
 
 @artifact_routes.route("/creation", methods=["POST"])

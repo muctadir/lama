@@ -1,7 +1,8 @@
 // Ana-Maria Olteniceanu
 // Bartjan Henkemans
 // Victoria Bogachenkova
-// Thea Bradley 
+// Thea Bradley
+// Eduardo Costa Martins
 
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -23,8 +24,11 @@ export class ArtifactManagementPageComponent {
   routeService: ReroutingService;
   // Initialize the url
   url: string;
-  // Make list of all artifacts
-  artifacts: Array<StringArtifact> = [];
+  // Make list of all _received_ artifacts
+  // A page number maps to a list of artifacts on that page
+  artifacts: Record<number, Array<StringArtifact>> = {};
+  // number of artifacts
+  nArtifacts: number = 0;
 
   //bool on if there is text in the search bar
   search = false;
@@ -51,7 +55,7 @@ export class ArtifactManagementPageComponent {
     private router: Router, private formBuilder: FormBuilder) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
-    this.artifacts = new Array<StringArtifact>();
+    // this.artifacts = new Array<StringArtifact>();
   }
 
   ngOnInit(): void {
@@ -59,7 +63,7 @@ export class ArtifactManagementPageComponent {
     const p_id = Number(this.routeService.getProjectID(this.url))
 
     // Get the artifacts from the backend
-    this.getArtifacts(p_id);
+    this.getArtifacts(p_id, this.page, this.pageSize);
   }
 
   /**
@@ -67,9 +71,17 @@ export class ArtifactManagementPageComponent {
    * 
    * @param p_id the id of the project
    */
-  async getArtifacts(p_id: number): Promise<void> {
-    const artifacts = await this.artifactDataService.getArtifacts(p_id);
-    this.artifacts = artifacts;
+  async getArtifacts(p_id: number, page: number, pageSize: number): Promise<Array<StringArtifact>> {
+    if (!this.artifacts.hasOwnProperty(page)) {
+      const result = await this.artifactDataService.getArtifacts(p_id, page, pageSize);
+      if (result[0] != this.nArtifacts) {
+        this.nArtifacts = result[0];
+        this.artifacts = {};
+      }
+      this.artifacts[page] = result[1];
+      console.log(this.artifacts)
+    }
+    return this.artifacts[page];
   }
 
   /**
@@ -90,7 +102,7 @@ export class ArtifactManagementPageComponent {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
     // When the modal closes, call the getArtifact function to update the displayed artifacts
     modalRef.result.then( async () => {
-      this.getArtifacts(Number(this.routeService.getProjectID(this.url))) });
+      this.getArtifacts(Number(this.routeService.getProjectID(this.url)), this.page, this.pageSize) });
     }
   
   //gets the search text
@@ -105,7 +117,7 @@ export class ArtifactManagementPageComponent {
     // If nothing was searched
     if(text.length == 0){
       // Show all artifacts
-      await this.getArtifacts(p_id);
+      await this.getArtifacts(p_id, this.page, this.pageSize);
     } else {
       // Otherwise search
     
@@ -122,7 +134,12 @@ export class ArtifactManagementPageComponent {
         artifact_list.push(newArtifact);
       }
       // Only show the resulting artifacts from the search
-      this.artifacts = artifact_list;
+      for (let i: number = 1; i <= Math.ceil(artifact_list.length / this.pageSize); i++) {
+        this.artifacts[i] = artifact_list.slice((i - 1) * this.pageSize, Math.min(
+          artifact_list.length,
+          i * this.pageSize
+        ));
+      }
     }
   }
 

@@ -27,18 +27,21 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @returns Promise<Array<StringArtifact>>
    */
-  async getArtifacts(p_id: number): Promise<Array<StringArtifact>> {
+  async getArtifacts(p_id: number, page: number, pageSize: number): Promise<[number, Array<StringArtifact>]> {
     // Check if the p_id is larger than 1
     if (p_id < 1) throw new Error("p_id cannot be less than 1");
 
     // Array with results
-    let result: Array<StringArtifact> = new Array<StringArtifact>();
+    let artifacts: Array<StringArtifact> = new Array<StringArtifact>();
 
     // Actual request
-    let response = await this.requestHandler.get('/artifact/artifactmanagement', { 'p_id': p_id }, true);
+    let response = await this.requestHandler.get('/artifact/artifactmanagement', {
+      'p_id': p_id,
+      'page': page,
+      'page_size': pageSize }, true);
 
     // For each artifact in the list
-    response.forEach((artifact: any) => {
+    response['info'].forEach((artifact: any) => {
       // Initialize a new artifact with all values
       let artifactJson = artifact["artifact"];
 
@@ -53,11 +56,11 @@ export class ArtifactDataService {
       artifactNew.setLabellings(artifact["artifact_labellings"]);
 
       // Add the artifact to the result
-      result.push(artifactNew);
+      artifacts.push(artifactNew);
     });
 
     // Return result
-    return result;
+    return [response['nArtifacts'], artifacts];
 
   }
 
