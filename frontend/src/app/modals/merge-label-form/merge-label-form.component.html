@@ -1,55 +1,58 @@
-<!-- Author: Victoria Bogachenkoca -->
-
+<!-- Author: Bartjan Henkemans -->
+<!-- Author: Victoria Bogachenkova -->
 <div class="container" id="body">
   <div class="row modal-header" class="title">
     <!-- Title -->
     <div class="col-12">Merge Label</div>
   </div>
 
-  <div class="row modal-body">
+  <div class="row modal-body" [formGroup]="form">
     <div class="col-6">
-      <div class="form-group">
-        <p class="subTitle">Select Label Type</p>
-        <select class="form-control" id="label-type" name="labels">
-          <option *ngFor="let labeltype of labelTypes">
+      <p class="subTitle">Select Label Type</p>
+      <div class="input-group">
+        <select
+          class="form-control"
+          id="label-type"
+          name="labels"
+          formControlName="labelType"
+        >
+          <option *ngFor="let labeltype of labelTypes" [ngValue]="labeltype">
             {{ labeltype.getName() }}
           </option>
         </select>
       </div>
-      <!-- Add more labels -->
-      <button
-        (click)="add()"
-        type="button"
-        class="btn btn-secondary"
-        id="addLabelButton"
-        style="float: right"
-      >
-        <!-- Plus icon -->
+      <p class="subTitle">Select Label Type</p>
+      <button (click)="add()" type="button" class="btn btn-secondary float-end">
         <i class="bi bi-plus"></i>
       </button>
-      <div class="label-selection" [formGroup]="form">
+      <div class="label-selection-form" [formGroup]="form">
         <ng-container formArrayName="toBeMergedLabels">
           <ng-container
-            class="form-row"
             *ngFor="let labelForm of toBeMergedLabels.controls; let i = index"
+            [formGroupName]="i"
           >
-            <div class="col">
+            <div class="input-group label-selection">
+              <!-- multiple -->
               <select class="form-control" formControlName="label">
-                <option>a</option>
-                <option>b</option>
+                <option
+                  *ngFor="let label of this.availableLabels"
+                  [ngValue]="label"
+                  [disabled]="used.includes(label)"
+                >
+                  {{ label.getName() }}
+                </option>
               </select>
-            </div>
-            <div class="col">
-              <button
-                (click)="rem(i)"
-                type="button"
-                class="btn btn-light"
-                id="addLabelButton"
-                style="float: right"
-              >
-                <!-- Plus icon -->
-                <i class="bi bi-dash"></i>
-              </button>
+              <div class="input-group-append">
+                <button
+                  (click)="rem(i)"
+                  type="button"
+                  class="btn btn-light"
+                  style="float: right"
+                >
+                  <!-- Plus icon -->
+                  <i class="bi bi-dash"></i>
+                </button>
+              </div>
             </div>
           </ng-container>
         </ng-container>
@@ -64,6 +67,7 @@
           class="form-control"
           id="label-name"
           placeholder="Merge Name"
+          formControlName="mergerName"
         />
       </div>
       <div>
@@ -76,6 +80,7 @@
             rows="8"
             placeholder="Description"
             id="remark"
+            formControlName="mergerDescription"
           ></textarea>
         </div>
       </div>
@@ -94,7 +99,7 @@
       </button>
       <button
         class="btn btn-primary float-end"
-        (click)="notImplemented()"
+        (click)="submit()"
         id="btns-cancel-submit"
       >
         Submit
