@@ -34,8 +34,8 @@ def get_artifacts(*, user, membership):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
-    page = args['page'] - 1
-    page_size = args['page_size']
+    page = int(args['page']) - 1
+    page_size = int(args['page_size'])
     
     # Check if user is admin for the project and get artifacts
     if membership.admin:

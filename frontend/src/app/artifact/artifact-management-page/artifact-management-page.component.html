@@ -55,7 +55,7 @@
 
                     <!-- Table Content -->
                     <tbody>
-                        <tr *ngFor="let artifact of artifacts |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(artifact.getId())">
+                        <tr *ngFor="let artifact of artifacts[page]" (click)="reRouter(artifact.getId())">
                             <!-- Artifact ID -->
                             <td><p class="artifactID">{{artifact.getId()}}</p></td>
                             <!-- Artifact text -->
@@ -72,7 +72,7 @@
                 <ngb-pagination
                     [(page)]="page"
                     [pageSize]="pageSize"
-                    [collectionSize]="artifacts.length">
+                    [collectionSize]="nArtifacts">
                 </ngb-pagination>
             </div>        
             
