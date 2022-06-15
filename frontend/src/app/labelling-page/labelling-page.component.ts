@@ -49,6 +49,12 @@ export class LabellingPageComponent implements OnInit {
   p_id: number;
 
   /**
+   * Start and end timestamps
+   */
+   startTime: any;
+   endTime: any;
+
+  /**
    * Constructor passes in the modal service and the labelling data service
    * @param modalService
    * @param labellingDataService
@@ -94,6 +100,9 @@ export class LabellingPageComponent implements OnInit {
      */
     this.getRandomArtifact();
     this.getLabelTypesWithLabels();
+
+    // Get the timestamp when this component is opened
+    this.startTime = Date.now();
   }
 
   /**
@@ -177,8 +186,13 @@ export class LabellingPageComponent implements OnInit {
    *
    */
   submit(): void {
+    // Get the timestamp when the labels are submitted
+    this.endTime = Date.now();
+    // Number of seconds the labellings took
+    let totalTime = (this.endTime - this.startTime) / 1000
+
     try {
-      let resultArray: Array<Object> = this.createResponse();
+      let resultArray: Array<Object> = this.createResponse(totalTime);
       const dict = {
         p_id: this.p_id,
         resultArray: resultArray,
@@ -190,7 +204,7 @@ export class LabellingPageComponent implements OnInit {
     }
   }
 
-  createResponse(): Array<Object> {
+  createResponse(totalTime: number): Array<Object> {
     let resultArray: Array<Object> = Array<Object>();
 
     this.labellings.controls.forEach((el: any) => {
@@ -202,6 +216,7 @@ export class LabellingPageComponent implements OnInit {
         lt_id: el.get('labelType')?.value,
         l_id: el.get('label')?.value,
         remark: el.get('remark')?.value,
+        time: totalTime
       });
     });
     return resultArray;

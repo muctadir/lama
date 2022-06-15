@@ -14,6 +14,7 @@ from flask import make_response, request
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import select
 from inspect import getfullargspec
+import datetime
 
 def check_args(required, args):
     """
@@ -215,3 +216,11 @@ def in_project(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+def time_from_seconds(seconds):
+    seconds_leftover = int(seconds % 60)
+    minutes = int((seconds - seconds_leftover) / 60)
+    minutes_leftover = int(minutes % 60)
+    hours = int((minutes -  minutes_leftover) / 60)
+    
+    return datetime.time(hours, minutes_leftover, seconds_leftover)

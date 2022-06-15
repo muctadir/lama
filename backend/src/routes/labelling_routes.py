@@ -4,7 +4,7 @@ from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func
 from sqlalchemy.exc import OperationalError
-from src.app_util import login_required, in_project
+from src.app_util import login_required, in_project, time_from_seconds
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
 
@@ -60,7 +60,7 @@ def post_labelling(*, user):
             l_id=labelling['l_id'], 
             p_id=args['p_id'], 
             remark=labelling['remark'],
-            time=func.current_timestamp()
+            time=time_from_seconds(labelling['time'])
         )
         try:
             db.session.add(labelling_)
