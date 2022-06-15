@@ -58,7 +58,7 @@ const routes: Routes = [
       // Default is stats page
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       // Project settings page
-      {path: 'settings', component: ProjectSettingsComponent},
+      {path: 'settings', component: ProjectSettingsComponent, canActivate: [LoginGuardService]},
       // Stats page route
       {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
       // Labelling page route

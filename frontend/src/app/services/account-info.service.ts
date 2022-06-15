@@ -14,6 +14,7 @@ export class AccountInfoService {
    * @throws error when server request goes wrong 
    */
   async userData() : Promise<any> {
+    // User object
     let user;
 
     // Get the user authentication token
@@ -42,5 +43,42 @@ export class AccountInfoService {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");
     }
+  }
+
+
+  
+  async allUsersData(): Promise<Array<User>> {
+    let users: User[] = [];
+
+    // Get the user authentication token
+    let token: string | null  = sessionStorage.getItem('ses_token');
+
+    // Initializes the request handler
+    let requestHandler: RequestHandler = new RequestHandler(token);
+
+    // Makes the request and handles response
+    try {
+      // Makes the request to the backend for all users in the application
+      let response: any = requestHandler.get("/project/users", {}, true);
+
+      // Waits on the request
+      let result = await response;
+
+      // Loops over the response of the server and parses the response into the allMembers array
+      for (let user of result) {
+        // creates the object
+        let newUser = new User(user.id, user.username);
+        // passes additional data to the newly created user object
+        newUser.setEmail(user.email);
+        newUser.setDesc(user.description);
+        // pushes the new user to the array of all users
+        users.push(newUser);
+      }
+    } catch(e) {
+      // Outputs an error
+      console.log("An error occured when loading data from the server");
+    }
+
+    return users;
   }
 }

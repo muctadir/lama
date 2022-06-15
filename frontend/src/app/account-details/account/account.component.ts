@@ -25,7 +25,7 @@ export class AccountComponent {
    * 
    * @trigger on component load
    */
-  ngOnInit(){
+  ngOnInit() {
     this.getInformation()
   }
 
