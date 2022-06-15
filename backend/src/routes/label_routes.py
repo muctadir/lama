@@ -109,7 +109,8 @@ def get_all_labels():
     # Get all the labels of a labelType
     labels = db.session.execute(
         select(Label)
-        .where(Label.p_id == args['p_id'])
+        .where(Label.p_id == args['p_id'], 
+               Label.deleted != 1)
     ).scalars().all()
 
     label_schema = LabelSchema()
@@ -162,7 +163,6 @@ def get_single_label():
 @in_project
 def merge_route():
     args = request.json['params']
-    print(args)
     required = ['leftLabelId', 'rightLabelId',
                 'newLabelName', 'newLabelDescription', 'p_id']
 
@@ -201,8 +201,6 @@ def merge_route():
                       lt_id=labels[0].lt_id,
                       p_id=labels[0].p_id)
     label_schema = LabelSchema()
-    print(label_schema.dump(new_label))
-
     try:
         db.session.add(new_label)
         db.session.commit()
@@ -247,3 +245,22 @@ def get_label_artifacts(label, u_id, admin):
         select(Artifact)
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
     )
+
+
+@label_routes.route('/delete', methods=['POST'])
+@login_required
+@in_project
+def soft_delete_route():
+    args = request.json['params']
+    required = ['l_id', 'p_id']
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    try:
+        db.session.execute(
+            update(Label)
+            .where(Label.id == args['l_id']).values(deleted=1)
+        )
+        db.session.commit()
+    except:
+        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+    return make_response()

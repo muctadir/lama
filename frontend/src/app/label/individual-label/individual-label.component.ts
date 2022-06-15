@@ -89,6 +89,19 @@ export class IndividualLabelComponent {
     }
   }
 
+  async postSoftDelete() {
+    try{
+      await this.labelingDataService.postSoftDelete({
+        'p_id': this.p_id,
+        'l_id': this.label_id
+      });
+      this.router.navigate(['project', this.p_id, 'labelmanagement']);
+    } catch (e) {
+      console.log("Something went wrong!")
+      this.router.navigate(['project', this.p_id]);
+    }
+  }
+
   /**
    * Gets the project id from the URL and reroutes to the label management page
    * of the same project

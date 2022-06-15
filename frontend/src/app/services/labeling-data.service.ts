@@ -205,4 +205,8 @@ export class LabelingDataService {
   async postMerge(dict: Object): Promise<void> {
     await this.requestHandler.post('/label/merge', dict, true);
   }
+
+  async postSoftDelete(dict: Object): Promise<void> {
+    await this.requestHandler.post('/label/delete', dict, true);
+  }
 }
