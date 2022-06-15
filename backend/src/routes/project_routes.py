@@ -565,7 +565,8 @@ Gets user statistics for a single project
 """
 @project_routes.route("/projectStats", methods=["GET"])
 @login_required
-def project_stats(*, user):
+@in_project
+def project_stats():
     # Get args from request 
     args = request.args
     # What args are required
@@ -582,7 +583,7 @@ def project_stats(*, user):
         select(Project).where(Project.id==p_id)
     )
 
-    # Get all user with conflicts and the number of conflicts they have
+    # Get all users with conflicts and the number of conflicts they have
     user_conflicts = nr_user_conflicts(p_id)
 
     # List of all stats per user
@@ -626,7 +627,8 @@ def project_stats(*, user):
             "username": username,
             "nr_labelled": artifacts_num,
             "time": avg_time,
-            "nr_conflicts": conflicts
+            "nr_conflicts": conflicts,
+            "superadmin": user.super_admin
         }
 
         # Add dictionary to list of dictionaries
@@ -669,6 +671,8 @@ def __time_to_string(time):
         if number == 0:
             time_string += '00:'
         else:
+            if number < 10:
+                time_string += '0'
             time_string += str(number) + ':'
     
     # Return the string with the time

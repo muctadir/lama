@@ -96,10 +96,12 @@
                     <!--Table Content-->
                     <tbody>
                         <tr *ngFor="let user of user_contribution">
-                            <td><p class="tablecontent">{{user.username}}</p></td>
-                            <td><p class="tablecontent">{{user.nr_labelled}}</p></td>
-                            <td><p class="tablecontent">{{user.time}}</p></td>
-                            <td><p class="tablecontent">{{user.nr_conflicts}}</p></td>
+                            <ng-container *ngIf="user.superadmin == 0">
+                                <td><p class="tablecontent">{{user.username}}</p></td>
+                                <td><p class="tablecontent">{{user.nr_labelled}}</p></td>
+                                <td><p class="tablecontent">{{user.time}}</p></td>
+                                <td><p class="tablecontent">{{user.nr_conflicts}}</p></td>
+                            </ng-container>
                         </tr>
                     </tbody>
                 </table>
