@@ -248,7 +248,8 @@ def get_project(*, user):
         'id': member.user.id,
         'username': member.user.username,
         'admin': member.admin,
-        'removed': member.deleted
+        'removed': member.deleted,
+        'super_admin': member.user.super_admin
     } for member in users_of_project]    
 
     #Get all label types from the project
