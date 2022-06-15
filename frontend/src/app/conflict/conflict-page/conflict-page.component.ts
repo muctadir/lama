@@ -3,21 +3,6 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ConflictDataService } from 'app/services/conflict-data.service';
 
-// Artifact object 
-interface Artifact {
-  conflictName: string,
-  conflictDescription: string;
-}
-
-// Functions for adding values
-// function addValues(name:string, descr:string, users: Array<string>):Artifact {
-//   var conflictName = name;
-//   var conflictDescription = descr;
-//   var users = users;
-//   // Return the given values
-//   return {conflictName, conflictDescription, users};
-// } 
-
 @Component({
   selector: 'app-conflict-page',
   templateUrl: './conflict-page.component.html',
@@ -55,17 +40,16 @@ export class ConflictPageComponent implements OnInit {
    * 
    * @trigger resolve conflict button is pressed
    */
-   reRouter() : void {
+   reRouter(a_id: number, lt_id: number) : void {
     // Gets the url from the router
     let url: string = this.router.url
-    
     // Initialize the ReroutingService
     let routeService: ReroutingService = new ReroutingService();
     // Use reroutingService to obtain the project ID
     let p_id = routeService.getProjectID(url);
-    
+    console.log(p_id)
     // Changes the route accordingly
-    this.router.navigate(['/conflictmanagement', p_id, 'conflictResolution']);
+    this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id]);
   }
 
   /**

@@ -38,7 +38,6 @@ export class ReroutingService {
 
     // Returns the project ID
     return p_id
-
   }
 
   /**

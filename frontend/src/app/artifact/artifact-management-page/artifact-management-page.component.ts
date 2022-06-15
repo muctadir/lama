@@ -78,6 +78,7 @@ export class ArtifactManagementPageComponent {
    * @trigger user clicks on artifact
    */
   reRouter(a_id: number): void {
+    console.log("click")
     // Use reroutingService to obtain the project ID
     let p_id = this.routeService.getProjectID(this.url);
 
