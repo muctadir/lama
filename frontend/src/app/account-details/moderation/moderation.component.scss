@@ -16,6 +16,14 @@ $light-grey-shade: #bfbfbf;
     margin-right: 10px;
 }
 
+#back-button {
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    font-size: 30px;
+    position: fixed;
+}
+
 
 // Moves the table down
 #table {
