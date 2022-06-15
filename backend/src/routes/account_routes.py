@@ -62,38 +62,25 @@ def edit_user_information(*, user):
     if not check_format(new_username, new_email, new_description)[0]:
         return make_response(("Bad Request", 400))
     
+    # Checks whether the request is made by a super-admin
+    # if so use user_ID from the request, if not a superadmin use id derived from token
     if user.super_admin:
-        db.session.execute(
-            update(User).
-            where(User.id == edit_id).
-            values(
-                username=new_username,
-                email=new_email,
-                description=new_description
-            )
-        )
+        id_used = edit_id
     else:
-        db.session.execute(
-            update(User).
-            where(User.id == user.id).
-            values(
-                username=new_username,
-                email=new_email,
-                description=new_description
-            )
+        id_used = user.id
+    
+    # Changes the account details
+    db.session.execute(
+        update(User).
+        where(User.id == id_used).
+        values(
+            username=new_username,
+            email=new_email,
+            description=new_description
         )
+    )
 
-    # Change the users information
-    # db.session.execute(
-    #     update(User).
-    #     where(User.id == user.id).
-    #     values(
-    #         username=new_username,
-    #         email=new_email,
-    #         description=new_description
-    #     )
-    # )
-    # Commit the new information
+    # Commits to the database
     db.session.commit()
     
     # Return a success message
@@ -113,17 +100,19 @@ def edit_user_password(*, user):
     args = args['params']
 
     # Required arguments
-    required = ["password", "newPassword"] 
+    required = ["password", "newPassword", "id"] 
 
-    # Get id and password by username
-    password = db.session.execute(select(User.password).where(User.id == user.id)).one()
+    # checks whether the superadmin made the call
+    if not user.super_admin:
+        # Get id and password by user id
+        password = db.session.execute(select(User.password).where(User.id == user.id)).one()
 
-    # Hash new password
-    hashed_password = generate_password_hash(args["password"])
+        # Hash new password
+        hashed_password = generate_password_hash(args["password"])
 
-    # Check correct password
-    if not check_password_hash(password[0], args["password"]):
-        return make_response(("Invalid password", 400))
+        # Check correct password
+        if not check_password_hash(password[0], args["password"]):
+            return make_response(("Invalid password", 400))
 
     # Check required arguments are supplied
     if not check_args(required, args):
@@ -136,10 +125,17 @@ def edit_user_password(*, user):
     # Hash new password
     hashed_password = generate_password_hash(args["newPassword"])
     
+    # checks whether the superadmin is making the request, based on that sets used user.id
+    if user.super_admin:
+        id_used = args["id"]
+    else:
+        id_used = user.id
+
+
     # Change the users information
     db.session.execute(
         update(User).
-        where(User.id == user.id).
+        where(User.id == id_used).
         values(
             password = hashed_password
         )

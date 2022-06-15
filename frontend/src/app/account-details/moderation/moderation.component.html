@@ -58,6 +58,6 @@
     <!-- Change password -->
     <ng-container *ngIf="mode==2">
         <!-- Create app-account-change-password component, passes user data and listens for modeChange events -->
-        <app-account-change-password [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
+        <app-account-change-password [userAccount]="user" [superAdmin]="true" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
     </ng-container>
 </div>
