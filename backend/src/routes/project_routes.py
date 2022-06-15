@@ -8,10 +8,10 @@ from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus
-from src.models.item_models import Artifact, LabelType
+from src.models.item_models import Artifact, LabelType, Label
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select, func, update
+from sqlalchemy import select, func, update, distinct
 from src.app_util import login_required, check_args, in_project
 from sqlalchemy.exc import OperationalError, IntegrityError
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
@@ -536,6 +536,9 @@ def single_project(*, user):
 
     # Get the number of conflicts in the conflict
     conflicts = nr_project_conflicts(p_id)
+
+    # Get the number of labels in the conflict
+    labels = db.session.scalar(select(func.count(distinct(Label.id))).where(Label.p_id==p_id))
         
     # Put all values into a dictonary
     info = {
@@ -543,7 +546,8 @@ def single_project(*, user):
         "projectNrArtifacts": project_nr_artifacts,
         "projectNrCLArtifacts": project_nr_cl_artifacts,
         "projectUsers": users,
-        "conflicts": conflicts
+        "conflicts": conflicts,
+        "labels": labels
         }
 
     # Convert dictionary to json

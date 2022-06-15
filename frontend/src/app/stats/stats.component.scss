@@ -76,6 +76,14 @@ p.header{
     margin-top: -10px;
 }
 
+// sets the layout of the label icon
+#label-icon {
+    color: $orange-shade;
+    font-size: 30px;
+    padding-left: 20px;
+    margin-top: -10px;
+}
+
 // sets the layout of the user icon
 #person-icon {
     color: $orange-shade;
@@ -140,4 +148,9 @@ p.header{
 #scrolly{
     padding-right: 40px;
     height: auto;
+}
+
+// Number of labels
+#labels{
+    padding-left: 100px;
 }

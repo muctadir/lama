@@ -43,7 +43,9 @@ export class StatsDataService {
     projectNew.setNumberOfCLArtifacts(response["projectNrCLArtifacts"]);
     projectNew.setUsers(response["projectUsers"]);
 
-    return { 'project_data': projectNew, 'conflicts': response["conflicts"] }
+    return { 'project_data': projectNew,
+     'conflicts': response["conflicts"],
+     'labels':  response["labels"]}
   }
 
   /**
