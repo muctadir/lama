@@ -27,7 +27,7 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @returns Promise<Array<StringArtifact>>
    */
-  async getArtifacts(p_id: number, page: number, pageSize: number): Promise<[number, Array<StringArtifact>]> {
+  async getArtifacts(p_id: number, page: number, pageSize: number, seekIndex: number, seekPage: number): Promise<[number, Array<StringArtifact>]> {
     // Check if the p_id is larger than 1
     if (p_id < 1) throw new Error("p_id cannot be less than 1");
 
@@ -38,7 +38,9 @@ export class ArtifactDataService {
     let response = await this.requestHandler.get('/artifact/artifactmanagement', {
       'p_id': p_id,
       'page': page,
-      'page_size': pageSize }, true);
+      'page_size': pageSize,
+      'seek_index': seekIndex,
+      'seek_page': seekPage }, true);
 
     // For each artifact in the list
     response['info'].forEach((artifact: any) => {

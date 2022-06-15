@@ -73,7 +73,10 @@
                     [(page)]="page"
                     [pageSize]="pageSize"
                     [collectionSize]="nArtifacts"
-                    (pageChange)="getArtifacts()">
+                    (pageChange)="getArtifacts()"
+                    [maxSize]="5"
+                    [rotate]="true" 
+                    [boundaryLinks]="true">
                 </ngb-pagination>
             </div>        
             

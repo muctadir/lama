@@ -27,7 +27,7 @@ def get_artifacts(*, user, membership):
     # Get args from request 
     args = request.args
     # What args are required
-    required = ('p_id', 'page', 'page_size')
+    required = ('p_id', 'page', 'page_size', 'seek_index', 'seek_page')
 
     # Check if required args are present
     if not check_args(required, args):
@@ -35,15 +35,19 @@ def get_artifacts(*, user, membership):
 
     p_id = args['p_id']
     page = int(args['page']) - 1
+    seek_page = int(args['seek_page']) - 1
     page_size = int(args['page_size'])
-    
+    seek_index = args['seek_index']
+    # NB: seek method only works when we order by index since it is unique and non-nullable
     # Check if user is admin for the project and get artifacts
     if membership.admin:
         # If the user is admin, then get any artifact in the project for a certain page
         artifacts = db.session.scalars(
             select(Artifact)
-            .where(Artifact.p_id == p_id)
-            .offset(page * page_size)
+            .where(
+                Artifact.p_id == p_id,
+                Artifact.id > seek_index)
+            .offset((page - seek_page - 1) * page_size)
             .limit(page_size)
         ).all()
         # Get the number of artifacts in the project
@@ -60,8 +64,9 @@ def get_artifacts(*, user, membership):
             .where(
                 Artifact.a_id == Labelling.a_id,
                 Labelling.u_id == user.id, 
-                Labelling.p_id == p_id)
-            .offset(page * page_size)
+                Labelling.p_id == p_id,
+                Artifact.id > seek_index)
+            .offset((page - seek_page - 1) * page_size)
             .limit(page_size)
         ).all()
         # Get the number of artifacts the user has labelled

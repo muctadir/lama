@@ -75,8 +75,10 @@ export class ArtifactManagementPageComponent {
     if (!this.artifacts.hasOwnProperty(this.page)) {
       // Get the ID of the project
       const p_id = Number(this.routeService.getProjectID(this.url))
+      // Get the seek index of this page
+      const [seekIndex, seekPage] = this.getSeekInfo(this.page);
       // Get the artifacts for this page
-      const result = await this.artifactDataService.getArtifacts(p_id, this.page, this.pageSize);
+      const result = await this.artifactDataService.getArtifacts(p_id, this.page, this.pageSize, seekIndex, seekPage);
       // If the number of artifacts changed, then we need to reset the cache.
       if (result[0] != this.nArtifacts) {
         this.nArtifacts = result[0];
@@ -86,6 +88,23 @@ export class ArtifactManagementPageComponent {
       this.artifacts[this.page] = result[1];
     }
 
+  }
+
+  /**
+   * Used for the Seek Method
+   * @param page the page that we are searching for
+   * @return the largest index we can exclude in the SQL query
+   * @return the page corresponding to this index
+   */
+  getSeekInfo(page: number): [number, number] {
+    for (let i: number = page - 1; i >= 1; i--) {
+      if (this.artifacts.hasOwnProperty(i)) {
+        let artifacts: StringArtifact[] = this.artifacts[i];
+        let seekIndex: number = artifacts[artifacts.length - 1].getId();
+        return [seekIndex, i]
+      }
+    }
+    return [0, 0];
   }
 
   /**
