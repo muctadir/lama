@@ -35,6 +35,7 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { ModerationComponent } from './account-details/moderation/moderation.component';
 
 
 /* All the routes within the application */
@@ -46,6 +47,8 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent},
     // Account route
     {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
+    // User moderation
+    {path: 'moderation', component: ModerationComponent, canActivate: [LoginGuardService]},
     // Home page route
     {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
     // Project creation route

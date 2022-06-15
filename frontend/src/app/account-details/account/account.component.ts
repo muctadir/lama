@@ -1,8 +1,7 @@
 // Veerle Furst
 // Jarl Jansen
 import { Component } from '@angular/core';
-import { User } from 'app/classes/user';
-import { RequestHandler } from 'app/classes/RequestHandler';
+import { AccountInfoService } from 'app/services/account-info.service';
 
 @Component({
   selector: 'app-account',
@@ -48,34 +47,15 @@ export class AccountComponent {
    * Queries backend for the user account details
    * 
    * @modifies user
-   * 
-   * TODO: error handling code
    */
   async getInformation(){
-    // Get the user authentication token
-    let token: string | null  = sessionStorage.getItem('ses_token');
+    let accountService = new AccountInfoService();
 
-    // Initializes the request handler
-    let requestHandler: RequestHandler = new RequestHandler(token);
-    
     try {
-      // Creates a request for the account information
-      let response: any = requestHandler.get("/account/information", {}, true);
-
-      // Waits on the request
-      let result = await response;
-
-      // Gets the user data from the database response and stores the data
-      this.user = new User(result['id'], result['username']);
-      this.user.setEmail(result['email']);
-      this.user.setDesc(result['description']);
-
-      // Resets error message
-      this.errorMsg = ""
-    } catch (e) {
-      // Displays error message to the user if anything goes wrong.
+      this.user = await accountService.userData();
+      this.errorMsg = "";
+    } catch(e) {
       this.errorMsg = "An error occured when requesting the server for user data.";
     }
   }
-
 }
