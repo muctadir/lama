@@ -1,0 +1,242 @@
+// Victoria Bogachenkova
+// Veerle Fürst
+
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+/* Icon related markup */
+// Plus icon
+.bi.bi-plus{
+    font-size: 24px;
+    color: $grey-shade;
+}
+
+// Cross icon next to member name
+.bi.bi-x{
+    font-size: 20px;
+    color: $grey-shade;
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+}
+
+// Plus icon for label types
+.bi.bi-plus.members{
+    float: right;
+}
+
+/* Project creation page markup */
+// Header of the page
+.header{
+    font-size: 35px;
+    letter-spacing: 1px;
+    padding-top: 10px;
+}
+
+// Markup of error message that gets displayed
+#errorMessage {
+    font-size: 18px;
+    color: red;
+}
+
+// sets displays as a block
+#block {
+    display: block;
+}
+
+// Moves the right column up 2 pixes
+#RightColumnMoveUp {
+    margin-top: -2px;
+}
+
+// Container of all elements
+.container.main{
+    height: 90vh;
+}
+
+// Text inside the forms
+.form-control{
+    font-size: 15px;
+}
+
+// Text above the setting divisions
+.settingsHeader{
+    font-size: 18px;
+}
+
+// Sets the padding and margin to 0 px
+.padd-marg {
+    padding: 0px;
+    margin: 0px;
+}
+
+// Ensures that the labeltype forms have some space between them
+#labeltype_margin {
+    margin-bottom: 10px;
+}
+
+// Project settings divions parent
+.projectSettingsDivParent{
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+// Project settings divisions orange lines
+.projectSettingsDiv{
+    border-top: 2px solid $orange-shade;
+    padding: 10px 5px 10px 5px;
+}
+
+// Member settings division
+#membersDiv{
+    height: 20vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+// Ensures that the add labeltype box does not extend beyond its box
+.limit_overflow {
+    height: 25vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+// Span of the "Project admin" word
+.projectAdminSpan{
+    text-align: center;
+    text-decoration: underline;
+    padding: 0px;
+    margin: 0px;
+}
+// Style of the member checkbox
+.checkboxCol {  
+    text-align: center; 
+}
+
+// LABEL TYPE DIVISION
+// Label type settings division
+#labelTypeDiv{
+    height: 25vh;
+    overflow-y: scroll;
+}
+
+// Label type forms
+.form-control.labelType{
+    width: 60%;
+    margin-bottom: 10px;
+}
+
+// Button for adding label types
+#addLabelTypeButton{
+    width: 200px;
+    border: 2px solid $grey-shade;
+    background-color: $white-shade;
+    color: $grey-shade;
+    margin: 0px;
+    text-align: left;
+}
+
+// Add label type text 
+#addLabelTypeText{
+    float: left;
+    margin-top: 5px;
+}
+
+// Response division
+#responseDiv{
+    margin-top:20px;
+}
+
+// Space between the two rows
+.top-buffer{
+    margin-top: 10px;
+}
+
+// BOTTOM BUTTONS
+// Row for buttons
+.fixed-bottom{
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+// Both buttons
+.btn.btn-secondary{
+    width: 150px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+// Cancel project creation button
+#createProjectButton{
+    background-color: $orange-shade;
+    border: 2px solid;
+    border-color: $orange-shade;
+    color: $white-shade;
+}
+
+#labelcount {
+    max-width: 20%;
+}
+
+// Project description text area
+#projectDescriptionForm{
+    resize: none;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
+
+/* SCSS related to the add user modal */
+// Row displaying the various users
+#user-modal-rows {
+    padding:5px 16px; 
+    max-height: 35px;
+}
+
+// ensures that the modal doesnt become too large, does scrolling instead
+#overflow-modal {
+    max-height: 60vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+// Column holding the username of the users to be added
+#username-modal-col {
+    padding:15 1 1 1px; 
+    list-style: none; 
+    max-height: 25px;
+}
+
+// Button for adding members
+#addMembersButton{
+    background-color: $white-shade;
+    width: 30px;
+    padding: 0px;
+    border: none;
+    margin-top: -10px;
+}
+
+// Changes the size of the plus icon in the add members popup.
+#popup-plus {
+    font-size: 20px;
+}
+
+/* Scrollbar related layout */
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}

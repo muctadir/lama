@@ -1,0 +1,58 @@
+// Jarl Jansen
+
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// Header above the input fields
+#header {
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+// Styles the link to go back to the login page
+#back-login {
+    font-size: 12px;
+    float: right;
+    color: #ed5a06;
+}
+
+// the register button at the bottom of the forms
+#register-button {
+    margin-top: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    letter-spacing: 1px;
+    font-size: 17px;
+    border: none;
+}
+
+// Changes the color of the button to orange
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: $orange-shade !important;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
+// Ensures that the content is not entirely at the top of the page
+#middle-col {
+    margin-top: 10vh;
+}
+
+// Styles the link to go back to the login page
+#back-login {
+    font-size: 12px;
+    float: right;
+    color: #ed5a06;
+}
+
+// Sets layout of the error message that is displayed when register input is incorrect
+#error-msg {
+    color: $orange-shade;
+    font-size: 15px;
+}

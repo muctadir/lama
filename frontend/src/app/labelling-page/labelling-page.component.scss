@@ -85,29 +85,27 @@ div.artifactContainer{
 
 #remark{
     max-height: 29vh;
+    resize: none;
 }
 
-#butt{
-    margin-top: 5px;
-    float: right;
-    float: bottom;
-    position: fixed;
+// Division of the buttons
+#buttons{
+    margin-top: 10px;
 }
 
-#split1, #split2{
-    color: #ed5a06;
+// Submit button
+#btn-submit{
+    border: none;
+    background-color: #ed5a06;
 }
 
-#skit-button {
-    margin-left:10px;
+// Skip button
+#btn-skip{
+    margin-right: 10px;
+    border: none;
 }
 
-#labelling-row {
-    margin-top: 5px;
-}
-
-#LabellingTitle {
-  font-size: 19px;
-  padding-bottom: 2px;
-  height: 28px;
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }

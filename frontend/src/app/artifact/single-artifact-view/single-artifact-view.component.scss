@@ -1,0 +1,110 @@
+// Page header title
+#pageTitle {
+    padding-top: 10px;
+    border-bottom: 0px; 
+    border-bottom-style: solid;
+}
+
+// Artifact header part
+#artifactId, #artifactIdentifier {
+    font-size: 36px;
+    letter-spacing: 1px;
+}
+
+//Labelled by text
+#labelledBy{
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+// Container for the artifact
+.artifactContainer {
+    max-height: 35vh;
+    border: 1px; 
+    border: solid;
+    border-color: #1C5858;
+    border-width: thin;
+    padding-bottom: 4px;
+    min-height: 30vh;
+    overflow-y: scroll;
+}
+// Section right below "labelled by"
+#names{
+    padding-top: 3px;
+    padding-bottom: 5px;
+}
+
+
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+//"Labelled by" section
+div.allUserLabels{
+    height: 30vh;
+    overflow-y: scroll
+}
+/*TODO: For some reason the variable defined in the root stylesheet is not working*/
+.labelTypeDescription {
+    border-left: 2px solid #ed5a06;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+// Artifact identifier
+#artifactIdentifier{
+    text-align: right
+}
+
+// Labeltype names
+#labelTypeName1{
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-weight: 450;
+}
+
+// Remark given for each user
+#remarks{
+    font-size: 17px;
+    letter-spacing: 1px;
+    text-align: left;
+    font-weight: 450;
+}
+#remarksText{
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+//Name of labeller
+#labellerName{
+    font-size: 17px;
+    letter-spacing: 1px;
+    font-weight: 450;
+}
+#split1, #split2{
+    color: #ed5a06;
+}
+
+// Labels input box
+#formControl{
+    width:auto;
+}
+
+// Horizontal line between the labellers
+.horizontalLine{
+    height:1px; 
+    width:80%; 
+    border-width:0px;
+}

@@ -14,7 +14,7 @@ describe('NavigationMenuComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ NavigationMenuComponent ],
-      // Adding the RouterTestingModule dependency
+      // Adds the RouterTestingModule dependency
       imports: [RouterTestingModule]
     })
     .compileComponents();
@@ -47,7 +47,7 @@ describe('NavigationMenuComponent', () => {
      // Create spy on the router.navigate function, and stubs the call (doesnt do anything)
     spyOn(router, 'navigate');
     
-    // calls the changePage function
+    // Calls the changePage function
     component.changePage("thememanagement");
     
     // Checks whether the function works properly

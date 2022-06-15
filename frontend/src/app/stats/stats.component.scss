@@ -5,7 +5,8 @@ $orange-shade: #ed5a06;
 
 #main-cont {
     height: 100vh;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 // Sets the layout of the header saying Statistics
@@ -101,6 +102,11 @@ p.header{
 // Sets the style for the content of the table
 .tablecontent {
     font-size: 15px;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
 }
 
 //Scroll Related Business

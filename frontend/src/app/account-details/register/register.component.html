@@ -1,0 +1,29 @@
+<!-- Jarl Jansen -->
+<!-- Main container holding all the register page content-->
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row">
+        <!-- Filler column -->
+        <div class="col-2"></div>
+        <!-- Column with main content -->
+        <div class="col-8 d-flex justify-content-center" id="middle-col">
+            <div>
+                <!-- Form fields -->
+                <div id="header">Please enter your info down below:</div>
+                <!-- Component with 5 input fields, username, email, password, repeated password, description -->
+                <app-account-information-form></app-account-information-form>
+
+                <!-- Potential error messages that should be displayed, only displayed when non-empty -->
+                <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
+                <!-- Button for registering calls onRegister function when clicked-->
+                <div>
+                    <button type="submit" class="btn btn-primary" id="register-button" (click)="onRegister()">Register</button>
+                    <!-- Link to the login page -->
+                    <a [routerLink]="['/login']" id="back-login">I already have an account</a>
+                </div>
+            </div>
+        </div>
+        <!-- Filler column -->
+        <div class="col-2 offset-2 justify-content-center">
+        </div>
+    </div>
+</div>

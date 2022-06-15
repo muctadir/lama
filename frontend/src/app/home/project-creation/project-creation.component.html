@@ -1,0 +1,179 @@
+<!-- Victoria Bogachenkova -->
+<!-- Veerle Fürst -->
+<!-- Jarl Jansen -->
+
+<!-- Container for settings -->
+<div class="container main">
+
+    <!-- Header create project-->
+    <div class="row">
+        <div class="col-12">
+            <p class="header"> Create Project </p>
+            <!-- Error message displayed if user input is incorrect -->
+            <div *ngIf="errorMsg" id="errorMessage">{{errorMsg}}</div>
+        </div>
+    </div>
+
+    <!-- Row for all settings -->
+    <div class="row justify-content-between">
+        <!-- Left side of the page (project name and description) -->
+        <div class="col-5">
+            <!-- Filling in Project information all info placed in projectForm -->
+            <form [formGroup]="projectForm">
+                <!-- Username field -->
+                <div class="form-group">
+                    <label class="settingsHeader">Project Name:</label>
+                    <!-- input field for the project name Addsit to the projectForm -->
+                    <div class="projectSettingsDiv">
+                        <input class="form-control" placeholder="Project Name" formControlName="projectName" required>
+                    </div>
+                </div>
+                
+                <!-- Description field -->
+                <div class="form-group">
+                    <label class="settingsHeader">Description:</label>
+                    <!-- Input field for the project description, adds the project description to the projectForm, large text box -->
+                    <div class="projectSettingsDiv">
+                        <textarea id="projectDescriptionForm" class="form-control" rows="10" placeholder="Description" formControlName="projectDesc">
+                        </textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right side of the page (members, labeller count, label types) -->
+        <div class="col-6">
+
+            <!-- Division around the whole members section -->
+            <div class="projectSettingsDivParent" id="RightColumnMoveUp">
+                <!-- "Members" header -->
+                <div class="row">
+                    <!-- Header for the adding members section -->
+                    <div class="col">
+                        <span class="settingsHeader">Members</span>
+                    </div>
+                    <!-- Col for adding users button -->
+                    <div class="col-2">
+                        <!-- Button for adding new members, on click calls function open() -->
+                        <button class="btn" type="button" id="addMembersButton" (click)="open()">
+                            <!-- Members icon -->
+                            <em class="bi bi-plus members"></em>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Division around the all members -->
+                <div class="projectSettingsDiv">
+                    <div id="membersDiv">
+                        <!-- Row for the 'Project admin' words -->
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <p class="projectAdminSpan">Project admin</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Name and checkbox per member of the project -->
+                        <!-- Loops throught the projectMembers and does the following for each member -->
+                        <label *ngFor="let member of projectMembers" for="user" id="block"> 
+
+                            <!-- Row for the delete, name and project admin -->
+                            <div class="row align-items-center">
+
+                                <!-- Column for delete icon -->
+                                <div class="col-1">
+                                    <!-- x icon, when clicked removes the member from the project -->
+                                    <em class="bi bi-x" (click)="removeMember(member.getUsername())"></em>
+                                </div>
+
+                                <!-- Column for username -->
+                                <div class="col-7">
+                                    <!-- Gets the username of the member and displays it -->
+                                    {{ member.getUsername() }}
+                                </div>
+
+                                <!-- Column for checkbox -->
+                                <div class="col-4 checkboxCol">
+                                    <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getUsername() }}">
+                                </div>                                        
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Creates the box for the labeller count form, adds it to the projectForm -->
+            <form [formGroup]="projectForm">
+                <div class="form-group">
+                    <!-- Adds the header to the box -->
+                    <label class="settingsHeader">Labeller Count</label>
+                    <!-- Creates the number form for the labeller count -->
+                    <div class="projectSettingsDiv">
+                        <div id="labellerCountDiv">
+                            <!-- Initializes the labeller count to 2, min 2, max 20 -->
+                            <input type="number" class="form-control" id="labelcount" value="2" min="2" max="100" formControlName="labellerCount">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Creates the box for the adding label types -->
+            <div class="projectSettingsDivParent">
+                <!-- Sets the header -->
+                <span class="settingsHeader"> Label Type </span>
+                <!-- Creates the box containing the label types and other content, makes it scrollable -->
+                <div class="projectSettingsDiv limit_overflow ">
+                    <!-- Adds the label types to the projectForm -->
+                    <div [formGroup]="projectForm">
+                        <!-- Loops through all the label types and adds a form for each -->
+                        <ng-container formArrayName="labeltypes">
+                            <ng-container *ngFor="let labelTypeForm of labeltypes.controls; let i = index">
+                                <!-- Links the form to the formGroup with index i in the formArray -->
+                                <form [formGroupName]="i">
+
+                                    <!-- Container holding the form and remove button -->
+                                    <div class="container padd-marg" id="labeltype_margin">
+                                        <div class="row padd-marg">
+                                            <!-- Adds the form input for the label type -->
+                                            <div class="col-10 padd-marg">
+                                                <!-- Input field for the label type -->
+                                                <input class="form-control" formControlName="label" placeholder="Label type">
+                                            </div>
+                                            <!-- Adds the remove button for each label type -->
+                                            <div class="col-2">
+                                                <!-- displays the bootstrap icon, and when clicked calls function deleteLabelType -->
+                                                <em class="bi bi-x" (click)="deleteLabelType(i)"></em>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+
+                    <!-- Button for adding more label types -->
+                    <button type="button" class="btn btn-secondary" id="addLabelTypeButton" (click)="addLabelType()">
+                        <span id="addLabelTypeText">Add Label Type</span>
+                        <!-- Plus icon is displayed -->
+                        <em class="bi bi-plus labelType"></em>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+
+    <!-- Buttons row (cancel and submit button) -->
+    <div class="row justify-content-end fixed-bottom top-buffer">
+        <!-- Cancel button, routes to the homepage when clicked -->
+        <button type="button" class="btn btn-secondary text-nowrap" routerLink="/home">
+            Cancel
+        </button>
+    
+        <!-- Submit button, calls the createProject function when clicked -->
+        <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">
+            Create Project
+        </button>
+    </div>
+
+</div>

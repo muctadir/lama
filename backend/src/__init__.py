@@ -3,21 +3,19 @@ import click
 from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
-from src.models import db, ma
-from src.models.auth_models import User
+from src.models import db
+from src.models.auth_models import User, UserStatus
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
-from src.routes import demos, auth_routes, project_routes, account_routes, label_routes, \
-label_type_routes, labelling_routes, theme_routes
-from src.routes.artifact_routes import artifact_routes
+from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
+label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
-
-
+from werkzeug.security import generate_password_hash
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
 HOST = environ.get("HOST")
@@ -46,23 +44,18 @@ def db_init():
     init()
     migrate(message="Initial migration")
     upgrade()
-
-# TODO: Add db reset (this always breaks the migrations in my experience)
-
-# Fills the user table with a bunch of random users.
-# TODO: Update this to match the new database models. Also, this should probably
-# be defined in another file. (Testing setup needs to reuse it as well.)
-@db_opt.command("fill")
-def fill():
-    lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla aliquet."
-    lorem = lorem.replace(",", "")
-    lorem = lorem.replace(".", "")
-    password = "1234"
-    users = [User(username=word, password=password) for word in lorem.split()]
-    db.session.add_all(users)
-    db.session.commit()    
-
-
+    SUPER_USER = environ.get("SUPER_USER")
+    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
+    SUPER_EMAIL = environ.get("SUPER_EMAIL")
+    db.session.add(User(
+        username=SUPER_USER,
+        email=SUPER_EMAIL,
+        password=generate_password_hash(SUPER_PASSWORD),
+        status=UserStatus.approved,
+        super_admin=True,
+        description="Auto-generated super admin"
+    ))
+    db.session.commit()
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
@@ -114,7 +107,7 @@ def create_app(config={'TESTING': False}):
     # The endpoints for the API are defined in blueprints. These are imported
     # and hooked to the app object.
     app.register_blueprint(auth_routes)
-    app.register_blueprint(demos)
+    app.register_blueprint(util_routes)
     app.register_blueprint(project_routes)
     app.register_blueprint(account_routes)
     app.register_blueprint(label_routes)
@@ -123,9 +116,9 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(artifact_routes)
     app.register_blueprint(theme_routes)
 
+
     # Magic library that makes cross-origin resource sharing work.
-    # TODO: Check if we are setting this up correctly.
-    CORS(app, resources={r"*": {"origins": "*"}})
+    CORS(app)
 
     # For testing apps, additional teardown is required. This code is found in
     # conftest.py

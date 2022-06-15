@@ -1,0 +1,30 @@
+<!-- Linh Nguyen -->
+
+<div class="modal-header">
+    <!-- Main title for modal -->
+    <h4 class="modal-title">Choose the users to add to the project</h4>
+    <!-- Button to close the add users modal -->
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<!-- Ensures that the modal is not larger than the window size of the users browser -->
+<div id="overflow-modal">
+    <!-- Loops through all the users in the project, and does the following for each: -->
+    <div class="modal-body row" *ngFor="let user of users" (click)="addUser(user)" id="user-modal-rows">
+        <!-- Displays the username of the user -->
+        <div class="col" id="username-modal-col">
+          <div> {{ user.getUsername() }}</div>
+        </div>
+        <!-- Col for adding users button -->
+        <div class="col-2">
+            <!-- Button for adding new project_members, when clicked adds the user to the project -->
+            <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
+              <!-- Plus icon displayed behind the username -->
+              <em class="bi bi-plus labelType" id="popup-plus"></em>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Button to close the modal, when clicked closes the modal -->
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>

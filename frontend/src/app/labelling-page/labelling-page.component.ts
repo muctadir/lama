@@ -3,15 +3,14 @@
  * @author T. Bradley
  */
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelFormComponent } from 'app/label-form/label-form.component';
-import { LabellingDataService } from 'app/labelling-data.service';
-import { ArtifactDataService } from 'app/artifact-data.service';
+import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { LabelingDataService } from "app/services/labeling-data.service";
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
-
+import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { Router } from '@angular/router';
-import { ReroutingService } from 'app/rerouting.service';
+import { ReroutingService } from 'app/services/rerouting.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
@@ -61,7 +60,7 @@ export class LabellingPageComponent implements OnInit {
    */
   constructor(
     private modalService: NgbModal,
-    private labellingDataService: LabellingDataService,
+    private labellingDataService: LabelingDataService,
     private artifactDataService: ArtifactDataService,
     private router: Router
   ) {

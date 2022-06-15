@@ -1,6 +1,9 @@
+/* @author Jarl */
 import { Component, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { ReroutingService } from 'app/rerouting.service';
+import { ReroutingService } from 'app/services/rerouting.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogoutComponent } from 'app/modals/logout/logout.component';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -33,39 +36,58 @@ export class NavigationMenuComponent {
    * Subscribes to the router events, when the routing changes updates the icon highlighted
    * in the navigation bar accordingly
    * 
+   * Also creates instance of NgbModal
+   * 
    * @param router Instance of the Router class used to get info about the current route
-   * @param 
+   * @param modalService Instance of the NgbModal 
    * 
    * @trigger when the route changes
    * @modifies page 
    */
-  constructor(private router: Router) {
-    // subscribes to the router event
+  constructor(private router: Router, private modalService: NgbModal) {
+    // Ensures that the currently highlighted icon is correct
+    this.evalURL(this.router.url);
+
+    // Subscribes to the router event
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
         // code executed when the route changes 
         let new_route = ev['urlAfterRedirects'];
-        if (new_route.includes("stats")) {
-          // highlights stats page icon
-          this.page = 0;
-        } else if (new_route.includes("labelling")) {
-          // highlights labelling page icon
-          this.page = 1;
-        } else if (new_route.includes("artifact")) {
-          // highlights artifact management page icon
-          this.page = 2;
-        } else if (new_route.includes("label")) {
-          // highlights labelling management page icon
-          this.page = 3;
-        } else if (new_route.includes("theme")) {
-          // highlights theme management page icon
-          this.page = 4;
-        } else if (new_route.includes("conflict")) {
-          // highlights conflict management page icon
-          this.page = 5;
-        }
+        this.evalURL(new_route);
       }
     });
+  }
+
+  /**
+   * Uses the new_route to determine what icon should be coloured.
+   * 
+   * @param new_route the url
+   * @modifies page
+   */
+  evalURL(new_route: string) : void {
+    if (new_route.includes("stats")) {
+      // highlights stats page icon
+      this.page = 0;
+    } else if (new_route.includes("labelling")) {
+      // highlights labelling page icon
+      this.page = 1;
+    } else if (new_route.includes("artifact")) {
+      // highlights artifact management page icon
+      this.page = 2;
+    } else if (new_route.includes("label")) {
+      // highlights labelling management page icon
+      this.page = 3;
+    } else if (new_route.includes("theme")) {
+      // highlights theme management page icon
+      this.page = 4;
+    } else if (new_route.includes("conflict")) {
+      // highlights conflict management page icon
+      this.page = 5;
+    }
+      else if (new_route.includes("settings")) {
+      // highlights settings page icon
+      this.page =6;
+    }
   }
 
   /**
@@ -78,7 +100,12 @@ export class NavigationMenuComponent {
     this.collapsed = !this.collapsed;
   }
 
-
+  /**
+   * Changes the page to the page that the user wants to view.
+   * 
+   * @param next_page new page the user wants to see
+   * @trigger onclick nav menu
+   */
   changePage(next_page : string) : void  {
     // Removes the first character from the route
     let url : string = this.router.url;
@@ -90,6 +117,15 @@ export class NavigationMenuComponent {
     
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, next_page]);
+  }
+
+  /**
+   * Opens the logout modal
+   * 
+   * @trigger logout button clicked
+   */
+  openLogout() : void {
+    this.modalService.open(LogoutComponent, {});
   }
 
 }
