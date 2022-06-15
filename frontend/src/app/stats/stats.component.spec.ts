@@ -31,11 +31,15 @@ describe('StatsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [StatsComponent],
       // Adding the RouterTestingModule dependency
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule]
     })
       .compileComponents();
     statsDataService = TestBed.inject(StatsDataService);
     router = TestBed.inject(Router);
+    
+    // When router.url gets called, return this string
+    spyOnProperty(router, 'url', 'get').and.returnValue('/project/5/stats');
+    
   });
 
   beforeEach(() => {
@@ -47,6 +51,21 @@ describe('StatsComponent', () => {
   // Checks whether the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  // Checks if ngOnInit works correctly
+  it('Tests ngOnInit()', () => {
+    // Spy on getProject and getUserStats and stub the calls
+    spyOn(component, 'getProject');
+    spyOn(component, 'getUserStats');
+
+    // Call the ngOnInit function
+    component.ngOnInit();
+
+    // Check that getProject and getUserStats were called
+    // with the right parameter
+    expect(component.getProject).toHaveBeenCalledWith(p_id);
+    expect(component.getUserStats).toHaveBeenCalledWith(p_id);
   });
 
   // Checks if getProject function works correctly
@@ -85,9 +104,6 @@ describe('StatsComponent', () => {
   });
 
   it('Tests reRouter()', () => {
-    // When router.url gets called, return this string
-    spyOnProperty(router, 'url', 'get').and.returnValue('/project/5/stats');
-
     // Spy on router.navigate and stub the call
     spyOn(router, 'navigate');
 
