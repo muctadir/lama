@@ -209,4 +209,8 @@ export class LabelingDataService {
   async postSoftDelete(dict: Object): Promise<void> {
     await this.requestHandler.post('/label/delete', dict, true);
   }
+
+  async getLabellingCount(dict: Object): Promise<string> {
+    return await this.requestHandler.get('/label/count_usage', dict, true);
+  }
 }

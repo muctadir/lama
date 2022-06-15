@@ -6,7 +6,7 @@ from src.app_util import check_args
 from src import db  # need this in every route
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func
 from src.app_util import login_required, in_project
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
     Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
@@ -264,3 +264,23 @@ def soft_delete_route():
     except:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
     return make_response()
+
+@label_routes.route('/count_usage', methods=['GET'])
+@login_required
+@in_project
+def count_usage_route():
+    args = request.args 
+    required = ['p_id', 'l_id']
+    # if not check_args(required, args):
+    #     return make_response('Bad Request', 400)
+    try:
+        count = db.session.execute(
+            select(func.count(Labelling.l_id))
+            .where(
+                Labelling.p_id == args['p_id'],
+                Labelling.l_id == args['l_id'],
+            )
+        ).scalar()
+        return make_response(str(count), 200)
+    except:
+        return make_response('Internal Server Error', 500)

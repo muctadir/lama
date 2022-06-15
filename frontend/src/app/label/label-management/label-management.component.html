@@ -10,11 +10,11 @@
             <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
                 Create label
                 <i class="bi bi-plus"></i>
-            </button>                
+            </button>
             <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()">
                 Merge labels
                 <i class="bi bi-plus"></i>
-            </button>                
+            </button>
         </div>
     </div>
 
@@ -49,12 +49,12 @@
                         <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(label.getId())">
                             <td><p class="tablecontent">{{label.getName()}}</p></td>
                             <td><p class="tablecontent">{{label.getType()}}</p></td>
-                            <td><p class="tablecontent">{{label.getNumberOfArtifacts()}}</p></td>
+                            <td><p class="tablecontent">{{ labelAmount[label.getId()]}}</p></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <!--Pagination -->          
+            <!--Pagination -->
             <div id="center-pagination">
                 <ngb-pagination
                     [(page)]="page"
