@@ -145,6 +145,8 @@ Author: Linh Nguyen
 }
 """
 def project_conflicts(p_id, admin, u_id):
+    # Artifact IDs involved with this users
+    a_per_user = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
     # Number of differing labels per label type and artifact
     per_label_type = select(
         # Artifact id
@@ -155,12 +157,15 @@ def project_conflicts(p_id, admin, u_id):
         func.count(distinct(Labelling.l_id)).label('label_count')
     # In the given project
     ).where(
-        Labelling.p_id == p_id
+        Labelling.p_id == p_id,
+        Labelling.a_id.in_(a_per_user)
     # Grouped by artifacts and by label type
     ).group_by(
         Labelling.a_id,
         Labelling.lt_id
     ).subquery()
+
+    print(db.session.scalars(select(distinct(Labelling.a_id)).where(Labelling.a_id.in_(a_per_user))).all())
 
     # Conflicts per artifact
     per_artifact = select(
