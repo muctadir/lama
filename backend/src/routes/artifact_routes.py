@@ -224,7 +224,7 @@ def search(*, user, membership):
 
 def __get_extended(artifact):
     # Children of the artifact
-    artifact_children = []\
+    artifact_children = []
 
     for child in artifact.children:
         artifact_children.append(child.id)

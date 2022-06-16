@@ -8,7 +8,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 @Injectable({
   providedIn: 'root',
 })
-export class LabelingDataService {
+export class LabellingDataService {
   // Initialise the Request handler
   requestHandler: RequestHandler;
 

@@ -71,7 +71,7 @@ def get_label_types_wl():
     # Create dictionary with label type and labels
     dict_json = jsonify([{
         'label_type': label_type_schema.dump(labelType), 
-        'labels': label_schema.dump(labelType.labels, many = True)
+        'labels': label_schema.dump((labelType.labels).filter_by(deleted=0), many = True)
     } for labelType in labelTypes])
     
     return make_response(dict_json)

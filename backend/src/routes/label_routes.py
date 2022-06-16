@@ -1,19 +1,18 @@
 # Author: Eduardo
 # Author: Bartjan
 # Author: Victoria
-from re import L
 from src.app_util import check_args
 from src import db  # need this in every route
-from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func
+from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
-    Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
+from src.models.item_models import Label, LabelSchema, LabelType, \
+  Labelling, ThemeSchema, Artifact, ArtifactSchema
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
-# Author: Eduardo
+# Author: Eduardo, Bartjan
 # Create a label
 @label_routes.route('/create', methods=['POST'])
 @login_required
@@ -50,7 +49,7 @@ def create_label():
     try:
         db.session.add(label)
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response('Created')
@@ -65,31 +64,35 @@ def edit_label():
     args = request.json['params']
     # Required args
     required = ('labelId', 'labelName', 'labelDescription', 'p_id')
-
-    # Check whether the required arguments are delivered
+    # Checks if arguments were at least provided
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-
-    # Check whether the label exists
-    label = db.session.get(Label, args['labelId'])
+    # Checks if the provided labelId is somewhat valid
+    if args['labelId'] < 0:
+        return make_response('Bad Request, labelId invalid', 400)
+    # Get label from database
+    try:
+        label = db.session.get(Label, args['labelId'])
+    except:
+        # Something went wrong
+        return make_response('Internal Server Error: Fetching label from database unsuccessful.', 500)
+    # Check if the response contained a label
     if not label:
         return make_response('Label does not exist', 400)
-
-    # Check whether the label is part of the project
+    # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
-
-    # Update the label and commit it, otherwise throw an error
     try:
+        # Update
         db.session.execute(
             update(Label)
             .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
         )
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
-    return make_response('Ok')
+    return make_response()
 
 # Author: Bartjan, Victoria
 # Check whether the pID exists
@@ -208,7 +211,7 @@ def merge_route():
     try:
         db.session.add(new_label)
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
     # Update all labellings
@@ -218,7 +221,7 @@ def merge_route():
             .where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
         db.session.commit()
         return make_response('Success')
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
 # Author: Veerle Furst
@@ -272,8 +275,7 @@ def soft_delete_route():
             .where(Label.id == args['l_id']).values(deleted=1)
         )
         db.session.commit()
-    except:
-        # Throw exception
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
     return make_response()
 
@@ -284,8 +286,12 @@ def soft_delete_route():
 @login_required
 @in_project
 def count_usage_route():
-    args = request.args
-
+    args = request.args 
+    # Required args
+    required = ['p_id', 'l_id']
+    # Check Args
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
     try:
         # Count the number of labellings
         count = db.session.execute(
@@ -296,6 +302,5 @@ def count_usage_route():
             )
         ).scalar()
         return make_response(str(count), 200)
-    except:
-        # Throw error
+    except OperationalError:
         return make_response('Internal Server Error', 500)

@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-individual-labelling-form',
@@ -11,6 +12,7 @@ import { LabelType } from 'app/classes/label-type';
 export class IndividualLabellingForm implements OnInit {
   @Input() labelType?: LabelType;
   @Input() parentForm?: FormArray;
+  @Input() reload?: EventEmitter<any>;
   selectedDesc: string | undefined;
   labelForm: FormGroup;
   constructor(private formBuilder: FormBuilder) {
@@ -22,6 +24,11 @@ export class IndividualLabellingForm implements OnInit {
   }
 
   ngOnInit(): void {
+    this.reload?.subscribe(v => {
+      this.ngOnInit();
+    });
+    this.labelForm.reset()
+    this.selectedDesc = undefined;
     if (typeof this.labelType === 'undefined') {
       this.selectedDesc = 'Something went wrong while getting the labels.';
     }
