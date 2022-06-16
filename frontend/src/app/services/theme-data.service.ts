@@ -231,4 +231,23 @@ export class ThemeDataService {
     }
   }
 
+  /**
+   * Function to deleted a theme
+   * 
+   * @param p_id 
+   * @param t_id 
+   * @returns response. Whether the theme was deleted or an error occured
+   */
+  async delete_theme(p_id: number, t_id: number): Promise<string> {
+    try{
+      // Create project in the backend
+      await this.requestHandler.post('/theme/delete_theme', {"p_id": p_id, "t_id": t_id}, true);
+      return "Theme deleted succesfully"
+    // Catch the error
+    } catch(e) {
+      // Return the response
+      return "An error occured when trying to delete the theme";
+    }
+  }
+
 }

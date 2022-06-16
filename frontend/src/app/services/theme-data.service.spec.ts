@@ -162,7 +162,7 @@ describe('ThemeDataService', () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "get");
     // Call the function
-    await service.themes_without_parents(1);
+    await service.themes_without_parents(1, 1);
     // Test if the function works
     expect(spy).toHaveBeenCalled();
   });
@@ -236,5 +236,41 @@ describe('ThemeDataService', () => {
     // Test if the function works
     expect(response).toEqual("An error occured when trying to edit the theme.");
   });
+
+  // DELETE THEME FUNCTION
+  // Test for delete_theme function when successful
+  it('Test for delete_theme function when successful', async () => {
+    // Spy on the get from the request handler
+    let spy = spyOn(service['requestHandler'], "post");
+    // Call the function
+    let response = await service.delete_theme(0,0);
+    // Test if the function works
+    expect(spy).toHaveBeenCalled();
+    expect(response).toEqual("Theme deleted succesfully");
+  });
+  
+  // Test for delete_theme function when failed
+  it('Test for delete_theme function when failed', async () => {
+
+    spyOn(service, "delete_theme").and.callFake(async function(): Promise<string> {
+      try{
+        // Create project in the backend
+        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function(){
+          throw new Error("interal database error");
+        })
+        await service['requestHandler'].post('/theme/delete', {}, true);
+        expect(spy1).toThrow();
+        return "Theme deleted succesfully";
+      // Catch the error
+      } catch (e) {
+        // Return the response
+        return "An error occured when trying to delete the theme.";
+      }
+    })
+    let response = await service.delete_theme(0,0);
+    // Test if the function works
+    expect(response).toEqual("An error occured when trying to delete the theme.");
+  });
+
 
 });

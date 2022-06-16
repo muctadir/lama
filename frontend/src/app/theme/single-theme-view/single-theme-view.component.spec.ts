@@ -124,4 +124,16 @@ describe('SingleThemeViewComponent', () => {
     expect(spy1).toHaveBeenCalled();
   });
 
+  // Test the deleteTheme function
+  it('Tests the deleteTheme function', () => {
+    // Spy on the functions that should have been called
+    let spy1 = spyOn(component['theme'], 'getChildren');
+    let spy2 = spyOn(component['theme'], 'getLabels');
+    // Calls the goToTheme function
+    component.deleteTheme();
+    // Checks whether the function works properly
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
+
 });
