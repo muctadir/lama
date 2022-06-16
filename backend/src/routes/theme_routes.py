@@ -22,7 +22,7 @@ For getting the theme information
 """
 @theme_routes.route("/theme-management-info", methods=["GET"])
 @login_required
-def theme_management_info(*, user):
+def theme_management_info():
 
     # The required arguments
     required = ["p_id"]
@@ -149,7 +149,7 @@ For getting the all themes without parents
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
 @in_project
-def all_themes_no_parents(*, user):
+def all_themes_no_parents():
 
     # The required arguments
     required = ["p_id", "t_id"]
@@ -211,7 +211,7 @@ For creating a new theme
 @theme_routes.route("/create_theme", methods=["POST"])
 @login_required
 @in_project
-def create_theme(*, user):
+def create_theme():
 
     # The required arguments
     required = ["name", "description", "labels", "sub_themes", "p_id"]
@@ -249,7 +249,7 @@ def create_theme(*, user):
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503) 
+        return make_response("Internal Server Error", 503) 
 
     # Return the conformation
     return make_response("Theme created", 200)
@@ -269,7 +269,7 @@ For editing a theme
 @theme_routes.route("/edit_theme", methods=["POST"])
 @login_required
 @in_project
-def edit_theme(*, user):
+def edit_theme():
 
     # The required arguments
     required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
@@ -319,7 +319,7 @@ def edit_theme(*, user):
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503)       
+        return make_response("Internal Server Error", 503)       
 
     # Return the conformation
     return make_response("Theme edited", 200)
@@ -328,18 +328,14 @@ def edit_theme(*, user):
 For editing a theme 
 @params a list of theme information:
 {
-    id: id of the theme
-    name: name of new theme
-    description: description of new theme
-    labels: list of labels inside the theme
-    sub_themes: list of sub_themes
+    t_id: id of the theme
     p_id: project id
 }
 """
 @theme_routes.route("/delete_theme", methods=["POST"])
 @login_required
 @in_project
-def delete_theme(*, user):
+def delete_theme():
 
     # The required arguments
     required = ["p_id", "t_id"]
@@ -381,7 +377,7 @@ def delete_theme(*, user):
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503)       
+        return make_response("Internal Server Error", 503)       
 
     # Return the conformation
     return make_response("Theme deleted", 200)

@@ -232,7 +232,7 @@ export class ThemeDataService {
   }
 
   /**
-   * Funciton to deleted a theme
+   * Function to deleted a theme
    * 
    * @param p_id 
    * @param t_id 
