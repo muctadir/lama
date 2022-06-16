@@ -42,11 +42,11 @@ export class ModerationComponent {
    * @param newMode new page to displayed
    * @modifies mode
    */
-  modeChange(newMode: number): void {
+  async modeChange(newMode: number): Promise<void> {
     // Changes page
     this.mode = newMode;
     // Updates the user data
-    this.getAllUsers();
+    await this.getAllUsers();
   }
 
   /**
@@ -56,7 +56,12 @@ export class ModerationComponent {
    * @trigger on component creation, when mode is changed
    */
   async getAllUsers(): Promise<void> {
-    this.users = await this.accountService.allUsersData();
+    try {
+      // Gets the user data
+      this.users = await this.accountService.allUsersData();
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   /**

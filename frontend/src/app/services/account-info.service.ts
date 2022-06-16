@@ -52,6 +52,12 @@ export class AccountInfoService {
     }
   }
 
+  /**
+   * Returns an array with User objects of all users in the application
+   * by first requested that data from the database
+   *  
+   * @returns array with all users in the app 
+   */
   async allUsersData(): Promise<Array<User>> {
     let users: User[] = [];
 
@@ -77,13 +83,16 @@ export class AccountInfoService {
     return users;
   }
 
-  async softDelUser(toDel: User) : Promise<any> {
+  /**
+   * Makes a call to the server to delete the the user from the database
+   * 
+   * @param toDel user to be deleted
+   */
+  async softDelUser(toDel: User) : Promise<void> {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
       await this.requestHandler.post("/account/soft_del", {"id": toDel.getId()}, true);
-
-      return "success";
     } catch(e) {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");

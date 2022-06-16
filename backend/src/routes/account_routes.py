@@ -143,7 +143,7 @@ def edit_user_password(*, user):
     # Return a success message
     return make_response("Updated succesfully")
 
-
+# Soft deletes a user from the database
 @account_routes.route("/soft_del", methods=["POST"])
 @super_admin_required
 def soft_delete(*, super_admin):
