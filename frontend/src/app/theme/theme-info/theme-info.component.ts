@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { InputCheckService } from 'app/services/input-check.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import { LabellingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { FormBuilder } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';

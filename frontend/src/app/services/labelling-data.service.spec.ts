@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LabellingDataService } from 'app/services/labeling-data.service';
-
+import { LabellingDataService } from './labelling-data.service';
 
 describe('LabellingDataService', () => {
   let service: LabellingDataService;

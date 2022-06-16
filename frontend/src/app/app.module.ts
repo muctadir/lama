@@ -27,7 +27,8 @@ import { ProjectComponent } from './project/project-page/project.component';
 // Statistic page import
 import { StatsComponent } from './stats/stats.component';
 // Labelling page import
-import { LabellingPageComponent } from './labelling-page/labelling-page.component';
+import { LabellingPageComponent } from './labelling/labelling-page/labelling-page.component';
+import { IndividualLabellingForm } from './labelling/individual-labelling-form/individual-labelling-form.component';
 // Label page imports
 import { LabelFormComponent } from './modals/label-form/label-form.component';
 import { LabelManagementComponent } from './label/label-management/label-management.component';
@@ -80,16 +81,18 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     // Labelling page components
     LabellingPageComponent,
     LabelFormComponent,
+    IndividualLabellingForm,
     // Artifact page component
     ArtifactManagementPageComponent,
     SingleArtifactViewComponent,
     AddArtifactComponent,
     // Label page component
     LabelManagementComponent,
-    MergeLabelFormComponent,
     IndividualLabelComponent,
+    MergeLabelFormComponent,
     // Theme page component
     ThemeManagementComponent,
+    SingleThemeViewComponent,
     ThemeInfoComponent,
     SingleThemeViewComponent,
     ModerationComponent,

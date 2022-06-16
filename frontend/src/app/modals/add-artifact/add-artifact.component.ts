@@ -31,7 +31,7 @@ export class AddArtifactComponent {
 
   /**
    * Initializes the modal
-   * 
+   *
    * @param activeModal modal init
    * @param artifactDataService instance of ArtifactDataService
    * @param router instance of Router
@@ -39,16 +39,16 @@ export class AddArtifactComponent {
   constructor(public activeModal: NgbActiveModal,
     private artifactDataService: ArtifactDataService,
     private router: Router) {
-    this.file = null;
-    this.p_id = 0;
-    this.routeService = new ReroutingService();
-    this.url = this.router.url;
-  }
+       this.file = null;
+       this.p_id = 0;
+       this.routeService = new ReroutingService();
+       this.url = this.router.url;
+     }
 
   /**
-   * Stores the file uploaded by the user to the @file variable 
+   * Stores the file uploaded by the user to the @file variable
    * and stores the ID of the current project to the @p_id variable
-   * 
+   *
    * @param event The file upload event
    * @returns nothing
    */
@@ -72,10 +72,10 @@ export class AddArtifactComponent {
    * Function which checks whether the file is a text file.
    * The text file gets parsed based on the newlines.
    * The resulting artifacts gets send to the database.
-   * 
+   *
    * @returns nothing
    * @modifies message, error
-   * 
+   *
    */
   fileUpload(): void {
     // Make sure error and message are reset
