@@ -35,6 +35,8 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { SuperAdminGuardService } from './services/super-admin-guard.service';
 
 
 /* All the routes within the application */
@@ -46,6 +48,8 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent},
     // Account route
     {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
+    // User moderation
+    {path: 'moderation', component: ModerationComponent, canActivate: [SuperAdminGuardService]},
     // Home page route
     {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
     // Project creation route
@@ -55,7 +59,7 @@ const routes: Routes = [
       // Default is stats page
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       // Project settings page
-      {path: 'settings', component: ProjectSettingsComponent},
+      {path: 'settings', component: ProjectSettingsComponent, canActivate: [LoginGuardService]},
       // Stats page route
       {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
       // Labelling page route

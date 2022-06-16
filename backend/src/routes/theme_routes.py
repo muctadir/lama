@@ -3,13 +3,12 @@
 
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
-from src.models.project_models import Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
+from sqlalchemy.exc import OperationalError
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -23,7 +22,7 @@ For getting the theme information
 """
 @theme_routes.route("/theme-management-info", methods=["GET"])
 @login_required
-def theme_management_info(*, user):
+def theme_management_info():
 
     # The required arguments
     required = ["p_id"]
@@ -36,15 +35,18 @@ def theme_management_info(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Get all themes
-    all_themes = db.session.execute(
+    all_themes = db.session.scalars(
         select(Theme)
-        .where(Theme.p_id == args["p_id"])
-    ).scalars().all()
+        .where(
+            Theme.p_id == args["p_id"],
+            Theme.deleted == False
+        )
+    ).all()
 
     # Schemas to serialize
     theme_schema = ThemeSchema()
 
-    # List for project information
+    # List for theme information
     theme_info = [{
         'theme' : theme_schema.dump(theme),
         'number_of_labels' : get_theme_label_count(theme.id)
@@ -146,10 +148,11 @@ For getting the all themes without parents
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
-def all_themes_no_parents(*, user):
+@in_project
+def all_themes_no_parents():
 
     # The required arguments
-    required = ["p_id"]
+    required = ["p_id", "t_id"]
 
     # Get args
     args = request.args
@@ -163,15 +166,19 @@ def all_themes_no_parents(*, user):
 
     # Get the project id
     p_id = int(args["p_id"])
+    # Get theme id
+    t_id = int(args["t_id"])
 
     # Get the themes without parents
-    themes = db.session.execute(
+    themes = db.session.scalars(
         select(Theme)
         .where(
             Theme.p_id == p_id,
-            Theme.super_theme == None
+            Theme.super_theme == None,
+            Theme.id != t_id,
+            Theme.deleted == False
         )
-    ).scalars().all()
+    ).all()
 
     # Dump the themes to get the info
     themes_info = theme_schema.dump(themes, many=True)
@@ -202,9 +209,9 @@ For creating a new theme
 }
 """
 @theme_routes.route("/create_theme", methods=["POST"])
-# TODO: add @in_project
 @login_required
-def create_theme(*, user):
+@in_project
+def create_theme():
 
     # The required arguments
     required = ["name", "description", "labels", "sub_themes", "p_id"]
@@ -225,11 +232,11 @@ def create_theme(*, user):
         "p_id": theme_info["p_id"]
     }
 
-    # Load the project data into a project object
+    # Load the theme data into a theme object
     thema_schema = ThemeSchema()
     theme = thema_schema.load(theme_creation_info)
 
-    # Add the project to the database
+    # Add the theme to the database
     db.session.add(theme)
 
     # Make the sub_themes the sub_themes of the created theme
@@ -242,10 +249,10 @@ def create_theme(*, user):
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503) 
+        return make_response("Internal Server Error", 503) 
 
     # Return the conformation
-    return make_response("Project created", 200)
+    return make_response("Theme created", 200)
 
 """
 For editing a theme 
@@ -260,9 +267,9 @@ For editing a theme
 }
 """
 @theme_routes.route("/edit_theme", methods=["POST"])
-# TODO: add @in_project
 @login_required
-def edit_theme(*, user):
+@in_project
+def edit_theme():
 
     # The required arguments
     required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
@@ -275,7 +282,6 @@ def edit_theme(*, user):
 
     # Check if all required arguments are there
     if not check_args(required, theme_info):
-        print("ello")
         return make_response("Not all required arguments supplied", 400)
     
     # Get theme id
@@ -309,39 +315,113 @@ def edit_theme(*, user):
     # Set the labels of the theme
     theme.labels = make_labels(theme_info["labels"])
 
-    # Edit the project
+    # Edit the theme
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503)       
+        return make_response("Internal Server Error", 503)       
 
     # Return the conformation
-    return make_response("Project created", 200)
+    return make_response("Theme edited", 200)
 
+"""
+For editing a theme 
+@params a list of theme information:
+{
+    t_id: id of the theme
+    p_id: project id
+}
+"""
+@theme_routes.route("/delete_theme", methods=["POST"])
+@login_required
+@in_project
+def delete_theme():
+
+    # The required arguments
+    required = ["p_id", "t_id"]
+
+    # Get args
+    args = request.json
+
+    # Get the info
+    theme_info = args["params"]
+
+    # Check if all required arguments are there
+    if not check_args(required, theme_info):
+        return make_response("Not all required arguments supplied", 400)
+    
+    # Get theme id
+    t_id = theme_info["t_id"]
+    # Project id
+    p_id = theme_info["p_id"]
+
+    # Get the corresponding theme
+    theme = db.session.get(Theme, t_id)
+    
+    # Check if the theme exists
+    if not theme:
+        return make_response("Bad request", 400)
+
+    # Check if theme is in given project
+    if theme.p_id != p_id:
+        return make_response("Bad request", 400)
+        
+    # Change the theme information to be delted
+    db.session.execute(
+        update(Theme).
+        where(Theme.id == t_id).
+        values(deleted = True)
+    )  
+
+    # Delete the theme
+    try:
+        db.session.commit()   
+    except OperationalError:
+        return make_response("Internal Server Error", 503)       
+
+    # Return the conformation
+    return make_response("Theme deleted", 200)
+
+"""
+For getting the labels from the passed data
+@params labels_info includes: {
+    id: id of the label
+}
+"""
 def make_labels(labels_info):
-    # Add the labels to the theme
-    labels_list = []
-    # Make sub_themes themes
-    for label in labels_info:
-        # Get the theme
-        new_label = db.session.scalar(
-            select(Label)
-            .where(Label.id == label["id"])
-        )
-        # Append the theme to the list
-        labels_list.append(new_label)
+    # List for the label ids
+    label_ids_list = []
+    # Put all added label ids into the list
+    for label in labels_info:        
+        # Append the label id to the list
+        label_ids_list.append(label["id"])
+    
+    # Get all labels that are in the list
+    labels_list = db.session.scalars(
+        select(Label)
+        .where(Label.id.in_(label_ids_list))
+    ).all()
+    # Return the actual added labels
     return labels_list
 
+"""
+For getting the themes from the passed data
+@params sub_themes_info includes: {
+    id: id of the theme
+}
+"""
 def make_sub_themes(sub_themes_info):
-    # Add the sub_themes to the theme
-    sub_themes_list = []
-    # Make sub_themes themes
-    for sub_theme in sub_themes_info:
-        # Get the theme
-        new_theme = db.session.scalar(
-            select(Theme)
-            .where(Theme.id == sub_theme["id"])
-        )
-        # Append the theme to the list
-        sub_themes_list.append(new_theme)
-    return sub_themes_list
+    # List for the label ids
+    sub_theme_ids_list = []
+    # Put all added label ids into the list
+    for label in sub_themes_info:        
+        # Append the label id to the list
+        sub_theme_ids_list.append(label["id"])
+    
+    # Get all labels that are in the list
+    sub_theme_list = db.session.scalars(
+        select(Theme)
+        .where(Theme.id.in_(sub_theme_ids_list))
+    ).all()
+    # Return the actual added labels
+    return sub_theme_list

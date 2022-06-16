@@ -14,6 +14,7 @@ import { InputCheckService } from 'app/services/input-check.service';
 export class AccountChangePasswordComponent {
   /* User object containing account info of the user */
   @Input() userAccount!: User;
+  @Input() superAdmin!: boolean;
   /* Emits an event which will change the page currently being viewed */
   @Output() modeChangeEvent = new EventEmitter<number>();
 
@@ -46,6 +47,7 @@ export class AccountChangePasswordComponent {
     let passwordInformation: Record<string, any> = {};
     // Puts old password and new password in the object
     passwordInformation = {
+      "id": this.userAccount.getId(),
       "password" : this.passwordForm.value.old_password,
       "newPassword": this.passwordForm.value.new_password
     };
@@ -56,6 +58,7 @@ export class AccountChangePasswordComponent {
     if (validInput) {
       // Makes change password request to backend
       this.makeRequest(passwordInformation);
+      this.errorMsg = "";
     } else {
       // Displays error
       this.errorMsg = "Please fill in all forms correctly";
@@ -73,7 +76,7 @@ export class AccountChangePasswordComponent {
     let service : InputCheckService = new InputCheckService();
 
     // Checks input
-    return service.checkFilled(this.passwordForm.value.old_password) && 
+    return service.checkFilled(this.passwordForm.value.old_password || this.superAdmin) && 
       service.checkFilled(this.passwordForm.value.new_password) &&
       (this.passwordForm.value.new_password == this.passwordForm.value.new_passwordR);
   }
