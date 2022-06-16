@@ -19,6 +19,8 @@ export class SingleArtifactViewComponent implements OnInit {
   routeService: ReroutingService;
   // Initialize the artifact
   artifact: StringArtifact;
+  // Initialize list of users
+
   // Initialize array of label types in the project
   labelTypes: Array<LabelType>;
   // Initialize the url
@@ -78,6 +80,7 @@ export class SingleArtifactViewComponent implements OnInit {
     const result = await this.artifactDataService.getArtifact(p_id, a_id);
     this.artifact = result["result"];
     this.userLabels = result["labellings"];
+    console.log(this.userLabels)
     this.username = result["username"];
     this.admin = result["admin"];
   }

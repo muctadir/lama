@@ -4,13 +4,13 @@
 # Thea Bradley
 
 from importlib.metadata import requires
-from types import NoneType
 from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, Highlight, HighlightSchema
-from src.models.project_models import Membership, Project
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.auth_models import UserSchema
+from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
@@ -70,22 +70,16 @@ def get_artifacts(*, user, membership):
     else:
         # If user isn't admin, then get all artifacts the user has labelled
 
-        # Get distinct ids of all artifacts the user has labelled in the current projct (for a certain page)
-        distinct_artifacts = select(distinct(Artifact.id)
+        # Get artifacts the user has labelled in the current project (for a certain page)
+        artifacts = db.session.scalars(select(Artifact
                 ).where(
                 Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id,
                 Artifact.id > seek_index
             ).offset((page - seek_page - 1) * page_size
-            ).limit(page_size).subquery()
+            ).limit(page_size).distinct()).all()
 
-        # Get only the artifacts the user has labelled in the current project (for a certain page)
-        artifacts = db.session.scalars(
-            select(Artifact)
-            .where(
-                Artifact.id.in_(distinct_artifacts)
-                )).all()
         # Get the number of artifacts the user has labelled
         n_artifacts = db.session.scalar(
             select(func.count(distinct(Artifact.id)))
@@ -100,25 +94,20 @@ def get_artifacts(*, user, membership):
                                     user.id, Labelling.p_id == p_id)
         ).scalars().all()
 
-        # Take the artifacts labelled by the user
-        # TODO: Remove for loop
-        for labelling in labellings:
-            artifacts.add(labelling.artifact)
-
     # List of artifacts to be passed to frontend
     artifact_info = []
 
     # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
+    labelling_schema = LabellingSchema()
 
     # For each displayed artifact
     for artifact in artifacts:
-
         # Convert artifact to JSON
         artifact_json = artifact_schema.dump(artifact)
-
+        print(artifact)
         # Get the serialized labellings
-        labellings = __get_labellings(artifact)
+        labellings = labelling_schema.dump(artifact.labellings, many=True)
 
         # Put all values into a dictionary
         info = {
@@ -203,14 +192,26 @@ def single_artifact(*, user, membership):
     # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
 
+    # Schema to serialize users
+    user_schema = UserSchema()
+
     # Convert artifact to JSON
     artifact_json = artifact_schema.dump(artifact)
+
+    # Get users who labelled this artifact
+    users = db.session.scalars(select(User)
+        .where(Labelling.p_id==args['p_id'], Labelling.u_id==User.id, Labelling.a_id==a_id)
+        .distinct()).all()
+
+    # Serialize users
+    users_json = user_schema.dump(users, many=True)
 
     # Put all values into a dictionary
     info = {
         "artifact": artifact_json,
         "username": user.username,
-        "admin": membership.admin
+        "admin": membership.admin,
+        "users": users_json
     }
 
     # If the extended data was requested, append the requested data
@@ -317,29 +318,16 @@ def __aggregate_labellings(artifact):
 
             # What to add to result
             addition = {
-                'labellerName': user,
-                'labelTypeName': labelling.label_type.name,
                 'labelGiven': labelling.label.name,
                 'labelRemark': labelling.remark
             }
 
             # Add the labelling to the result
             if user not in result:
-                result[user] = [addition]
-            else:
-                result[user].append(addition)
-
-        # Format result to be compatible with the frontend
-        formatted_result = []
-        for labeller in result:
-            formatted_result.append({
-                'labellerName': labeller,
-                'labelsGiven': result[labeller]
-            })
-
-        return formatted_result
-
-
+                result[user] = {}
+            result[user][labelling.label_type.name] = addition
+        return result
+        
 @artifact_routes.route("/randomArtifact", methods=["GET"])
 @login_required
 @in_project
