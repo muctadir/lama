@@ -1,72 +1,104 @@
 <!-- @author: Bartjan Henkemans -->
 <!-- Main container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
-    <!-- contains the page title and little buttons -->
-    <div class="row" id="pageTitle">
-        <div id="artifactId" class="col-10">
-            Artifact {{ artifact?.getId() }} ({{ artifact?.getIdentifier() }})
-        </div>
-        <div *ngIf="hightlightedText.length > 0 " class="col-2">
-            <div id="artifactButtons">
-                <i (click)="notImplemented()" class="bi bi-scissors"></i><i (click)="notImplemented()" class="bi bi-brush"></i>
-            </div>
-        </div>
+  <!-- contains the page title and little buttons -->
+  <div class="row" id="pageTitle">
+    <div id="artifactId" class="col-10">
+      Artifact {{ artifact?.getId() }} ({{ artifact?.getIdentifier() }})
     </div>
-    <!-- Row containing the artifact -->
-    <div class = "row" >
-         <!-- Div containing the artifact -->
-        <div class = "artifactContainer" id="artifactContainer">
-            <p (mouseup)="notImplemented()" (mousedown)="notImplemented()">{{ artifact?.getData()! }}</p>
-        </div>
-
-        <!-- Labeller information -->
-        <div class="col-6">
-            <div *ngIf="labellers.length != 0">
-                Labeled by: <span *ngFor="let labeler of labellers; let last = last">{{ labeler.username }}<span *ngIf="!last">, </span></span>
-            </div>
-        </div>
-
-        <!-- @TODO Information about the origin of the artifact -->
-        <!-- Currently not implemented -->
-        <div class="col-6" id="split">
-            <p class="float-end">
-                <span *ngIf="artifact!.getNumberOfChildIds() == 0 "></span>
-                <span *ngIf="artifact!.getNumberOfChildIds() === 1" > Artifact was split into child artifact</span>
-                <span *ngIf="artifact!.getNumberOfChildIds() > 1" >Artifact was split into children artifacts</span>
-                <span *ngIf="artifact!.getNumberOfChildIds() > 0" id="split1"> #{{artifact!.getChildIds()}}.</span>
-                <br *ngIf="artifact!.getNumberOfChildIds() > 0">
-                <span *ngIf="artifact!.getParentId() != undefined">Artifact was split from parent artifact</span>
-                <span *ngIf="artifact!.getParentId() != undefined" id="split2"> #{{artifact!.getParentId()}}.</span>
-            </p>
-        </div>
-
-        <!-- Row containing the labelling tools -->
-        <div class="row">
-            <div class="col-3">
-              <span id="LabellingTitle">Labelling</span>
-              <span (click)="openCreateForm()" class=""><i class="bi bi-plus-lg"></i></span>
-            </div>
-            <div class="col-9"></div>
-            <div class="col-3">
-              {{ submitMessage }}
-            </div>
-            <div class="col-12" id="labelThing">
-                <div *ngFor="let labelType of labelTypes" id="labelling-row">
-                    <app-individual-labelling-form [labelType]="labelType"
-                                        [parentForm]="labellings">
-                    </app-individual-labelling-form>
-                </div>
-            </div>
-
-            <!-- Submission buttons -->
-            <div class="col-10"></div>
-            <div class="col-2">
-                <!-- Submission buttons -->
-                <div id="butt">
-                    <button class="form-group btn btn-light float-right" (click)="skip()" id="skip-button">Skip</button>
-                    <button class="form-group btn btn-primary float-right" (click)="submit()">Submit</button>
-                </div>
-            </div>
-        </div>
+    <div *ngIf="hightlightedText.length > 0" class="col-2">
+      <div id="artifactButtons">
+        <i (click)="notImplemented()" class="bi bi-scissors"></i
+        ><i (click)="notImplemented()" class="bi bi-brush"></i>
+      </div>
     </div>
+  </div>
+  <!-- Row containing the artifact -->
+  <div class="row">
+    <!-- Div containing the artifact -->
+    <div class="artifactContainer" id="artifactContainer">
+      <p (mouseup)="notImplemented()" (mousedown)="notImplemented()">
+        {{ artifact?.getData()! }}
+      </p>
+    </div>
+
+    <!-- Labeller information -->
+    <div class="col-6">
+      <div *ngIf="labellers.length != 0">
+        Labeled by:
+        <span *ngFor="let labeler of labellers; let last = last"
+          >{{ labeler.username }}<span *ngIf="!last">, </span></span
+        >
+      </div>
+    </div>
+
+    <!-- @TODO Information about the origin of the artifact -->
+    <!-- Currently not implemented -->
+    <div class="col-6" id="split">
+      <p class="float-end">
+        <span *ngIf="artifact!.getNumberOfChildIds() == 0"></span>
+        <span *ngIf="artifact!.getNumberOfChildIds() === 1">
+          Artifact was split into child artifact</span
+        >
+        <span *ngIf="artifact!.getNumberOfChildIds() > 1"
+          >Artifact was split into children artifacts</span
+        >
+        <span *ngIf="artifact!.getNumberOfChildIds() > 0" id="split1">
+          #{{ artifact!.getChildIds() }}.</span
+        >
+        <br *ngIf="artifact!.getNumberOfChildIds() > 0" />
+        <span *ngIf="artifact!.getParentId() != undefined"
+          >Artifact was split from parent artifact</span
+        >
+        <span *ngIf="artifact!.getParentId() != undefined" id="split2">
+          #{{ artifact!.getParentId() }}.</span
+        >
+      </p>
+    </div>
+
+    <!-- Row containing the labelling tools -->
+    <div class="row">
+      <div class="col-3">
+        <span id="LabellingTitle">Labelling</span>
+        <span (click)="openCreateForm()" class=""
+          ><i class="bi bi-plus-lg"></i
+        ></span>
+      </div>
+      <div class="col-9"></div>
+      <div class="col-3">
+        {{ submitMessage }}
+      </div>
+      <div class="col-12" id="labelThing">
+        <div *ngFor="let labelType of labelTypes" id="labelling-row">
+          <app-individual-labelling-form
+            [labelType]="labelType"
+            [parentForm]="labellings"
+            [reload]="eventEmitter"
+          >
+          </app-individual-labelling-form>
+        </div>
+      </div>
+
+      <!-- Submission buttons -->
+      <div class="col-10"></div>
+      <div class="col-2">
+        <!-- Submission buttons -->
+        <div id="butt">
+          <button
+            class="form-group btn btn-light float-right"
+            (click)="skip()"
+            id="skip-button"
+          >
+            Skip
+          </button>
+          <button
+            class="form-group btn btn-primary float-right"
+            (click)="submit()"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

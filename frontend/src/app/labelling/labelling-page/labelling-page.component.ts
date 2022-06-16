@@ -2,10 +2,10 @@
  * @author B. Henkemans
  * @author T. Bradley
  */
-import { Component, OnInit } from '@angular/core';
-import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { LabelingDataService } from "app/services/labeling-data.service";
+import { LabelingDataService } from 'app/services/labeling-data.service';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
@@ -32,6 +32,7 @@ export class LabellingPageComponent implements OnInit {
   labellings: FormArray;
   form: FormGroup;
   submitMessage: string;
+  eventEmitter: EventEmitter<any>;
 
   /**
    * Information concerning the highlighting and cutting
@@ -50,8 +51,8 @@ export class LabellingPageComponent implements OnInit {
   /**
    * Start and end timestamps
    */
-   startTime: any;
-   endTime: any;
+  startTime: any;
+  endTime: any;
 
   /**
    * Constructor passes in the modal service and the labelling data service
@@ -79,6 +80,7 @@ export class LabellingPageComponent implements OnInit {
       labellings: this.labellings,
     });
     this.submitMessage = '';
+    this.eventEmitter = new EventEmitter<any>();
     /**
      * Setting up routing
      */
@@ -97,6 +99,8 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
+    this.labellings = new FormArray([]);
+    this.eventEmitter.emit();
     this.getRandomArtifact();
     this.getLabelTypesWithLabels();
 
@@ -188,8 +192,7 @@ export class LabellingPageComponent implements OnInit {
     // Get the timestamp when the labels are submitted
     this.endTime = Date.now();
     // Number of seconds the labellings took
-    let totalTime = (this.endTime - this.startTime) / 1000
-
+    let totalTime = (this.endTime - this.startTime) / 1000;
     try {
       let resultArray: Array<Object> = this.createResponse(totalTime);
       const dict = {
@@ -205,17 +208,18 @@ export class LabellingPageComponent implements OnInit {
 
   createResponse(totalTime: number): Array<Object> {
     let resultArray: Array<Object> = Array<Object>();
-
     this.labellings.controls.forEach((el: any) => {
       if (el.status != 'VALID') {
+        console.log(this.labellings.controls);
         throw 'Submission invalid';
       }
+      console.log(this.artifact);
       resultArray.push({
         a_id: this.artifact?.getId(),
         lt_id: el.get('labelType')?.value,
         l_id: el.get('label')?.value,
         remark: el.get('remark')?.value,
-        time: totalTime
+        time: totalTime,
       });
     });
     return resultArray;
