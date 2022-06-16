@@ -73,7 +73,7 @@ def test():
     changes.extend(get_changes(Theme.__change__, 1))
     for change in changes:
         print(str(change))
-
+    print(getattr(modules['src.models.item_models'], 'Artifact').__change__)
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
