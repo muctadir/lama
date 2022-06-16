@@ -8,6 +8,7 @@ from flask import make_response, request, Blueprint
 from sqlalchemy import select, update
 from src.app_util import login_required, super_admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import  OperationalError
 
 account_routes = Blueprint("account", __name__, url_prefix="/account")
 
@@ -69,8 +70,8 @@ def edit_user_information(*, user):
     
     # Changes the account details
     db.session.execute(
-        update(User).
-        where(User.id == id_used).
+        update(User)
+        .where(User.id == id_used).
         values(
             username=new_username,
             email=new_email,
@@ -79,7 +80,10 @@ def edit_user_information(*, user):
     )
 
     # Commits to the database
-    db.session.commit()
+    try:
+        db.session.commit()
+    except OperationalError:
+        return make_response('Internal Server Error', 503)
     
     # Return a success message
     return make_response("Updated succesfully")
