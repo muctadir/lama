@@ -129,11 +129,7 @@ export class ArtifactManagementPageComponent {
 
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
-    // When the modal closes, call the getArtifact function to update the displayed artifacts
-    modalRef.result.then( async () => {
-      this.getArtifacts() });
-    }
-  
+  }
   //gets the search text
   async onEnter() {
 
