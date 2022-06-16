@@ -173,10 +173,10 @@ export class ThemeDataService {
    * @param p_id 
    * @returns allSubThemes. All sub-themes without parents
    */
-  async themes_without_parents (p_id: number): Promise<Array<Theme>> {
+  async themes_without_parents (p_id: number, t_id: number): Promise<Array<Theme>> {
     try{
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id}, true);
+      let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id, "t_id": t_id}, true);
 
       // List for all subthemes
       let allSubThemes: Array<Theme> = [];
@@ -228,6 +228,25 @@ export class ThemeDataService {
     } catch(e) {
       // Return the response
       return "An error occured when trying to edit the theme";
+    }
+  }
+
+  /**
+   * Function to deleted a theme
+   * 
+   * @param p_id 
+   * @param t_id 
+   * @returns response. Whether the theme was deleted or an error occured
+   */
+  async delete_theme(p_id: number, t_id: number): Promise<string> {
+    try{
+      // Create project in the backend
+      await this.requestHandler.post('/theme/delete_theme', {"p_id": p_id, "t_id": t_id}, true);
+      return "Theme deleted succesfully"
+    // Catch the error
+    } catch(e) {
+      // Return the response
+      return "An error occured when trying to delete the theme";
     }
   }
 
