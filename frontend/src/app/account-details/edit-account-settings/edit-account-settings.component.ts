@@ -63,6 +63,7 @@ export class EditAccountSettingsComponent {
     
     // Enters the data into the object
     accountInformation = {
+      "id": this.userAccount.getId(),
       "username" : this.accountForm.value.username,
       "description" : this.accountForm.value.description,
       "email": this.accountForm.value.email

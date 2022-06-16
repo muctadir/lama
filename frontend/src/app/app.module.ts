@@ -49,6 +49,7 @@ import { ThemeHistoryComponent } from './modals/theme-history/theme-history.comp
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModerationComponent } from './account-details/moderation/moderation.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ThemeManagementComponent,
     ThemeInfoComponent,
     SingleThemeViewComponent,
+    ModerationComponent,
     DeleteThemeComponent,
     ThemeHistoryComponent,
   ],
