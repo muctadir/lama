@@ -97,13 +97,21 @@ export class ArtifactManagementPageComponent {
    * @return the page corresponding to this index
    */
   getSeekInfo(page: number): [number, number] {
+    // Go backwards from the page we need (to get the closest/largest page)
     for (let i: number = page - 1; i >= 1; i--) {
+      // See if we have already retrieved artifacts for that page
       if (this.artifacts.hasOwnProperty(i)) {
+        // Get the artifacts for that page
         let artifacts: StringArtifact[] = this.artifacts[i];
+        // Get the index of the last artifact (the largest index)
         let seekIndex: number = artifacts[artifacts.length - 1].getId();
+        // The index can be used to exclude artifacts from the query (before the offset)
+        // The page needs to be passed to see how many artifacts we still need to offset
         return [seekIndex, i]
       }
     }
+    // Worst case scenario when we have not cached any previous pages
+    // Then we have to offset everything
     return [0, 0];
   }
 

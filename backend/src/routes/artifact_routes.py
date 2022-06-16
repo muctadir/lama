@@ -34,9 +34,12 @@ def get_artifacts(*, user, membership):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
+    # The page of artifacts we are trying to retrieve
     page = int(args['page']) - 1
+    # How many pages we can skip by using the seek index
     seek_page = int(args['seek_page']) - 1
     page_size = int(args['page_size'])
+    # The indexes we can skip using the where clause. See below explanation for how the seek method works.
     seek_index = args['seek_index']
 
     # We use seek method for pagination. Offset in SQL is slow since it still goes through
