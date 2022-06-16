@@ -123,23 +123,17 @@ export class SingleThemeViewComponent {
    * 
    * @Trigger When the delete button is clicked
    */
-  async deleteTheme(){
+  deleteTheme(){
     // Get the children and labels
     let children = this.theme.getChildren();
     let labels = this.theme.getLabels();
     // Check if the children and labels are undefined
-    if(children == undefined || labels == undefined){
-      // Alert that the theme cannot be deleted
-      this.alertMessage = "This theme has sub-themes and labels, so it cannot be deleted";
-      return;
-    } else {
-      if(labels != undefined && children != undefined){
-        // Check the length of the arrays
-        if(labels.length != 0 || children.length != 0){
-          // Alert that the theme cannot be deleted
-          this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
-          return;
-        }
+    if(children != undefined && labels != undefined){
+      // Check the length of the arrays
+      if(labels.length != 0 || children.length != 0){
+        // Alert that the theme cannot be deleted
+        this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
+        return;
       }
     }
     // Open the modal

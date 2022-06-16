@@ -550,13 +550,11 @@ describe('ThemeInfoComponent', () => {
 
   // GET_THEMES_WITHOUT_PARENTS FUNTION
   // Test the get_themes_without_parents function
-  it('Tests if the get_themes_without_parents function calls its functions correctly', async () => {  
-    // Set the component pid
-    component.p_id = 1;
+  it('Tests if the get_themes_without_parents function calls its functions correctly', async () => {
     // Spy on the themes_without_parents function of the dataservice
     let spy = spyOn(component['themeDataService'], "themes_without_parents").and.returnValue(Promise.resolve([]));
     // Call the function
-    await component.get_themes_without_parents(component.p_id);
+    await component.get_themes_without_parents(1, 1);
     // Check if function works correctly
     expect(spy).toHaveBeenCalled();
   });
