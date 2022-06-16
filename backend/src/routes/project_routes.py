@@ -685,17 +685,25 @@ def __get_artifact_counts(p_id, criteria):
     ).subquery()
 
     per_artifact = select(
+        # Artifact ids
         per_label_type.c.a_id,
+        # Max number of distinct labels for the label types of the artifact
         func.max(per_label_type.c.label_count).label('max_distinct'),
+        # Minimum number of labellings for the label types of the artifact
+        # NB: technically this number should be the same across all label types, since label types can't be left blank
         func.min(per_label_type.c.labelling_count).label('min_labellings')
     ).group_by(
         per_label_type.c.a_id
     ).subquery()
 
     project_nr_cl_artifacts = db.session.scalar(select(
+        # Count number of artifacts
         func.count(per_artifact.c.a_id)
     ).where(
+        # Each label type was labelled with at most one type of label
+        # (NB: At least one type of label is handled by the next condition)
         per_artifact.c.max_distinct == 1,
+        # The label types have each been labelled the required amount of times
         per_artifact.c.min_labellings >= criteria
     ))
 
