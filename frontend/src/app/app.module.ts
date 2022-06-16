@@ -48,6 +48,7 @@ import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.compo
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModerationComponent } from './account-details/moderation/moderation.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ThemeManagementComponent,
     ThemeInfoComponent,
     SingleThemeViewComponent,
+    ModerationComponent,
     DeleteThemeComponent,
   ],
   imports: [
