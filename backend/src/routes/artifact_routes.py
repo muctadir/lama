@@ -65,22 +65,27 @@ def get_artifacts(*, user, membership):
     else:
         # If user isn't admin, then get all artifacts the user has labelled
 
+        # Get distinct ids of all artifacts the user has labelled in the current projct (for a certain page)
+        distinct_artifacts = select(distinct(Artifact.id)
+                ).where(
+                Artifact.id == Labelling.a_id,
+                Labelling.u_id == user.id, 
+                Labelling.p_id == p_id,
+                Artifact.id > seek_index
+            ).offset((page - seek_page - 1) * page_size
+            ).limit(page_size).subquery()
+
         # Get only the artifacts the user has labelled in the current project (for a certain page)
         artifacts = db.session.scalars(
             select(Artifact)
             .where(
-                Artifact.a_id == Labelling.a_id,
-                Labelling.u_id == user.id, 
-                Labelling.p_id == p_id,
-                Artifact.id > seek_index)
-            .offset((page - seek_page - 1) * page_size)
-            .limit(page_size)
-        ).all()
+                Artifact.id.in_(distinct_artifacts)
+                )).all()
         # Get the number of artifacts the user has labelled
         n_artifacts = db.session.scalar(
-            select(func.count(Artifact.id))
+            select(func.count(distinct(Artifact.id)))
             .where(
-                Artifact.a_id == Labelling.a_id,
+                Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id)
         )
@@ -92,7 +97,6 @@ def get_artifacts(*, user, membership):
     artifact_schema = ArtifactSchema()
 
     # For each displayed artifact
-    # TODO: Remove for loop
     for artifact in artifacts:
 
         # Convert artifact to JSON
