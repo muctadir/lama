@@ -4,7 +4,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labeling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
@@ -30,7 +30,7 @@ export class IndividualLabelComponent {
    */
   constructor(private modalService: NgbModal,
     private router: Router,
-    private labelingDataService: LabelingDataService) {
+    private labelingDataService: LabellingDataService) {
       this.label = new Label(-1,"","","");
       this.routeService = new ReroutingService();
       this.url = this.router.url;

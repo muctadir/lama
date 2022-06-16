@@ -5,7 +5,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { LabelingDataService } from "app/services/labeling-data.service";
+import { LabellingDataService } from "app/services/labeling-data.service";
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 
@@ -34,7 +34,7 @@ export class LabellingPageComponent implements OnInit{
    * @param labelingDataService 
    */
   constructor(private modalService: NgbModal, 
-    private labelingDataService: LabelingDataService) { }
+    private labelingDataService: LabellingDataService) { }
 
   /**
    * ngOnInit runs after the constructor. When the constructor is executed

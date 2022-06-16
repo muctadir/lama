@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labeling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
@@ -26,7 +26,7 @@ export class MergeLabelFormComponent {
    */
    constructor(public activeModal: NgbActiveModal,
     private router: Router,
-    private labelingDataService: LabelingDataService) {
+    private labelingDataService: LabellingDataService) {
       this.labels = new Array<Label>();
       this.labelTypes = new Array<LabelType>();
       this.routeService = new ReroutingService();

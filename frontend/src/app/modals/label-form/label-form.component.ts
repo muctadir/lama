@@ -3,7 +3,7 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labeling-data.service';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/services/rerouting.service';
@@ -36,7 +36,7 @@ export class LabelFormComponent implements OnInit {
    * @param formBuilder
    */
   constructor(public activeModal: NgbActiveModal,
-    private labelingDataService: LabelingDataService,
+    private labelingDataService: LabellingDataService,
     private router: Router,
     private formBuilder: FormBuilder) {
       this.labelTypes = new Array<LabelType>();
