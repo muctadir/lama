@@ -13,8 +13,7 @@ from src.models.item_models import Label, LabelSchema, LabelType, \
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
 # Author: Eduardo
-
-
+# Author: Bartjan
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
@@ -55,9 +54,8 @@ def create_label():
 
     return make_response('Created')
 
-# Author: Bartjan, Victoria
-
-
+# Author: Bartjan,
+# Author: Victoria
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
@@ -66,18 +64,26 @@ def edit_label():
     args = request.json['params']
     # Required args
     required = ('labelId', 'labelName', 'labelDescription', 'p_id')
-
+    # Checks if arguments were at least provided
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-
-    label = db.session.get(Label, args['labelId'])
+    # Checks if the provided labelId is somewhat valid
+    if args['labelId'] < 0:
+        return make_response('Bad Request, labelId invalid', 400)
+    # Get label from database
+    try:
+        label = db.session.get(Label, args['labelId'])
+    except:
+        # Something went wrong
+        return make_response('Internal Server Error: Fetching label from database unsuccessful.', 500)
+    # Check if the response contained a label
     if not label:
         return make_response('Label does not exist', 400)
-
+    # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
-
     try:
+        # Update
         db.session.execute(
             update(Label)
             .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
@@ -86,12 +92,10 @@ def edit_label():
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
-    return make_response('Ok')
+    return make_response()
 
 # Author: Bartjan, Victoria
 # Check whether the pID exists
-
-
 @label_routes.route('/allLabels', methods=['GET'])
 @login_required
 @in_project
