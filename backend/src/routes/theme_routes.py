@@ -23,7 +23,7 @@ For getting the theme information
 """
 @theme_routes.route("/theme-management-info", methods=["GET"])
 @login_required
-def theme_management_info(*, user):
+def theme_management_info():
 
     # The required arguments
     required = ["p_id"]
@@ -36,15 +36,18 @@ def theme_management_info(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Get all themes
-    all_themes = db.session.execute(
+    all_themes = db.session.scalars(
         select(Theme)
-        .where(Theme.p_id == args["p_id"])
-    ).scalars().all()
+        .where(
+            Theme.p_id == args["p_id"],
+            Theme.deleted == False
+        )
+    ).all()
 
     # Schemas to serialize
     theme_schema = ThemeSchema()
 
-    # List for project information
+    # List for theme information
     theme_info = [{
         'theme' : theme_schema.dump(theme),
         'number_of_labels' : get_theme_label_count(theme.id)
@@ -147,7 +150,7 @@ For getting the all themes without parents
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
 @in_project
-def all_themes_no_parents(*, user):
+def all_themes_no_parents():
 
     # The required arguments
     required = ["p_id", "t_id"]
@@ -168,14 +171,15 @@ def all_themes_no_parents(*, user):
     t_id = int(args["t_id"])
 
     # Get the themes without parents
-    themes = db.session.execute(
+    themes = db.session.scalars(
         select(Theme)
         .where(
             Theme.p_id == p_id,
             Theme.super_theme == None,
-            Theme.id != t_id
+            Theme.id != t_id,
+            Theme.deleted == False
         )
-    ).scalars().all()
+    ).all()
 
     # Dump the themes to get the info
     themes_info = theme_schema.dump(themes, many=True)
@@ -227,11 +231,11 @@ def create_theme(*, user):
         "p_id": args["p_id"]
     }
 
-    # Load the project data into a project object
+    # Load the theme data into a theme object
     thema_schema = ThemeSchema()
     theme = thema_schema.load(theme_creation_info)
 
-    # Add the project to the database
+    # Add the theme to the database
     db.session.add(theme)
     db.session.flush()
     __record_creation(theme.id, theme.name, args['p_id'], user.id)
@@ -246,10 +250,10 @@ def create_theme(*, user):
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503) 
+        return make_response("Internal Server Error", 503) 
 
     # Return the conformation
-    return make_response("Project created", 200)
+    return make_response("Theme created", 200)
 
 """
 For editing a theme 
@@ -276,7 +280,6 @@ def edit_theme(*, user):
 
     # Check if all required arguments are there
     if not check_args(required, args):
-        print("ello")
         return make_response("Not all required arguments supplied", 400)
     
     # Get theme id
@@ -316,14 +319,74 @@ def edit_theme(*, user):
     # Set the labels of the theme
     theme.labels = make_labels(args["labels"])
 
-    # Edit the project
+    # Edit the theme
     try:
         db.session.commit()   
     except OperationalError:
-        return make_response("internal Server Error", 503)       
+        return make_response("Internal Server Error", 503)       
 
-    # Return the confirmation
-    return make_response("Project edited", 200)
+    # Return the conformation
+    return make_response("Theme edited", 200)
+
+"""
+For editing a theme 
+@params a list of theme information:
+{
+    t_id: id of the theme
+    p_id: project id
+}
+"""
+@theme_routes.route("/delete_theme", methods=["POST"])
+@login_required
+@in_project
+def delete_theme(*, user):
+
+    # The required arguments
+    required = ["p_id", "t_id"]
+
+    # Get args
+    args = request.json
+
+    # Get the info
+    theme_info = args["params"]
+
+    # Check if all required arguments are there
+    if not check_args(required, theme_info):
+        return make_response("Not all required arguments supplied", 400)
+    
+    # Get theme id
+    t_id = theme_info["t_id"]
+    # Project id
+    p_id = theme_info["p_id"]
+
+    # Get the corresponding theme
+    theme = db.session.get(Theme, t_id)
+    
+    # Check if the theme exists
+    if not theme:
+        return make_response("Bad request", 400)
+
+    # Check if theme is in given project
+    if theme.p_id != p_id:
+        return make_response("Bad request", 400)
+        
+    # Change the theme information to be delted
+    db.session.execute(
+        update(Theme).
+        where(Theme.id == t_id).
+        values(deleted = True)
+    )
+
+    __record_delete(theme.id, theme.name, p_id, user.id)
+
+    # Delete the theme
+    try:
+        db.session.commit()   
+    except OperationalError:
+        return make_response("Internal Server Error", 503)       
+
+    # Return the conformation
+    return make_response("Theme deleted", 200)
 
 """
 For getting the labels from the passed data
@@ -343,7 +406,7 @@ def make_labels(labels_info):
     labels_list = db.session.scalars(
         select(Label)
         .where(Label.id.in_(label_ids_list))
-    )
+    ).all()
     # Return the actual added labels
     return labels_list
 
@@ -365,7 +428,7 @@ def make_sub_themes(sub_themes_info):
     sub_theme_list = db.session.scalars(
         select(Theme)
         .where(Theme.id.in_(sub_theme_ids_list))
-    )
+    ).all()
     # Return the actual added labels
     return sub_theme_list
 
@@ -398,7 +461,7 @@ def __record_name_edit(t_id, old_name, p_id, u_id, new_name):
 
     db.session.add(change)
 
-def __record_description_edit(t_id, old_name, p_id, u_id):
+def __record_description_edit(t_id, name, p_id, u_id):
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
 
@@ -406,7 +469,7 @@ def __record_description_edit(t_id, old_name, p_id, u_id):
         i_id=t_id,
         p_id=p_id,
         u_id=u_id,
-        name=old_name,
+        name=name,
         change_type=ChangeType.description
     )
 
@@ -437,5 +500,18 @@ def __record_removing(t_id, name, p_id, u_id, removed, change_type):
         name=name,
         description="removed" + ','.join(removed),
         change_type=change_type     
+    )
+    db.session.add(change)
+
+def __record_delete(t_id, name, p_id, u_id):
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    change = ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=name,
+        change_type=ChangeType.deleted
     )
     db.session.add(change)

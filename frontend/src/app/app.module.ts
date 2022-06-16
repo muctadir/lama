@@ -44,6 +44,7 @@ import { ConflictResolutionComponent } from './conflict/conflict-resolution/conf
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -89,7 +90,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     // Theme page component
     ThemeManagementComponent,
     ThemeInfoComponent,
-    SingleThemeViewComponent
+    SingleThemeViewComponent,
+    DeleteThemeComponent,
   ],
   imports: [
     BrowserModule,

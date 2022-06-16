@@ -163,7 +163,7 @@ $light-grey-shade: #aaaaaa;
 // Scrolling for the accordion
 #accordionScroll{
     overflow-y: scroll;
-    height: 30vh;
+    height: 25vh;
 }
 
 // Edit Button
@@ -175,7 +175,7 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Cancel button
-#btns-cancel-submit{
+#btns-cancel-submit, #deleteButton{
     border: none;
     width: 150px;
 }
@@ -183,4 +183,22 @@ $light-grey-shade: #aaaaaa;
 // Make the highlight around the buttons none
 .btn:focus {
     box-shadow: none;
+}
+
+// Row for the buttons
+.buttonRow{
+    width: 100%;
+}
+
+// Column for the alert message
+#alertMessageCol{
+    padding-top: 10px;
+}
+
+// Style for the alert message
+#alertMessage{
+    font-size: 18px;
+    color: red;
+    margin: 0px;
+    padding:0px;
 }

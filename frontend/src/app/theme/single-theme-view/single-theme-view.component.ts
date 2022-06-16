@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
+import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -24,7 +26,10 @@ export class SingleThemeViewComponent {
   // Variable for the theme
   theme: Theme; 
 
-  constructor(private router: Router, private themeDataService: ThemeDataService) { 
+  // Alert message for deleting theme
+  alertMessage = "";
+
+  constructor(private router: Router, private themeDataService: ThemeDataService, private modalService: NgbModal) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -46,10 +51,6 @@ export class SingleThemeViewComponent {
   async get_single_theme_info(p_id: number, t_id: number){
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
-  }
-
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
   }
 
   /**
@@ -115,6 +116,33 @@ export class SingleThemeViewComponent {
     if (theme != undefined){
       this.reRouterTheme(theme.getId());
     }
+  }
+
+  /**
+   * Function for deleting the theme
+   * 
+   * @Trigger When the delete button is clicked
+   */
+  deleteTheme(){
+    // Get the children and labels
+    let children = this.theme.getChildren();
+    let labels = this.theme.getLabels();
+    // Check if the children and labels are undefined
+    if(children != undefined && labels != undefined){
+      // Check the length of the arrays
+      if(labels.length != 0 || children.length != 0){
+        // Alert that the theme cannot be deleted
+        this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
+        return;
+      }
+    }
+    // Open the modal
+    const modalRef = this.modalService.open(DeleteThemeComponent, {});
+    // Give the modal the project id and theme id
+    modalRef.componentInstance.p_id = this.p_id;
+    modalRef.componentInstance.t_id = this.t_id; 
+    // Give alert message
+    this.alertMessage = "";
   }
 
 }
