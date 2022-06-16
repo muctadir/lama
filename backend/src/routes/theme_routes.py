@@ -335,10 +335,10 @@ def make_labels(labels_info):
         label_ids_list.append(label["id"])
     
     # Get all labels that are in the list
-    labels_list = db.session.execute(
+    labels_list = db.session.scalars(
         select(Label)
         .where(Label.id.in_(label_ids_list))
-    ).scalars().all()
+    )
     # Return the actual added labels
     return labels_list
 
@@ -357,9 +357,9 @@ def make_sub_themes(sub_themes_info):
         sub_theme_ids_list.append(label["id"])
     
     # Get all labels that are in the list
-    sub_theme_list = db.session.execute(
+    sub_theme_list = db.session.scalars(
         select(Theme)
         .where(Theme.id.in_(sub_theme_ids_list))
-    ).scalars().all()
+    )
     # Return the actual added labels
     return sub_theme_list

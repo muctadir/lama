@@ -72,7 +72,18 @@ export class ThemeManagementComponent {
     this.themes = await this.themeDataService.theme_management_info(this.p_id);
   }
 
-  notImplemented(): void {
+  // Function for sorting on names
+  sortName(): void {
+    alert("Button has not been implemented yet.");
+  }
+
+  // Function for sorting on description
+  sortDesc(): void {
+    alert("Button has not been implemented yet.");
+  }
+
+  // Function for sorting on labels
+  sortLabels(): void {
     alert("Button has not been implemented yet.");
   }
 
