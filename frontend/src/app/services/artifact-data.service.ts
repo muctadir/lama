@@ -111,7 +111,6 @@ export class ArtifactDataService {
      * @returns Promise<StringArtifact>
      */
    async getArtifact(p_id: number, a_id: number): Promise<Record<string, any>> {
-
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');
     // Check if the session token exists
@@ -128,7 +127,7 @@ export class ArtifactDataService {
 
     // Get the artifact information from the back end
     let response = await this.requestHandler.get('/artifact/singleArtifact', { 'p_id': p_id, 'a_id': a_id, 'extended': true }, true);
-    console.log(response["users"])
+    
     // Get the artifact from the response
     let artifact = response['artifact'];
 

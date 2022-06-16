@@ -5,7 +5,6 @@ import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { StringArtifact } from 'app/classes/stringartifact';
-import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
 
 @Component({
@@ -20,24 +19,18 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the artifact
   artifact: StringArtifact;
   // Initialize list of users
-
+  users: Array<any>
   // Initialize array of label types in the project
   labelTypes: Array<LabelType>;
   // Initialize the url
   url: string;
   // Initialize list of labels given + remarks per user
-  userLabels: Array<any> = []
+  userLabels: Record<string, Record<string, any>>;
 
   // Will be changed once @inproject decorator is merged
   admin: boolean;
   // Initialize the username of the current user
   username: string;
-
-  allLabels = []
-
-  notImplemented() {
-    alert("This button is not implemented.");
-  }
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -52,13 +45,15 @@ export class SingleArtifactViewComponent implements OnInit {
     private router: Router) {
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
+    this.users = [];
     this.labelTypes = new Array<LabelType>();
     this.url = this.router.url;
+    this.userLabels = {};
     this.admin = false;
     this.username = '';
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Get the ID of the artifact and the project
     let a_id = Number(this.routeService.getArtifactID(this.url));
     let p_id = Number(this.routeService.getProjectID(this.url));
@@ -66,8 +61,7 @@ export class SingleArtifactViewComponent implements OnInit {
     // Get the artifact data from the backend
     this.getArtifact(a_id, p_id)
 
-    this.getLabelTypesWithLabels(p_id)
-    console.log(this.labelTypes)
+    await this.getLabelTypesWithLabels(p_id)
   }
 
    /**
@@ -80,9 +74,9 @@ export class SingleArtifactViewComponent implements OnInit {
     const result = await this.artifactDataService.getArtifact(p_id, a_id);
     this.artifact = result["result"];
     this.userLabels = result["labellings"];
-    console.log(this.userLabels)
     this.username = result["username"];
     this.admin = result["admin"];
+    this.users = result["users"];
   }
 
   /**
