@@ -290,7 +290,7 @@ def __parse_split(change, username):
 A merge string should be of the format:
 "new_label_name ; label_type_name ; <comma separated label names that were merged>" for labels
 or
-"new_label_name ; label_type_name ; old_label_name" for artifacts
+"new_label_name ; label_type_name ; old_label_name" for artifacts and themes
 """
 def __parse_merge(change, username):
     description = change.description.split(' ; ')
@@ -302,9 +302,11 @@ def __parse_merge(change, username):
             if len(names) < 2:
                 raise ChangeSyntaxError
             parsed_names = '"' + '", "'.join(names) + '"'
-            return f"{username} created Label \"{change.name}\" of type {description[1]} by merging labels {parsed_names}"
+            return f"{username} created Label \"{change.name}\" of type \"{description[1]}\" by merging labels {parsed_names}"
         case 'Artifact':
-            return f"{username} changed a labelling for Artifact {change.name} of type {description[1]} from {description[2]} to {description[0]} as a result of a merge"
+            return f"{username} changed a labelling for Artifact {change.name} of type \"{description[1]}\" from \"{description[2]}\" to \"{description[0]}\" as a result of a merge"
+        case 'Theme':
+            return f"Theme {change.name} had Label \"{description[2]}\" of type \"{description[1]}\" switched for \"{description[0]}\" as a result of a merge {username} made"
 
 """
 A label_theme string should be of the format:

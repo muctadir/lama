@@ -1,6 +1,7 @@
 # Author: Eduardo
 # Author: Bartjan
 # Author: Victoria
+from backend.src.models.item_models import Theme
 from src.app_util import check_args
 from src import db # need this in every route
 from flask import make_response, request, Blueprint, jsonify
@@ -9,7 +10,7 @@ from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
-  Labelling, ThemeSchema, Artifact, ArtifactSchema
+  Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -234,7 +235,27 @@ def merge_route(*, user):
         )
     ).all()
 
-    __record_merge(new_label, labels, args['p_id'], user.id, args['labelTypeName'], artifact_changes)
+    # Theme ids that were affected because they had a label assigned to them
+    theme_changes_ids = select(
+        label_to_theme.c.t_id,
+        label_to_theme.c.l_id
+    ).where(
+        label_to_theme.c.l_id.in_(label_ids)
+    )
+
+    # Replace label id with name and also get theme name
+    theme_changes = db.session.execute(
+        select(
+            Theme.name,
+            Theme.id,
+            Label.name
+        ).where(
+            Theme.id == theme_changes_ids.c.t_id,
+            Label.id == theme_changes_ids.c.l_id
+        )
+    )
+
+    __record_merge(new_label, labels, args['p_id'], user.id, args['labelTypeName'], artifact_changes, theme_changes)
 
     # Update all labellings
     db.session.execute(
@@ -315,7 +336,7 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
 
     db.session.add(change)
 
-def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes):
+def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, theme_changes):
     # PascalCase because it is a class
     LabelChange = Label.__change__
     names = ','.join([label.name for label in labels])
@@ -336,11 +357,25 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes):
 
     # Record change for the artifacts
     changes = [ArtifactChange(
-        i_id=artifact.id,
+        i_id=a_id,
         p_id=p_id,
         u_id=u_id,
-        name=artifact.name,
+        name=a_id,
         change_type=ChangeType.merge,
         description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
-    ) for artifact, old_label_name in artifact_changes]
+    ) for a_id, old_label_name in artifact_changes]
+    db.session.add_all(changes)
+
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    # Record change for the artifacts
+    changes = [ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=t_name,
+        change_type=ChangeType.merge,
+        description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
+    ) for t_id, t_name, old_label_name in theme_changes]
     db.session.add_all(changes)
