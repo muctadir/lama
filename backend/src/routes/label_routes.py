@@ -4,7 +4,7 @@
 from src.app_util import check_args
 from src import db # need this in every route
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update
+from sqlalchemy import select, update, distinct
 from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
 from src.models.change_models import ChangeType
@@ -163,9 +163,9 @@ def get_single_label():
 @label_routes.route('/merge', methods=['POST'])
 @login_required
 @in_project
-def merge_route():
+def merge_route(*, user):
     args = request.json
-    required = ['mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id']
+    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')
 
     # Check if required args are present
     if not check_args(required, args):
@@ -183,37 +183,65 @@ def merge_route():
     if len(label_ids) != len(set(label_ids)):
         return make_response('Bad request: Label ids must be unique', 400)
 
-    labels = db.session.execute(
-            select(Label)
-            .where(Label.id.in_(label_ids))).scalars.all()
+    # Labels being merged
+    labels = db.session.scalars(
+        select(
+            Label
+        ).where(
+            Label.id.in_(label_ids)
+        )
+    ).all()
     
     # Check that the labels exist
-    if len(labels) != 2:
+    if len(labels) != len(label_ids):
         return make_response('Bad request: One or more labels do not exist', 400)
-    # Check labels are in the same project
-    if labels[0].p_id != labels[1].p_id:
-        return make_response('Bad request: Labels must be in the same project', 400)
-    # Check labels are of the same type
-    if labels[0].lt_id != labels[1].lt_id:
-        return make_response('Bad request: Labels must be of the same type', 400)
+
+    for label in labels:
+        # Check labels are in the same project (the one selected)
+        if label.p_id != args['p_id']:
+            return make_response('Bad request: Labels must be in the same project', 400)
+        # Check labels are of the same type
+        if label.lt_id != labels[0].lt_id:
+            return make_response('Bad request: Labels must be of the same type', 400)        
     
     # Create new label
-    new_label = Label(name=args['newLabelName'], 
-            description=args['newLabelDescription'],
-            lt_id=labels[0].lt_id,
-            p_id=labels[0].p_id)
+    new_label = Label(
+        name=args['newLabelName'], 
+        description=args['newLabelDescription'],
+        lt_id=labels[0].lt_id,
+        p_id=args['p_id']
+    )
 
-    try:
-        db.session.add(new_label)
-        db.session.commit()
-    except OperationalError:
-        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
+    db.session.add(new_label)
+
+    # Artifact ids and label ids that are being affected
+    artifact_changes_ids = select(
+        Labelling.a_id,
+        distinct(Labelling.l_id)
+    ).where(
+        Labelling.l_id.in_(label_ids)
+    ).group_by(
+        Labelling.a_id
+    ).subquery()
+
+    # Replace label ids with label name
+    artifact_changes = db.session.execute(
+        select(
+            artifact_changes_ids.a_id,
+            Label.name
+        ).where(
+            artifact_changes_ids.l_id == Label.id
+        )
+    ).all()
+
+    __record_merge(new_label, labels, args['p_id'], user.id, args['labelTypeName'], artifact_changes)
 
     # Update all labellings
+    db.session.execute(
+        update(Labelling)
+        .where(Labelling.l_id.in_(label_ids)).values(l_id=new_label.id)
+    )
     try:
-        db.session.execute(
-            update(Labelling)
-            .where(Labelling.l_id.in_(label_ids)).values(l_id=new_label.id))
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
@@ -287,7 +315,7 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
 
     db.session.add(change)
 
-def __record_merge(new_label, labels, p_id, u_id, lt_name, a_ids):
+def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes):
     # PascalCase because it is a class
     LabelChange = Label.__change__
     names = ','.join([label.name for label in labels])
@@ -307,4 +335,12 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, a_ids):
     ArtifactChange = Artifact.__change__
 
     # Record change for the artifacts
-    # TODO:
+    changes = [ArtifactChange(
+        i_id=artifact.id,
+        p_id=p_id,
+        u_id=u_id,
+        name=artifact.name,
+        change_type=ChangeType.merge,
+        description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
+    ) for artifact, old_label_name in artifact_changes]
+    db.session.add_all(changes)
