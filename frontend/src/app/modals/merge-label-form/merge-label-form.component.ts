@@ -89,7 +89,7 @@ export class MergeLabelFormComponent {
     this.toBeMergedLabels.removeAt(i);
   }
 
-  submit() {
+  async submit(): Promise<void> {
     if (this.toBeMergedLabels.length !== 2) {
       throw new Error(
         `Sorry, currently only merging of two labels is supported. ${this.toBeMergedLabels.length} !== 2`
@@ -97,13 +97,18 @@ export class MergeLabelFormComponent {
     }
     const arrayResult = this.form.get('toBeMergedLabels')?.value;
 
-    this.labelingDataService.postMerge({
-      'leftLabelId': arrayResult[0].label.getId(),
-      'rightLabelId': arrayResult[1].label.getId(),
-      'newLabelName': this.form.get('mergerName')?.value,
-      'newLabelDescription': this.form.get('mergerName')?.value,
-      'p_id': this.p_id
-    });
+    try {
+      await this.labelingDataService.postMerge({
+        'leftLabelId': arrayResult[0].label.getId(),
+        'rightLabelId': arrayResult[1].label.getId(),
+        'newLabelName': this.form.get('mergerName')?.value,
+        'newLabelDescription': this.form.get('mergerName')?.value,
+        'p_id': this.p_id
+      });
+      this.activeModal.close()
+    } catch (e) {
+      console.log(e);
+    }
 
 
   }
