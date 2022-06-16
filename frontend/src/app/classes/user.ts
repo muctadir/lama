@@ -11,7 +11,7 @@ export class User {
     // Status of the user
     private status: string | undefined;
     // Type of the user
-    private type: string | undefined;
+    private type: boolean | undefined;
 
     constructor(id: number, username: string) {
         this.id = id;
@@ -105,7 +105,7 @@ export class User {
      * Gets the type of the user
      * @returns this.type
     */
-    getType(): string | undefined {
+    getType(): boolean | undefined {
         return this.type;
     }
 
@@ -113,7 +113,7 @@ export class User {
     * Gets the type of the user
     * @params type 
     */
-    setType(type: string) {
+    setType(type: boolean) {
         this.type = type;
     }
 }

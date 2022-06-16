@@ -47,6 +47,7 @@ import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModerationComponent } from './account-details/moderation/moderation.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     // Theme page component
     ThemeManagementComponent,
     ThemeInfoComponent,
-    SingleThemeViewComponent
+    SingleThemeViewComponent,
+    ModerationComponent
   ],
   imports: [
     BrowserModule,

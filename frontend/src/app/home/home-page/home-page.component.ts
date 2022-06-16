@@ -9,6 +9,7 @@ import { Project } from 'app/classes/project';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from 'app/modals/logout/logout.component';
 import { ProjectDataService } from 'app/services/project-data.service';
+import { AccountInfoService } from 'app/services/account-info.service';
 
 @Component({
   selector: 'app-home-page',
@@ -22,6 +23,9 @@ export class HomePageComponent implements OnInit {
   /* Error message that is displayed to the user */
   errorMsg: string = "";
 
+  /* Saves the user data */
+  user: any;
+
   /**
    * Initializes the modal service provided by bootstrap
    * 
@@ -29,7 +33,8 @@ export class HomePageComponent implements OnInit {
    * @trigger on loads
    */
   constructor(private modalService: NgbModal,
-    private projectDataService: ProjectDataService) {}
+    private projectDataService: ProjectDataService,
+    private accountService: AccountInfoService) {}
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of
@@ -37,19 +42,21 @@ export class HomePageComponent implements OnInit {
    * @trigger on component creation
    * @modifies projects
    */
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Makes the request to the backend for the projects
     this.getProjects();
+    // Makes the request to the backend to get the user data
+    this.user = await this.accountService.userData();
   }
 
   /**
    * Sets the projects of a specific user from project-data.service
    * 
    */
-     async getProjects(): Promise<void> {
-      const projects = await this.projectDataService.getProjects();
-      this.projects = projects;
-    }
+  async getProjects(): Promise<void> {
+    const projects = await this.projectDataService.getProjects();
+    this.projects = projects;
+  }
 
 
   /**
@@ -57,7 +64,7 @@ export class HomePageComponent implements OnInit {
    * 
    * @trigger click on logout button
    */
-   openLogout() : void {
+  openLogout() : void {
     // opens logout modal
     this.modalService.open(LogoutComponent, {});
   }
