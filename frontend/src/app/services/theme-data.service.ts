@@ -173,10 +173,10 @@ export class ThemeDataService {
    * @param p_id 
    * @returns allSubThemes. All sub-themes without parents
    */
-  async themes_without_parents (p_id: number): Promise<Array<Theme>> {
+  async themes_without_parents (p_id: number, t_id: number): Promise<Array<Theme>> {
     try{
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id}, true);
+      let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id, "t_id": t_id}, true);
 
       // List for all subthemes
       let allSubThemes: Array<Theme> = [];
