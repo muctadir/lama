@@ -84,15 +84,16 @@ export class ArtifactManagementPageComponent {
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
-  
+
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
     // When the modal closes, call the getArtifact function to update the displayed artifacts
-    modalRef.result.then( async () => {
-      this.getArtifacts(Number(this.routeService.getProjectID(this.url))) });
-    }
-  
-  //gets the search text
+    modalRef.result.then(async () => {
+      this.getArtifacts(Number(this.routeService.getProjectID(this.url)))
+    });
+  }
+
+  // Gets the search text
   async onEnter() {
 
     // Get p_id
@@ -102,19 +103,19 @@ export class ArtifactManagementPageComponent {
     var text = this.searchForm.value.search_term;
 
     // If nothing was searched
-    if(text.length == 0){
+    if (text.length == 0) {
       // Show all artifacts
       await this.getArtifacts(p_id);
     } else {
       // Otherwise search
-    
+
       // Pass the search word to services
       let artifacts_searched = await this.artifactDataService.search(text, p_id);
 
       // List for the artifacts resulting from the search
       let artifact_list: Array<StringArtifact> = [];
       // For loop through all searched artifacts
-      for (let search_artifact of artifacts_searched){
+      for (let search_artifact of artifacts_searched) {
         // Make it an artifact object
         let newArtifact = new StringArtifact(search_artifact["id"], search_artifact["identifier"], search_artifact['data']);
         // Append artifact to list
