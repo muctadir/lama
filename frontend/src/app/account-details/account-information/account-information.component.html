@@ -2,6 +2,7 @@
 
 <!-- Row for account details-->
 <div class="row">
+    <!-- Places column slightly to the right by 16.7% -->
     <div class="col-8 offset-2">
         <div id="header">
             Account details
@@ -17,34 +18,43 @@
 </div>
 <!-- Row for username -->
 <div class="row">
+    <!-- Places column slightly to the right by 16.7% -->
     <div class="col-8 offset-2">
+        <!-- Bold faced text -->
         <strong id="boldText">Username:</strong>
         <hr>
+        <!-- Displays username if it is non-empty -->
         <span *ngIf="userAccount" id="infoText">{{userAccount.getUsername()}}</span>
     </div>
 </div>
 <!-- Row for user email -->
 <div class="row">
+    <!-- Places column slightly to the right by 16.7% -->
     <div class="col-8 offset-2">
+        <!-- Bold faced text -->
         <strong id="boldText">Email:</strong>
         <hr>
+        <!-- Displays email if it is non-empty -->
         <span *ngIf="userAccount" id="infoText">{{userAccount.getEmail()}}</span>
     </div>
 </div>
 <!-- Row for user description -->
 <div class="row">
+    <!-- Places column slightly to the right by 16.7% -->
     <div class="col-8 offset-2">
+        <!-- Bold faced text -->
         <strong id="boldText">Description:</strong>
         <hr>
+        <!-- Displays description if it is non-empty -->
         <span *ngIf="userAccount" id="infoText">{{userAccount.getDesc()}}</span>
     </div>
 </div>
 <!-- Row for edit button -->
 <div class="row">
     <div class="col-8 offset-2 text-right">
-        <!-- Edit button -->
+        <!-- Edit button, emits modeChangeEvent when clicked -->
         <button (click)="modeChangeEvent.emit(1)" class="btn btn-primary infoButtons">Edit information</button>
         <!-- Back button -->
-        <button [routerLink]="['/home']" class="btn btn-danger infoButtons" id="backButton">Back</button>
+        <button [routerLink]="['/home']" class="btn btn-secondary infoButtons" id="backButton">Back</button>
     </div>
 </div>

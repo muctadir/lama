@@ -3,12 +3,11 @@
 # Author: Victoria
 from src.app_util import check_args
 from src import db # need this in every route
-from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
 from src.app_util import login_required, in_project
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
-  Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
+from src.models.item_models import Label, LabelSchema, LabelType, \
+  Labelling, ThemeSchema, Artifact, ArtifactSchema
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 

@@ -45,6 +45,11 @@ $light-grey-shade: #bfbfbf;
     margin-right: 20px;
 }
 
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
 // Columns of the information
 .col-8 {
     padding-top: 2%;

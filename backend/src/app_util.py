@@ -3,6 +3,7 @@ Authors: Eduardo Costa Martins
 """
 
 import re
+from src.models.auth_models import UserStatus
 from jwt import decode
 from jwt.exceptions import InvalidSignatureError
 from functools import wraps
@@ -107,7 +108,6 @@ def login_required(f):
         def func(<positional arguments>, *, user):
     enforces user to be a keyword argument
     """
-    # TODO: Check user status
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Check that header for token is provided
@@ -122,6 +122,9 @@ def login_required(f):
             # Check to see if user exists
             if not user:
                 return make_response('2 Unauthorized', 401)
+            # Checks whether the user account is approved
+            if user.status != UserStatus.approved:
+                return make_response('Unauthorized', 401)
             # Add the found user as a keyword argument
             # Note, this means every function decorated with this must have user as an argument
             if 'user' in getfullargspec(f).kwonlyargs:
@@ -163,7 +166,7 @@ def super_admin_required(f):
             if not user:
                 return make_response('Unauthorized', 401)
             # Check to see if user is a super_admin
-            if user.type != 'super_admin':
+            if not user.super_admin:
                 return make_response('Forbidden', 403)
             # Add the found admin as a keyword argument
             # Note, this means every function decorated with this must have user as an argument

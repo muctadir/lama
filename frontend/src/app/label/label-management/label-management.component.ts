@@ -1,8 +1,8 @@
-// <!-- Author: Victoria Bogachenkova, Thea Bradley -->
+// Author: Victoria Bogachenkova, Thea Bradley
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from 'app/modals/merge-label-form/merge-label-form.component';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labeling-data.service';
 import { Label } from 'app/classes/label';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
@@ -30,7 +30,7 @@ export class LabelManagementComponent {
 
 // Contructor with modal
   constructor(private modalService: NgbModal,
-    private labelingDataService: LabelingDataService,
+    private labelingDataService: LabellingDataService,
     private router: Router,
     private formBuilder: FormBuilder) {
       this.routeService = new ReroutingService();

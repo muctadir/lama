@@ -27,33 +27,68 @@ def get_artifacts(*, user, membership):
     # Get args from request 
     args = request.args
     # What args are required
-    required = ['p_id']
+    required = ('p_id', 'page', 'page_size', 'seek_index', 'seek_page')
 
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
-    
+    # The page of artifacts we are trying to retrieve
+    page = int(args['page']) - 1
+    # How many pages we can skip by using the seek index
+    seek_page = int(args['seek_page']) - 1
+    page_size = int(args['page_size'])
+    # The indexes we can skip using the where clause. See below explanation for how the seek method works.
+    seek_index = args['seek_index']
+
+    # We use seek method for pagination. Offset in SQL is slow since it still goes through
+    # all the rows before discarding them. Keep a seek index of the max index we can discard.
+    # We also keep the seek page to see how many pages we still need to offset.
+    # NB: seek method only works when we order by index since it is unique and non-nullable
     # Check if user is admin for the project and get artifacts
     if membership.admin:
-        # If the user is admin, then get all artifacts in the project
-        artifacts = db.session.execute(
-            select(Artifact).where(Artifact.p_id==p_id)
-        ).scalars().all()
+        # If the user is admin, then get any artifact in the project for a certain page
+        artifacts = db.session.scalars(
+            select(Artifact)
+            .where(
+                Artifact.p_id == p_id,
+                Artifact.id > seek_index)
+            .offset((page - seek_page - 1) * page_size)
+            .limit(page_size)
+        ).all()
+        # Get the number of artifacts in the project
+        n_artifacts = db.session.scalar(
+            select(func.count(Artifact.id))
+            .where(Artifact.p_id == p_id)
+        )
     else:
         # If user isn't admin, then get all artifacts the user has labelled
-        artifacts = set()
 
-        # Get all the labellings the user has done in the current project
-        labellings = db.session.execute(
-            select(Labelling).where(Labelling.u_id==user.id, Labelling.p_id==p_id)
-        ).scalars().all()
+        # Get distinct ids of all artifacts the user has labelled in the current projct (for a certain page)
+        distinct_artifacts = select(distinct(Artifact.id)
+                ).where(
+                Artifact.id == Labelling.a_id,
+                Labelling.u_id == user.id, 
+                Labelling.p_id == p_id,
+                Artifact.id > seek_index
+            ).offset((page - seek_page - 1) * page_size
+            ).limit(page_size).subquery()
 
-        # Take the artifacts labelled by the user
-        # TODO: Remove for loop
-        for labelling in labellings:
-            artifacts.add(labelling.artifact)
+        # Get only the artifacts the user has labelled in the current project (for a certain page)
+        artifacts = db.session.scalars(
+            select(Artifact)
+            .where(
+                Artifact.id.in_(distinct_artifacts)
+                )).all()
+        # Get the number of artifacts the user has labelled
+        n_artifacts = db.session.scalar(
+            select(func.count(distinct(Artifact.id)))
+            .where(
+                Artifact.id == Labelling.a_id,
+                Labelling.u_id == user.id, 
+                Labelling.p_id == p_id)
+        )
 
     # List of artifacts to be passed to frontend
     artifact_info = []
@@ -62,7 +97,6 @@ def get_artifacts(*, user, membership):
     artifact_schema = ArtifactSchema()
 
     # For each displayed artifact
-    # TODO: Remove for loop
     for artifact in artifacts:
 
         # Convert artifact to JSON
@@ -80,11 +114,13 @@ def get_artifacts(*, user, membership):
         # Append dictionary to list
         artifact_info.append(info)
 
-    # Convert the list of dictionaries to json
-    dict_json = jsonify(artifact_info)
+    response = {
+        'info': artifact_info,
+        'nArtifacts': n_artifacts
+    }
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(jsonify(response))
 
 
 @artifact_routes.route("/creation", methods=["POST"])

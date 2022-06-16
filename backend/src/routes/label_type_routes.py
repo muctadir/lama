@@ -29,3 +29,31 @@ def get_label_types():
     label_type_json = jsonify(label_type_schema.dump(labelTypes, many=True))
 
     return make_response(label_type_json)
+
+@label_type_routes.route('/allWithLabels', methods=['GET'])
+@login_required
+@in_project
+def get_label_types_wl(): 
+    args = request.args
+    required = ['p_id']
+
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Get all the labels of a labelType
+    labelTypes = db.session.execute(
+        select(LabelType)
+        .where(
+            LabelType.p_id == args['p_id']
+        )
+    ).scalars().all()
+
+    label_type_schema = LabelTypeSchema()
+    label_schema = LabelSchema()
+    
+    dict_json = jsonify([{
+        'label_type': label_type_schema.dump(labelType), 
+        'labels': label_schema.dump((labelType.labels).filter_by(deleted=0), many = True)
+    } for labelType in labelTypes])
+    
+    return make_response(dict_json)

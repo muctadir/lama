@@ -78,6 +78,10 @@ export class AddArtifactComponent {
    * 
    */
   fileUpload(): void {
+    // Make sure error and message are reset
+    this.error = false;
+    this.message = '';
+
     // Stores the project id in a local variable
     let p_id = this.p_id;
 
@@ -86,7 +90,7 @@ export class AddArtifactComponent {
 
     // Try reading the file
     try {
-      this.readFile().then((added_artifacts) => {
+      this.readFile().then(async (added_artifacts) => {
         // Checks if any artifacts have been read from the file
         if (added_artifacts.length == 0) {
 
@@ -99,7 +103,7 @@ export class AddArtifactComponent {
         }
 
         // Stop if an error has been found
-        if (this.error) return;
+        if (this.error)  return;
 
         // Put the artifacts from the file in artifacts
         artifacts = added_artifacts;
@@ -122,8 +126,8 @@ export class AddArtifactComponent {
         }
 
         // Add the artifacts to the backend
-        this.addArtifacts(p_id, allArtifacts)
-        
+        await this.addArtifacts(p_id, allArtifacts)
+        window.location.reload()
       })
     } catch (e) {
       // Ensures an error message is displayed

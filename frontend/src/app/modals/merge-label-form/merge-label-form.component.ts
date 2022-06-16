@@ -1,19 +1,10 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labeling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
-import { Labelling } from 'app/classes/labelling';
 import { LabelType } from 'app/classes/label-type';
-
-// // Tyep for label
-// type label = {
-//   labelId: Number,
-//   labelName: String,
-//   labelDescription: String,
-//   labelType: String
-// }
 
 @Component({
   selector: 'app-merge-label-form',
@@ -29,11 +20,13 @@ export class MergeLabelFormComponent {
   /**
    * Constructor which:
    * 1. makes an empty label
-   * 2.
+   * 2. makes an empty label type
+   * 3. makes a router service
+   * 4. gets the url
    */
    constructor(public activeModal: NgbActiveModal,
     private router: Router,
-    private labelingDataService: LabelingDataService) {
+    private labelingDataService: LabellingDataService) {
       this.labels = new Array<Label>();
       this.labelTypes = new Array<LabelType>();
       this.routeService = new ReroutingService();

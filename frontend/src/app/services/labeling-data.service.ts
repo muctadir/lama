@@ -6,10 +6,20 @@ import { Label } from 'app/classes/label';
 import axios from 'axios';
 import { Theme } from 'app/classes/theme';
 import { Labelling } from 'app/classes/labelling';
+import { RequestHandler } from 'app/classes/RequestHandler';
 @Injectable({
   providedIn: 'root'
 })
-export class LabelingDataService {
+export class LabellingDataService {
+  // Initialise the Request handler
+  requestHandler: RequestHandler;
+
+  // Constructors for the request handler
+  constructor() {
+    this.requestHandler = new RequestHandler(
+      sessionStorage.getItem('ses_token')
+    );
+  }
 
   /**
    * Function does call to backend to retrieve all labels of a given project.
@@ -194,4 +204,37 @@ export class LabelingDataService {
       return false;
     });
   }
+
+  /**
+   * Function to get the label types with their labels within a project
+   *
+   * @param p_id: number - project id
+   * @returns label types with their labels within a project
+   */
+   async getLabelTypesWithLabels(p_id: number): Promise<Array<LabelType>> {
+    // Array of label types
+    let labelTypes: Array<LabelType> = new Array<LabelType>();
+    // Response from the request handler
+    const response = await this.requestHandler.get(
+      '/labeltype/allWithLabels',
+      { p_id: p_id },
+      true
+    );
+
+    // Get the label types with their labels
+    response.forEach((r: any) => {
+      let labelArray: Array<Label> = new Array<Label>();
+      r.labels.forEach((l: any) => {
+        labelArray.push(
+          new Label(l.id, l.name, l.description, r.label_type.name)
+        );
+      });
+      labelTypes.push(
+        new LabelType(r.label_type.id, r.label_type.name, labelArray)
+      );
+    });
+
+    return labelTypes;
+  }
+
 }

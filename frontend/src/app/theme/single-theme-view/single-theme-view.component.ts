@@ -1,34 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
-import { StringArtifact } from 'app/classes/stringartifact';
-import {ActivatedRoute, Router} from "@angular/router";
+import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import axios from 'axios';
-import { Label } from 'app/classes/label';
-
-//Test array for label holding artifacts
+import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 
 @Component({
   selector: 'app-single-theme-view',
   templateUrl: './single-theme-view.component.html',
   styleUrls: ['./single-theme-view.component.scss']
 })
+
 export class SingleThemeViewComponent {
 
   // Variable for theme id
   t_id: number;
-  //  Project id
+  // Variable for project id
   p_id: number;
 
   // Variables for routing
   url: string;
   routeService: ReroutingService;
 
-  // List for the theme
+  // Variable for the theme
   theme: Theme; 
 
-  constructor(private router: Router, private themeDataService: ThemeDataService) { 
+  // Alert message for deleting theme
+  alertMessage = "";
+
+  constructor(private router: Router, private themeDataService: ThemeDataService, private modalService: NgbModal) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -52,10 +53,6 @@ export class SingleThemeViewComponent {
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
   }
 
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
-  }
-
   /**
    * Gets the project id from the URL and reroutes to the theme management page
    * of the same project
@@ -77,7 +74,8 @@ export class SingleThemeViewComponent {
     this.router.navigate(['/project', this.p_id, "singleTheme", theme_id])
     // And reload the page
     .then(() => {
-      window.location.reload();
+      // Get the information for the theme
+      this.get_single_theme_info(this.p_id, theme_id);
     });
   }   
 
@@ -87,7 +85,7 @@ export class SingleThemeViewComponent {
   */
    reRouterEdit() : void {
     // Changes the route accordingly
-    this.router.navigate(['/project', this.p_id, "editTheme", this.routeService.getThemeID(this.url)]);
+    this.router.navigate(['/project', this.p_id, "editTheme", this.t_id]);
   }  
 
   // Function for making sure parent name is not undefined
@@ -114,9 +112,37 @@ export class SingleThemeViewComponent {
    * @trigger a sub or super-theme is pressed
   */
   goToTheme(theme: Theme | undefined){
+    // Check if we can get the id of the theme
     if (theme != undefined){
       this.reRouterTheme(theme.getId());
     }
+  }
+
+  /**
+   * Function for deleting the theme
+   * 
+   * @Trigger When the delete button is clicked
+   */
+  deleteTheme(){
+    // Get the children and labels
+    let children = this.theme.getChildren();
+    let labels = this.theme.getLabels();
+    // Check if the children and labels are undefined
+    if(children != undefined && labels != undefined){
+      // Check the length of the arrays
+      if(labels.length != 0 || children.length != 0){
+        // Alert that the theme cannot be deleted
+        this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
+        return;
+      }
+    }
+    // Open the modal
+    const modalRef = this.modalService.open(DeleteThemeComponent, {});
+    // Give the modal the project id and theme id
+    modalRef.componentInstance.p_id = this.p_id;
+    modalRef.componentInstance.t_id = this.t_id; 
+    // Give alert message
+    this.alertMessage = "";
   }
 
 }

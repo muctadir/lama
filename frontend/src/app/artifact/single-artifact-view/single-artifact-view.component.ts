@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
+import { LabellingDataService } from 'app/services/labeling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { StringArtifact } from 'app/classes/stringartifact';
+import { Label } from 'app/classes/label';
+import { LabelType } from 'app/classes/label-type';
 
 @Component({
   selector: 'app-single-artifact-view',
@@ -16,8 +19,8 @@ export class SingleArtifactViewComponent implements OnInit {
   routeService: ReroutingService;
   // Initialize the artifact
   artifact: StringArtifact;
-  // Will be changed once the route to get labels by label types is merged 
-  allLabels: Array<string> = ['Fakeroonie', ' Truth']
+  // Initialize array of label types in the project
+  labelTypes: Array<LabelType>;
   // Initialize the url
   url: string;
   // Initialize list of labels given + remarks per user
@@ -28,6 +31,7 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the username of the current user
   username: string;
 
+  allLabels = []
 
   notImplemented() {
     alert("This button is not implemented.");
@@ -42,9 +46,11 @@ export class SingleArtifactViewComponent implements OnInit {
      */
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
+    private labellingDataService: LabellingDataService,
     private router: Router) {
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
+    this.labelTypes = new Array<LabelType>();
     this.url = this.router.url;
     this.admin = false;
     this.username = '';
@@ -57,6 +63,9 @@ export class SingleArtifactViewComponent implements OnInit {
 
     // Get the artifact data from the backend
     this.getArtifact(a_id, p_id)
+
+    this.getLabelTypesWithLabels(p_id)
+    console.log(this.labelTypes)
   }
 
    /**
@@ -72,4 +81,19 @@ export class SingleArtifactViewComponent implements OnInit {
     this.username = result["username"];
     this.admin = result["admin"];
   }
+
+  /**
+   * Function for getting the label and labeltypes
+   * @param p_id
+   */
+   async getLabelTypesWithLabels(p_id: number): Promise<void> {
+    try {
+      const labelTypes =
+        await this.labellingDataService.getLabelTypesWithLabels(p_id);
+      this.labelTypes = labelTypes;
+    } catch {
+      this.router.navigate(['/project', p_id]);
+    }
+  }
+
 }

@@ -35,7 +35,7 @@
         <div class="col-1"></div>
         <div class="col-9">
             <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
-                <table class="table table-hover" id="labelsTable">
+                <table class="table table-hover">
                     <!--Table Headers-->
                     <thead>
                         <tr>
@@ -59,7 +59,10 @@
                 <ngb-pagination
                     [(page)]="page"
                     [pageSize]="pageSize"
-                    [collectionSize]="labels.length">
+                    [collectionSize]="labels.length"
+                    [maxSize]="5"
+                    [rotate]="true" 
+                    [boundaryLinks]="true">
                 </ngb-pagination>
             </div>
         </div>
