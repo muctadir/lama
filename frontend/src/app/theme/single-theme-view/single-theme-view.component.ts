@@ -1,28 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
-
-//Test array for label holding artifacts
 
 @Component({
   selector: 'app-single-theme-view',
   templateUrl: './single-theme-view.component.html',
   styleUrls: ['./single-theme-view.component.scss']
 })
+
 export class SingleThemeViewComponent {
 
   // Variable for theme id
   t_id: number;
-  //  Project id
+  // Variable for project id
   p_id: number;
 
   // Variables for routing
   url: string;
   routeService: ReroutingService;
 
-  // List for the theme
+  // Variable for the theme
   theme: Theme; 
 
   constructor(private router: Router, private themeDataService: ThemeDataService) { 
@@ -85,7 +84,7 @@ export class SingleThemeViewComponent {
   */
    reRouterEdit() : void {
     // Changes the route accordingly
-    this.router.navigate(['/project', this.p_id, "editTheme", this.routeService.getThemeID(this.url)]);
+    this.router.navigate(['/project', this.p_id, "editTheme", this.t_id]);
   }  
 
   // Function for making sure parent name is not undefined
@@ -112,6 +111,7 @@ export class SingleThemeViewComponent {
    * @trigger a sub or super-theme is pressed
   */
   goToTheme(theme: Theme | undefined){
+    // Check if we can get the id of the theme
     if (theme != undefined){
       this.reRouterTheme(theme.getId());
     }

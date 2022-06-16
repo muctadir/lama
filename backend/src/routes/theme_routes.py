@@ -3,9 +3,7 @@
 
 from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
-from src.models.project_models import Membership, ProjectSchema
 from src.models.change_models import ChangeType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
@@ -148,10 +146,11 @@ For getting the all themes without parents
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
+@in_project
 def all_themes_no_parents(*, user):
 
     # The required arguments
-    required = ["p_id"]
+    required = ["p_id", "t_id"]
 
     # Get args
     args = request.args
@@ -165,13 +164,16 @@ def all_themes_no_parents(*, user):
 
     # Get the project id
     p_id = int(args["p_id"])
+    # Get theme id
+    t_id = int(args["t_id"])
 
     # Get the themes without parents
     themes = db.session.execute(
         select(Theme)
         .where(
             Theme.p_id == p_id,
-            Theme.super_theme == None
+            Theme.super_theme == None,
+            Theme.id != t_id
         )
     ).scalars().all()
 
@@ -323,33 +325,49 @@ def edit_theme(*, user):
     # Return the confirmation
     return make_response("Project edited", 200)
 
+"""
+For getting the labels from the passed data
+@params labels_info includes: {
+    id: id of the label
+}
+"""
 def make_labels(labels_info):
-    # Add the labels to the theme
-    labels_list = []
-    # Make sub_themes themes
-    for label in labels_info:
-        # Get the theme
-        new_label = db.session.scalar(
-            select(Label)
-            .where(Label.id == label["id"])
-        )
-        # Append the theme to the list
-        labels_list.append(new_label)
+    # List for the label ids
+    label_ids_list = []
+    # Put all added label ids into the list
+    for label in labels_info:        
+        # Append the label id to the list
+        label_ids_list.append(label["id"])
+    
+    # Get all labels that are in the list
+    labels_list = db.session.scalars(
+        select(Label)
+        .where(Label.id.in_(label_ids_list))
+    )
+    # Return the actual added labels
     return labels_list
 
+"""
+For getting the themes from the passed data
+@params sub_themes_info includes: {
+    id: id of the theme
+}
+"""
 def make_sub_themes(sub_themes_info):
-    # Add the sub_themes to the theme
-    sub_themes_list = []
-    # Make sub_themes themes
-    for sub_theme in sub_themes_info:
-        # Get the theme
-        new_theme = db.session.scalar(
-            select(Theme)
-            .where(Theme.id == sub_theme["id"])
-        )
-        # Append the theme to the list
-        sub_themes_list.append(new_theme)
-    return sub_themes_list
+    # List for the label ids
+    sub_theme_ids_list = []
+    # Put all added label ids into the list
+    for label in sub_themes_info:        
+        # Append the label id to the list
+        sub_theme_ids_list.append(label["id"])
+    
+    # Get all labels that are in the list
+    sub_theme_list = db.session.scalars(
+        select(Theme)
+        .where(Theme.id.in_(sub_theme_ids_list))
+    )
+    # Return the actual added labels
+    return sub_theme_list
 
 def __record_creation(t_id, name, p_id, u_id):
     # PascalCase because it is a class
