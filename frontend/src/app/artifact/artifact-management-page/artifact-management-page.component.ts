@@ -55,7 +55,6 @@ export class ArtifactManagementPageComponent {
     private router: Router, private formBuilder: FormBuilder) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
-    // this.artifacts = new Array<StringArtifact>();
   }
 
   ngOnInit(): void {
