@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Project } from 'app/classes/project';
 
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { User } from 'app/classes/user';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +62,50 @@ export class ProjectDataService {
     // Return result
     return result;
   }
+
+  /**
+   * Gets all the users in the application from the backend
+   * 
+   * @param token used for authenticating the user to the backend
+   * 
+   * @trigger on component load
+   * @modifies allMembers
+   */
+  async getUsers() : Promise<Array<User>> {
+
+    // Makes the request to the backend for all users in the application
+    let response: any = await this.requestHandler.get("/project/users", {}, true);
+
+    // Array with results
+    let result: Array<User> = new Array<User>();
+
+    // Loops over the response of the server and parses the response into the allMembers array
+    for (let user of response) {
+      // creates the object
+      let newUser = new User(user.id, user.username);
+      // passes additional data to the newly created user object
+      newUser.setEmail(user.email);
+      newUser.setDesc(user.description);
+      // pushes the new user to the array of all users
+      result.push(newUser);
+    }
+
+    // Return result
+    return result;
+    
+  }
+
+  /**
+   * Makes the project creation request to the backend
+   * 
+   * @param projectInformation Record holding the different parameters of the project to be created
+   * @trigger Create project button is clicked
+   */
+   async makeRequest(projectInformation: Record<string, any> ) : Promise<void> {
+
+    // Makes the backend request to get the projects of which the user is a member
+    let response: any = await this.requestHandler.post("/project/creation", projectInformation, true);
+  }
+
 
 }
