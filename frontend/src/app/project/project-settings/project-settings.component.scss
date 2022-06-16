@@ -11,8 +11,8 @@ body{
     color: $grey-shade;
     font-size: 15px;
     letter-spacing: 1px;
+    overflow-y: hidden;
 }
-
 // Top bar row
 #topBarRow{
     margin-left: 10px;
@@ -35,7 +35,8 @@ body{
 
 // Container of all elements
 .container.main{
-    height: 90vh;
+    height: 80vh;
+
 }
 
 // Texts above each of the forms indicating what the form is for
