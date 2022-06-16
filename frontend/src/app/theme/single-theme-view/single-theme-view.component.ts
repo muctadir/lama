@@ -5,6 +5,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
+import { ThemeHistoryComponent } from 'app/modals/theme-history/theme-history.component';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -143,6 +144,11 @@ export class SingleThemeViewComponent {
     modalRef.componentInstance.t_id = this.t_id; 
     // Give alert message
     this.alertMessage = "";
+  }
+
+  openThemeHistory(): void {
+    // opens theme history modal
+    this.modalService.open(ThemeHistoryComponent, {});
   }
 
 }
