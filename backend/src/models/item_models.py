@@ -69,7 +69,7 @@ class LabelType(ProjectItem, db.Model):
     name = Column(String(64), nullable=False)
 
     # A list of labels that are of this type
-    labels = relationship('Label', back_populates='label_type')
+    labels = relationship('Label', back_populates='label_type', lazy='dynamic')
 
 class Artifact(ChangingItem, db.Model):
 
