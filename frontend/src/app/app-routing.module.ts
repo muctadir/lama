@@ -23,7 +23,7 @@ import { NavigationMenuComponent } from './navigation-menu/navigation-menu.compo
 // Stats page imports
 import { StatsComponent } from './stats/stats.component';
 // Labelling page imports
-import { LabellingPageComponent } from './labelling-page/labelling-page.component';
+import { LabellingPageComponent } from './labelling/labelling-page/labelling-page.component';
 // Label page imports
 import { LabelFormComponent } from './modals/label-form/label-form.component';
 import { LabelManagementComponent } from './label/label-management/label-management.component';

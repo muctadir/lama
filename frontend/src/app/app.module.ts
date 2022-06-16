@@ -27,7 +27,7 @@ import { ProjectComponent } from './project/project-page/project.component';
 // Statistic page import
 import { StatsComponent } from './stats/stats.component';
 // Labelling page import
-import { LabellingPageComponent } from './labelling-page/labelling-page.component';
+import { LabellingPageComponent } from './labelling/labelling-page/labelling-page.component';
 // Label page imports
 import { LabelFormComponent } from './modals/label-form/label-form.component';
 import { LabelManagementComponent } from './label/label-management/label-management.component';
@@ -47,7 +47,7 @@ import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { IndividualLabellingForm } from './individual-labelling-form/individual-labelling-form.component';
+import { IndividualLabellingForm } from './labelling/individual-labelling-form/individual-labelling-form.component';
 
 @NgModule({
   declarations: [
