@@ -45,12 +45,12 @@ export class HomePageComponent implements OnInit {
   /**
    * Sets the projects of a specific user from project-data.service
    * 
-   */
-     async getProjects(): Promise<void> {
-      const projects = await this.projectDataService.getProjects();
-      this.projects = projects;
-    }
-
+   * @Trigger the home page is loaded
+  */
+  async getProjects(): Promise<void> {
+    const projects = await this.projectDataService.getProjects();
+    this.projects = projects;
+  }
 
   /**
    * Opens the logout modal asking confirmation for logging out
