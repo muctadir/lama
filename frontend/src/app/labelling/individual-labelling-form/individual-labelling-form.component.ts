@@ -10,11 +10,17 @@ import { EventEmitter } from '@angular/core';
   styleUrls: ['./individual-labelling-form.component.scss'],
 })
 export class IndividualLabellingForm implements OnInit {
+  // Inputs
   @Input() labelType?: LabelType;
   @Input() parentForm?: FormArray;
   @Input() reload?: EventEmitter<any>;
+
   selectedDesc: string | undefined;
   labelForm: FormGroup;
+  /**
+   * Constructor which:
+   * 1. Creates a label form
+   */
   constructor(private formBuilder: FormBuilder) {
     this.labelForm = this.formBuilder.group({
       labelType: [undefined, [Validators.required]],
@@ -24,18 +30,22 @@ export class IndividualLabellingForm implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.reload?.subscribe(v => {
       this.ngOnInit();
     });
+    // Reset the label form
     this.labelForm.reset()
     this.selectedDesc = undefined;
+    //  If the label type is undefined rerun an error
     if (typeof this.labelType === 'undefined') {
       this.selectedDesc = 'Something went wrong while getting the labels.';
     }
-
+    //  If the parent form is undefined rerun an error
     if (typeof this.parentForm === 'undefined') {
       this.selectedDesc = 'Something went wrong while preparing the form.';
     }
+    // Get the values of the label form
     this.labelForm.get('label')?.valueChanges.subscribe((val) => {
       this.labelType?.getLabels().forEach((l: Label) => {
         if (l.getId() == val) {
@@ -43,9 +53,9 @@ export class IndividualLabellingForm implements OnInit {
         }
       });
     });
-
+    // Patch the values of the label form
     this.labelForm.controls['labelType'].patchValue(this.labelType?.getId());
-
+    // Push the label form to the backend
     this.parentForm?.push(this.labelForm);
   }
 }

@@ -26,26 +26,25 @@ export class ArtifactManagementPageComponent {
   // Make list of all artifacts
   artifacts: Array<StringArtifact> = [];
 
-  //bool on if there is text in the search bar
+  // Bool on if there is text in the search bar
   search = false;
 
-  //Pagination Settings
+  // Pagination Settings
   page = 1;
   pageSize = 5;
 
-  // gets the search terms
+  // Gets the search terms
   searchForm = this.formBuilder.group({
     search_term: ''
   });
 
 
   /**
-     * Constructor passes in the modal service, the artifact service 
-     * and initializes Router
-     * @param modalService instance of NgbModal
-     * @param artifactDataService instance of ArtifactDataService
-     * @param router instance of Router
-     */
+   * Constructor which:
+   * 1. gets a router
+   * 2. gets the url
+   * 3. initialised artifacts
+   */
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
     private router: Router, private formBuilder: FormBuilder) {
@@ -86,6 +85,7 @@ export class ArtifactManagementPageComponent {
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
   
+  // Open the modal
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
     // When the modal closes, call the getArtifact function to update the displayed artifacts
@@ -93,7 +93,7 @@ export class ArtifactManagementPageComponent {
       this.getArtifacts(Number(this.routeService.getProjectID(this.url))) });
     }
   
-  //gets the search text
+  // Gets the search text
   async onEnter() {
 
     // Get p_id

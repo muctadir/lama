@@ -31,6 +31,9 @@ export class IndividualLabelComponent {
    * 2. get routerService
    * 3. get url
    * 4. initialize labellings variable
+   * 5. initialize themes variable
+   * 6. get project id
+   * 7. get label id
    */
   constructor(
     private modalService: NgbModal,
@@ -48,9 +51,8 @@ export class IndividualLabelComponent {
 
   /**
    * OnInit,
-   *  1. the p_id of the project is retrieved
-   *  2. the labelId of the label is retrieved
-   *  3. the label loading is started
+   * 1. Get label
+   * 2. Get labelling
    */
   ngOnInit(): void {
     this.getLabel(this.p_id, this.label_id);
@@ -62,42 +64,59 @@ export class IndividualLabelComponent {
    */
   async getLabel(p_id: number, labelID: number): Promise<void> {
     try {
+      // Get label through labelling service
       const label = await this.labellingDataService.getLabel(p_id, labelID);
+      // Assign it to local variable label
       this.label = label;
     } catch (e) {
+      // If something goes wrong navigate away to the projects page
       this.router.navigate(['project', this.p_id]);
     }
     try {
+      // Get themes
       const themes = this.label.getThemes();
       if (themes !== undefined) {
         this.themes = themes;
       }
     } catch (e) {
+      // If something goes wrong navigate away to the projects page
       this.router.navigate(['project', this.p_id]);
     }
   }
-
+  /**
+   * Async function which gets labellings
+   * @param p_id 
+   * @param labelID 
+   */
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     try {
+      // Get labelling from the labelling service
       const labellings = await this.labellingDataService.getLabelling(
         p_id,
         labelID
       );
       this.labellings = labellings;
     } catch (edit) {
+      // If something goes wrong navigate away to the projects page
       this.router.navigate(['project', this.p_id]);
     }
   }
 
+  /**
+   * Post of the soft delete
+   */
   async postSoftDelete() {
     try{
+      // Post the soft delete
       await this.labellingDataService.postSoftDelete({
         'p_id': this.p_id,
         'l_id': this.label_id
       });
+      // Navigate to the label management page
       this.router.navigate(['project', this.p_id, 'labelmanagement']);
     } catch (e) {
       console.log("Something went wrong!")
+      // Navigate to the project page
       this.router.navigate(['project', this.p_id]);
     }
   }
@@ -117,9 +136,12 @@ export class IndividualLabelComponent {
    * Opens modal to edit label
    */
   openEdit() {
+    // Open the modal
     const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl' });
+    // Get the label from the modal
     modalRef.componentInstance.label = this.label;
     modalRef.result.then(() => {
+      // Refresh the contents of the page
       this.ngOnInit();
     });
   }

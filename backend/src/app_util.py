@@ -217,10 +217,16 @@ def in_project(f):
 
     return decorated_function
 
+# Get time from seconds
 def time_from_seconds(seconds):
+    # Left over seconds
     seconds_leftover = int(seconds % 60)
+    # Minutes
     minutes = int((seconds - seconds_leftover) / 60)
+    # Left over minutes
     minutes_leftover = int(minutes % 60)
+    # Hours
     hours = int((minutes -  minutes_leftover) / 60)
     
+    # Return the time
     return datetime.time(hours, minutes_leftover, seconds_leftover)

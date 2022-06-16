@@ -32,12 +32,21 @@ export class LabelManagementComponent {
   page: number;
   pageSize: number;
 
-  //text from the search bar
+  // Text from the search bar
   searchForm = this.formBuilder.group({
     search_term: '',
   });
 
-  // Contructor with modal
+  /**
+   * Constructor which:
+   * 1. get routerService
+   * 2. get url
+   * 3. get project if
+   * 4. initialize labels variable
+   * 5. initialize label amount variable
+   * 6. set page
+   * 7. set page size
+   */
   constructor(
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
@@ -76,12 +85,18 @@ export class LabelManagementComponent {
     });
   }
 
+  /**
+   * Get labels
+   */
   async getLabels(): Promise<void> {
     try {
+      // Get labels from the labelling data service
       const labels = await this.labellingDataService.getLabels(this.p_id);
       this.labels = labels;
+      // Get label count
       this.getLabelledCount();
     } catch (e) {
+      // Navigate to project page
       this.router.navigate(['project', this.p_id]);
     }
   }
@@ -97,24 +112,28 @@ export class LabelManagementComponent {
     this.router.navigate(['/project', this.p_id, 'singlelabel', label_id]);
   }
 
-  //gets the search text
+  // Gets the search text
   onEnter() {
     var text = this.searchForm.value.search_term;
     alert('entered!!' + text + '');
   }
 
+  // Get the labelled count
   async getLabelledCount(): Promise<void> {
+    // Result dictionary
     let resultDict: { [id: number]: string } = {};
 
+
     await this.labels.forEach(async (label: Label) => {
-      console.log('f');
+      // Wait for the laeblling data service to get the labelling count
       const result = await this.labellingDataService.getLabellingCount({
         p_id: this.p_id,
         l_id: label.getId(),
       });
+      // Fill in the result dictionary
       resultDict[label.getId()] = result;
     });
-
+    // Set the result equal to the label amount variable
     this.labelAmount = resultDict;
   }
 }

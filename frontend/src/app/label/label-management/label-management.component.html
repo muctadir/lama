@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!-- row containing the search bar  -->
+    <!-- Row containing the search bar  -->
     <div class="row">
         <div class="col-5">
             <div class="search__container">
@@ -47,9 +47,12 @@
                     <!--Table Content-->
                     <tbody>
                         <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(label.getId())">
+                            <!-- Label name field -->
                             <td><p class="tablecontent">{{label.getName()}}</p></td>
+                            <!-- Label type name field -->
                             <td><p class="tablecontent">{{label.getType()}}</p></td>
-                            <td><p class="tablecontent">{{ labelAmount[label.getId()]}}</p></td>
+                            <!-- Number of times the labels were used field -->
+                            <td><p class="tablecontent">{{labelAmount[label.getId()]}}</p></td>
                         </tr>
                     </tbody>
                 </table>
