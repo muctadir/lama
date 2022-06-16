@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
-import { LabellingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { StringArtifact } from 'app/classes/stringartifact';
