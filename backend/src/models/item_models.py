@@ -81,8 +81,6 @@ class Artifact(ChangingItem, db.Model):
     # The text data that the artifact carries
     data = Column(Text, nullable=False)
 
-    completed = Column(Boolean, default=False)
-
     # start and end characters of split (in the parent's data)
     # Null if this artifact was not split from anything
     start = Column(Integer)

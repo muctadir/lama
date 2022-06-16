@@ -67,7 +67,6 @@ this exists mostly to simplify queries or to be extended later <br>
 <details><summary>Artifact (Inherits ChangingItem)</summary>
     identifier (artifact identifier (NOT ID)) <br>
     data (the text that is displayed) <br>
-    completed (if this artifact is completely labelled) <br>
     parent_id (id of artifact this one was split from) <br>
     parent (the artifact object this one was split from) <br>
     start (start character of the split in parent artifact) <br>
