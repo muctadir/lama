@@ -8,6 +8,7 @@ from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update
 from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
+from sqlalchemy.exc import OperationalError
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -34,15 +35,18 @@ def theme_management_info(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Get all themes
-    all_themes = db.session.execute(
+    all_themes = db.session.scalars(
         select(Theme)
-        .where(Theme.p_id == args["p_id"])
-    ).scalars().all()
+        .where(
+            Theme.p_id == args["p_id"],
+            Theme.deleted == False
+        )
+    ).all()
 
     # Schemas to serialize
     theme_schema = ThemeSchema()
 
-    # List for project information
+    # List for theme information
     theme_info = [{
         'theme' : theme_schema.dump(theme),
         'number_of_labels' : get_theme_label_count(theme.id)
@@ -166,14 +170,15 @@ def all_themes_no_parents(*, user):
     t_id = int(args["t_id"])
 
     # Get the themes without parents
-    themes = db.session.execute(
+    themes = db.session.scalars(
         select(Theme)
         .where(
             Theme.p_id == p_id,
             Theme.super_theme == None,
-            Theme.id != t_id
+            Theme.id != t_id,
+            Theme.deleted == False
         )
-    ).scalars().all()
+    ).all()
 
     # Dump the themes to get the info
     themes_info = theme_schema.dump(themes, many=True)
@@ -227,11 +232,11 @@ def create_theme(*, user):
         "p_id": theme_info["p_id"]
     }
 
-    # Load the project data into a project object
+    # Load the theme data into a theme object
     thema_schema = ThemeSchema()
     theme = thema_schema.load(theme_creation_info)
 
-    # Add the project to the database
+    # Add the theme to the database
     db.session.add(theme)
 
     # Make the sub_themes the sub_themes of the created theme
@@ -247,7 +252,7 @@ def create_theme(*, user):
         return make_response("internal Server Error", 503) 
 
     # Return the conformation
-    return make_response("Project created", 200)
+    return make_response("Theme created", 200)
 
 """
 For editing a theme 
@@ -277,7 +282,6 @@ def edit_theme(*, user):
 
     # Check if all required arguments are there
     if not check_args(required, theme_info):
-        print("ello")
         return make_response("Not all required arguments supplied", 400)
     
     # Get theme id
@@ -311,14 +315,76 @@ def edit_theme(*, user):
     # Set the labels of the theme
     theme.labels = make_labels(theme_info["labels"])
 
-    # Edit the project
+    # Edit the theme
     try:
         db.session.commit()   
     except OperationalError:
         return make_response("internal Server Error", 503)       
 
     # Return the conformation
-    return make_response("Project created", 200)
+    return make_response("Theme edited", 200)
+
+"""
+For editing a theme 
+@params a list of theme information:
+{
+    id: id of the theme
+    name: name of new theme
+    description: description of new theme
+    labels: list of labels inside the theme
+    sub_themes: list of sub_themes
+    p_id: project id
+}
+"""
+@theme_routes.route("/delete_theme", methods=["POST"])
+@login_required
+@in_project
+def delete_theme(*, user):
+
+    # The required arguments
+    required = ["p_id", "t_id"]
+
+    # Get args
+    args = request.json
+
+    # Get the info
+    theme_info = args["params"]
+
+    # Check if all required arguments are there
+    if not check_args(required, theme_info):
+        return make_response("Not all required arguments supplied", 400)
+    
+    # Get theme id
+    t_id = theme_info["t_id"]
+    # Project id
+    p_id = theme_info["p_id"]
+
+    # Get the corresponding theme
+    theme = db.session.get(Theme, t_id)
+    
+    # Check if the theme exists
+    if not theme:
+        return make_response("Bad request", 400)
+
+    # Check if theme is in given project
+    if theme.p_id != p_id:
+        return make_response("Bad request", 400)
+        
+    # Change the theme information to be delted
+    db.session.execute(
+        update(Theme).
+        where(Theme.id == t_id).
+        values(deleted = True)
+    )  
+
+    # Delete the theme
+    try:
+        db.session.commit()   
+    except OperationalError:
+        return make_response("internal Server Error", 503)       
+
+    # Return the conformation
+    return make_response("Theme deleted", 200)
 
 """
 For getting the labels from the passed data
@@ -338,7 +404,7 @@ def make_labels(labels_info):
     labels_list = db.session.scalars(
         select(Label)
         .where(Label.id.in_(label_ids_list))
-    )
+    ).all()
     # Return the actual added labels
     return labels_list
 
@@ -360,6 +426,6 @@ def make_sub_themes(sub_themes_info):
     sub_theme_list = db.session.scalars(
         select(Theme)
         .where(Theme.id.in_(sub_theme_ids_list))
-    )
+    ).all()
     # Return the actual added labels
     return sub_theme_list

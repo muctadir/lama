@@ -24,6 +24,9 @@ export class SingleThemeViewComponent {
   // Variable for the theme
   theme: Theme; 
 
+  // Alert message for deleting theme
+  alertMessage = "";
+
   constructor(private router: Router, private themeDataService: ThemeDataService) { 
     // Gets the url from the router
     this.url = this.router.url
@@ -46,10 +49,6 @@ export class SingleThemeViewComponent {
   async get_single_theme_info(p_id: number, t_id: number){
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
-  }
-
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
   }
 
   /**
@@ -115,6 +114,36 @@ export class SingleThemeViewComponent {
     if (theme != undefined){
       this.reRouterTheme(theme.getId());
     }
+  }
+
+  /**
+   * Function for deleting the theme
+   * 
+   * @Trigger When the delete button is clicked
+   */
+  async deleteTheme(){
+    // Get the children and labels
+    let children = this.theme.getChildren();
+    let labels = this.theme.getLabels();
+    // Check if the children and labels are undefined
+    if(children == undefined || labels == undefined){
+      // Alert that the theme cannot be deleted
+      this.alertMessage = "This theme has sub-themes and labels, so it cannot be deleted";
+      return;
+    } else {
+      if(labels != undefined && children != undefined){
+        // Check the length of the arrays
+        if(labels.length != 0 || children.length != 0){
+          // Alert that the theme cannot be deleted
+          this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
+          return;
+        }
+      }
+    }
+    // Delete the theme
+    this.alertMessage = await this.themeDataService.delete_theme(this.p_id, this.t_id);
+    // Reroute to theme management again
+    this.reRouter();
   }
 
 }
