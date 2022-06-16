@@ -1,12 +1,12 @@
 # Veerle Furst
 
 from src import db # need this in every route
-from src.models.auth_models import User, UserSchema
+from src.models.auth_models import User, UserSchema, UserStatus
 from src.app_util import check_args, check_email, check_password, check_username
 from flask import current_app as app
 from flask import make_response, request, Blueprint
 from sqlalchemy import select, update
-from src.app_util import login_required
+from src.app_util import login_required, super_admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
 account_routes = Blueprint("account", __name__, url_prefix="/account")
@@ -38,8 +38,6 @@ def edit_user_information(*, user):
     """
         Edit the user information
     """
-    print("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
-    print(user)
 
     # Get the information needed
     args = request.json
@@ -131,7 +129,6 @@ def edit_user_password(*, user):
     else:
         id_used = user.id
 
-
     # Change the users information
     db.session.execute(
         update(User).
@@ -145,6 +142,37 @@ def edit_user_password(*, user):
     
     # Return a success message
     return make_response("Updated succesfully")
+
+
+@account_routes.route("/soft_del", methods=["POST"])
+@super_admin_required
+def soft_delete(*, super_admin):
+    # gets the arguments from the request
+    args = request.json
+    args = args['params']
+
+    # checks whether the ID param is given
+    required = ["id"] 
+
+    # Check required arguments are supplied
+    if not check_args(required, args):
+        return make_response(("Bad Request", 400))
+
+    # Changes the account details to deleted
+    db.session.execute(
+        update(User).
+        where(User.id == args["id"]).
+        values(
+            status=UserStatus.deleted
+        )
+    )
+
+    # Commits the changes to the database
+    db.session.commit()
+    
+    # Return a success message
+    return make_response("Updated succesfully")
+
 
 # Checks validity of all required fields for User creation
 def check_format(username, email, description):

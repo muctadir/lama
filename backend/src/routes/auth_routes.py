@@ -100,6 +100,15 @@ def check_login():
     """
     return make_response(("Success", 200))
 
+# Function for checking whether user has logged in and a superadmin
+@auth_routes.route("/check_super_admin", methods=["GET"])
+@super_admin_required
+def check_super_admin():
+    """
+    Checks whether the user has already logged in and is a super-admin
+    """
+    return make_response(("Success", 200))
+
 def login_user(u_id):
     # Encode user id
     token = encode({'u_id_token': u_id}, app.secret_key, algorithm='HS256')

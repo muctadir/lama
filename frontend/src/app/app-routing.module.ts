@@ -36,6 +36,7 @@ import { ThemeManagementComponent } from './theme/theme-management/theme-managem
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { SuperAdminGuardService } from './services/super-admin-guard.service';
 
 
 /* All the routes within the application */
@@ -48,7 +49,7 @@ const routes: Routes = [
     // Account route
     {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
     // User moderation
-    {path: 'moderation', component: ModerationComponent, canActivate: [LoginGuardService]},
+    {path: 'moderation', component: ModerationComponent, canActivate: [SuperAdminGuardService]},
     // Home page route
     {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
     // Project creation route

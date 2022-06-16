@@ -12,10 +12,12 @@ $light-grey-shade: #bfbfbf;
     padding-top: 10px;
 }
 
+// Padding between the buttons
 .padd {
     margin-right: 10px;
 }
 
+// Markup of the cross to go back to the home page
 #back-button {
     cursor: pointer;
     top: 0;
@@ -23,7 +25,6 @@ $light-grey-shade: #bfbfbf;
     font-size: 30px;
     position: fixed;
 }
-
 
 // Moves the table down
 #table {
