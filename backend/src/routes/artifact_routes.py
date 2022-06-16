@@ -38,6 +38,10 @@ def get_artifacts(*, user, membership):
     seek_page = int(args['seek_page']) - 1
     page_size = int(args['page_size'])
     seek_index = args['seek_index']
+
+    # We use seek method for pagination. Offset in SQL is slow since it still goes through
+    # all the rows before discarding them. Keep a seek index of the max index we can discard.
+    # We also keep the seek page to see how many pages we still need to offset.
     # NB: seek method only works when we order by index since it is unique and non-nullable
     # Check if user is admin for the project and get artifacts
     if membership.admin:
