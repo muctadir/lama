@@ -138,6 +138,7 @@ export class ArtifactDataService {
       "result": result,
       "labellings": response["artifact_labellings"],
       "username": response["username"],
+      "u_id": response["u_id"],
       "admin": response["admin"]
     }
   }
@@ -154,5 +155,4 @@ export class ArtifactDataService {
     // Return the record
     return (artifacts);
   }
-
 }

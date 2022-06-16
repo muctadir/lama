@@ -157,6 +157,7 @@ def single_artifact(*, user, membership):
     # Put all values into a dictionary
     info = {
         "artifact": artifact_json,
+        "u_id": user.id,
         "username": user.username,
         "admin": membership.admin
     }

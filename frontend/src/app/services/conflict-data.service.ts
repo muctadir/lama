@@ -48,4 +48,11 @@ export class ConflictDataService {
       // Return the result
       return result;
   }
+
+  async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<Record<string, any>> {
+    // Make call to the backend and return the response
+    let response = await this.requestHandler.get('/conflict/LabelPerUser', 
+    {'p_id': p_id, 'a_id': a_id, 'lt_id': lt_id}, true);
+    return response
+  }
 }

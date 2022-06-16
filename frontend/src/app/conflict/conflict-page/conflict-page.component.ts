@@ -40,16 +40,15 @@ export class ConflictPageComponent implements OnInit {
    * 
    * @trigger resolve conflict button is pressed
    */
-   reRouter(a_id: number, lt_id: number) : void {
+   reRouter(a_id: number, lt_id: number, lt: string) : void {
     // Gets the url from the router
     let url: string = this.router.url
     // Initialize the ReroutingService
     let routeService: ReroutingService = new ReroutingService();
     // Use reroutingService to obtain the project ID
     let p_id = routeService.getProjectID(url);
-    console.log(p_id)
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id]);
+    this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id, lt ]);
   }
 
   /**

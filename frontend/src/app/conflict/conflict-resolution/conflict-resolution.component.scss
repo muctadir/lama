@@ -64,7 +64,11 @@ $white-shade: #FFFFFF;
 }
 // Row where the split information is
 #splitRow{
+    padding-left: 30px;
     padding-right: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    width: 100%;
 }
 
 // BUTTONS FOR LABEL CREATION AND MERGING

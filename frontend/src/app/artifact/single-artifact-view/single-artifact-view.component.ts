@@ -21,9 +21,9 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the url
   url: string;
   // Initialize list of labels given + remarks per user
-  userLabels: Array<any> = []
+  userLabels: Array<any>
 
-  // Will be changed once @inproject decorator is merged
+  // Initialize boolean value that represents whether the current user is admin
   admin: boolean;
   // Initialize the username of the current user
   username: string;
@@ -43,13 +43,24 @@ export class SingleArtifactViewComponent implements OnInit {
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
     private router: Router) {
+    //Initializing variables
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.url = this.router.url;
+    this.userLabels = [];
     this.admin = false;
     this.username = '';
   }
 
+  /**
+   * Gets the artifact id, project ID and the artifact from the backend
+   * Stores the users in the allMembers array
+   * Gets project information from the backend
+   * Store the project in currentProject
+   *
+   * @modifies allMembers, currentProject
+   * @trigger on creation of component
+   */
   ngOnInit(): void {
     // Get the ID of the artifact and the project
     let a_id = Number(this.routeService.getArtifactID(this.url));

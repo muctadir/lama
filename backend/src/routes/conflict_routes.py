@@ -5,8 +5,8 @@
 from src.models.item_models import Artifact, LabelType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
-from src.models.item_models import Labelling
-from src.models.auth_models import UserSchema
+from src.models.item_models import Labelling, Label
+from src.models.auth_models import UserSchema, User
 from src.models import db
 from src.app_util import login_required, check_args, in_project
 
@@ -147,7 +147,6 @@ Author: Linh Nguyen
 def project_conflicts(p_id, admin, u_id):
     # Artifact IDs involved with this users
     a_per_user = select(distinct(Labelling.a_id)).where(Labelling.u_id == u_id).subquery()
-    print(u_id)
     # Number of differing labels per label type and artifact
     per_label_type = select(
         # Artifact id
@@ -167,8 +166,6 @@ def project_conflicts(p_id, admin, u_id):
         Labelling.a_id,
         Labelling.lt_id
     ).subquery()
-
-    print(db.session.scalars(select(distinct(Labelling.a_id)).where(Labelling.a_id.in_(a_per_user))).all())
 
     # Conflicts per artifact
     per_artifact = select(
@@ -270,3 +267,40 @@ def conflict_management_page(*, user, membership):
 
     p_id = args['p_id']
     return make_response(project_conflicts(p_id, membership.admin, user.id))
+"""
+Author: Linh Nguyen & Ana-Maria Oltenic
+Route to send labelling made by users concerning a certain conflict to the frontend
+@returns list of dictionaries of the form:
+{
+    the name of each user: list of dictionaries of the form:
+    {
+        "name": name of the label
+        "description": description of the label
+    }
+}
+"""
+@conflict_routes.route("/LabelPerUser", methods=["GET"])
+@login_required
+@in_project
+def single_label_per_user():
+    # Get args 
+    args = request.args
+
+    # What args are required
+    required = ['p_id', 'a_id', 'lt_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    user_per_lt = select(Labelling.u_id).where(Labelling.lt_id==args['lt_id']).subquery()
+
+    userInfo = db.session.execute(select(distinct(User.username), Labelling.l_id, Label.name, Label.description)
+    .where(User.id.in_(user_per_lt), User.id==Labelling.u_id, Labelling.l_id == Label.id,
+     Labelling.lt_id==args['lt_id'], Labelling.a_id==args['a_id'])).all()
+
+    response = {}
+    for labeller in userInfo:
+        response[labeller[0]] = {"name": labeller[2], "description": labeller[3]}
+
+    return make_response(response)
