@@ -57,7 +57,7 @@ def pending():
     
     user_schema = UserSchema()
     # Get all users with pending status
-    users = db.session.scalars(select(User).where(User.status == UserStatus.pending))
+    users = db.session.scalars(select(User).where(User.status == UserStatus.pending)).all()
     # Convert to json format
     json_users = jsonify(user_schema.dump(users, many=True))
     

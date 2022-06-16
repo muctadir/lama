@@ -1,0 +1,32 @@
+<form [formGroup]="labelForm">
+  <div class="row">
+    <div class="col-4">
+        <!-- Title of the labelType -->
+        <div class = "labelTypeTitle">
+            <span>{{ labelType?.getName() }}</span>
+        </div>
+        <!-- List of available labels -->
+        <div>
+            <select class="form-control" formControlName="label" name="labels">
+                <option *ngFor="let label of labelType?.getLabels()" [ngValue]="label.getId()">{{ label.getName() }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-4" >
+        <!-- Description of the labelType -->
+        <div class = "labelDescription">
+            <div class="descriptionTitle">
+                <p>Description</p>
+            </div>
+            <div class="descriptionText">
+                <p>{{ selectedDesc }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <!-- Remark box -->
+        <textarea class="form-control" rows="4" placeholder="Remark" id="remark" formControlName="remark"></textarea>
+    </div>
+  </div>
+</form>
+

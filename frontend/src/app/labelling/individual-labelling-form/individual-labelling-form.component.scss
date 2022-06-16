@@ -1,0 +1,41 @@
+// Color variables
+$orange-shade: #ed5a06;
+
+// Title of label type
+.labelTypeTitle {
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+// Title description
+.descriptionTitle {
+  font-size: 19px;
+  padding-bottom: 2px;
+  height: 28px;
+}
+
+// Description of text
+.descriptionText {
+  max-height: 20vh;
+  font-size: 16px;
+  overflow-y: scroll;
+}
+
+// Label description
+.labelDescription {
+  border-left: 2px solid $orange-shade;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+// Remark
+#remark {
+  max-height: 29vh;
+}
+
+// Row of the labelling
+#labelling-row {
+  margin-top: 5px;
+}
+

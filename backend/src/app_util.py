@@ -16,6 +16,7 @@ from flask import make_response, request
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import select
 from inspect import getfullargspec
+import datetime
 
 def check_args(required, args):
     """
@@ -380,3 +381,16 @@ def __parse_deleted(change, username):
     if change.description:
         raise ChangeSyntaxError
     return f"{username} deleted {item_type} \"{change.name}\""
+# Get time from seconds
+def time_from_seconds(seconds):
+    # Left over seconds
+    seconds_leftover = int(seconds % 60)
+    # Minutes
+    minutes = int((seconds - seconds_leftover) / 60)
+    # Left over minutes
+    minutes_leftover = int(minutes % 60)
+    # Hours
+    hours = int((minutes -  minutes_leftover) / 60)
+    
+    # Return the time
+    return datetime.time(hours, minutes_leftover, seconds_leftover)

@@ -3,15 +3,17 @@
 # Eduardo Costa Martis
 # Thea Bradley
 
-from importlib.metadata import requires
-from types import NoneType
 from src.app_util import in_project
 from src.app_util import check_args
-from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, Highlight, HighlightSchema
 from src.models.change_models import ChangeType
+from src.models.project_models import Project
 from flask import jsonify, Blueprint, make_response, request
+from sqlalchemy import select, func
+from src.app_util import login_required
+from sqlalchemy.exc import OperationalError
+from src.models.auth_models import User, UserSchema
 from sqlalchemy import select, func, distinct
 from src.app_util import login_required, in_project
 from sqlalchemy.exc import  OperationalError
@@ -19,6 +21,7 @@ from src.searching.search import search_func_all_res, best_search_results
 from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
+
 
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
@@ -84,6 +87,16 @@ def get_artifacts(*, user, membership):
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id)
         )
+        # Get all the labellings the user has done in the current project
+        labellings = db.session.execute(
+            select(Labelling).where(Labelling.u_id ==
+                                    user.id, Labelling.p_id == p_id)
+        ).scalars().all()
+
+        # Take the artifacts labelled by the user
+        # TODO: Remove for loop
+        for labelling in labellings:
+            artifacts.add(labelling.artifact)
 
     # List of artifacts to be passed to frontend
     artifact_info = []
@@ -167,6 +180,7 @@ def add_new_artifacts(*, user):
 
     return make_response("Route accessed")
 
+
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 @in_project
@@ -185,7 +199,7 @@ def single_artifact(*, user, membership):
     # Get the current artifact
     artifact = __get_artifact(a_id)
 
-     # Schema to serialize the artifact
+    # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
 
     # Convert artifact to JSON
@@ -254,8 +268,8 @@ def search(*, user, membership):
 
 def __get_extended(artifact):
     # Children of the artifact
-    artifact_children = []\
-        
+    artifact_children = []
+
     for child in artifact.children:
         artifact_children.append(child.id)
 
@@ -267,6 +281,7 @@ def __get_extended(artifact):
         "artifact_children": artifact_children,
         "artifact_labellings": labellings_formatted
     }
+
 
 def __get_labellings(artifact):
     # Schema to serialize the labellings
@@ -280,9 +295,10 @@ def __get_labellings(artifact):
     for labelling in artifact_labellings:
         labelling_json = labelling_schema.dump(labelling)
         labellings.append(labelling_json)
-    
+
     # Return labellings
     return labellings
+
 
 def __aggregate_labellings(artifact):
     # Get all the labellings of the artifact
@@ -315,13 +331,165 @@ def __aggregate_labellings(artifact):
         # Format result to be compatible with the frontend
         formatted_result = []
         for labeller in result:
-                formatted_result.append({
+            formatted_result.append({
                 'labellerName': labeller,
                 'labelsGiven': result[labeller]
-                })
-        
+            })
+
         return formatted_result
 
+
+@artifact_routes.route("/randomArtifact", methods=["GET"])
+@login_required
+@in_project
+def random_artifact(*, user):
+    # Get args from request
+    args = request.args
+    # What args are required
+    required = ['p_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    p_id = int(args['p_id'])
+
+    # TODO: Change to be an artifact that has not been labelled
+    artifact = db.session.scalar(
+        select(Artifact)
+        .where(Artifact.p_id == p_id)
+        .order_by(func.rand())
+        .limit(1)
+    )
+
+    if not artifact:
+        return make_response('No artifact')
+    # artifact = get_random_artifact(user.id, p_id)
+
+    childIds = db.session.scalars(
+        select(Artifact.id)
+        .where(artifact.id == Artifact.parent_id)
+    ).all()
+    # Schemas to serialize the artifact
+    artifact_schema = ArtifactSchema()
+
+    dict_json = jsonify({
+        'artifact': artifact_schema.dump(artifact),
+        'parentId': artifact.parent_id,
+        'childIds': childIds
+    })
+
+    return make_response(dict_json)
+
+
+@artifact_routes.route("/getLabellers", methods=["GET"])
+@login_required
+@in_project
+def get_labellers():
+    # Get args from request
+    args = request.args
+    # What args are required
+    required = ['p_id', 'a_id']
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    labellers = db.session.scalars(
+        select(User)
+        .where(
+            User.id == Labelling.u_id,
+            Labelling.a_id == args['a_id']
+        )
+        .distinct()
+    ).all()
+    user_schema = UserSchema()
+    json_labellers = jsonify(user_schema.dump(labellers, many=True))
+
+    return make_response(json_labellers)
+
+
+@artifact_routes.route("/getLabelers", methods=["GET"])
+@login_required
+@in_project
+def get_labells_by_label_type():
+    # Get args from request
+    args = request.args
+    # What args are required
+    required = ['p_id', 'a_id']
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    # Get all the labels of a specifc label type
+    labels = db.session.scalars(
+        select(User)
+        .where(
+            User.id == Labelling.u_id,
+            Labelling.a_id == args['a_id']
+        )
+    ).all()
+    # Schema to serialize the User
+    user_schema = UserSchema()
+    # Jsonify the result
+    json_labellers = jsonify(user_schema.dump(labels, many=True))
+
+    return make_response(json_labellers)
+
+
+artifact_routes.route("/newHighlights", methods=["POST"])
+
+
+@login_required
+@in_project
+def add_new_highlights(*, user):
+    # Get args from request
+    args = request.args
+    # What args are required
+    required = ['p_id', 'a_id', 'u_id']
+
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+
+    # Get the information given by the frontend
+    highlight_info = request.json
+
+    # Schema to serialize the Highlight
+    artifact_schema = HighlightSchema()
+
+    highlight_object = artifact_schema.load(highlight_info["highlight"])
+
+    # Add the highligh to the database
+    db.session.add(highlight_object)
+
+    # Try commiting the artifacts
+    try:
+        db.session.commit()
+    except OperationalError:
+        return make_response('Internal Server Error', 503)
+
+    return make_response("Route accessed")
+
+
+def get_random_artifact(u_id, p_id):
+    # Criteria for artifact completion
+    criteria = db.session.get(Project.criteria, p_id)
+    # Artifact ids that have been labelled by enough people
+    # NB: Even with conflicts, it still should not be seen by more people
+    completed = select(
+        Labelling.a_id
+    ).where(
+        func.count(Labelling.l_id) >= criteria
+    ).subquery()
+    # Artifact ids that the user has already labelled
+    labelled = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
+    artifact = db.session.scalar(
+        select(Artifact)
+        .where(Artifact.p_id == p_id)
+        .except_(completed, labelled)
+        .order_by(func.rand())
+        .limit(1)
+    )
+    return artifact
 # Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
