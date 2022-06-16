@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
+import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -27,7 +29,7 @@ export class SingleThemeViewComponent {
   // Alert message for deleting theme
   alertMessage = "";
 
-  constructor(private router: Router, private themeDataService: ThemeDataService) { 
+  constructor(private router: Router, private themeDataService: ThemeDataService, private modalService: NgbModal) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -140,10 +142,13 @@ export class SingleThemeViewComponent {
         }
       }
     }
-    // Delete the theme
-    this.alertMessage = await this.themeDataService.delete_theme(this.p_id, this.t_id);
-    // Reroute to theme management again
-    this.reRouter();
+    // Open the modal
+    const modalRef = this.modalService.open(DeleteThemeComponent, {});
+    // Give the modal the project id and theme id
+    modalRef.componentInstance.p_id = this.p_id;
+    modalRef.componentInstance.t_id = this.t_id; 
+    // Give alert message
+    this.alertMessage = "";
   }
 
 }
