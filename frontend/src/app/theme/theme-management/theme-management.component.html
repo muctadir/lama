@@ -50,7 +50,10 @@
             <ngb-pagination
                 [(page)]="page"
                 [pageSize]="pageSize"
-                [collectionSize]="themes.length">
+                [collectionSize]="themes.length"
+                [maxSize]="5"
+                [rotate]="true" 
+                [boundaryLinks]="true">
             </ngb-pagination>
         </div> 
 
