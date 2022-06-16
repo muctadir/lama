@@ -1,15 +1,14 @@
 # Author: Eduardo
 # Author: Bartjan
 # Author: Victoria
-from re import L
 from src.app_util import check_args
 from src import db  # need this in every route
-from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func
+from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
-    Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
+from src.models.item_models import Label, LabelSchema, LabelType, \
+  Labelling, ThemeSchema, Artifact, ArtifactSchema
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -51,7 +50,7 @@ def create_label():
     try:
         db.session.add(label)
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response('Created')
@@ -84,7 +83,7 @@ def edit_label():
             .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
         )
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
     return make_response('Ok')
@@ -200,11 +199,11 @@ def merge_route():
                       description=args['newLabelDescription'],
                       lt_id=labels[0].lt_id,
                       p_id=labels[0].p_id)
-    label_schema = LabelSchema()
+
     try:
         db.session.add(new_label)
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
     # Update all labellings
@@ -214,7 +213,7 @@ def merge_route():
             .where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
         db.session.commit()
         return make_response('Success')
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
 # Author: Veerle Furst
@@ -261,7 +260,7 @@ def soft_delete_route():
             .where(Label.id == args['l_id']).values(deleted=1)
         )
         db.session.commit()
-    except:
+    except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
     return make_response()
 
@@ -271,8 +270,8 @@ def soft_delete_route():
 def count_usage_route():
     args = request.args 
     required = ['p_id', 'l_id']
-    # if not check_args(required, args):
-    #     return make_response('Bad Request', 400)
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
     try:
         count = db.session.execute(
             select(func.count(Labelling.l_id))
@@ -282,5 +281,5 @@ def count_usage_route():
             )
         ).scalar()
         return make_response(str(count), 200)
-    except:
+    except OperationalError:
         return make_response('Internal Server Error', 500)
