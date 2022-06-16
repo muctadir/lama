@@ -165,7 +165,7 @@ def get_single_label():
 @in_project
 def merge_route():
     args = request.json
-    required = ['leftLabelId', 'rightLabelId', 'newLabelName', 'newLabelDescription', 'p_id']
+    required = ['mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id']
 
     # Check if required args are present
     if not check_args(required, args):
@@ -176,15 +176,16 @@ def merge_route():
         return make_response('Bad request: Label name cannot have size <= 0', 400)
     # Check whether the length of label description is at least one character long
     if len(args['newLabelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot have size <= 0', 400)    
-    # Check whether the ids are different
-    if len(args['leftLabelId'] == args['rightLabelId']) <= 0:
-        return make_response('Bad request: Cannot merge the same label twice', 400)
+        return make_response('Bad request: Label description cannot have size <= 0', 400)
+    
+    # Check that labels have different ids (set construction keeps only unique ids)
+    label_ids = [label['id'] for label in args['mergedLabels']]
+    if len(label_ids) != len(set(label_ids)):
+        return make_response('Bad request: Label ids must be unique', 400)
 
-    ids = [args['leftLabelId'], args['rightLabelId']]
     labels = db.session.execute(
             select(Label)
-            .where(Label.id.in_(ids))).scalars.all()
+            .where(Label.id.in_(label_ids))).scalars.all()
     
     # Check that the labels exist
     if len(labels) != 2:
@@ -212,7 +213,7 @@ def merge_route():
     try:
         db.session.execute(
             update(Labelling)
-            .where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
+            .where(Labelling.l_id.in_(label_ids)).values(l_id=new_label.id))
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
@@ -286,5 +287,24 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
 
     db.session.add(change)
 
-def __record_merge():
-    pass
+def __record_merge(new_label, labels, p_id, u_id, lt_name, a_ids):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+    names = ','.join([label.name for label in labels])
+
+    # Record change for the label
+    change = LabelChange(
+        i_id=new_label.id,
+        p_id=p_id,
+        u_id=u_id,
+        name=new_label.name,
+        change_type=ChangeType.merge,
+        description=f"{new_label.name} ; {lt_name} ; {names}"
+    )
+    db.session.add(change)
+
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+
+    # Record change for the artifacts
+    # TODO:

@@ -288,13 +288,23 @@ def __parse_split(change, username):
 
 """
 A merge string should be of the format:
-"left_label_name ; right_label_name"
+"new_label_name ; label_type_name ; <comma separated label names that were merged>" for labels
+or
+"new_label_name ; label_type_name ; old_label_name" for artifacts
 """
 def __parse_merge(change, username):
     description = change.description.split(' ; ')
-    if len(description) != 2:
+    if len(description) != 3:
         raise ChangeSyntaxError
-    return f"{username} created Label \"{change.name}\" by merging Label \"{description[0]}\" and Label \"{description[1]}\""
+    match change.item_class_name:
+        case 'Label':
+            names = description[2].split(',')
+            if len(names) < 2:
+                raise ChangeSyntaxError
+            parsed_names = '"' + '", "'.join(names) + '"'
+            return f"{username} created Label \"{change.name}\" of type {description[1]} by merging labels {parsed_names}"
+        case 'Artifact':
+            return f"{username} changed a labelling for Artifact {change.name} of type {description[1]} from {description[2]} to {description[0]} as a result of a merge"
 
 """
 A label_theme string should be of the format:
@@ -340,7 +350,8 @@ def __parse_theme_theme(change, username):
 """
 A labelled string should be of the format:
 'label' ; label_type_name ; label_name
-'edit'|'merge' ; label_type_name ; old_label_name ; new_label_name
+or
+'edit' ; label_type_name ; old_label_name ; new_label_name
 """
 def __parse_labelled(change, username):
     description = change.description.split(' ; ')
@@ -353,10 +364,6 @@ def __parse_labelled(change, username):
             if len(description) != 4:
                 raise ChangeSyntaxError
             return f"{username} changed Artifact \"{change.name}'s\" Label of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
-        case 'merge':
-            if len(description) != 4:
-                raise ChangeSyntaxError
-            return f"Artifact \"{change.name}'s\" Label of type \"{description[1]}\" changed from \"{description[2]}\" to \"{description[3]}\" as a result of a merge {username} made"
         case _:
             raise ChangeSyntaxError
 
