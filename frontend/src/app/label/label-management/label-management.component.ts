@@ -1,4 +1,4 @@
-// <!-- Author: Victoria Bogachenkova, Thea Bradley -->
+// Author: Victoria Bogachenkova, Thea Bradley
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from 'app/modals/merge-label-form/merge-label-form.component';

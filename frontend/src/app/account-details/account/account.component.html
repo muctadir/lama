@@ -2,23 +2,21 @@
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <!-- Account information -->
     <ng-container *ngIf="mode==0">
+        <!-- Create app-account-information component, passes errorMsg, user data and listens for modeChange events -->
         <app-account-information [errorM]="errorMsg" [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
     </ng-container>
     
     <!-- Edit division -->
     <ng-container *ngIf="mode==1">
+        <!-- Create app-edit-account-settings component, passes user data and listens for modeChange events -->
         <app-edit-account-settings [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-edit-account-settings>
     </ng-container>
     
     <!-- Change password -->
     <ng-container *ngIf="mode==2">
-        <app-account-change-password [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
+        <!-- Create app-account-change-password component, passes user data and listens for modeChange events -->
+        <app-account-change-password [userAccount]="user" [superAdmin]="false" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
     </ng-container>
-
-    <!-- Logout icon -->
-    <div id="logout-icon">
-        <a><em class="bi bi-box-arrow-left def" (click)="openLogout()"></em></a>
-    </div>
 </div>
 
 

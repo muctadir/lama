@@ -1,7 +1,7 @@
 <!-- Author: Victoria Bogachenkova -->
-<div class="container-fluid min-vh-100 d-flex flex-column" id="body">
+<div class="container-fluid min-vh-100 d-flex flex-column">
     <!-- contains the page title and Artifact Identifier -->
-    <div class="row" id="pageTitle">
+    <div class="row">
         <!-- Label Name as title -->
         <div id="artifactId" class="col-10">
             <p class="header">{{label.getName()}}</p>
@@ -10,7 +10,7 @@
 
     <!-- Container for Labels -->
     <div class="row" id="rowLabels">
-        <div class="col-4" id="leftRow">
+        <div class="col-4">
             <div>
                 <!-- Label Name -->
                 <div class="subTitle">Name</div>
@@ -37,14 +37,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-2" id="middleRow"></div>
-        <div class="col-6" id="rightRow">
+        <div class="col-2"></div>
+        <div class="col-6">
             <!-- Description -->
             <div class="subTitle">
                 Description
             </div>
             <div class="form-group">
-                <textarea class="form-control" rows="8" placeholder="Description" id="remark" readonly>{{label.getDesc()}}</textarea>
+                <textarea class="form-control" rows="8" placeholder="Description" id="description" readonly>{{label.getDesc()}}</textarea>
             </div>
             <!-- Part of which Themes -->
             <div class="subTitle">
@@ -57,8 +57,12 @@
     </div>
 
     <!-- Back and Edit Buttons -->
-    <div  class="btns">
-        <button class="btn btn-secondary float-start" (click)="reRouter()" id="btns-cancel-submit">Back</button>
-        <button class="btn btn-secondary float-start" (click)="openEdit()" id="btn-edit">Edit</button>
+    <div class="col-6 align-self-end">
+        <div>
+            <!-- Edit button -->
+            <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit">Edit</button>
+            <!-- Cancel button -->
+            <button class="btn btn-secondary float-end" (click)="reRouter()" id="btn-back">Back</button>
+        </div>
     </div>
 </div>

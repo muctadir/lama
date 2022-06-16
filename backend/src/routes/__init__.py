@@ -1,5 +1,5 @@
 from src.routes.auth_routes import auth_routes
-from src.routes.demos import demos
+from src.routes.util_routes import util_routes
 from src.routes.project_routes import project_routes
 from src.routes.label_routes import label_routes
 from src.routes.label_type_routes import label_type_routes
