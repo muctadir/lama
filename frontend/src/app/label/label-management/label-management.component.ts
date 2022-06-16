@@ -107,7 +107,7 @@ export class LabelManagementComponent {
     let resultDict: { [id: number]: string } = {};
 
     await this.labels.forEach(async (label: Label) => {
-      console.log("f")
+      console.log('f');
       const result = await this.labelingDataService.getLabellingCount({
         p_id: this.p_id,
         l_id: label.getId(),
