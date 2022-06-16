@@ -186,7 +186,13 @@ export class LabellingPageComponent implements OnInit {
   }
 
   /**
-   *
+   *Submit the labelling
+   * 1. Get the time now
+   * 2. Count the total time
+   * 3. Create a reponse
+   * 4. Create a dictionary
+   * 5. Put reponse in dictionary and send it
+   * 6. Otherwise catch the message
    */
   submit(): void {
     // Get the timestamp when the labels are submitted
@@ -206,14 +212,21 @@ export class LabellingPageComponent implements OnInit {
     }
   }
 
+  /**
+   * Create response 
+   * @param totalTime 
+   * @returns response from creating a labelling 
+   */
   createResponse(totalTime: number): Array<Object> {
+    // Create an array
     let resultArray: Array<Object> = Array<Object>();
     this.labellings.controls.forEach((el: any) => {
+      // Check the laeblling is valid
       if (el.status != 'VALID') {
-        console.log(this.labellings.controls);
+        // Throw and error
         throw 'Submission invalid';
       }
-      console.log(this.artifact);
+      // Push valid results into result array
       resultArray.push({
         a_id: this.artifact?.getId(),
         lt_id: el.get('labelType')?.value,
@@ -222,14 +235,22 @@ export class LabellingPageComponent implements OnInit {
         time: totalTime,
       });
     });
+    // Return results
     return resultArray;
   }
 
+  /**
+   * Send the submission to the backend
+   * @param dict - dictionary
+   */
   async sendSubmission(dict: Object): Promise<void> {
     try {
+      // Wait for the submission
       await this.labellingDataService.postLabelling(dict);
+      // Reinitialise the page
       this.ngOnInit();
     } catch (err) {
+      // Send error
       this.submitMessage = 'Database error while submitting labelling.';
     }
   }

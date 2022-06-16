@@ -83,7 +83,7 @@ def edit_label():
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
     try:
-        # Update
+        # Update and commit
         db.session.execute(
             update(Label)
             .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])

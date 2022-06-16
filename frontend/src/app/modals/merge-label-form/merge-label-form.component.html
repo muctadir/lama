@@ -6,10 +6,15 @@
     <div class="col-12">Merge Label</div>
   </div>
 
+  <!-- Form -->
   <div class="row modal-body" [formGroup]="form">
+    <!-- Left column -->
     <div class="col-6">
+      <!-- Select label type title -->
       <p class="subTitle">Select Label Type</p>
+      <!-- Input for label type -->
       <div class="input-group">
+        <!-- Select for label type -->
         <select
           class="form-control"
           id="label-type"
@@ -21,10 +26,13 @@
           </option>
         </select>
       </div>
-      <p class="subTitle">Select Label Type</p>
+      <!-- Select Labels -->
+      <p class="subTitle">Select Labels</p>
+      <!-- Add button -->
       <button (click)="add()" type="button" class="btn btn-secondary float-end">
         <i class="bi bi-plus"></i>
       </button>
+      <!-- Get the labels of that label type -->
       <div class="label-selection-form" [formGroup]="form">
         <ng-container formArrayName="toBeMergedLabels">
           <ng-container
@@ -32,7 +40,7 @@
             [formGroupName]="i"
           >
             <div class="input-group label-selection">
-              <!-- multiple -->
+              <!-- Select multiple labels-->
               <select class="form-control" formControlName="label">
                 <option
                   *ngFor="let label of this.availableLabels"

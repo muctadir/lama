@@ -1,3 +1,6 @@
+// Color variables
+$orange-shade: #ed5a06;
+
 // Title of label type
 .labelTypeTitle {
   font-size: 17px;
@@ -18,9 +21,9 @@
   overflow-y: scroll;
 }
 
-/*TODO: For some reason the variable defined in the root stylesheet is not working*/
+// Label description
 .labelDescription {
-  border-left: 2px solid #ed5a06;
+  border-left: 2px solid $orange-shade;
   padding-left: 10px;
   padding-bottom: 5px;
   padding-top: 5px;

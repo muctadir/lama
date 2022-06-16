@@ -12,7 +12,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 
 @Component({
@@ -25,7 +25,7 @@ export class LabelFormComponent implements OnInit {
   @Input() label?: Label;
   // Label form
   labelForm: FormGroup;
-  // ROuting and url initialising
+  // Routing and url initialising
   routeService: ReroutingService;
   url: string;
   p_id: number;
@@ -86,6 +86,7 @@ export class LabelFormComponent implements OnInit {
    * @param p_id
    */
   async getLabelTypes(): Promise<void> {
+    // Wait for the label types
     const labelTypes = await this.labellingDataService.getLabelTypes(this.p_id);
     this.labelTypes = labelTypes;
   }
@@ -96,29 +97,42 @@ export class LabelFormComponent implements OnInit {
   submit(): void {
     if (this.label === undefined) {
       try {
+        // Create a new label
         const label: Label = this.constructNewLabel();
+        // Submit label to the server
         this.submitPostToServer(label);
       } catch (e) {
+        // Throw error
         this.err = 'Invalid Form';
       }
     } else {
       try {
+        // Construct a patch for the label
         this.constructPatch();
+        // Submit the patch to the label
         this.submitPatchToServer(this.label);
       } catch (e) {
+        // Throw error
         this.err = 'Invalid Form';
       }
     }
   }
 
+  /**
+   * Construct a new label
+   * 
+   */
   constructNewLabel(): Label {
+    // Check validity
     if (
       !this.labelForm.controls['labelName'].valid ||
       !this.labelForm.controls['labelDescription'].valid ||
       !this.labelForm.controls['labelTypeId'].valid
     ) {
+      // Throw error
       throw 'Invalid Form';
     }
+    // Return new label
     return new Label(
       0,
       this.labelForm.controls['labelName'].value,
@@ -127,15 +141,22 @@ export class LabelFormComponent implements OnInit {
     );
   }
 
+  /**
+   * Construct patch
+   */
   constructPatch(): void {
+    // CHeck label undefined
     if (typeof this.label === 'undefined') {
       throw 'Patch was attempted to be constructed without a label being supplied.';
     } else if (
+      // Check validity
       !this.labelForm.controls['labelName'].valid ||
       !this.labelForm.controls['labelDescription'].valid
     ) {
+      // Throw error
       throw 'Invalid form';
     } else {
+      // Change name and/pr description
       this.label.setName(this.labelForm.controls['labelName'].value);
       this.label.setDesc(this.labelForm.controls['labelDescription'].value);
     }
@@ -146,26 +167,36 @@ export class LabelFormComponent implements OnInit {
    */
   async submitPostToServer(label: Label): Promise<void> {
     try {
+      // Wait for submit label
       await this.labellingDataService.submitLabel(
         this.p_id,
         label,
         this.labelForm.controls['labelTypeId'].value
       );
+      // Close modal
       this.activeModal.close();
     } catch (e) {
+      // Throw error
       this.err = 'Something went wrong while submitting.';
     }
   }
 
+  /**
+   * Submit new patch to the server
+   * @param label 
+   */
   async submitPatchToServer(label: Label): Promise<void> {
     try {
+      // Wait for edit label
       await this.labellingDataService.editLabel(
         this.p_id,
         label,
         this.labelForm.controls['labelTypeId'].value
       );
+      // Close modal
       this.activeModal.close();
     } catch (e) {
+      // Throw error
       this.err = 'Something went wrong while submitting.';
     }
   }

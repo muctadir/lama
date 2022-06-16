@@ -13,6 +13,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./merge-label-form.component.scss'],
 })
 export class MergeLabelFormComponent {
+
   routeService: ReroutingService;
   url: string;
   labelTypes: Array<LabelType>;
@@ -21,6 +22,22 @@ export class MergeLabelFormComponent {
   availableLabels: Array<Label>;
   formArray: FormArray;
   used = new Array<Label>();
+
+  /**
+   * Constuctor
+   * @param activeModal 
+   * @param router 
+   * @param labellingDataService 
+   * @param formBuilder 
+   * 
+   * 1. creates labels types array
+   * 2. creates forms array
+   * 3. gets router service
+   * 4. gets url
+   * 5. creates form
+   * 6. gets project id
+   * 7. creates avaliable labels array
+   */
   constructor(
     public activeModal: NgbActiveModal,
     private router: Router,
@@ -41,6 +58,7 @@ export class MergeLabelFormComponent {
     this.availableLabels = new Array<Label>();
   }
 
+  // Gets the ,erged labels
   get toBeMergedLabels() {
     return this.form.controls['toBeMergedLabels'] as FormArray;
   }
@@ -67,17 +85,19 @@ export class MergeLabelFormComponent {
     });
   }
 
+  // Gets labels
   async getLabels(): Promise<void> {
     try {
+      // Wait for get label types with labels
       const result = await this.labellingDataService.getLabelTypesWithLabels(
         this.p_id
       );
       this.labelTypes = result;
     } catch (e) {
-      console.log(e);
     }
   }
 
+  // Add to form
   add(): void {
     const labelForm = this.formBuilder.group({
       label: [undefined, Validators.required],
@@ -85,19 +105,24 @@ export class MergeLabelFormComponent {
     this.toBeMergedLabels.push(labelForm);
   }
 
+  // Remove from form
   rem(i: number): void {
     this.toBeMergedLabels.removeAt(i);
   }
 
+  // Submit form
   async submit(): Promise<void> {
+    // Check you are merging two or more labels
     if (this.toBeMergedLabels.length !== 2) {
       throw new Error(
         `Sorry, currently only merging of two labels is supported. ${this.toBeMergedLabels.length} !== 2`
       );
     }
+    // PUts the labels to be merged in array
     const arrayResult = this.form.get('toBeMergedLabels')?.value;
 
     try {
+      // Wait for the posting of the merging
       await this.labellingDataService.postMerge({
         'leftLabelId': arrayResult[0].label.getId(),
         'rightLabelId': arrayResult[1].label.getId(),
@@ -105,13 +130,10 @@ export class MergeLabelFormComponent {
         'newLabelDescription': this.form.get('mergerName')?.value,
         'p_id': this.p_id
       });
+      // Close modal
       this.activeModal.close()
     } catch (e) {
-      console.log(e);
     }
-
-
   }
 
-  notImplemented() {}
 }

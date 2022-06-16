@@ -98,7 +98,7 @@ def create_app(config={'TESTING': False}):
     # TODO: More comments, but this may be changed in the soon future.
 
     # generates a secret key for login use (TODO: Elaborate on this)
-    app.secret_key =  'test' 
+    app.secret_key = token_hex()
 
     # Allows the Flask CLI to use the `db-opt` commands. I'm not quite sure how
     # it knows about this.

@@ -198,18 +198,34 @@ export class LabellingDataService {
     return labelTypes;
   }
 
+  /**
+   * Function to post the labelling
+   * @param dict  - dictionary
+   */
   async postLabelling(dict: Object): Promise<void> {
     await this.requestHandler.post('/labelling/create', dict, true);
   }
 
+  /**
+   * Function to post the merged labels
+   * @param dict  - dictionary
+   */
   async postMerge(dict: Object): Promise<void> {
     await this.requestHandler.post('/label/merge', dict, true);
   }
 
+  /**
+   * Function to post the soft delete
+   * @param dict  - dictionary
+   */
   async postSoftDelete(dict: Object): Promise<void> {
     await this.requestHandler.post('/label/delete', dict, true);
   }
 
+  /**
+   * Function to get the labelling count
+   * @param dict  - dictionary
+   */
   async getLabellingCount(dict: Object): Promise<string> {
     return await this.requestHandler.get('/label/count_usage', dict, true);
   }
