@@ -236,6 +236,8 @@ def parse_change(change, username):
             return __parse_theme_theme(change, username)
         case ChangeType.labelled:
             return __parse_labelled(change, username)
+        case ChangeType.deleted:
+            return __parse_deleted(change, username)
         
 """
 A creation string should be of the format
@@ -357,3 +359,12 @@ def __parse_labelled(change, username):
             return f"Artifact \"{change.name}'s\" Label of type \"{description[1]}\" changed from \"{description[2]}\" to \"{description[3]}\" as a result of a merge {username} made"
         case _:
             raise ChangeSyntaxError
+
+"""
+A deleted string should be null
+"""
+def __parse_deleted(change, username):
+    item_type = change.item_class_name
+    if change.description:
+        raise ChangeSyntaxError
+    return f"{username} deleted {item_type} \"{change.name}\""
