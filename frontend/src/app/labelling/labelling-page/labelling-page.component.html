@@ -8,8 +8,8 @@
     </div>
     <div *ngIf="hightlightedText.length > 0" class="col-2">
       <div id="artifactButtons">
-        <i (click)="notImplemented()" class="bi bi-scissors"></i
-        ><i (click)="notImplemented()" class="bi bi-brush"></i>
+        <i (click)="notImplemented()" class="bi bi-scissors"></i>
+        <i (click)="notImplemented()" class="bi bi-brush"></i>
       </div>
     </div>
   </div>
@@ -17,17 +17,17 @@
   <div class="row">
     <!-- Div containing the artifact -->
     <div class="artifactContainer" id="artifactContainer">
-      <p (mouseup)="notImplemented()" (mousedown)="notImplemented()">
+      <!-- <p (mouseup)="selectedText()" (mousedown)="selectedText()">
         {{ artifact?.getData()! }}
-      </p>
+      </p> -->
     </div>
 
     <!-- Labeller information -->
     <div class="col-6">
       <div *ngIf="labellers.length != 0">
         Labeled by:
-        <span *ngFor="let labeler of labellers; let last = last"
-          >{{ labeler.username }}<span *ngIf="!last">, </span></span
+        <span *ngFor="let labeller of labellers; let last = last"
+          >{{ labeller.username }}<span *ngIf="!last">, </span></span
         >
       </div>
     </div>

@@ -239,4 +239,33 @@ export class LabellingPageComponent implements OnInit {
   notImplemented(): void {
     throw new Error('This function has not been implemented yet.');
   }
+
+
+  ////TO BARTGANG: idk how to get the text to be selected againnnn
+    /**
+   * Function is ran on mouseDown or mouseUp and updates the current selection
+   * of the artifact. If the selection is null or empty, the selection is set
+   * to ""
+   * BROKEN
+   */
+  //  selectedText(): void {
+  //   let hightlightedText: Selection | null = document.getSelection();
+  //   //gets the start and end indices of the highlighted bit
+  //   let startCharacter: number = hightlightedText?.anchorOffset!;
+  //   let endCharacter: number = hightlightedText?.focusOffset!;
+  //   //make sure they in the right order
+  //   if (startCharacter > endCharacter) {
+  //     startCharacter = hightlightedText?.focusOffset!;
+  //     endCharacter = hightlightedText?.anchorOffset!;
+  //   }
+  //   //put into global variable
+  //   this.selectionStartChar = startCharacter;
+  //   this.selectionEndChar = endCharacter;
+  //   //this is so the buttons still pop up, idk if we need it so ill ask bartgang
+  //   if (hightlightedText == null || hightlightedText.toString().length <= 0) {
+  //     this.hightlightedText = '';
+  //   } else {
+  //     this.hightlightedText = hightlightedText.toString();
+  //   }
+  // }
 }
