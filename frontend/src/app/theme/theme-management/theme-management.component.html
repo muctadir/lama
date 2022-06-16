@@ -31,9 +31,9 @@
                 <!-- Headers for all themes -->
                 <thead>
                     <tr>
-                        <th scope="col" sortable="name" (click)="sortName();">Name</th>
-                        <th scope="col" sortable="description" (click)="sortDesc();">Description</th>
-                        <th scope="col" sortable="labels" (click)="sortLabels();">Labels</th>                
+                        <th scope="col" (click)="sortName();"><span class="clickable">Name</span></th>
+                        <th scope="col" (click)="sortDesc();"><span class="clickable">Description</span></th>
+                        <th scope="col" (click)="sortLabels();"><span class="clickable">Labels</span></th>                
                     </tr>
                 </thead>
                 <tbody>

@@ -39,9 +39,9 @@
                     <!--Table Headers-->
                     <thead>
                         <tr>
-                            <th scope="col"><p class="labelheader">Label</p></th>
-                            <th scope="col"><p class="labelheader">Label Type</p></th>
-                            <th scope="col"><p class="labelheader">Artifacts Labelled</p></th>
+                            <th scope="col"><p class="labelheader" (click)="sortLabel();"><span class="clickable">Label</span></p></th>
+                            <th scope="col"><p class="labelheader" (click)="sortLabelType();"><span class="clickable">Label Type</span></p></th>
+                            <th scope="col"><p class="labelheader" (click)="sortNumberOfArtifacts();"><span class="clickable">Artifacts Labelled</span></p></th>
                         </tr>
                     </thead>
                     <!--Table Content-->

@@ -27,6 +27,7 @@ $light-grey-shade: #aaaaaa;
     border: 2px solid;
     border-color: $grey-shade;
 }
+
 // The plus for creating a theme
 .bi.bi-plus.createTheme{
     color: black;
@@ -50,6 +51,11 @@ $light-grey-shade: #aaaaaa;
     border-bottom: 1px;
     border-bottom-style: solid;
     border-bottom-color: $grey-shade;
+}
+
+// Make the headers clickable
+.clickable:hover{
+    cursor: pointer;
 }
 
 // Centers the pagination to the middle of the page

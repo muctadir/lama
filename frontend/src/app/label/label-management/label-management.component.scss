@@ -63,7 +63,7 @@ svg.bi.bi-plus{
 }
 
 #tableRow {
-    padding-top: 2em;
+    padding-top: 5px;
 }
 
 #horizontalLineRow{
@@ -75,46 +75,19 @@ svg.bi.bi-plus{
     padding-right: 0px;
 }
 
-//New Table version styles
-p.labelName{
+//Table styles
+.labelHeader{
     font-size: 20px;
     letter-spacing: 1px;
     text-align: center;
-    font-weight: 480;
-}
-p.labelType{
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-align: justify;
-    padding-left: 20px;
-}
-p.artifactsLabelled{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;
-}
-p.labelHeader{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;
-    white-space:nowrap;
-    font-weight: 500;
-}
-
-p.labelTypeHeader{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;
-    white-space:nowrap;
-    font-weight: 500;
-}
-
-p.artifactsLabelledHeader{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;   
     white-space: nowrap;
     font-weight: 500;
+    margin: 0px;
+}
+
+// Make the headers clickable
+.clickable:hover{
+    cursor: pointer;
 }
 
 // Make the highlight around the buttons none

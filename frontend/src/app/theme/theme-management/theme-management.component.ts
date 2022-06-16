@@ -6,6 +6,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { FormBuilder } from '@angular/forms';
 
+// Enumeration for sorting
 enum sorted {
   Not = 0,
   Asc = 1,
@@ -83,7 +84,10 @@ export class ThemeManagementComponent {
     this.themes = await this.themeDataService.theme_management_info(this.p_id);
   }
 
-  // Function for sorting on names
+  /**
+   * Function for sorting on name
+   * 
+  */
   sortName(): void {
     // Check if it was sorted ascending
     if (this.sortedName == sorted.Asc){
@@ -103,7 +107,10 @@ export class ThemeManagementComponent {
     this.sortedNOL = sorted.Not
   }
 
-  // Function for sorting on description
+  /**
+   * Function for sorting on description
+   * 
+  */
   sortDesc(): void {
     // Check if it was sorted ascending
     if (this.sortedDesc == sorted.Asc){
@@ -123,7 +130,10 @@ export class ThemeManagementComponent {
     this.sortedNOL = sorted.Not
   }
 
-  // Function for sorting on labels
+  /**
+   * Function for sorting on number of labels
+   * 
+  */
   sortLabels(): void {
     // Check if it was sorted ascending
     if (this.sortedNOL == sorted.Asc){
