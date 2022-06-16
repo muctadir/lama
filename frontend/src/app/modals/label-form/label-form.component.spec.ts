@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { FormBuilder } from '@angular/forms';
 import { LabelFormComponent } from './label-form.component';
 
@@ -14,8 +14,8 @@ describe('LabelFormComponent', () => {
       // Adds RouterTestingModule dependency
       imports: [RouterTestingModule],
       declarations: [ LabelFormComponent ],
-      // Adds NgbActiveModal, LabelingDataService and FormBuilder dependencies
-      providers: [NgbActiveModal, LabelingDataService, FormBuilder]
+      // Adds NgbActiveModal, LabellingDataService and FormBuilder dependencies
+      providers: [NgbActiveModal, LabellingDataService, FormBuilder]
     })
     .compileComponents();
   });

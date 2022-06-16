@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { InputCheckService } from 'app/services/input-check.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { FormBuilder } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
@@ -64,7 +64,7 @@ export class ThemeInfoComponent implements OnInit {
   allSubThemes: Array<Theme> = [];
  
   constructor(private formBuilder: FormBuilder, private service: InputCheckService, 
-        private router: Router, private themeDataService: ThemeDataService, private labelDataService: LabelingDataService) { 
+        private router: Router, private themeDataService: ThemeDataService, private labelDataService: LabellingDataService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService

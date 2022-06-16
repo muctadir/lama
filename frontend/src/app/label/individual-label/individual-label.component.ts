@@ -4,7 +4,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
@@ -35,7 +35,7 @@ export class IndividualLabelComponent {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private labelingDataService: LabelingDataService
+    private labellingDataService: LabellingDataService
   ) {
     this.label = new Label(-1, '', '', '');
     this.routeService = new ReroutingService();
@@ -62,7 +62,7 @@ export class IndividualLabelComponent {
    */
   async getLabel(p_id: number, labelID: number): Promise<void> {
     try {
-      const label = await this.labelingDataService.getLabel(p_id, labelID);
+      const label = await this.labellingDataService.getLabel(p_id, labelID);
       this.label = label;
     } catch (e) {
       this.router.navigate(['project', this.p_id]);
@@ -79,7 +79,7 @@ export class IndividualLabelComponent {
 
   async getLabellings(p_id: number, labelID: number): Promise<void> {
     try {
-      const labellings = await this.labelingDataService.getLabelling(
+      const labellings = await this.labellingDataService.getLabelling(
         p_id,
         labelID
       );
@@ -91,7 +91,7 @@ export class IndividualLabelComponent {
 
   async postSoftDelete() {
     try{
-      await this.labelingDataService.postSoftDelete({
+      await this.labellingDataService.postSoftDelete({
         'p_id': this.p_id,
         'l_id': this.label_id
       });

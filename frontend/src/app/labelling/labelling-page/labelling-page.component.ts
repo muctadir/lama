@@ -5,7 +5,7 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
@@ -61,7 +61,7 @@ export class LabellingPageComponent implements OnInit {
    */
   constructor(
     private modalService: NgbModal,
-    private labellingDataService: LabelingDataService,
+    private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
     private router: Router
   ) {
