@@ -64,45 +64,43 @@
     </div>
     <!-- Division for each labeller -->
     <div class="labellerDiv">
-        <div *ngFor="let labelling of label_per_user | keyvalue">
+        <div *ngFor="let user of users">
             <!-- Row for each labeller -->
             <div class="row margin" id="labellerRow">
                 <!-- Column for labels given -->
                 <div class="col">
                     <!-- Row for the labeller name -->
                     <div class="row">
-                        <span class="boldText">{{labelling.key}}</span>
+                        <span class="boldText">{{user}}</span>
                     </div>
 
                     <!-- TODO add angular for loop -->
                     <div class="labelTypeDiv">
-
-                        <!-- Rows for the labels per label type -->
-                        <div class="row" id="labelTypeRow">
-                            <!-- Dropdown (disabled or not) -->
-                            <div *ngIf="labelling.key != username; else elseBlock">
-                                <!-- Not diabled dropdown -->
-                                <select *ngFor="let label in labels">
-                                    <option value={{label}}>{{label}}</option>
-                                </select>
+                            <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
+                            <select class="form-control" name="labelsForm" id="formControl"
+                            [disabled]="!admin && user != username">
+                            <div>
+                                <!-- All labels from the label type are dropdown options -->
+                                <!-- User's given label is the default value of the dropdown -->
+                                <option *ngFor="let label of labels"
+                                    [selected]="label == label_per_user[user]['name']">
+                                    {{label}}
+                                </option>
                             </div>
-                            <!-- Disabled dropdown -->
-                            <ng-template #elseBlock>
-                                <div>
-                                    <select disabled *ngFor="let label in labels">
-                                        <option value={{label}}>{{label}}</option>
-                                    </select>
-                                </div>
-                            </ng-template>
-                        </div>
+                            <!-- All labels from the label type are dropdown options -->
+                            <!-- User's given label is the default value of the dropdown -->
+                            <option *ngFor="let label of labels"
+                                [selected]="label == label_per_user[user]['name']">
+                                {{label}}
+                            </option>
+                        </select>
                     </div>
-
                 </div>
 
                 <!-- Column for remark -->
                 <div class="col-5" id="remarkCol">
                     <span class="boldText">Description: </span> <br>
-                    <!-- {{labeller.labellerRemark}} -->
+                    {{label_per_user[user]['description']}}
                 </div>
             </div>
         </div>

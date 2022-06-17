@@ -55,4 +55,10 @@ export class ConflictDataService {
     {'p_id': p_id, 'a_id': a_id, 'lt_id': lt_id}, true);
     return response
   }
+
+  async getLabelsByType(p_id: number, lt_id: number): Promise<Array<Record<string, any>>> {
+    let response = await this.requestHandler.get('/labeltype/labelsByType', 
+    {'p_id': p_id, 'lt_id': lt_id}, true);
+    return response;
+  }
 }

@@ -17,13 +17,13 @@ interface Labeller {
 }
 
 // Functions for adding values
-function addValuesLabeller(labeller:string, remark:string, cur:boolean):Labeller {
+function addValuesLabeller(labeller: string, remark: string, cur: boolean): Labeller {
   var labellerName = labeller;
   var labellerRemark = remark;
   var current = cur;
   // Return the given values
-  return {labellerName, labellerRemark, current};
-} 
+  return { labellerName, labellerRemark, current };
+}
 
 @Component({
   selector: 'app-conflict-resolution',
@@ -44,10 +44,11 @@ export class ConflictResolutionComponent implements OnInit {
   // Label type of current conflict
   label_type: string;
   // Dictionary holding the users and the labels they gave for the conflict's label type
-  label_per_user: Record<string, any>
-
-  // Hardcoded list of labels until I can get labels per labeltype
-  labels = ['label1', 'label2']
+  label_per_user: Record<string, Record<string, any>>
+  // Array of usernames
+  users: string[];
+  // Array of labels in the label type
+  labels: Array<string> = [];
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -57,7 +58,7 @@ export class ConflictResolutionComponent implements OnInit {
      */
   constructor(private artifactDataService: ArtifactDataService,
     private conflictDataService: ConflictDataService,
-    private router: Router) { 
+    private router: Router) {
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.routeService = new ReroutingService();
     this.url = this.router.url;
@@ -65,6 +66,8 @@ export class ConflictResolutionComponent implements OnInit {
     this.username = '';
     this.label_type = '';
     this.label_per_user = {};
+    this.users = [];
+    this.labels = [];
   }
 
   /**
@@ -87,6 +90,10 @@ export class ConflictResolutionComponent implements OnInit {
 
     // Get the labels given by each user
     await this.getLabelPerUser(p_id, a_id, lt_id)
+
+    // Get the labels in the label type
+    await this.getLabelsByType(p_id, lt_id)
+
     console.log(this.label_per_user)
   }
 
@@ -97,7 +104,7 @@ export class ConflictResolutionComponent implements OnInit {
    * @param a_id the id of the artifact
    * @param p_id the id of the project
    */
-   async getArtifact(a_id: number, p_id: number): Promise<void> {
+  async getArtifact(a_id: number, p_id: number): Promise<void> {
     const result = await this.artifactDataService.getArtifact(p_id, a_id);
     this.artifact = result["result"];
     this.username = result["username"];
@@ -116,14 +123,19 @@ export class ConflictResolutionComponent implements OnInit {
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<void> {
     const response = await this.conflictDataService.getLabelPerUser(p_id, a_id, lt_id);
     this.label_per_user = response;
+    this.users = Object.keys(this.label_per_user);
+
   }
 
-  // Hardcoding some labellers
-  labeller1 = addValuesLabeller("Veerle", "I think this artifact is unreadable", true);
-  labeller2 = addValuesLabeller("Chinno", "What is this artifact?", false);
-  labeller3 = addValuesLabeller("Jarl", "Yeah no this is a mistake", false);
-  labeller4 = addValuesLabeller("Vic", "I will remove this artifact later", false);
-  // List of labellers
-  labellers: Labeller[] = [this.labeller1, this.labeller2, this.labeller3, this.labeller4]
-
+  async getLabelsByType(p_id: number, lt_id: number): Promise<void> {
+    const response = await this.conflictDataService.getLabelsByType(p_id, lt_id);
+    // Add label names to the list of labels
+    let labels = []
+    for(let label of response) {
+      labels.push(label["name"]); 
+    }
+    this.labels = labels
+    console.log(this.label_per_user['ana2001']['name']);
+    
+  }
 }
