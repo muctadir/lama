@@ -1,58 +1,61 @@
 // Main title
 .title {
-    padding-top: 10px;
-    border-bottom: 1px; 
-    border-bottom-style: solid;
-    font-size: 36px;
-    letter-spacing: 1px;
+  padding-top: 10px;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  font-size: 36px;
+  letter-spacing: 1px;
 }
 
 // Smaller subtitles
 .subTitle {
-    padding-top: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px; 
-    border-bottom-style: solid;
-    border-color: #ed5a06;
-    font-size: 25px;
-    letter-spacing: 1px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-color: #ed5a06;
+  font-size: 25px;
+  letter-spacing: 1px;
 }
 
 // Container
 .container {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 // Width for label name
 #label-name.form-control {
-    width: auto;
+  width: auto;
 }
 
 // Bottom buttons row
 #buttons-cancel-submit {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 // Bottom buttons
 #btns-cancel-submit {
-    margin-left: 10px;
-    border: none;
-    width: 150px;
+  margin-left: 10px;
+  border: none;
+  width: 150px;
 }
 
 // Add labels button
 #addLabelButton {
-    margin-top: 5px;
-    background-color: #ed5a06;
-    border: none;
+  margin-top: 5px;
+  background-color: #ed5a06;
+  border: none;
 }
 
 // Make the highlight around the buttons none
 .btn:focus {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 // Description textarea
-#description{
-    resize: none;
+#description {
+  resize: none;
+}
+.label-selection, .label-selection-form {
+  padding-top:10px;
 }

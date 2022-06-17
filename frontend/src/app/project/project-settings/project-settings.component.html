@@ -1,7 +1,7 @@
 <!-- Linh Nguyen -->
 
-<body>
-    <!-- Conatiner for the top row -->
+<body class="container-fluid min-vh-100 d-flex flex-column">
+    <!-- Container for the top row -->
     <div class="container" id="topBarRow"> 
         <div class="row">
             <p *ngIf="!isInEditMode" class="header"> Project Settings </p>
@@ -289,7 +289,7 @@
             <button *ngIf="!isInEditMode && !currentProject.getFrozen() && adminMembers[currentUserId]" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
                 Edit
             </button>
-            <button *ngIf="currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="changeFreezeProject(false, true)">
+            <button *ngIf="currentProject.getFrozen()" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="changeFreezeProject(false, false)">
                 Unfreeze
             </button>
         </div>

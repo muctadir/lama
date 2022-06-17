@@ -3,6 +3,7 @@ Authors: Eduardo Costa Martins
 """
 
 import re
+from src.models.auth_models import UserStatus
 from jwt import decode
 from jwt.exceptions import InvalidSignatureError
 from functools import wraps
@@ -14,6 +15,7 @@ from flask import make_response, request
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import select
 from inspect import getfullargspec
+import datetime
 
 def check_args(required, args):
     """
@@ -107,7 +109,6 @@ def login_required(f):
         def func(<positional arguments>, *, user):
     enforces user to be a keyword argument
     """
-    # TODO: Check user status
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Check that header for token is provided
@@ -122,6 +123,9 @@ def login_required(f):
             # Check to see if user exists
             if not user:
                 return make_response('2 Unauthorized', 401)
+            # Checks whether the user account is approved
+            if user.status != UserStatus.approved:
+                return make_response('Unauthorized', 401)
             # Add the found user as a keyword argument
             # Note, this means every function decorated with this must have user as an argument
             if 'user' in getfullargspec(f).kwonlyargs:
@@ -215,3 +219,17 @@ def in_project(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+# Get time from seconds
+def time_from_seconds(seconds):
+    # Left over seconds
+    seconds_leftover = int(seconds % 60)
+    # Minutes
+    minutes = int((seconds - seconds_leftover) / 60)
+    # Left over minutes
+    minutes_leftover = int(minutes % 60)
+    # Hours
+    hours = int((minutes -  minutes_leftover) / 60)
+    
+    # Return the time
+    return datetime.time(hours, minutes_leftover, seconds_leftover)

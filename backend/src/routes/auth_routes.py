@@ -58,7 +58,7 @@ def pending():
     
     user_schema = UserSchema()
     # Get all users with pending status
-    users = db.session.scalars(select(User).where(User.status == UserStatus.pending))
+    users = db.session.scalars(select(User).where(User.status == UserStatus.pending)).all()
     # Convert to json format
     json_users = jsonify(user_schema.dump(users, many=True))
     
@@ -97,6 +97,15 @@ def login():
 def check_login():
     """
     Checks whether the user has already logged in
+    """
+    return make_response(("Success", 200))
+
+# Function for checking whether user has logged in and a superadmin
+@auth_routes.route("/check_super_admin", methods=["GET"])
+@super_admin_required
+def check_super_admin():
+    """
+    Checks whether the user has already logged in and is a super-admin
     """
     return make_response(("Success", 200))
 

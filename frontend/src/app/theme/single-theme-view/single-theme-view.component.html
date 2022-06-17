@@ -109,13 +109,33 @@
         </div>
 
     </div>
-    <!-- Back and Edit Buttons -->
-    <div class="col-6 align-self-end">
-        <div>
-            <!-- Create button --> 
-            <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton">Edit</button> 
-            <!-- Cancel button -->
-            <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
+
+    <!-- Row for the buttons -->
+    <div class="row buttonRow">
+        <!-- Delet button column -->
+        <div class="col align-self-start">
+            <div>
+                <!-- Delete button --> 
+                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton">Delete</button> 
+            </div>
+        </div>
+        <!-- Back and Edit Buttons -->
+        <div class="col-6 align-self-end">
+            <div>
+                <!-- Create button --> 
+                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton">Edit</button> 
+                <!-- Cancel button -->
+                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
+            </div>
         </div>
     </div>
+
+    <!-- Row for the alert message -->
+    <div class="row">
+        <!-- Column for the error message -->
+        <div class="col align-self-start" id="alertMessageCol">
+            <p id="alertMessage">{{alertMessage}}</p>
+        </div>
+    </div>
+
 </div>

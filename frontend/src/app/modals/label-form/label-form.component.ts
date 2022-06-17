@@ -3,65 +3,79 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-label-form',
   templateUrl: './label-form.component.html',
-  styleUrls: ['./label-form.component.scss']
+  styleUrls: ['./label-form.component.scss'],
 })
-
 export class LabelFormComponent implements OnInit {
   //Optional input in the form of a Label
   @Input() label?: Label;
   // Label form
   labelForm: FormGroup;
-  // ROuting and url initialising
+  // Routing and url initialising
   routeService: ReroutingService;
   url: string;
+  p_id: number;
   // Label types initialising
   labelTypes: Array<LabelType>;
+  err: string;
 
   /**
    * Check the input
    * @param activeModal
-   * @param labelingDataService
+   * @param labellingDataService
    * @param router
    * @param formBuilder
    */
-  constructor(public activeModal: NgbActiveModal,
-    private labelingDataService: LabelingDataService,
+  constructor(
+    public activeModal: NgbActiveModal,
+    private labellingDataService: LabellingDataService,
     private router: Router,
-    private formBuilder: FormBuilder) {
-      this.labelTypes = new Array<LabelType>();
-      this.routeService = new ReroutingService();
-      this.url = this.router.url;
-      this.labelForm = this.formBuilder.group({
-        labelName: [undefined],
-        labelDescription: [undefined],
-        labelTypeId: [undefined]
-      })
-    }
+    private formBuilder: FormBuilder
+  ) {
+    this.labelTypes = new Array<LabelType>();
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.p_id = parseInt(this.routeService.getProjectID(this.url));
+    this.labelForm = this.formBuilder.group({
+      labelName: [undefined, [Validators.required, Validators.minLength(1)]],
+      labelDescription: [
+        undefined,
+        [Validators.required, Validators.minLength(1)],
+      ],
+      labelTypeId: [undefined, [Validators.required]],
+    });
+
+    this.err = '';
+  }
 
   /**
    * On init
-   * 1. Get the name 
+   * 1. Get the name
    * 2. Get the description
    * 3. Get the label Type
    * 4. Disable changing label type
    */
   ngOnInit(): void {
-    const p_id = parseInt(this.routeService.getProjectID(this.url));
-    this.getLabelTypes(p_id);
-    if(this.label !== undefined){
+    this.getLabelTypes();
+    if (this.label !== undefined) {
       this.labelForm.controls['labelName'].patchValue(this.label.getName());
-      this.labelForm.controls['labelDescription'].patchValue(this.label.getDesc());
+      this.labelForm.controls['labelDescription'].patchValue(
+        this.label.getDesc()
+      );
       this.labelForm.controls['labelTypeId'].patchValue(this.label.getType());
       this.labelForm.controls['labelTypeId'].disable();
     }
@@ -71,44 +85,119 @@ export class LabelFormComponent implements OnInit {
    * Get the different label types
    * @param p_id
    */
-  async getLabelTypes(p_id: number) : Promise<void> {
-    const labelTypes = await this.labelingDataService.getLabelTypes(p_id);
+  async getLabelTypes(): Promise<void> {
+    // Wait for the label types
+    const labelTypes = await this.labellingDataService.getLabelTypes(this.p_id);
     this.labelTypes = labelTypes;
   }
 
   /**
    * Submit the label form with the changes
    */
-  submit (): void {
-    // This is a funky Label object. Why?
-    // - labelId = 0 - Since I have no clue what the ID is going to be.
-    // - labelType = "" - Since this is not relevant.
+  submit(): void {
     if (this.label === undefined) {
-      let label = new Label(0,
-        this.labelForm.controls['labelName'].value,
-        this.labelForm.controls['labelDescription'].value,
-        "");
-        this.submitToServer(label);
+      try {
+        // Create a new label
+        const label: Label = this.constructNewLabel();
+        // Submit label to the server
+        this.submitPostToServer(label);
+      } catch (e) {
+        // Throw error
+        this.err = 'Invalid Form';
+      }
+    } else {
+      try {
+        // Construct a patch for the label
+        this.constructPatch();
+        // Submit the patch to the label
+        this.submitPatchToServer(this.label);
+      } catch (e) {
+        // Throw error
+        this.err = 'Invalid Form';
+      }
     }
-    else {
+  }
+
+  /**
+   * Construct a new label
+   * 
+   */
+  constructNewLabel(): Label {
+    // Check validity
+    if (
+      !this.labelForm.controls['labelName'].valid ||
+      !this.labelForm.controls['labelDescription'].valid ||
+      !this.labelForm.controls['labelTypeId'].valid
+    ) {
+      // Throw error
+      throw 'Invalid Form';
+    }
+    // Return new label
+    return new Label(
+      0,
+      this.labelForm.controls['labelName'].value,
+      this.labelForm.controls['labelDescription'].value,
+      ''
+    );
+  }
+
+  /**
+   * Construct patch
+   */
+  constructPatch(): void {
+    // CHeck label undefined
+    if (typeof this.label === 'undefined') {
+      throw 'Patch was attempted to be constructed without a label being supplied.';
+    } else if (
+      // Check validity
+      !this.labelForm.controls['labelName'].valid ||
+      !this.labelForm.controls['labelDescription'].valid
+    ) {
+      // Throw error
+      throw 'Invalid form';
+    } else {
+      // Change name and/pr description
       this.label.setName(this.labelForm.controls['labelName'].value);
       this.label.setDesc(this.labelForm.controls['labelDescription'].value);
-      this.submitToServer(this.label);
     }
   }
 
   /**
    * Submit the label form with the changes to server
    */
-  async submitToServer(label: Label) : Promise<void> {
-    const p_id = parseInt(this.routeService.getProjectID(this.url));
-    // Label was created or modified
-    if (this.label === undefined){
-      await this.labelingDataService.submitLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
-      window.location.reload();
-    } else {
-      await this.labelingDataService.editLabel(p_id, label, this.labelForm.controls['labelTypeId'].value);
-      window.location.reload();
+  async submitPostToServer(label: Label): Promise<void> {
+    try {
+      // Wait for submit label
+      await this.labellingDataService.submitLabel(
+        this.p_id,
+        label,
+        this.labelForm.controls['labelTypeId'].value
+      );
+      // Close modal
+      this.activeModal.close();
+    } catch (e) {
+      // Throw error
+      this.err = 'Something went wrong while submitting.';
+    }
+  }
+
+  /**
+   * Submit new patch to the server
+   * @param label 
+   */
+  async submitPatchToServer(label: Label): Promise<void> {
+    try {
+      // Wait for edit label
+      await this.labellingDataService.editLabel(
+        this.p_id,
+        label,
+        this.labelForm.controls['labelTypeId'].value
+      );
+      // Close modal
+      this.activeModal.close();
+    } catch (e) {
+      // Throw error
+      this.err = 'Something went wrong while submitting.';
     }
   }
 }

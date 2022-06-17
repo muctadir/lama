@@ -16,8 +16,6 @@ $light-grey-shade: #aaaaaa;
 // Header of the page
 #pageTitle {
     padding-top: 10px;
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
     font-size: 36px;
     letter-spacing: 1px;
 }
@@ -25,9 +23,9 @@ $light-grey-shade: #aaaaaa;
 // Button for adding themes
 #createThemeButton{
     background-color: $white-shade;
+    color: black;
     border: 2px solid;
     border-color: $grey-shade;
-    color: black;
 }
 // The plus for creating a theme
 .bi.bi-plus.createTheme{
@@ -38,8 +36,7 @@ $light-grey-shade: #aaaaaa;
 // Div for the button for adding themes
 #addButton {
     padding-top: 10px;
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    
 }
 
 .subTitle {
