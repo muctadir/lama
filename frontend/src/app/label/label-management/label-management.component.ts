@@ -16,6 +16,13 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
 import { FormBuilder } from '@angular/forms';
 
+// Enumeration for sorting 
+enum sorted {
+  Not = 0, // Not sorted
+  Asc = 1, // Sorted in ascending order
+  Des = 2 // Sorted in descending order
+}
+
 @Component({
   selector: 'app-label-management',
   templateUrl: './label-management.component.html',
@@ -31,6 +38,11 @@ export class LabelManagementComponent {
   //Pagination Settings
   page: number;
   pageSize: number;
+
+  //Variables for sorting - all are not sorted
+  sortedLabel = sorted.Not; // Label name
+  sortedLabelType = sorted.Not; // Label Type 
+  sortedNOA = sorted.Not; // Number of artifacts
 
   // Text from the search bar
   searchForm = this.formBuilder.group({
@@ -135,5 +147,74 @@ export class LabelManagementComponent {
     });
     // Set the result equal to the label amount variable
     this.labelAmount = resultDict;
+  }
+
+  /**
+   * Function for sorting on name
+   * 
+  */
+  sortLabel(){
+    // Check if it was sorted ascending
+    if (this.sortedLabel == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedLabel = sorted.Des;
+      // Sort the array
+      this.labels.sort((a,b) => b.getName().localeCompare(a.getName()));
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedLabel == sorted.Des || this.sortedLabel == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedLabel = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a,b) => a.getName().localeCompare(b.getName()));
+    }
+    // Set other sorts to not sorted
+    this.sortedLabelType = sorted.Not;
+    this.sortedNOA = sorted.Not
+  }
+
+  /**
+   * Function for sorting on label type
+   * 
+  */
+  sortLabelType(){
+    // Check if it was sorted ascending
+    if (this.sortedLabelType == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedLabelType = sorted.Des;
+      // Sort the array
+      this.labels.sort((a,b) => b.getType().localeCompare(a.getType()));
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedLabelType == sorted.Des || this.sortedLabelType == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedLabelType = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a,b) => a.getType().localeCompare(b.getType()));
+    }
+    // Set other sorts to not sorted
+    this.sortedLabel = sorted.Not;
+    this.sortedNOA = sorted.Not
+  }
+
+  /**
+   * Function for sorting on number of artifacts
+   * 
+  */
+  sortNumberOfArtifacts(){
+    // Check if it was sorted ascending
+    if (this.sortedNOA == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedNOA = sorted.Des;
+      // Sort the array
+      this.labels.sort((a,b) => a.getNumberOfArtifacts() - b.getNumberOfArtifacts());
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedNOA == sorted.Des || this.sortedNOA == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedNOA = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a,b) => b.getNumberOfArtifacts() - a.getNumberOfArtifacts());
+    }
+    // Set other sorts to not sorted
+    this.sortedLabel = sorted.Not;
+    this.sortedLabelType = sorted.Not
   }
 }
