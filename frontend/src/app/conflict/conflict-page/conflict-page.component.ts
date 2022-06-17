@@ -1,3 +1,6 @@
+// Ana-Maria Olteniceanu
+// Linh Nguyen
+// Veerle Fürst
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
@@ -10,6 +13,12 @@ import { ConflictDataService } from 'app/services/conflict-data.service';
 })
 export class ConflictPageComponent implements OnInit {
 
+  /**
+   * Initializes the router, rerouting service and conflict data service
+   * @param router instance of router
+   * @param reroutingService instance of rerouting service
+   * @param conflictDataService instance of ConflictDataService
+   */
   constructor(private router: Router,
      private reroutingService: ReroutingService,
      private conflictDataService: ConflictDataService) { }
@@ -60,7 +69,9 @@ export class ConflictPageComponent implements OnInit {
    * @modifies allMembers
    */
    async requestConflicts(p_id: number) : Promise<void> {
+    //Getting conflict data from service
     const conflicts = await this.conflictDataService.getConflicts(p_id)
+    //Setting the conflict data to the variable
     this.conflicts = conflicts
   }
 }

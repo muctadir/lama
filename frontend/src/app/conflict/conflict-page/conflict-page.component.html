@@ -1,3 +1,7 @@
+<!-- Ana-Maria Olteniceanu -->
+<!-- Linh Nguyen -->
+<!-- Veerle Fürst -->
+
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <div class="row" id="topBarContainer">
         <!-- Row of the top bar -->
@@ -11,7 +15,7 @@
         <div class="container">
             <!-- Div for each conflicting artifact -->
             <div *ngFor="let conflict of conflicts" class="conflictDivs">
-                <!-- Row with name of artifact -->
+                <!-- Row with name of artifact and label type of the conflict -->
                 <div class="row">
                     <p class="artifactName">{{"Artifact " + conflict.conflictName + " - " + conflict.conflictLT}}</p>
                 </div>
@@ -23,6 +27,7 @@
                     </div>
                     <!-- Column with resolve button -->
                     <div class="col-3 text-center">
+                        <!-- Navigate to the page of respective conflict -->
                         <button class="btn btn-secondary" id="resolveConflictButton" 
                         (click)="reRouter(conflict.conflictName, conflict.conflictLTid, conflict.conflictLT)" >
                             Resolve

@@ -9,22 +9,6 @@ import { ConflictDataService } from 'app/services/conflict-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
 
-// Labelled object 
-interface Labeller {
-  labellerName: string,
-  labellerRemark: string,
-  current: boolean;
-}
-
-// Functions for adding values
-function addValuesLabeller(labeller: string, remark: string, cur: boolean): Labeller {
-  var labellerName = labeller;
-  var labellerRemark = remark;
-  var current = cur;
-  // Return the given values
-  return { labellerName, labellerRemark, current };
-}
-
 @Component({
   selector: 'app-conflict-resolution',
   templateUrl: './conflict-resolution.component.html',
@@ -59,6 +43,7 @@ export class ConflictResolutionComponent implements OnInit {
   constructor(private artifactDataService: ArtifactDataService,
     private conflictDataService: ConflictDataService,
     private router: Router) {
+    //Reinitializing the variables
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.routeService = new ReroutingService();
     this.url = this.router.url;
