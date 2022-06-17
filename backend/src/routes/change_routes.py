@@ -52,11 +52,11 @@ def get_changes(*, user, membership):
         return make_response('Bad Request', 400)
 
     # Get parsed changelog
-    changes = jsonify(get_changes(ItemChangeClass, args['i_id'], user.id, membership.admin))
+    changes = jsonify(get_changes(ItemChangeClass, args['i_id'], user.id, membership.admin, args['p_id']))
 
     return make_response(changes)
 
-def get_changes(ChangeClass, i_id, u_id, admin):
+def get_changes(ChangeClass, i_id, u_id, admin, p_id):
 
     changes = db.session.execute(select(
         # Get the change and the username of the person that made the change
@@ -68,7 +68,10 @@ def get_changes(ChangeClass, i_id, u_id, admin):
         # For changes that are made to the given item
         ChangeClass.i_id == i_id,
         # The change must either have been made by the logged in user, or the user must be an admin
-        or_(User.id == u_id, admin == True)
+        or_(User.id == u_id, admin == True),
+        # The item with that id must belong to the logged in project
+        # (Note that this is more of a security thing since the frontend should only supply items such that this is true)
+        ChangeClass.p_id == p_id
     ).order_by(
         # Newest changes first
         ChangeClass.timestamp.desc()
