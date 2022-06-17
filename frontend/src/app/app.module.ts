@@ -46,7 +46,7 @@ import { ThemeManagementComponent } from './theme/theme-management/theme-managem
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
-import { ThemeHistoryComponent } from './modals/theme-history/theme-history.component';
+import { HistoryComponent } from './modals/history/history.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -98,7 +98,7 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     SingleThemeViewComponent,
     ModerationComponent,
     DeleteThemeComponent,
-    ThemeHistoryComponent,
+    HistoryComponent,
   ],
   imports: [
     BrowserModule,

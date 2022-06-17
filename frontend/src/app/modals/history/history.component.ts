@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Changelog } from 'app/classes/changelog';
 import { HistoryDataService } from 'app/services/history-data.service';
 
 @Component({
   selector: 'app-theme-history',
-  templateUrl: './theme-history.component.html',
-  styleUrls: ['./theme-history.component.scss']
+  templateUrl: './history.component.html',
+  styleUrls: ['./history.component.scss']
 })
-export class ThemeHistoryComponent {
+export class HistoryComponent {
+  /* Gets the type of history that should be gathered */
+  @Input() history_type!: string;
+
   /* Array with all the changelogs */
   changelog: Changelog[] = [];
 
@@ -19,7 +22,7 @@ export class ThemeHistoryComponent {
   }
 
   async getHistoryData() {
-    this.changelog = await this.historyService.getThemeHistory();
+    this.changelog = await this.historyService.getHistory(this.history_type);
   }
 
 }
