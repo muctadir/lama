@@ -294,7 +294,6 @@ export class LabellingPageComponent implements OnInit {
   split(): void {
     let firstCharacter = this.selectionStartChar! - 1;
     let lastCharacter = this.selectionEndChar! - 1;
-    //this.posFixer(firstCharacter, lastCharacter)
     firstCharacter = this.posFixer(firstCharacter, lastCharacter)[0];
     lastCharacter = this.posFixer(firstCharacter, lastCharacter)[1] + 1;
     let splitText = this.artifact?.data.substring(
@@ -311,45 +310,34 @@ export class LabellingPageComponent implements OnInit {
     );
   }
 
-  //Gets the correct indices so that words aren't split
+  //Gets the correct indices so that full words aren't cut in half
+  //@param startPos, endPos: number positions of the start and end of the selection
+  //@returns start and end position of full words from the selection
   posFixer(startPos: number, endPos: number) {
-    let splitText = this.artifact?.data.substring(
-      startPos,
-      endPos
-    );
+    //get start and end char of the text selection
     let chart = this.artifact?.data.charAt(startPos);
     let chend = this.artifact?.data.charAt(endPos);
 
-    //console.log(endPos, this.artifact?.data.length)
-
-
+    //goes until the start of the word until it finds a space
     while (chart != ' ' && startPos > 0) {
       chart = this.artifact?.data.charAt(startPos);
       startPos--;
-      //console.log(chart, startPos)
-
     }
 
+    //goes until the end of the word, until it finds a space
     while (chend != ' ' && endPos <= this.artifact?.data.length) {
       chend = this.artifact?.data.charAt(endPos);
       endPos++;
-      //console.log(chend, endPos)
-
     }
 
+    //last adjustmensts for when the text goes too far
     if (startPos != 0) {
       startPos++;
       startPos++;
     }
-
     if (endPos != this.artifact?.data.length) {
       endPos--;
     }
-
-    // console.log(startPos, endPos, this.artifact?.data.substring(
-    //   startPos,
-    //   endPos
-    // ))
 
     return [startPos, endPos]
 
