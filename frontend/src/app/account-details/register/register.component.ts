@@ -98,7 +98,7 @@ export class RegisterComponent {
     })
     .catch(error =>{
       // Print the error message
-      this.errorMsg = "Bad input data";
+      this.errorMsg = "Username or Email Address already used";
     })
 
   }
