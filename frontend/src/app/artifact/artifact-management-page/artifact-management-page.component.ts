@@ -57,7 +57,8 @@ export class ArtifactManagementPageComponent {
 
   ngOnInit(): void {
 
-    // Get the artifacts from the backend
+    // Clear cache and get the artifacts from the backend
+    this.artifacts = {}
     this.getArtifacts();
   }
 

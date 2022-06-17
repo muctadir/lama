@@ -105,7 +105,6 @@ def get_artifacts(*, user, membership):
     for artifact in artifacts:
         # Convert artifact to JSON
         artifact_json = artifact_schema.dump(artifact)
-        print(artifact)
         # Get the serialized labellings
         labellings = labelling_schema.dump(artifact.labellings, many=True)
 
