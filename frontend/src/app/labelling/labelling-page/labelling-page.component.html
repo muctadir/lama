@@ -8,7 +8,7 @@
     </div>
     <div *ngIf="hightlightedText.length > 0" class="col-2">
       <div id="artifactButtons">
-        <i (click)="notImplemented()" class="bi bi-scissors"></i>
+        <i (click)="split()" class="bi bi-scissors"></i>
         <i (click)="notImplemented()" class="bi bi-brush"></i>
       </div>
     </div>
@@ -17,9 +17,9 @@
   <div class="row">
     <!-- Div containing the artifact -->
     <div class="artifactContainer" id="artifactContainer">
-      <!-- <p (mouseup)="selectedText()" (mousedown)="selectedText()">
+      <p (mouseup)="selectedText()" (mousedown)="selectedText()">
         {{ artifact?.getData()! }}
-      </p> -->
+      </p>
     </div>
 
     <!-- Labeller information -->
