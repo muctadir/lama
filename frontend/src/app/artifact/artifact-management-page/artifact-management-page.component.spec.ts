@@ -43,8 +43,11 @@ describe('ArtifactManagementPageComponent', () => {
       providers: [NgbActiveModal, FormBuilder]
     })
       .compileComponents();
+      // Inject the artifact data service into the component's constructor
     artifactDataService = TestBed.inject(ArtifactDataService);
+    // Inject the router into the component's constructor
     router = TestBed.inject(Router);
+    // Inject the modal service into the component's constructor
     modalService = TestBed.inject(NgbModal)
 
     // When the url gets requested, return this string

@@ -24,7 +24,7 @@ export class SingleArtifactViewComponent implements OnInit {
   labelTypes: Array<LabelType>;
   // Initialize the url
   url: string;
-  // Initialize list of labels given + remarks per user
+  // Initialize record of labels given per label type + remarks
   userLabels: Record<string, Record<string, any>>;
 
   // Will be changed once @inproject decorator is merged
@@ -60,7 +60,7 @@ export class SingleArtifactViewComponent implements OnInit {
 
     // Get the artifact data from the backend
     this.getArtifact(a_id, p_id)
-
+    // Get the label types with their labels
     await this.getLabelTypesWithLabels(p_id)
   }
 
@@ -84,10 +84,14 @@ export class SingleArtifactViewComponent implements OnInit {
    * @param p_id
    */
    async getLabelTypesWithLabels(p_id: number): Promise<void> {
+    // Try to get the label type and labels
     try {
+      // Make call to the backend
       const labelTypes =
         await this.labellingDataService.getLabelTypesWithLabels(p_id);
+      // Set the list of label types
       this.labelTypes = labelTypes;
+    // If an error is caught, redirect user to the project's homepage
     } catch {
       this.router.navigate(['/project', p_id]);
     }

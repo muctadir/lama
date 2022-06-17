@@ -208,9 +208,13 @@ def single_artifact(*, user, membership):
 
     # Put all values into a dictionary
     info = {
+        # The artifact object
         "artifact": artifact_json,
+        # Username of the user who requests to see the artifact
         "username": user.username,
+        # Admin status of the user who requests to see the artifact
         "admin": membership.admin,
+        # List of users who labelled the artifact
         "users": users_json
     }
 
@@ -322,9 +326,10 @@ def __aggregate_labellings(artifact):
                 'labelRemark': labelling.remark
             }
 
-            # Add the labelling to the result
+            # If the user is not in result, create an entry in result for them
             if user not in result:
                 result[user] = {}
+            # Put the addition in result, under the right user and the right label type
             result[user][labelling.label_type.name] = addition
         return result
         
@@ -341,6 +346,7 @@ def random_artifact(*, user):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    # Get the project id
     p_id = int(args['p_id'])
 
     # TODO: Change to be an artifact that has not been labelled

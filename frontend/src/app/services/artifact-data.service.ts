@@ -88,13 +88,12 @@ export class ArtifactDataService {
       for (const element of artifacts) {
         if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
       }
-
+      // Record containting the artifacts
       let artifacts_rec = {
         'array': artifacts
       }
-
       // Send the data to the database
-      return await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
+      return this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
     }
 
   /**
@@ -124,10 +123,8 @@ export class ArtifactDataService {
 
     // Resulting artifact
     let result: StringArtifact = new StringArtifact(0, 'null', 'null');
-
     // Get the artifact information from the back end
     let response = await this.requestHandler.get('/artifact/singleArtifact', { 'p_id': p_id, 'a_id': a_id, 'extended': true }, true);
-    
     // Get the artifact from the response
     let artifact = response['artifact'];
 
