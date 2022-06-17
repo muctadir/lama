@@ -1,26 +1,38 @@
 <!-- Author Jarl Jansen -->
 <!-- Main container of the modal -->
 <div class="container">
-    <!-- Centers row -->
     <div class="row justify-content-md-center">
         <div class="col">
-            <!-- Displays header -->
             <div id="header">History</div>
         </div>
     </div>
 
-    <!-- Centers row -->
     <div class="row justify-content-md-center">
-        <!-- Centers column content -->
         <div class="col text-center">
-            Main content
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Timestamp</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody class="table">
+                    <tr>
+                        <td>1</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Centers row -->
     <div class="row justify-content-md-center">
         <div class="col text-center">
-            <!-- Close modal button, closes the modal when clicked -->
             <button class="btn btn-secondary" (click)="activeModal.close()">Close</button>
         </div>
     </div>
