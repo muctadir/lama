@@ -6,25 +6,26 @@
 }
 
 // Body
-body{
+body {
     color: var(--main-color-2);
+    overflow-x: hidden;
 }
 
 // TOP BAR
-.alignValues{
+.alignValues {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
 }
 // Header saying "Label Management"
-p.header{
+p.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
 // CREATE LABEL
 // Create label button on Label Management Page
-#createLabelButton, #mergeLabelButton{
+#createLabelButton, #mergeLabelButton {
     float: right;
     margin-right: 10px;    
     margin-top: 10px;
@@ -35,17 +36,17 @@ p.header{
 
 }
 // Create project button on hover
-#createLabelButton:hover, #createLabelButton:focus, #createLabelButton:active{
+#createLabelButton:hover, #createLabelButton:focus, #createLabelButton:active {
     background-color: rgb(222, 222, 222);
 }
-#mergeLabelButton:hover, #mergeLabelButton:focus, #mergeLabelButton:active{
+#mergeLabelButton:hover, #mergeLabelButton:focus, #mergeLabelButton:active {
     background-color: rgb(222, 222, 222);
 }
-.SearchContainer{
+.SearchContainer {
     max-width: 30%;
 }
 // Create button plus
-svg.bi.bi-plus{
+svg.bi.bi-plus {
     width: 22px;
     height: 22px;
 }
@@ -56,65 +57,38 @@ svg.bi.bi-plus{
 }
 
 // TOP BAR
-#topBarRow{
+#topBarRow {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
 }
 
 #tableRow {
-    padding-top: 2em;
+    padding-top: 5px;
 }
 
-#horizontalLineRow{
+#horizontalLineRow {
     padding-top: 10px;
     padding-bottom: 30px;
     padding-right: 0px;
 }
-#horizontalLineColumn{
+#horizontalLineColumn {
     padding-right: 0px;
 }
 
-//New Table version styles
-p.labelName{
+//Table styles
+.labelHeader {
     font-size: 20px;
     letter-spacing: 1px;
     text-align: center;
-    font-weight: 480;
-}
-p.labelType{
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-align: justify;
-    padding-left: 20px;
-}
-p.artifactsLabelled{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;
-}
-p.labelHeader{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;
-    white-space:nowrap;
-    font-weight: 500;
-}
-
-p.labelTypeHeader{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;
-    white-space:nowrap;
-    font-weight: 500;
-}
-
-p.artifactsLabelledHeader{
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-align: center;   
     white-space: nowrap;
     font-weight: 500;
+    margin: 0px;
+}
+
+// Make the headers clickable
+.clickable:hover {
+    cursor: pointer;
 }
 
 // Make the highlight around the buttons none
@@ -165,15 +139,11 @@ box-shadow: 0 0 0 0.1rem dimgrey;
     border-radius: 10px;
 }
 // Scroll bar
-#scrolly{
+#scrolly {
     padding-right: 40px;
     height: auto;
 }
 
-// Get rid of horizontal scrol; bar
-body{
-    overflow-x:hidden;
-}
 
 // Sets the style for the headers in the table
 .tableheader {
