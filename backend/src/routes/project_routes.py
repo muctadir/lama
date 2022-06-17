@@ -8,7 +8,7 @@ from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus
-from src.models.item_models import Artifact, LabelType, Labelling
+from src.models.item_models import Artifact, LabelType, Labelling, Label
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, distinct
@@ -518,6 +518,9 @@ def single_project():
 
     # Get the number of conflicts in the conflict
     conflicts = nr_project_conflicts(p_id)
+
+    # Get the number of labels in the conflict
+    labels = db.session.scalar(select(func.count(distinct(Label.id))).where(Label.p_id==p_id))
         
     # Put all values into a dictonary
     info = {
@@ -525,7 +528,8 @@ def single_project():
         "projectNrArtifacts": project_nr_artifacts,
         "projectNrCLArtifacts": project_nr_cl_artifacts,
         "projectUsers": users,
-        "conflicts": conflicts
+        "conflicts": conflicts,
+        "labels": labels
         }
 
     # Convert dictionary to json
@@ -565,7 +569,7 @@ def project_stats():
         select(Project).where(Project.id==p_id)
     )
 
-    # Get all user with conflicts and the number of conflicts they have
+    # Get all users with conflicts and the number of conflicts they have
     user_conflicts = nr_user_conflicts(p_id)
 
     # List of all stats per user
@@ -609,7 +613,8 @@ def project_stats():
             "username": username,
             "nr_labelled": artifacts_num,
             "time": avg_time,
-            "nr_conflicts": conflicts
+            "nr_conflicts": conflicts,
+            "superadmin": user.super_admin
         }
 
         # Add dictionary to list of dictionaries
@@ -652,6 +657,8 @@ def __time_to_string(time):
         if number == 0:
             time_string += '00:'
         else:
+            if number < 10:
+                time_string += '0'
             time_string += str(number) + ':'
     
     # Return the string with the time
