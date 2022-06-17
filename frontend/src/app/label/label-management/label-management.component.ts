@@ -9,11 +9,11 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
 import { FormBuilder } from '@angular/forms';
 
-// Enumeration for sorting
+// Enumeration for sorting 
 enum sorted {
-  Not = 0,
-  Asc = 1,
-  Des = 2
+  Not = 0, // Not sorted
+  Asc = 1, // Sorted in ascending order
+  Des = 2 // Sorted in descending order
 }
 
 @Component({
@@ -30,12 +30,12 @@ export class LabelManagementComponent {
   page: number = 1;
   pageSize: number = 10;
 
-  //Variables for sorting
-  sortedLabel = sorted.Not;
-  sortedLabelType = sorted.Not;
-  sortedNOA = sorted.Not;
+  //Variables for sorting - all are not sorted
+  sortedLabel = sorted.Not; // Label name
+  sortedLabelType = sorted.Not; // Label Type 
+  sortedNOA = sorted.Not; // Number of artifacts
 
-  //text from the search bar
+  // Text from the search bar
   searchForm = this.formBuilder.group({
     search_term: ''
   });

@@ -8,9 +8,9 @@ import { FormBuilder } from '@angular/forms';
 
 // Enumeration for sorting
 enum sorted {
-  Not = 0,
-  Asc = 1,
-  Des = 2
+  Not = 0, // Not sorted
+  Asc = 1, // Sorted in ascending order
+  Des = 2 // Sorted in descending order
 }
 
 @Component({
@@ -35,10 +35,10 @@ export class ThemeManagementComponent {
   url: string;
   routeService: ReroutingService;
 
-  //Variables for sorting
-  sortedName = sorted.Not;
-  sortedDesc = sorted.Not;
-  sortedNOL = sorted.Not;
+  //Variables for sorting - all are not sorted
+  sortedName = sorted.Not; // Theme name
+  sortedDesc = sorted.Not; // Theme description
+  sortedNOL = sorted.Not; // Number of labels
 
   // var for getting search text
   searchForm = this.formBuilder.group({
