@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ThemeManagementComponent } from './theme-management.component';
 
-describe('ThemeManagementComponent', () => {
+fdescribe('ThemeManagementComponent', () => {
   let component: ThemeManagementComponent;
   let fixture: ComponentFixture<ThemeManagementComponent>;
   let router: Router;
@@ -65,6 +65,36 @@ describe('ThemeManagementComponent', () => {
     let spy = spyOn(component, 'get_theme_management_info');
     // Call ngOnInit
     component.ngOnInit();    
+    // Checks whether the function is called in ngOnInit
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the sortName function
+  it('Tests if the sortName function', () => {    
+    // Create spy for get url call
+    let spy = spyOn(component['themes'], 'sort');
+    // Call ngOnInit
+    component.sortName();    
+    // Checks whether the function is called in ngOnInit
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the sortDesc function
+  it('Tests if the sortDesc function', () => {    
+    // Create spy for get url call
+    let spy = spyOn(component['themes'], 'sort');
+    // Call ngOnInit
+    component.sortDesc();    
+    // Checks whether the function is called in ngOnInit
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the sortLabels function
+  it('Tests if the sortLabels function', () => {    
+    // Create spy for get url call
+    let spy = spyOn(component['themes'], 'sort');
+    // Call ngOnInit
+    component.sortLabels();    
     // Checks whether the function is called in ngOnInit
     expect(spy).toHaveBeenCalled();
   });
