@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Changelog } from 'app/classes/changelog';
 import { HistoryDataService } from 'app/services/history-data.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { HistoryDataService } from 'app/services/history-data.service';
 })
 export class ThemeHistoryComponent {
   /* Array with all the changelogs */
-  // changelog: any[] = [];
+  changelog: Changelog[] = [];
 
   constructor(public activeModal: NgbActiveModal, private historyService: HistoryDataService) { }
 
