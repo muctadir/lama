@@ -26,7 +26,7 @@ def get_changes(*, user, membership):
 
     args = request.args
     
-    required = ('p_id', 'item_type')
+    required = ('p_id', 'item_type', 'i_id')
 
     if not check_args(required, args):
         return make_response('Bad Request', 400)
@@ -52,11 +52,11 @@ def get_changes(*, user, membership):
         return make_response('Bad Request', 400)
 
     # Get parsed changelog
-    changes = jsonify(get_changes(ItemChangeClass, args['p_id'], user.id, membership.admin))
+    changes = jsonify(get_changes(ItemChangeClass, args['i_id'], user.id, membership.admin))
 
     return make_response(changes)
 
-def get_changes(ChangeClass, p_id, u_id, admin):
+def get_changes(ChangeClass, i_id, u_id, admin):
 
     changes = db.session.execute(select(
         # Get the change and the username of the person that made the change
@@ -65,8 +65,8 @@ def get_changes(ChangeClass, p_id, u_id, admin):
     ).where(
         # Joining the user with the change
         User.id == ChangeClass.u_id,
-        # For changes that are made in the given project
-        ChangeClass.p_id == p_id,
+        # For changes that are made to the given item
+        ChangeClass.i_id == i_id,
         # The change must either have been made by the logged in user, or the user must be an admin
         or_(User.id == u_id, admin == True)
     ).order_by(
@@ -76,8 +76,6 @@ def get_changes(ChangeClass, p_id, u_id, admin):
 
     # Convert to relevant format to be used for frontend
     processed_changes = [{
-        # The id of the item that was changed
-        'i_id': change[0].i_id,
         # When the item was changed (formatted)
         'timestamp': change[0].timestamp.strftime("%Y/%m/%d, %H:%M:%S"),
         # The username of the person that made the change
