@@ -22,7 +22,7 @@ def create_label(*, user):
 
     args = request.json['params']
 
-    required = ['labelTypeId', 'labelName', 'labelDescription', 'labelTypeName', 'p_id']
+    required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
@@ -51,7 +51,7 @@ def create_label(*, user):
     try:
         db.session.add(label)
         db.session.flush()
-        __record_creation(label.id, label.name, args['labelTypeName'], args['p_id'], user.id)
+        __record_creation(label.id, label.name, label_type.name, args['p_id'], user.id)
         db.session.commit() 
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
@@ -63,7 +63,7 @@ def create_label(*, user):
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
-def edit_label():
+def edit_label(*, user):
     # Get args
     args = request.json['params']
     # Required args
