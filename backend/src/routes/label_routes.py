@@ -77,7 +77,7 @@ def edit_label(*, user):
     # Get label from database
     try:
         label = db.session.get(Label, args['labelId'])
-    except:
+    except OperationalError:
         # Something went wrong
         return make_response('Internal Server Error: Fetching label from database unsuccessful.', 500)
     # Check if the response contained a label
@@ -196,7 +196,7 @@ def merge_route(*, user):
         return make_response('Bad request: Label description cannot have size <= 0', 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
-    label_ids = [label['id'] for label in args['mergedLabels']]
+    label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
         return make_response('Bad request: Label ids must be unique', 400)
 
@@ -234,20 +234,18 @@ def merge_route(*, user):
     # Artifact ids and label ids that are being affected
     artifact_changes_ids = select(
         Labelling.a_id,
-        distinct(Labelling.l_id)
+        Labelling.l_id
     ).where(
         Labelling.l_id.in_(label_ids)
-    ).group_by(
-        Labelling.a_id
-    ).subquery()
+    ).distinct().subquery()
 
     # Replace label ids with label name
     artifact_changes = db.session.execute(
         select(
-            artifact_changes_ids.a_id,
+            artifact_changes_ids.c.a_id,
             Label.name
         ).where(
-            artifact_changes_ids.l_id == Label.id
+            artifact_changes_ids.c.l_id == Label.id
         )
     ).all()
 
@@ -257,7 +255,7 @@ def merge_route(*, user):
         label_to_theme.c.l_id
     ).where(
         label_to_theme.c.l_id.in_(label_ids)
-    )
+    ).subquery()
 
     # Replace label id with name and also get theme name
     theme_changes = db.session.execute(
