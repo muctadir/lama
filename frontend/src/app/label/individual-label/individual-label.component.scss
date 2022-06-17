@@ -71,3 +71,10 @@ p.header{
   border: none;
   width: 150px;
 }
+
+// Changes the cursor of the user when hovering history icon
+#history-hover {
+    cursor: pointer;
+    font-size: 30px;
+    margin-top: 20px;
+}

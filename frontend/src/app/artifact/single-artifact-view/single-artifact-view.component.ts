@@ -4,6 +4,7 @@ import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { StringArtifact } from 'app/classes/stringartifact';
+import { HistoryComponent } from 'app/modals/history/history.component';
 
 @Component({
   selector: 'app-single-artifact-view',
@@ -71,5 +72,18 @@ export class SingleArtifactViewComponent implements OnInit {
     this.userLabels = result["labellings"];
     this.username = result["username"];
     this.admin = result["admin"];
+  }
+
+  /**
+   * Opens the modal displaying the artifact history
+   * 
+   * @trigger on click of history icon
+   */
+   openArtifactHistory(): void {
+    // opens artifact history modal
+    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+
+    // Passes the type of history we want to view
+    modalRef.componentInstance.history_type = "Artifact";
   }
 }

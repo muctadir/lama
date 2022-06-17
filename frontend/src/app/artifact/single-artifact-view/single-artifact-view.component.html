@@ -35,9 +35,13 @@
     <!-- Bottom part of page-->
     <div class="row">
         <!--Labelled By text-->
-        <div class="col-12" id="labelledBy">
+        <div class="col-11" id="labelledBy">
             <p class="float-start">Labelled By:</p>
-        </div> 
+        </div>
+        <div class="col-1 d-flex justify-content-center" id="pageTitle">
+            <!-- When clicked calls openThemeHistory function -->
+            <em class="bi bi-clock-history" id="history-hover" (click)="openArtifactHistory()"></em>
+        </div>
 
         <!--User Labels-->
         <div class="allUserLabels">            

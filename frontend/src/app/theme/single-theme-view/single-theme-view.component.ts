@@ -146,6 +146,11 @@ export class SingleThemeViewComponent {
     this.alertMessage = "";
   }
 
+  /**
+   * Opens the modal displaying the theme history
+   * 
+   * @trigger on click of history icon
+   */
   openThemeHistory(): void {
     // opens theme history modal
     let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
@@ -153,5 +158,4 @@ export class SingleThemeViewComponent {
     // passes all the users in the application to the modal
     modalRef.componentInstance.history_type = "Theme";
   }
-
 }
