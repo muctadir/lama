@@ -63,7 +63,7 @@ export class ConflictResolutionComponent implements OnInit {
    * @trigger on creation of component
    */
   async ngOnInit(): Promise<void> {
-    // Get the ID of the artifact and the project
+    // Get the ID of the artifact, label type and the project ID
     let ids = this.routeService.getArtifactConflict(this.url)
     let a_id = Number(ids[0])
     let lt_id = Number(ids[1])
@@ -78,8 +78,6 @@ export class ConflictResolutionComponent implements OnInit {
 
     // Get the labels in the label type
     await this.getLabelsByType(p_id, lt_id)
-
-    console.log(this.label_per_user)
   }
 
   /**
@@ -90,7 +88,9 @@ export class ConflictResolutionComponent implements OnInit {
    * @param p_id the id of the project
    */
   async getArtifact(a_id: number, p_id: number): Promise<void> {
+    //Get an artifact based on given ID and project ID
     const result = await this.artifactDataService.getArtifact(p_id, a_id);
+    //Assigning the response to the artifact, username (current user) and their admin status
     this.artifact = result["result"];
     this.username = result["username"];
     this.admin = result["admin"];
@@ -106,21 +106,31 @@ export class ConflictResolutionComponent implements OnInit {
    * @param lt_id the id of the label type
    */
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<void> {
+    //Get conflict information (users who labelled and ther labels) based on the project ID, artifact ID and label type ID
     const response = await this.conflictDataService.getLabelPerUser(p_id, a_id, lt_id);
+    //Assigning the label given by a user to the entry with the key of their username in label_per_user
     this.label_per_user = response;
+    //Getting the keys from users
     this.users = Object.keys(this.label_per_user);
-
   }
 
+  
+  /**
+   * Author: Ana-Maria Olteniceanu
+   * Gets the labels from a label type given by all users in a given project ID
+   * 
+   * @param p_id the id of the project
+   * @param lt_id the id of the label type
+   */
   async getLabelsByType(p_id: number, lt_id: number): Promise<void> {
+    //Get labels from a certain label type
     const response = await this.conflictDataService.getLabelsByType(p_id, lt_id);
     // Add label names to the list of labels
     let labels = []
     for(let label of response) {
       labels.push(label["name"]); 
     }
-    this.labels = labels
-    console.log(this.label_per_user['ana2001']['name']);
-    
+    //Assigning the label names to labels
+    this.labels = labels 
   }
 }

@@ -5,7 +5,9 @@ import { RequestHandler } from 'app/classes/RequestHandler';
   providedIn: 'root'
 })
 export class ConflictDataService {
+  /* Request handler to deal with requests */
   private requestHandler: RequestHandler;
+  /* Session token for authentication */
   private sessionToken: string | null;
 
   constructor() { 
@@ -49,14 +51,28 @@ export class ConflictDataService {
       return result;
   }
 
+  /**
+   * Function gets label given by a user from a project of a label type for an artifact
+   * 
+   * @params p_id: project ID
+   * @params a_id: artifact ID
+   * @params lt_id: label type ID
+   */
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<Record<string, any>> {
-    // Make call to the backend and return the response
+    // Make call to the backend to get label and return the response
     let response = await this.requestHandler.get('/conflict/LabelPerUser', 
     {'p_id': p_id, 'a_id': a_id, 'lt_id': lt_id}, true);
     return response
   }
 
+  /**
+   * Function gets labels given by users from a project of a label type
+   * 
+   * @params p_id: project ID
+   * @params lt_id: label type ID
+   */
   async getLabelsByType(p_id: number, lt_id: number): Promise<Array<Record<string, any>>> {
+    // Make call to the backend to get labels from a label type in a project and return the response
     let response = await this.requestHandler.get('/labeltype/labelsByType', 
     {'p_id': p_id, 'lt_id': lt_id}, true);
     return response;
