@@ -266,7 +266,6 @@ export class LabellingPageComponent implements OnInit {
  * Function is ran on mouseDown or mouseUp and updates the current selection
  * of the artifact. If the selection is null or empty, the selection is set
  * to ""
- * BROKEN
  */
   selectedText(): void {
     let hightlightedText: Selection | null = document.getSelection();
@@ -291,11 +290,11 @@ export class LabellingPageComponent implements OnInit {
 
   /**
    * Splitting function, gets text without splitting words and gets start and end char
-   * BROKEN
    */
   split(): void {
-    let firstCharacter = this.selectionStartChar!;
-    let lastCharacter = this.selectionEndChar!;
+    let firstCharacter = this.selectionStartChar! - 1;
+    let lastCharacter = this.selectionEndChar! - 1;
+    //this.posFixer(firstCharacter, lastCharacter)
     firstCharacter = this.posFixer(firstCharacter, lastCharacter)[0];
     lastCharacter = this.posFixer(firstCharacter, lastCharacter)[1] + 1;
     let splitText = this.artifact?.data.substring(
@@ -312,31 +311,49 @@ export class LabellingPageComponent implements OnInit {
     );
   }
 
-  /**
-     * Gets the correct indices so that words aren't split
-     * BROKEN
-     */
+  //Gets the correct indices so that words aren't split
   posFixer(startPos: number, endPos: number) {
-    //get the chars at index
+    let splitText = this.artifact?.data.substring(
+      startPos,
+      endPos
+    );
     let chart = this.artifact?.data.charAt(startPos);
-    let chend = this.artifact?.data.charAt(endPos - 1);
-    //if you just select the space
-    if (startPos - endPos == 1) {
-      return [startPos, endPos];
-    }
-    //else we move until we hit a space
-    while (chart != ' ' && startPos != -1) {
+    let chend = this.artifact?.data.charAt(endPos);
+
+    //console.log(endPos, this.artifact?.data.length)
+
+
+    while (chart != ' ' && startPos > 0) {
       chart = this.artifact?.data.charAt(startPos);
-      startPos = startPos - 1;
+      startPos--;
+      //console.log(chart, startPos)
+
     }
-    while (chend != ' ' && endPos != this.artifact?.data.length) {
+
+    while (chend != ' ' && endPos <= this.artifact?.data.length) {
       chend = this.artifact?.data.charAt(endPos);
       endPos++;
-      console.log(chend, endPos);
+      //console.log(chend, endPos)
+
     }
-    //last adjustements from going too far
-    startPos = startPos + 2;
-    endPos = endPos - 2;
-    return [startPos, endPos];
+
+    if (startPos != 0) {
+      startPos++;
+      startPos++;
+    }
+
+    if (endPos != this.artifact?.data.length) {
+      endPos--;
+    }
+
+    // console.log(startPos, endPos, this.artifact?.data.substring(
+    //   startPos,
+    //   endPos
+    // ))
+
+    return [startPos, endPos]
+
   }
+
+
 }
