@@ -10,6 +10,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { InputCheckService } from 'app/services/input-check.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 // Project object
 interface Project {
@@ -49,7 +50,10 @@ export class ProjectCreationComponent implements OnInit {
    * @param router instance of router
    * @param formBuilder instance of formbuilder
    */
-  constructor(private modalService: NgbModal, private router: Router, private formBuilder: FormBuilder) {}
+  constructor(private modalService: NgbModal,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private projectDataService: ProjectDataService) {}
 
   /**
    * Gets all the users within the application from the backend
@@ -59,47 +63,19 @@ export class ProjectCreationComponent implements OnInit {
    * @trigger on creation of component
    */
   ngOnInit(): void { 
-    // Gets the authentication token from the session storage
-    let token: string | null  = sessionStorage.getItem('ses_token');
-
     // Get all users within the tool
-    this.requestUsers(token);
+    this.getUsers();
   }
 
   /**
    * Gets all the users in the application from the backend
    * 
-   * @param token used for authenticating the user to the backend
-   * 
    * @trigger on component load
    * @modifies allMembers
    */
-  async requestUsers(token : string | null) : Promise<void> {
-    // Initializes the request handler
-    let requestHandler: RequestHandler = new RequestHandler(token);
-
-    // Makes the request and handles response
-    try {
-      // Makes the request to the backend for all users in the application
-      let response: any = requestHandler.get("/project/users", {}, true);
-
-      // Waits on the request
-      let result = await response;
-
-      // Loops over the response of the server and parses the response into the allMembers array
-      for (let user of result) {
-        // creates the object
-        let newUser = new User(user.id, user.username);
-        // passes additional data to the newly created user object
-        newUser.setEmail(user.email);
-        newUser.setDesc(user.description);
-        // pushes the new user to the array of all users
-        this.allMembers.push(newUser);
-      }
-    } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
-    }
+  async getUsers(): Promise<void> {
+    const allMembers = await this.projectDataService.getUsers();
+    this.allMembers = allMembers;
   }
 
   /**

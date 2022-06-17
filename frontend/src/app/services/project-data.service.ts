@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Project } from 'app/classes/project';
 
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { User } from 'app/classes/user';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,37 @@ export class ProjectDataService {
       // Add project to list
       result.push(projectNew);
     });
+
+    // Return result
+    return result;
+  }
+
+  /**
+   * Function which makes the request to the backend for all project of which the user is a member
+   * Religates the parsing of the response to a different function. 
+   * (uses requesthandler for communication with the backend)
+   * 
+   * @trigger on component creation
+   * @modifies projects
+   */
+  async getUsers() : Promise<Array<User>> {
+
+    // Makes the backend request to get the projects of which the user is a member
+    let response: any = await this.requestHandler.get("/project/users", {}, true);
+
+    // Array with results
+    let result: Array<User> = new Array<User>();
+
+    // Loops over the response of the server and parses the response into the allMembers array
+    for (let user of response) {
+      // creates the object
+      let newUser = new User(user.id, user.username);
+      // passes additional data to the newly created user object
+      newUser.setEmail(user.email);
+      newUser.setDesc(user.description);
+      // pushes the new user to the array of all users
+      result.push(newUser);
+    }
 
     // Return result
     return result;
