@@ -17,7 +17,7 @@ p.header{
     color: $grey-shade;
 }
 
-// markup of the button linking to the labelling page
+// Markup of the button linking to the labelling page
 #mergeLabelButton {
     float: right;
     margin-right: 10px;    
@@ -28,14 +28,14 @@ p.header{
     color: black;
 }
 
-// markup of the project name
+// Markup of the project name
 #project_title {
     color: $grey-shade;
     font-size: 35px;
     letter-spacing: 1px;
 }
 
-// markup of the text showing about what the stats are
+// Markup of the text showing about what the stats are
 .page-splitter {
     color: $grey-shade;
     font-size: 20px;
@@ -57,18 +57,18 @@ p.header{
     border-radius: 10px
 }
 
-// makes sure that number of conflict and the icon are aligned
+// Makes sure that number of conflict and the icon are aligned
 .left {
     float: left;
 }
 
-// moves the content to the right used on text
+// Moves the content to the right used on text
 .text-margin {
     padding-left: 10px;
     margin-top: 3px;
 }
 
-// sets the layout of the bino icon
+// Sets the layout of the bino icon
 #bino-icon {
     color: $orange-shade;
     font-size: 30px;
@@ -76,7 +76,7 @@ p.header{
     margin-top: -10px;
 }
 
-// sets the layout of the label icon
+// Sets the layout of the label icon
 #label-icon {
     color: $orange-shade;
     font-size: 30px;
@@ -84,7 +84,7 @@ p.header{
     margin-top: -10px;
 }
 
-// sets the layout of the user icon
+// Sets the layout of the user icon
 #person-icon {
     color: $orange-shade;
     font-size: 30px;
@@ -117,7 +117,7 @@ p.header{
     box-shadow: none;
 }
 
-//Scroll Related Business
+// Scroll Related Business
 .my-custom-scrollbar {
     position:relative;
     height: 80vh;
@@ -126,7 +126,7 @@ p.header{
 .table-wrapper-scroll-y {
     display: block;
     }
-//Scroll Bar 
+// Scroll Bar 
 ::-webkit-scrollbar {
     width: 10px;
 }
