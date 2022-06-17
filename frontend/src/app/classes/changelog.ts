@@ -1,7 +1,5 @@
 export class Changelog {
 
-    /* id number of the item which was modified */
-    private id: number;
     /* username of the user who made the change */
     private name: string;
     /* timestamp of the modification */
@@ -12,30 +10,14 @@ export class Changelog {
     /**
      * Creates the Changelog object
      * 
-     * @param id id of item that is changed
      * @param name name of user making the change
      * @param timestamp time of change
      * @param desc description of the change
      */
-    constructor(id: number, name: string, timestamp: string, desc: string) {
-        this.id = id;
+    constructor(name: string, timestamp: string, desc: string) {
         this.name = name;
         this.timestamp = timestamp;
         this.desc = desc;
-    }
-
-    /**
-     * Sets the id of the item changed
-     */
-    setId(id: number): void {
-        this.id = id;
-    }
-
-    /**
-     * Gets the id of the item changed
-     */
-    getId(): number {
-        return this.id;
     }
 
     /**
@@ -52,18 +34,30 @@ export class Changelog {
         return this.name;
     }
 
+    /**
+     * Sets the timestamp of when the item was changed
+     */
     setTimestamp(timestamp: string): void {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Gets the timestamp of when the item was changed
+     */
     getTimestamp(): string {
         return this.timestamp;
     }
 
+    /**
+     * Sets the description of the item change
+     */
     setDesc(desc: string): void {
         this.desc = desc;
     }
 
+    /**
+     * Gets the description of the item change
+     */
     getDesc(): string {
         return this.desc;
     }

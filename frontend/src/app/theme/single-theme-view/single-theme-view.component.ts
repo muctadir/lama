@@ -148,7 +148,7 @@ export class SingleThemeViewComponent {
 
   openThemeHistory(): void {
     // opens theme history modal
-    this.modalService.open(ThemeHistoryComponent, {});
+    this.modalService.open(ThemeHistoryComponent, {size: 'xl'});
   }
 
 }

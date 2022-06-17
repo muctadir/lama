@@ -18,13 +18,10 @@
                     </tr>
                 </thead>
                 <tbody class="table">
-                    <tr>
-                        <td>1</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>4</td>
+                    <tr *ngFor="let changelog of changelog">
+                        <td>{{changelog.getName()}}</td>
+                        <td>{{changelog.getTimestamp()}}</td>
+                        <td>{{changelog.getDesc()}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -36,4 +33,5 @@
             <button class="btn btn-secondary" (click)="activeModal.close()">Close</button>
         </div>
     </div>
+    <div id="padd-bottom"></div>
 </div>

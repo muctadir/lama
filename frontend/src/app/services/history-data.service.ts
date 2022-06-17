@@ -15,11 +15,13 @@ export class HistoryDataService {
     this.requestHandler = new RequestHandler(token);
   }
 
-  async getThemeHistory(): Promise<any> {
+  async getThemeHistory(): Promise<Array<Changelog>> {
     // Gets the project id from the url
     let p_id = this.rerouter.getProjectID(this.router.url);
+    // Gets the theme id from the url
+    let t_id = this.rerouter.getThemeID(this.router.url);
     // Makes the request to the backend for the changelogs
-    let result = await this.requestHandler.get('/change/changes', {'p_id': p_id, 'item_type': "Theme"}, true)
+    let result = await this.requestHandler.get('/change/changes', {'p_id': p_id, 'item_type': "Theme", 'i_id': t_id}, true)
 
     // Makes the list of Changelogs
     let changelogArray: Changelog[] = [];
@@ -27,13 +29,11 @@ export class HistoryDataService {
     // Gets the different changelogs out of the request response
     result.forEach((changelog: any) => {
       // Creates the changelog object
-      let change = new Changelog(changelog["i_id"], changelog["username"], changelog["timestamp"], changelog["description"]);
+      let change = new Changelog(changelog["username"], changelog["timestamp"], changelog["description"]);
       // Pushes the changelog object onto the changelog array
       changelogArray.push(change);
     });
 
-    // TODO: remove this console log
-    console.log(changelogArray);
     // Returns the array with changelogs
     return changelogArray;
   }

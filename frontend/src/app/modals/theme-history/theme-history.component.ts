@@ -18,8 +18,8 @@ export class ThemeHistoryComponent {
     this.getHistoryData();
   }
 
-  getHistoryData() {
-    this.historyService.getThemeHistory();
+  async getHistoryData() {
+    this.changelog = await this.historyService.getThemeHistory();
   }
 
 }
