@@ -323,7 +323,7 @@ def edit_project(*, membership):
     # Adding new members to the project
     project_new_members_added = add_members(project.id, args['add'])
     # Checks if everything went well
-    if project_updated == 200 & project_members_updated == 200 & project_new_members_added == 200 & project_old_members_added == 200:
+    if project_updated.status_code == 200 and project_members_updated.status_code == 200 and project_new_members_added.status_code == 200 and project_old_members_added.status_code == 200:
         # Committing the updates/additions to the databse
         try:
             db.session.commit()
@@ -353,7 +353,7 @@ def update_project(args):
             description=args['description'], criteria=args["criteria"])
         )
         #Returning response saying that things went well
-        return make_response("Updated")
+        return make_response("Updated", 200)
     except OperationalError:
         #Returning an error response
         return make_response("Internal Server Error", 503)
@@ -388,7 +388,7 @@ def update_members_in_project(p_id, args, update_or_add):
         #Updating the information in the database
         db.session.bulk_update_mappings(Membership,updated_members_list)
         #Returning response saying that things went well
-        return make_response("Success")
+        return make_response("Success", 200)
     except OperationalError:
         #Returning an error response
         return make_response("Internal Service Error", 503)
@@ -418,7 +418,7 @@ def add_members(p_id, args):
         # Adding members to the database
         db.session.bulk_insert_mappings(Membership, added_members_list)
         # Returning response saying that things went well
-        return make_response("Success")
+        return make_response("Success", 200)
     except OperationalError:
         # Returning an error response
         return make_response("Internal Service Error", 503)

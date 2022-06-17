@@ -6,7 +6,7 @@
         <!-- title name -->
         <div id="artifactId" class="col-10">
             Artifact {{artifact.getId()}}
-        </div> 
+        </div>
         <!-- Artifact Identifier -->
         <div class="col-2" id="artifactIdentifier">
             {{artifact.getIdentifier()}}
@@ -23,10 +23,13 @@
             <!-- previous artifacts that it was split from, if any -->
             <div class="col-6" id="split">
                 <p class="float-end">
-                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child artifact</span>
-                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children artifacts</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child
+                        artifact</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children
+                        artifacts</span>
                     <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}.</span>
-                    <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent artifact #{{artifact.getParentId()}}.</span>
+                    <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent
+                        artifact #{{artifact.getParentId()}}.</span>
                 </p>
             </div>
         </div>
@@ -37,73 +40,72 @@
         <!--Labelled By text-->
         <div class="col-12" id="labelledBy">
             <p class="float-start">Labelled By:</p>
-        </div> 
+        </div>
 
         <!--User Labels-->
-        <div class="allUserLabels">            
+        <div class="allUserLabels">
             <div class="col-12">
-                <!--User + labels given per label type + Remark-->                  
-                <div *ngFor = "let userLabel of userLabels">
+                <!--User + labels given per label type + Remark-->
+                <div *ngFor="let user of users">
                     <div class="row">
                         <!--Labeller Name-->
                         <div class="row">
                             <div class="col-sm-12">
-                                <p id="labellerName">{{userLabel.labellerName}}</p>
+                                <p id="labellerName">{{user.username}}</p>
                             </div>
-                            <!--Remarks header-->
-                            <!-- <div class="col align-self-start">
-                                <p id="remarks">Remarks:</p>
-                            </div> -->
                         </div>
                         <div class="row">
                             <!--Label Type and Given Label Section-->
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-12" *ngFor="let label of userLabel.labelsGiven">
-                                        <div class="row">   
+                                    <div class="col-12" *ngFor="let labeltype of labelTypes">
+                                        <div class="row">
                                             <div class="col-sm-2">
-                                                <!--Label Type-->                                   
-                                                <p id="labelTypeName1">                                              
-                                                    {{label.labelTypeName}}:                                              
+                                                <!--Label Type-->
+                                                <p id="labelTypeName1">
+                                                    {{labeltype.getName()}}:
                                                 </p>
                                             </div>
-                                            <!--Label Given-->  
+                                            <!--Dropdown with label given and labels by label type-->
                                             <div class="col-sm-8">
-                                                <select class="form-control" name="labels" id="formControl" [disabled]="!admin && username != label.labellerName">   
-                                                    <div> 
-                                                        <option>
-                                                            {{label.labelGiven}}
+                                                <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
+                                                <select class="form-control" name="labels" id="formControl"
+                                                    [disabled]="!admin && username != user.username">
+                                                    <div>
+                                                        <!-- All labels from the label type are dropdown options -->
+                                                        <!-- User's given label is the default value of the dropdown -->
+                                                        <option *ngFor="let labels of labeltype.getLabels()"
+                                                            [selected]="labels.getName() == userLabels[user.username][labeltype.getName()].labelGiven">
+                                                            {{labels.getName()}}
                                                         </option>
-                                                        <option *ngFor ="let labels of allLabels">
-                                                            {{labels}}
-                                                        </option>
-                                                    </div>                                          
-                                                    <option>
-                                                        {{label.labelGiven}}
+                                                    </div>
+                                                    <!-- All labels from the label type are dropdown options -->
+                                                    <!-- User's given label is the default value of the dropdown -->
+                                                    <option *ngFor="let labels of labeltype.getLabels()"
+                                                        [selected]="labels.getName() == userLabels[user.username][labeltype.getName()].labelGiven">
+                                                        {{labels.getName()}}
                                                     </option>
-                                                    <option *ngFor ="let labels of allLabels">
-                                                        {{labels}}
-                                                    </option>           
                                                 </select>
                                                 <!--Label Remark-->
-                                                <div class="col align-self-start" >
-                                                    <p id="remarksText">Remark: {{label.labelRemark}}</p>
+                                                <div class="col align-self-start">
+                                                    <p id="remarksText">Remark:
+                                                        {{userLabels[user.username][labeltype.getName()].labelRemark}}
+                                                    </p>
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                        </div>                      
-                    </div>    
+                        </div>
+                    </div>
                     <!--Line Separator-->
                     <div class="col-12">
-                        <hr class="horizontalLine">    
-                    </div>           
+                        <hr class="horizontalLine">
+                    </div>
                 </div>
             </div>
-        </div>             
+        </div>
     </div>
 </div>
-
