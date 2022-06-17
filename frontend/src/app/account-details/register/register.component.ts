@@ -98,7 +98,7 @@ export class RegisterComponent {
     })
     .catch(error =>{
       // Print the error message
-      this.errorMsg = error.response.data;
+      this.errorMsg = "Bad input data";
     })
 
   }
