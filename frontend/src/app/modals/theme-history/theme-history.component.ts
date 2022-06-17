@@ -8,6 +8,8 @@ import { HistoryDataService } from 'app/services/history-data.service';
   styleUrls: ['./theme-history.component.scss']
 })
 export class ThemeHistoryComponent {
+  /* Array with all the changelogs */
+  // changelog: any[] = [];
 
   constructor(public activeModal: NgbActiveModal, private historyService: HistoryDataService) { }
 
