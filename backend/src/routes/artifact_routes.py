@@ -167,7 +167,9 @@ def add_new_artifacts(*, user):
     # Add the artifact to the database
     db.session.add_all(artifact_object)
 
-    artifact_ids = db.session.scalars(select(Artifact.id).where(Artifact.identifier == identifier)).all()
+    db.session.flush()
+
+    artifact_ids = [artifact.id for artifact in artifact_object]
 
     __record_creations(artifact_ids, user.id, args['p_id'])
     
@@ -410,7 +412,7 @@ def get_labellers():
 @artifact_routes.route("/getLabelers", methods=["GET"])
 @login_required
 @in_project
-def get_labells_by_label_type():
+def get_labels_by_label_type():
     # Get args from request
     args = request.args
     # What args are required
