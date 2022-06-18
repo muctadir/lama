@@ -76,6 +76,7 @@ def get_artifacts(*, user, membership):
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id,
                 Artifact.id > seek_index)
+            .distinct()
             .offset((page - seek_page - 1) * page_size)
             .limit(page_size)
         ).all()
