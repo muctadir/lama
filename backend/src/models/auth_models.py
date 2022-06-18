@@ -36,7 +36,7 @@ class User(db.Model):
     username = Column(String(32), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
     email = Column(String(320), unique=True, nullable=False)
-    # See UserStatus currently initilizing to approved
+    # See UserStatus currently initializing to approved
     status = Column(db.Enum(UserStatus), default=UserStatus.approved, nullable=False)
     # Personal description
     description = Column(Text, default="") 
@@ -62,11 +62,13 @@ from src.models.project_models import Membership
 from src.models.item_models import Labelling
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
+    def __init__(self, *args, **kwargs):
+        # Exclude the password field when serializing and returning a user object
+        super(UserSchema, self).__init__(exclude=['password'], *args, **kwargs)
 
     class Meta:
         model = User
         include_fk = True # Include foreign keys (not useful now, but maybe later)
-        load_instance = True
     
     # Enum fields are not automatically serialized/deserialized
     status = fields.Method("get_approval", deserialize="load_approval")

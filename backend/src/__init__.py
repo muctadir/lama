@@ -114,6 +114,7 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(label_type_routes)
     app.register_blueprint(labelling_routes)
     app.register_blueprint(artifact_routes)
+    app.register_blueprint(conflict_routes)
     app.register_blueprint(theme_routes)
 
 

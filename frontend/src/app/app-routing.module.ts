@@ -87,7 +87,8 @@ const routes: Routes = [
       // Conflict route
       {path: 'conflict', component: ConflictPageComponent, canActivate: [LoginGuardService]},
       // Conflict resolution route
-      {path: 'conflictResolution', component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
+      {path: 'conflictResolution/:artifactId/:labelTypeId/:labelTypeName',
+       component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
       // Load navigarion menu for every link in project
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},
