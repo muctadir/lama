@@ -9,9 +9,8 @@ import { Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { InputCheckService } from 'app/services/input-check.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
-import { RequestHandler } from 'app/classes/RequestHandler';
-import { ToastGlobalComponent } from 'app/modals/toast-global/toast-global.component';
 import { ProjectDataService } from 'app/services/project-data.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 // Project object
 interface Project {
@@ -53,7 +52,8 @@ export class ProjectCreationComponent implements OnInit {
    */
   constructor(private modalService: NgbModal, private router: Router,
      private formBuilder: FormBuilder,
-     private projectDataService: ProjectDataService) {}
+     private projectDataService: ProjectDataService,
+     private toastCommService: ToastCommService) {}
 
   /**
    * Gets all the users within the application from the backend
@@ -76,8 +76,6 @@ export class ProjectCreationComponent implements OnInit {
     this.allMembers = allMembers;
   }
 
-
-
   /**
    * Responsible for creating a new project. Gathers the data from the various forms,
    * creates a projectInformation record holding this information, which is then send to
@@ -85,7 +83,7 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @trigger Create project button is clicked
    */
-  createProject() : void { 
+  createProject() : void {
     // Creates object which will be returned to the backend
     let projectInformation: Record<string, any> = {};
     // Adds the projectname, project description and nr of labellers to the object
@@ -107,12 +105,13 @@ export class ProjectCreationComponent implements OnInit {
     if(this.checkProjectData(projectInformation)){
       // Calls function responsible for making the project creation request
       this.projectDataService.makeRequest(projectInformation);
+      // Emits a success toast
+      this.toastCommService.emitChange([true, "Project created sucessfully"]);
       // Navigates the user back to the home page
       this.router.navigate(["/home"]);
     } else {
-      // Displays an error that the user input was incorrect
-      this.errorMsg = "Please fill in all forms";
-      // this.toastGlobalComponent.showDanger("Please fill in all forms")
+      // Emits a success toast
+      this.toastCommService.emitChange([false, "Please fill in all input fields!"]);
     }
   }
 
@@ -268,5 +267,4 @@ export class ProjectCreationComponent implements OnInit {
     })
   }
 
- }
-
+}

@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { Project } from 'app/classes/project';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from 'app/modals/logout/logout.component';
-import { ToastGlobalComponent } from 'app/modals/toast-global/toast-global.component';
 import { ProjectDataService } from 'app/services/project-data.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-home-page',
@@ -30,7 +30,8 @@ export class HomePageComponent implements OnInit {
    * @trigger on loads
    */
   constructor(private modalService: NgbModal,
-    private projectDataService: ProjectDataService) {}
+    private projectDataService: ProjectDataService,
+    private toastCommService: ToastCommService) {}
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of
@@ -41,6 +42,7 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // Makes the request to the backend for the projects
     this.getProjects();
+    
   }
 
   /**
