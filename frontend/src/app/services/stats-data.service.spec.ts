@@ -19,7 +19,8 @@ describe('StatsDataService', () => {
     "projectNrArtifacts": 10,
     "projectNrCLArtifacts": 3,
     "projectUsers": users,
-    "conflicts": 10
+    "conflicts": 10,
+    "labels": ["Label1", "Label2"]
   };
   // Project made with data from project_data
   let project = new Project(
@@ -66,7 +67,8 @@ describe('StatsDataService', () => {
     // Check that the right data is returned
     expect(data).toEqual({
       'project_data': project,
-      'conflicts': project_data["conflicts"]
+      'conflicts': project_data["conflicts"],
+      'labels': project_data["labels"]
     });
   });
 

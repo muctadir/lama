@@ -76,7 +76,7 @@
                                 <div class="col-1"></div>
 
                                 <!-- Column for username -->
-                                <div class="col-7">
+                                <div *ngIf="allProjectMembers[superAdminID] != undefined" class="col-7">
                                     {{ allProjectMembers[superAdminID].getUsername() }}
                                 </div>
 
@@ -88,12 +88,12 @@
                             </div>
 
                             <!-- Row for the current user on top-->
-                            <div class="row align-items-center">
+                            <div class="row align-items-center" *ngIf="currentUserId != superAdminID">
                                 <!-- Column for delete icon -->
                                 <div class="col-1"></div>
 
                                 <!-- Column for username -->
-                                <div class="col-7">
+                                <div *ngIf="allProjectMembers[currentUserId] != undefined" class="col-7">
                                     {{ allProjectMembers[currentUserId].getUsername() }}
                                 </div>
 
@@ -186,7 +186,7 @@
     </div>
     
     <!--Container if not in edit mode-->
-    <div *ngIf="!isInEditMode" class="container main">
+    <div *ngIf="!isInEditMode" class="container main editSection">
         <!-- Row for all settings -->
         <div class="row justify-content-between">
             <!-- Left side of the page (project name and description) -->
@@ -238,7 +238,7 @@
                             <div class="row align-items-center">
 
                                 <!-- Column for username -->
-                                <div class="col-8">
+                                <div *ngIf="allProjectMembers[superAdminID] != undefined" class="col-8">
                                     {{ allProjectMembers[superAdminID].getUsername() }}
                                 </div>
 
@@ -252,7 +252,7 @@
                             <!-- Row for the current user (who is not a super admin) on top-->
                             <div class="row align-items-center" *ngIf="currentUserId != superAdminID">
                                 <!-- Column for username -->
-                                <div class="col-8">
+                                <div *ngIf="allProjectMembers[currentUserId] != undefined" class="col-8">
                                     {{ allProjectMembers[currentUserId].getUsername() }}
                                 </div>
 

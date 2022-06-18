@@ -4,13 +4,13 @@
 # Thea Bradley
 
 from importlib.metadata import requires
-from types import NoneType
 from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, Highlight, HighlightSchema
-from src.models.project_models import Membership, Project
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.auth_models import UserSchema
+from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
@@ -70,51 +70,38 @@ def get_artifacts(*, user, membership):
     else:
         # If user isn't admin, then get all artifacts the user has labelled
 
-        # Get only the artifacts the user has labelled in the current project (for a certain page)
-        artifacts = db.session.scalars(
-            select(Artifact)
-            .where(
-                Artifact.a_id == Labelling.a_id,
+        # Get artifacts the user has labelled in the current project (for a certain page)
+        artifacts = db.session.scalars(select(Artifact
+                ).where(
+                Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id,
-                Artifact.id > seek_index)
-            .offset((page - seek_page - 1) * page_size)
-            .limit(page_size)
-        ).all()
+                Artifact.id > seek_index
+            ).offset((page - seek_page - 1) * page_size
+            ).limit(page_size).distinct()).all()
+
         # Get the number of artifacts the user has labelled
         n_artifacts = db.session.scalar(
-            select(func.count(Artifact.id))
+            select(func.count(distinct(Artifact.id)))
             .where(
-                Artifact.a_id == Labelling.a_id,
+                Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id)
         )
-        # Get all the labellings the user has done in the current project
-        labellings = db.session.execute(
-            select(Labelling).where(Labelling.u_id ==
-                                    user.id, Labelling.p_id == p_id)
-        ).scalars().all()
-
-        # Take the artifacts labelled by the user
-        # TODO: Remove for loop
-        for labelling in labellings:
-            artifacts.add(labelling.artifact)
-
+        
     # List of artifacts to be passed to frontend
     artifact_info = []
 
     # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
+    labelling_schema = LabellingSchema()
 
     # For each displayed artifact
-    # TODO: Remove for loop
     for artifact in artifacts:
-
         # Convert artifact to JSON
         artifact_json = artifact_schema.dump(artifact)
-
         # Get the serialized labellings
-        labellings = __get_labellings(artifact)
+        labellings = labelling_schema.dump(artifact.labellings, many=True)
 
         # Put all values into a dictionary
         info = {
@@ -175,7 +162,7 @@ def add_new_artifacts():
     except OperationalError:
         return make_response('Internal Server Error', 503)
 
-    return make_response("Route accessed")
+    return make_response(identifier)
 
 
 @artifact_routes.route("/singleArtifact", methods=["GET"])
@@ -199,14 +186,30 @@ def single_artifact(*, user, membership):
     # Schema to serialize the artifact
     artifact_schema = ArtifactSchema()
 
+    # Schema to serialize users
+    user_schema = UserSchema()
+
     # Convert artifact to JSON
     artifact_json = artifact_schema.dump(artifact)
 
+    # Get users who labelled this artifact
+    users = db.session.scalars(select(User)
+        .where(Labelling.p_id==args['p_id'], Labelling.u_id==User.id, Labelling.a_id==a_id)
+        .distinct()).all()
+
+    # Serialize users
+    users_json = user_schema.dump(users, many=True)
+
     # Put all values into a dictionary
     info = {
+        # The artifact object
         "artifact": artifact_json,
+        # Username of the user who requests to see the artifact
         "username": user.username,
-        "admin": membership.admin
+        # Admin status of the user who requests to see the artifact
+        "admin": membership.admin,
+        # List of users who labelled the artifact
+        "users": users_json
     }
 
     # If the extended data was requested, append the requested data
@@ -313,29 +316,17 @@ def __aggregate_labellings(artifact):
 
             # What to add to result
             addition = {
-                'labellerName': user,
-                'labelTypeName': labelling.label_type.name,
                 'labelGiven': labelling.label.name,
                 'labelRemark': labelling.remark
             }
 
-            # Add the labelling to the result
+            # If the user is not in result, create an entry in result for them
             if user not in result:
-                result[user] = [addition]
-            else:
-                result[user].append(addition)
-
-        # Format result to be compatible with the frontend
-        formatted_result = []
-        for labeller in result:
-            formatted_result.append({
-                'labellerName': labeller,
-                'labelsGiven': result[labeller]
-            })
-
-        return formatted_result
-
-
+                result[user] = {}
+            # Put the addition in result, under the right user and the right label type
+            result[user][labelling.label_type.name] = addition
+        return result
+        
 @artifact_routes.route("/randomArtifact", methods=["GET"])
 @login_required
 @in_project
@@ -349,6 +340,7 @@ def random_artifact(*, user):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    # Get the project id
     p_id = int(args['p_id'])
 
     # TODO: Change to be an artifact that has not been labelled
@@ -361,7 +353,6 @@ def random_artifact(*, user):
 
     if not artifact:
         return make_response('No artifact')
-    # artifact = get_random_artifact(user.id, p_id)
 
     childIds = db.session.scalars(
         select(Artifact.id)
