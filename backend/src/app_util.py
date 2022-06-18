@@ -381,6 +381,7 @@ def __parse_deleted(change, username):
     if change.description:
         raise ChangeSyntaxError
     return f"{username} deleted {item_type} \"{change.name}\""
+    
 # Get time from seconds
 def time_from_seconds(seconds):
     # Left over seconds
