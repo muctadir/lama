@@ -35,9 +35,9 @@ body{
 }
 
 // Container of all elements
-.container.main{
+.editSection {
     height: 85vh;
-
+    overflow-y: hidden;
 }
 
 // Texts above each of the forms indicating what the form is for
