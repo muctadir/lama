@@ -6,6 +6,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
 import { InputCheckService } from 'app/services/input-check.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-edit-account-settings',
@@ -19,9 +20,6 @@ export class EditAccountSettingsComponent {
   /* Sends an event with the next page account settings page to display */
   @Output() modeChangeEvent = new EventEmitter<number>();
 
-  /* Error message displayed when user modifies settings incorrectly */
-  errorMsg: string = ""; 
-
   /* Form displayed on the page containing username, email and description */
   accountForm = this.formBuilder.group({
     username: "",
@@ -34,7 +32,7 @@ export class EditAccountSettingsComponent {
    * 
    * @param formBuilder instance of form builder
    */
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private toastCommService: ToastCommService) { }
 
   /**
    * When the userAccount gets modified it ensures that this change is communicated 
@@ -77,8 +75,8 @@ export class EditAccountSettingsComponent {
       // Calls function responsible for making the request to the backend
       this.makeRequest(accountInformation)
     } else {
-      // Displays an error message to the user 
-      this.errorMsg = "Please enter valid input in all fields";
+      // Displays an error message to the user
+      this.toastCommService.emitChange([false, "Please fill in all forms correctly!"]);
     }
   }
 
@@ -121,12 +119,12 @@ export class EditAccountSettingsComponent {
         this.modeChangeEvent.emit(0);
       }
       
-      // Resets error message
-      this.errorMsg = "";
+      // Emits a success toast
+      this.toastCommService.emitChange([true, "Modification successful"]);
 
     } catch(e) {
       // Displays the error message
-      this.errorMsg = "Please enter valid details";
+      this.toastCommService.emitChange([false, "Please enter valid details!"]);
     }
   }
 
