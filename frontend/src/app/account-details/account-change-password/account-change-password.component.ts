@@ -25,6 +25,8 @@ export class AccountChangePasswordComponent {
     new_password: "",
     new_passwordR: ""
   });
+  // Error message
+  errorMsg: string = "";
 
   /**
    * Initializes the formBuilder
