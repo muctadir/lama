@@ -318,19 +318,31 @@ def get_label_artifacts(label, u_id, admin):
 @label_routes.route('/delete', methods=['POST'])
 @login_required
 @in_project
-def soft_delete_route():
+def soft_delete_route(*, user):
     args = request.json['params']
     # Required args
     required = ['l_id', 'p_id']
     # Check for arguments
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
+    label = db.session.get(Label, args['l_id'])
+
+    # Check if label exists
+    if not label:
+        return make_response("Bad request", 400)
+
+    # Check if label is in the same project
+    if label.p_id != int(args['p_id']):
+        return make_response("Bad request", 400)
+    
     try:
         # Update the label and commit
         db.session.execute(
             update(Label)
             .where(Label.id == args['l_id']).values(deleted=1)
         )
+        __record_delete(label.id, label.name, label.p_id, user.id)
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
@@ -449,3 +461,16 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
         description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
     ) for t_id, t_name, old_label_name in theme_changes]
     db.session.add_all(changes)
+
+def __record_delete(l_id, name, p_id, u_id):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=name,
+        change_type=ChangeType.deleted
+    )
+    db.session.add(change)
