@@ -355,6 +355,8 @@ def get_labellers():
 
     return make_response(json_labellers)
 
+# Author: Eduardo Costa Martins
+# TODO: Record split in changelog
 @artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
@@ -362,8 +364,21 @@ def post_split():
 
     args = request.json['params']
 
-    required = ('p_id')
-    pass
+    required = ('p_id', 'parent_id', 'identifier', 'start', 'end', 'data')
+
+    if not check_args(required, args):
+        return make_response("Bad Request", 400)
+    
+    new_artifact = Artifact(**args)
+    
+    db.session.add(new_artifact)
+
+    try:
+        db.session.commit()
+    except OperationalError:
+        make_response("Internal Service Error", 503)
+
+    return make_response("Success")
 
 def get_random_artifact(u_id, p_id):
     # Criteria for artifact completion

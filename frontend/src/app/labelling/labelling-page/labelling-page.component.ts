@@ -292,22 +292,20 @@ export class LabellingPageComponent implements OnInit {
    * Splitting function, gets text without splitting words and gets start and end char
    */
   split(): void {
+    // Get start/end positions of highlight
     let firstCharacter = this.selectionStartChar! - 1;
     let lastCharacter = this.selectionEndChar! - 1;
+    // Fix positions to start/end of words that they clip
     firstCharacter = this.posFixer(firstCharacter, lastCharacter)[0];
     lastCharacter = this.posFixer(firstCharacter, lastCharacter)[1] + 1;
+    // Get the text represented by the rounded start and end
     let splitText = this.artifact?.data.substring(
       firstCharacter,
       lastCharacter
     );
-    alert(
-      "The text is: '" +
-      splitText +
-      "'\nThe start is at: " +
-      firstCharacter +
-      '\nThe end is at: ' +
-      lastCharacter
-    );
+    // Make request to split
+    this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    // TODO: Show visual feedback that split occurs
   }
 
   //Gets the correct indices so that full words aren't cut in half
