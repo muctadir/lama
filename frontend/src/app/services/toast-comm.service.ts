@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ToastCommService {
   // Observable string sources
@@ -13,5 +13,4 @@ export class ToastCommService {
   emitChange(change: any) {
     this.emitChangeToast.next(change);
   }
-  
 }

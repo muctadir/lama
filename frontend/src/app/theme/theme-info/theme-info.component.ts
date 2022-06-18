@@ -7,6 +7,7 @@ import { LabelingDataService } from 'app/services/labeling-data.service';
 import { FormBuilder } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-theme-info',
@@ -63,8 +64,12 @@ export class ThemeInfoComponent implements OnInit {
   //Hard coded sub-themes
   allSubThemes: Array<Theme> = [];
  
-  constructor(private formBuilder: FormBuilder, private service: InputCheckService, 
-        private router: Router, private themeDataService: ThemeDataService, private labelDataService: LabelingDataService) { 
+  constructor(private formBuilder: FormBuilder, 
+    private service: InputCheckService, 
+    private router: Router, 
+    private themeDataService: ThemeDataService, 
+    private labelDataService: LabelingDataService,
+    private toastCommService: ToastCommService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -199,7 +204,7 @@ export class ThemeInfoComponent implements OnInit {
       this.reRouter();   
     } else {
       // Displays error message
-      this.errorMsg = "Name or description not filled in";
+      this.toastCommService.emitChange([false, "Name or description not filled in"]);
     }
   }
 

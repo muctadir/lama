@@ -110,7 +110,7 @@ export class ProjectCreationComponent implements OnInit {
       // Navigates the user back to the home page
       this.router.navigate(["/home"]);
     } else {
-      // Emits a success toast
+      // Emits an error toast
       this.toastCommService.emitChange([false, "Please fill in all input fields!"]);
     }
   }

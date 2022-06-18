@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { StringArtifact } from 'app/classes/stringartifact';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import axios from 'axios';
 import { Theme } from 'app/classes/theme';
-import { Labelling } from 'app/classes/labelling';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -163,7 +161,7 @@ export class LabelingDataService {
         }
       })
       .then((response) => {
-      return Math.floor(response.status/100) == 2;
+        return Math.floor(response.status/100) == 2;
     }).catch(err => {
       return false;
     });
@@ -189,7 +187,7 @@ export class LabelingDataService {
         }
       })
       .then((response) => {
-      return Math.floor(response.status/100) == 2;
+        return Math.floor(response.status/100) == 2;
     }).catch(err => {
       return false;
     });

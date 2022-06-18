@@ -12,8 +12,6 @@
                 <!-- Component with 5 input fields, username, email, password, repeated password, description -->
                 <app-account-information-form></app-account-information-form>
 
-                <!-- Potential error messages that should be displayed, only displayed when non-empty -->
-                <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
                 <!-- Button for registering calls onRegister function when clicked-->
                 <div>
                     <button type="submit" class="btn btn-primary" id="register-button" (click)="onRegister()">Register</button>

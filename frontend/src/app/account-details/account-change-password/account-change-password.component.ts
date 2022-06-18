@@ -5,6 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
 import { InputCheckService } from 'app/services/input-check.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-account-change-password',
@@ -16,9 +17,6 @@ export class AccountChangePasswordComponent {
   @Input() userAccount!: User;
   /* Emits an event which will change the page currently being viewed */
   @Output() modeChangeEvent = new EventEmitter<number>();
-
-  /* Error message that displays explanation if the user made a mistake in inputs */
-  errorMsg: string = "";
 
   /* Form storing old password, new password, and repeated new password */
   passwordForm = this.formBuilder.group({
@@ -32,7 +30,8 @@ export class AccountChangePasswordComponent {
    * 
    * @param formBuilder instance of FormBuilder
    */
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, 
+    private toastCommService: ToastCommService) {}
 
   /**
    * Function which will get verify whether the data filled in is valid, encapsulates it in object
@@ -57,8 +56,8 @@ export class AccountChangePasswordComponent {
       // Makes change password request to backend
       this.makeRequest(passwordInformation);
     } else {
-      // Displays error
-      this.errorMsg = "Please fill in all forms correctly";
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "Please fill in all forms correctly!"]);
     }
   }
 
@@ -105,11 +104,11 @@ export class AccountChangePasswordComponent {
         this.modeChangeEvent.emit(0);
       }
       
-      // Resets the error message 
-      this.errorMsg = "";
+      // Emits a success toast
+      this.toastCommService.emitChange([true, "Password changed"]);
     } catch(e) {
-      // Displays an error to the user if anything goes wrong
-      this.errorMsg = "Please enter correct details";
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "Please enter the correct password, and check your connection."]);
     }
   }
 }
