@@ -10,6 +10,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-individual-label',
@@ -38,7 +39,8 @@ export class IndividualLabelComponent {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private labellingDataService: LabellingDataService
+    private labellingDataService: LabellingDataService,
+    private toastCommService: ToastCommService
   ) {
     this.label = new Label(-1, '', '', '');
     this.routeService = new ReroutingService();
@@ -114,8 +116,10 @@ export class IndividualLabelComponent {
       });
       // Navigate to the label management page
       this.router.navigate(['project', this.p_id, 'labelmanagement']);
+      // Success message
+      this.toastCommService.emitChange([true, "Successfully deleted label"]);
     } catch (e) {
-      console.log("Something went wrong!")
+      this.toastCommService.emitChange([true, "Something went wrong!"]);
       // Navigate to the project page
       this.router.navigate(['project', this.p_id]);
     }
