@@ -1,4 +1,6 @@
 <!-- Veerle Furst -->
+<!-- Ana-Maria Olteniceanu -->
+<!-- Linh Nguyen -->
 
 <!-- Top bar container -->
 <div class="container" id="topBarContainer">
@@ -6,7 +8,7 @@
     <div class="row" id="topBarRow">
         <div class="col">
             <!-- Header with Conflict name -->
-            <p class="header"> Conflict: {{conflict1.artifactName}} </p>
+            <p class="header"> Conflict: {{artifact.getIdentifier()}} - {{label_type}} </p>
         </div>
         <!-- Column with the splitting artifact button -->
         <div class="col-1 align-self-center">
@@ -18,14 +20,26 @@
 
     <!-- Row with description -->
     <div class="row" id="descRow">
-        {{conflict1.artifactDescription}}
+        {{artifact.getData()}}
     </div>
     <!-- Row with splitting information -->
-    <div class="row justify-content-end" id="splitRow">
-        <!-- Column to make the text start at the end -->
-        <div class="col text-end">
-            This artifact was split into <span class="coloredText">Artifact #50</span> and <span class="coloredText">Artifact #109</span>
-        </div>
+    <div class="row" id="splitRow">
+        <!-- previous artifacts that it was split from, if any -->
+            <div class="col-3" id="names">
+                <p class="float-start">
+                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child artifact</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children artifacts</span>
+                    <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}.</span>
+                </p>
+            </div>
+    </div>
+    <div class="row justify-content-start" id="splitRow">
+        <!-- previous artifacts that it was split from, if any -->
+            <div class="col-2" id="names">
+                <p class="float-end">
+                    <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent artifact #{{artifact.getParentId()}}.</span>
+                </p>
+            </div>
     </div>
 
     <!-- Row for create and merge label buttons -->
@@ -50,92 +64,45 @@
     </div>
     <!-- Division for each labeller -->
     <div class="labellerDiv">
-        <div *ngFor="let labeller of labellers">
+        <div *ngFor="let user of users">
             <!-- Row for each labeller -->
             <div class="row margin" id="labellerRow">
                 <!-- Column for labels given -->
                 <div class="col">
                     <!-- Row for the labeller name -->
                     <div class="row">
-                        <span class="boldText">{{labeller.labellerName}}</span>
+                        <span class="boldText">{{user}}</span>
                     </div>
 
-                    <!-- TODO add angular for loop -->
+                    <!-- Add angular for loop -->
                     <div class="labelTypeDiv">
-
-                        <!-- Rows for the labels per label type -->
-                        <div class="row" id="labelTypeRow">
-                            <span class="coloredText">Emotion:</span>
-                            <!-- Dropdown (disabled or not) -->
-                            <div *ngIf="labeller.current; else elseBlock">
-                                <!-- Not diabled dropdown -->
-                                <select>
-                                    <option value="happy">Happy</option>
-                                    <option value="sad">Sad</option>
-                                </select>
-                            </div>
-                            <!-- Disabled dropdown -->
-                            <ng-template #elseBlock>
-                                <div>
-                                    <select disabled>
-                                        <option value="happy">Happy</option>
-                                        <option value="sad">Sad</option>
-                                    </select>
-                                </div>
-                            </ng-template>
-                        </div>
-
-
-                        <!-- Rows for the labels per label type -->
-                        <div class="row" id="labelTypeRow">
-                            <span class="coloredText">Language:</span>
-                            <br>
-                            <!-- Dropdown (disabled or not) -->
-                            <div *ngIf="labeller.current; else elseBlock2">
-                                <!-- Not diabled dropdown -->
-                                <select>
-                                    <option value="python">Python</option>
-                                    <option value="html">Html</option>
-                                </select>
-                            </div>
-                            <!-- Disabled dropdown -->
-                            <ng-template #elseBlock2>
-                                <div>
-                                    <select disabled>
-                                        <option value="python">Python</option>
-                                        <option value="html">Html</option>
-                                    </select>
-                                </div>
-                            </ng-template>
-                        </div>
-
-                        <!-- Rows for the labels per label type -->
-                        <div class="row" id="labelTypeRow">
-                            <!-- Column for the label type -->
-                            <div class="col">
-                                <span class="coloredText">Biep:</span>
-                            </div>
-                            <!-- Not diabled dropdown -->
+                            <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
+                            <select class="form-control" name="labelsForm" id="formControl"
+                            [disabled]="!admin && user != username">
                             <div>
-                                <select>
-                                    <option value="trial">Trial</option>
-                                    <option value="error">Error and more errors</option>
-                                </select>
+                                <!-- All labels from the label type are dropdown options -->
+                                <!-- User's given label is the default value of the dropdown -->
+                                <option *ngFor="let label of labels"
+                                    [selected]="label == label_per_user[user]['name']">
+                                    {{label}}
+                                </option>
                             </div>
-                        </div>
-
+                            <!-- All labels from the label type are dropdown options -->
+                            <!-- User's given label is the default value of the dropdown -->
+                            <option *ngFor="let label of labels"
+                                [selected]="label == label_per_user[user]['name']">
+                                {{label}}
+                            </option>
+                        </select>
                     </div>
-
                 </div>
 
-                <!-- Column for remark -->
+                <!-- Column for description of label -->
                 <div class="col-5" id="remarkCol">
-                    <span class="boldText">Remark: </span> <br>
-                    {{labeller.labellerRemark}}
+                    <span class="boldText">Description: </span> <br>
+                    {{label_per_user[user]['description']}}
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>

@@ -6,6 +6,7 @@ import { LoginGuardService } from './services/login-guard.service';
 // Authentication imports
 import { LoginComponent } from './account-details/login/login.component';
 import { RegisterComponent } from './account-details/register/register.component';
+import { SuperAdminGuardService } from './services/super-admin-guard.service';
 // Account page imports
 import { AccountComponent } from './account-details/account/account.component';
 // Home page imports
@@ -35,8 +36,9 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+
 import { ModerationComponent } from './account-details/moderation/moderation.component';
-import { SuperAdminGuardService } from './services/super-admin-guard.service';
+import { ToastCommService } from './services/toast-comm.service';
 
 
 /* All the routes within the application */
@@ -85,7 +87,8 @@ const routes: Routes = [
       // Conflict route
       {path: 'conflict', component: ConflictPageComponent, canActivate: [LoginGuardService]},
       // Conflict resolution route
-      {path: 'conflictResolution', component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
+      {path: 'conflictResolution/:artifactId/:labelTypeId/:labelTypeName',
+       component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
       // Load navigarion menu for every link in project
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},

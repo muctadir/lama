@@ -51,6 +51,10 @@ import { HistoryComponent } from './modals/history/history.component';
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
+import { ToastsContainer } from './modals/toast-global/toast-container.component';
+import { ToastCommService } from './services/toast-comm.service';
+import { AppToastService } from './services/app-toast.service';
 
 @NgModule({
   declarations: [
@@ -99,6 +103,8 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     ModerationComponent,
     DeleteThemeComponent,
     HistoryComponent,
+    ToastGlobalComponent,
+    ToastsContainer
   ],
   imports: [
     BrowserModule,
@@ -107,8 +113,9 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [],
+  providers: [ToastCommService],
   bootstrap: [
-    AppComponent]
+    AppComponent
+  ]
 })
 export class AppModule { }

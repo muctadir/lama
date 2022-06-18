@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 import { HistoryComponent } from 'app/modals/history/history.component';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -27,10 +28,10 @@ export class SingleThemeViewComponent {
   // Variable for the theme
   theme: Theme; 
 
-  // Alert message for deleting theme
-  alertMessage = "";
-
-  constructor(private router: Router, private themeDataService: ThemeDataService, private modalService: NgbModal) { 
+  constructor(private router: Router, 
+    private themeDataService: ThemeDataService, 
+    private modalService: NgbModal,
+    private toastCommService: ToastCommService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -133,7 +134,7 @@ export class SingleThemeViewComponent {
       // Check the length of the arrays
       if(labels.length != 0 || children.length != 0){
         // Alert that the theme cannot be deleted
-        this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
+        this.toastCommService.emitChange([false, "This theme has sub-themes and/or labels, so it cannot be deleted"]);
         return;
       }
     }
@@ -142,8 +143,6 @@ export class SingleThemeViewComponent {
     // Give the modal the project id and theme id
     modalRef.componentInstance.p_id = this.p_id;
     modalRef.componentInstance.t_id = this.t_id; 
-    // Give alert message
-    this.alertMessage = "";
   }
 
   /**

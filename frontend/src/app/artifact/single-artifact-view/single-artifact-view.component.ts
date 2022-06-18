@@ -28,7 +28,7 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize record of labels given per label type + remarks
   userLabels: Record<string, Record<string, any>>;
 
-  // Will be changed once @inproject decorator is merged
+  // Initialize boolean value that represents whether the current user is admin
   admin: boolean;
   // Initialize the username of the current user
   username: string;
@@ -44,6 +44,7 @@ export class SingleArtifactViewComponent implements OnInit {
     private artifactDataService: ArtifactDataService,
     private labellingDataService: LabellingDataService,
     private router: Router) {
+    //Initializing variables
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.users = [];
@@ -54,6 +55,15 @@ export class SingleArtifactViewComponent implements OnInit {
     this.username = '';
   }
 
+  /**
+   * Gets the artifact id, project ID and the artifact from the backend
+   * Stores the users in the allMembers array
+   * Gets project information from the backend
+   * Store the project in currentProject
+   *
+   * @modifies allMembers, currentProject
+   * @trigger on creation of component
+   */
   async ngOnInit(): Promise<void> {
     // Get the ID of the artifact and the project
     let a_id = Number(this.routeService.getArtifactID(this.url));
