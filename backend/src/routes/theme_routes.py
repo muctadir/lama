@@ -241,10 +241,10 @@ def create_theme(*, user):
     __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
-    theme.sub_themes = make_sub_themes(args["sub_themes"])
+    make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
 
     # Make the labels the labels of the created theme
-    theme.labels = make_labels(args["labels"])
+    make_labels(theme, args["labels"], args['p_id'], user.id)
 
     # Create the project
     try:
@@ -315,9 +315,10 @@ def edit_theme(*, user):
     )
 
     # Set the sub_themes of the theme
-    theme.sub_themes = make_sub_themes(args["sub_themes"])
+    make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
+
     # Set the labels of the theme
-    theme.labels = make_labels(args["labels"])
+    make_labels(theme, args["labels"], args['p_id'], user.id)
 
     # Edit the theme
     try:
@@ -394,21 +395,22 @@ For getting the labels from the passed data
     id: id of the label
 }
 """
-def make_labels(labels_info):
+def make_labels(theme, labels_info, p_id, u_id):
     # List for the label ids
-    label_ids_list = []
-    # Put all added label ids into the list
-    for label in labels_info:        
-        # Append the label id to the list
-        label_ids_list.append(label["id"])
+    label_ids_list = [label['id'] for label in labels_info]
     
     # Get all labels that are in the list
-    labels_list = db.session.scalars(
+    labels = db.session.scalars(
         select(Label)
         .where(Label.id.in_(label_ids_list))
     ).all()
-    # Return the actual added labels
-    return labels_list
+
+    label_names = [label.name for label in labels]
+
+    # If the assigned labels have changed
+    if set(labels) != set(theme.labels):
+        theme.labels = labels
+        __record_chilren(theme.id, theme.name, p_id, u_id, label_names, 'label')
 
 """
 For getting the themes from the passed data
@@ -416,21 +418,23 @@ For getting the themes from the passed data
     id: id of the theme
 }
 """
-def make_sub_themes(sub_themes_info):
-    # List for the label ids
-    sub_theme_ids_list = []
-    # Put all added label ids into the list
-    for label in sub_themes_info:        
-        # Append the label id to the list
-        sub_theme_ids_list.append(label["id"])
+def make_sub_themes(theme, sub_themes_info, p_id, u_id):
+
+    # List for the theme ids
+    sub_theme_ids_list = [theme['id'] for theme in sub_themes_info]
     
-    # Get all labels that are in the list
-    sub_theme_list = db.session.scalars(
+    # Get all themes that are in the list
+    sub_themes = db.session.scalars(
         select(Theme)
         .where(Theme.id.in_(sub_theme_ids_list))
     ).all()
-    # Return the actual added labels
-    return sub_theme_list
+
+    sub_theme_names = [sub_theme.name for sub_theme in sub_themes]
+
+    # If the assigned subthemes have changed
+    if set(sub_themes) != set(theme.sub_themes):
+        theme.sub_themes = sub_themes
+        __record_chilren(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
 
 def __record_creation(t_id, name, p_id, u_id):
     # PascalCase because it is a class
@@ -475,7 +479,7 @@ def __record_description_edit(t_id, name, p_id, u_id):
 
     db.session.add(change)
 
-def __record_adding(t_id, name, p_id, u_id, added, change_type):
+def __record_chilren(t_id, t_name, p_id, u_id, c_names, c_type):
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
 
@@ -483,23 +487,9 @@ def __record_adding(t_id, name, p_id, u_id, added, change_type):
         i_id=t_id,
         p_id=p_id,
         u_id=u_id,
-        name=name,
-        description="added" + ','.join(added),
-        change_type=change_type
-    )
-    db.session.add(change)
-
-def __record_removing(t_id, name, p_id, u_id, removed, change_type):
-    # PascalCase because it is a class
-    ThemeChange = Theme.__change__
-
-    change = ThemeChange(
-        i_id=t_id,
-        p_id=p_id,
-        u_id=u_id,
-        name=name,
-        description="removed" + ','.join(removed),
-        change_type=change_type     
+        name=t_name,
+        description=c_type + ' ; ' + ','.join(c_names),
+        change_type=ChangeType.theme_children
     )
     db.session.add(change)
 
