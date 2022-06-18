@@ -72,7 +72,7 @@ def get_artifacts(*, user, membership):
         artifacts = db.session.scalars(
             select(Artifact)
             .where(
-                Artifact.a_id == Labelling.a_id,
+                Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id,
                 Artifact.id > seek_index)
@@ -83,20 +83,10 @@ def get_artifacts(*, user, membership):
         n_artifacts = db.session.scalar(
             select(func.count(Artifact.id))
             .where(
-                Artifact.a_id == Labelling.a_id,
+                Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id)
         )
-        # Get all the labellings the user has done in the current project
-        labellings = db.session.execute(
-            select(Labelling).where(Labelling.u_id ==
-                                    user.id, Labelling.p_id == p_id)
-        ).scalars().all()
-
-        # Take the artifacts labelled by the user
-        # TODO: Remove for loop
-        for labelling in labellings:
-            artifacts.add(labelling.artifact)
 
     # List of artifacts to be passed to frontend
     artifact_info = []
@@ -255,7 +245,7 @@ def search(*, user, membership):
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
                 Labelling.a_id == Artifact.id,
-                Labelling.u_id == user.id)
+                Labelling.u_id == user.id).distinct()
         ).all()
 
     # Getting result of search
