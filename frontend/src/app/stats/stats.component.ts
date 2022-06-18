@@ -35,6 +35,9 @@ export class StatsComponent implements OnInit{
   // Initialize the number of conflicts in the project
   conflicts: number
 
+  // Initialize the number of labels in the project
+  labels: number
+
   /**
    * Initializes the router 
    * 
@@ -48,6 +51,7 @@ export class StatsComponent implements OnInit{
       this.project = new Project(0, "", "");
       this.user_contribution = [];
       this.conflicts = 0;
+      this.labels = 0;
   }
 
 
@@ -75,6 +79,8 @@ export class StatsComponent implements OnInit{
     this.project = data['project_data']
     // Pass the number of conflicts
     this.conflicts = data['conflicts']
+    // Pass the number of labels
+    this.labels = data['labels']
   }
 
   /**

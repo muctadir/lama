@@ -88,12 +88,7 @@ def get_artifacts(*, user, membership):
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id)
         )
-        # Get all the labellings the user has done in the current project
-        labellings = db.session.execute(
-            select(Labelling).where(Labelling.u_id ==
-                                    user.id, Labelling.p_id == p_id)
-        ).scalars().all()
-
+        
     # List of artifacts to be passed to frontend
     artifact_info = []
 
@@ -358,7 +353,6 @@ def random_artifact(*, user):
 
     if not artifact:
         return make_response('No artifact')
-    # artifact = get_random_artifact(user.id, p_id)
 
     childIds = db.session.scalars(
         select(Artifact.id)
