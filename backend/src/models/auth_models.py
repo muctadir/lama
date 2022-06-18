@@ -63,6 +63,7 @@ from src.models.item_models import Labelling
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     def __init__(self, *args, **kwargs):
+        # Exclude the password field when serializing and returning a user object
         super(UserSchema, self).__init__(exclude=['password'], *args, **kwargs)
 
     class Meta:

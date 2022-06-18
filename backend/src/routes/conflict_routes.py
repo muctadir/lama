@@ -266,6 +266,7 @@ def conflict_management_page(*, user, membership):
         return make_response('Bad Request', 400)
 
     p_id = args['p_id']
+    
     return make_response(project_conflicts(p_id, membership.admin, user.id))
 """
 Author: Linh Nguyen & Ana-Maria Oltenic

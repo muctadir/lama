@@ -7,7 +7,7 @@ $light-grey-shade: #aaaaaa;
 $white-shade: #FFFFFF;
 
 // Container
-#topBarContainer{
+#topBarContainer {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 100%;
@@ -17,21 +17,21 @@ $white-shade: #FFFFFF;
 
 // TEXT
 // Orange text
-.coloredText{
+.coloredText {
     color: $main-color-1;
 }
 // Bold text
-.boldText{
+.boldText {
     font-weight: 500;
 }
 
 // TOP BAR
 // Row
-#topBarRow{
+#topBarRow {
     margin-bottom: 20px;
 }
 // Header
-.header{
+.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
@@ -39,14 +39,14 @@ $white-shade: #FFFFFF;
 
 // SPLITTING ICON
 // Splitting artifact icon
-.splittingArtifactDiv{
+.splittingArtifactDiv {
     width: 50px;
     height: 50px;
     border: 2px solid $main-color-1;
     border-radius: 10px;
 }
 // Scissors icon
-.bi.bi-scissors{
+.bi.bi-scissors {
     margin-left: 8px;
     font-size: 30px;
     color: $grey-shade;
@@ -54,7 +54,7 @@ $white-shade: #FFFFFF;
 
 // DESCRIPTION AND SPLIT INFO ROW
 // Row of the description
-#descRow{
+#descRow {
     padding-left: 25px;
     padding-right: 25px;
     margin-bottom: 25px;
@@ -63,7 +63,7 @@ $white-shade: #FFFFFF;
     overflow-y: scroll;
 }
 // Row where the split information is
-#splitRow{
+#splitRow {
     padding-left: 30px;
     padding-right: 25px;
     margin-bottom: 25px;
@@ -73,7 +73,7 @@ $white-shade: #FFFFFF;
 
 // BUTTONS FOR LABEL CREATION AND MERGING
 // Buttons for creating and merging labels
-.labelButtons{
+.labelButtons {
     width: 150px;
     margin: 10px;
     background-color: $main-color-1;
@@ -87,48 +87,48 @@ $white-shade: #FFFFFF;
 
 // CONFLICTING LABELS SECTION
 // Margin for the left for all rows
-.margin{
+.margin {
     margin-left: 10px;
     margin-top: 25px;
 }
 // Header for the conflicting labels
-#conflictLabelsHeader{
+#conflictLabelsHeader {
     font-size: 20px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
 // Division around all labellers
-.labellerDiv{
+.labellerDiv {
     height: 300px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
 // EACH LABELLER
 // Rows of each labeller
-#labellerRow{
+#labellerRow {
     border-top: 2px solid $light-grey-shade;
     margin-right: 100px;
     padding-top: 10px;
 }
 // EACH LABEL TYPE
-.labelTypeDiv{
+.labelTypeDiv {
     height: 150x;
     overflow-y: scroll;
     overflow-x: hidden;
 }
 // Row for each label type
-#labelTypeRow{
+#labelTypeRow {
     margin-top: 10px;
 }
 // REMARK
 // Remark column
-#remarkCol{
+#remarkCol {
     margin-left:50px;
 }
 
 // SELECT DROPDOWN
 // Dropdown layout
-select{
+select {
     width: auto;
     border-radius: 7px;
     border-color: $light-grey-shade;
@@ -136,7 +136,7 @@ select{
     margin-top: 10px;
 }
 // Disabled dropdown
-select:disabled{
+select:disabled {
     background-color: $light-grey-shade;
     -webkit-appearance: none;
     -moz-appearance: none;
