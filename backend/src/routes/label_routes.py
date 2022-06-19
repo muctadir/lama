@@ -87,10 +87,10 @@ def edit_label(*, user):
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
         
-    if label.description != args['description']:
+    if label.description != args['labelDescription']:
         __record_description_edit(label.id, args['name'], args['p_id'], user.id)
     
-    if label.name != args['name']:
+    if label.name != args['labelName']:
         __record_name_edit(label.id, label.name, args['p_id'], label.id, args['name'])
 
     db.session.execute(
