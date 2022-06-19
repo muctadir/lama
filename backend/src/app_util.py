@@ -308,7 +308,7 @@ def __parse_merge(change, username):
         case 'Artifact':
             return f"{username} changed a labelling for Artifact {change.name} of type \"{description[1]}\" from \"{description[2]}\" to \"{description[0]}\" as a result of a merge"
         case 'Theme':
-            return f"Theme {change.name} had Label \"{description[2]}\" of type \"{description[1]}\" switched for \"{description[0]}\" as a result of a merge {username} made"
+            return f"Theme \"{change.name}\" had Label \"{description[2]}\" of type \"{description[1]}\" switched for \"{description[0]}\" as a result of a merge {username} made"
 
 """
 A theme_children string should be of the format:

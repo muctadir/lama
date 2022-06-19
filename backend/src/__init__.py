@@ -4,7 +4,6 @@ import click
 from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
-from src.models.auth_models import User, UserStatus
 from src.models import db, ma
 import src.models.auth_models
 import src.models.project_models
@@ -45,9 +44,24 @@ db_opt = AppGroup("db-opt")
 # those tables do not yet exist.
 @db_opt.command("init")
 def db_init():
+    from src.models.auth_models import User, UserStatus
+    
     init()
     migrate(message="Initial migration")
     upgrade()
+
+    SUPER_USER = environ.get("SUPER_USER")
+    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
+    SUPER_EMAIL = environ.get("SUPER_EMAIL")
+    db.session.add(User(
+        username=SUPER_USER,
+        email=SUPER_EMAIL,
+        password=generate_password_hash(SUPER_PASSWORD),
+        status=UserStatus.approved,
+        super_admin=True,
+        description="Auto-generated super admin"
+    ))
+    db.session.commit()
 
 # TODO: Add db reset (this always breaks the migrations in my experience)
 
@@ -170,19 +184,6 @@ def fill():
         p_id = 2
     ) for i in range(3, 6)])
     db.session.add_all(theme)
-    db.session.commit()
-
-    SUPER_USER = environ.get("SUPER_USER")
-    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
-    SUPER_EMAIL = environ.get("SUPER_EMAIL")
-    db.session.add(User(
-        username=SUPER_USER,
-        email=SUPER_EMAIL,
-        password=generate_password_hash(SUPER_PASSWORD),
-        status=UserStatus.approved,
-        super_admin=True,
-        description="Auto-generated super admin"
-    ))
     db.session.commit()
 
 # TODO: Add db reset (this always breaks the migrations in my experience)
