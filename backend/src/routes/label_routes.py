@@ -178,14 +178,14 @@ def merge_route():
         return make_response('Bad Request', 400)
 
     # Check whether the length of the label name is at least one character long
-    if len(args['newLabelName']) <= 0:
-        return make_response('Bad request: Label name cannot have size <= 0', 400)
+    if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
+        return make_response('Label name cannot be empty')
     # Check whether the length of label description is at least one character long
-    if len(args['newLabelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot have size <= 0', 400)
+    if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
+        return make_response('Label description cannot be empty')
     # Check whether the ids are different
     if args['leftLabelId'] == args['rightLabelId']:
-        return make_response('Bad request: Cannot merge the same label twice' + str(args['leftLabelId']) + '==' + str(args['rightLabelId']), 400)
+        return make_response('Cannot merge the same label twice', 400)
 
     ids = [args['leftLabelId'], args['rightLabelId']]
     labels = db.session.execute(

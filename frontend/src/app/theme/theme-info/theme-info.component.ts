@@ -198,12 +198,14 @@ export class ThemeInfoComponent implements OnInit {
       // Reset description
       this.selectedDescriptionLabel = '';
       this.selectedDescriptionTheme = '';
-      // Reset name and description forms
-      this.themeForm.reset();
       // Give succes message
       this.errorMsg = response;  
       // Rerouter to the theme management page if theme was created
-      if(response == "Theme created succesfully") this.reRouter();   
+      if(response == "Theme created succesfully") {
+        // Reset name and description forms
+        this.themeForm.reset();
+        this.reRouter(); 
+      }  
     } else {
       // Displays error message
       this.toastCommService.emitChange([false, "Name or description not filled in"]);

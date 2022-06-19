@@ -209,8 +209,8 @@ export class LabellingDataService {
    * Function to post the merged labels
    * @param dict  - dictionary
    */
-  async postMerge(dict: Object): Promise<void> {
-    await this.requestHandler.post('/label/merge', dict, true);
+  async postMerge(dict: Object): Promise<string> {
+    return await this.requestHandler.post('/label/merge', dict, true);
   }
 
   /**
