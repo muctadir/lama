@@ -265,15 +265,18 @@ def conflict_management_page(*, user, membership):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    #Assigning project ID
     p_id = args['p_id']
 
     return make_response(project_conflicts(p_id, membership.admin, user.id))
 """
 Author: Linh Nguyen & Ana-Maria Olteniceanu
-Route to send labelling made by users concerning a certain conflict to the frontend
+Route to send labelling made by a spcefic user concerning a certain conflict to the frontend
 @returns list of dictionaries of the form:
 {
+    id: label ID
     name: label name
+    description: label description
 }
 """
 @conflict_routes.route("/LabelPerUser", methods=["GET"])
@@ -298,6 +301,7 @@ def single_label_per_user():
     .where(User.id.in_(user_per_lt), User.id==Labelling.u_id, Labelling.l_id == Label.id,
      Labelling.lt_id==args['lt_id'], Labelling.a_id==args['a_id'])).all()
 
+    #Processing the response from the database to send to the front-end label ID, name and description
     response = {}
     for labeller in userInfo:
         response[labeller[0]] = {"id": labeller[1], "name": labeller[2], "description": labeller[3]}

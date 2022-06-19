@@ -99,8 +99,10 @@ def post_labelling(*, user):
     
 """
 Author: Linh Nguyen, Ana-Maria Olteniceanu
-@params:
-@post:
+Editing existing labelling(s)
+@params user: current user
+@params membership: the membership of the current user
+@post: updating the labelling in the database
 """
 @labelling_routes.route('/edit', methods=['PATCH'])
 @login_required
@@ -120,8 +122,10 @@ def edit_labelling(*, user, membership):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     
+    #Array to hold updated labellings
     updated_labellings = []
     
+    #Appending updated information about each labelling to the list above
     for key in args['labellings']:
         print(args['labellings'][key]['id'])
         updated_labellings.append({'u_id': user.id,'a_id': args['a_id'], 'lt_id': args['lt_id'],
@@ -133,12 +137,13 @@ def edit_labelling(*, user, membership):
         return make_response('Project does not exist', 400)
 
     # Committing the information to the backend
-    # try: 
+    try: 
     # Updating the information in the database
     db.session.bulk_update_mappings(Labelling, updated_labellings)
     db.session.commit()
-    # except OperationalError:
-    #     return make_response('Internal Server Error', 503)
+    except OperationalError:
+        #Returning an error response
+        return make_response('Internal Server Error', 503)
 
     # Returning a response
     return make_response('Succeeded', 200)

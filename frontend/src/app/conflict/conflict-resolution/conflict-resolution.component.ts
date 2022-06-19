@@ -160,41 +160,69 @@ export class ConflictResolutionComponent implements OnInit {
     });
   }
 
+  /**
+   * Updates the labelling when the dropdown selected value changes
+   * 
+   * @param user the username of the user who changed their labelling
+   * @param label the name of the label to which the user is changing their labelling
+   */
   updateLabelling(user: string, label: any): void {
+    //Placeholder for new label value of labelling
     let selectedLabel: Label;
     try {
+      //Getting the label from a given name in the list of labels from this label type
       selectedLabel = this.findLabel(this.labels, label);
+      //Change the labelling in the label_per_user array for user
       this.label_per_user[user] = {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), "id": selectedLabel.getId()};
     } catch (error) {
+      //If couldn't find label, show error
       this.toastCommService.emitChange([false, "Label doesn't exist"]);
     }   
     
   }
 
+  /**
+   * Finds a label object in an array of Labels from a given name
+   * 
+   * @param labels array of labels
+   * @param label the name of the label that needs to be found
+   */
   findLabel(labels: Label[], label: string): Label {
+    //Running through each label in array and see if the label has the same name as (parameter) "label"
     for (let eachLabel of labels) {
       if (eachLabel.getName() == label) {
         return eachLabel
       }
     }
+    //Return error if cannot find the label
     throw new Error("Label name invalid")
   }
 
+  /**
+   * Update the labellings in the backend
+   */
   async updateLabellings(): Promise<void> {
     try {
+      //Send project ID, label type ID, artifact ID and labelling updates to the backend
       this.labellingDataService.editLabelling(this.p_id, this.lt_id, this.a_id, this.label_per_user)
     } catch (error) {
+      //If not posisble to update, sends an error
       this.toastCommService.emitChange([false, "Something went wrong! Please try again."]);
     }
+    //Set to keep track of all current labellings
     let labelCheck = new Set<string>();
+    //Adding each user's current labelling to the set
     for (let labelling in this.label_per_user) {
       labelCheck.add(this.label_per_user[labelling]['name'])
     }
+    //Checks if the set has only 1 value
     if(labelCheck.size == 1) {
-      console.log("Resolved");
+      //This means that all labellings have the same label and therefore conflict is resolved
+      //Navigate to conflict page
       this.router.navigate(['/project', this.p_id, 'conflict'])
     }
     else {
+      //If not, shows an error saying conflict is not solved
       this.toastCommService.emitChange([false, "Conflict has not been resolved."]);
     }
   }
