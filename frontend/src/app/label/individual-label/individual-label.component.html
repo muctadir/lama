@@ -59,7 +59,7 @@
     <!-- Back and Edit Buttons -->
     <div class="col-6 align-self-end">
         <div>
-          <button class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete">Delete</button>
+          <button *ngIf="labelCount == 0" class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete">Delete</button>
           <!-- Edit button -->
           <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit">Edit</button>
           <!-- Cancel button -->

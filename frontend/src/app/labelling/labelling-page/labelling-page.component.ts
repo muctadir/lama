@@ -264,31 +264,101 @@ export class LabellingPageComponent implements OnInit {
   }
 
 
-  ////TO BARTGANG: idk how to get the text to be selected againnnn
-    /**
-   * Function is ran on mouseDown or mouseUp and updates the current selection
-   * of the artifact. If the selection is null or empty, the selection is set
-   * to ""
-   * BROKEN
+  /**
+ * Function is ran on mouseDown or mouseUp and updates the current selection
+ * of the artifact. If the selection is null or empty, the selection is set
+ * to ""
+ */
+  selectedText(): void {
+    let hightlightedText: Selection | null = document.getSelection();
+    //gets the start and end indices of the highlighted bit
+    let startCharacter: number = hightlightedText?.anchorOffset!;
+    let endCharacter: number = hightlightedText?.focusOffset!;
+    //make sure they in the right order
+    if (startCharacter > endCharacter) {
+      startCharacter = hightlightedText?.focusOffset!;
+      endCharacter = hightlightedText?.anchorOffset!;
+    }
+    //put into global variable
+    this.selectionStartChar = startCharacter;
+    this.selectionEndChar = endCharacter;
+    //this is so the buttons still pop up, idk if we need it so ill ask bartgang
+    if (hightlightedText == null || hightlightedText.toString().length <= 0) {
+      this.hightlightedText = '';
+    } else {
+      this.hightlightedText = hightlightedText.toString();
+    }
+  }
+
+  /**
+   * Splitting function, gets text without splitting words and gets start and end char
    */
-  //  selectedText(): void {
-  //   let hightlightedText: Selection | null = document.getSelection();
-  //   //gets the start and end indices of the highlighted bit
-  //   let startCharacter: number = hightlightedText?.anchorOffset!;
-  //   let endCharacter: number = hightlightedText?.focusOffset!;
-  //   //make sure they in the right order
-  //   if (startCharacter > endCharacter) {
-  //     startCharacter = hightlightedText?.focusOffset!;
-  //     endCharacter = hightlightedText?.anchorOffset!;
-  //   }
-  //   //put into global variable
-  //   this.selectionStartChar = startCharacter;
-  //   this.selectionEndChar = endCharacter;
-  //   //this is so the buttons still pop up, idk if we need it so ill ask bartgang
-  //   if (hightlightedText == null || hightlightedText.toString().length <= 0) {
-  //     this.hightlightedText = '';
-  //   } else {
-  //     this.hightlightedText = hightlightedText.toString();
-  //   }
-  // }
+  split(): void {
+    // Get start/end positions of highlight
+    let firstCharacter = this.selectionStartChar! - 1;
+    let lastCharacter = this.selectionEndChar! - 1;
+    // Fix positions to start/end of words that they clip
+    firstCharacter = this.startPosFixer(firstCharacter);
+    lastCharacter = this.endPosFixer(lastCharacter);
+    // Get the text represented by the rounded start and end
+    let splitText = this.artifact?.data.substring(
+      firstCharacter,
+      lastCharacter
+    );
+    // Make request to split
+    this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    // TODO: Show visual feedback that split occurs
+    this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected': " + splitText+ "'"]);
+  }
+
+  //fixes the position of the start character of a word
+  startPosFixer(startPos: number) {
+    //gets char at start of the word
+    let chart = this.artifact?.data.charAt(startPos);
+    //checks if it is at the correct position to begin with
+    if (chart == ' ' ) {
+      startPos = startPos + 1
+      return startPos
+    }
+    //start bound check
+    if (startPos == 0) {
+      return startPos
+    }
+
+    //else, move until we find the start of a word
+    while (chart != ' ' && startPos > 0) {
+      chart = this.artifact?.data.charAt(startPos);
+      startPos--;
+    }
+
+    //last adjustmensts for when the text goes too far
+    if (startPos != 0) {
+      startPos++;
+    }
+    return startPos
+
+  }
+
+  //fixes the position of the start character of a word
+  endPosFixer(endPos: number) {
+    //gets char at end of the word
+    let chend = this.artifact?.data.charAt(endPos);
+    //see if the last char is correct to begin with
+    if (chend == ' ' || endPos == this.artifact.data.length) {
+      return endPos
+    }
+    //fix such that the next word is not accidentally selected
+    if (this.artifact?.data.charAt(endPos - 1) == ' ') {
+      endPos--
+      return endPos
+    }
+    //else, move until we find a space or hit the end of artifact
+    while (chend != ' ' && endPos < this.artifact?.data.length) {
+      chend = this.artifact?.data.charAt(endPos);
+      endPos++;
+    }
+
+    return endPos
+  }
+
 }

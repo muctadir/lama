@@ -343,13 +343,8 @@ def random_artifact(*, user):
     # Get the project id
     p_id = int(args['p_id'])
 
-    # TODO: Change to be an artifact that has not been labelled
-    artifact = db.session.scalar(
-        select(Artifact)
-        .where(Artifact.p_id == p_id)
-        .order_by(func.rand())
-        .limit(1)
-    )
+    # Get a random
+    artifact = get_random_artifact(user.id, p_id)
 
     if not artifact:
         return make_response('No artifact')
@@ -394,90 +389,79 @@ def get_labellers():
 
     return make_response(json_labellers)
 
-
-@artifact_routes.route("/getLabelers", methods=["GET"])
+# Author: Eduardo Costa Martins
+# Posts the split to the database
+# TODO: Record split in changelog
+@artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
-def get_labells_by_label_type():
-    # Get args from request
-    args = request.args
+def post_split():
+    
+    args = request.json['params']
     # What args are required
-    required = ['p_id', 'a_id']
+    required = ('p_id', 'parent_id', 'identifier', 'start', 'end', 'data')
     # Check if required args are present
     if not check_args(required, args):
-        return make_response('Bad Request', 400)
+        return make_response("Bad Request", 400)
+    # Declare new artifact
+    new_artifact = Artifact(**args)
+    # Add the new artifact
+    db.session.add(new_artifact)
 
-    # Get all the labels of a specifc label type
-    labels = db.session.scalars(
-        select(User)
-        .where(
-            User.id == Labelling.u_id,
-            Labelling.a_id == args['a_id']
-        )
-    ).all()
-    # Schema to serialize the User
-    user_schema = UserSchema()
-    # Jsonify the result
-    json_labellers = jsonify(user_schema.dump(labels, many=True))
-
-    return make_response(json_labellers)
-
-
-artifact_routes.route("/newHighlights", methods=["POST"])
-
-
-@login_required
-@in_project
-def add_new_highlights(*, user):
-    # Get args from request
-    args = request.args
-    # What args are required
-    required = ['p_id', 'a_id', 'u_id']
-
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
-
-    # Get the information given by the frontend
-    highlight_info = request.json
-
-    # Schema to serialize the Highlight
-    artifact_schema = HighlightSchema()
-
-    highlight_object = artifact_schema.load(highlight_info["highlight"])
-
-    # Add the highligh to the database
-    db.session.add(highlight_object)
-
-    # Try commiting the artifacts
     try:
+        # Commit the artifact
         db.session.commit()
     except OperationalError:
-        return make_response('Internal Server Error', 503)
+        make_response("Internal Service Error", 503)
 
-    return make_response("Route accessed")
+    return make_response("Success")
 
-
+# Gets a random artifact which has not been already labelled by the user
 def get_random_artifact(u_id, p_id):
     # Criteria for artifact completion
-    criteria = db.session.get(Project.criteria, p_id)
+    criteria = db.session.scalar(select(Project.criteria).where(Project.id == p_id))
+
     # Artifact ids that have been labelled by enough people
     # NB: Even with conflicts, it still should not be seen by more people
-    completed = select(
-        Labelling.a_id
+    labellings = select(
+        Labelling.a_id,
+        Labelling.lt_id,
+        func.count(Labelling.l_id).label('label_count')
     ).where(
-        func.count(Labelling.l_id) >= criteria
+        Labelling.p_id == p_id
+    ).group_by(
+        Labelling.a_id,
+        Labelling.lt_id
     ).subquery()
+
+    min_labellings = select(
+        labellings.c.a_id,
+        func.min(labellings.c.label_count).label('min_count')
+    ).group_by(
+        labellings.c.a_id
+    ).subquery()
+
+    completed = select(
+        min_labellings.c.a_id
+    ).where(
+        min_labellings.c.min_count >= criteria
+    )
+
     # Artifact ids that the user has already labelled
-    labelled = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
+    labelled = select(distinct(Labelling.a_id)).where(Labelling.u_id == u_id)
+
     artifact = db.session.scalar(
         select(Artifact)
-        .where(Artifact.p_id == p_id)
-        .except_(completed, labelled)
-        .order_by(func.rand())
+        .where(
+            Artifact.p_id == p_id,
+            Artifact.id.not_in(completed),
+            Artifact.id.not_in(labelled)
+        ).order_by(func.rand())
         .limit(1)
     )
+
     return artifact
+
 # Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
