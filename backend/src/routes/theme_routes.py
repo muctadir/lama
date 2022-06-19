@@ -297,12 +297,13 @@ def edit_theme(*, user):
     # Check if theme is in given project
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
+        
+    if theme.description != args['description']:
+        __record_description_edit(theme.id, args['name'], p_id, user.id)
     
     if theme.name != args['name']:
         __record_name_edit(theme.id, theme.name, p_id, user.id, args['name'])
     
-    if theme.description != args['description']:
-        __record_description_edit(theme.id, args['name'], p_id, user.id)
 
     # Change the theme information
     db.session.execute(
