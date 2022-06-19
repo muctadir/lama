@@ -140,6 +140,10 @@ export class ArtifactManagementPageComponent {
   // Open the modal
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
+    modalRef.result.then((data) => {
+      this.ngOnInit();
+    });
+
   }  
   
   // Gets the search text

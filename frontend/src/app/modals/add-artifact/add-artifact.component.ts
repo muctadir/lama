@@ -6,6 +6,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
+
 
 @Component({
   selector: 'app-add-artifact',
@@ -23,9 +25,6 @@ export class AddArtifactComponent {
   // Gets the url from the router
   url: string;
 
-  /* Message displayed to the user, success or failure */
-  message: string = "";
-
   /* Whether the message is an error */
   error: boolean = false;
 
@@ -38,6 +37,7 @@ export class AddArtifactComponent {
    */
   constructor(public activeModal: NgbActiveModal,
     private artifactDataService: ArtifactDataService,
+    private toastCommService: ToastCommService,
     private router: Router) {
        this.file = null;
        this.p_id = 0;
@@ -78,9 +78,8 @@ export class AddArtifactComponent {
    *
    */
   fileUpload(): void {
-    // Make sure error and message are reset
+    // Make sure error is reset
     this.error = false;
-    this.message = '';
 
     // Stores the project id in a local variable
     let p_id = this.p_id;
@@ -97,7 +96,7 @@ export class AddArtifactComponent {
           // If no artifacts were added and no error was detected,
           // make an error message
           if (!this.error) {
-            this.message = "No artifacts were uploaded";
+            this.toastCommService.emitChange([false, "No artifacts were uploaded"])
             this.error = true;
           }
         }
@@ -127,11 +126,13 @@ export class AddArtifactComponent {
 
         // Add the artifacts to the backend
         await this.addArtifacts(p_id, allArtifacts)
-        window.location.reload()
+        // Close modal
+        this.activeModal.close();
+
       })
     } catch (e) {
       // Ensures an error message is displayed
-      this.message = "Error uploading artifacts";
+      this.toastCommService.emitChange([false, "Error uploading artifacts"])
       this.error = true;
       return;
     }
@@ -146,7 +147,7 @@ export class AddArtifactComponent {
   async addArtifacts(pid: number, artifacts: Record<string, any>[]) {
     let identifier = await this.artifactDataService.addArtifacts(pid, artifacts);
     // Indicates that the upload was successful
-    this.message = "Upload successful. Artifact identifier: ".concat(identifier);
+    this.toastCommService.emitChange([true, "Upload successful. Artifact identifier: ".concat(identifier)])
     this.error = false;
   }
 
@@ -160,7 +161,7 @@ export class AddArtifactComponent {
     // Checks whether the file is a text file, if not displays error
     if (this.file?.type != "text/plain") {
       // Ensures an error message is displayed
-      this.message = "Invalid file type, should be .txt";
+      this.toastCommService.emitChange([false, "Invalid file type, should be .txt"])
       this.error = true;
       // Exists function
       return new Promise((resolve) => {
