@@ -199,19 +199,29 @@ export class LabelManagementComponent {
    * Function for sorting on number of artifacts
    * 
   */
-  sortNumberOfArtifacts(){
+   sortNumberOfArtifacts(){
     // Check if it was sorted ascending
     if (this.sortedNOA == sorted.Asc){
       // Make the sorted enum descending
       this.sortedNOA = sorted.Des;
       // Sort the array
-      this.labels.sort((a,b) => a.getNumberOfArtifacts() - b.getNumberOfArtifacts());
+      this.labels.sort((a,b) => {
+        // Get the number of artifacts labelled
+        const n1 = parseInt(this.labelAmount[a.getId()]);
+        const n2 = parseInt(this.labelAmount[b.getId()]);
+        return n2 - n1;
+      });
     // Check if it was sorted descending or not yet
     } else if (this.sortedNOA == sorted.Des || this.sortedNOA == sorted.Not){
       // Make the sorted enum ascending
       this.sortedNOA = sorted.Asc;
       // Sort the array
-      this.labels.sort((a,b) => b.getNumberOfArtifacts() - a.getNumberOfArtifacts());
+      this.labels.sort((a,b) => {
+        // Get the number of artifacts labelled
+        const n1 = parseInt(this.labelAmount[a.getId()]);
+        const n2 = parseInt(this.labelAmount[b.getId()]);
+        return n1 - n2;
+      });
     }
     // Set other sorts to not sorted
     this.sortedLabel = sorted.Not;

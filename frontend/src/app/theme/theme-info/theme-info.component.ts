@@ -185,6 +185,7 @@ export class ThemeInfoComponent implements OnInit {
           "p_id": this.p_id
         }
       }
+      
       // Send the theme information to the backend
       let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
@@ -198,12 +199,13 @@ export class ThemeInfoComponent implements OnInit {
       // Reset description
       this.selectedDescriptionLabel = '';
       this.selectedDescriptionTheme = '';
+      // Give succes/error message
+      this.errorMsg = response;
+
       // Reset name and description forms
       this.themeForm.reset();
-      // Give succes message
-      this.errorMsg = response;  
       // Rerouter to the correct page
-      this.reRouter();   
+      this.reRouter(); 
     } else {
       // Displays error message
       this.toastCommService.emitChange([false, "Name or description not filled in"]);
@@ -224,13 +226,13 @@ export class ThemeInfoComponent implements OnInit {
   
   // Async function for posting the new theme info
   async post_theme_info(theme_info: any): Promise<string> {
-    if(this.create){
+    if (this.create){
       // Send info to backend
       return this.themeDataService.create_theme(theme_info);
     } else if (this.edit){
       return this.themeDataService.edit_theme(theme_info);
     } else {
-      return "";
+      return "Error has occured when creating/editing the theme";
     }
   }
 
