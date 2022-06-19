@@ -1,5 +1,7 @@
 stages:
   - testing
+  - build-image
+
     
 frontend-test:
   stage: testing
@@ -41,3 +43,29 @@ backend-test:
     - pip3 install -r requirements.txt
   script:
     - pytest
+
+
+build-image-frontend:
+  stage: build-image
+  image: docker
+  needs: ['frontend-test', 'backend-test']
+  only:
+    - main 
+  retry: 2
+  script:
+    - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
+    - docker build -t lamahost.win.tue.nl:81/lama-frontend ./frontend
+    - docker push lamahost.win.tue.nl:81/lama-frontend
+
+build-image-backend:
+  stage: build-image
+  image: docker  
+  needs: ['frontend-test', 'backend-test']
+  only:
+    - main 
+  retry: 2
+  script:
+    - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
+    - docker build -t lamahost.win.tue.nl:81/lama-backend ./backend
+    - docker push lamahost.win.tue.nl:81/lama-backend
+
