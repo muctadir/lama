@@ -4,13 +4,14 @@
 # Thea Bradley
 
 from importlib.metadata import requires
+from src.models.project_models import Project
 from src.app_util import in_project
 from src.app_util import check_args
-from flask import current_app as app
 from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, LabelType
+from src.models.change_models import ChangeType
 from src.models.auth_models import UserSchema
-from src.models.project_models import Membership
+from src.models.project_models import Project, Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
@@ -75,16 +76,18 @@ def get_artifacts(*, user, membership):
     else:
         # If user isn't admin, then get all artifacts the user has labelled
 
-        # Get artifacts the user has labelled in the current project (for a certain page)
-        artifacts = db.session.scalars(select(Artifact
-                ).where(
+        # Get only the artifacts the user has labelled in the current project (for a certain page)
+        artifacts = db.session.scalars(
+            select(Artifact)
+            .where(
                 Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id,
-                Artifact.id > seek_index
-            ).offset((page - seek_page - 1) * page_size
-            ).limit(page_size).distinct()).all()
-
+                Artifact.id > seek_index)
+            .distinct()
+            .offset((page - seek_page - 1) * page_size)
+            .limit(page_size)
+        ).all()
         # Get the number of artifacts the user has labelled
         n_artifacts = db.session.scalar(
             select(func.count(distinct(Artifact.id)))
@@ -130,7 +133,7 @@ def get_artifacts(*, user, membership):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 @in_project
-def add_new_artifacts():
+def add_new_artifacts(*, user):
     # Get args from request 
     args = request.json['params']
     # What args are required
@@ -161,11 +164,21 @@ def add_new_artifacts():
 
     # Add the artifact to the database
     db.session.add_all(artifact_object)
+
+    # Flushing updates the ids of the objects to what they actually are in the db
+    db.session.flush()
+
+    # Retrieve the ids from the artifacts
+    artifact_ids = [artifact.id for artifact in artifact_object]
+
+    # Store the creations in the changelog
+    __record_creations(artifact_ids, user.id, args['p_id'])
     
-    # Try commiting the artifacts
+    # Try commiting the changes
     try:
         db.session.commit()
-    except OperationalError:
+    except OperationalError as e:
+        print(e)
         return make_response('Internal Server Error', 503)
 
     return make_response(identifier)
@@ -259,7 +272,7 @@ def search(*, user, membership):
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
                 Labelling.a_id == Artifact.id,
-                Labelling.u_id == user.id)
+                Labelling.u_id == user.id).distinct()
         ).all()
 
     # Getting result of search
@@ -349,13 +362,8 @@ def random_artifact(*, user):
     # Get the project id
     p_id = int(args['p_id'])
 
-    # TODO: Change to be an artifact that has not been labelled
-    artifact = db.session.scalar(
-        select(Artifact)
-        .where(Artifact.p_id == p_id)
-        .order_by(func.rand())
-        .limit(1)
-    )
+    # Get a random
+    artifact = get_random_artifact(user.id, p_id)
 
     if not artifact:
         return make_response('No artifact')
@@ -400,90 +408,82 @@ def get_labellers():
 
     return make_response(json_labellers)
 
-
-@artifact_routes.route("/getLabelers", methods=["GET"])
+# Author: Eduardo Costa Martins
+# Posts the split to the database
+@artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
-def get_labells_by_label_type():
-    # Get args from request
-    args = request.args
+def post_split(*, user):
+    
+    args = request.json['params']
     # What args are required
-    required = ['p_id', 'a_id']
+    required = ('p_id', 'parent_id', 'identifier', 'start', 'end', 'data')
     # Check if required args are present
     if not check_args(required, args):
-        return make_response('Bad Request', 400)
+        return make_response("Bad Request", 400)
+    # Declare new artifact
+    new_artifact = Artifact(**args)
+    # Add the new artifact
+    db.session.add(new_artifact)
+    # Updates the id for the new artifact
+    db.session.flush()
+    # Records the split in the artifact changelog
+    __record_split(user.id, args['p_id'], new_artifact.id, args['parent_id'])
 
-    # Get all the labels of a specifc label type
-    labels = db.session.scalars(
-        select(User)
-        .where(
-            User.id == Labelling.u_id,
-            Labelling.a_id == args['a_id']
-        )
-    ).all()
-    # Schema to serialize the User
-    user_schema = UserSchema()
-    # Jsonify the result
-    json_labellers = jsonify(user_schema.dump(labels, many=True))
-
-    return make_response(json_labellers)
-
-
-artifact_routes.route("/newHighlights", methods=["POST"])
-
-
-@login_required
-@in_project
-def add_new_highlights(*, user):
-    # Get args from request
-    args = request.args
-    # What args are required
-    required = ['p_id', 'a_id', 'u_id']
-
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
-
-    # Get the information given by the frontend
-    highlight_info = request.json
-
-    # Schema to serialize the Highlight
-    artifact_schema = HighlightSchema()
-
-    highlight_object = artifact_schema.load(highlight_info["highlight"])
-
-    # Add the highligh to the database
-    db.session.add(highlight_object)
-
-    # Try commiting the artifacts
     try:
+        # Commit the artifact
         db.session.commit()
     except OperationalError:
-        return make_response('Internal Server Error', 503)
+        make_response("Internal Service Error", 503)
 
-    return make_response("Route accessed")
+    return make_response("Success")
 
-
+# Gets a random artifact which has not been already labelled by the user
 def get_random_artifact(u_id, p_id):
     # Criteria for artifact completion
-    criteria = db.session.get(Project.criteria, p_id)
+    criteria = db.session.scalar(select(Project.criteria).where(Project.id == p_id))
+
     # Artifact ids that have been labelled by enough people
     # NB: Even with conflicts, it still should not be seen by more people
-    completed = select(
-        Labelling.a_id
+    labellings = select(
+        Labelling.a_id,
+        Labelling.lt_id,
+        func.count(Labelling.l_id).label('label_count')
     ).where(
-        func.count(Labelling.l_id) >= criteria
+        Labelling.p_id == p_id
+    ).group_by(
+        Labelling.a_id,
+        Labelling.lt_id
     ).subquery()
+
+    min_labellings = select(
+        labellings.c.a_id,
+        func.min(labellings.c.label_count).label('min_count')
+    ).group_by(
+        labellings.c.a_id
+    ).subquery()
+
+    completed = select(
+        min_labellings.c.a_id
+    ).where(
+        min_labellings.c.min_count >= criteria
+    )
+
     # Artifact ids that the user has already labelled
-    labelled = select(Labelling.a_id).where(Labelling.u_id == u_id).subquery()
+    labelled = select(distinct(Labelling.a_id)).where(Labelling.u_id == u_id)
+
     artifact = db.session.scalar(
         select(Artifact)
-        .where(Artifact.p_id == p_id)
-        .except_(completed, labelled)
-        .order_by(func.rand())
+        .where(
+            Artifact.p_id == p_id,
+            Artifact.id.not_in(completed),
+            Artifact.id.not_in(labelled)
+        ).order_by(func.rand())
         .limit(1)
     )
+
     return artifact
+
 # Function that gets the artifact with ID a_id
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
@@ -528,3 +528,48 @@ def generate_artifact_identifier(p_id):
     
     # Return the identifier
     return identifier_upper[start:length]
+
+"""
+Records the creation of a list of artifacts in the artifact changelog
+
+@param artifact_ids: a list of ids of artifacts that were created
+@param u_id: id of the user that created the artifact
+@param p_id: id of the project the artifacts were created in
+"""
+def __record_creations(artifact_ids, u_id, p_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+    
+    # Record each creation as a separate change
+    creations = [ArtifactChange(
+        u_id=u_id,
+        p_id=p_id,
+        i_id=a_id,
+        change_type=ChangeType.create,
+        name=a_id
+    ) for a_id in artifact_ids]
+    
+    db.session.add_all(creations)
+
+"""
+Records an artifact split in the artifact changelog
+@param u_id: the id of the user that made the split
+@param p_id: the id of the project the artifacts are in
+@param a_id: the id of the created artifact
+@param parent_id: the id of the artifact that the created artifact was split from
+"""
+def __record_split(u_id, p_id, a_id, parent_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+
+    change = ArtifactChange(
+        u_id=u_id,
+        p_id=p_id,
+        i_id=a_id,
+        change_type=ChangeType.split,
+        name=a_id,
+        # The encoding for a split is just the parent id
+        description=parent_id
+    )
+
+    db.session.add(change)

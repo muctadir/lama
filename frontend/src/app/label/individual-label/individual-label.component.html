@@ -3,8 +3,12 @@
     <!-- contains the page title and Artifact Identifier -->
     <div class="row">
         <!-- Label Name as title -->
-        <div id="artifactId" class="col-10">
+        <div id="artifactId" class="col-11">
             <p class="header">{{label.getName()}}</p>
+        </div>
+        <div class="col-1 d-flex justify-content-center">
+            <!-- When clicked calls openThemeHistory function -->
+            <em class="bi bi-clock-history" id="history-hover" (click)="openLabelHistory()"></em>
         </div>
     </div>
 
@@ -59,7 +63,7 @@
     <!-- Back and Edit Buttons -->
     <div class="col-6 align-self-end">
         <div>
-          <button class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete">Delete</button>
+          <button *ngIf="labelCount == 0" class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete">Delete</button>
           <!-- Edit button -->
           <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit">Edit</button>
           <!-- Cancel button -->

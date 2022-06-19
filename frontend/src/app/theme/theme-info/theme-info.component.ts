@@ -185,6 +185,7 @@ export class ThemeInfoComponent implements OnInit {
           "p_id": this.p_id
         }
       }
+      
       // Send the theme information to the backend
       let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
@@ -198,7 +199,7 @@ export class ThemeInfoComponent implements OnInit {
       // Reset description
       this.selectedDescriptionLabel = '';
       this.selectedDescriptionTheme = '';
-      // Give succes message
+      // Give success message
       this.errorMsg = response;  
       // Rerouter to the theme management page if theme was created
       if(response == "Theme created succesfully") {
@@ -226,13 +227,13 @@ export class ThemeInfoComponent implements OnInit {
   
   // Async function for posting the new theme info
   async post_theme_info(theme_info: any): Promise<string> {
-    if(this.create){
+    if (this.create){
       // Send info to backend
       return this.themeDataService.create_theme(theme_info);
     } else if (this.edit){
       return this.themeDataService.edit_theme(theme_info);
     } else {
-      return "";
+      return "Error has occured when creating/editing the theme";
     }
   }
 

@@ -8,3 +8,4 @@ from src.routes.account_routes import account_routes
 from src.routes.theme_routes import theme_routes
 from src.routes.artifact_routes import artifact_routes
 from src.routes.conflict_routes import conflict_routes
+from src.routes.change_routes import change_routes

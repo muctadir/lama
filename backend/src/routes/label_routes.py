@@ -4,11 +4,12 @@
 from src.app_util import check_args
 from src import db  # need this in every route
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update, func
+from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
+from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
-  Labelling, ThemeSchema, Artifact, ArtifactSchema
+  Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -17,14 +18,15 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
-def create_label():
+def create_label(*, user):
 
     args = request.json['params']
-    # What args are required
+
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
+        print(args)
         return make_response('Bad Request', 400)
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
@@ -48,7 +50,11 @@ def create_label():
     # Commit the label
     try:
         db.session.add(label)
-        db.session.commit()
+        # Flushing updates the id of the label object
+        db.session.flush()
+        # Records the creation of the label in the label changelog
+        __record_creation(label.id, label.name, label_type.name, args['p_id'], user.id)
+        db.session.commit() 
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
@@ -59,7 +65,7 @@ def create_label():
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
-def edit_label():
+def edit_label(*, user):
     # Get args
     args = request.json['params']
     # Required args
@@ -73,7 +79,7 @@ def edit_label():
     # Get label from database
     try:
         label = db.session.get(Label, args['labelId'])
-    except:
+    except OperationalError:
         # Something went wrong
         return make_response('Internal Server Error: Fetching label from database unsuccessful.', 500)
     # Check if the response contained a label
@@ -82,15 +88,24 @@ def edit_label():
     # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
+    
+    # Records a change in the description, only if the description has actually changed
+    if label.description != args['labelDescription']:
+        __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
+    
+    # Records a change in the name, only if the name has actually changed
+    if label.name != args['labelName']:
+        __record_name_edit(label.id, label.name, args['p_id'], label.id, args['labelName'])
+
+    db.session.execute(
+        update(Label)
+        .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
+    )
+    
     try:
-        # Update and commit
-        db.session.execute(
-            update(Label)
-            .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
-        )
         db.session.commit()
     except OperationalError:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+        return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response()
 
@@ -167,11 +182,11 @@ def get_single_label():
 @label_routes.route('/merge', methods=['POST'])
 @login_required
 @in_project
-def merge_route():
+def merge_route(*, user):
+
     args = request.json['params']
-    # Required arguments
-    required = ['leftLabelId', 'rightLabelId',
-                'newLabelName', 'newLabelDescription', 'p_id']
+    # Required parameters
+    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')
 
     # Check if required args are present
     if not check_args(required, args):
@@ -182,43 +197,116 @@ def merge_route():
         return make_response('Label name cannot be empty')
     # Check whether the length of label description is at least one character long
     if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
-        return make_response('Label description cannot be empty')
-    # Check whether the ids are different
-    if args['leftLabelId'] == args['rightLabelId']:
-        return make_response('Cannot merge the same label twice', 400)
+        return make_response('Bad request: Label description cannot be empty', 400)
+    
+    # Check that labels have different ids (set construction keeps only unique ids)
+    label_ids = args['mergedLabels']
+    if len(label_ids) != len(set(label_ids)):
+        return make_response('Bad request: Label ids must be unique', 400)
 
-    ids = [args['leftLabelId'], args['rightLabelId']]
-    labels = db.session.execute(
-        select(Label)
-        .where(Label.id.in_(ids))).scalars().all()
-
+    # Labels being merged
+    labels = db.session.scalars(
+        select(
+            Label
+        ).where(
+            Label.id.in_(label_ids)
+        )
+    ).all()
+    
     # Check that the labels exist
-    if len(labels) != 2:
+    if len(labels) != len(label_ids):
         return make_response('Bad request: One or more labels do not exist', 400)
-    # Check labels are in the same project
-    if labels[0].p_id != labels[1].p_id:
-        return make_response('Bad request: Labels must be in the same project', 400)
-    # Check labels are of the same type
-    if labels[0].lt_id != labels[1].lt_id:
-        return make_response('Bad request: Labels must be of the same type', 400)
 
+    for label in labels:
+        # Check labels are in the same project (the one selected)
+        if label.p_id != args['p_id']:
+            return make_response('Bad request: Labels must be in the same project', 400)
+        # Check labels are of the same type
+        if label.lt_id != labels[0].lt_id:
+            return make_response('Bad request: Labels must be of the same type', 400)        
+    
     # Create new label
-    new_label = Label(name=args['newLabelName'],
+    new_label = Label(
+        name=args['newLabelName'], 
         description=args['newLabelDescription'],
         lt_id=labels[0].lt_id,
-        p_id=labels[0].p_id)
+        p_id=args['p_id']
+    )
 
-    try:
-        db.session.add(new_label)
-        db.session.commit()
-    except OperationalError:
-        return make_response('Internal Server Error: Commit to database unsuccesful', 500)
+    db.session.add(new_label)
+    db.session.flush()
+
+    # Artifact ids and label ids that are being affected
+    artifact_changes_ids = select(
+        Labelling.a_id,
+        Labelling.l_id
+    ).where(
+        Labelling.l_id.in_(label_ids)
+    ).distinct().subquery()
+
+    # Replace label ids with label name
+    artifact_changes = db.session.execute(
+        select(
+            artifact_changes_ids.c.a_id,
+            Label.name
+        ).where(
+            artifact_changes_ids.c.l_id == Label.id
+        )
+    ).all()
+
+    # Theme ids and label ids that were affected because they had a label assigned to them
+    theme_changes_ids = select(
+        label_to_theme.c.t_id,
+        label_to_theme.c.l_id
+    ).where(
+        label_to_theme.c.l_id.in_(label_ids)
+    ).subquery()
+
+    # Replace label id with name and also get theme name
+    theme_changes = db.session.execute(
+        select(
+            Theme.name,
+            Theme.id,
+            Label.name
+        ).where(
+            Theme.id == theme_changes_ids.c.t_id,
+            Label.id == theme_changes_ids.c.l_id
+        )
+    ).all()
+
+    __record_merge(new_label, labels, args['p_id'], user.id, args['labelTypeName'], artifact_changes, theme_changes)
 
     # Update all labellings
+    db.session.execute(
+        update(Labelling)
+        .where(Labelling.l_id.in_(label_ids)).values(l_id=new_label.id)
+    )
+
+    # Update all the themes
+    # First insert new label
+    db.session.execute(
+        insert(label_to_theme).from_select(
+            # The columns we are inserting
+            ['t_id', 'l_id', 'p_id'], 
+            # The selection we insert
+            select(
+                # The theme ids being affected
+                theme_changes_ids.c.t_id,
+                # The new label id
+                new_label.id, 
+                # The project id
+                args['p_id']
+            ) # Distinct in case some themes contain multiple of the labels being merged
+            .distinct()
+        )
+    )
+    # Then delete all instances of this label being used in themes
+    db.session.execute(
+        delete(label_to_theme)
+        .where(label_to_theme.c.l_id.in_(label_ids))
+    )
+
     try:
-        db.session.execute(
-            update(Labelling)
-            .where(Labelling.l_id.in_(ids)).values(l_id=new_label.id))
         db.session.commit()
         return make_response('Success')
     except OperationalError:
@@ -255,25 +343,36 @@ def get_label_artifacts(label, u_id, admin):
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
     )
 
-
 # Author: B. Henkemans
 # Soft delete labels route
 @label_routes.route('/delete', methods=['POST'])
 @login_required
 @in_project
-def soft_delete_route():
+def soft_delete_route(*, user):
     args = request.json['params']
     # Required args
     required = ['l_id', 'p_id']
     # Check for arguments
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
+    label = db.session.get(Label, args['l_id'])
+
+    # Check if label exists
+    if not label:
+        return make_response("Bad request", 400)
+
+    # Check if label is in the same project
+    if label.p_id != int(args['p_id']):
+        return make_response("Bad request", 400)
+    
     try:
         # Update the label and commit
         db.session.execute(
             update(Label)
             .where(Label.id == args['l_id']).values(deleted=1)
         )
+        __record_delete(label.id, label.name, label.p_id, user.id)
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
@@ -304,3 +403,166 @@ def count_usage_route():
         return make_response(str(count), 200)
     except OperationalError:
         return make_response('Internal Server Error', 500)
+
+"""
+Records a creation of a label in the label changelog
+@param l_id: the id of the label created
+@param l_name: the name of the label created
+@param lt_name: the name of the label type of the label created
+@param p_id: the id of the project the new label is in
+@param u_id: the id of the user that created the label
+"""
+def __record_creation(l_id, l_name, lt_name, p_id, u_id):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        change_type=ChangeType.create,
+        name=l_name,
+        # Label creation description is encoded with just the label type name
+        description=lt_name
+    )
+
+    db.session.add(change)
+
+"""
+Records the editing of label's name in the label changelog
+@param l_id: the id of the label edited
+@param old_name: the name of the label before the edit
+@param new_name: the name of the label after the edit
+@param p_id: the id of the project the label is in
+@param u_id: the id of the user that edited the label
+"""
+def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        # Names in change tables refer to the name before the change
+        name=old_name,
+        # A change description for renaming is encoded with just the new name
+        description=new_name,
+        change_type=ChangeType.name
+    )
+
+    db.session.add(change)
+
+"""
+Records the editing of label's name in the label changelog
+@param l_id: the id of the label edited
+@param old_name: the name of the label before the edit
+@param p_id: the id of the project the label is in
+@param u_id: the id of the user that edited the label
+"""
+def __record_description_edit(l_id, old_name, p_id, u_id):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=old_name,
+        change_type=ChangeType.description
+    )
+
+    db.session.add(change)
+
+"""
+Records the merge of a list of labels in the label changelog
+@param new_label: the _object_ corresponding to the new label
+@param labels: a list of label _objects_ that were merged into the new label
+@param p_id: the project id all these labels belong to
+@param u_id: the id of the user that made the merge
+@param lt_name: the name of the label type of all these labels
+@param artifact_changes: a list of tuples describing artifacts that were affected (and how) of the form
+    (
+        id of an artifact that was labelled with an old label,
+        name of the label the artifact was labelled with before the merge
+    )
+@param theme_changes: a list of tuples describing themes that were changed (and how) of the form
+    (
+        the name of the theme affected,
+        the id of the theme affected,
+        name of a merged label that used to belong to the theme
+    )
+"""
+def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, theme_changes):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+    # Extract the names from the labels, and join them into a string separated by commas
+    # This is used to encode a merge description
+    names = ','.join([label.name for label in labels])
+
+    # Record change for the label
+    # We say that it is the new label that was changed (it is a type of creation)
+    change = LabelChange(
+        i_id=new_label.id,
+        p_id=p_id,
+        u_id=u_id,
+        name=new_label.name,
+        change_type=ChangeType.merge,
+        # Format the description for a merge encoding
+        description=f"{new_label.name} ; {lt_name} ; {names}"
+    )
+    db.session.add(change)
+
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+
+    # Record change for the artifacts
+    # Each artifact that used to be labelled with a merged label is changed
+    changes = [ArtifactChange(
+        i_id=a_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=a_id,
+        change_type=ChangeType.merge,
+        # Format the description for a merge encoding
+        description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
+    ) for a_id, old_label_name in artifact_changes]
+    db.session.add_all(changes)
+
+    # PascalCase because it is a class
+    ThemeChange = Theme.__change__
+
+    # Record change for the themes
+    # Each theme that used to have a merged label assigned to it is changed
+    changes = [ThemeChange(
+        i_id=t_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=t_name,
+        change_type=ChangeType.merge,
+        # Format the description for a merge encoding
+        description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
+    ) for t_name, t_id, old_label_name in theme_changes]
+    db.session.add_all(changes)
+
+"""
+Records the deletion of a label in the label changelog
+Note that since the label can no longer be viewed, its personal history can't be viewed either
+This change is still recorded in case the project is extended with a history page over all labels
+@param l_id: The id of the label being deleted
+@param name: The name of the label being deleted
+@param p_id: The project id the label belong(ed/s) to
+@param u_id: The id of the user that deleted the label
+"""
+def __record_delete(l_id, name, p_id, u_id):
+    # PascalCase because it is a class
+    LabelChange = Label.__change__
+
+    change = LabelChange(
+        i_id=l_id,
+        p_id=p_id,
+        u_id=u_id,
+        name=name,
+        change_type=ChangeType.deleted
+    )
+    db.session.add(change)
