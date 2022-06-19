@@ -229,4 +229,28 @@ export class ArtifactDataService {
       true
     );
   }
+  /**
+   * Post the split to the database 
+   * 
+   * @param p_id 
+   * @param parent_id 
+   * @param identifier 
+   * @param start 
+   * @param end 
+   * @param data 
+   */
+  async postSplit(p_id: number, parent_id: number, identifier: string, start: number, end: number, data: string): Promise<any> {
+    await this.requestHandler.post(
+      '/artifact/split',
+      {
+        p_id: p_id,
+        parent_id: parent_id,
+        identifier: identifier,
+        start: start,
+        end: end,
+        data: data
+      },
+      true
+    )
+  }
 }

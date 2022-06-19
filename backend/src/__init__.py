@@ -74,6 +74,19 @@ def fill():
     from src.models.item_models import LabelType, Label, Theme
     from src.models.auth_models import User, UserStatus
 
+    SUPER_USER = environ.get("SUPER_USER")
+    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
+    SUPER_EMAIL = environ.get("SUPER_EMAIL")
+    db.session.add(User(
+        username=SUPER_USER,
+        email=SUPER_EMAIL,
+        password=generate_password_hash(SUPER_PASSWORD),
+        status=UserStatus.approved,
+        super_admin=True,
+        description="Auto-generated super admin"
+    ))
+    db.session.commit()
+
     # Creates 10 users which are all approved
     users = [User(
         username=f"TestUser{i}",
@@ -81,9 +94,11 @@ def fill():
         email=f"test{i}@test.com",
         description=f"Description for test user {i}",
         super_admin=False
-    ) for i in range(1, 11)]
+    ) for i in range(2, 11)]
     db.session.add_all(users)
     db.session.commit()
+
+    
 
     # Creates 3 projects, the second of which is frozen
     projects = [Project(
@@ -103,13 +118,31 @@ def fill():
         u_id = i,
         admin = i == 1,
         deleted = i == 2
-    ) for i in range(1, 7)]
+    ) for i in range(2, 7)]
     memberships.extend([Membership(
         p_id = 2,
         u_id = i,
         admin = i == 5,
         deleted = i == 6
     ) for i in range(5, 11)])
+    memberships.extend([Membership(
+        p_id = 1,
+        u_id = 1,
+        admin = 1,
+        deleted = 0
+    )])
+    memberships.extend([Membership(
+        p_id = 2,
+        u_id = 1,
+        admin = 1,
+        deleted = 0
+    )])
+    memberships.extend([Membership(
+        p_id = 3,
+        u_id = 1,
+        admin = 1,
+        deleted = 0
+    )])
     db.session.add_all(memberships)
     db.session.commit()
 
@@ -184,12 +217,8 @@ def fill():
     ) for i in range(3, 6)])
     db.session.add_all(theme)
     db.session.commit()
+
     
-@db_opt.command("test")
-def test():
-    changes = get_changes(Label.__change__, 1, 1, True)
-    for change in changes:
-        print(f"{change['timestamp']} | {change['description']}")
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
