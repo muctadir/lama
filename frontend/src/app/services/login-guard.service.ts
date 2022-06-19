@@ -1,3 +1,4 @@
+// Author: Jarl Jansen
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AccountInfoService } from './account-info.service';

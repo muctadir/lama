@@ -20,7 +20,7 @@ export class RequestHandler {
      */
     this.axiosInstance = axios.create({
       baseURL: environment.apiURL, // Environment variable
-      timeout: 1000, // 1 second
+      timeout: 5000, // 5 second
       responseType: 'json', // We want JSON information back
       responseEncoding: 'utf8', // Default encoding
       maxRedirects: 0, // Our api does not have redirects - hence this is put at 0
@@ -96,6 +96,10 @@ export class RequestHandler {
    * 4. Authentication is required and provided -> Ok
    */
   private verifyAuthentication(authenticationReq: boolean) {
+    let sessionToken = sessionStorage.getItem('ses_token');
+    if (sessionToken !== undefined && sessionToken !== null) {
+      this.sessionToken = sessionToken;
+    }
     if (authenticationReq && this.sessionToken === undefined) {
       throw new Error(
         'The method requires a session token which was not provided during instantation.'

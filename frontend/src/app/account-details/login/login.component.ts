@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import axios from 'axios';
 import { InputCheckService } from 'app/services/input-check.service';
 import { Router } from '@angular/router';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 /**
  * Component responsible for logging in the user
@@ -19,10 +20,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-
-  /* String, when login data is incorrect will contain error */
-  errorMsg = "";
-
   /* Login form, data will be modified when user enters data in the login forms */
   loginForm = this.formBuilder.group({
     username: '',
@@ -38,7 +35,10 @@ export class LoginComponent {
    * 
    * @trigger component loaded
    */
-  constructor(private formBuilder: FormBuilder, private service: InputCheckService, private route: Router) { }
+  constructor(private formBuilder: FormBuilder, 
+    private service: InputCheckService, 
+    private route: Router,
+    private toastCommService: ToastCommService) { }
 
   /**
    * Checks whether the input is valid, if it is valid, removes error message and calls login function
@@ -52,16 +52,13 @@ export class LoginComponent {
     // Checks input
     let not_empty = this.service.checkFilled(this.loginForm.value.username) && 
       this.service.checkFilled(this.loginForm.value.password);
-                
-    // Chooses desired behaviour based on validity of input
-    if (not_empty) {
-      this.errorMsg = "";
-      // Check the login credentials
-      this.checkLogin();
-    } else {
-      // Displays error message
-      this.errorMsg = "Username or password not filled in";
+    
+    // Checks input
+    if (!not_empty) {
+      this.toastCommService.emitChange([false, "Please fill in a username and password"]);
+      return;
     }
+    this.checkLogin();
   }
 
   /**
@@ -92,13 +89,10 @@ export class LoginComponent {
 
       // Navigates to the home page
       this.route.navigate(['/home']);
-
-      // Resets error message to now display
-      this.errorMsg = "";
     })
     .catch(error =>{
       // Print the error message: "Invalid username or password"
-      this.errorMsg = error.response.data;
+      this.toastCommService.emitChange([false, error.response.data]);
     })
   }
 }

@@ -3,6 +3,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
 import { StringArtifact } from 'app/classes/stringartifact';
+import { ToastCommService } from './toast-comm.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class ThemeDataService {
   // Session token variable
   private sessionToken: string | null;
   
-  constructor() { 
+  constructor(private toastCommService: ToastCommService) { 
     // Get the session token
     this.sessionToken = sessionStorage.getItem("ses_token");
     // Make the request handler
@@ -205,9 +206,13 @@ export class ThemeDataService {
     try{
       // Create project in the backend
       await this.requestHandler.post('/theme/create_theme', theme_info, true);
+      // Emits an success toast
+      this.toastCommService.emitChange([true, "Created theme successfully"]);
       return "Theme created succesfully";
     // Catch the error
     } catch (e) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
       // Return the response
       return "An error occured when trying to create the theme.";
     }
@@ -223,9 +228,13 @@ export class ThemeDataService {
     try{
       // Create project in the backend
       await this.requestHandler.post('/theme/edit_theme', theme_info, true);
+      // Emits an success toast
+      this.toastCommService.emitChange([true, "Edited theme successfully"]);
       return "Theme edited succesfully"
     // Catch the error
     } catch(e) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
       // Return the response
       return "An error occured when trying to edit the theme";
     }

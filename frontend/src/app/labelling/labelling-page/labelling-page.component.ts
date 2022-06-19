@@ -12,6 +12,7 @@ import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-labelling-page',
@@ -63,7 +64,8 @@ export class LabellingPageComponent implements OnInit {
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
-    private router: Router
+    private router: Router,
+    private toastCommService: ToastCommService
   ) {
     /**
      * Preparing variables for information
@@ -208,7 +210,7 @@ export class LabellingPageComponent implements OnInit {
       this.submitMessage = '';
       this.sendSubmission(dict);
     } catch (e) {
-      this.submitMessage = 'Submission invalid';
+      this.toastCommService.emitChange([false, "Submission invalid"]);
     }
   }
 
@@ -221,7 +223,7 @@ export class LabellingPageComponent implements OnInit {
     // Create an array
     let resultArray: Array<Object> = Array<Object>();
     this.labellings.controls.forEach((el: any) => {
-      // Check the laeblling is valid
+      // Check the labelling is valid
       if (el.status != 'VALID') {
         // Throw and error
         throw 'Submission invalid';
@@ -229,8 +231,14 @@ export class LabellingPageComponent implements OnInit {
       // Push valid results into result array
       resultArray.push({
         a_id: this.artifact?.getId(),
-        lt_id: el.get('labelType')?.value,
-        l_id: el.get('label')?.value,
+        label_type: {
+          id: el.get('labelType')?.value.getId(),
+          name: el.get('labelType')?.value.getName()
+        },
+        label: {
+          id: el.get('label')?.value.getId(),
+          name: el.get('label')?.value.getName()
+        },
         remark: el.get('remark')?.value,
         time: totalTime,
       });
@@ -251,7 +259,7 @@ export class LabellingPageComponent implements OnInit {
       this.ngOnInit();
     } catch (err) {
       // Send error
-      this.submitMessage = 'Database error while submitting labelling.';
+      this.toastCommService.emitChange([false, "Database error while submitting labelling."]);
     }
   }
   /**

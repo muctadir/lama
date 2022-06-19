@@ -13,7 +13,6 @@ import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.compo
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { FormBuilder } from '@angular/forms';
 
-
 @Component({
   selector: 'app-artifact-management-page',
   templateUrl: './artifact-management-page.component.html',
@@ -58,7 +57,8 @@ export class ArtifactManagementPageComponent {
 
   ngOnInit(): void {
 
-    // Get the artifacts from the backend
+    // Clear cache and get the artifacts from the backend
+    this.artifacts = {}
     this.getArtifacts();
   }
 
@@ -120,6 +120,7 @@ export class ArtifactManagementPageComponent {
    * @trigger user clicks on artifact
    */
   reRouter(a_id: number): void {
+    console.log("click")
     // Use reroutingService to obtain the project ID
     let p_id = this.routeService.getProjectID(this.url);
 
@@ -130,10 +131,7 @@ export class ArtifactManagementPageComponent {
   // Open the modal
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
-    // When the modal closes, call the getArtifact function to update the displayed artifacts
-    modalRef.result.then( async () => {
-      this.getArtifacts() });
-    }
+  }  
   
   // Gets the search text
   async onEnter() {
@@ -151,14 +149,14 @@ export class ArtifactManagementPageComponent {
       await this.getArtifacts();
     } else {
       // Otherwise search
-    
+
       // Pass the search word to services
       let artifacts_searched = await this.artifactDataService.search(text, p_id);
 
       // List for the artifacts resulting from the search
       let artifact_list: Array<StringArtifact> = [];
       // For loop through all searched artifacts
-      for (let search_artifact of artifacts_searched){
+      for (let search_artifact of artifacts_searched) {
         // Make it an artifact object
         let newArtifact = new StringArtifact(search_artifact["id"], search_artifact["identifier"], search_artifact['data']);
         // Append artifact to list

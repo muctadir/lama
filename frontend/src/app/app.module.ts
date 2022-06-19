@@ -46,11 +46,15 @@ import { ThemeManagementComponent } from './theme/theme-management/theme-managem
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
-import { ThemeHistoryComponent } from './modals/theme-history/theme-history.component';
+import { HistoryComponent } from './modals/history/history.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
+import { ToastsContainer } from './modals/toast-global/toast-container.component';
+import { ToastCommService } from './services/toast-comm.service';
+import { AppToastService } from './services/app-toast.service';
 
 @NgModule({
   declarations: [
@@ -98,7 +102,9 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     SingleThemeViewComponent,
     ModerationComponent,
     DeleteThemeComponent,
-    ThemeHistoryComponent,
+    HistoryComponent,
+    ToastGlobalComponent,
+    ToastsContainer
   ],
   imports: [
     BrowserModule,
@@ -107,8 +113,9 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [],
+  providers: [ToastCommService],
   bootstrap: [
-    AppComponent]
+    AppComponent
+  ]
 })
 export class AppModule { }

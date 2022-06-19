@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { LabellingDataService } from './labelling-data.service';
 
 describe('LabellingDataService', () => {

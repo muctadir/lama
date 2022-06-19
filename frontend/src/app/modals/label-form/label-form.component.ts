@@ -14,6 +14,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-label-form',
@@ -44,7 +45,8 @@ export class LabelFormComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private labellingDataService: LabellingDataService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toastCommService: ToastCommService
   ) {
     this.labelTypes = new Array<LabelType>();
     this.routeService = new ReroutingService();
@@ -103,7 +105,7 @@ export class LabelFormComponent implements OnInit {
         this.submitPostToServer(label);
       } catch (e) {
         // Throw error
-        this.err = 'Invalid Form';
+        this.toastCommService.emitChange([false, "Invalid Input"]);
       }
     } else {
       try {
@@ -113,7 +115,7 @@ export class LabelFormComponent implements OnInit {
         this.submitPatchToServer(this.label);
       } catch (e) {
         // Throw error
-        this.err = 'Invalid Form';
+        this.toastCommService.emitChange([false, "Invalid Input"]);
       }
     }
   }
@@ -177,7 +179,7 @@ export class LabelFormComponent implements OnInit {
       this.activeModal.close();
     } catch (e) {
       // Throw error
-      this.err = 'Something went wrong while submitting.';
+      this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
     }
   }
 
@@ -197,7 +199,7 @@ export class LabelFormComponent implements OnInit {
       this.activeModal.close();
     } catch (e) {
       // Throw error
-      this.err = 'Something went wrong while submitting.';
+      this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
     }
   }
 }

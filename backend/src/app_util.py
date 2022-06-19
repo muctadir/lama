@@ -234,10 +234,8 @@ def parse_change(change, username):
             return __parse_name_edit(change, username)
         case ChangeType.description:
             return __parse_desc_edit(change, username)
-        case ChangeType.label_theme:
-            return __parse_label_theme(change, username)
-        case ChangeType.theme_theme:
-            return __parse_theme_theme(change, username)
+        case ChangeType.theme_children:
+            return __parse_theme_children(change, username)
         case ChangeType.labelled:
             return __parse_labelled(change, username)
         case ChangeType.deleted:
@@ -313,45 +311,16 @@ def __parse_merge(change, username):
             return f"Theme {change.name} had Label \"{description[2]}\" of type \"{description[1]}\" switched for \"{description[0]}\" as a result of a merge {username} made"
 
 """
-A label_theme string should be of the format:
-"'added'|'removed' ; <comma separated label names>"
+A theme_children string should be of the format:
+"'subtheme'|'label' ; <comma separated theme names>"
 """
-def __parse_label_theme(change, username):
+def __parse_theme_children(change, username):
     description = change.description.split(' ; ')
     if len(description) != 2:
         raise ChangeSyntaxError
     names = description[1].split(',')
-    if names[0].strip() == "":
-        raise ChangeSyntaxError
-    parsed_names = '"' + '", "'.join(names) + '"'
-    match description[0]:
-        case 'added':
-            return f"{username} added label{'s' if len(names[1]) > 1 else ''} {parsed_names} to Theme \"{change.name}\""
-        case 'removed':
-            return f"{username} removed label{'s' if len(names[1]) > 1 else ''} {parsed_names} from Theme \"{change.name}\""
-        case _:
-            raise ChangeSyntaxError
-
-
-"""
-A theme_theme string should be of the format:
-'added'|'removed' ; <comma separated theme names>
-"""
-def __parse_theme_theme(change, username):
-    description = change.description.split(' ; ')
-    if len(description) != 2:
-        raise ChangeSyntaxError
-    names = description[1].split(', ')
-    if names[0].strip() == "":
-        raise ChangeSyntaxError
-    parsed_names = '"' + '", "'.join(names) + '"'
-    match description[0]:
-        case 'added':
-            return f"{username} added subtheme{'s' if len(names[1]) > 1 else ''} {parsed_names} to Theme \"{change.name}\""
-        case 'removed':
-            return f"{username} removed subtheme{'s' if len(names[1]) > 1 else ''} {parsed_names} from Theme \"{change.name}\""
-        case _:
-            raise ChangeSyntaxError
+    parsed_names = '"' + '", "'.join(names) + '"' if names[0] != '' else ''
+    return f"{username} set {description[0]}s of Theme \"{change.name}\" to {{{parsed_names}}}"
 
 """
 A labelled string should be of the format:
@@ -365,11 +334,11 @@ def __parse_labelled(change, username):
         case 'label':
             if len(description) != 3:
                 raise ChangeSyntaxError
-            return f"{username} labelled Artifact \"{change.name}\" with Label \"{description[2]}\" of type \"{description[1]}\""
+            return f"{username} labelled Artifact {change.name} with Label \"{description[2]}\" of type \"{description[1]}\""
         case 'edit':            
             if len(description) != 4:
                 raise ChangeSyntaxError
-            return f"{username} changed Artifact \"{change.name}'s\" Label of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
+            return f"{username} changed Artifact {change.name}'s Label of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
         case _:
             raise ChangeSyntaxError
 
@@ -381,6 +350,7 @@ def __parse_deleted(change, username):
     if change.description:
         raise ChangeSyntaxError
     return f"{username} deleted {item_type} \"{change.name}\""
+
 # Get time from seconds
 def time_from_seconds(seconds):
     # Left over seconds

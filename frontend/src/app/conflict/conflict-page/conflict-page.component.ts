@@ -1,37 +1,47 @@
+// Ana-Maria Olteniceanu
+// Linh Nguyen
+// Veerle Fürst
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
-
-// Artifact object 
-interface Artifact {
-  conflictName: string,
-  conflictDescription: string;
-}
-
-// Functions for adding values
-function addValues(name:string, descr:string):Artifact {
-  var conflictName = name;
-  var conflictDescription = descr;
-  // Return the given values
-  return {conflictName, conflictDescription};
-} 
+import { ConflictDataService } from 'app/services/conflict-data.service';
 
 @Component({
   selector: 'app-conflict-page',
   templateUrl: './conflict-page.component.html',
   styleUrls: ['./conflict-page.component.scss']
 })
-export class ConflictPageComponent {
+export class ConflictPageComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  /**
+   * Initializes the router, rerouting service and conflict data service
+   * @param router instance of router
+   * @param reroutingService instance of rerouting service
+   * @param conflictDataService instance of ConflictDataService
+   */
+  constructor(private router: Router,
+     private reroutingService: ReroutingService,
+     private conflictDataService: ConflictDataService) { }
 
-  // Hardcoding some conflicts
-  conflict1 = addValues("Artifact 1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
-  conflict2 = addValues("Artifact 35", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
-  conflict3 = addValues("Artifact 104", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu venenatis nunc. Nam porttitor, tortor id blandit facilisis, tellus ex interdum nisl, nec molestie quam erat vitae lacus. Phasellus pulvinar risus a tortor congue fringilla. Aliquam malesuada nec velit vel sollicitudin. Nunc dictum ipsum nibh, ut convallis ipsum faucibus a. Aliquam auctor dictum mi, eget venenatis libero commodo quis. Etiam a molestie tortor.");
-  // List of the projects
-  conflicts: Artifact[] = [this.conflict1, this.conflict2, this.conflict3];
+  /**
+   * Gets all the users within the application from the backend
+   * Stores the users in the allMembers array
+   * Gets project information from the backend
+   * Store the project in currentProject
+   * 
+   * @modifies allMembers, currentProject
+   * @trigger on creation of component
+   */
+   ngOnInit(): void {
+    // Initiliazing project with the retrieved project ID from URL
+    let projectID = +(this.reroutingService.getProjectID(this.router.url));
 
+    // Get the conflicts from the backend
+    this.requestConflicts(projectID);
+  }
+
+  // List of the conflicts
+  conflicts: any[] = [];
 
   /**
    * Gets the project id from the URL and reroutes to the conflict resolution page
@@ -39,17 +49,29 @@ export class ConflictPageComponent {
    * 
    * @trigger resolve conflict button is pressed
    */
-   reRouter() : void {
+   reRouter(a_id: number, lt_id: number, lt: string) : void {
     // Gets the url from the router
     let url: string = this.router.url
-    
     // Initialize the ReroutingService
     let routeService: ReroutingService = new ReroutingService();
     // Use reroutingService to obtain the project ID
     let p_id = routeService.getProjectID(url);
-    
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'conflictResolution']);
+    this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id, lt ]);
   }
 
+  /**
+   * Gets all the users in the application from the backend
+   * 
+   * @param token used for authenticating the user to the backend
+   * 
+   * @trigger on component load
+   * @modifies allMembers
+   */
+   async requestConflicts(p_id: number) : Promise<void> {
+    //Getting conflict data from service
+    const conflicts = await this.conflictDataService.getConflicts(p_id)
+    //Setting the conflict data to the variable
+    this.conflicts = conflicts
+  }
 }

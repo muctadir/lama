@@ -10,6 +10,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { EditModeService } from 'app/services/edit-mode.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 /* Project settings component */
 @Component({
@@ -63,8 +64,12 @@ export class ProjectSettingsComponent implements OnInit {
    * @param reroutingService instance of rerouting service
    * @param formBuilder instance of formbuilder
    */
-  constructor(private modalService: NgbModal, private router: Router, private reroutingService: ReroutingService,
-    private formBuilder: FormBuilder, private editModeService: EditModeService) {
+  constructor(private modalService: NgbModal, 
+    private router: Router, 
+    private reroutingService: ReroutingService,
+    private formBuilder: FormBuilder, 
+    private editModeService: EditModeService,
+    private toastCommService: ToastCommService) {
     //Initiliazing project with the retrieved project ID from URL
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
@@ -132,8 +137,8 @@ export class ProjectSettingsComponent implements OnInit {
         this.allMembers.push(newUser);
       }
     } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -196,8 +201,8 @@ export class ProjectSettingsComponent implements OnInit {
         numberOfLabellers: this.currentProject.getCriteria(),
       })
     } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -235,10 +240,11 @@ export class ProjectSettingsComponent implements OnInit {
         this.removedMembers = [];
         this.added = [];
       }
+      this.toastCommService.emitChange([true, "Edit successful"]);
     }
     catch {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -475,12 +481,13 @@ export class ProjectSettingsComponent implements OnInit {
       // Waits on the request
       let result = await response;
       if (result == "Ok") {
-        console.log("Done")
+        // Emits an error toast
+        this.toastCommService.emitChange([true, "Success"]);
       }
     }
     catch {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 }

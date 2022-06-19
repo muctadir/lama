@@ -31,14 +31,14 @@ def register():
     if not check_args(required, args):
         return make_response(("Bad Request", 400))
 
+    # Check that username/email are unique
+    if taken(args["username"], args["email"]):
+        return make_response(("Username or email taken", 400))
+
     # Check that arguments were formatted correctly
     check, reason = check_format(**args)
     if not check:
         return make_response((reason, 400))
-
-    # Check that username/email are unique
-    if taken(args["username"], args["email"]):
-        return make_response(("Username or email taken", 400))
     
     return create_user(args)
 

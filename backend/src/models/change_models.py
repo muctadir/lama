@@ -109,14 +109,12 @@ class ChangeType(Enum):
     split = 3
     # Merging a label
     merge = 4
-    # Adding/removing labels from a theme
-    label_theme = 5
-    # Adding/removing subthemes
-    theme_theme = 6
+    # Changing subthemes or labels of a theme
+    theme_children = 5
     # Labelled
-    labelled = 7
+    labelled = 6
     # Soft deleted
-    deleted = 8
+    deleted = 7
 
 
 # For project-wide history, consider changing this to an Abstract Concrete Class

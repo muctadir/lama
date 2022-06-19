@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutComponent } from 'app/modals/logout/logout.component';
 import { ProjectDataService } from 'app/services/project-data.service';
 import { AccountInfoService } from 'app/services/account-info.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-home-page',
@@ -34,7 +35,8 @@ export class HomePageComponent implements OnInit {
    */
   constructor(private modalService: NgbModal,
     private projectDataService: ProjectDataService,
-    private accountService: AccountInfoService) {}
+    private accountService: AccountInfoService,
+    private toastCommService: ToastCommService) {}
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of

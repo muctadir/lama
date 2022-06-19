@@ -17,6 +17,7 @@ export class IndividualLabellingForm implements OnInit {
 
   selectedDesc: string | undefined;
   labelForm: FormGroup;
+  selectedLabel : Label | undefined;
   /**
    * Constructor which:
    * 1. Creates a label form
@@ -54,7 +55,7 @@ export class IndividualLabellingForm implements OnInit {
       });
     });
     // Patch the values of the label form
-    this.labelForm.controls['labelType'].patchValue(this.labelType?.getId());
+    this.labelForm.controls['labelType'].patchValue(this.labelType);
     // Push the label form to the backend
     this.parentForm?.push(this.labelForm);
   }

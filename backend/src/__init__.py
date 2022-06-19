@@ -16,7 +16,7 @@ from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
 from src.routes.change_routes import get_changes
-
+from src.models.item_models import Label
 
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
@@ -63,7 +63,9 @@ def db_init():
 
 @db_opt.command("test")
 def test():
-    pass
+    changes = get_changes(Label.__change__, 1, 1, True)
+    for change in changes:
+        print(f"{change['timestamp']} | {change['description']}")
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
@@ -122,6 +124,7 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(label_type_routes)
     app.register_blueprint(labelling_routes)
     app.register_blueprint(artifact_routes)
+    app.register_blueprint(conflict_routes)
     app.register_blueprint(theme_routes)
     app.register_blueprint(change_routes)
 
