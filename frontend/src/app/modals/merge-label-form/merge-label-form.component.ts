@@ -134,7 +134,7 @@ export class MergeLabelFormComponent {
         'leftLabelId': arrayResult[0].label.getId(),
         'rightLabelId': arrayResult[1].label.getId(),
         'newLabelName': this.form.get('mergerName')?.value,
-        'newLabelDescription': this.form.get('mergerName')?.value,
+        'newLabelDescription': this.form.get('mergerDescription')?.value,
         'p_id': this.p_id
       });
       // Make toast signalling whether the merging was successful or not
