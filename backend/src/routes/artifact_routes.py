@@ -404,11 +404,10 @@ def get_labellers():
 
 # Author: Eduardo Costa Martins
 # Posts the split to the database
-# TODO: Record split in changelog
 @artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
-def post_split():
+def post_split(*, user):
     
     args = request.json['params']
     # What args are required
@@ -420,6 +419,10 @@ def post_split():
     new_artifact = Artifact(**args)
     # Add the new artifact
     db.session.add(new_artifact)
+    # Updates the id for the new artifact
+    db.session.flush()
+    # Records the split in the artifact changelog
+    __record_split(user.id, args['p_id'], new_artifact.id, args['parent_id'])
 
     try:
         # Commit the artifact
@@ -543,8 +546,24 @@ def __record_creations(artifact_ids, u_id, p_id):
     db.session.add_all(creations)
 
 """
-TODO: This function will record an artifact split in the artifact changelog
-Still waiting on split to be merged
+Records an artifact split in the artifact changelog
+@param u_id: the id of the user that made the split
+@param p_id: the id of the project the artifacts are in
+@param a_id: the id of the created artifact
+@param parent_id: the id of the artifact that the created artifact was split from
 """
-def __record_split():
-    pass
+def __record_split(u_id, p_id, a_id, parent_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+
+    change = ArtifactChange(
+        u_id=u_id,
+        p_id=p_id,
+        i_id=a_id,
+        change_type=ChangeType.split,
+        name=a_id,
+        # The encoding for a split is just the parent id
+        description=parent_id
+    )
+
+    db.session.add(change)
