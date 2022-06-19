@@ -126,8 +126,9 @@ export class AddArtifactComponent {
         }
 
         // Add the artifacts to the backend
-        await this.addArtifacts(p_id, allArtifacts)
-        window.location.reload()
+        await this.addArtifacts(p_id, allArtifacts);
+        // Close modal
+        this.activeModal.close();
       })
     } catch (e) {
       // Ensures an error message is displayed

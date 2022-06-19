@@ -9,13 +9,16 @@ import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
 from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
-label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes
+label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes, change_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
+from src.routes.change_routes import get_changes
+from src.models.item_models import Label
+
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
 HOST = environ.get("HOST")
@@ -41,15 +44,29 @@ db_opt = AppGroup("db-opt")
 # those tables do not yet exist.
 @db_opt.command("init")
 def db_init():
+    from src.models.auth_models import User, UserStatus
+    
     init()
     migrate(message="Initial migration")
     upgrade()
 
-# TODO: Add db reset (this always breaks the migrations in my experience)
+    # This section creates the super admin upon initializing the database
+    # The login details are retrieved from environment variables
+    SUPER_USER = environ.get("SUPER_USER")
+    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
+    SUPER_EMAIL = environ.get("SUPER_EMAIL")
+    # The super admin is created and added
+    db.session.add(User(
+        username=SUPER_USER,
+        email=SUPER_EMAIL,
+        password=generate_password_hash(SUPER_PASSWORD),
+        status=UserStatus.approved,
+        super_admin=True,
+        description="Auto-generated super admin"
+    ))
+    db.session.commit()
 
 # Fills the user table with a bunch of random users.
-# TODO: Update this to match the new database models. Also, this should probably
-# be defined in another file. (Testing setup needs to reuse it as well.)
 @db_opt.command("fill")
 def fill():
 
@@ -262,7 +279,7 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(artifact_routes)
     app.register_blueprint(conflict_routes)
     app.register_blueprint(theme_routes)
-
+    app.register_blueprint(change_routes)
 
     # Magic library that makes cross-origin resource sharing work.
     CORS(app)

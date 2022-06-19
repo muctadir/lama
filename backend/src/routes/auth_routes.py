@@ -12,7 +12,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode
-from functools import wraps
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 

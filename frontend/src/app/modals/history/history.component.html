@@ -1,0 +1,57 @@
+<!-- Author Jarl Jansen -->
+<!-- Main container of the modal -->
+<div class="container">
+    <!-- Centers the row and the content of the row -->
+    <div class="row justify-content-md-center">
+        <div class="col">
+            <!-- Displays the "History" header -->
+            <div id="header">History</div>
+        </div>
+    </div>
+
+    <!-- Centers the row and the content of the row -->
+    <div class="row justify-content-md-center">
+        <!-- Centers the content of the column -->
+        <div class="col text-center">
+            <!-- Creates the bootstrap table with the history -->
+            <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+                <table class="table table-hover">
+                    <!-- Header above the table -->
+                    <thead>
+                        <tr>
+                            <!-- User above username column -->
+                            <th>User</th>
+                            <!-- Timestamp above the timestamp column -->
+                            <th>Timestamp</th>
+                            <!-- Description above the description column -->
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <!-- Body of the table -->
+                    <tbody class="table">
+                        <!-- Loops over the changelogs -->
+                        <tr *ngFor="let changelog of changelog">
+                            <!-- Displays the name of user who made the change -->
+                            <td>{{changelog.getName()}}</td>
+                            <!-- Displays the timestamp of when the change was made -->
+                            <td>{{changelog.getTimestamp()}}</td>
+                            <!-- Displays the descripton of the changelog -->
+                            <td>{{changelog.getDesc()}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row below the table -->
+    <div class="row justify-content-md-center">
+        <!-- Column that centers all content -->
+        <div class="col text-center">
+            <!-- Button that closes the modal -->
+            <button class="btn btn-secondary" (click)="activeModal.close()">Close</button>
+        </div>
+    </div>
+    <!-- Div to make the button move up slightly -->
+    <div id="padd-bottom"></div>
+</div>

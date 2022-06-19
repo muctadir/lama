@@ -1,0 +1,50 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+
+// Markup of the logout header
+#header {
+    text-align: center;
+    padding-top: 10px;
+    font-size: 20px;
+}
+
+// Puts some space below the table
+#padd-bottom {
+    padding-top: 10px;
+}
+
+//Scroll Related Business
+.my-custom-scrollbar {
+    position:relative;
+    height: 80vh;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+// Scroll bar
+#scrolly{
+    padding-right: 40px;
+    height: auto;
+    max-height: 70vh;
+}

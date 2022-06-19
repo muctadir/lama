@@ -7,11 +7,11 @@ from importlib.metadata import requires
 from src.models.project_models import Project
 from src.app_util import in_project
 from src.app_util import check_args
-from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, HighlightSchema
+from src.models.change_models import ChangeType
 from src.models.auth_models import UserSchema
-from src.models.project_models import Membership
+from src.models.project_models import Project, Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required
@@ -71,16 +71,18 @@ def get_artifacts(*, user, membership):
     else:
         # If user isn't admin, then get all artifacts the user has labelled
 
-        # Get artifacts the user has labelled in the current project (for a certain page)
-        artifacts = db.session.scalars(select(Artifact
-                ).where(
+        # Get only the artifacts the user has labelled in the current project (for a certain page)
+        artifacts = db.session.scalars(
+            select(Artifact)
+            .where(
                 Artifact.id == Labelling.a_id,
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id,
-                Artifact.id > seek_index
-            ).offset((page - seek_page - 1) * page_size
-            ).limit(page_size).distinct()).all()
-
+                Artifact.id > seek_index)
+            .distinct()
+            .offset((page - seek_page - 1) * page_size)
+            .limit(page_size)
+        ).all()
         # Get the number of artifacts the user has labelled
         n_artifacts = db.session.scalar(
             select(func.count(distinct(Artifact.id)))
@@ -125,7 +127,7 @@ def get_artifacts(*, user, membership):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 @in_project
-def add_new_artifacts():
+def add_new_artifacts(*, user):
     # Get args from request 
     args = request.json['params']
     # What args are required
@@ -156,11 +158,21 @@ def add_new_artifacts():
 
     # Add the artifact to the database
     db.session.add_all(artifact_object)
+
+    # Flushing updates the ids of the objects to what they actually are in the db
+    db.session.flush()
+
+    # Retrieve the ids from the artifacts
+    artifact_ids = [artifact.id for artifact in artifact_object]
+
+    # Store the creations in the changelog
+    __record_creations(artifact_ids, user.id, args['p_id'])
     
-    # Try commiting the artifacts
+    # Try commiting the changes
     try:
         db.session.commit()
-    except OperationalError:
+    except OperationalError as e:
+        print(e)
         return make_response('Internal Server Error', 503)
 
     return make_response(identifier)
@@ -254,7 +266,7 @@ def search(*, user, membership):
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
                 Labelling.a_id == Artifact.id,
-                Labelling.u_id == user.id)
+                Labelling.u_id == user.id).distinct()
         ).all()
 
     # Getting result of search
@@ -392,11 +404,10 @@ def get_labellers():
 
 # Author: Eduardo Costa Martins
 # Posts the split to the database
-# TODO: Record split in changelog
 @artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
-def post_split():
+def post_split(*, user):
     
     args = request.json['params']
     # What args are required
@@ -408,6 +419,10 @@ def post_split():
     new_artifact = Artifact(**args)
     # Add the new artifact
     db.session.add(new_artifact)
+    # Updates the id for the new artifact
+    db.session.flush()
+    # Records the split in the artifact changelog
+    __record_split(user.id, args['p_id'], new_artifact.id, args['parent_id'])
 
     try:
         # Commit the artifact
@@ -507,3 +522,48 @@ def generate_artifact_identifier(p_id):
     
     # Return the identifier
     return identifier_upper[start:length]
+
+"""
+Records the creation of a list of artifacts in the artifact changelog
+
+@param artifact_ids: a list of ids of artifacts that were created
+@param u_id: id of the user that created the artifact
+@param p_id: id of the project the artifacts were created in
+"""
+def __record_creations(artifact_ids, u_id, p_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+    
+    # Record each creation as a separate change
+    creations = [ArtifactChange(
+        u_id=u_id,
+        p_id=p_id,
+        i_id=a_id,
+        change_type=ChangeType.create,
+        name=a_id
+    ) for a_id in artifact_ids]
+    
+    db.session.add_all(creations)
+
+"""
+Records an artifact split in the artifact changelog
+@param u_id: the id of the user that made the split
+@param p_id: the id of the project the artifacts are in
+@param a_id: the id of the created artifact
+@param parent_id: the id of the artifact that the created artifact was split from
+"""
+def __record_split(u_id, p_id, a_id, parent_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+
+    change = ArtifactChange(
+        u_id=u_id,
+        p_id=p_id,
+        i_id=a_id,
+        change_type=ChangeType.split,
+        name=a_id,
+        # The encoding for a split is just the parent id
+        description=parent_id
+    )
+
+    db.session.add(change)

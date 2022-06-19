@@ -10,6 +10,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
@@ -151,6 +152,19 @@ export class IndividualLabelComponent {
       this.ngOnInit();
     });
   }
+
+  /**
+   * Opens the modal displaying the label history
+   * 
+   * @trigger on click of history icon
+   */
+   openLabelHistory(): void {
+    // opens label history modal
+    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+
+    // passes the type of history we want to view
+    modalRef.componentInstance.history_type = "Label";
+   }
   
   // Get the number of labellings
   async getLabellingAmount(): Promise<void> {

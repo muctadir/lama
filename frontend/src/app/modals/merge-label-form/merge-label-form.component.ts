@@ -113,21 +113,23 @@ export class MergeLabelFormComponent {
   // Submit form
   async submit(): Promise<void> {
     // Check you are merging two or more labels
-    if (this.toBeMergedLabels.length !== 2) {
+    if (this.toBeMergedLabels.length < 2) {
       throw new Error(
-        `Sorry, currently only merging of two labels is supported. ${this.toBeMergedLabels.length} !== 2`
+        `Sorry, you need to select at least 2 labels to be merged. ${this.toBeMergedLabels.length} < 2`
       );
     }
-    // PUts the labels to be merged in array
-    const arrayResult = this.form.get('toBeMergedLabels')?.value;
+    // Puts the labels to be merged in array
+    const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
+
+    const mergedLabels = arrayResult.map(result => result['label'].getId());
 
     try {
       // Wait for the posting of the merging
       await this.labellingDataService.postMerge({
-        'leftLabelId': arrayResult[0].label.getId(),
-        'rightLabelId': arrayResult[1].label.getId(),
+        'mergedLabels': mergedLabels,
         'newLabelName': this.form.get('mergerName')?.value,
         'newLabelDescription': this.form.get('mergerName')?.value,
+        'labelTypeName': this.form.get('labelType')?.value.getName(),
         'p_id': this.p_id
       });
       // Close modal
