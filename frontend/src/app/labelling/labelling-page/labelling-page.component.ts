@@ -296,8 +296,8 @@ export class LabellingPageComponent implements OnInit {
     let firstCharacter = this.selectionStartChar! - 1;
     let lastCharacter = this.selectionEndChar! - 1;
     // Fix positions to start/end of words that they clip
-    firstCharacter = this.posFixer(firstCharacter, lastCharacter)[0];
-    lastCharacter = this.posFixer(firstCharacter, lastCharacter)[1] + 1;
+    firstCharacter = this.startPosFixer(firstCharacter);
+    lastCharacter = this.endPosFixer(lastCharacter);
     // Get the text represented by the rounded start and end
     let splitText = this.artifact?.data.substring(
       firstCharacter,
@@ -308,38 +308,54 @@ export class LabellingPageComponent implements OnInit {
     // TODO: Show visual feedback that split occurs
   }
 
-  //Gets the correct indices so that full words aren't cut in half
-  //@param startPos, endPos: number positions of the start and end of the selection
-  //@returns start and end position of full words from the selection
-  posFixer(startPos: number, endPos: number) {
-    //get start and end char of the text selection
+  //fixes the position of the start character of a word
+  startPosFixer(startPos: number) {
+    //gets char at start of the word
     let chart = this.artifact?.data.charAt(startPos);
-    let chend = this.artifact?.data.charAt(endPos);
+    //checks if it is at the correct position to begin with
+    if (chart == ' ' ) {
+      startPos = startPos + 1
+      return startPos
+    }
+    //start bound check
+    if (startPos == 0) {
+      return startPos
+    }
 
-    //goes until the start of the word until it finds a space
+    //else, move until we find the start of a word
     while (chart != ' ' && startPos > 0) {
       chart = this.artifact?.data.charAt(startPos);
       startPos--;
     }
 
-    //goes until the end of the word, until it finds a space
-    while (chend != ' ' && endPos <= this.artifact?.data.length) {
+    //last adjustmensts for when the text goes too far
+    if (startPos != 0) {
+      startPos++;
+    }
+    return startPos
+
+  }
+
+  //fixes the position of the start character of a word
+  endPosFixer(endPos: number) {
+    //gets char at end of the word
+    let chend = this.artifact?.data.charAt(endPos);
+    //see if the last char is correct to begin with
+    if (chend == ' ' || endPos == this.artifact.data.length) {
+      return endPos
+    }
+    //fix such that the next word is not accidentally selected
+    if (this.artifact?.data.charAt(endPos - 1) == ' ') {
+      endPos--
+      return endPos
+    }
+    //else, move until we find a space or hit the end of artifact
+    while (chend != ' ' && endPos < this.artifact?.data.length) {
       chend = this.artifact?.data.charAt(endPos);
       endPos++;
     }
 
-    //last adjustmensts for when the text goes too far
-    if (startPos != 0) {
-      startPos++;
-      startPos++;
-    }
-    if (endPos != this.artifact?.data.length) {
-      endPos--;
-    }
-
-    return [startPos, endPos]
-
+    return endPos
   }
-
 
 }
