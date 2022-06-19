@@ -24,10 +24,12 @@ Returns a list of dicts of the form:
 @in_project
 def get_changes(*, user, membership):
 
+    # Arguments provided
     args = request.args
-    
+    # Arguments needed
     required = ('p_id', 'item_type', 'i_id')
 
+    # Check that correct arguments were provided (no more, no less)
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
@@ -56,6 +58,19 @@ def get_changes(*, user, membership):
 
     return make_response(changes)
 
+"""
+Returns a list of parsed changes for a given item. Each change is a dictionary of the form
+{
+    'timestamp': When the item was changed (the timestamp is formatted as a string),
+    'username': The username of the person that made the change,
+    'description': A parsed description of the change that was made
+}
+@param ChangeClass: The changelog class of the item type you want changes of
+@param i_id: Changes retrieved correspond to items with this id
+@param u_id: The id of the user requesting the changes
+@param admin: If the user requesting the changes is an admin
+@param p_id: The id of the project that the item belongs to
+"""
 def get_changes(ChangeClass, i_id, u_id, admin, p_id):
 
     changes = db.session.execute(select(

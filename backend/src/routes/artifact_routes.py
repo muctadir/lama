@@ -158,13 +158,16 @@ def add_new_artifacts(*, user):
     # Add the artifact to the database
     db.session.add_all(artifact_object)
 
+    # Flushing updates the ids of the objects to what they actually are in the db
     db.session.flush()
 
+    # Retrieve the ids from the artifacts
     artifact_ids = [artifact.id for artifact in artifact_object]
 
+    # Store the creations in the changelog
     __record_creations(artifact_ids, user.id, args['p_id'])
     
-    # Try commiting the artifacts
+    # Try commiting the changes
     try:
         db.session.commit()
     except OperationalError as e:
@@ -532,10 +535,18 @@ def generate_artifact_identifier(p_id):
     # Return the identifier
     return identifier_upper[start:length]
 
+"""
+Records the creation of a list of artifacts in the artifact changelog
+
+@param artifact_ids: a list of ids of artifacts that were created
+@param u_id: id of the user that created the artifact
+@param p_id: id of the project the artifacts were created in
+"""
 def __record_creations(artifact_ids, u_id, p_id):
     # PascalCase because it is a class
     ArtifactChange = Artifact.__change__
     
+    # Record each creation as a separate change
     creations = [ArtifactChange(
         u_id=u_id,
         p_id=p_id,
@@ -546,5 +557,9 @@ def __record_creations(artifact_ids, u_id, p_id):
     
     db.session.add_all(creations)
 
+"""
+TODO: This function will record an artifact split in the artifact changelog
+Still waiting on split to be merged
+"""
 def __record_split():
     pass

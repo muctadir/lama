@@ -50,7 +50,9 @@ def create_label(*, user):
     # Commit the label
     try:
         db.session.add(label)
+        # Flushing updates the id of the label object
         db.session.flush()
+        # Records the creation of the label in the label changelog
         __record_creation(label.id, label.name, label_type.name, args['p_id'], user.id)
         db.session.commit() 
     except OperationalError:
@@ -86,10 +88,12 @@ def edit_label(*, user):
     # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
-        
+    
+    # Records a change in the description, only if the description has actually changed
     if label.description != args['labelDescription']:
         __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
     
+    # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
         __record_name_edit(label.id, label.name, args['p_id'], label.id, args['labelName'])
 
@@ -400,6 +404,14 @@ def count_usage_route():
     except OperationalError:
         return make_response('Internal Server Error', 500)
 
+"""
+Records a creation of a label in the label changelog
+@param l_id: the id of the label created
+@param l_name: the name of the label created
+@param lt_name: the name of the label type of the label created
+@param p_id: the id of the project the new label is in
+@param u_id: the id of the user that created the label
+"""
 def __record_creation(l_id, l_name, lt_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -410,11 +422,20 @@ def __record_creation(l_id, l_name, lt_name, p_id, u_id):
         u_id=u_id,
         change_type=ChangeType.create,
         name=l_name,
+        # Label creation description is encoded with just the label type name
         description=lt_name
     )
 
     db.session.add(change)
 
+"""
+Records the editing of label's name in the label changelog
+@param l_id: the id of the label edited
+@param old_name: the name of the label before the edit
+@param new_name: the name of the label after the edit
+@param p_id: the id of the project the label is in
+@param u_id: the id of the user that edited the label
+"""
 def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -423,13 +444,22 @@ def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
         i_id=l_id,
         p_id=p_id,
         u_id=u_id,
+        # Names in change tables refer to the name before the change
         name=old_name,
+        # A change description for renaming is encoded with just the new name
         description=new_name,
         change_type=ChangeType.name
     )
 
     db.session.add(change)
 
+"""
+Records the editing of label's name in the label changelog
+@param l_id: the id of the label edited
+@param old_name: the name of the label before the edit
+@param p_id: the id of the project the label is in
+@param u_id: the id of the user that edited the label
+"""
 def __record_description_edit(l_id, old_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -444,18 +474,41 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
 
     db.session.add(change)
 
+"""
+Records the merge of a list of labels in the label changelog
+@param new_label: the _object_ corresponding to the new label
+@param labels: a list of label _objects_ that were merged into the new label
+@param p_id: the project id all these labels belong to
+@param u_id: the id of the user that made the merge
+@param lt_name: the name of the label type of all these labels
+@param artifact_changes: a list of tuples describing artifacts that were affected (and how) of the form
+    (
+        id of an artifact that was labelled with an old label,
+        name of the label the artifact was labelled with before the merge
+    )
+@param theme_changes: a list of tuples describing themes that were changed (and how) of the form
+    (
+        the name of the theme affected,
+        the id of the theme affected,
+        name of a merged label that used to belong to the theme
+    )
+"""
 def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, theme_changes):
     # PascalCase because it is a class
     LabelChange = Label.__change__
+    # Extract the names from the labels, and join them into a string separated by commas
+    # This is used to encode a merge description
     names = ','.join([label.name for label in labels])
 
     # Record change for the label
+    # We say that it is the new label that was changed (it is a type of creation)
     change = LabelChange(
         i_id=new_label.id,
         p_id=p_id,
         u_id=u_id,
         name=new_label.name,
         change_type=ChangeType.merge,
+        # Format the description for a merge encoding
         description=f"{new_label.name} ; {lt_name} ; {names}"
     )
     db.session.add(change)
@@ -464,12 +517,14 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
     ArtifactChange = Artifact.__change__
 
     # Record change for the artifacts
+    # Each artifact that used to be labelled with a merged label is changed
     changes = [ArtifactChange(
         i_id=a_id,
         p_id=p_id,
         u_id=u_id,
         name=a_id,
         change_type=ChangeType.merge,
+        # Format the description for a merge encoding
         description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
     ) for a_id, old_label_name in artifact_changes]
     db.session.add_all(changes)
@@ -477,17 +532,28 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
 
-    # Record change for the artifacts
+    # Record change for the themes
+    # Each theme that used to have a merged label assigned to it is changed
     changes = [ThemeChange(
         i_id=t_id,
         p_id=p_id,
         u_id=u_id,
         name=t_name,
         change_type=ChangeType.merge,
+        # Format the description for a merge encoding
         description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
     ) for t_name, t_id, old_label_name in theme_changes]
     db.session.add_all(changes)
 
+"""
+Records the deletion of a label in the label changelog
+Note that since the label can no longer be viewed, its personal history can't be viewed either
+This change is still recorded in case the project is extended with a history page over all labels
+@param l_id: The id of the label being deleted
+@param name: The name of the label being deleted
+@param p_id: The project id the label belong(ed/s) to
+@param u_id: The id of the user that deleted the label
+"""
 def __record_delete(l_id, name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
