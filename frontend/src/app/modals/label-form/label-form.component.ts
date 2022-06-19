@@ -114,6 +114,7 @@ export class LabelFormComponent implements OnInit {
         this.constructPatch();
         // Submit the patch to the label
         this.submitPatchToServer(this.label);
+        this.toastCommService.emitChange([true, "Label edited successfully"]);
       } catch (e) {
         // Throw error
         this.toastCommService.emitChange([false, "Invalid Input"]);
