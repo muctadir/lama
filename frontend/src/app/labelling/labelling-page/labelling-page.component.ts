@@ -209,6 +209,7 @@ export class LabellingPageComponent implements OnInit {
       };
       this.submitMessage = '';
       this.sendSubmission(dict);
+      this.toastCommService.emitChange([true, "Artifact labelled successfully"]);
     } catch (e) {
       this.toastCommService.emitChange([false, "Submission invalid"]);
     }

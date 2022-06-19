@@ -264,6 +264,7 @@ export class ProjectSettingsComponent implements OnInit {
     //Reinitializing arrays and original user list
     this.projectMembers = [];
     this.labelTypes = [];
+    this.allMembers = [];
     this.ngOnInit();
   }
 
