@@ -6,6 +6,7 @@ import { LoginGuardService } from './services/login-guard.service';
 // Authentication imports
 import { LoginComponent } from './account-details/login/login.component';
 import { RegisterComponent } from './account-details/register/register.component';
+import { SuperAdminGuardService } from './services/super-admin-guard.service';
 // Account page imports
 import { AccountComponent } from './account-details/account/account.component';
 // Home page imports
@@ -36,6 +37,9 @@ import { ThemeManagementComponent } from './theme/theme-management/theme-managem
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 
+import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { ToastCommService } from './services/toast-comm.service';
+
 
 /* All the routes within the application */
 const routes: Routes = [
@@ -46,6 +50,8 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent},
     // Account route
     {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
+    // User moderation
+    {path: 'moderation', component: ModerationComponent, canActivate: [SuperAdminGuardService]},
     // Home page route
     {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
     // Project creation route
@@ -55,7 +61,7 @@ const routes: Routes = [
       // Default is stats page
       {path: '', redirectTo: 'stats', pathMatch: 'full'},
       // Project settings page
-      {path: 'settings', component: ProjectSettingsComponent},
+      {path: 'settings', component: ProjectSettingsComponent, canActivate: [LoginGuardService]},
       // Stats page route
       {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
       // Labelling page route
@@ -81,7 +87,8 @@ const routes: Routes = [
       // Conflict route
       {path: 'conflict', component: ConflictPageComponent, canActivate: [LoginGuardService]},
       // Conflict resolution route
-      {path: 'conflictResolution', component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
+      {path: 'conflictResolution/:artifactId/:labelTypeId/:labelTypeName',
+       component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
       // Load navigarion menu for every link in project
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { InputCheckService } from 'app/services/input-check.service';
 import { Router } from '@angular/router';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-register',
@@ -32,16 +33,15 @@ export class RegisterComponent {
     this.desc = directive.description;
   }
 
-  /* String, when register data is incorrect will contain error */
-  errorMsg = "";
-
   /**
    * Initializes instance of InputCheckService
    * 
    * @param service instance of InputCheckService
    * @param route instance of Router
    */
-  constructor(private service: InputCheckService, private route: Router) { }
+  constructor(private service: InputCheckService, 
+    private route: Router,
+    private toastCommService: ToastCommService) { }
 
   /**
    * Checks whether the username/password is nonempty, and checks whether the email is valid.
@@ -55,18 +55,24 @@ export class RegisterComponent {
     let not_empty = this.service.checkFilled(this.username.value) && 
       this.service.checkFilled(this.password.value) &&
       this.service.checkFilled(this.passwordR.value) &&
-      this.service.checkEmail(this.email.value);
-
-    // Chooses desired behaviour based on validity of input
-    if (not_empty){
-      // Needed to not show the error
-      this.errorMsg = "";
-      // Calls method responsible for the actual registering
-      this.register()
-    } else {
-      // Case where username, password or email will not filled in / valid
-      this.errorMsg = "Fill in username, password and valid email.";
+      this.service.checkFilled(this.email.value)
+    
+    // Gives popup if one of the fields is not filled in
+    if (!not_empty) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "Please enter input in all input fields"]);
+      return;
     }
+
+    let valid_email = this.service.checkEmail(this.email.value);
+    // Gives popup if email is invalid
+    if (!valid_email) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "Please enter a valid email address"]);
+      return;
+    }
+
+    this.register()
   }
 
   /**
@@ -89,16 +95,12 @@ export class RegisterComponent {
 
     // Post to backend
     axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
-    .then(response =>{
-      // Print the created message
-      this.errorMsg = response.data;
-
+    .then(() => {
       // Reroutes the user to the login page
       this.route.navigate(['/login']);
     })
     .catch(error =>{
-      // Print the error message
-      this.errorMsg = error.response.data;
+      this.toastCommService.emitChange([false, error.response.data]);
     })
 
   }

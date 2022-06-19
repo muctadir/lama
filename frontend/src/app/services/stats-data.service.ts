@@ -33,17 +33,28 @@ export class StatsDataService {
 
     // Create the project with constructor
     let projectNew = new Project(
+      // Project id
       projectJson["id"],
+      // Project name
       projectJson["name"],
+      // Project description
       projectJson["description"]
     )
 
     // Set other variables
+    // Number of artifacts in the project
     projectNew.setNumberOfArtifacts(response["projectNrArtifacts"]);
+    // Number of completely labelled artifacts in the project
     projectNew.setNumberOfCLArtifacts(response["projectNrCLArtifacts"]);
+    // List of users in the project
     projectNew.setUsers(response["projectUsers"]);
 
-    return { 'project_data': projectNew, 'conflicts': response["conflicts"] }
+    // Return project data
+    return { 'project_data': projectNew,
+      // Return number of conflicts in project
+     'conflicts': response["conflicts"],
+     // Return number of labels in project
+     'labels':  response["labels"]}
   }
 
   /**

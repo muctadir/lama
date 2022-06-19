@@ -8,7 +8,7 @@ from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
 from src.models.auth_models import User, UserSchema, UserStatus
-from src.models.item_models import Artifact, LabelType, Labelling
+from src.models.item_models import Artifact, LabelType, Labelling, Label
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, distinct
@@ -192,8 +192,6 @@ def get_serialized_users(users):
     for user in users:
         # Serialize the user
         user_dumped = user_schema.dump(user)
-        # Pop the password of the user
-        user_dumped.pop("password")
         # Add the serialized user to the list of serialized users
         users_list.append(user_dumped)
     
@@ -325,7 +323,7 @@ def edit_project(*, membership):
     # Adding new members to the project
     project_new_members_added = add_members(project.id, args['add'])
     # Checks if everything went well
-    if project_updated == 200 & project_members_updated == 200 & project_new_members_added == 200 & project_old_members_added == 200:
+    if project_updated.status_code == 200 and project_members_updated.status_code == 200 and project_new_members_added.status_code == 200 and project_old_members_added.status_code == 200:
         # Committing the updates/additions to the databse
         try:
             db.session.commit()
@@ -355,7 +353,7 @@ def update_project(args):
             description=args['description'], criteria=args["criteria"])
         )
         #Returning response saying that things went well
-        return make_response("Updated")
+        return make_response("Updated", 200)
     except OperationalError:
         #Returning an error response
         return make_response("Internal Server Error", 503)
@@ -390,7 +388,7 @@ def update_members_in_project(p_id, args, update_or_add):
         #Updating the information in the database
         db.session.bulk_update_mappings(Membership,updated_members_list)
         #Returning response saying that things went well
-        return make_response("Success")
+        return make_response("Success", 200)
     except OperationalError:
         #Returning an error response
         return make_response("Internal Service Error", 503)
@@ -420,7 +418,7 @@ def add_members(p_id, args):
         # Adding members to the database
         db.session.bulk_insert_mappings(Membership, added_members_list)
         # Returning response saying that things went well
-        return make_response("Success")
+        return make_response("Success", 200)
     except OperationalError:
         # Returning an error response
         return make_response("Internal Service Error", 503)
@@ -513,11 +511,13 @@ def single_project():
     users = []  
     for user in project_users:
         user_dumped = user_schema.dump(user)
-        user_dumped.pop("password")
         users.append(user_dumped)
 
     # Get the number of conflicts in the conflict
     conflicts = nr_project_conflicts(p_id)
+
+    # Get the number of labels in the conflict
+    labels = db.session.scalar(select(func.count(distinct(Label.id))).where(Label.p_id==p_id))
         
     # Put all values into a dictonary
     info = {
@@ -525,7 +525,8 @@ def single_project():
         "projectNrArtifacts": project_nr_artifacts,
         "projectNrCLArtifacts": project_nr_cl_artifacts,
         "projectUsers": users,
-        "conflicts": conflicts
+        "conflicts": conflicts,
+        "labels": labels
         }
 
     # Convert dictionary to json
@@ -565,7 +566,7 @@ def project_stats():
         select(Project).where(Project.id==p_id)
     )
 
-    # Get all user with conflicts and the number of conflicts they have
+    # Get all users with conflicts and the number of conflicts they have
     user_conflicts = nr_user_conflicts(p_id)
 
     # List of all stats per user
@@ -609,7 +610,8 @@ def project_stats():
             "username": username,
             "nr_labelled": artifacts_num,
             "time": avg_time,
-            "nr_conflicts": conflicts
+            "nr_conflicts": conflicts,
+            "superadmin": user.super_admin
         }
 
         # Add dictionary to list of dictionaries
@@ -652,6 +654,8 @@ def __time_to_string(time):
         if number == 0:
             time_string += '00:'
         else:
+            if number < 10:
+                time_string += '0'
             time_string += str(number) + ':'
     
     # Return the string with the time

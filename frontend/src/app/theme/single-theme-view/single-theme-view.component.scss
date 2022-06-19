@@ -5,12 +5,12 @@ $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
 
 // Page Header container
-#titleRow{
+#titleRow {
     padding-bottom: 20px;
 }
 
 // Page Title
-#pageTitle{
+#pageTitle {
     font-size: 35px;
     padding-top: 10px;
     text-align: left;
@@ -21,18 +21,18 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Top Half container
-#topHalfRow{
+#topHalfRow {
     padding-left: 10px;
 }
 
 // TOP LEFT
 // Top left container
-#topLeftCol{
+#topLeftCol {
     padding-right: 200px;
 }
 
 // Name Column
-#name{
+#name {
     border-bottom: 1px; 
     border-bottom-style: solid; 
     letter-spacing: 1px;
@@ -40,7 +40,7 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Label Count Header
-#labelCount{
+#labelCount {
     border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
@@ -49,7 +49,7 @@ $light-grey-shade: #aaaaaa;
 }
 
 // ArtifactCount Header
-#artifactCount{
+#artifactCount {
     border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
@@ -58,7 +58,7 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Parent-Themes Header
-#parentThemes{
+#parentThemes {
     border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
@@ -67,13 +67,13 @@ $light-grey-shade: #aaaaaa;
 }
 
 //Container for parent theme scroll
-#parentThemesScroll{
+#parentThemesScroll {
     overflow-y: scroll;
     height: 10vh;
 }
 
 //Content text of multipl sections in top left part
-#parentThemesText, #themeNameText, #labelCountText, #artifactCountText, #subThemesText{
+#parentThemesText, #themeNameText, #labelCountText, #artifactCountText, #subThemesText {
     font-size: 14px;
     letter-spacing: 1px;
     margin-bottom: 0;
@@ -82,12 +82,12 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Make childern names hoverable
-#subThemesText:hover, #parentThemesText:hover{
+#subThemesText:hover, #parentThemesText:hover {
     cursor: pointer;
 }
 
 //Sub-ThemesHeader
-#subThemes{
+#subThemes {
     border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
@@ -96,25 +96,25 @@ $light-grey-shade: #aaaaaa;
 }
 
 //Container for sub theme scroll
-#subThemesScroll{
+#subThemesScroll {
     overflow-y: scroll;
     height: 10vh;
 }
 
 // Description area
-#themeDescription{
+#themeDescription {
     resize: none;
 }
 
 //TOP RIGHT
 //Top right container
-#topRightCol{
+#topRightCol {
     padding-left: 50px;
     padding-right: 50px;
 }
 
 //Labels Header 
-#labelsHeader{
+#labelsHeader {
     border-bottom: 1px; 
     border-bottom-style: solid; 
     font-size: 16px;
@@ -124,13 +124,13 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Artifact text and remarks
-#artifactText ,#artifactRemark{
+#artifactText ,#artifactRemark {
     font-size: 14px;
     font-weight: 400;
 }
 
 //Artifact Remark Header
-#artifactRemarkHeader{
+#artifactRemarkHeader {
     font-size: 15px;
     font-weight: 500;
 }
@@ -155,19 +155,19 @@ $light-grey-shade: #aaaaaa;
 }
 
 //Table Scroll
-#tableScroll{
+#tableScroll {
     min-height: 50vh;
     overflow-y: scroll;
 }
 
 // Scrolling for the accordion
-#accordionScroll{
+#accordionScroll {
     overflow-y: scroll;
-    height: 30vh;
+    height: 25vh;
 }
 
 // Edit Button
-#editButton{
+#editButton {
     background-color: $orange-shade;
     margin-left: 10px;
     border: none;
@@ -175,7 +175,7 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Cancel button
-#btns-cancel-submit{
+#btns-cancel-submit, #deleteButton {
     border: none;
     width: 150px;
 }
@@ -183,4 +183,22 @@ $light-grey-shade: #aaaaaa;
 // Make the highlight around the buttons none
 .btn:focus {
     box-shadow: none;
+}
+
+// Row for the buttons
+.buttonRow {
+    width: 100%;
+}
+
+// Column for the alert message
+#alertMessageCol {
+    padding-top: 10px;
+}
+
+// Style for the alert message
+#alertMessage {
+    font-size: 18px;
+    color: red;
+    margin: 0px;
+    padding:0px;
 }
