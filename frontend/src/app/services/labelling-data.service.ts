@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
-import axios from 'axios';
 import { Theme } from 'app/classes/theme';
 import { RequestHandler } from 'app/classes/RequestHandler';
 

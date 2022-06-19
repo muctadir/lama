@@ -8,7 +8,7 @@ from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema
+from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, LabelType
 from src.models.auth_models import UserSchema
 from src.models.project_models import Membership
 from flask import jsonify, Blueprint, make_response, request
@@ -46,6 +46,11 @@ def get_artifacts(*, user, membership):
     page_size = int(args['page_size'])
     # The indexes we can skip using the where clause. See below explanation for how the seek method works.
     seek_index = args['seek_index']
+    # Get the number of label types in the project
+    n_label_types = db.session.scalar(
+        select(func.count(distinct(LabelType.id)))
+        .where(LabelType.p_id==p_id)
+    )
 
     # We use seek method for pagination. Offset in SQL is slow since it still goes through
     # all the rows before discarding them. Keep a seek index of the max index we can discard.
@@ -114,7 +119,8 @@ def get_artifacts(*, user, membership):
 
     response = {
         'info': artifact_info,
-        'nArtifacts': n_artifacts
+        'nArtifacts': n_artifacts,
+        'nLabelTypes': n_label_types
     }
 
     # Return the list of dictionaries
