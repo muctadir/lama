@@ -4,6 +4,7 @@
 # Thea Bradley
 
 from importlib.metadata import requires
+from src.models.project_models import Project
 from src.app_util import in_project
 from src.app_util import check_args
 from flask import current_app as app
