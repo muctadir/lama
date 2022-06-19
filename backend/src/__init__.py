@@ -50,9 +50,12 @@ def db_init():
     migrate(message="Initial migration")
     upgrade()
 
+    # This section creates the super admin upon initializing the database
+    # The login details are retrieved from environment variables
     SUPER_USER = environ.get("SUPER_USER")
     SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
     SUPER_EMAIL = environ.get("SUPER_EMAIL")
+    # The super admin is created and added
     db.session.add(User(
         username=SUPER_USER,
         email=SUPER_EMAIL,
@@ -63,11 +66,7 @@ def db_init():
     ))
     db.session.commit()
 
-# TODO: Add db reset (this always breaks the migrations in my experience)
-
 # Fills the user table with a bunch of random users.
-# TODO: Update this to match the new database models. Also, this should probably
-# be defined in another file. (Testing setup needs to reuse it as well.)
 @db_opt.command("fill")
 def fill():
 

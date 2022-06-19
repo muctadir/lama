@@ -98,6 +98,14 @@ def post_labelling(*, user):
     # Make a response
     return make_response()
 
+"""
+Records a labelling in the artifact changelog
+@param p_id: the id of the project of the labelling
+@param u_id: the id of the user that labelled the artifact
+@param lt_name: the name of the label type corresponding to this labelling
+@param l_name: the name of the label used to label the artifact
+@param a_id: the id of the artifact that was labelled
+"""
 def __record_labelling(p_id, u_id, lt_name, l_name, a_id):
     # PascalCase because it is a class
     ArtifactChange = Artifact.__change__
@@ -108,6 +116,7 @@ def __record_labelling(p_id, u_id, lt_name, l_name, a_id):
         u_id=u_id,
         name=a_id,
         change_type=ChangeType.labelled,
+        # Encoding a change description, designating how it was labelled, and with what
         description=f"label ; {lt_name} ; {l_name}"
     )
 

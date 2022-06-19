@@ -221,6 +221,17 @@ def in_project(f):
 
     return decorated_function
 
+"""
+This function will parse a change to a readable description. It looks at the type of change that was 
+made and deflects the parsing to a helper function which parses that type of change.
+
+Each change has a description which contains encoded, compact information. When parsing,
+the encoded description will be converted to a more readable format which is displayed on the frontend.
+This also allows us to easily make changes here if we do not like the formats we have now.
+
+@param change: An object of type Change
+@param username: the name of the user corresponding to the u_id in the change
+"""
 def parse_change(change, username):
     from src.models.change_models import ChangeType
     match change.change_type:
@@ -319,8 +330,8 @@ def __parse_theme_children(change, username):
     if len(description) != 2:
         raise ChangeSyntaxError
     names = description[1].split(',')
-    parsed_names = '"' + '", "'.join(names) + '"' if names[0] != '' else ''
-    return f"{username} set {description[0]}s of Theme \"{change.name}\" to {{{parsed_names}}}"
+    parsed_names = '["' + '", "'.join(names) + '"]' if names[0] != '' else 'nothing'
+    return f"{username} set {description[0]}s of Theme \"{change.name}\" to {parsed_names}"
 
 """
 A labelled string should be of the format:
