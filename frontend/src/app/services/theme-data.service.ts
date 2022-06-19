@@ -205,10 +205,17 @@ export class ThemeDataService {
   async create_theme (theme_info: any): Promise<string> {
     try{
       // Create project in the backend
-      await this.requestHandler.post('/theme/create_theme', theme_info, true);
-      // Emits an success toast
+      let message = await this.requestHandler.post('/theme/create_theme', theme_info, true);
+      // Create a toast indicating whether or not the theme was
+      // created successfully
+      if(message == "Theme created") {
       this.toastCommService.emitChange([true, "Created theme successfully"]);
-      return "Theme created succesfully";
+      }
+      else {
+        this.toastCommService.emitChange([false, message]);
+      }
+      return message
+  
     // Catch the error
     } catch (e) {
       // Emits an error toast
@@ -227,10 +234,16 @@ export class ThemeDataService {
    async edit_theme (theme_info: any): Promise<string> {
     try{
       // Create project in the backend
-      await this.requestHandler.post('/theme/edit_theme', theme_info, true);
-      // Emits an success toast
-      this.toastCommService.emitChange([true, "Edited theme successfully"]);
-      return "Theme edited succesfully"
+      let message = await this.requestHandler.post('/theme/edit_theme', theme_info, true);
+      // Create a toast indicating whether or not the theme was
+      // edited successfully
+      if(message == "Theme edited") {
+        this.toastCommService.emitChange([true, "Edited theme successfully"]);
+        }
+        else {
+          this.toastCommService.emitChange([false, message]);
+        }
+        return message
     // Catch the error
     } catch(e) {
       // Emits an error toast

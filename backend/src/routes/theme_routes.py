@@ -5,7 +5,7 @@ from flask import current_app as app
 from src.models import db
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select, func, update
+from sqlalchemy import select, func, update, or_
 from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
 from sqlalchemy.exc import OperationalError
@@ -225,6 +225,10 @@ def create_theme():
     if not check_args(required, theme_info):
         return make_response("Not all required arguments supplied", 400)
 
+    # Check if the theme name is unique
+    if theme_name_taken(theme_info["name"]):
+        return make_response("Theme name already exists")
+
     # Theme creation info
     theme_creation_info = {
         "name": theme_info["name"],
@@ -283,6 +287,10 @@ def edit_theme():
     # Check if all required arguments are there
     if not check_args(required, theme_info):
         return make_response("Not all required arguments supplied", 400)
+
+    # Check if the theme name is unique
+    if theme_name_taken(theme_info["name"]):
+        return make_response("Theme name already exists")
     
     # Get theme id
     t_id = theme_info["id"]
@@ -366,7 +374,7 @@ def delete_theme():
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
         
-    # Change the theme information to be delted
+    # Change the theme information to be deleted
     db.session.execute(
         update(Theme).
         where(Theme.id == t_id).
@@ -425,3 +433,16 @@ def make_sub_themes(sub_themes_info):
     ).all()
     # Return the actual added labels
     return sub_theme_list
+
+"""
+Function that checks if a theme name is already taken
+@params name: string, the name to be checked
+@returns true if name is already a theme name and false otherwise
+"""
+def theme_name_taken(name):
+    if bool(db.session.scalars(
+        select(Theme)
+        .where(Theme.name==name))
+        .first()):
+        return True
+    return False

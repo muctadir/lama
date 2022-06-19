@@ -110,11 +110,11 @@ def get_all_labels():
         return make_response('Bad Request', 400)
 
     # Get all the labels of a labelType
-    labels = db.session.execute(
+    labels = db.session.scalars(
         select(Label)
         .where(Label.p_id == args['p_id'], 
                Label.deleted != 1)
-    ).scalars().all()
+    ).all()
 
     # Initialise label schema
     label_schema = LabelSchema()
