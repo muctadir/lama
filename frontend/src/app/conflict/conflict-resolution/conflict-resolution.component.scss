@@ -157,3 +157,10 @@ select:disabled {
     background: $grey-shade; 
     border-radius: 10px;
 }
+
+#submitLabellingButton {
+    width: 150px;
+    margin: 10px;
+    background-color: $main-color-1;
+    border: none;
+}

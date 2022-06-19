@@ -6,8 +6,13 @@ import { Component, OnInit } from '@angular/core';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { ConflictDataService } from 'app/services/conflict-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { ToastCommService } from 'app/services/toast-comm.service';
+import { Label } from 'app/classes/label';
 
 @Component({
   selector: 'app-conflict-resolution',
@@ -25,30 +30,45 @@ export class ConflictResolutionComponent implements OnInit {
   admin: boolean;
   // Initialize the username of the current user
   username: string;
+  // Initialize the project id
+  p_id: number;
+  // Initialize the label type id
+  lt_id: number;
+  // Initialize the artifact id
+  a_id: number;
   // Label type of current conflict
   label_type: string;
-  // Dictionary holding the users and the labels they gave for the conflict's label type
-  label_per_user: Record<string, Record<string, any>>
+  // Dictionary holding the users and the labels they gave 
+  // for the conflict's label type along with their description
+  label_per_user: Record<string, Record<string, any>>;
   // Array of usernames
   users: string[];
   // Array of labels in the label type
-  labels: Array<string> = [];
+  labels: Label[];
 
   /**
      * Constructor passes in the modal service and the artifact service,
      * initializes Router
+     * @param modalService instance of NgbModal
      * @param artifactDataService instance of ArtifactDataService
+     * @param conflictDataService instance of ConflictDataService
      * @param router instance of Router
      */
-  constructor(private artifactDataService: ArtifactDataService,
+  constructor( private modalService: NgbModal,
+    private artifactDataService: ArtifactDataService,
     private conflictDataService: ConflictDataService,
-    private router: Router) {
+    private labellingDataService: LabellingDataService,
+    private router: Router,
+    private toastCommService: ToastCommService) {
     //Reinitializing the variables
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.routeService = new ReroutingService();
     this.url = this.router.url;
     this.admin = false;
     this.username = '';
+    this.p_id = Number(this.routeService.getProjectID(this.url));
+    this.lt_id = 0;
+    this.a_id = 0;
     this.label_type = '';
     this.label_per_user = {};
     this.users = [];
@@ -65,19 +85,17 @@ export class ConflictResolutionComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     // Get the ID of the artifact, label type and the project ID
     let ids = this.routeService.getArtifactConflict(this.url)
-    let a_id = Number(ids[0])
-    let lt_id = Number(ids[1])
+    this.a_id = Number(ids[0])
+    this.lt_id = Number(ids[1])
     this.label_type = ids[2]
-    let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Get the artifact data from the backend
-    await this.getArtifact(a_id, p_id)
+    await this.getArtifact(this.a_id, this.p_id)
 
     // Get the labels given by each user
-    await this.getLabelPerUser(p_id, a_id, lt_id)
+    await this.getLabelPerUser(this.p_id, this.a_id, this.lt_id)
 
     // Get the labels in the label type
-    await this.getLabelsByType(p_id, lt_id)
+    await this.getLabelsByType(this.p_id, this.lt_id)
   }
 
   /**
@@ -106,15 +124,16 @@ export class ConflictResolutionComponent implements OnInit {
    * @param lt_id the id of the label type
    */
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<void> {
-    //Get conflict information (users who labelled and ther labels) based on the project ID, artifact ID and label type ID
+    // Get conflict information (users who labelled and ther labels) based on the project ID, artifact ID and label type ID
     const response = await this.conflictDataService.getLabelPerUser(p_id, a_id, lt_id);
-    //Assigning the label given by a user to the entry with the key of their username in label_per_user
+    console.log(response)
+    // Assigning the label given by a user to the entry with the key of their username in label_per_user
     this.label_per_user = response;
-    //Getting the keys from users
+    // Getting the keys from users
     this.users = Object.keys(this.label_per_user);
   }
 
-  
+
   /**
    * Author: Ana-Maria Olteniceanu
    * Gets the labels from a label type given by all users in a given project ID
@@ -126,11 +145,57 @@ export class ConflictResolutionComponent implements OnInit {
     //Get labels from a certain label type
     const response = await this.conflictDataService.getLabelsByType(p_id, lt_id);
     // Add label names to the list of labels
-    let labels = []
-    for(let label of response) {
-      labels.push(label["name"]); 
+    for (let label of response) {
+      this.labels.push(new Label(label["id"], label["name"], label["description"], this.label_type));
     }
-    //Assigning the label names to labels
-    this.labels = labels 
+  }
+
+  /**
+   * Opens modal which contains the create LabelFormComponent.
+   */
+   openCreateForm(): void {
+    let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
+    modal.result.then((data) => {
+      this.ngOnInit();
+    });
+  }
+
+  updateLabelling(user: string, label: any): void {
+    let selectedLabel: Label;
+    try {
+      selectedLabel = this.findLabel(this.labels, label);
+      this.label_per_user[user] = {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), "id": selectedLabel.getId()};
+    } catch (error) {
+      this.toastCommService.emitChange([false, "Label doesn't exist"]);
+    }   
+    
+  }
+
+  findLabel(labels: Label[], label: string): Label {
+    for (let eachLabel of labels) {
+      if (eachLabel.getName() == label) {
+        return eachLabel
+      }
+    }
+    throw new Error("Label name invalid")
+  }
+
+  async updateLabellings(): Promise<void> {
+    try {
+      this.labellingDataService.editLabelling(this.p_id, this.lt_id, this.a_id, this.label_per_user)
+    } catch (error) {
+      this.toastCommService.emitChange([false, "Something went wrong! Please try again."]);
+    }
+    let labelCheck = new Set<string>();
+    for (let labelling in this.label_per_user) {
+      labelCheck.add(this.label_per_user[labelling]['name'])
+    }
+    if(labelCheck.size == 1) {
+      console.log("Resolved");
+      this.router.navigate(['/project', this.p_id, 'conflict'])
+    }
+    else {
+      this.toastCommService.emitChange([false, "Conflict has not been resolved."]);
+    }
   }
 }

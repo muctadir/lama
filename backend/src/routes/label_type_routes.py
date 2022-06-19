@@ -104,7 +104,6 @@ def get_labels_by_label_type():
     
     # Create dictionary with label type and labels
     dict_json = label_schema.dump((labelType.labels).filter_by(deleted=0), many = True)
-    print(dict_json)
     return make_response(jsonify(dict_json))
 
 """

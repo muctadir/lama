@@ -1,3 +1,4 @@
+from cProfile import label
 from src.app_util import check_args
 from src import db # need this in every route
 from flask import current_app as app
@@ -7,6 +8,7 @@ from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, time_from_seconds
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
+from src.models.project_models import Project
 
 labelling_routes = Blueprint("labelling", __name__, url_prefix="/labelling")
 
@@ -94,3 +96,49 @@ def post_labelling(*, user):
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
     # Make a response
     return make_response()
+    
+"""
+Author: Linh Nguyen, Ana-Maria Olteniceanu
+@params:
+@post:
+"""
+@labelling_routes.route('/edit', methods=['PATCH'])
+@login_required
+@in_project
+def edit_labelling(*, user, membership):
+    
+    # TODO: implement this properly
+    # if not membership.admin:
+    #     return make_response('This member is not admin', 401)
+    
+    # Get args from request 
+    args = request.json['params']
+    # What args are required
+    required = ['p_id', 'lt_id', 'a_id', 'labellings']
+
+    # Check if required args are presentF
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    updated_labellings = []
+    
+    for key in args['labellings']:
+        print(args['labellings'][key]['id'])
+        updated_labellings.append({'u_id': user.id,'a_id': args['a_id'], 'lt_id': args['lt_id'],
+                    'l_id': args['labellings'][key]['id']})       
+
+    # Get project with supplied ID
+    project = db.session.get(Project, args['p_id'])
+    if not project:
+        return make_response('Project does not exist', 400)
+
+    # Committing the information to the backend
+    # try: 
+    # Updating the information in the database
+    db.session.bulk_update_mappings(Labelling, updated_labellings)
+    db.session.commit()
+    # except OperationalError:
+    #     return make_response('Internal Server Error', 503)
+
+    # Returning a response
+    return make_response('Succeeded', 200)

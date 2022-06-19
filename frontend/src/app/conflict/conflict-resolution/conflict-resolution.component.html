@@ -25,33 +25,36 @@
     <!-- Row with splitting information -->
     <div class="row" id="splitRow">
         <!-- previous artifacts that it was split from, if any -->
-            <div class="col-3" id="names">
-                <p class="float-start">
-                    <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child artifact</span>
-                    <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children artifacts</span>
-                    <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}.</span>
-                </p>
-            </div>
+        <div class="col-3" id="names">
+            <p class="float-start">
+                <span *ngIf="artifact.getNumberOfChildIds() === 1" id="split1"> Artifact was split into child
+                    artifact</span>
+                <span *ngIf="artifact.getNumberOfChildIds() > 1" id="split1">Artifact was split into children
+                    artifacts</span>
+                <span *ngIf="artifact.getNumberOfChildIds() > 0" id="split1"> #{{artifact.getChildIds()}}.</span>
+            </p>
+        </div>
     </div>
     <div class="row justify-content-start" id="splitRow">
         <!-- previous artifacts that it was split from, if any -->
-            <div class="col-2" id="names">
-                <p class="float-end">
-                    <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent artifact #{{artifact.getParentId()}}.</span>
-                </p>
-            </div>
+        <div class="col-2" id="names">
+            <p class="float-end">
+                <span *ngIf="artifact.getParentId() != undefined" id="split2"> Artifact was split from parent artifact
+                    #{{artifact.getParentId()}}.</span>
+            </p>
+        </div>
     </div>
 
     <!-- Row for create and merge label buttons -->
     <div class="row">
         <div class="col">
             <!-- Create label button -->
-            <button class="btn btn-secondary labelButtons">
+            <button class="btn btn-secondary labelButtons" (click)="openCreateForm()">
                 Create label
             </button>
             <!-- Merge label buttons -->
             <button class="btn btn-secondary labelButtons">
-                Merge labels                    
+                Merge labels
             </button>
         </div>
     </div>
@@ -76,22 +79,21 @@
 
                     <!-- Add angular for loop -->
                     <div class="labelTypeDiv">
-                            <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
-                            <select class="form-control" name="labelsForm" id="formControl"
-                            [disabled]="!admin && user != username">
+                        <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
+                        <select class="form-control" name="labelsForm" #changedLabel
+                            [disabled]="!admin && user != username"
+                            (change)="updateLabelling(user, changedLabel.value)">
                             <div>
                                 <!-- All labels from the label type are dropdown options -->
                                 <!-- User's given label is the default value of the dropdown -->
-                                <option *ngFor="let label of labels"
-                                    [selected]="label == label_per_user[user]['name']">
-                                    {{label}}
+                                <option *ngFor="let label of labels" [selected]="label.getName() == label_per_user[user]['name']">
+                                    {{label.getName()}}
                                 </option>
                             </div>
                             <!-- All labels from the label type are dropdown options -->
                             <!-- User's given label is the default value of the dropdown -->
-                            <option *ngFor="let label of labels"
-                                [selected]="label == label_per_user[user]['name']">
-                                {{label}}
+                            <option *ngFor="let label of labels" [selected]="label.getName() == label_per_user[user]['name']">
+                                {{label.getName()}}
                             </option>
                         </select>
                     </div>
@@ -103,6 +105,19 @@
                     {{label_per_user[user]['description']}}
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!--Division around buttons-->
+    <div class="row">
+        <div class="col-5">
+        </div>
+        <!-- Division for save & cancel button -->
+        <div class="col-6">
+            <!-- Submit button -->
+            <button type="button" class="btn btn-secondary text-nowrap float-end" id="submitLabellingButton" (click)="updateLabellings()">
+                Resolve
+            </button>
         </div>
     </div>
 </div>

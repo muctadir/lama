@@ -199,6 +199,19 @@ export class LabellingDataService {
   }
 
   /**
+   * Function to edit one or multiple labellings
+   * @param p_id number, project id
+   * @param lt_id number, label type id
+   * @param labellings Record<string, string>, record which has usernames as keys 
+   *  and the labelling they gave to label type with id lt_id
+   */
+  async editLabelling(p_id: number, lt_id: number, a_id: number, labellings: Record<string, Record<string, any>>) {
+    // Make call to backend and get its reponse
+    await this.requestHandler.patch('/labelling/edit',
+     {'p_id': p_id, 'lt_id': lt_id, 'a_id': a_id, 'labellings': labellings}, true)
+  }
+
+  /**
    * Function to post the labelling
    * @param dict  - dictionary
    */
