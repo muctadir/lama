@@ -313,8 +313,7 @@ export class LabellingPageComponent implements OnInit {
     );
     // Make request to split
     this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
-    // TODO: Show visual feedback that split occurs
-    this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected': " + splitText+ "'"]);
+    this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected: '" + splitText+ "'"]);
   }
 
   //fixes the position of the start character of a word
