@@ -4,7 +4,7 @@
 from src.app_util import check_args
 from src import db  # need this in every route
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update, func, distinct
+from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project
 from src.models.change_models import ChangeType
@@ -230,6 +230,7 @@ def merge_route(*, user):
     )
 
     db.session.add(new_label)
+    db.session.flush()
 
     # Artifact ids and label ids that are being affected
     artifact_changes_ids = select(
@@ -249,7 +250,7 @@ def merge_route(*, user):
         )
     ).all()
 
-    # Theme ids that were affected because they had a label assigned to them
+    # Theme ids and label ids that were affected because they had a label assigned to them
     theme_changes_ids = select(
         label_to_theme.c.t_id,
         label_to_theme.c.l_id
@@ -267,7 +268,7 @@ def merge_route(*, user):
             Theme.id == theme_changes_ids.c.t_id,
             Label.id == theme_changes_ids.c.l_id
         )
-    )
+    ).all()
 
     __record_merge(new_label, labels, args['p_id'], user.id, args['labelTypeName'], artifact_changes, theme_changes)
 
@@ -276,6 +277,31 @@ def merge_route(*, user):
         update(Labelling)
         .where(Labelling.l_id.in_(label_ids)).values(l_id=new_label.id)
     )
+
+    # Update all the themes
+    # First insert new label
+    db.session.execute(
+        insert(label_to_theme).from_select(
+            # The columns we are inserting
+            ['t_id', 'l_id', 'p_id'], 
+            # The selection we insert
+            select(
+                # The theme ids being affected
+                theme_changes_ids.c.t_id,
+                # The new label id
+                new_label.id, 
+                # The project id
+                args['p_id']
+            ) # Distinct in case some themes contain multiple of the labels being merged
+            .distinct()
+        )
+    )
+    # Then delete all instances of this label being used in themes
+    db.session.execute(
+        delete(label_to_theme)
+        .where(label_to_theme.c.l_id.in_(label_ids))
+    )
+
     try:
         db.session.commit()
         return make_response('Success')
@@ -459,7 +485,7 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
         name=t_name,
         change_type=ChangeType.merge,
         description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
-    ) for t_id, t_name, old_label_name in theme_changes]
+    ) for t_name, t_id, old_label_name in theme_changes]
     db.session.add_all(changes)
 
 def __record_delete(l_id, name, p_id, u_id):
