@@ -96,6 +96,10 @@ export class RequestHandler {
    * 4. Authentication is required and provided -> Ok
    */
   private verifyAuthentication(authenticationReq: boolean) {
+    let sessionToken = sessionStorage.getItem('ses_token');
+    if (sessionToken !== undefined && sessionToken !== null) {
+      this.sessionToken = sessionToken;
+    }
     if (authenticationReq && this.sessionToken === undefined) {
       throw new Error(
         'The method requires a session token which was not provided during instantation.'

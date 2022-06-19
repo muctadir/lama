@@ -32,14 +32,14 @@ def register():
     if not check_args(required, args):
         return make_response(("Bad Request", 400))
 
+    # Check that username/email are unique
+    if taken(args["username"], args["email"]):
+        return make_response(("Username or email taken", 400))
+
     # Check that arguments were formatted correctly
     check, reason = check_format(**args)
     if not check:
         return make_response((reason, 400))
-
-    # Check that username/email are unique
-    if taken(args["username"], args["email"]):
-        return make_response(("Username or email taken", 400))
     
     return create_user(args)
 
@@ -97,6 +97,15 @@ def login():
 def check_login():
     """
     Checks whether the user has already logged in
+    """
+    return make_response(("Success", 200))
+
+# Function for checking whether user has logged in and a superadmin
+@auth_routes.route("/check_super_admin", methods=["GET"])
+@super_admin_required
+def check_super_admin():
+    """
+    Checks whether the user has already logged in and is a super-admin
     """
     return make_response(("Success", 200))
 

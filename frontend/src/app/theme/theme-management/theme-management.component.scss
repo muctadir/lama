@@ -16,21 +16,20 @@ $light-grey-shade: #aaaaaa;
 // Header of the page
 #pageTitle {
     padding-top: 10px;
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
     font-size: 36px;
     letter-spacing: 1px;
 }
 
 // Button for adding themes
-#createThemeButton{
+#createThemeButton {
     background-color: $white-shade;
+    color: black;
     border: 2px solid;
     border-color: $grey-shade;
-    color: black;
 }
+
 // The plus for creating a theme
-.bi.bi-plus.createTheme{
+.bi.bi-plus.createTheme {
     color: black;
     margin-left: 5px;
 }
@@ -38,8 +37,7 @@ $light-grey-shade: #aaaaaa;
 // Div for the button for adding themes
 #addButton {
     padding-top: 10px;
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    
 }
 
 .subTitle {
@@ -53,6 +51,11 @@ $light-grey-shade: #aaaaaa;
     border-bottom: 1px;
     border-bottom-style: solid;
     border-bottom-color: $grey-shade;
+}
+
+// Make the headers clickable
+.clickable:hover {
+    cursor: pointer;
 }
 
 // Centers the pagination to the middle of the page
@@ -109,7 +112,7 @@ box-shadow: 0 0 0 0.1rem $light-grey-shade;
     border-radius: 10px;
 }
 // Scroll bar
-#scrolly{
+#scrolly {
     padding-right: 40px;
     height: auto;
 }

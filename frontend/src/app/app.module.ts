@@ -45,9 +45,15 @@ import { ConflictResolutionComponent } from './conflict/conflict-resolution/conf
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
+import { ToastsContainer } from './modals/toast-global/toast-container.component';
+import { ToastCommService } from './services/toast-comm.service';
+import { AppToastService } from './services/app-toast.service';
 
 @NgModule({
   declarations: [
@@ -92,7 +98,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ThemeManagementComponent,
     SingleThemeViewComponent,
     ThemeInfoComponent,
-    SingleThemeViewComponent
+    SingleThemeViewComponent,
+    ModerationComponent,
+    DeleteThemeComponent,
+    ToastGlobalComponent,
+    ToastsContainer
   ],
   imports: [
     BrowserModule,
@@ -101,8 +111,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [],
+  providers: [ToastCommService],
   bootstrap: [
-    AppComponent]
+    AppComponent
+  ]
 })
 export class AppModule { }

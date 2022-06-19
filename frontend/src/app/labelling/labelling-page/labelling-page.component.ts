@@ -12,6 +12,7 @@ import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-labelling-page',
@@ -63,7 +64,8 @@ export class LabellingPageComponent implements OnInit {
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
-    private router: Router
+    private router: Router,
+    private toastCommService: ToastCommService
   ) {
     /**
      * Preparing variables for information
@@ -208,7 +210,7 @@ export class LabellingPageComponent implements OnInit {
       this.submitMessage = '';
       this.sendSubmission(dict);
     } catch (e) {
-      this.submitMessage = 'Submission invalid';
+      this.toastCommService.emitChange([false, "Submission invalid"]);
     }
   }
 
@@ -251,7 +253,7 @@ export class LabellingPageComponent implements OnInit {
       this.ngOnInit();
     } catch (err) {
       // Send error
-      this.submitMessage = 'Database error while submitting labelling.';
+      this.toastCommService.emitChange([false, "Database error while submitting labelling."]);
     }
   }
   /**
