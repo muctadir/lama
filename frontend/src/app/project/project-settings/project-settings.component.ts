@@ -403,11 +403,6 @@ export class ProjectSettingsComponent implements OnInit {
       delete this.allProjectMembers[user.getId()]
       //Remove user from list of newly added users
       delete this.added[user.getId()]
-      //Remove user from project members list
-      let index = this.projectMembers.indexOf(user);
-      this.projectMembers.splice(index,1);
-      //Remove user as admin from admin status dictionary
-      this.adminMembers[user.getId()] = false;
     }
     else {
       // Assign removed status to user
