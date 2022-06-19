@@ -1,10 +1,12 @@
 # TODO: Short description of each of these libraries.
+
 import click
 from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
-from src.models import db
 from src.models.auth_models import User, UserStatus
+from src.models import db, ma
+import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
 from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
@@ -46,6 +48,130 @@ def db_init():
     init()
     migrate(message="Initial migration")
     upgrade()
+
+# TODO: Add db reset (this always breaks the migrations in my experience)
+
+# Fills the user table with a bunch of random users.
+# TODO: Update this to match the new database models. Also, this should probably
+# be defined in another file. (Testing setup needs to reuse it as well.)
+@db_opt.command("fill")
+def fill():
+
+    from src.models.project_models import Membership, Project
+    from src.models.item_models import LabelType, Label, Theme
+    from src.models.auth_models import User, UserStatus
+
+    # Creates 10 users which are all approved
+    users = [User(
+        username=f"TestUser{i}",
+        password=generate_password_hash("1234"),
+        email=f"test{i}@test.com",
+        description=f"Description for test user {i}",
+        super_admin=False
+    ) for i in range(1, 11)]
+    db.session.add_all(users)
+    db.session.commit()
+
+    # Creates 3 projects, the second of which is frozen
+    projects = [Project(
+        name=f"Project {i}",
+        description=f"Description for test project {i}",
+        frozen = i % 2
+    ) for i in range(1, 4)]
+    db.session.add_all(projects)
+    db.session.commit()
+
+    # Assigns the first 6/10 users to the first project
+    # The last 6/10 users to the second project (two user overlap in projects)
+    # No users to the third project
+    # For each project, the first user is an admin, and the second user is soft-deleted
+    memberships = [Membership(
+        p_id = 1,
+        u_id = i,
+        admin = i == 1,
+        deleted = i == 2
+    ) for i in range(1, 7)]
+    memberships.extend([Membership(
+        p_id = 2,
+        u_id = i,
+        admin = i == 5,
+        deleted = i == 6
+    ) for i in range(5, 11)])
+    db.session.add_all(memberships)
+    db.session.commit()
+
+    # Creates 3 label types for the first project
+    # Creates 4 label types for the second project
+    labeltypes =  [LabelType(
+        name = f"Label Type {i}",
+        id = i,
+        p_id = 1
+    ) for i in range(1, 4)]
+    labeltypes.extend([LabelType(
+        name = f"Label Type {i}",
+        id = i,
+        p_id = 2
+    ) for i in range(4, 8)])
+    db.session.add_all(labeltypes)
+    db.session.commit()
+
+    # Creates 2 labels for the first label types and 3 for the other labels in project 1
+    # Creates 3 labels for the first two label types in project 2
+    labels =  [Label(
+        id = i,
+        name = f"Label {i} (Label Type 1)",
+        description=f"Description for label {i} for Label Type 1",
+        lt_id = 1,
+        p_id = 1
+    ) for i in range(1, 3)]
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 2)",
+        description=f"Description for label {i} for Label Type 2",
+        lt_id = 2,
+        p_id = 1
+    ) for i in range(3, 6)])
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 3)",
+        description=f"Description for label {i} for Label Type 3",
+        lt_id = 3,
+        p_id = 1
+    ) for i in range(6, 9)])
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 1)",
+        description=f"Description for label {i} for Label Type 1",
+        lt_id = 1,
+        p_id = 2
+    ) for i in range(9, 11)])
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 2)",
+        description=f"Description for label {i} for Label Type 2",
+        lt_id = 2,
+        p_id = 2
+    ) for i in range(11, 13)])
+    db.session.add_all(labels)
+    db.session.commit()
+
+    # Creates 2 theme in project 1 
+    # Creates 3 theme in project 2
+    theme = [Theme(
+        id = i,
+        name = f"Theme {i}",
+        description=f"Description for theme {i}",
+        p_id = 1
+    ) for i in range(1, 3)]
+    theme.extend([Theme(
+        id = i,
+        name = f"Theme {i}",
+        description=f"Description for theme {i}",
+        p_id = 2
+    ) for i in range(3, 6)])
+    db.session.add_all(theme)
+    db.session.commit()
+
     SUPER_USER = environ.get("SUPER_USER")
     SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
     SUPER_EMAIL = environ.get("SUPER_EMAIL")
