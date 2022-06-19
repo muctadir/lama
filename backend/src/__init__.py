@@ -184,9 +184,7 @@ def fill():
     ) for i in range(3, 6)])
     db.session.add_all(theme)
     db.session.commit()
-
-# TODO: Add db reset (this always breaks the migrations in my experience)
-
+    
 @db_opt.command("test")
 def test():
     changes = get_changes(Label.__change__, 1, 1, True)
