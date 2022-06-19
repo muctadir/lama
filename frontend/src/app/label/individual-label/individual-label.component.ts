@@ -151,14 +151,19 @@ export class IndividualLabelComponent {
       this.ngOnInit();
     });
   }
+  
+  // Get the number of labellings
   async getLabellingAmount(): Promise<void> {
     try {
+      // Get the number of labellings from the labelling data service
       const result = await this.labellingDataService.getLabellingCount({
         p_id: this.p_id,
         l_id: this.label_id
       });
+      // Parse the number of labellings into an int
       this.labelCount = parseInt(result);
     } catch (e) {
+      // Return error
       console.error(e);
     }
   }

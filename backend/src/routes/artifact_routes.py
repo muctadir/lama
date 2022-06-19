@@ -343,6 +343,7 @@ def random_artifact(*, user):
     # Get the project id
     p_id = int(args['p_id'])
 
+    # Get a random
     artifact = get_random_artifact(user.id, p_id)
 
     if not artifact:
@@ -389,30 +390,33 @@ def get_labellers():
     return make_response(json_labellers)
 
 # Author: Eduardo Costa Martins
+# Posts the split to the database
 # TODO: Record split in changelog
 @artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
 def post_split():
-
+    
     args = request.json['params']
-
+    # What args are required
     required = ('p_id', 'parent_id', 'identifier', 'start', 'end', 'data')
-
+    # Check if required args are present
     if not check_args(required, args):
         return make_response("Bad Request", 400)
-    
+    # Declare new artifact
     new_artifact = Artifact(**args)
-    
+    # Add the new artifact
     db.session.add(new_artifact)
 
     try:
+        # Commit the artifact
         db.session.commit()
     except OperationalError:
         make_response("Internal Service Error", 503)
 
     return make_response("Success")
 
+# Gets a random artifact which has not been already labelled by the user
 def get_random_artifact(u_id, p_id):
     # Criteria for artifact completion
     criteria = db.session.scalar(select(Project.criteria).where(Project.id == p_id))
