@@ -135,26 +135,26 @@ export class LabelManagementComponent {
 
     // If nothing was searched
     if(text.length == 0){
-      // Get all themes anew
+      // Get all labels anew
       this.getLabels();
     } else {
       // Otherwise search
 
       // Pass the search word to services
-      let labels_searched = await this.labellingDataService.search(text, p_id);
+      let labelsSearched = await this.labellingDataService.search(text, p_id);
 
       
-      // List for the artifacts resulting from the search
-      let label_list: Array<Label> = [];
-      // For loop through all searched artifacts
-      for (let label of labels_searched) {
-        // Make it an artifact object
-        let newArtifact = new Label(label['id'], label['name'], label['description'], label['type']);
-        // Append artifact to list
-        label_list.push(newArtifact);
+      // List for the labels resulting from the search
+      let labelList: Array<Label> = [];
+      // For loop through all searched labels
+      for (let label of labelsSearched) {
+        // Make it an label object
+        let newLabel = new Label(label['id'], label['name'], label['description'], label['type']);
+        // Append label to list
+        labelList.push(newLabel);
       }
 
-      this.labels = label_list;
+      this.labels = labelList;
 
     }
   }

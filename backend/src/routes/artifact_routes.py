@@ -277,13 +277,16 @@ def search(*, user, membership):
 
     # Yes, it may be slow to serialise all the artifacts
     # But the search function works on dictionaries (which was an intentional decision)
-    artifacts = artifact_schema.dump(artifacts, many=True)
+    serialised_artifacts = artifact_schema.dump(artifacts, many=True)
 
+    # The columns we search through
+    search_columns = ['data']
+    
     # Getting result of search
-    results = search_func_all_res(args['search_words'], artifacts, 'id', ['data'])
+    results = search_func_all_res(args['search_words'], serialised_artifacts, 'id', search_columns)
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
-    # Gets the actual artifact from the search
+    # Gets the actual artifact object from the search
     artifacts_results = [result['item'] for result in clean_results]
 
     # Return the list of artifacts from the search

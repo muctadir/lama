@@ -447,7 +447,7 @@ def search_route():
     results = search_func_all_res(args['search_words'], serialised_labels, 'id', ['name', 'description'])
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
-    # Gets the actual artifact from the search
+    # Gets the actual label object from the search
     labels_results = [result['item'] for result in clean_results]
 
     return make_response(jsonify(labels_results))
