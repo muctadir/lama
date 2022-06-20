@@ -101,13 +101,39 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
+
+    // Gets the url again
+    this.url = this.router.url;
+
     this.labellings = new FormArray([]);
     this.eventEmitter.emit();
-    this.getRandomArtifact();
+
+    // Checks whether a labelling ID is provided
+    if(this.routeService.checkLabellingId(this.url)) {
+      console.log("case 1");
+
+      this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
+      // Shows labelling page of a specific artifact
+      //console.log(this.routeService.getThemeID(this.url));
+    } else {
+      console.log("case 2")
+      // Shows labelling page of a random artifact
+      this.getRandomArtifact();
+    }
     this.getLabelTypesWithLabels();
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
+  }
+
+  async getNonRandomArtifact(artID: number): Promise<void> {
+    try {
+      let result = await this.artifactDataService.getArtifact(this.p_id, artID);
+      console.log(result["result"]);
+    } catch {
+      this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Invalid request"]);
+    }
   }
 
   /**
@@ -145,8 +171,6 @@ export class LabellingPageComponent implements OnInit {
       this.router.navigate(['/project', this.p_id]);
       this.toastCommService.emitChange([false, "Something went wrong. Please try again!"]);
     }
-
-    
   }
 
   /**

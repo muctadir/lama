@@ -110,4 +110,15 @@ export class ReroutingService {
     // Return the t_id
     return t_id;
   }
+
+  checkLabellingId(url_path: string): boolean {
+    let count: number;
+    count = (url_path.split("/").length - 1);
+    if(count == 4){
+      return true;
+    }
+    return false;
+  }
+
+
 }
