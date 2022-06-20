@@ -290,7 +290,7 @@ def edit_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check if the theme name is unique
-    if theme_name_taken(theme_info["name"]):
+    if theme_name_taken(args["name"]):
         return make_response("Theme name already exists")
     
     # Get theme id
