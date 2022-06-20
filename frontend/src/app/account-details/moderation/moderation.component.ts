@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'app/classes/user';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 import { AccountInfoService } from 'app/services/account-info.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
@@ -25,7 +27,8 @@ export class ModerationComponent {
    * @trigger on component creation
    */
   constructor(private accountService: AccountInfoService,
-    private toastCommService: ToastCommService) { }
+    private toastCommService: ToastCommService, 
+    private modalService: NgbModal) { }
 
   /**
    * Requests the server for the data of all users in the application
@@ -88,8 +91,9 @@ export class ModerationComponent {
    */
   async softDelete(deluser: User): Promise<void> {
     try {
+      this.modalService.open(ConfirmModalComponent, {});
       // Makes the call to delete the user
-      await this.accountService.softDelUser(deluser);
+      //await this.accountService.softDelUser(deluser);
       this.toastCommService.emitChange([true, "User deleted successfully"])
       // Reloads the user data
       await this.getAllUsers();
@@ -99,5 +103,7 @@ export class ModerationComponent {
       this.toastCommService.emitChange([false, "Something went wrong"])
     }
   }
+
+
 
 }

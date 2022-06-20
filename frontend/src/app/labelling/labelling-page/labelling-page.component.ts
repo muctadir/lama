@@ -264,7 +264,7 @@ export class LabellingPageComponent implements OnInit {
    * 5. Put reponse in dictionary and send it
    * 6. Otherwise catch the message
    */
-  submit(): void {
+  async submit(): Promise<void> {
     // Get the timestamp when the labels are submitted
     this.endTime = Date.now();
     // Number of seconds the labellings took
@@ -275,7 +275,7 @@ export class LabellingPageComponent implements OnInit {
         p_id: this.p_id,
         resultArray: resultArray,
       };
-      this.sendSubmission(dict);
+      await this.sendSubmission(dict);
       this.toastCommService.emitChange([true, "Artifact labelled successfully"]);
     } catch (e) {
       this.toastCommService.emitChange([false, "Submission invalid"]);
@@ -323,8 +323,12 @@ export class LabellingPageComponent implements OnInit {
     try {
       // Wait for the submission
       await this.labellingDataService.postLabelling(dict);
-      // Reinitialise the page
-      this.ngOnInit();
+      if(this.routeService.checkLabellingId(this.url)) {
+        this.reRouter();
+      } else{
+        // Reinitialise the page
+        this.ngOnInit();
+      }
     } catch (err) {
       // Send error
       this.toastCommService.emitChange([false, "Database error while submitting labelling."]);
