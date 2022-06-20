@@ -49,8 +49,8 @@ build-image-frontend:
   stage: build-image
   image: docker
   needs: ['frontend-test']
-  only:
-    - main 
+  # only:
+  #   - main 
   retry: 2
   script:
     - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
@@ -61,8 +61,8 @@ build-image-backend:
   stage: build-image
   image: docker  
   needs: ['backend-test']
-  only:
-    - main 
+  # only:
+  #   - main 
   retry: 2
   script:
     - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
