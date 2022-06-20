@@ -126,7 +126,13 @@ export class LabellingPageComponent implements OnInit {
       );
       this.artifact = artifact;
     } catch {
-      this.router.navigate(['/project', this.p_id]);
+      if (this.artifact.getId() === -1) {
+        this.router.navigate(['/project', this.p_id]);
+        this.toastCommService.emitChange([false, "There are no artifacts yet."]);
+      } else{
+        this.router.navigate(['/project', this.p_id]);
+        this.toastCommService.emitChange([false, "There are no artifacts left to label!"]);
+      }
     }
 
     try {
@@ -137,11 +143,10 @@ export class LabellingPageComponent implements OnInit {
       this.labellers = labellers;
     } catch {
       this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Something went wrong. Please try again!"]);
     }
 
-    if (this.artifact.getId() === -1) {
-      this.router.navigate(['/project', this.p_id]);
-    }
+    
   }
 
   /**
