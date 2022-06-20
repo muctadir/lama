@@ -11,12 +11,6 @@
     letter-spacing: 1px;
 }
 
-//Labelled by text
-#labelledBy{
-    font-size: 18px;
-    letter-spacing: 1px;
-}
-
 // Container for the artifact
 .artifactContainer {
     max-height: 35vh;
@@ -95,7 +89,7 @@ div.allUserLabels{
 }
 
 //Name of labeller
-#labellerName{
+#labeller{
     font-size: 17px;
     letter-spacing: 1px;
     font-weight: 450;
