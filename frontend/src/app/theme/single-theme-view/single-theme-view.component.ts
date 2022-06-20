@@ -5,6 +5,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
+import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
@@ -144,4 +145,16 @@ export class SingleThemeViewComponent {
     modalRef.componentInstance.t_id = this.t_id; 
   }
 
+  /**
+   * Opens the modal displaying the theme history
+   * 
+   * @trigger on click of history icon
+   */
+  openThemeHistory(): void {
+    // opens theme history modal
+    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+
+    // passes all the users in the application to the modal
+    modalRef.componentInstance.history_type = "Theme";
+  }
 }

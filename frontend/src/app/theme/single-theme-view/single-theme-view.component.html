@@ -6,8 +6,14 @@
 
     <!-- Page Header -->
     <div class="row" id="titleRow">
-        <div class="col-12 header" id="pageTitle"> 
+        <!-- Displays the theme name -->
+        <div class="col-11 header" id="pageTitle"> 
             {{theme.getName()}}
+        </div>
+        <!-- Displays the history icon -->
+        <div class="col-1 d-flex justify-content-center" id="pageTitle">
+            <!-- When clicked calls openThemeHistory function -->
+            <em class="bi bi-clock-history" id="history-hover" (click)="openThemeHistory()"></em>
         </div>
     </div>
 
@@ -91,7 +97,7 @@
                                                     <ng-template ngbPanelContent>
                                                         <div class="row">
                                                             <!--Artifact Text-->
-                                                            <div class="col-6">
+                                                            <div class="col-12">
                                                                 <p id="artifactText">{{artifact.getData()}}</p>
                                                             </div>
                                                         </div>

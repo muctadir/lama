@@ -20,7 +20,6 @@ export class RequestHandler {
      */
     this.axiosInstance = axios.create({
       baseURL: environment.apiURL, // Environment variable
-      timeout: 2000, // 2 seconds
       responseType: 'json', // We want JSON information back
       responseEncoding: 'utf8', // Default encoding
       maxRedirects: 0, // Our api does not have redirects - hence this is put at 0
