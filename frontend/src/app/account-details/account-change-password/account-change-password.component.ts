@@ -6,6 +6,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
 import { InputCheckService } from 'app/services/input-check.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { AxiosError } from 'axios';
 
 @Component({
   selector: 'app-account-change-password',
@@ -113,7 +114,11 @@ export class AccountChangePasswordComponent {
       this.toastCommService.emitChange([true, "Password changed"]);
     } catch(e) {
       // Emits an error toast
-      this.toastCommService.emitChange([false, "Please enter the correct password, and check your connection."]);
+      let message: string = "An unknown error occurred";
+      if (e instanceof AxiosError) {
+        message = e.response?.data;
+      }
+      this.toastCommService.emitChange([false, message]);
     }
   }
 }

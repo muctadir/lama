@@ -3,9 +3,9 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import axios from 'axios';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { InputCheckService } from 'app/services/input-check.service';
+import { AccountInfoService } from 'app/services/account-info.service';
 import { Router } from '@angular/router';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
@@ -37,9 +37,12 @@ export class RegisterComponent {
    * Initializes instance of InputCheckService
    * 
    * @param service instance of InputCheckService
+   * @param accountInfoService instance of AccountInfoService
    * @param route instance of Router
+   * @param toastCommService instance of ToastCommService
    */
-  constructor(private service: InputCheckService, 
+  constructor(private service: InputCheckService,
+    private accountInfoService: AccountInfoService,
     private route: Router,
     private toastCommService: ToastCommService) { }
 
@@ -50,13 +53,13 @@ export class RegisterComponent {
    * @modifies errorMsg
    * @trigger register button is clicked
    */
-  onRegister() : void {
+  onRegister(): void {
     // Checks input
-    let not_empty = this.service.checkFilled(this.username.value) && 
+    let not_empty = this.service.checkFilled(this.username.value) &&
       this.service.checkFilled(this.password.value) &&
       this.service.checkFilled(this.passwordR.value) &&
       this.service.checkFilled(this.email.value)
-    
+
     // Gives popup if one of the fields is not filled in
     if (!not_empty) {
       // Emits an error toast
@@ -83,7 +86,7 @@ export class RegisterComponent {
    * @trigger register button clicked, valid input
    * @modifies errorMsg
    */
-  register() : void {
+  register(): void {
     // Information needed for backend
     let registerInformation = {
       username: this.username.value,
@@ -94,14 +97,17 @@ export class RegisterComponent {
     }
 
     // Post to backend
-    axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
-    .then(() => {
-      // Reroutes the user to the login page
-      this.route.navigate(['/login']);
-    })
-    .catch(error =>{
-      this.toastCommService.emitChange([false, error.response.data]);
-    })
+    this.accountInfoService.registerUser(registerInformation)
+      .then(() => {
+        // Displays a success toast
+        this.toastCommService.emitChange([true, "Account created successfully!"]);
+        // Reroutes the user to the login page
+        this.route.navigate(['/login']);
+      })
+      .catch(error => {
+        console.log(error)
+        this.toastCommService.emitChange([false, error.response.data]);
+      })
 
   }
 

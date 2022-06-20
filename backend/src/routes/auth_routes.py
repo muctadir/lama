@@ -2,17 +2,17 @@
 # Jarl Jansen
 # Eduardo Costa Martins
 
+from operator import or_
 from src import db # need this in every route
 from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required
 from src.models.auth_models import User, UserSchema, UserStatus
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode
-from functools import wraps
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -23,8 +23,8 @@ def register():
     Registers a user when supplied username, email, password, and description
     See create_user() for default arguments
     """
-    args = request.json
-    
+    args = request.json['params']
+    print(args)
     # Required arguments
     required = ["username", "email", "password", "passwordR", "description"] 
 
@@ -141,7 +141,8 @@ def create_user(args):
 
 # If there already exists a User with given username or email
 def taken(username, email):
-    violation = db.session.query(User).filter(User.username == username or User.email == email).first()
+    violation = db.session.scalars(select(User).where(or_(User.username == username, User.email == email))).first()
+    print(violation)
     return bool(violation)
 
 # Checks validity of all required fields for User creation

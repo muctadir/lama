@@ -14,8 +14,8 @@ export class ThemeDataService {
   private requestHandler: RequestHandler;
   // Session token variable
   private sessionToken: string | null;
-  
-  constructor(private toastCommService: ToastCommService) { 
+
+  constructor(private toastCommService: ToastCommService) {
     // Get the session token
     this.sessionToken = sessionStorage.getItem("ses_token");
     // Make the request handler
@@ -29,9 +29,9 @@ export class ThemeDataService {
    * @returns themes_list. List of themes. Each theme includes the oject and the number of labels within the theme
    */
   async theme_management_info(p_id: number): Promise<Array<Theme>> {
-    try{
+    try {
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/theme-management-info', {"p_id": p_id}, true);
+      let response = await this.requestHandler.get('/theme/theme-management-info', { "p_id": p_id }, true);
 
       // Get the response data
       let themes = response;
@@ -40,7 +40,7 @@ export class ThemeDataService {
       let themes_list: Array<Theme> = []
 
       // For each theme in the list
-      for (let theme of themes){
+      for (let theme of themes) {
 
         // Get the theme information
         let themeJson = theme["theme"];
@@ -50,15 +50,15 @@ export class ThemeDataService {
         let newTheme: Theme = new Theme(themeJson['id'], themeJson["name"], themeJson["description"]);
 
         // Put labels in the theme
-        newTheme.setNumberOfLabels(themeJson["numberOfLabels"]) 
+        newTheme.setNumberOfLabels(themeJson["numberOfLabels"])
 
         // Add theme to list
         themes_list.push(newTheme);
       }
       // Return the list of themes
       return themes_list;
-    // Catch error
-    } catch(e){
+      // Catch error
+    } catch (e) {
       console.log("An error occured when trying to get all themes");
       return [];
     }
@@ -72,9 +72,9 @@ export class ThemeDataService {
    * @returns newTheme. all information of a single theme
    */
   async single_theme_info(p_id: number, t_id: number): Promise<Theme> {
-    try{
+    try {
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/single-theme-info', {"p_id": p_id, "t_id": t_id}, true);
+      let response = await this.requestHandler.get('/theme/single-theme-info', { "p_id": p_id, "t_id": t_id }, true);
 
       // Get the theme data
       let theme = response["theme"];
@@ -99,8 +99,8 @@ export class ThemeDataService {
 
       // Return the theme
       return newTheme;
-    // Catch the error
-    } catch(e) {
+      // Catch the error
+    } catch (e) {
       console.log("An error occured when trying to get the theme information");
       return new Theme(0, "", "");
     }
@@ -112,11 +112,11 @@ export class ThemeDataService {
    * @param subThemes json of sub-themes
    * @returns childArray. array of children themes
    */
-  createChildren(subThemes: []): Array<Theme>{
+  createChildren(subThemes: []): Array<Theme> {
     // List for the children
     let childArray: Array<Theme> = [];
     // For each child make an object
-    for (let child of subThemes){
+    for (let child of subThemes) {
       // Add the child to the array
       childArray.push(new Theme(child["id"], child["name"], child["description"]));
     }
@@ -134,13 +134,13 @@ export class ThemeDataService {
     // List for the labels 
     let labelsArray: Array<Label> = [];
     // For each label in the list
-    for (let label of labels){
+    for (let label of labels) {
       let label_info = label["label"]
       // Make a new label object
       let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"])
 
       // Create the artifacts
-      let artifactArray = this.createArtifacts(label["artifacts"]);        
+      let artifactArray = this.createArtifacts(label["artifacts"]);
       // Add artifacts to the label
       newLabel.setArtifacts(artifactArray);
 
@@ -160,7 +160,7 @@ export class ThemeDataService {
   createArtifacts(artifacts: []): Array<StringArtifact> {
     // List for the artifacts
     let artifactArray: Array<StringArtifact> = [];
-    for (let artifact of artifacts){
+    for (let artifact of artifacts) {
       // Push the new artifact
       artifactArray.push(new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]));
     }
@@ -174,26 +174,26 @@ export class ThemeDataService {
    * @param p_id 
    * @returns allSubThemes. All sub-themes without parents
    */
-  async themes_without_parents (p_id: number, t_id: number): Promise<Array<Theme>> {
-    try{
+  async themes_without_parents(p_id: number, t_id: number): Promise<Array<Theme>> {
+    try {
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/possible-sub-themes', {"p_id": p_id, "t_id": t_id}, true);
+      let response = await this.requestHandler.get('/theme/possible-sub-themes', { "p_id": p_id, "t_id": t_id }, true);
 
       // List for all subthemes
       let allSubThemes: Array<Theme> = [];
       // For each subtheme make a Theme object
-      for (let subtheme of response){
-        let newTheme = new Theme (subtheme['id'], subtheme['name'], subtheme['description']);
+      for (let subtheme of response) {
+        let newTheme = new Theme(subtheme['id'], subtheme['name'], subtheme['description']);
         // Push the subthemes to a list
         allSubThemes.push(newTheme);
-    }
-    // Return the list of subThemes
-    return allSubThemes
-    //Catch the error
-    } catch(e) {
+      }
+      // Return the list of subThemes
+      return allSubThemes
+      //Catch the error
+    } catch (e) {
       console.log("An error occured when trying to get the themes without parents");
       return [];
-    }    
+    }
   }
 
   /**
@@ -202,14 +202,21 @@ export class ThemeDataService {
    * @param theme_info Includes name, description, sub_themes, labels, and p_id
    * @returns response. Whether the theme was created or an error occured
    */
-  async create_theme (theme_info: any): Promise<string> {
-    try{
+  async create_theme(theme_info: any): Promise<string> {
+    try {
       // Create project in the backend
-      await this.requestHandler.post('/theme/create_theme', theme_info, true);
-      // Emits an success toast
-      this.toastCommService.emitChange([true, "Created theme successfully"]);
-      return "Theme created succesfully";
-    // Catch the error
+      let message = await this.requestHandler.post('/theme/create_theme', theme_info, true);
+      // Create a toast indicating whether or not the theme was
+      // created successfully
+      if (message == "Theme created") {
+        this.toastCommService.emitChange([true, "Created theme successfully"]);
+      }
+      else {
+        this.toastCommService.emitChange([false, message]);
+      }
+      return message
+
+      // Catch the error
     } catch (e) {
       // Emits an error toast
       this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
@@ -217,22 +224,28 @@ export class ThemeDataService {
       return "An error occured when trying to create the theme.";
     }
   }
-  
+
   /**
    * Function to edit a theme
    * 
    * @param theme_info Includes id, name, description, sub_themes, labels, and p_id
    * @returns response. Whether the theme was edited or an error occured
    */
-   async edit_theme (theme_info: any): Promise<string> {
-    try{
+  async edit_theme(theme_info: any): Promise<string> {
+    try {
       // Create project in the backend
-      await this.requestHandler.post('/theme/edit_theme', theme_info, true);
-      // Emits an success toast
-      this.toastCommService.emitChange([true, "Edited theme successfully"]);
-      return "Theme edited succesfully"
-    // Catch the error
-    } catch(e) {
+      let message = await this.requestHandler.post('/theme/edit_theme', theme_info, true);
+      // Create a toast indicating whether or not the theme was
+      // edited successfully
+      if (message == "Theme edited") {
+        this.toastCommService.emitChange([true, "Edited theme successfully"]);
+      }
+      else {
+        this.toastCommService.emitChange([false, message]);
+      }
+      return message
+      // Catch the error
+    } catch (e) {
       // Emits an error toast
       this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
       // Return the response
@@ -248,12 +261,12 @@ export class ThemeDataService {
    * @returns response. Whether the theme was deleted or an error occured
    */
   async delete_theme(p_id: number, t_id: number): Promise<string> {
-    try{
+    try {
       // Create project in the backend
-      await this.requestHandler.post('/theme/delete_theme', {"p_id": p_id, "t_id": t_id}, true);
+      await this.requestHandler.post('/theme/delete_theme', { "p_id": p_id, "t_id": t_id }, true);
       return "Theme deleted succesfully"
-    // Catch the error
-    } catch(e) {
+      // Catch the error
+    } catch (e) {
       // Return the response
       return "An error occured when trying to delete the theme";
     }

@@ -264,6 +264,7 @@ export class ProjectSettingsComponent implements OnInit {
     //Reinitializing arrays and original user list
     this.projectMembers = [];
     this.labelTypes = [];
+    this.allMembers = [];
     this.ngOnInit();
   }
 
@@ -363,11 +364,11 @@ export class ProjectSettingsComponent implements OnInit {
    * @modifies projectMembers, adminMembers, removed, added, allProjectMembers
    */
   addMember(user: User, admin: boolean) {
-    //If user is previously removed (from the front end, not yet in the back end)
+    // If user is previously removed (from the front end, not yet in the back end)
     if (user.getId() in this.removedMembers) {
-      //Remove them from the removed members list
+      // Remove them from the removed members list
       delete this.removedMembers[user.getId()]
-      //Change the user's removed status
+      // Change the user's removed status
       this.removed[user.getId()] = 0
     }
     else {
@@ -385,6 +386,7 @@ export class ProjectSettingsComponent implements OnInit {
     this.projectMembers.push(user);
     //Assigning the admin status to the user
     this.adminMembers[user.getId()] = admin;
+    this.toastCommService.emitChange([true, "User added"])
   }
 
   /**
@@ -401,22 +403,17 @@ export class ProjectSettingsComponent implements OnInit {
       delete this.allProjectMembers[user.getId()]
       //Remove user from list of newly added users
       delete this.added[user.getId()]
-      //Remove user from project members list
-      let index = this.projectMembers.indexOf(user);
-      this.projectMembers.splice(index,1);
-      //Remove user as admin from admin status dictionary
-      this.adminMembers[user.getId()] = false;
     }
     else {
-      //Assign removed status to user
+      // Assign removed status to user
       this.removed[user.getId()] = 1;
-      //Add user to list of users that have been removed from project
+      // Add user to list of users that have been removed from project
       this.removedMembers[user.getId()] = user
     }
-    //Remove user from project members list
+    // Remove user from project members list
     let index = this.projectMembers.indexOf(user);
     this.projectMembers.splice(index,1);
-    //Remove user as admin from admin status dictionary
+    // Remove user as admin from admin status dictionary
     this.adminMembers[user.getId()] = false;
   }
 

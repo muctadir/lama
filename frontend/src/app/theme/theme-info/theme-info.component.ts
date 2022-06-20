@@ -88,7 +88,7 @@ export class ThemeInfoComponent implements OnInit {
     // Set the header of the page
     this.setHeader();  
 
-    // If were in edit mode we get the information, and set values
+    // If in edit mode, get the information and set values
     if(this.edit){
       // Get theme id
       this.t_id = Number(this.routeService.getThemeID(this.url));
@@ -185,6 +185,7 @@ export class ThemeInfoComponent implements OnInit {
           "p_id": this.p_id
         }
       }
+      
       // Send the theme information to the backend
       let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
@@ -198,12 +199,14 @@ export class ThemeInfoComponent implements OnInit {
       // Reset description
       this.selectedDescriptionLabel = '';
       this.selectedDescriptionTheme = '';
-      // Reset name and description forms
-      this.themeForm.reset();
-      // Give succes message
+      // Give success message
       this.errorMsg = response;  
-      // Rerouter to the correct page
-      this.reRouter();   
+      // Rerouter to the theme management page if theme was created
+      if(response == "Theme created" || response == "Theme edited") {
+        // Reset name and description forms
+        this.themeForm.reset();
+        this.reRouter(); 
+      }  
     } else {
       // Displays error message
       this.toastCommService.emitChange([false, "Name or description not filled in"]);
@@ -224,13 +227,13 @@ export class ThemeInfoComponent implements OnInit {
   
   // Async function for posting the new theme info
   async post_theme_info(theme_info: any): Promise<string> {
-    if(this.create){
+    if (this.create){
       // Send info to backend
       return this.themeDataService.create_theme(theme_info);
     } else if (this.edit){
       return this.themeDataService.edit_theme(theme_info);
     } else {
-      return "";
+      return "Error has occured when saving the theme";
     }
   }
 
@@ -285,7 +288,10 @@ export class ThemeInfoComponent implements OnInit {
     });   
     // Put the sub-theme back into the allSubThemes list
     if(this.edit){
-      this.allSubThemes.push(subTheme);
+      // Check if the theme is already in the array
+      if(this.allSubThemes.indexOf(subTheme) < 0){
+        this.allSubThemes.push(subTheme);
+      }
     } 
   }
 

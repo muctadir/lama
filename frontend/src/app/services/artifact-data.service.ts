@@ -25,7 +25,7 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @returns Promise<Array<StringArtifact>>
    */
-  async getArtifacts(p_id: number, page: number, pageSize: number, seekIndex: number, seekPage: number): Promise<[number, Array<StringArtifact>]> {
+  async getArtifacts(p_id: number, page: number, pageSize: number, seekIndex: number, seekPage: number): Promise<[number, number, Array<StringArtifact>]> {
     // Check if the p_id is larger than 1
     if (p_id < 1) throw new Error("p_id cannot be less than 1");
 
@@ -60,7 +60,7 @@ export class ArtifactDataService {
     });
 
     // Return result
-    return [response['nArtifacts'], artifacts];
+    return [response['nArtifacts'], response['nLabelTypes'], artifacts];
 
   }
 
@@ -228,5 +228,30 @@ export class ArtifactDataService {
       },
       true
     );
+  }
+  /**
+   * Post the split to the database 
+   * 
+   * @param p_id 
+   * @param parent_id 
+   * @param identifier 
+   * @param start 
+   * @param end 
+   * @param data 
+   */
+  async postSplit(p_id: number, parent_id: number, identifier: string, start: number, end: number, data: string): Promise<number> {
+    let response = await this.requestHandler.post(
+      '/artifact/split',
+      {
+        p_id: p_id,
+        parent_id: parent_id,
+        identifier: identifier,
+        start: start,
+        end: end,
+        data: data
+      },
+      true
+    )
+    return response
   }
 }

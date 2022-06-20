@@ -175,6 +175,8 @@ export class LabelFormComponent implements OnInit {
         label,
         this.labelForm.controls['labelTypeId'].value
       );
+      // Show success toast
+      this.toastCommService.emitChange([true, "Label edited successfully"]);
       // Close modal
       this.activeModal.close();
     } catch (e) {

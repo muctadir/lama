@@ -1,21 +1,24 @@
 # TODO: Short description of each of these libraries.
+
 import click
 from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
-from src.models import db
-from src.models.auth_models import User, UserStatus
+from src.models import db, ma
 import src.models.auth_models
 import src.models.project_models
 import src.models.item_models
 from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
-label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes
+label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes, change_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
+from src.routes.change_routes import get_changes
+from src.models.item_models import Label
+
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
 HOST = environ.get("HOST")
@@ -41,9 +44,36 @@ db_opt = AppGroup("db-opt")
 # those tables do not yet exist.
 @db_opt.command("init")
 def db_init():
+    from src.models.auth_models import User, UserStatus
+    
     init()
     migrate(message="Initial migration")
     upgrade()
+
+    # This section creates the super admin upon initializing the database
+    # The login details are retrieved from environment variables
+    SUPER_USER = environ.get("SUPER_USER")
+    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
+    SUPER_EMAIL = environ.get("SUPER_EMAIL")
+    # The super admin is created and added
+    db.session.add(User(
+        username=SUPER_USER,
+        email=SUPER_EMAIL,
+        password=generate_password_hash(SUPER_PASSWORD),
+        status=UserStatus.approved,
+        super_admin=True,
+        description="Auto-generated super admin"
+    ))
+    db.session.commit()
+
+# Fills the user table with a bunch of random users.
+@db_opt.command("fill")
+def fill():
+
+    from src.models.project_models import Membership, Project
+    from src.models.item_models import LabelType, Label, Theme
+    from src.models.auth_models import User, UserStatus
+
     SUPER_USER = environ.get("SUPER_USER")
     SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
     SUPER_EMAIL = environ.get("SUPER_EMAIL")
@@ -56,6 +86,139 @@ def db_init():
         description="Auto-generated super admin"
     ))
     db.session.commit()
+
+    # Creates 10 users which are all approved
+    users = [User(
+        username=f"TestUser{i}",
+        password=generate_password_hash("1234"),
+        email=f"test{i}@test.com",
+        description=f"Description for test user {i}",
+        super_admin=False
+    ) for i in range(2, 11)]
+    db.session.add_all(users)
+    db.session.commit()
+
+    
+
+    # Creates 3 projects, the second of which is frozen
+    projects = [Project(
+        name=f"Project {i}",
+        description=f"Description for test project {i}",
+        frozen = i % 2
+    ) for i in range(1, 4)]
+    db.session.add_all(projects)
+    db.session.commit()
+
+    # Assigns the first 6/10 users to the first project
+    # The last 6/10 users to the second project (two user overlap in projects)
+    # No users to the third project
+    # For each project, the first user is an admin, and the second user is soft-deleted
+    memberships = [Membership(
+        p_id = 1,
+        u_id = i,
+        admin = i == 1,
+        deleted = i == 2
+    ) for i in range(2, 7)]
+    memberships.extend([Membership(
+        p_id = 2,
+        u_id = i,
+        admin = i == 5,
+        deleted = i == 6
+    ) for i in range(5, 11)])
+    memberships.extend([Membership(
+        p_id = 1,
+        u_id = 1,
+        admin = 1,
+        deleted = 0
+    )])
+    memberships.extend([Membership(
+        p_id = 2,
+        u_id = 1,
+        admin = 1,
+        deleted = 0
+    )])
+    memberships.extend([Membership(
+        p_id = 3,
+        u_id = 1,
+        admin = 1,
+        deleted = 0
+    )])
+    db.session.add_all(memberships)
+    db.session.commit()
+
+    # Creates 3 label types for the first project
+    # Creates 4 label types for the second project
+    labeltypes =  [LabelType(
+        name = f"Label Type {i}",
+        id = i,
+        p_id = 1
+    ) for i in range(1, 4)]
+    labeltypes.extend([LabelType(
+        name = f"Label Type {i}",
+        id = i,
+        p_id = 2
+    ) for i in range(4, 8)])
+    db.session.add_all(labeltypes)
+    db.session.commit()
+
+    # Creates 2 labels for the first label types and 3 for the other labels in project 1
+    # Creates 3 labels for the first two label types in project 2
+    labels =  [Label(
+        id = i,
+        name = f"Label {i} (Label Type 1)",
+        description=f"Description for label {i} for Label Type 1",
+        lt_id = 1,
+        p_id = 1
+    ) for i in range(1, 3)]
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 2)",
+        description=f"Description for label {i} for Label Type 2",
+        lt_id = 2,
+        p_id = 1
+    ) for i in range(3, 6)])
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 3)",
+        description=f"Description for label {i} for Label Type 3",
+        lt_id = 3,
+        p_id = 1
+    ) for i in range(6, 9)])
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 1)",
+        description=f"Description for label {i} for Label Type 1",
+        lt_id = 1,
+        p_id = 2
+    ) for i in range(9, 11)])
+    labels.extend([Label(
+        id = i,
+        name = f"Label {i} (Label Type 2)",
+        description=f"Description for label {i} for Label Type 2",
+        lt_id = 2,
+        p_id = 2
+    ) for i in range(11, 13)])
+    db.session.add_all(labels)
+    db.session.commit()
+
+    # Creates 2 theme in project 1 
+    # Creates 3 theme in project 2
+    theme = [Theme(
+        id = i,
+        name = f"Theme {i}",
+        description=f"Description for theme {i}",
+        p_id = 1
+    ) for i in range(1, 3)]
+    theme.extend([Theme(
+        id = i,
+        name = f"Theme {i}",
+        description=f"Description for theme {i}",
+        p_id = 2
+    ) for i in range(3, 6)])
+    db.session.add_all(theme)
+    db.session.commit()
+
+    
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
@@ -116,7 +279,7 @@ def create_app(config={'TESTING': False}):
     app.register_blueprint(artifact_routes)
     app.register_blueprint(conflict_routes)
     app.register_blueprint(theme_routes)
-
+    app.register_blueprint(change_routes)
 
     # Magic library that makes cross-origin resource sharing work.
     CORS(app)

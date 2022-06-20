@@ -9,6 +9,7 @@ from src.app_util import login_required, in_project, time_from_seconds
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
 from src.models.project_models import Project
+from src.models.change_models import ChangeType
 
 labelling_routes = Blueprint("labelling", __name__, url_prefix="/labelling")
 
@@ -75,16 +76,18 @@ def post_labelling(*, user):
     # For every labelling, record the required data:
     # artifact id, label type id, label id, project id, remark and time
     for labelling in args['resultArray']:
-        labelling_ = Labelling(u_id=user.id, 
+        labelling_ = Labelling(
+            u_id=user.id, 
             a_id=labelling['a_id'], 
-            lt_id=labelling['lt_id'], 
-            l_id=labelling['l_id'], 
+            lt_id=labelling['label_type']['id'], 
+            l_id=labelling['label']['id'], 
             p_id=args['p_id'], 
             remark=labelling['remark'],
             time=time_from_seconds(labelling['time'])
         )
         # Check if the labelling was added, otherwise throw and error
         try:
+            __record_labelling(args['p_id'], user.id, labelling['label_type']['name'], labelling['label']['name'], labelling['a_id'])
             db.session.add(labelling_)
         except OperationalError:
             return make_response('Internal Server Error: Adding to database unsuccessful', 500)
@@ -138,12 +141,36 @@ def edit_labelling(*, user, membership):
 
     # Committing the information to the backend
     try: 
-    # Updating the information in the database
-    db.session.bulk_update_mappings(Labelling, updated_labellings)
-    db.session.commit()
+        # Updating the information in the database
+        db.session.bulk_update_mappings(Labelling, updated_labellings)
+        db.session.commit()
     except OperationalError:
         #Returning an error response
         return make_response('Internal Server Error', 503)
 
     # Returning a response
     return make_response('Succeeded', 200)
+
+"""
+Records a labelling in the artifact changelog
+@param p_id: the id of the project of the labelling
+@param u_id: the id of the user that labelled the artifact
+@param lt_name: the name of the label type corresponding to this labelling
+@param l_name: the name of the label used to label the artifact
+@param a_id: the id of the artifact that was labelled
+"""
+def __record_labelling(p_id, u_id, lt_name, l_name, a_id):
+    # PascalCase because it is a class
+    ArtifactChange = Artifact.__change__
+
+    change = ArtifactChange(
+        p_id=p_id,
+        i_id=a_id,
+        u_id=u_id,
+        name=a_id,
+        change_type=ChangeType.labelled,
+        # Encoding a change description, designating how it was labelled, and with what
+        description=f"label ; {lt_name} ; {l_name}"
+    )
+
+    db.session.add(change)

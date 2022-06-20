@@ -10,6 +10,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
@@ -25,7 +26,7 @@ export class IndividualLabelComponent {
   themes: Array<Theme>;
   p_id: number;
   label_id: number;
-
+  labelCount: number;
   /**
    * Constructor which:
    * 1. makes an empty label
@@ -49,6 +50,7 @@ export class IndividualLabelComponent {
     this.themes = new Array<Theme>();
     this.p_id = parseInt(this.routeService.getProjectID(this.url));
     this.label_id = parseInt(this.routeService.getLabelID(this.url));
+    this.labelCount = 1; // initialize as 1 so that if something goes wrong the delete button does not show up
   }
 
   /**
@@ -59,6 +61,7 @@ export class IndividualLabelComponent {
   ngOnInit(): void {
     this.getLabel(this.p_id, this.label_id);
     this.getLabellings(this.p_id, this.label_id);
+    this.getLabellingAmount();
   }
 
   /**
@@ -119,7 +122,7 @@ export class IndividualLabelComponent {
       // Success message
       this.toastCommService.emitChange([true, "Successfully deleted label"]);
     } catch (e) {
-      this.toastCommService.emitChange([true, "Something went wrong!"]);
+      this.toastCommService.emitChange([false, "Something went wrong!"]);
       // Navigate to the project page
       this.router.navigate(['project', this.p_id]);
     }
@@ -148,5 +151,34 @@ export class IndividualLabelComponent {
       // Refresh the contents of the page
       this.ngOnInit();
     });
+  }
+
+  /**
+   * Opens the modal displaying the label history
+   * 
+   * @trigger on click of history icon
+   */
+   openLabelHistory(): void {
+    // opens label history modal
+    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+
+    // passes the type of history we want to view
+    modalRef.componentInstance.history_type = "Label";
+   }
+  
+  // Get the number of labellings
+  async getLabellingAmount(): Promise<void> {
+    try {
+      // Get the number of labellings from the labelling data service
+      const result = await this.labellingDataService.getLabellingCount({
+        p_id: this.p_id,
+        l_id: this.label_id
+      });
+      // Parse the number of labellings into an int
+      this.labelCount = parseInt(result);
+    } catch (e) {
+      // Return error
+      console.error(e);
+    }
   }
 }
