@@ -128,10 +128,10 @@
                     </table>
                 </div>
                 <!-- Add Labels right side Description part -->
-                <div class="col-sm-6">
+                <div class="col-sm-6" *ngIf="allLabels.length != 0">
                     <p id="labelDescription">Description:</p>
                     <div id="descriptionScroll">
-                        <div *ngIf="selectedDescriptionLabel != null">
+                        <div>
                             <p class="labelDescriptionText">{{selectedDescriptionLabel}}</p>
                         </div>
                     </div>
@@ -172,10 +172,10 @@
                 </div> 
 
                 <!-- Add themes right side Description part -->
-                <div class="col-sm-6">
+                <div class="col-sm-6"  *ngIf="allSubThemes.length != 0">
                     <p id="labelDescription">Description:</p>
                     <div id="descriptionScroll">
-                        <div *ngIf="selectedDescriptionTheme != null">
+                        <div>
                             <p class="labelDescriptionText">{{selectedDescriptionTheme}}</p>
                         </div>
                     </div>
