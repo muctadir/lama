@@ -228,4 +228,18 @@ export class LabellingDataService {
   async getLabellingCount(dict: Object): Promise<string> {
     return await this.requestHandler.get('/label/count_usage', dict, true);
   }
+
+  // Function for searching in backend
+  async search(
+    searchWords: string,
+    p_id: number
+  ): Promise<Array<Record<string, any>>> {
+    // Get the label information from the back end
+    return this.requestHandler.get(
+      '/label/search',
+      { p_id: p_id, search_words: searchWords },
+      true
+    );
+
+  }
 }

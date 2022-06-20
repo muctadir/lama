@@ -10,6 +10,7 @@ from src.app_util import login_required, in_project
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
   Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
+from src.searching.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -403,6 +404,53 @@ def count_usage_route():
         return make_response(str(count), 200)
     except OperationalError:
         return make_response('Internal Server Error', 500)
+
+# Author: Eduardo
+# Search labels
+@label_routes.route('/search', methods=['GET'])
+@login_required
+@in_project
+def search_route():
+
+    # Get arguments
+    args = request.args
+    # Required arguments
+    required = ('p_id', 'search_words')
+    
+    # Check if required agruments are supplied
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Sanity conversion to int (for when checking for equality in sql)
+    p_id = int(args['p_id'])
+
+    # Get all the labels and the name of their label type
+    # Note that the label type name needs to be supplied for the Label class in the frontend
+    labels = db.session.execute(
+        select(
+            Label,
+            LabelType.name
+        ).where(
+            Label.p_id == p_id,
+            Label.lt_id == LabelType.id
+        )
+    ).all()
+
+    # Schema for serialising labels
+    label_schema = LabelSchema()
+
+    # Convert the labels into a list of dictionaryies
+    # Add the label type name as a key in the dictionary
+    serialised_labels = [dict(label_schema.dump(label), type=type) for label, type in labels]
+
+    # Get search results
+    results = search_func_all_res(args['search_words'], serialised_labels, 'id', ['name', 'description'])
+    # Take the best results
+    clean_results = best_search_results(results, len(args['search_words'].split()))
+    # Gets the actual artifact from the search
+    labels_results = [result['item'] for result in clean_results]
+
+    return make_response(jsonify(labels_results))
 
 """
 Records a creation of a label in the label changelog

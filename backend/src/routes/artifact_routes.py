@@ -275,15 +275,19 @@ def search(*, user, membership):
                 Labelling.u_id == user.id).distinct()
         ).all()
 
+    # Yes, it may be slow to serialise all the artifacts
+    # But the search function works on dictionaries (which was an intentional decision)
+    artifacts = artifact_schema.dump(artifacts, many=True)
+
     # Getting result of search
-    results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    results = search_func_all_res(args['search_words'], artifacts, 'id', ['data'])
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
     # Gets the actual artifact from the search
     artifacts_results = [result['item'] for result in clean_results]
 
     # Return the list of artifacts from the search
-    return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
+    return make_response(jsonify(artifacts_results))
 
 def __get_extended(artifact):
     # Children of the artifact
