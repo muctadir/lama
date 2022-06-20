@@ -94,20 +94,21 @@ def search_func_all_res(search_words, data, id_col, data_cols):
         # Go through each search word
         for search_word in search_words.split():
             # Search through all the data columns
-            for data_col in data_cols:
-                # Stores the best matches in artifact for all the search words
-                matches = []
-                # Get best search word result in artifact
-                result = word_match(search_word, item[data_col])
-                # Make sure words are below min letter diff distance
-                if len(result) != 0 and result[0] <= MIN_DIST:
-                    if len(matches) == 0:
-                        matches.append(item[id_col])
-                    matches.append(result)
-                    matches.append(search_word)
-                    matches.append(item)
-                if len(matches) != 0:
-                    param_list.append(matches)
+            # Extract the data into a list
+            search_data = [str(item[data_col]) for data_col in data_cols]
+            # Concatenate the data into one string to search through
+            joined_data = " ".join(search_data)
+            # Get best search word result in artifact
+            result = word_match(search_word, joined_data)
+            # Make sure words are below min letter diff distance
+            if len(result) != 0 and result[0] <= MIN_DIST:
+                matches = [
+                    item[id_col],
+                    result,
+                    search_word,
+                    item
+                ]
+                param_list.append(matches)
     # Turn into a dictionary that is grouped by id
     dictionary = list_to_dictionary(param_list, id_col)
     return dictionary

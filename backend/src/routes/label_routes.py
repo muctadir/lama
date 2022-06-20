@@ -443,8 +443,11 @@ def search_route():
     # Add the label type name as a key in the dictionary
     serialised_labels = [dict(label_schema.dump(label), type=type) for label, type in labels]
 
+    # Columns we search through
+    search_columns = ['id', 'name', 'description']
+
     # Get search results
-    results = search_func_all_res(args['search_words'], serialised_labels, 'id', ['name', 'description'])
+    results = search_func_all_res(args['search_words'], serialised_labels, 'id', search_columns)
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
     # Gets the actual label object from the search

@@ -280,7 +280,7 @@ def search(*, user, membership):
     serialised_artifacts = artifact_schema.dump(artifacts, many=True)
 
     # The columns we search through
-    search_columns = ['data']
+    search_columns = ['id', 'data']
     
     # Getting result of search
     results = search_func_all_res(args['search_words'], serialised_artifacts, 'id', search_columns)
