@@ -93,7 +93,7 @@ export class ReroutingService {
     // Get the label type id from lt
     let lt_id = lt.substring(0, pos)
     // Get the labe type name from lt
-    let lt_name = lt.substring(pos + 1) 
+    let lt_name = decodeURI(lt.substring(pos + 1))
     return [a_id, lt_id, lt_name]
   }
 
