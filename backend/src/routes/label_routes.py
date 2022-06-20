@@ -432,14 +432,15 @@ def search_route():
             LabelType.name
         ).where(
             Label.p_id == p_id,
-            Label.lt_id == LabelType.id
+            Label.lt_id == LabelType.id,
+            Label.deleted == False
         )
     ).all()
 
     # Schema for serialising labels
     label_schema = LabelSchema()
 
-    # Convert the labels into a list of dictionaryies
+    # Convert the labels into a list of dictionaries
     # Add the label type name as a key in the dictionary
     serialised_labels = [dict(label_schema.dump(label), type=type) for label, type in labels]
 

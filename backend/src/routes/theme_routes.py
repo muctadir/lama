@@ -11,6 +11,7 @@ from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
 from sqlalchemy.exc import OperationalError
 from src.exc import ChangeSyntaxError
+from src.searching.search import search_func_all_res, best_search_results
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
 
@@ -190,14 +191,6 @@ def all_themes_no_parents():
 
     # Return the list of dictionaries
     return make_response(list_json)
-
-# Function for getting the number of labels in the theme
-def get_theme_label_count(t_id):
-    return db.session.scalar(
-            select(func.count(label_to_theme.c.l_id))
-            .where(label_to_theme.c.t_id==t_id)
-        )
-
 
 """
 For creating a new theme 
@@ -402,6 +395,60 @@ def delete_theme(*, user):
 
     # Return the conformation
     return make_response("Theme deleted", 200)
+
+# Author: Eduardo
+# Search labels
+@theme_routes.route('/search', methods=['GET'])
+@login_required
+@in_project
+def search_route():
+
+    # Get arguments
+    args = request.args
+    # Required arguments
+    required = ('p_id', 'search_words')
+    
+    # Check if required agruments are supplied
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Sanity conversion to int (for when checking for equality in sql)
+    p_id = int(args['p_id'])
+
+    # Get all the themes that are not deleted
+    themes = db.session.scalars(
+        select(
+            Theme
+        ).where(
+            Theme.p_id == p_id,
+            Theme.deleted == False
+        )
+    ).all()
+
+    # Schema for serialising labels
+    theme_schema = ThemeSchema()
+
+    # Convert the themes into a list of dictionaries
+    serialised_themes = theme_schema.dump(themes, many=True)
+
+    # Columns we search through
+    search_columns = ['id', 'name', 'description']
+
+    # Get search results
+    results = search_func_all_res(args['search_words'], serialised_themes, 'id', search_columns)
+    # Take the best results
+    clean_results = best_search_results(results, len(args['search_words'].split()))
+    # Gets the actual label object from the search
+    themes_results = [result['item'] for result in clean_results]
+
+    return make_response(jsonify(themes_results))
+
+# Function for getting the number of labels in the theme
+def get_theme_label_count(t_id):
+    return db.session.scalar(
+            select(func.count(label_to_theme.c.l_id))
+            .where(label_to_theme.c.t_id==t_id)
+        )
 
 """
 For getting the labels from the passed data
