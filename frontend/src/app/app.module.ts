@@ -46,15 +46,18 @@ import { ThemeManagementComponent } from './theme/theme-management/theme-managem
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
+// History imports
 import { HistoryComponent } from './modals/history/history.component';
-
-/* Imports bootstrap */
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModerationComponent } from './account-details/moderation/moderation.component';
+// Toast imports
 import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
 import { ToastsContainer } from './modals/toast-global/toast-container.component';
 import { ToastCommService } from './services/toast-comm.service';
-import { AppToastService } from './services/app-toast.service';
+// Account moderation imports
+import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
+
+/* Imports bootstrap */
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -104,7 +107,8 @@ import { AppToastService } from './services/app-toast.service';
     DeleteThemeComponent,
     HistoryComponent,
     ToastGlobalComponent,
-    ToastsContainer
+    ToastsContainer,
+    ConfirmModalComponent
   ],
   imports: [
     BrowserModule,
