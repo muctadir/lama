@@ -66,6 +66,7 @@ const routes: Routes = [
       {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
       // Labelling page route
       {path: 'labelling-page', component: LabellingPageComponent, canActivate: [LoginGuardService]},
+      {path: 'labelling-page/:labellingId', component: LabellingPageComponent, canActivate: [LoginGuardService]},
       // Create label route
       {path: 'create-label', component: LabelFormComponent, canActivate: [LoginGuardService]},
       // Artifact management route

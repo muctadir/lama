@@ -82,7 +82,7 @@ export class LoginComponent {
     }
 
     // Let the backend check login
-    axios.post(`https://lamahost.win.tue.nl/api/auth/login`, loginInformation)
+    axios.post(`${environment.apiURL}/auth/login`, loginInformation)
     .then(response =>{
       // Gets the token from the response header
       let token = response.headers["u_id_token"];
