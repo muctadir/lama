@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 // Authentication imports
 import { LoginComponent } from './account-details/login/login.component';
 import { RegisterComponent } from './account-details/register/register.component';
-import { LogoutComponent } from './modals/logout/logout.component';
 // Account imports
 import { AccountComponent } from './account-details/account/account.component';
 import { AccountInformationFormComponent } from './account-details/account-information-form/account-information-form.component';
@@ -66,7 +65,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     // Authentication components
     LoginComponent,
     RegisterComponent,
-    LogoutComponent,
     // Account components
     AccountComponent,
     AccountInformationFormComponent,

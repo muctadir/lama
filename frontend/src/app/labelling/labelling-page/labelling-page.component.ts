@@ -225,7 +225,7 @@ export class LabellingPageComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then((data) => {
+    modal.result.then(() => {
       // RESET THE FORM AND UPDATE WITH NEW LABEL
       this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
@@ -294,7 +294,7 @@ export class LabellingPageComponent implements OnInit {
       // Check the labelling is valid
       if (el.status != 'VALID') {
         // Throw and error
-        throw 'Submission invalid';
+        throw new Error('Submission invalid');
       }
       // Push valid results into result array
       resultArray.push({
