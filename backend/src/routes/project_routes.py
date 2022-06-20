@@ -699,6 +699,11 @@ def __get_artifact_counts(p_id, criteria):
 
     return project_nr_artifacts, project_nr_cl_artifacts
 
+"""
+Function to query for the users in a project
+@param p_id: the project id
+@returns a list of (non-deleted) users in the project p_id 
+"""
 def get_users_in_project(p_id):
     return db.session.scalars(select(User)
             .where(
