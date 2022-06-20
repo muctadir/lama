@@ -49,7 +49,7 @@ export class IndividualLabellingForm implements OnInit {
     // Get the values of the label form
     this.labelForm.get('label')?.valueChanges.subscribe((val) => {
       this.labelType?.getLabels().forEach((l: Label) => {
-        if (l.getId() == val) {
+        if (l == val) {
           this.selectedDesc = l.getDesc();
         }
       });

@@ -226,7 +226,7 @@ def create_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check if the theme name is unique
-    if theme_name_taken(theme_info["name"]):
+    if theme_name_taken(args["name"], 0):
         return make_response("Theme name already exists")
 
     # Theme creation info
@@ -290,7 +290,7 @@ def edit_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check if the theme name is unique
-    if theme_name_taken(args["name"]):
+    if theme_name_taken(args["name"], args["id"]):
         return make_response("Theme name already exists")
     
     # Get theme id
@@ -455,10 +455,13 @@ Function that checks if a theme name is already taken
 @params name: string, the name to be checked
 @returns true if name is already a theme name and false otherwise
 """
-def theme_name_taken(name):
+def theme_name_taken(name, t_id):
     if bool(db.session.scalars(
         select(Theme)
-        .where(Theme.name==name))
+        .where(
+            Theme.name==name,
+            Theme.id != t_id
+        ))
         .first()):
         return True
     return False

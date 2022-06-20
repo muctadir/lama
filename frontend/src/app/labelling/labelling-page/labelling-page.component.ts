@@ -169,6 +169,8 @@ export class LabellingPageComponent implements OnInit {
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modal.result.then((data) => {
+      // RESET THE FORM AND UPDATE WITH NEW LABEL
+      this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
     });
   }
@@ -305,7 +307,7 @@ export class LabellingPageComponent implements OnInit {
   /**
    * Splitting function, gets text without splitting words and gets start and end char
    */
-  split(): void {
+  async split(): Promise<void> {
     // Get start/end positions of highlight
     let firstCharacter = this.selectionStartChar! - 1;
     let lastCharacter = this.selectionEndChar! - 1;
@@ -317,9 +319,10 @@ export class LabellingPageComponent implements OnInit {
       firstCharacter,
       lastCharacter
     );
+  
     // Make request to split
-    this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
-    this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected: '" + splitText+ "'"]);
+    let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
   }
 
   //fixes the position of the start character of a word

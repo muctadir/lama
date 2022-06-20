@@ -120,11 +120,6 @@ export class MergeLabelFormComponent {
       this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
       return 
     }
-    if (this.toBeMergedLabels.length !== 2) {
-      throw new Error(
-        `Sorry, you need to select at least 2 labels to be merged. ${this.toBeMergedLabels.length} < 2`
-      );
-    }
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
 

@@ -239,8 +239,8 @@ export class ArtifactDataService {
    * @param end 
    * @param data 
    */
-  async postSplit(p_id: number, parent_id: number, identifier: string, start: number, end: number, data: string): Promise<any> {
-    await this.requestHandler.post(
+  async postSplit(p_id: number, parent_id: number, identifier: string, start: number, end: number, data: string): Promise<number> {
+    let response = await this.requestHandler.post(
       '/artifact/split',
       {
         p_id: p_id,
@@ -252,5 +252,6 @@ export class ArtifactDataService {
       },
       true
     )
+    return response
   }
 }

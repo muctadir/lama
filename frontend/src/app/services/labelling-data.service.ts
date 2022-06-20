@@ -38,7 +38,7 @@ export class LabellingDataService {
     // Filling in the array of labels
     response.forEach((r: any) => {
       result.push(
-        new Label(r.label.id, r.label.name, r.label.desc, r.label_type)
+        new Label(r.label.id, r.label.name, r.label.description, r.label_type)
       );
     });
 

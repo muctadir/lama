@@ -202,7 +202,7 @@ export class ThemeInfoComponent implements OnInit {
       // Give success message
       this.errorMsg = response;  
       // Rerouter to the theme management page if theme was created
-      if(response == "Theme created succesfully") {
+      if(response == "Theme created" || response == "Theme edited") {
         // Reset name and description forms
         this.themeForm.reset();
         this.reRouter(); 
@@ -233,7 +233,7 @@ export class ThemeInfoComponent implements OnInit {
     } else if (this.edit){
       return this.themeDataService.edit_theme(theme_info);
     } else {
-      return "Error has occured when creating/editing the theme";
+      return "Error has occured when saving the theme";
     }
   }
 
@@ -288,7 +288,10 @@ export class ThemeInfoComponent implements OnInit {
     });   
     // Put the sub-theme back into the allSubThemes list
     if(this.edit){
-      this.allSubThemes.push(subTheme);
+      // Check if the theme is already in the array
+      if(this.allSubThemes.indexOf(subTheme) < 0){
+        this.allSubThemes.push(subTheme);
+      }
     } 
   }
 
