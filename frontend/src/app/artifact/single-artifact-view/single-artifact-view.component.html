@@ -39,7 +39,7 @@
     <div class="row">
         <!--Labelled By text-->
         <div class="col-11" id="labelledBy">
-            <p class="float-start">Labelled By:</p>
+            <p class="float-start" *ngIf="users.length > 0">Labelled By:</p>
         </div>
         <div class="col-1 d-flex justify-content-center" id="pageTitle">
             <!-- When clicked calls openThemeHistory function -->
