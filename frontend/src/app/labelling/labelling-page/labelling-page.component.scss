@@ -80,7 +80,7 @@ div.artifactContainer{
 #body{
     margin: 0;
     height: 100vh;
-    overflow: hidden;
+    overflow: scroll;
 }
 
 #remark{
@@ -90,7 +90,7 @@ div.artifactContainer{
 
 // Division of the buttons
 #buttons{
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 // Submit button

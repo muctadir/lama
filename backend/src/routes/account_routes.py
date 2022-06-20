@@ -96,40 +96,36 @@ def edit_user_password(*, user):
     """
 
     # Get the information needed
-    args = request.json
-    args = args['params']
+    args = request.json['params']
 
     # Required arguments
     required = ["password", "newPassword", "id"] 
-
-    # checks whether the superadmin made the call
-    if not user.super_admin:
-        # Get id and password by user id
-        password = db.session.execute(select(User.password).where(User.id == user.id)).one()
-
-        # Hash new password
-        hashed_password = generate_password_hash(args["password"])
-
-        # Check correct password
-        if not check_password_hash(password[0], args["password"]):
-            return make_response(("Invalid password", 400))
-
-    # Check required arguments are supplied
-    if not check_args(required, args):
-        return make_response(("Bad Request", 400))
-
-    # Check if new password is valid
-    if not check_format_password(args["newPassword"])[0]:
-        return make_response(("Invalid password", 400))
-    
-    # Hash new password
-    hashed_password = generate_password_hash(args["newPassword"])
     
     # checks whether the superadmin is making the request, based on that sets used user.id
     if user.super_admin:
         id_used = args["id"]
     else:
         id_used = user.id
+
+    # checks whether the superadmin made the call
+    if not user.super_admin or id_used == user.id:
+        # Get id and password by user id
+        password = db.session.scalar(select(User.password).where(User.id == user.id))
+
+        # Check correct password
+        if not check_password_hash(password, args["password"]):
+            return make_response(("Incorrect password entered", 400))
+
+    # Check required arguments are supplied
+    if not check_args(required, args):
+        return make_response(("Incorrect arguments supplied in request", 400))
+
+    # Check if new password is valid
+    if not check_format_password(args["newPassword"])[0]:
+        return make_response(("Please enter a more secure password", 400))
+    
+    # Hash new password
+    hashed_password = generate_password_hash(args["newPassword"])
 
     # Change the users information
     db.session.execute(

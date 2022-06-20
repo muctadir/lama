@@ -226,6 +226,8 @@ export class LabellingPageComponent implements OnInit {
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modal.result.then((data) => {
+      // RESET THE FORM AND UPDATE WITH NEW LABEL
+      this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
     });
   }
@@ -377,6 +379,7 @@ export class LabellingPageComponent implements OnInit {
       firstCharacter,
       lastCharacter
     );
+  
     // Make request to split
     let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
     //this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected: '" + splitText+ "'"]);
