@@ -128,7 +128,7 @@ export class LabellingPageComponent implements OnInit {
     } catch {
       if (this.artifact.getId() === -1) {
         this.router.navigate(['/project', this.p_id]);
-        this.toastCommService.emitChange([false, "There are no artifacts yet."]);
+        this.toastCommService.emitChange([false, "There are no artifacts to label."]);
       } else{
         this.router.navigate(['/project', this.p_id]);
         this.toastCommService.emitChange([false, "There are no artifacts left to label!"]);

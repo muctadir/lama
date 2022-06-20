@@ -1,5 +1,5 @@
 // Environement constant
 export const environment = {
   production: true,
-  apiURL: 'http://localhost:5000' ,
+  apiURL: 'https://lamahost.win.tue.nl/api' ,
 };
