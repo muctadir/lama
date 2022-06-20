@@ -74,28 +74,13 @@ export class LoginComponent {
    *
    * @modifies errorMsg, route
    */
-   checkLogin() : void {
+   async checkLogin() : Promise<void> {
     // Creates the object with the user filled info
     let loginInformation = {
       username: this.loginForm.value.username,
       password: this.loginForm.value.password
     }
 
-    // Let the backend check login
-    axios.post(`${environment.apiURL}/auth/login`, loginInformation)
-    .then(response =>{
-      // Gets the token from the response header
-      let token = response.headers["u_id_token"];
-
-      // Stores the session token, can get the token using sessionStorage.getItem('ses_token');
-      sessionStorage.setItem('ses_token', token);
-
-      // Navigates to the home page
-      this.route.navigate(['/home']);
-    })
-    .catch(error =>{
-      // Print the error message: "Invalid username or password"
-      this.toastCommService.emitChange([false, error.response.data]);
-    })
+    await this.accountInfoService.loginUser(loginInformation);
   }
 }
