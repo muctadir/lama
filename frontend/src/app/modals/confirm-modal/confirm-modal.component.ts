@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -8,6 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./confirm-modal.component.scss']
 })
 export class ConfirmModalComponent {
+  @Output() confirmEvent = new EventEmitter<boolean>();
 
   /**
    * Initializes the NgbActiveModal and the router
@@ -18,7 +19,8 @@ export class ConfirmModalComponent {
    constructor(public activeModal: NgbActiveModal, private route: Router) { }
 
   confirm() : void {
-    console.log("confirm");
+    this.confirmEvent.emit(true);
+    this.activeModal.close();
   }
 
 }

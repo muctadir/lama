@@ -91,15 +91,27 @@ export class ModerationComponent {
    */
   async softDelete(deluser: User): Promise<void> {
     try {
-      this.modalService.open(ConfirmModalComponent, {});
-      // Makes the call to delete the user
-      //await this.accountService.softDelUser(deluser);
-      this.toastCommService.emitChange([true, "User deleted successfully"])
-      // Reloads the user data
-      await this.getAllUsers();
+      let modalRef = this.modalService.open(ConfirmModalComponent, {});
+
+      // Listens for an event emitted by the modal
+      modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+        // If a confirmEvent = true is emitted we delete the user
+        if($e) {
+          try {
+            // Makes the call to delete the user
+            await this.accountService.softDelUser(deluser);
+            // Shows confirmation
+            this.toastCommService.emitChange([true, "User deleted successfully"]);
+            // Reloads the user data
+            await this.getAllUsers();
+          } catch {
+            // Logs the error if one were to occur
+            this.toastCommService.emitChange([false, "Something went wrong"])
+          }
+        }
+      })
     } catch(e) {
       // Logs the error if one were to occur
-      console.log(e);
       this.toastCommService.emitChange([false, "Something went wrong"])
     }
   }
