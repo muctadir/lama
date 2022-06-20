@@ -125,11 +125,11 @@ def get_all_labels():
         return make_response('Bad Request', 400)
 
     # Get all the labels of a labelType
-    labels = db.session.execute(
+    labels = db.session.scalars(
         select(Label)
         .where(Label.p_id == args['p_id'], 
                Label.deleted != 1)
-    ).scalars().all()
+    ).all()
 
     # Initialise label schema
     label_schema = LabelSchema()
@@ -193,11 +193,11 @@ def merge_route(*, user):
         return make_response('Bad Request', 400)
 
     # Check whether the length of the label name is at least one character long
-    if len(args['newLabelName']) <= 0:
-        return make_response('Bad request: Label name cannot have size <= 0', 400)
+    if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
+        return make_response('Label name cannot be empty')
     # Check whether the length of label description is at least one character long
-    if len(args['newLabelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot have size <= 0', 400)
+    if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
+        return make_response('Bad request: Label description cannot be empty', 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']

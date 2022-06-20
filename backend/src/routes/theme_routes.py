@@ -6,7 +6,7 @@ from src.models import db
 from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from src.models.change_models import ChangeType
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select, func, update
+from sqlalchemy import select, func, update, or_
 from src.app_util import login_required, check_args, in_project
 from src.routes.label_routes import get_label_info
 from sqlalchemy.exc import OperationalError
@@ -225,6 +225,10 @@ def create_theme(*, user):
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
 
+    # Check if the theme name is unique
+    if theme_name_taken(theme_info["name"]):
+        return make_response("Theme name already exists")
+
     # Theme creation info
     theme_creation_info = {
         "name": args["name"],
@@ -284,6 +288,10 @@ def edit_theme(*, user):
     # Check if all required arguments are there
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
+
+    # Check if the theme name is unique
+    if theme_name_taken(theme_info["name"]):
+        return make_response("Theme name already exists")
     
     # Get theme id
     t_id = args["id"]
@@ -376,7 +384,7 @@ def delete_theme(*, user):
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
         
-    # Change the theme information to be delted
+    # Change the theme information to be deleted
     db.session.execute(
         update(Theme).
         where(Theme.id == t_id).
@@ -434,13 +442,27 @@ def make_sub_themes(theme, sub_themes_info, p_id, u_id):
         select(Theme)
         .where(Theme.id.in_(sub_theme_ids_list))
     ).all()
-
+    # Get names from themes
     sub_theme_names = [sub_theme.name for sub_theme in sub_themes]
 
     # If the assigned subthemes have changed
     if set(sub_themes) != set(theme.sub_themes):
         theme.sub_themes = sub_themes
         __record_chilren(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
+
+"""
+Function that checks if a theme name is already taken
+@params name: string, the name to be checked
+@returns true if name is already a theme name and false otherwise
+"""
+def theme_name_taken(name):
+    if bool(db.session.scalars(
+        select(Theme)
+        .where(Theme.name==name))
+        .first()):
+        return True
+    return False
+
 
 """
 Records the creation of a theme in the theme changelog

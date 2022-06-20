@@ -65,7 +65,8 @@ def home_page(*, user):
         project_nr_artifacts, project_nr_cl_artifacts = __get_artifact_counts(project.id, project.criteria)
 
         # Get the serialized users in the project
-        users = get_serialized_users(project.users)
+        users = get_serialized_users(get_users_in_project(project.id)
+        )
         
         # Put all values into a dictonary
         info = {
@@ -186,16 +187,8 @@ Function to get a serialized list of users
 def get_serialized_users(users):
     # Schema to serialize the Users
     user_schema = UserSchema()
-
-     # Serialize all users
-    users_list = []  
-    for user in users:
-        # Serialize the user
-        user_dumped = user_schema.dump(user)
-        # Add the serialized user to the list of serialized users
-        users_list.append(user_dumped)
     
-    return users_list
+    return user_schema.dump(users, many = True)
 
 """
 For getting the information in a project's settings page
@@ -505,13 +498,8 @@ def single_project():
 
     project_nr_artifacts, project_nr_cl_artifacts = __get_artifact_counts(p_id, project.criteria)
 
-    # Get the users in the project
-    project_users = project.users
     # Serialize all users
-    users = []  
-    for user in project_users:
-        user_dumped = user_schema.dump(user)
-        users.append(user_dumped)
+    users = get_serialized_users(get_users_in_project(project.id))
 
     # Get the number of conflicts in the conflict
     conflicts = nr_project_conflicts(p_id)
@@ -562,16 +550,14 @@ def project_stats():
     p_id = int(args['p_id'])
 
     # Get all the users in the project
-    project = db.session.scalar(
-        select(Project).where(Project.id==p_id)
-    )
+    users = get_users_in_project(p_id)
 
     # Get all users with conflicts and the number of conflicts they have
     user_conflicts = nr_user_conflicts(p_id)
 
     # List of all stats per user
     stats = []
-    for user in project.users:
+    for user in users:
         # Get username
         username = user.username
 
@@ -712,3 +698,17 @@ def __get_artifact_counts(p_id, criteria):
     ))
 
     return project_nr_artifacts, project_nr_cl_artifacts
+
+"""
+Function to query for the users in a project
+@param p_id: the project id
+@returns a list of (non-deleted) users in the project p_id 
+"""
+def get_users_in_project(p_id):
+    return db.session.scalars(select(User)
+            .where(
+                Membership.u_id==User.id,
+                Membership.p_id==p_id,
+                Membership.deleted==False,
+                User.status==UserStatus.approved
+            )).all()

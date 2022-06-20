@@ -11,7 +11,9 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { FormBuilder } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-artifact-management-page',
@@ -23,11 +25,15 @@ export class ArtifactManagementPageComponent {
   routeService: ReroutingService;
   // Initialize the url
   url: string;
+  // Initialize the project id
+  p_id: number;
   // Make list of all _received_ artifacts
   // A page number maps to a list of artifacts on that page
   artifacts: Record<number, Array<StringArtifact>> = {};
-  // number of artifacts
+  // Number of artifacts
   nArtifacts: number = 0;
+  // Number of label types
+  nLabelTypes: number;
 
   // Bool on if there is text in the search bar
   search = false;
@@ -46,19 +52,24 @@ export class ArtifactManagementPageComponent {
    * Constructor which:
    * 1. gets a router
    * 2. gets the url
-   * 3. initialised artifacts
+   * 3. gets the project id
+   * 4. initializes the number of label types
    */
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
-    private router: Router, private formBuilder: FormBuilder) {
+    private labellingDataService: LabellingDataService,
+    private router: Router, private formBuilder: FormBuilder,
+    private toastCommService: ToastCommService) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
+    this.p_id = Number(this.routeService.getProjectID(this.url))
+    this.nLabelTypes = 0;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     // Clear cache and get the artifacts from the backend
-    this.artifacts = {}
+    this.artifacts = {};
     this.getArtifacts();
   }
 
@@ -71,19 +82,18 @@ export class ArtifactManagementPageComponent {
 
     // If we do not already have the artifacts for this page cached
     if (!this.artifacts.hasOwnProperty(this.page)) {
-      // Get the ID of the project
-      const p_id = Number(this.routeService.getProjectID(this.url))
       // Get the seek index of this page
       const [seekIndex, seekPage] = this.getSeekInfo(this.page);
       // Get the artifacts for this page
-      const result = await this.artifactDataService.getArtifacts(p_id, this.page, this.pageSize, seekIndex, seekPage);
+      const result = await this.artifactDataService.getArtifacts(this.p_id, this.page, this.pageSize, seekIndex, seekPage);
       // If the number of artifacts changed, then we need to reset the cache.
       if (result[0] != this.nArtifacts) {
         this.nArtifacts = result[0];
+        this.nLabelTypes = result[1]
         this.artifacts = {};
       }
       // Cache artifacts for this page
-      this.artifacts[this.page] = result[1];
+      this.artifacts[this.page] = result[2];
     }
 
   }
@@ -120,7 +130,6 @@ export class ArtifactManagementPageComponent {
    * @trigger user clicks on artifact
    */
   reRouter(a_id: number): void {
-    console.log("click")
     // Use reroutingService to obtain the project ID
     let p_id = this.routeService.getProjectID(this.url);
 
@@ -134,6 +143,7 @@ export class ArtifactManagementPageComponent {
     modalRef.result.then((data) => {
       this.ngOnInit();
     });
+
   }  
   
   // Gets the search text
@@ -178,6 +188,20 @@ export class ArtifactManagementPageComponent {
           i * this.pageSize
         ));
       }
+    }
+  }
+
+  /**
+   * Function that returns the number of users who gave a set of labellings
+   * @param labellings: number, the number of labellings
+   */
+  getNumberUsers(labellings: number): string|number{
+    if(labellings % this.nLabelTypes != 0) {
+      this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
+      return "Cannot compute";
+    }
+    else {
+      return Math.floor(labellings / this.nLabelTypes)
     }
   }
 

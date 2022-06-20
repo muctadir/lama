@@ -122,7 +122,7 @@ export class IndividualLabelComponent {
       // Success message
       this.toastCommService.emitChange([true, "Successfully deleted label"]);
     } catch (e) {
-      this.toastCommService.emitChange([true, "Something went wrong!"]);
+      this.toastCommService.emitChange([false, "Something went wrong!"]);
       // Navigate to the project page
       this.router.navigate(['project', this.p_id]);
     }

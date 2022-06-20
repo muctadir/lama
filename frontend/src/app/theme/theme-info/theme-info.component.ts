@@ -88,7 +88,7 @@ export class ThemeInfoComponent implements OnInit {
     // Set the header of the page
     this.setHeader();  
 
-    // If were in edit mode we get the information, and set values
+    // If in edit mode, get the information and set values
     if(this.edit){
       // Get theme id
       this.t_id = Number(this.routeService.getThemeID(this.url));
@@ -199,13 +199,14 @@ export class ThemeInfoComponent implements OnInit {
       // Reset description
       this.selectedDescriptionLabel = '';
       this.selectedDescriptionTheme = '';
-      // Give succes/error message
-      this.errorMsg = response;
-
-      // Reset name and description forms
-      this.themeForm.reset();
-      // Rerouter to the correct page
-      this.reRouter(); 
+      // Give success message
+      this.errorMsg = response;  
+      // Rerouter to the theme management page if theme was created
+      if(response == "Theme created succesfully") {
+        // Reset name and description forms
+        this.themeForm.reset();
+        this.reRouter(); 
+      }  
     } else {
       // Displays error message
       this.toastCommService.emitChange([false, "Name or description not filled in"]);

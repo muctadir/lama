@@ -6,6 +6,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-merge-label-form',
@@ -42,6 +43,7 @@ export class MergeLabelFormComponent {
     public activeModal: NgbActiveModal,
     private router: Router,
     private labellingDataService: LabellingDataService,
+    private toastCommService: ToastCommService,
     private formBuilder: FormBuilder
   ) {
     this.labelTypes = new Array<LabelType>();
@@ -94,6 +96,7 @@ export class MergeLabelFormComponent {
       );
       this.labelTypes = result;
     } catch (e) {
+      this.toastCommService.emitChange([false, "Something went wrong when trying to supply the labels"])
     }
   }
 
@@ -114,6 +117,10 @@ export class MergeLabelFormComponent {
   async submit(): Promise<void> {
     // Check you are merging two or more labels
     if (this.toBeMergedLabels.length < 2) {
+      this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
+      return 
+    }
+    if (this.toBeMergedLabels.length !== 2) {
       throw new Error(
         `Sorry, you need to select at least 2 labels to be merged. ${this.toBeMergedLabels.length} < 2`
       );
@@ -125,16 +132,24 @@ export class MergeLabelFormComponent {
 
     try {
       // Wait for the posting of the merging
-      await this.labellingDataService.postMerge({
+      let response = await this.labellingDataService.postMerge({
         'mergedLabels': mergedLabels,
         'newLabelName': this.form.get('mergerName')?.value,
-        'newLabelDescription': this.form.get('mergerName')?.value,
+        'newLabelDescription': this.form.get('mergerDescription')?.value,
         'labelTypeName': this.form.get('labelType')?.value.getName(),
         'p_id': this.p_id
       });
-      // Close modal
-      this.activeModal.close()
+      // Make toast signalling whether the merging was successful or not
+      if(response == "Success" ){
+        this.toastCommService.emitChange([true, "Labels merged successfully"])
+        // Close modal
+        this.activeModal.close()
+      }
+      else {
+        this.toastCommService.emitChange([false, response])
+      }
     } catch (e) {
+      this.toastCommService.emitChange([false, "Something went wrong while merging"])
     }
   }
 

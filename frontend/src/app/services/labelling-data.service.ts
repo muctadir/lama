@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
-import axios from 'axios';
 import { Theme } from 'app/classes/theme';
 import { RequestHandler } from 'app/classes/RequestHandler';
 
@@ -210,8 +209,8 @@ export class LabellingDataService {
    * Function to post the merged labels
    * @param dict  - dictionary
    */
-  async postMerge(dict: Object): Promise<void> {
-    await this.requestHandler.post('/label/merge', dict, true);
+  async postMerge(dict: Object): Promise<string> {
+    return await this.requestHandler.post('/label/merge', dict, true);
   }
 
   /**

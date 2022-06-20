@@ -146,4 +146,20 @@ export class AccountInfoService {
       return false;
     }
   }
+
+  /**
+   * Makes a post call to backend to register a user
+   * 
+   * @params registerInformation, a record with the register information of the shape:
+   * {
+   *  username: the username of the user,
+   *  email: the email of the user,
+   *  description: the description of the user,
+   *  password: the password of the user
+   *  passwordR: the repeated instance of the user's password
+   * }
+   */
+  async registerUser(registerInformation: Record<string, any>): Promise<any> {
+    await this.requestHandler.post('auth/register', registerInformation, false)
+  }
 }
