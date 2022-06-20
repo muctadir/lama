@@ -66,7 +66,8 @@ export class LabellingPageComponent implements OnInit {
     private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
     private router: Router,
-    private toastCommService: ToastCommService
+    private toastCommService: ToastCommService,
+    private accountService: AccountInfoService
   ) {
     /**
      * Preparing variables for information
@@ -127,10 +128,8 @@ export class LabellingPageComponent implements OnInit {
     // Requests the label types and the corresponding labels
     await this.getLabelTypesWithLabels();
 
-    // Initialize accountInfoService
-    let accountService = new AccountInfoService();
     // Gets user data
-    let user = await accountService.userData();
+    let user = await this.accountService.userData();
 
     // Checks whether this user has already labelled the artifact, if so redirects to artifact management page
     this.labellers.forEach(labeller => {

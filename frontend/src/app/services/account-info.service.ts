@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
+import { ToastCommService } from './toast-comm.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AccountInfoService {
    * @modifies @requestHandler
    * @trigger on creation
    */
-  constructor() {
+  constructor(private toastCommService: ToastCommService) {
     // Gets the token
     let token = sessionStorage.getItem('ses_token');
 
@@ -117,7 +118,8 @@ export class AccountInfoService {
 
       // Returns true if the token is valid
       return true;
-    } catch(e) {
+    } catch(e: any) {
+      this.toastCommService.emitChange([false, e.response.data]);
       // Returns false if the token is not valid
       return false;
     }
