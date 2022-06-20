@@ -169,6 +169,8 @@ export class LabellingPageComponent implements OnInit {
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modal.result.then((data) => {
+      // RESET THE FORM AND UPDATE WITH NEW LABEL
+      this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
     });
   }
