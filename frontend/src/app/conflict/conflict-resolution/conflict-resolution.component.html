@@ -13,15 +13,19 @@
         </div>
         <!-- Column with the splitting artifact button -->
         <div class="col-1 align-self-center">
-            <div class="splittingArtifactDiv">
-                <i class="bi bi-scissors"></i>
+            <div *ngIf="hightlightedText.length > 0" class="col-2">
+                <div id="artifactButtons">
+                    <i (click)="split()" class="bi bi-scissors"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Row with description -->
     <div class="row" id="descRow">
-        {{artifact.getData()}}
+        <p (mouseup)="selectedText()" (mousedown)="selectedText()">
+            {{artifact.getData()}}
+        </p>
     </div>
     <!-- Row with splitting information -->
     <div class="row" id="splitRow">
@@ -60,7 +64,7 @@
                 Create label
             </button>
             <!-- Merge label buttons -->
-            <button class="btn btn-secondary labelButtons">
+            <button class="btn btn-secondary labelButtons" (click)="openMerge()">
                 Merge labels
             </button>
         </div>
@@ -81,25 +85,27 @@
                 <div class="col">
                     <!-- Row for the labeller name -->
                     <div class="row">
-                        <span class="boldText">{{user}}</span>
+                        <span class="boldText">{{user.getUsername()}}</span>
                     </div>
 
                     <!-- Add angular for loop -->
                     <div class="labelTypeDiv">
                         <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
                         <select class="form-control" name="labelsForm" #changedLabel
-                            [disabled]="!admin && user != username"
+                            [disabled]="!admin && user.getUsername() != username"
                             (change)="updateLabelling(user, changedLabel.value)">
                             <div>
                                 <!-- All labels from the label type are dropdown options -->
                                 <!-- User's given label is the default value of the dropdown -->
-                                <option *ngFor="let label of labels" [selected]="label.getName() == label_per_user[user]['name']">
+                                <option *ngFor="let label of labels"
+                                    [selected]="label.getName() == label_per_user[user.getUsername()]['name']">
                                     {{label.getName()}}
                                 </option>
                             </div>
                             <!-- All labels from the label type are dropdown options -->
                             <!-- User's given label is the default value of the dropdown -->
-                            <option *ngFor="let label of labels" [selected]="label.getName() == label_per_user[user]['name']">
+                            <option *ngFor="let label of labels"
+                                [selected]="label.getName() == label_per_user[user.getUsername()]['name']">
                                 {{label.getName()}}
                             </option>
                         </select>
@@ -109,7 +115,7 @@
                 <!-- Column for description of label -->
                 <div class="col-5" id="remarkCol">
                     <span class="boldText">Description: </span> <br>
-                    {{label_per_user[user]['description']}}
+                    {{label_per_user[user.getUsername()]['description']}}
                 </div>
             </div>
         </div>
@@ -122,7 +128,8 @@
         <!-- Division for save & cancel button -->
         <div class="col-6">
             <!-- Submit button -->
-            <button type="button" class="btn btn-secondary text-nowrap float-end" id="submitLabellingButton" (click)="updateLabellings()">
+            <button type="button" class="btn btn-secondary text-nowrap float-end" id="submitLabellingButton"
+                (click)="updateLabellings()">
                 Resolve
             </button>
         </div>

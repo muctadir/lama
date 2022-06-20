@@ -111,15 +111,14 @@ Editing existing labelling(s)
 @login_required
 @in_project
 def edit_labelling(*, user, membership):
-    
-    # TODO: implement this properly
-    # if not membership.admin:
-    #     return make_response('This member is not admin', 401)
-    
     # Get args from request 
     args = request.json['params']
     # What args are required
     required = ['p_id', 'lt_id', 'a_id', 'labellings']
+
+    # Checking if user is allowed to edit this labelling
+    if not membership.admin and len(args['labellings']) != 1:
+        return make_response('This member is not admin', 401)
 
     # Check if required args are presentF
     if not check_args(required, args):
@@ -131,9 +130,10 @@ def edit_labelling(*, user, membership):
     #Appending updated information about each labelling to the list above
     for key in args['labellings']:
         print(args['labellings'][key]['id'])
-        updated_labellings.append({'u_id': user.id,'a_id': args['a_id'], 'lt_id': args['lt_id'],
+        updated_labellings.append({'u_id': args['labellings'][key]['u_id'],'a_id': args['a_id'], 'lt_id': args['lt_id'],
                     'l_id': args['labellings'][key]['id']})       
 
+    print(updated_labellings)
     # Get project with supplied ID
     project = db.session.get(Project, args['p_id'])
     if not project:

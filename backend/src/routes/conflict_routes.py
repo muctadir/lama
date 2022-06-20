@@ -297,13 +297,13 @@ def single_label_per_user():
     user_per_lt = select(Labelling.u_id).where(Labelling.lt_id==args['lt_id']).subquery()
 
     # Get the usernames, the label names and the descriptions of the labels given to this artifact
-    userInfo = db.session.execute(select(distinct(User.username), Labelling.l_id, Label.name, Label.description)
+    userInfo = db.session.execute(select(distinct(User.username), User.id, Labelling.l_id, Label.name, Label.description)
     .where(User.id.in_(user_per_lt), User.id==Labelling.u_id, Labelling.l_id == Label.id,
      Labelling.lt_id==args['lt_id'], Labelling.a_id==args['a_id'])).all()
 
     #Processing the response from the database to send to the front-end label ID, name and description
     response = {}
     for labeller in userInfo:
-        response[labeller[0]] = {"id": labeller[1], "name": labeller[2], "description": labeller[3]}
+        response[labeller[0]] = {"u_id": labeller[1], "id": labeller[2], "name": labeller[3], "description": labeller[4]}
 
     return make_response(response)
