@@ -54,8 +54,9 @@
           >Artifact was split from parent artifact</span
         >
         <span *ngIf="artifact!.getParentId() != undefined" id="split2">
+          #
           <span (click)="routeToLabel(artifact!.getParentId())" id="hoverCurs">
-            #{{ artifact!.getParentId() }}.
+            {{ artifact!.getParentId() }}.
           </span>
         </span>
       </p>

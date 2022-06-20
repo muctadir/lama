@@ -378,8 +378,9 @@ export class LabellingPageComponent implements OnInit {
       lastCharacter
     );
     // Make request to split
-    await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
-    this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected: '" + splitText+ "'"]);
+    let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    //this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected: '" + splitText+ "'"]);
+    this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
 
     // Reloads the page
     this.ngOnInit();
