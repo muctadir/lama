@@ -191,6 +191,7 @@ export class ArtifactDataService {
       true
     );
   }
+  
   // Function for searching in backend
   async search(
     searchWords: string,

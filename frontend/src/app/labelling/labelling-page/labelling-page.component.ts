@@ -1,6 +1,7 @@
 /**
  * @author B. Henkemans
  * @author T. Bradley
+ * @author Jarl Jansen
  */
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,8 +12,9 @@ import { LabelType } from 'app/classes/label-type';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { AccountInfoService } from 'app/services/account-info.service';
 
 @Component({
   selector: 'app-labelling-page',
@@ -32,7 +34,6 @@ export class LabellingPageComponent implements OnInit {
    */
   labellings: FormArray;
   form: FormGroup;
-  submitMessage: string;
   eventEmitter: EventEmitter<any>;
 
   /**
@@ -81,7 +82,6 @@ export class LabellingPageComponent implements OnInit {
     this.form = new FormGroup({
       labellings: this.labellings,
     });
-    this.submitMessage = '';
     this.eventEmitter = new EventEmitter<any>();
     /**
      * Setting up routing
@@ -91,7 +91,7 @@ export class LabellingPageComponent implements OnInit {
     this.p_id = parseInt(this.routeService.getProjectID(this.url));
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     /**
      * Getting information from the backend
      * This page has a couple of preconditions. These are checked at various points
@@ -108,32 +108,55 @@ export class LabellingPageComponent implements OnInit {
     this.labellings = new FormArray([]);
     this.eventEmitter.emit();
 
-    // Checks whether a labelling ID is provided
-    if(this.routeService.checkLabellingId(this.url)) {
-      console.log("case 1");
-
-      this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
-      // Shows labelling page of a specific artifact
-      //console.log(this.routeService.getThemeID(this.url));
-    } else {
-      console.log("case 2")
-      // Shows labelling page of a random artifact
-      this.getRandomArtifact();
-    }
-    this.getLabelTypesWithLabels();
+    // Loads the page content
+    await this.loadPageContent();    
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
   }
 
+  async loadPageContent() {
+    // Checks whether a labelling ID is provided
+    if(this.routeService.checkLabellingId(this.url)) {
+      // Shows labelling page of a specific artifact
+      await this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
+    } else {
+      // Shows labelling page of a random artifact
+      await this.getRandomArtifact();
+    }
+    // Requests the label types and the corresponding labels
+    await this.getLabelTypesWithLabels();
+
+    // Initialize accountInfoService
+    let accountService = new AccountInfoService();
+    // Gets user data
+    let user = await accountService.userData();
+
+    // Checks whether this user has already labelled the artifact, if so redirects to artifact management page
+    this.labellers.forEach(labeller => {
+      if (labeller["id"]==user["id"]) {
+        this.router.navigate(['/project', this.p_id, 'singleartifact', this.routeService.getThemeID(this.url)]);
+        this.toastCommService.emitChange([false, "You have already labelled this artifact"]);
+      }
+    });
+  }
+
+  /**
+   * Loads a specific artifact into the labelling page
+   * @param artID id of the artifact
+   */
   async getNonRandomArtifact(artID: number): Promise<void> {
     try {
+      // Gets the artifact data
       let result = await this.artifactDataService.getArtifact(this.p_id, artID);
-      console.log(result["result"]);
+      this.artifact = result["result"];
     } catch {
+      // If an error occurs reroute to the stats page
       this.router.navigate(['/project', this.p_id]);
       this.toastCommService.emitChange([false, "Invalid request"]);
     }
+    // Gets the people who have labelled the artifact already
+    await this.getLabellersGen();
   }
 
   /**
@@ -161,6 +184,15 @@ export class LabellingPageComponent implements OnInit {
       }
     }
 
+    await this.getLabellersGen();
+  }
+
+  /**
+   * Makes the request for all people who have already labelled an artifact
+   * @modifies this.labellers
+   */
+  async getLabellersGen(): Promise<void> {
+    // Makes the request
     try {
       const labellers = await this.artifactDataService.getLabellers(
         this.p_id,
@@ -168,6 +200,7 @@ export class LabellingPageComponent implements OnInit {
       );
       this.labellers = labellers;
     } catch {
+      // If an error occurs redirects to the stats page
       this.router.navigate(['/project', this.p_id]);
       this.toastCommService.emitChange([false, "Something went wrong. Please try again!"]);
     }
@@ -198,11 +231,15 @@ export class LabellingPageComponent implements OnInit {
   }
 
   /**
-   * Skip to another random artifact
+   * Skip to another random artifact 
+   * (if on the labelling page of a specific artifact, redirects to general labelling page)
    */
   skip(): void {
-    this.submitMessage = '';
-    this.ngOnInit();
+    if(this.routeService.checkLabellingId(this.url)) {
+      this.router.navigate(['/project', this.p_id, 'labelling-page']);
+    } else {
+      this.ngOnInit();
+    }
   }
 
   /**
@@ -236,7 +273,6 @@ export class LabellingPageComponent implements OnInit {
         p_id: this.p_id,
         resultArray: resultArray,
       };
-      this.submitMessage = '';
       this.sendSubmission(dict);
       this.toastCommService.emitChange([true, "Artifact labelled successfully"]);
     } catch (e) {
@@ -292,6 +328,7 @@ export class LabellingPageComponent implements OnInit {
       this.toastCommService.emitChange([false, "Database error while submitting labelling."]);
     }
   }
+
   /**
    * Error function for unimplemented features.
    */
@@ -299,12 +336,11 @@ export class LabellingPageComponent implements OnInit {
     throw new Error('This function has not been implemented yet.');
   }
 
-
   /**
- * Function is ran on mouseDown or mouseUp and updates the current selection
- * of the artifact. If the selection is null or empty, the selection is set
- * to ""
- */
+   * Function is ran on mouseDown or mouseUp and updates the current selection
+   * of the artifact. If the selection is null or empty, the selection is set
+   * to ""
+   */
   selectedText(): void {
     let hightlightedText: Selection | null = document.getSelection();
     //gets the start and end indices of the highlighted bit
@@ -329,7 +365,7 @@ export class LabellingPageComponent implements OnInit {
   /**
    * Splitting function, gets text without splitting words and gets start and end char
    */
-  split(): void {
+  async split(): Promise<void> {
     // Get start/end positions of highlight
     let firstCharacter = this.selectionStartChar! - 1;
     let lastCharacter = this.selectionEndChar! - 1;
@@ -342,8 +378,16 @@ export class LabellingPageComponent implements OnInit {
       lastCharacter
     );
     // Make request to split
-    this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
     this.toastCommService.emitChange([true, "Artifact successfully split!\n Text selected: '" + splitText+ "'"]);
+
+    // Reloads the page
+    this.ngOnInit();
+  }
+
+  async routeToLabel(item: number | undefined) : Promise<void> {
+    await this.router.navigate(['/project', this.p_id, 'labelling-page', item]);
+    await this.ngOnInit();
   }
 
   //fixes the position of the start character of a word
@@ -371,7 +415,6 @@ export class LabellingPageComponent implements OnInit {
       startPos++;
     }
     return startPos
-
   }
 
   //fixes the position of the start character of a word
@@ -395,5 +438,4 @@ export class LabellingPageComponent implements OnInit {
 
     return endPos
   }
-
 }
