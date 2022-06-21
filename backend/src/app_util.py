@@ -14,7 +14,7 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request
 from sqlalchemy.exc import OperationalError
-from sqlalchemy import select
+from sqlalchemy import false, select
 from inspect import getfullargspec
 import datetime
 
@@ -86,6 +86,30 @@ def check_password(password):
             re.match(specialRe, password) or \
             re.match(numberRe, password))
     return valid and complex
+
+def check_string(strings):
+    """
+    Checks the given string for the characters \ ; , #
+    @params string: the given input string
+    @return whether the string input includes a forbidden character
+    """
+    chars = ["\\", ";", ",", "#"]
+    for string in strings:
+        has_char = [char in string for char in chars]
+        if has_char:
+            return has_char
+    return False
+
+def check_whitespaces(strings):
+    """
+    Checks the given string for the characters \ ; , #
+    @params string: the given input string
+    @return whether the string input includes a forbidden character
+    """
+    for string in strings:
+        if string == string.strip():
+            return True
+    return False
 
 def get_all_subclasses(cls):
     """

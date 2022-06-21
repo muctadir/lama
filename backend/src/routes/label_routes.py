@@ -1,12 +1,11 @@
 # Author: Eduardo
 # Author: Bartjan
 # Author: Victoria
-from src.app_util import check_args
 from src import db  # need this in every route
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
-from src.app_util import login_required, in_project
+from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
   Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
@@ -26,21 +25,33 @@ def create_label(*, user):
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
-        print(args)
         return make_response('Bad Request', 400)
+    
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([args['labelName'], args['labelDescription']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
         return make_response('Bad request: Label name cannot have size <= 0', 400)
+
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
         return make_response('Bad request: Label description cannot have size <= 0', 400)
+
     # Check whether the label type exists
     label_type = db.session.get(LabelType, args['labelTypeId'])
     if not label_type:
         return make_response('Label type does not exist', 400)
+
     # # Check whether the labeltype is part of the project
     if label_type.p_id != args['p_id']:
         return make_response('Label type not in this project', 400)
+
     # Make the label
     label = Label(name=args['labelName'],
                   description=args['labelDescription'],
@@ -191,6 +202,14 @@ def merge_route(*, user):
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+    
+    # Check for invalid characters
+    if check_string([args['newLabelName'], args['newLabelDescription']]):
+        return make_response("Input contains a forbidden character", 511)
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
