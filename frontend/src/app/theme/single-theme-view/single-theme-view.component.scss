@@ -4,6 +4,7 @@ $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
 
+// Main container
 #main-cont {
     height: 100vh;
     overflow-y: scroll;
@@ -13,12 +14,6 @@ $light-grey-shade: #aaaaaa;
 // Page Header container
 #titleRow {
     padding-bottom: 20px;
-}
-
-// Container of the whole page
-#containerBody{
-    height: 100vh;
-    overflow-y: scroll;
 }
 
 // Page Title
