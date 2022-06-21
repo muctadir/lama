@@ -1,0 +1,16 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #aaaaaa;
+
+// Page Title
+#pageTitle {
+    font-size: 35px;
+    padding-top: 10px;
+    text-align: left;
+    letter-spacing: 1px;
+    border-bottom: 1px; 
+    border-bottom-style: solid;
+    border-bottom-color: $light-grey-shade;
+}

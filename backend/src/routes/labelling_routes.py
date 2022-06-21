@@ -1,3 +1,4 @@
+from cProfile import label
 from src.app_util import check_args
 from src import db # need this in every route
 from flask import current_app as app
@@ -7,6 +8,7 @@ from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, time_from_seconds
 from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema, \
   Labelling, LabellingSchema, Theme, ThemeSchema, Artifact, ArtifactSchema
+from src.models.project_models import Project
 from src.models.change_models import ChangeType
 
 labelling_routes = Blueprint("labelling", __name__, url_prefix="/labelling")
@@ -97,6 +99,54 @@ def post_labelling(*, user):
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
     # Make a response
     return make_response()
+    
+"""
+Author: Linh Nguyen, Ana-Maria Olteniceanu
+Editing existing labelling(s)
+@params user: current user
+@params membership: the membership of the current user
+@post: updating the labelling in the database
+"""
+@labelling_routes.route('/edit', methods=['PATCH'])
+@login_required
+@in_project
+def edit_labelling(*, user, membership):
+    # Get args from request 
+    args = request.json['params']
+    # What args are required
+    required = ['p_id', 'a_id', 'labellings']
+
+    # Checking if user is allowed to edit this labelling
+    if not membership.admin and len(args['labellings']) != 1:
+        return make_response('This member is not admin', 401)
+
+    # Check if required args are presentF
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    #Array to hold updated labellings
+    updated_labellings = [
+        {'u_id': args['labellings'][key]['u_id'],'a_id': args['a_id'], 'lt_id': args['labellings'][key]['lt_id'],
+                    'l_id': args['labellings'][key]['id']} for key in args['labellings']
+    ]
+
+    print(updated_labellings)
+    # Get project with supplied ID
+    project = db.session.get(Project, args['p_id'])
+    if not project:
+        return make_response('Project does not exist', 400)
+
+    # Committing the information to the backend
+    try: 
+        # Updating the information in the database
+        db.session.bulk_update_mappings(Labelling, updated_labellings)
+        db.session.commit()
+    except OperationalError:
+        #Returning an error response
+        return make_response('Internal Server Error', 503)
+
+    # Returning a response
+    return make_response('Succeeded', 200)
 
 """
 Records a labelling in the artifact changelog

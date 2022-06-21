@@ -28,6 +28,13 @@ $light-grey-shade: #aaaaaa;
     border-color: $grey-shade;
 }
 
+// Button for theme visualization
+#themeVisButton{
+    background-color: $orange-shade;
+    color: $white-shade;
+    border-color: $orange-shade;
+}
+
 // The plus for creating a theme
 .bi.bi-plus.createTheme {
     color: black;
@@ -35,9 +42,8 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Div for the button for adding themes
-#addButton {
-    padding-top: 10px;
-    
+.buttonsDiv {
+    padding-top: 10px;    
 }
 
 .subTitle {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
+import { Label } from 'app/classes/label';
 import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,6 +8,7 @@ import { ThemeDataService } from 'app/services/theme-data.service';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { StringArtifact } from 'app/classes/stringartifact';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -53,6 +55,45 @@ export class SingleThemeViewComponent {
   async get_single_theme_info(p_id: number, t_id: number){
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
+    // Sort the artifacts
+    this.sortArtifacts();
+  }
+
+  /**
+   * Function to sort the artifacts in a label
+   *
+   */
+  sortArtifacts(): void {
+    // Get the labels of the theme
+    let labels = this.theme.getLabels();
+    if(labels != undefined){
+      // For each label, get the artifacts
+      for (let label of labels){
+        // Get the artifacts
+        let artifacts = label.getArtifacts();
+        if (artifacts != undefined){
+          // Sort the artifacts
+          artifacts.sort((a,b) => a.getId() - b.getId());
+        }
+        // Set the artifacts of the label with the sorted array
+        label.setArtifacts(artifacts);
+      }
+    }
+  }
+
+  /**
+   * Function to get the artifacts of the label and remove the duplicates
+   * 
+   * @param label 
+   */
+  getNonDoubleArtifacts(label: Label): StringArtifact[] {
+    // Get the artifacts of the label
+    let artifacts = label.getArtifacts();
+    if(artifacts != undefined){
+      // Remove the duplicates from the list
+      return Array.from(artifacts.reduce((m, t) => m.set(t.getId(), t), new Map()).values());
+    }
+    return [];
   }
 
   /**
@@ -85,7 +126,7 @@ export class SingleThemeViewComponent {
    * Reroutes to other edit page of the theme
    * @trigger the edit button is clicked
   */
-   reRouterEdit() : void {
+  reRouterEdit() : void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, "editTheme", this.t_id]);
   }  

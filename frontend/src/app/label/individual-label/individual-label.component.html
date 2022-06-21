@@ -1,5 +1,5 @@
 <!-- Author: Victoria Bogachenkova -->
-<div class="container-fluid min-vh-100 d-flex flex-column">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
     <!-- contains the page title and Artifact Identifier -->
     <div class="row">
         <!-- Label Name as title -->
@@ -8,7 +8,7 @@
         </div>
         <div class="col-1 d-flex justify-content-center">
             <!-- When clicked calls openThemeHistory function -->
-            <em class="bi bi-clock-history" id="history-hover" (click)="openLabelHistory()"></em>
+            <em class="bi bi-clock-history" id="history-hover" (click)="openLabelHistory()" ngbTooltip="History"></em>
         </div>
     </div>
 
@@ -55,7 +55,7 @@
                 Themes
             </div>
             <div *ngFor="let theme of label.getThemes()" class="labelThemes">
-                <p>{{theme.getName()}}</p>
+                <p (click)="reRouterTheme(theme.getId())" id="clickable">{{theme.getName()}}</p>
             </div>
         </div>
     </div>

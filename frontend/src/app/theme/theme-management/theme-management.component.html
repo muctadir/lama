@@ -5,11 +5,17 @@
 <!-- big container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
     <div class="row" >
-        <div class="col-10 header" id="pageTitle"> 
+        <div class="col header" id="pageTitle"> 
             Theme Management
         </div>
+        <!-- Theme visualization button -->
+        <div class="col-2 buttonsDiv">
+            <!-- Button for visualizing the theme hierarchy -->
+            <button class="form-control btn btn-secondary" id="themeVisButton" (click)="reRouter('themeVisual')">Theme hierarchy</button>   
+        </div>
         <!-- Create theme button -->
-        <div class="col-2" id="addButton">
+        <div class="col-2 buttonsDiv">
+            <!-- Button for creating a new theme -->
             <button class="form-control btn btn-secondary" id="createThemeButton" (click)="reRouter('createTheme')">Create Theme<i class="bi bi-plus createTheme"></i></button>   
         </div>
     </div>
@@ -45,17 +51,6 @@
                 </tbody>
             </table>
         </div>
-        <!--Pagination-->          
-        <div id="center-pagination">
-            <ngb-pagination
-                [(page)]="page"
-                [pageSize]="pageSize"
-                [collectionSize]="themes.length"
-                [maxSize]="5"
-                [rotate]="true" 
-                [boundaryLinks]="true">
-            </ngb-pagination>
-        </div> 
 
     </div>
     

@@ -36,6 +36,7 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { ThemeVisualComponent } from './theme/theme-visual/theme-visual.component';
 
 import { ModerationComponent } from './account-details/moderation/moderation.component';
 import { ToastCommService } from './services/toast-comm.service';
@@ -81,6 +82,8 @@ const routes: Routes = [
       {path: 'thememanagement', component: ThemeManagementComponent, canActivate: [LoginGuardService]},
       // Create theme route
       {path: 'createTheme', component: ThemeInfoComponent, canActivate: [LoginGuardService]},
+      // Theme visualization route
+      {path: 'themeVisual', component: ThemeVisualComponent, canActivate: [LoginGuardService]},
       // Single theme route
       {path: 'singleTheme/:themeId', component: SingleThemeViewComponent, canActivate: [LoginGuardService]},
       // Edit theme route

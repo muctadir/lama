@@ -6,6 +6,12 @@ p.header{
     padding-top: 10px;
 }
 
+#main-cont {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 // Subtitle
 .subTitle {
     padding-top: 10px;
@@ -77,4 +83,9 @@ p.header{
     cursor: pointer;
     font-size: 30px;
     margin-top: 20px;
+}
+
+// Make clickable text have a pointer on hover
+#clickable:hover{
+    cursor: pointer;
 }
