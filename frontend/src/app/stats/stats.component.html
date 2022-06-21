@@ -55,12 +55,12 @@
         <div class="col">
             <div>
                 <p class="left">{{conflicts}}</p> 
-                <em class="left bi bi-binoculars" id="bino-icon"></em>
+                <em class="left bi bi-binoculars" id="bino-icon" ngbTooltip="Conflicts"></em>
             </div>
             <div class="col" id="labels">
                 <div>
                     <p class="left">{{labels}}</p> 
-                    <em class="left bi bi-tags def" id="label-icon"></em>
+                    <em class="left bi bi-tags def" id="label-icon" ngbTooltip="Labels"></em>
                 </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
             <div>
                 <!--  -->
                 <div class="left page-splitter">User stats</div>
-                <em class="left bi bi-person" id="person-icon"></em>
+                <em class="left bi bi-person" id="person-icon" ngbTooltip="Users"></em>
                 <p class="left text-margin">{{project.getNumberOfUsers()}}</p>
             </div>
         </div>

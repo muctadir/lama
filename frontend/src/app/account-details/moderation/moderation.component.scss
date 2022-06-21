@@ -19,10 +19,8 @@ $light-grey-shade: #bfbfbf;
 
 // Markup of the cross to go back to the home page
 #back-button {
-    cursor: pointer;
-    top: 0;
-    right: 0;
-    font-size: 30px;
+    top: 5px;
+    left: 5px;
     position: fixed;
 }
 
