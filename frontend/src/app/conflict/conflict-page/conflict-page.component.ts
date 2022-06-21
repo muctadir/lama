@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ConflictDataService } from 'app/services/conflict-data.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-conflict-page',
@@ -18,10 +19,12 @@ export class ConflictPageComponent implements OnInit {
    * @param router instance of router
    * @param reroutingService instance of rerouting service
    * @param conflictDataService instance of ConflictDataService
+   * @param toastCommService instance of ToastCommService
    */
   constructor(private router: Router,
      private reroutingService: ReroutingService,
-     private conflictDataService: ConflictDataService) { }
+     private conflictDataService: ConflictDataService,
+     private toastCommService: ToastCommService) { }
 
   /**
    * Gets all the users within the application from the backend
@@ -72,6 +75,10 @@ export class ConflictPageComponent implements OnInit {
     //Getting conflict data from service
     const conflicts = await this.conflictDataService.getConflicts(p_id)
     //Setting the conflict data to the variable
+    if (conflicts.length == 0) {
+      this.toastCommService.emitChange([true, "There are no conflicts"]);
+      this.router.navigate(['/project', p_id, 'stats'])
+    }
     this.conflicts = conflicts
   }
 }
