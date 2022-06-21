@@ -435,4 +435,17 @@ export class ThemeInfoComponent implements OnInit {
     }
   }
 
+  //returns label searchbar text when hitting enter
+  onEnterLabel() : void {
+    var text = this.labelSearch.value.labelSearch;
+    alert(text)
+
+  }
+  
+  //returns theme searchbar text when hitting enter
+  onEnterTheme() : void {
+    var text = this.themeSearch.value.themeSearch;
+    alert(text)
+  }
+
 }
