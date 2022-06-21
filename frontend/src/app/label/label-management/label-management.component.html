@@ -46,7 +46,7 @@
                     </thead>
                     <!--Table Content-->
                     <tbody>
-                        <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(label.getId())">
+                        <tr *ngFor="let label of labels" (click)="reRouter(label.getId())">
                             <!-- Label name field -->
                             <td><p class="tablecontent">{{label.getName()}}</p></td>
                             <!-- Label type name field -->
@@ -56,17 +56,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <!--Pagination -->
-            <div id="center-pagination">
-                <ngb-pagination
-                    [(page)]="page"
-                    [pageSize]="pageSize"
-                    [collectionSize]="labels.length"
-                    [maxSize]="5"
-                    [rotate]="true" 
-                    [boundaryLinks]="true">
-                </ngb-pagination>
             </div>
         </div>
     </div>

@@ -80,7 +80,8 @@ div.artifactContainer{
 #body{
     margin: 0;
     height: 100vh;
-    overflow: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #remark{
@@ -89,8 +90,8 @@ div.artifactContainer{
 }
 
 // Division of the buttons
-#buttons{
-    margin-top: 30px;
+#butt{
+    margin-top: 10px;
 }
 
 // Submit button
@@ -100,7 +101,7 @@ div.artifactContainer{
 }
 
 // Skip button
-#btn-skip{
+#skip-button{
     margin-right: 10px;
     border: none;
 }
@@ -113,4 +114,9 @@ div.artifactContainer{
 #hoverCurs {
     cursor: pointer;
     color: #ed5a06;
+}
+
+.hoverNoColor {
+    cursor: pointer;
+    margin-left: 5px;
 }

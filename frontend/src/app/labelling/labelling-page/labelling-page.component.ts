@@ -66,7 +66,8 @@ export class LabellingPageComponent implements OnInit {
     private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
     private router: Router,
-    private toastCommService: ToastCommService
+    private toastCommService: ToastCommService,
+    private accountService: AccountInfoService
   ) {
     /**
      * Preparing variables for information
@@ -101,7 +102,6 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
-
     // Gets the url again
     this.url = this.router.url;
 
@@ -109,28 +109,29 @@ export class LabellingPageComponent implements OnInit {
     this.eventEmitter.emit();
 
     // Loads the page content
-    await this.loadPageContent();    
+    await this.loadPageContent();  
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
   }
 
-  async loadPageContent() {
+  async loadPageContent() : Promise<void> {
     // Checks whether a labelling ID is provided
     if(this.routeService.checkLabellingId(this.url)) {
       // Shows labelling page of a specific artifact
       await this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
     } else {
       // Shows labelling page of a random artifact
-      await this.getRandomArtifact();
+      let errorOccured = await this.getRandomArtifact();
+      if (!errorOccured) {
+        return;
+      }
     }
     // Requests the label types and the corresponding labels
     await this.getLabelTypesWithLabels();
 
-    // Initialize accountInfoService
-    let accountService = new AccountInfoService();
     // Gets user data
-    let user = await accountService.userData();
+    let user = await this.accountService.userData();
 
     // Checks whether this user has already labelled the artifact, if so redirects to artifact management page
     this.labellers.forEach(labeller => {
@@ -168,7 +169,7 @@ export class LabellingPageComponent implements OnInit {
    * 5. Puts labellers into variable
    * @param p_id
    */
-  async getRandomArtifact(): Promise<void> {
+  async getRandomArtifact(): Promise<boolean> {
     try {
       const artifact = await this.artifactDataService.getRandomArtifact(
         this.p_id
@@ -182,9 +183,11 @@ export class LabellingPageComponent implements OnInit {
         this.router.navigate(['/project', this.p_id]);
         this.toastCommService.emitChange([false, "There are no artifacts left to label!"]);
       }
+      return false;
     }
 
     await this.getLabellersGen();
+    return true;
   }
 
   /**
@@ -225,7 +228,7 @@ export class LabellingPageComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then((data) => {
+    modal.result.then(() => {
       // RESET THE FORM AND UPDATE WITH NEW LABEL
       this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
@@ -294,7 +297,7 @@ export class LabellingPageComponent implements OnInit {
       // Check the labelling is valid
       if (el.status != 'VALID') {
         // Throw and error
-        throw 'Submission invalid';
+        throw new Error('Submission invalid');
       }
       // Push valid results into result array
       resultArray.push({
@@ -323,8 +326,12 @@ export class LabellingPageComponent implements OnInit {
     try {
       // Wait for the submission
       await this.labellingDataService.postLabelling(dict);
-      // Reinitialise the page
-      this.ngOnInit();
+      if(this.routeService.checkLabellingId(this.url)) {
+        this.reRouter();
+      } else{
+        // Reinitialise the page
+        this.ngOnInit();
+      }
     } catch (err) {
       // Send error
       this.toastCommService.emitChange([false, "Database error while submitting labelling."]);

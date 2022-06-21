@@ -2,7 +2,7 @@
 <!-- @author: Veerle Furst -->
 
 <!-- big container -->
-<div class="container-fluid min-vh-100 d-flex flex-column" id="containerBody">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
 
     <!-- Page Header -->
     <div class="row" id="titleRow">
@@ -13,7 +13,7 @@
         <!-- Displays the history icon -->
         <div class="col-1 d-flex justify-content-center" id="pageTitle">
             <!-- When clicked calls openThemeHistory function -->
-            <em class="bi bi-clock-history" id="history-hover" (click)="openThemeHistory()"></em>
+            <em class="bi bi-clock-history" id="history-hover" (click)="openThemeHistory()" ngbTooltip="History"></em>
         </div>
     </div>
 

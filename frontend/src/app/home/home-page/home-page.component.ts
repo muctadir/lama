@@ -7,10 +7,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from 'app/classes/project';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutComponent } from 'app/modals/logout/logout.component';
 import { ProjectDataService } from 'app/services/project-data.service';
 import { AccountInfoService } from 'app/services/account-info.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -36,7 +37,8 @@ export class HomePageComponent implements OnInit {
   constructor(private modalService: NgbModal,
     private projectDataService: ProjectDataService,
     private accountService: AccountInfoService,
-    private toastCommService: ToastCommService) {}
+    private toastCommService: ToastCommService,
+    private route: Router) {}
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of
@@ -68,7 +70,22 @@ export class HomePageComponent implements OnInit {
    */
   openLogout() : void {
     // opens logout modal
-    this.modalService.open(LogoutComponent, {});
+    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+
+      // Listens for an event emitted by the modal
+    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+      // If a confirmEvent = true is emitted we delete the user
+      if($e) {
+        // Drops the session token
+        sessionStorage.removeItem('ses_token');
+
+        // Navigates to the login page
+        this.route.navigate(['/login'])
+
+        // Logged out popup
+        this.toastCommService.emitChange([true, "Logged out successfully"]);
+      }
+    })
   }
 
 }
