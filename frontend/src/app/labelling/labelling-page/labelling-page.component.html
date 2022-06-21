@@ -8,7 +8,7 @@
     </div>
     <div *ngIf="hightlightedText.length > 0" class="col-2">
       <div id="artifactButtons">
-        <i (click)="split()" class="bi bi-scissors"></i>
+        <i (click)="split()" class="bi bi-scissors" ngbTooltip="Split artifact"></i>
       </div>
     </div>
   </div>
@@ -67,7 +67,7 @@
       <div class="col-3">
         <span id="LabellingTitle">Labelling</span>
         <span (click)="openCreateForm()" class=""
-          ><i class="bi bi-plus-lg hoverNoColor"></i
+          ><i class="bi bi-plus-lg hoverNoColor" ngbTooltip="Create label"></i
         ></span>
       </div>
       <div class="col-9"></div>
