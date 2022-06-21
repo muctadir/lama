@@ -191,6 +191,7 @@ export class ArtifactDataService {
       true
     );
   }
+
   // Function for searching in backend
   async search(
     searchWords: string,
@@ -239,18 +240,21 @@ export class ArtifactDataService {
    * @param end 
    * @param data 
    */
-  async postSplit(p_id: number, parent_id: number, identifier: string, start: number, end: number, data: string): Promise<any> {
-    await this.requestHandler.post(
-      '/artifact/split',
-      {
-        p_id: p_id,
-        parent_id: parent_id,
-        identifier: identifier,
-        start: start,
-        end: end,
-        data: data
-      },
-      true
+  async postSplit(p_id: number, 
+    parent_id: number, 
+    identifier: string, 
+    start: number, 
+    end: number, 
+    data: string): Promise<any> {
+    return this.requestHandler.post('/artifact/split', {
+      p_id: p_id,
+      parent_id: parent_id,
+      identifier: identifier,
+      start: start,
+      end: end,
+      data: data
+    },
+    true
     )
   }
 }

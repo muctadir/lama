@@ -11,7 +11,7 @@ export class AccountInfoService {
 
   /**
    * Gets the token from the session storage and creates the requestHandler with the token
-   * 
+   *
    * @modifies @requestHandler
    * @trigger on creation
    */
@@ -25,14 +25,14 @@ export class AccountInfoService {
 
   /**
    * Request the server for the user data and returns the user data in a User object
-   * 
+   *
    * @returns User object with user data
-   * @throws error when server request goes wrong 
+   * @throws error when server request goes wrong
    */
   async userData() : Promise<any> {
     // User object
     let user;
-    
+
     try {
       // Creates a request for the account information
       let response: any =  await this.requestHandler.get("/account/information", {}, true);
@@ -45,7 +45,7 @@ export class AccountInfoService {
 
       // Returns the user object
       return user;
-      
+
     } catch (e) {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");
@@ -55,8 +55,8 @@ export class AccountInfoService {
   /**
    * Returns an array with User objects of all users in the application
    * by first requested that data from the database
-   *  
-   * @returns array with all users in the app 
+   *
+   * @returns array with all users in the app
    */
   async allUsersData(): Promise<Array<User>> {
     let users: User[] = [];
@@ -85,7 +85,7 @@ export class AccountInfoService {
 
   /**
    * Makes a call to the server to delete the the user from the database
-   * 
+   *
    * @param toDel user to be deleted
    */
   async softDelUser(toDel: User) : Promise<void> {
@@ -103,8 +103,8 @@ export class AccountInfoService {
    * Makes a request to the backend with the session token
    * The backend returns an error if the session token is not valid
    * The backend returns a success package if it is valid
-   * Returns whether the backend response was valid or not valid 
-   * 
+   * Returns whether the backend response was valid or not valid
+   *
    * @returns whether authentication token is valid
    */
   async makeAuthRequest() : Promise<boolean> {
@@ -127,8 +127,8 @@ export class AccountInfoService {
    * Makes a request to the backend with the session token
    * The backend returns an error if the session token is not valid
    * The backend returns a success package if it is valid
-   * Returns whether the backend response was valid or not valid 
-   * 
+   * Returns whether the backend response was valid or not valid
+   *
    * @returns whether authentication token is valid
    */
    async makeSuperAuthRequest() : Promise<boolean> {
@@ -149,7 +149,7 @@ export class AccountInfoService {
 
   /**
    * Makes a post call to backend to register a user
-   * 
+   *
    * @params registerInformation, a record with the register information of the shape:
    * {
    *  username: the username of the user,
@@ -160,6 +160,19 @@ export class AccountInfoService {
    * }
    */
   async registerUser(registerInformation: Record<string, any>): Promise<any> {
-    await this.requestHandler.post('auth/register', registerInformation, false)
+    try {
+      await this.requestHandler.post('auth/register', registerInformation, false)
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+  async loginUser(user: Record<string, any>): Promise<any> {
+    try {
+      await this.requestHandler.post('auth/login', user, false);
+    } catch (e) {
+      throw e;
+    }
   }
 }

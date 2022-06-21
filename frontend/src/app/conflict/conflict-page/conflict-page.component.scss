@@ -58,7 +58,10 @@ body{
     margin-top: 20px;
     width: 125px;
 }
-
+#users {
+    font-weight: bold;
+    color: $main-color-1;
+}
 // Make the highlight around the buttons none
 .btn:focus {
     box-shadow: none;

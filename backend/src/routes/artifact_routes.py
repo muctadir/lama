@@ -436,7 +436,7 @@ def post_split(*, user):
     except OperationalError:
         make_response("Internal Service Error", 503)
 
-    return make_response("Success")
+    return make_response(str(new_artifact.id), 200)
 
 # Gets a random artifact which has not been already labelled by the user
 def get_random_artifact(u_id, p_id):
