@@ -96,8 +96,8 @@ def check_string(strings):
     chars = ["\\", ";", ",", "#"]
     for string in strings:
         has_char = [char in string for char in chars]
-        if has_char:
-            return has_char
+        if True in has_char:
+            return True
     return False
 
 def check_whitespaces(strings):
@@ -107,7 +107,7 @@ def check_whitespaces(strings):
     @return whether the string input includes a forbidden character
     """
     for string in strings:
-        if string == string.strip():
+        if string != string.strip():
             return True
     return False
 
