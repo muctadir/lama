@@ -304,6 +304,6 @@ def single_label_per_user():
     #Processing the response from the database to send to the front-end label ID, name and description
     response = {}
     for labeller in userInfo:
-        response[labeller[0]] = {"u_id": labeller[1], "id": labeller[2], "name": labeller[3], "description": labeller[4]}
+        response[labeller[0]] = {"u_id": labeller[1], "id": labeller[2], "name": labeller[3], "description": labeller[4], "lt_id": args['lt_id']}
 
     return make_response(response)
