@@ -102,7 +102,6 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
-
     // Gets the url again
     this.url = this.router.url;
 
@@ -110,7 +109,7 @@ export class LabellingPageComponent implements OnInit {
     this.eventEmitter.emit();
 
     // Loads the page content
-    await this.loadPageContent();    
+    await this.loadPageContent();  
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();

@@ -31,10 +31,12 @@ export class IndividualLabellingForm implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.reload?.subscribe(v => {
-      this.ngOnInit();
+      this.reloadModal();
     });
+  }
+
+  reloadModal() {
     // Reset the label form
     this.labelForm.reset()
     this.selectedDesc = undefined;
