@@ -127,11 +127,16 @@ def edit_labelling(*, user, membership):
     #Array to hold updated labellings
     updated_labellings = []
     
+    test = [{'u_id': labelling['u_id'],'a_id': args['a_id'], 'lt_id': labelling['lt_id'],
+                     'l_id': labelling['id']} for labelling in args['labellings']]
+    print(test)
+
     #Appending updated information about each labelling to the list above
     for key in args['labellings']:
         updated_labellings.append({'u_id': args['labellings'][key]['u_id'],'a_id': args['a_id'], 'lt_id': args['labellings'][key]['lt_id'],
                     'l_id': args['labellings'][key]['id']})       
 
+    print(updated_labellings)
     # Get project with supplied ID
     project = db.session.get(Project, args['p_id'])
     if not project:
