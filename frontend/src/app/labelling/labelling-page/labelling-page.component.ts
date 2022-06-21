@@ -122,7 +122,10 @@ export class LabellingPageComponent implements OnInit {
       await this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
     } else {
       // Shows labelling page of a random artifact
-      await this.getRandomArtifact();
+      let errorOccured = await this.getRandomArtifact();
+      if (!errorOccured) {
+        return;
+      }
     }
     // Requests the label types and the corresponding labels
     await this.getLabelTypesWithLabels();
@@ -166,7 +169,7 @@ export class LabellingPageComponent implements OnInit {
    * 5. Puts labellers into variable
    * @param p_id
    */
-  async getRandomArtifact(): Promise<void> {
+  async getRandomArtifact(): Promise<boolean> {
     try {
       const artifact = await this.artifactDataService.getRandomArtifact(
         this.p_id
@@ -180,9 +183,11 @@ export class LabellingPageComponent implements OnInit {
         this.router.navigate(['/project', this.p_id]);
         this.toastCommService.emitChange([false, "There are no artifacts left to label!"]);
       }
+      return false;
     }
 
     await this.getLabellersGen();
+    return true;
   }
 
   /**
