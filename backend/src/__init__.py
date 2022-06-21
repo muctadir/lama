@@ -74,19 +74,6 @@ def fill():
     from src.models.item_models import LabelType, Label, Theme
     from src.models.auth_models import User, UserStatus
 
-    SUPER_USER = environ.get("SUPER_USER")
-    SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
-    SUPER_EMAIL = environ.get("SUPER_EMAIL")
-    db.session.add(User(
-        username=SUPER_USER,
-        email=SUPER_EMAIL,
-        password=generate_password_hash(SUPER_PASSWORD),
-        status=UserStatus.approved,
-        super_admin=True,
-        description="Auto-generated super admin"
-    ))
-    db.session.commit()
-
     # Creates 10 users which are all approved
     users = [User(
         username=f"TestUser{i}",
