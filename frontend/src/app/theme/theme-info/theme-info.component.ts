@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { InputCheckService } from 'app/services/input-check.service';
@@ -8,6 +8,26 @@ import { FormBuilder } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { ToastCommService } from 'app/services/toast-comm.service';
+
+
+//import {Component, ViewChild} from '@angular/core';
+import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+
+
+//dummy data for labels
+const labels = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
+  'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
+  'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
+  'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
+  'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+  'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
+  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Islands', 'Virginia',
+  'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+
+//dummy data for the themes
+const themes = ['American', 'Indian', 'Japanese', 'Chinese','Spanish'];
 
 @Component({
   selector: 'app-theme-info',
@@ -32,6 +52,16 @@ export class ThemeInfoComponent implements OnInit {
     description: ""
   });
 
+  // Form for label search function
+  labelSearch = this.formBuilder.group({
+    labelSearch: ""
+  });
+
+  // Form for theme search function
+  themeSearch = this.formBuilder.group({
+    themeSearch: ""
+  });
+
   // Variable for the current theme
   theme: Theme;
 
@@ -45,24 +75,71 @@ export class ThemeInfoComponent implements OnInit {
   routeService: ReroutingService;
 
   //highlight label variable
-  highlightedLabel: String = '';
+  highlightedLabel: string = '';
   //highlight subtheme variable
-  highlightedSubtheme: String = "";
+  highlightedSubtheme: string = "";
 
   //Selected Labels description
-  selectedDescriptionLabel: String = '';
+  selectedDescriptionLabel: string = '';
   //Selected Theme description
-  selectedDescriptionTheme: String = '';
+  selectedDescriptionTheme: string = '';
 
   // Labels Added
   addedLabels: Label[] = [];
   // All labels
   allLabels: Array<Label> = [];
+  // All label names
+  allLabelsNames: string[] = [];
 
   //Subthemes Added
   addedSubThemes: Array<Theme> = [];
-  //Hard coded sub-themes
+  //All sub-themes
   allSubThemes: Array<Theme> = [];
+  // All label names
+  allSubThemesNames: string[] = [];
+
+  //model for the search autocomplete forms
+  model: any;
+  model1: any;
+
+  //implementation of the searching
+  @ViewChild('instance', { static: true })
+  //create autocomplete search instance
+  instance!: NgbTypeahead;
+  //listeners for different click and focus events
+  click$ = new Subject<string>();
+  focus1$ = new Subject<string>();
+  click1$ = new Subject<string>();
+  focus2$ = new Subject<string>();
+  click2$ = new Subject<string>();  
+
+  //search on labels to be added
+  searchLabel: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click2$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus2$;
+
+    //goes through the array of labels
+    //TODO: replace 'labels' with array of project labels
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => (term === '' ? this.allLabelsNames
+        : this.allLabelsNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+  }
+
+  //search on themes to be added
+  searchTheme: OperatorFunction<string, readonly string[]> = (text1$: Observable<string>) => {
+    const debouncedText1$ = text1$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup1$ = this.click1$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus1$ = this.focus1$;
+
+    //goes through the array of themes
+    //TODO: replace 'themes' with array of project themes
+    return merge(debouncedText1$, inputFocus1$, clicksWithClosedPopup1$).pipe(
+      map(term => (term === '' ? this.allSubThemesNames
+        : this.allSubThemesNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+  }
  
   constructor(private formBuilder: FormBuilder, 
     private service: InputCheckService, 
@@ -101,12 +178,22 @@ export class ThemeInfoComponent implements OnInit {
       .then(() => {
         // Set the values of the page
         this.insertThemeInfo();
+        // Get the names of the labels
+        this.getLabelNames();
+        // Get the names of the sub-themes
+        this.getSubThemesNames();
       })      
     } else {
       // Get all possible themes
       this.get_themes_without_parents(this.p_id, 0);
       // Get all possible labels
-      this.get_labels(this.p_id);
+      this.get_labels(this.p_id)
+      .then(() => {
+        // Get the names of the labels
+        this.getLabelNames();
+        // Get the names of the sub-themes
+        this.getSubThemesNames();
+      })
     }
   }
 
@@ -156,6 +243,24 @@ export class ThemeInfoComponent implements OnInit {
       "name": this.theme.getName(),
       "description": this.theme.getDesc()
     })
+  }
+
+  /**
+   * Function to get the names of the labels in the array
+   */
+  getLabelNames(): void {
+    for (let label of this.allLabels){
+      this.allLabelsNames.push(label.getName());
+    }
+  }
+
+  /**
+   * Function to get the names of the sub-themes in the array
+   */
+  getSubThemesNames(): void {
+    for (let theme of this.allSubThemes){
+      this.allSubThemesNames.push(theme.getName());
+    }
   }
 
   // Function for creating a theme
