@@ -115,7 +115,7 @@ export class LabellingPageComponent implements OnInit {
     this.startTime = Date.now();
   }
 
-  async loadPageContent() {
+  async loadPageContent() : Promise<void> {
     // Checks whether a labelling ID is provided
     if(this.routeService.checkLabellingId(this.url)) {
       // Shows labelling page of a specific artifact
@@ -228,7 +228,7 @@ export class LabellingPageComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then((data) => {
+    modal.result.then(() => {
       // RESET THE FORM AND UPDATE WITH NEW LABEL
       this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
