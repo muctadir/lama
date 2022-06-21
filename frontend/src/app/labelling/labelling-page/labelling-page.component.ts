@@ -392,7 +392,7 @@ export class LabellingPageComponent implements OnInit {
     this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
 
     // Reloads the page
-    this.ngOnInit();
+    await this.routeToLabel(this.artifact.getId());
   }
 
   async routeToLabel(item: number | undefined) : Promise<void> {
@@ -400,47 +400,47 @@ export class LabellingPageComponent implements OnInit {
     await this.ngOnInit();
   }
 
-  //fixes the position of the start character of a word
+  // Fixes the position of the start character of a word
   startPosFixer(startPos: number) {
-    //gets char at start of the word
+    // Gets char at start of the word
     let chart = this.artifact?.data.charAt(startPos);
-    //checks if it is at the correct position to begin with
+    // Checks if it is at the correct position to begin with
     if (chart == ' ' ) {
       startPos = startPos + 1
       return startPos
     }
-    //start bound check
+    // Start bound check
     if (startPos == 0) {
       return startPos
     }
 
-    //else, move until we find the start of a word
+    // Else, move until we find the start of a word
     while (chart != ' ' && startPos > 0) {
       chart = this.artifact?.data.charAt(startPos);
       startPos--;
     }
 
-    //last adjustmensts for when the text goes too far
+    // Last adjustmensts for when the text goes too far
     if (startPos != 0) {
       startPos++;
     }
     return startPos
   }
 
-  //fixes the position of the start character of a word
+  // Fixes the position of the start character of a word
   endPosFixer(endPos: number) {
-    //gets char at end of the word
+    // Gets char at end of the word
     let chend = this.artifact?.data.charAt(endPos);
-    //see if the last char is correct to begin with
+    // See if the last char is correct to begin with
     if (chend == ' ' || endPos == this.artifact.data.length) {
       return endPos
     }
-    //fix such that the next word is not accidentally selected
+    // Fix such that the next word is not accidentally selected
     if (this.artifact?.data.charAt(endPos - 1) == ' ') {
       endPos--
       return endPos
     }
-    //else, move until we find a space or hit the end of artifact
+    // Else, move until we find a space or hit the end of artifact
     while (chend != ' ' && endPos < this.artifact?.data.length) {
       chend = this.artifact?.data.charAt(endPos);
       endPos++;

@@ -84,3 +84,8 @@ p.header{
     font-size: 30px;
     margin-top: 20px;
 }
+
+// Make clickable text have a pointer on hover
+#clickable:hover{
+    cursor: pointer;
+}

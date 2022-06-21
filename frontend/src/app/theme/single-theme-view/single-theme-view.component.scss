@@ -4,6 +4,7 @@ $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
 
+// Main container
 #main-cont {
     height: 100vh;
     overflow-y: scroll;
@@ -160,16 +161,10 @@ $light-grey-shade: #aaaaaa;
     border-radius: 10px;
 }
 
-//Table Scroll
-#tableScroll {
-    min-height: 50vh;
-    overflow-y: scroll;
-}
-
 // Scrolling for the accordion
 #accordionScroll {
     overflow-y: scroll;
-    height: 25vh;
+    height: 35vh;
 }
 
 // Edit Button
