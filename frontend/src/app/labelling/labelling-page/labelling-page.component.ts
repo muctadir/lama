@@ -392,7 +392,7 @@ export class LabellingPageComponent implements OnInit {
     this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
 
     // Reloads the page
-    this.ngOnInit();
+    await this.routeToLabel(this.artifact.getId());
   }
 
   async routeToLabel(item: number | undefined) : Promise<void> {
