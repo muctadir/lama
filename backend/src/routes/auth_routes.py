@@ -70,7 +70,7 @@ def login():
     """
     Logs in the user
     """
-    args = request.json
+    args = request.json['params']
     # Check required arguments are supplied
     if not check_args(["username", "password"], args):
         return make_response(("Bad Request", 400))
