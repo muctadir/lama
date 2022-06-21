@@ -194,7 +194,8 @@ export class ConflictResolutionComponent implements OnInit {
       // Getting the label from a given name in the list of labels from this label type
       selectedLabel = this.findLabel(this.labels, label);
       // Change the labelling in the label_per_user array for user
-      this.label_per_user[user.getUsername()] = {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), "id": selectedLabel.getId(), "u_id": user.getId()};
+      this.label_per_user[user.getUsername()] = {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), 
+                                                "id": selectedLabel.getId(), "u_id": user.getId(), "lt_id": this.lt_id};
     } catch (error) {
       // If couldn't find label, show error
       this.toastCommService.emitChange([false, "Label doesn't exist"]);
@@ -226,13 +227,13 @@ export class ConflictResolutionComponent implements OnInit {
     try {
       if (this.admin) {
         // Send project ID, label type ID, artifact ID and labelling updates to the backend
-        this.labellingDataService.editLabelling(this.p_id, this.lt_id, this.a_id, this.label_per_user)
+        this.labellingDataService.editLabelling(this.p_id, this.a_id, this.label_per_user)
       }
       else {
         let singleUpdate: Record<string, any> = {};
         singleUpdate[this.username] = this.label_per_user[this.username];
         // Send project ID, label type ID, artifact ID and labelling updates to the backend
-        this.labellingDataService.editLabelling(this.p_id, this.lt_id, this.a_id, singleUpdate)
+        this.labellingDataService.editLabelling(this.p_id, this.a_id, singleUpdate)
       }
     } 
     catch (error) {
