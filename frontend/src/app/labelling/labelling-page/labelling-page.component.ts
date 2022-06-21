@@ -223,7 +223,7 @@ export class LabellingPageComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then(() => {
+    modal.result.then((data) => {
       // RESET THE FORM AND UPDATE WITH NEW LABEL
       this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
@@ -262,7 +262,7 @@ export class LabellingPageComponent implements OnInit {
    * 5. Put reponse in dictionary and send it
    * 6. Otherwise catch the message
    */
-  async submit(): Promise<void> {
+  submit(): void {
     // Get the timestamp when the labels are submitted
     this.endTime = Date.now();
     // Number of seconds the labellings took
@@ -273,7 +273,7 @@ export class LabellingPageComponent implements OnInit {
         p_id: this.p_id,
         resultArray: resultArray,
       };
-      await this.sendSubmission(dict);
+      this.sendSubmission(dict);
       this.toastCommService.emitChange([true, "Artifact labelled successfully"]);
     } catch (e) {
       this.toastCommService.emitChange([false, "Submission invalid"]);

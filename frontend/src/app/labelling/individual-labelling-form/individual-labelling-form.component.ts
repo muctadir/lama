@@ -28,15 +28,13 @@ export class IndividualLabellingForm implements OnInit {
       label: [undefined, [Validators.required]],
       remark: [undefined, [Validators.required, Validators.minLength(1)]],
     });
-  }
 
-  ngOnInit(): void {
     this.reload?.subscribe(v => {
-      this.reloadModal();
+      this.ngOnInit();
     });
   }
 
-  reloadModal() {
+  ngOnInit(): void {
     // Reset the label form
     this.labelForm.reset()
     this.selectedDesc = undefined;
