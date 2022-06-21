@@ -265,19 +265,18 @@ def conflict_management_page(*, user, membership):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    #Assigning project ID
     p_id = args['p_id']
-    
+
     return make_response(project_conflicts(p_id, membership.admin, user.id))
 """
-Author: Linh Nguyen & Ana-Maria Oltenic
-Route to send labelling made by users concerning a certain conflict to the frontend
+Author: Linh Nguyen & Ana-Maria Olteniceanu
+Route to send labelling made by a specific user concerning a certain conflict to the frontend
 @returns list of dictionaries of the form:
 {
-    the name of each user: list of dictionaries of the form:
-    {
-        "name": name of the label
-        "description": description of the label
-    }
+    id: label ID
+    name: label name
+    description: label description
 }
 """
 @conflict_routes.route("/LabelPerUser", methods=["GET"])
@@ -294,14 +293,17 @@ def single_label_per_user():
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    # Subquery to select the user ids of the users who made a labelling of this label id
     user_per_lt = select(Labelling.u_id).where(Labelling.lt_id==args['lt_id']).subquery()
 
-    userInfo = db.session.execute(select(distinct(User.username), Labelling.l_id, Label.name, Label.description)
+    # Get the usernames, the label names and the descriptions of the labels given to this artifact
+    userInfo = db.session.execute(select(distinct(User.username), User.id, Labelling.l_id, Label.name, Label.description)
     .where(User.id.in_(user_per_lt), User.id==Labelling.u_id, Labelling.l_id == Label.id,
      Labelling.lt_id==args['lt_id'], Labelling.a_id==args['a_id'])).all()
 
+    #Processing the response from the database to send to the front-end label ID, name and description
     response = {}
     for labeller in userInfo:
-        response[labeller[0]] = {"name": labeller[2], "description": labeller[3]}
+        response[labeller[0]] = {"u_id": labeller[1], "id": labeller[2], "name": labeller[3], "description": labeller[4], "lt_id": args['lt_id']}
 
     return make_response(response)

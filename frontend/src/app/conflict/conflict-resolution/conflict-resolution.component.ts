@@ -6,8 +6,15 @@ import { Component, OnInit } from '@angular/core';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { ConflictDataService } from 'app/services/conflict-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { ToastCommService } from 'app/services/toast-comm.service';
+import { MergeLabelFormComponent } from 'app/modals/merge-label-form/merge-label-form.component';
+import { Label } from 'app/classes/label';
+import { User } from 'app/classes/user';
 
 @Component({
   selector: 'app-conflict-resolution',
@@ -25,30 +32,52 @@ export class ConflictResolutionComponent implements OnInit {
   admin: boolean;
   // Initialize the username of the current user
   username: string;
+  // Initialize the project id
+  p_id: number;
+  // Initialize the label type id
+  lt_id: number;
+  // Initialize the artifact id
+  a_id: number;
   // Label type of current conflict
   label_type: string;
-  // Dictionary holding the users and the labels they gave for the conflict's label type
-  label_per_user: Record<string, Record<string, any>>
-  // Array of usernames
-  users: string[];
+  // Dictionary holding the users and the labels they gave 
+  // for the conflict's label type along with their description
+  label_per_user: Record<string, Record<string, any>>;
+  // Array of users
+  users: User[];
   // Array of labels in the label type
-  labels: Array<string> = [];
+  labels: Label[];
+
+  /**
+   * Information concerning the highlighting and cutting
+   */
+   hightlightedText: string = '';
+   selectionStartChar?: number;
+   selectionEndChar?: number;
 
   /**
      * Constructor passes in the modal service and the artifact service,
      * initializes Router
+     * @param modalService instance of NgbModal
      * @param artifactDataService instance of ArtifactDataService
+     * @param conflictDataService instance of ConflictDataService
      * @param router instance of Router
      */
-  constructor(private artifactDataService: ArtifactDataService,
+  constructor( private modalService: NgbModal,
+    private artifactDataService: ArtifactDataService,
     private conflictDataService: ConflictDataService,
-    private router: Router) {
+    private labellingDataService: LabellingDataService,
+    private router: Router,
+    private toastCommService: ToastCommService) {
     //Reinitializing the variables
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.routeService = new ReroutingService();
     this.url = this.router.url;
     this.admin = false;
     this.username = '';
+    this.p_id = Number(this.routeService.getProjectID(this.url));
+    this.lt_id = 0;
+    this.a_id = 0;
     this.label_type = '';
     this.label_per_user = {};
     this.users = [];
@@ -63,21 +92,26 @@ export class ConflictResolutionComponent implements OnInit {
    * @trigger on creation of component
    */
   async ngOnInit(): Promise<void> {
+    // Clear the cache of labels
+    this.labels = [];
+    // Clear the cache of labellings
+    this.label_per_user = {};
+    // Clear the cache of users
+    this.users = [];
+
     // Get the ID of the artifact, label type and the project ID
     let ids = this.routeService.getArtifactConflict(this.url)
-    let a_id = Number(ids[0])
-    let lt_id = Number(ids[1])
+    this.a_id = Number(ids[0])
+    this.lt_id = Number(ids[1])
     this.label_type = ids[2]
-    let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Get the artifact data from the backend
-    await this.getArtifact(a_id, p_id)
+    await this.getArtifact(this.a_id, this.p_id)
 
     // Get the labels given by each user
-    await this.getLabelPerUser(p_id, a_id, lt_id)
+    await this.getLabelPerUser(this.p_id, this.a_id, this.lt_id)
 
     // Get the labels in the label type
-    await this.getLabelsByType(p_id, lt_id)
+    await this.getLabelsByType(this.p_id, this.lt_id)
   }
 
   /**
@@ -88,9 +122,9 @@ export class ConflictResolutionComponent implements OnInit {
    * @param p_id the id of the project
    */
   async getArtifact(a_id: number, p_id: number): Promise<void> {
-    //Get an artifact based on given ID and project ID
+    // Get an artifact based on given ID and project ID
     const result = await this.artifactDataService.getArtifact(p_id, a_id);
-    //Assigning the response to the artifact, username (current user) and their admin status
+    // Assigning the response to the artifact, username (current user) and their admin status
     this.artifact = result["result"];
     this.username = result["username"];
     this.admin = result["admin"];
@@ -106,15 +140,17 @@ export class ConflictResolutionComponent implements OnInit {
    * @param lt_id the id of the label type
    */
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<void> {
-    //Get conflict information (users who labelled and ther labels) based on the project ID, artifact ID and label type ID
+    // Get conflict information (users who labelled and ther labels) based on the project ID, artifact ID and label type ID
     const response = await this.conflictDataService.getLabelPerUser(p_id, a_id, lt_id);
-    //Assigning the label given by a user to the entry with the key of their username in label_per_user
-    this.label_per_user = response;
-    //Getting the keys from users
-    this.users = Object.keys(this.label_per_user);
+    
+    // Assigning the label given by a user to the entry with the key of their username in label_per_user
+    this.label_per_user = response
+    for (let labelling in this.label_per_user) {
+      this.users.push(new User(this.label_per_user[labelling]["u_id"], labelling))
+    }    
   }
 
-  
+
   /**
    * Author: Ana-Maria Olteniceanu
    * Gets the labels from a label type given by all users in a given project ID
@@ -126,11 +162,215 @@ export class ConflictResolutionComponent implements OnInit {
     //Get labels from a certain label type
     const response = await this.conflictDataService.getLabelsByType(p_id, lt_id);
     // Add label names to the list of labels
-    let labels = []
-    for(let label of response) {
-      labels.push(label["name"]); 
+    for (let label of response) {
+      this.labels.push(new Label(label["id"], label["name"], label["description"], this.label_type));
     }
-    //Assigning the label names to labels
-    this.labels = labels 
+  }
+
+  /**
+   * Opens modal which contains the create LabelFormComponent.
+   * @trigger user clicks create label button
+   */
+   openCreateForm(): void {
+    let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
+    modal.result.then((data) => {
+      // Clear the cache of labels
+      this.labels = [];
+      // Reinitialize the page
+      this.ngOnInit();
+    });
+  }
+
+  /**
+   * Updates the labelling when the dropdown selected value changes
+   * 
+   * @param user the username of the user who changed their labelling
+   * @param label the name of the label to which the user is changing their labelling
+   */
+  updateLabelling(user: User, label: any): void {
+    // Placeholder for new label value of labelling
+    let selectedLabel: Label;
+    try {
+      // Getting the label from a given name in the list of labels from this label type
+      selectedLabel = this.findLabel(this.labels, label);
+      // Change the labelling in the label_per_user array for user
+      this.label_per_user[user.getUsername()] = {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), 
+                                                "id": selectedLabel.getId(), "u_id": user.getId(), "lt_id": this.lt_id};
+    } catch (error) {
+      // If couldn't find label, show error
+      this.toastCommService.emitChange([false, "Label doesn't exist"]);
+    }   
+    
+  }
+
+  /**
+   * Finds a label object in an array of Labels from a given name
+   * 
+   * @param labels array of labels
+   * @param label the name of the label that needs to be found
+   */
+  findLabel(labels: Label[], label: string): Label {
+    //Running through each label in array and see if the label has the same name as (parameter) "label"
+    for (let eachLabel of labels) {
+      if (eachLabel.getName() == label) {
+        return eachLabel
+      }
+    }
+    //Return error if cannot find the label
+    throw new Error("Label name invalid")
+  }
+
+  /**
+   * Update the labellings in the backend
+   */
+  async updateLabellings(): Promise<void> {
+    try {
+      if (this.admin) {
+        // Send project ID, label type ID, artifact ID and labelling updates to the backend
+        this.labellingDataService.editLabelling(this.p_id, this.a_id, this.label_per_user)
+      }
+      else {
+        let singleUpdate: Record<string, any> = {};
+        singleUpdate[this.username] = this.label_per_user[this.username];
+        // Send project ID, label type ID, artifact ID and labelling updates to the backend
+        this.labellingDataService.editLabelling(this.p_id, this.a_id, singleUpdate)
+      }
+    } 
+    catch (error) {
+      // If not posisble to update, sends an error
+      this.toastCommService.emitChange([false, "Something went wrong! Please try again."]);
+    }
+    // Set to keep track of all current labellings
+    let labelCheck = new Set<string>();
+    // Adding each user's current labelling to the set
+    for (let labelling in this.label_per_user) {
+      labelCheck.add(this.label_per_user[labelling]['name'])
+    }
+    // Checks if the set has only 1 value
+    if(labelCheck.size == 1) {
+      // This means that all labellings have the same label and therefore conflict is resolved
+      // Display success toast
+      this.toastCommService.emitChange([true, "Conflict resolved successfully"]);
+      //Reinitialize user list
+      this.users = [];
+      this.router.navigate(['/project', this.p_id, 'conflict'])
+    }
+    else {
+      // If not, shows an error saying conflict is not solved
+      this.toastCommService.emitChange([false, "Conflict has not been resolved."]);
+    }
+  }
+
+  /**
+   * Function to open the MergeLabelFormComponent modal
+   * 
+   * @trigger user clicks on the merge labels button
+   */
+  async openMerge() {
+    // Open the modal
+    const modalRef = this.modalService.open(MergeLabelFormComponent, {
+      size: 'xl',
+    });
+    modalRef.result.then(() => {
+      // Reinitialize the page
+      this.ngOnInit();
+    });
+  }
+
+  /**
+   * Splitting function, gets text without splitting words and gets start and end char
+   */
+   async split(): Promise<void> {
+    // Get start/end positions of highlight
+    let firstCharacter = this.selectionStartChar! - 1;
+    let lastCharacter = this.selectionEndChar! - 1;
+    // Fix positions to start/end of words that they clip
+    firstCharacter = this.startPosFixer(firstCharacter);
+    lastCharacter = this.endPosFixer(lastCharacter);
+    // Get the text represented by the rounded start and end
+    let splitText = this.artifact?.data.substring(
+      firstCharacter,
+      lastCharacter
+    );
+  
+    // Make request to split
+    let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
+  }
+
+  /**
+ * Function is ran on mouseDown or mouseUp and updates the current selection
+ * of the artifact. If the selection is null or empty, the selection is set
+ * to ""
+ */
+   selectedText(): void {
+    let hightlightedText: Selection | null = document.getSelection();
+    //gets the start and end indices of the highlighted bit
+    let startCharacter: number = hightlightedText?.anchorOffset!;
+    let endCharacter: number = hightlightedText?.focusOffset!;
+    //make sure they in the right order
+    if (startCharacter > endCharacter) {
+      startCharacter = hightlightedText?.focusOffset!;
+      endCharacter = hightlightedText?.anchorOffset!;
+    }
+    //put into global variable
+    this.selectionStartChar = startCharacter;
+    this.selectionEndChar = endCharacter;
+    //this is so the buttons still pop up, idk if we need it so ill ask bartgang
+    if (hightlightedText == null || hightlightedText.toString().length <= 0) {
+      this.hightlightedText = '';
+    } else {
+      this.hightlightedText = hightlightedText.toString();
+    }
+  }
+
+  // Fixes the position of the start character of a word
+  startPosFixer(startPos: number) {
+    // Gets char at start of the word
+    let chart = this.artifact?.data.charAt(startPos);
+    // Checks if it is at the correct position to begin with
+    if (chart == ' ' ) {
+      startPos = startPos + 1
+      return startPos
+    }
+    // Start bound check
+    if (startPos == 0) {
+      return startPos
+    }
+
+    // Else, move until we find the start of a word
+    while (chart != ' ' && startPos > 0) {
+      chart = this.artifact?.data.charAt(startPos);
+      startPos--;
+    }
+
+    // Last adjustmensts for when the text goes too far
+    if (startPos != 0) {
+      startPos++;
+    }
+    return startPos
+
+  }
+
+  // Fixes the position of the start character of a word
+  endPosFixer(endPos: number) {
+    // Gets char at end of the word
+    let chend = this.artifact?.data.charAt(endPos);
+    // See if the last char is correct to begin with
+    if (chend == ' ' || endPos == this.artifact.data.length) {
+      return endPos
+    }
+    // Fix such that the next word is not accidentally selected
+    if (this.artifact?.data.charAt(endPos - 1) == ' ') {
+      endPos--
+      return endPos
+    }
+    // Else, move until we find a space or hit the end of artifact
+    while (chend != ' ' && endPos < this.artifact?.data.length) {
+      chend = this.artifact?.data.charAt(endPos);
+      endPos++;
+    }
+
+    return endPos
   }
 }
