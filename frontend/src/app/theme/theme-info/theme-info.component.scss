@@ -41,7 +41,11 @@ $light-grey-shade: #aaaaaa;
     font-size: 18px;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
-    margin-bottom: 10px;
+}
+
+// Margin for the description input
+#descriptionInput{
+    margin-top: 10px;
 }
 
 // Labels added
@@ -55,7 +59,7 @@ $light-grey-shade: #aaaaaa;
 #allLabelsList{
     padding-top: 10px;
     overflow-y: scroll;
-    height: 20vh;
+    height: 15vh;
 }
 
 // x icon for removing labels
@@ -88,14 +92,14 @@ $light-grey-shade: #aaaaaa;
 #addedSubthemesList{
     padding-top: 10px;
     overflow-y: scroll;
-    height: 20vh;
+    height: 15vh;
 }
 
 //Bottom Half
 #bottomHalf{
     padding-top: 10px;
     padding-left: 0px;
-    max-height: 30vh;
+    max-height: 40vh;
 }
 
 //Add label text
@@ -126,9 +130,11 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Label description header
-#labelDescription{
+#description{
     font-size: 16px;
     font-weight: 450;
+    margin-top: 10px;
+    text-decoration: underline;
 }
 
 // Label Description text container
@@ -148,6 +154,11 @@ p.labelDescriptionText{
     width: 150px;
 }
 
+// Reset button
+.resetButton{
+    width: 75px;
+}
+
 // button outline
 .btn:focus {
     outline: none;
@@ -156,6 +167,7 @@ p.labelDescriptionText{
 
 // Make the subthemes and labels scrollabel
 #divScroll{
+    margin-top: 10px;
     overflow-y: scroll;
     height: 20vh;
 }

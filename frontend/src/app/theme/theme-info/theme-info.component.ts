@@ -8,26 +8,9 @@ import { FormBuilder } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { ToastCommService } from 'app/services/toast-comm.service';
-
-
-//import {Component, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-
-
-//dummy data for labels
-const labels = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
-  'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
-  'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
-  'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
-  'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-  'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island',
-  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Islands', 'Virginia',
-  'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-
-//dummy data for the themes
-const themes = ['American', 'Indian', 'Japanese', 'Chinese','Spanish'];
 
 @Component({
   selector: 'app-theme-info',
@@ -74,14 +57,14 @@ export class ThemeInfoComponent implements OnInit {
   url: string;
   routeService: ReroutingService;
 
-  //highlight label variable
+  // Highlight label variable
   highlightedLabel: string = '';
-  //highlight subtheme variable
+  // Highlight subtheme variable
   highlightedSubtheme: string = "";
 
-  //Selected Labels description
+  // Selected Labels description
   selectedDescriptionLabel: string = '';
-  //Selected Theme description
+  // Selected Theme description
   selectedDescriptionTheme: string = '';
 
   // Labels Added
@@ -98,43 +81,41 @@ export class ThemeInfoComponent implements OnInit {
   // All label names
   allSubThemesNames: string[] = [];
 
-  //model for the search autocomplete forms
+  // Model for the search autocomplete forms
   model: any;
   model1: any;
 
-  //implementation of the searching
+  // Implementation of the searching
   @ViewChild('instance', { static: true })
-  //create autocomplete search instance
+  // Create autocomplete search instance
   instance!: NgbTypeahead;
-  //listeners for different click and focus events
+  // Listeners for different click and focus events
   click$ = new Subject<string>();
   focus1$ = new Subject<string>();
   click1$ = new Subject<string>();
   focus2$ = new Subject<string>();
   click2$ = new Subject<string>();  
 
-  //search on labels to be added
+  // Search on labels to be added
   searchLabel: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.click2$.pipe(filter(() => !this.instance.isPopupOpen()));
     const inputFocus$ = this.focus2$;
 
-    //goes through the array of labels
-    //TODO: replace 'labels' with array of project labels
+    // Goes through the array of labels
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term => (term === '' ? this.allLabelsNames
         : this.allLabelsNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
   }
 
-  //search on themes to be added
+  // Search on themes to be added
   searchTheme: OperatorFunction<string, readonly string[]> = (text1$: Observable<string>) => {
     const debouncedText1$ = text1$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup1$ = this.click1$.pipe(filter(() => !this.instance.isPopupOpen()));
     const inputFocus1$ = this.focus1$;
 
-    //goes through the array of themes
-    //TODO: replace 'themes' with array of project themes
+    // Goes through the array of themes
     return merge(debouncedText1$, inputFocus1$, clicksWithClosedPopup1$).pipe(
       map(term => (term === '' ? this.allSubThemesNames
         : this.allSubThemesNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
@@ -142,11 +123,11 @@ export class ThemeInfoComponent implements OnInit {
   }
  
   constructor(private formBuilder: FormBuilder, 
-    private service: InputCheckService, 
-    private router: Router, 
-    private themeDataService: ThemeDataService, 
-    private labelDataService: LabellingDataService,
-    private toastCommService: ToastCommService) { 
+      private service: InputCheckService, 
+      private router: Router, 
+      private themeDataService: ThemeDataService, 
+      private labelDataService: LabellingDataService,
+      private toastCommService: ToastCommService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -435,17 +416,43 @@ export class ThemeInfoComponent implements OnInit {
     }
   }
 
-  //returns label searchbar text when hitting enter
+  /**
+   * Function to search through all labels
+   */
   onEnterLabel() : void {
     var text = this.labelSearch.value.labelSearch;
-    alert(text)
+    for (let label of this.allLabels){
+      if(label.getName() == text){
+        this.allLabels = [label];
+      }
+    }
+  }
 
+  /**
+   * Function to reset the search of the labels  
+  */
+  resetSearchLabels(){
+    this.get_labels(this.p_id);
   }
   
-  //returns theme searchbar text when hitting enter
+  /**
+   * Function to search through all sub-themes
+   */
   onEnterTheme() : void {
     var text = this.themeSearch.value.themeSearch;
-    alert(text)
+    for (let theme of this.allSubThemes){
+      if(theme.getName() == text){
+        this.allSubThemes = [theme];
+      }
+    }
+  }
+
+  /**
+   * Function to reset the search of the sub themes
+   */
+  resetSearchThemes(){
+    // Get all sub-themes again
+    this.get_themes_without_parents(this.p_id, this.t_id);
   }
 
 }

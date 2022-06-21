@@ -43,10 +43,12 @@
                         Description
                     </div>
                     <!-- Input for the description -->
-                    <form [formGroup]="themeForm">
-                        <textarea class="form-control" placeholder="Description" id="descriptionArea"
-                            formControlName="description"></textarea>
-                    </form>
+                    <div id="descriptionInput">
+                        <form [formGroup]="themeForm">
+                            <textarea class="form-control" placeholder="Description" id="descriptionArea"
+                                formControlName="description"></textarea>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,13 +107,21 @@
             </div>
             <div class="row">
                 <!-- Add Labels Left side -->
+                <!-- Row for searching -->
                 <div class="row">
-                    <form [formGroup]="labelSearch">
-                        <label for="typeahead-focus">Search for a label:</label>
-                        <input id="typeahead-focus-label" formControlName="labelSearch" type="text" name="label" class="form-control" [(ngModel)]="model"
-                            [ngbTypeahead]="searchLabel" (focus)="focus2$.next($any($event).target.value)"
-                            (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterLabel()"/>
-                    </form>
+                    <!-- Column for search bar -->
+                    <div class="col">
+                        <form [formGroup]="labelSearch">
+                            <label for="typeahead-focus">Search for a label:</label>
+                            <input id="typeahead-focus-label" formControlName="labelSearch" type="text" name="label" class="form-control" [(ngModel)]="model"
+                                [ngbTypeahead]="searchLabel" (focus)="focus2$.next($any($event).target.value)"
+                                (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterLabel()"/>
+                        </form>
+                    </div>
+                    <!-- Column for reset button -->
+                    <div class="col-3 align-self-end">
+                        <button (click)="resetSearchLabels()" class="btn btn-secondary resetButton">Reset</button>
+                    </div>
                 </div>
                 <div class="col-sm-6">
                     <!-- Table for showing all labels -->
@@ -140,7 +150,7 @@
                 </div>
                 <!-- Add Labels right side Description part -->
                 <div class="col-sm-6" *ngIf="allLabels.length != 0">
-                    <p id="labelDescription">Description:</p>
+                    <p id="description">Label description:</p>
                     <div id="descriptionScroll">
                         <div>
                             <p class="labelDescriptionText">{{selectedDescriptionLabel}}</p>
@@ -158,13 +168,20 @@
                 Add Sub-Themes
             </div>
             <div class="row">
+                <!-- Row for searching -->
                 <div class="row">
-                    <form [formGroup]="themeSearch">
-                        <label for="typeahead-focus">Search for a theme:</label>
-                        <input id="typeahead-focus-theme" formControlName="themeSearch" type="text" name="theme" class="form-control" [(ngModel)]="model1"
-                            [ngbTypeahead]="searchTheme" (focus)="focus1$.next($any($event).target.value)"
-                            (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterTheme()" />
-                    </form>
+                    <div class="col">
+                        <form [formGroup]="themeSearch">
+                            <label for="typeahead-focus">Search for a theme:</label>
+                            <input id="typeahead-focus-theme" formControlName="themeSearch" type="text" name="theme" class="form-control" [(ngModel)]="model1"
+                                [ngbTypeahead]="searchTheme" (focus)="focus1$.next($any($event).target.value)"
+                                (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterTheme()" />
+                        </form>
+                    </div>
+                    <!-- Column for reset button -->
+                    <div class="col-3 align-self-end">
+                        <button (click)="resetSearchThemes()" class="btn btn-secondary resetButton">Reset</button>
+                    </div>
                 </div>
                 <div class="col-sm-6">
                     <!-- Table for showing all Sub-Themes -->
@@ -195,7 +212,7 @@
 
                 <!-- Add themes right side Description part -->
                 <div class="col-sm-6" *ngIf="allSubThemes.length != 0">
-                    <p id="labelDescription">Description:</p>
+                    <p id="description">Theme description:</p>
                     <div id="descriptionScroll">
                         <div>
                             <p class="labelDescriptionText">{{selectedDescriptionTheme}}</p>
@@ -211,7 +228,7 @@
         <div class="col-6">
         </div>
         <!--Create/Cancel buttons-->
-        <div class="col-6 align-self-end" id="createCancelButtons">
+        <div class="col-6 align-self-end">
             <div>
                 <!-- Create button -->
                 <button class="form-group btn btn-primary float-end" (click)="createTheme()"
