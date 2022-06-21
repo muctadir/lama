@@ -1,7 +1,7 @@
 // Veerle Furst
 // Jarl Jansen
 
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import axios from 'axios';
 import { InputCheckService } from 'app/services/input-check.service';
@@ -19,13 +19,13 @@ import { environment } from 'environments/environment';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   /* Login form, data will be modified when user enters data in the login forms */
   loginForm = this.formBuilder.group({
     username: '',
-    password: ''
+    password: '',
   });
 
   /**
@@ -37,11 +37,13 @@ export class LoginComponent {
    *
    * @trigger component loaded
    */
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private formBuilder: FormBuilder,
     private service: InputCheckService,
     private route: Router,
     private toastCommService: ToastCommService,
-    private accountInfoService: AccountInfoService) { }
+    private accountInfoService: AccountInfoService
+  ) {}
 
   /**
    * Checks whether the input is valid, if it is valid, removes error message and calls login function
@@ -51,14 +53,18 @@ export class LoginComponent {
    *
    * @modifies this.errorMsg
    */
-  loginSubmit() : void {
+  loginSubmit(): void {
     // Checks input
-    let not_empty = this.service.checkFilled(this.loginForm.value.username) &&
+    let not_empty =
+      this.service.checkFilled(this.loginForm.value.username) &&
       this.service.checkFilled(this.loginForm.value.password);
 
     // Checks input
     if (!not_empty) {
-      this.toastCommService.emitChange([false, "Please fill in a username and password"]);
+      this.toastCommService.emitChange([
+        false,
+        'Please fill in a username and password',
+      ]);
       return;
     }
     this.checkLogin();
@@ -74,13 +80,29 @@ export class LoginComponent {
    *
    * @modifies errorMsg, route
    */
-   async checkLogin() : Promise<void> {
+  checkLogin(): void {
     // Creates the object with the user filled info
     let loginInformation = {
       username: this.loginForm.value.username,
-      password: this.loginForm.value.password
-    }
+      password: this.loginForm.value.password,
+    };
 
-    await this.accountInfoService.loginUser(loginInformation);
+    // Let the backend check login
+    axios
+      .post(`${environment.apiURL}/auth/login`, loginInformation)
+      .then((response) => {
+        // Gets the token from the response header
+        let token = response.headers['u_id_token'];
+
+        // Stores the session token, can get the token using sessionStorage.getItem('ses_token');
+        sessionStorage.setItem('ses_token', token);
+
+        // Navigates to the home page
+        this.route.navigate(['/home']);
+      })
+      .catch((error) => {
+        // Print the error message: "Invalid username or password"
+        this.toastCommService.emitChange([false, error.response.data]);
+      });
   }
 }
