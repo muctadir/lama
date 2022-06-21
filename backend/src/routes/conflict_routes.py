@@ -271,7 +271,7 @@ def conflict_management_page(*, user, membership):
     return make_response(project_conflicts(p_id, membership.admin, user.id))
 """
 Author: Linh Nguyen & Ana-Maria Olteniceanu
-Route to send labelling made by a spcefic user concerning a certain conflict to the frontend
+Route to send labelling made by a specific user concerning a certain conflict to the frontend
 @returns list of dictionaries of the form:
 {
     id: label ID
