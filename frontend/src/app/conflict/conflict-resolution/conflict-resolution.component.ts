@@ -51,9 +51,9 @@ export class ConflictResolutionComponent implements OnInit {
   /**
    * Information concerning the highlighting and cutting
    */
-   hightlightedText: string = '';
-   selectionStartChar?: number;
-   selectionEndChar?: number;
+  hightlightedText: string = '';
+  selectionStartChar?: number;
+  selectionEndChar?: number;
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -63,7 +63,7 @@ export class ConflictResolutionComponent implements OnInit {
      * @param conflictDataService instance of ConflictDataService
      * @param router instance of Router
      */
-  constructor( private modalService: NgbModal,
+  constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
     private conflictDataService: ConflictDataService,
     private labellingDataService: LabellingDataService,
@@ -142,12 +142,12 @@ export class ConflictResolutionComponent implements OnInit {
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<void> {
     // Get conflict information (users who labelled and ther labels) based on the project ID, artifact ID and label type ID
     const response = await this.conflictDataService.getLabelPerUser(p_id, a_id, lt_id);
-    
+
     // Assigning the label given by a user to the entry with the key of their username in label_per_user
     this.label_per_user = response
     for (let labelling in this.label_per_user) {
       this.users.push(new User(this.label_per_user[labelling]["u_id"], labelling))
-    }    
+    }
   }
 
 
@@ -171,7 +171,7 @@ export class ConflictResolutionComponent implements OnInit {
    * Opens modal which contains the create LabelFormComponent.
    * @trigger user clicks create label button
    */
-   openCreateForm(): void {
+  openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modal.result.then((data) => {
       // Clear the cache of labels
@@ -187,78 +187,72 @@ export class ConflictResolutionComponent implements OnInit {
    * @param user the username of the user who changed their labelling
    * @param label the name of the label to which the user is changing their labelling
    */
-  updateLabelling(user: User, label: any): void {
-    // Placeholder for new label value of labelling
-    let selectedLabel: Label;
-    try {
-      // Getting the label from a given name in the list of labels from this label type
-      selectedLabel = this.findLabel(this.labels, label);
-      // Change the labelling in the label_per_user array for user
-      this.label_per_user[user.getUsername()] = {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), 
-                                                "id": selectedLabel.getId(), "u_id": user.getId(), "lt_id": this.lt_id};
-    } catch (error) {
-      // If couldn't find label, show error
-      this.toastCommService.emitChange([false, "Label doesn't exist"]);
-    }   
-    
-  }
+  updateLabelling(user: User, label: string): void {
+    // Get the updated labelling
+    let response = this.labellingDataService.updateLabelling(
+      user, label, this.labels, this.lt_id)
 
-  /**
-   * Finds a label object in an array of Labels from a given name
-   * 
-   * @param labels array of labels
-   * @param label the name of the label that needs to be found
-   */
-  findLabel(labels: Label[], label: string): Label {
-    //Running through each label in array and see if the label has the same name as (parameter) "label"
-    for (let eachLabel of labels) {
-      if (eachLabel.getName() == label) {
-        return eachLabel
-      }
+    // If the updated labelling was received
+    if (response != null) {
+      // Update the labelling
+      this.label_per_user[user.getUsername()] = response;
     }
-    //Return error if cannot find the label
-    throw new Error("Label name invalid")
   }
 
   /**
    * Update the labellings in the backend
    */
   async updateLabellings(): Promise<void> {
+    // Record that holds the labellings in the format required by the backend
+    let labels_formatted: Record<string, any> = {}
+
+    // Format each user's labellings
+    for (let user in this.label_per_user) {
+      labels_formatted[user] = {};
+      labels_formatted[user][this.label_type] = this.label_per_user[user];
+    }
+
+    // Make call to the backend to store set of updated labellings
     try {
-      if (this.admin) {
-        // Send project ID, label type ID, artifact ID and labelling updates to the backend
-        this.labellingDataService.editLabelling(this.p_id, this.a_id, this.label_per_user)
-      }
-      else {
-        let singleUpdate: Record<string, any> = {};
-        singleUpdate[this.username] = this.label_per_user[this.username];
-        // Send project ID, label type ID, artifact ID and labelling updates to the backend
-        this.labellingDataService.editLabelling(this.p_id, this.a_id, singleUpdate)
-      }
-    } 
-    catch (error) {
-      // If not posisble to update, sends an error
-      this.toastCommService.emitChange([false, "Something went wrong! Please try again."]);
+      await this.labellingDataService.updateLabellings(
+        this.admin, this.p_id, this.a_id, this.username, labels_formatted)
     }
-    // Set to keep track of all current labellings
-    let labelCheck = new Set<string>();
-    // Adding each user's current labelling to the set
-    for (let labelling in this.label_per_user) {
-      labelCheck.add(this.label_per_user[labelling]['name'])
+    // If there are errors during the call, the stop the function
+    catch {
+      return
     }
+
     // Checks if the set has only 1 value
-    if(labelCheck.size == 1) {
+    if (this.oneLabel()) {
       // This means that all labellings have the same label and therefore conflict is resolved
       // Display success toast
       this.toastCommService.emitChange([true, "Conflict resolved successfully"]);
-      //Reinitialize user list
+      // Reinitialize user list
       this.users = [];
+      // Reroute to the conflict page
       this.router.navigate(['/project', this.p_id, 'conflict'])
     }
     else {
       // If not, shows an error saying conflict is not solved
       this.toastCommService.emitChange([false, "Conflict has not been resolved."]);
     }
+  }
+
+  /**
+   * Function that checks how many labels have been given for the current label type
+   * @returns true if there is only one label given, false otherwise
+   */
+  oneLabel(): boolean {
+    // Set to keep track of all current labellings
+    let labelCheck = new Set<string>();
+    // Adding each user's current labelling to the set
+    for (let labelling in this.label_per_user) {
+      labelCheck.add(this.label_per_user[labelling]['name'])
+    }
+
+    // Return true if there is only one label givem
+    // False otherwise
+    return labelCheck.size == 1
   }
 
   /**
@@ -280,7 +274,7 @@ export class ConflictResolutionComponent implements OnInit {
   /**
    * Splitting function, gets text without splitting words and gets start and end char
    */
-   async split(): Promise<void> {
+  async split(): Promise<void> {
     // Get start/end positions of highlight
     let firstCharacter = this.selectionStartChar! - 1;
     let lastCharacter = this.selectionEndChar! - 1;
@@ -292,7 +286,7 @@ export class ConflictResolutionComponent implements OnInit {
       firstCharacter,
       lastCharacter
     );
-  
+
     // Make request to split
     let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
     this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
@@ -303,7 +297,7 @@ export class ConflictResolutionComponent implements OnInit {
  * of the artifact. If the selection is null or empty, the selection is set
  * to ""
  */
-   selectedText(): void {
+  selectedText(): void {
     let hightlightedText: Selection | null = document.getSelection();
     //gets the start and end indices of the highlighted bit
     let startCharacter: number = hightlightedText?.anchorOffset!;
@@ -329,7 +323,7 @@ export class ConflictResolutionComponent implements OnInit {
     // Gets char at start of the word
     let chart = this.artifact?.data.charAt(startPos);
     // Checks if it is at the correct position to begin with
-    if (chart == ' ' ) {
+    if (chart == ' ') {
       startPos = startPos + 1
       return startPos
     }

@@ -35,6 +35,7 @@
         </div>
     </div>
 
+    <div class="infoDiv">
     <!-- Bottom part of page-->
     <div class="row">
         <!--Labelled By text-->
@@ -42,11 +43,11 @@
         </div>
         <div class="col-1 d-flex justify-content-center" id="pageTitle">
             <!-- When clicked calls openThemeHistory function -->
-            <em class="bi bi-clock-history" id="history-hover" (click)="openArtifactHistory()" ngbTooltip="History"></em>
+            <em class="bi bi-clock-history" id="history-hover" (click)="openArtifactHistory()"></em>
         </div>
 
         <!--User Labels-->
-        <div class="allUserLabels">
+        <div>
             <div class="col-12">
                 <!--User + labels given per label type + Remark-->
                 <div *ngFor="let user of users">
@@ -54,7 +55,7 @@
                         <!--Labeller Name-->
                         <div class="row">
                             <div class="col-sm-12">
-                                <p class="float-start" *ngIf="users.length > 0" id="labeller">Labelled by {{user.username}}</p>
+                                <p class="float-start" *ngIf="users.length > 0" id="labeller">Labelled by {{user.getUsername()}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -72,27 +73,28 @@
                                             <!--Dropdown with label given and labels by label type-->
                                             <div class="col-sm-8">
                                                 <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
-                                                <select class="form-control" name="labels" id="formControl"
-                                                    [disabled]="!admin && username != user.username">
+                                                <select class="form-control" name="labels" id="formControl" #changedLabel
+                                                    [disabled]="!admin && username != user.getUsername()"
+                                                    (change)="updateLabelling(user, changedLabel.value, labeltype.getId(), labeltype.getLabels())">
                                                     <div>
                                                         <!-- All labels from the label type are dropdown options -->
                                                         <!-- User's given label is the default value of the dropdown -->
                                                         <option *ngFor="let labels of labeltype.getLabels()"
-                                                            [selected]="labels.getName() == userLabels[user.username][labeltype.getName()].labelGiven">
+                                                            [selected]="labels.getName() == userLabels[user.getUsername()][labeltype.getName()].name">
                                                             {{labels.getName()}}
                                                         </option>
                                                     </div>
                                                     <!-- All labels from the label type are dropdown options -->
                                                     <!-- User's given label is the default value of the dropdown -->
                                                     <option *ngFor="let labels of labeltype.getLabels()"
-                                                        [selected]="labels.getName() == userLabels[user.username][labeltype.getName()].labelGiven">
+                                                        [selected]="labels.getName() == userLabels[user.getUsername()][labeltype.getName()].name">
                                                         {{labels.getName()}}
                                                     </option>
                                                 </select>
                                                 <!--Label Remark-->
                                                 <div class="col align-self-start">
                                                     <p id="remarksText">Remark:
-                                                        {{userLabels[user.username][labeltype.getName()].labelRemark}}
+                                                        {{userLabels[user.getUsername()][labeltype.getName()].labelRemark}}
                                                     </p>
                                                 </div>
                                             </div>
@@ -110,5 +112,16 @@
                 </div>
             </div>
         </div>
+        <!-- Back and Edit Buttons -->
+        <div>
+            <div>
+                <!-- Save button -->
+                <button class="btn btn-secondary float-end" id="btn-save"
+                (click)="updateLabellings()">
+                Save
+            </button>
+            </div>
+        </div>
+    </div>
     </div>
 </div>

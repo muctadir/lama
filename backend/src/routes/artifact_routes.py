@@ -330,20 +330,30 @@ def __aggregate_labellings(artifact):
     if len(labellings) > 0:
         # For each labelling
         for labelling in labellings:
-            # Get the username of the user who made it
-            user = labelling.user.username
+            # Get the the user who made the labelling
+            user = labelling.user
 
             # What to add to result
             addition = {
-                'labelGiven': labelling.label.name,
-                'labelRemark': labelling.remark
+                # Name if the added label
+                'name': labelling.label.name,
+                # The remark associated with the labelling
+                'labelRemark': labelling.remark,
+                # The id of the user who made the labelling
+                'u_id': user.id,
+                # The label id of the label
+                'id': labelling.l_id,
+                # The description of the label
+                'description': labelling.label.description,
+                # The label type id of the label
+                'lt_id': labelling.lt_id
             }
 
             # If the user is not in result, create an entry in result for them
-            if user not in result:
-                result[user] = {}
+            if user.username not in result:
+                result[user.username] = {}
             # Put the addition in result, under the right user and the right label type
-            result[user][labelling.label_type.name] = addition
+            result[user.username][labelling.label_type.name] = addition
         return result
         
 @artifact_routes.route("/randomArtifact", methods=["GET"])

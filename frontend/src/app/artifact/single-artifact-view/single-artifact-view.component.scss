@@ -50,11 +50,7 @@
     background: #38474e; 
     border-radius: 10px;
 }
-//"Labelled by" section
-div.allUserLabels{
-    height: 50vh;
-    overflow-y: scroll
-}
+
 /*TODO: For some reason the variable defined in the root stylesheet is not working*/
 .labelTypeDescription {
     border-left: 2px solid #ed5a06;
@@ -108,4 +104,16 @@ div.allUserLabels{
     height:1px; 
     width:80%; 
     border-width:0px;
+}
+//Save button
+.btn {
+    background-color: #ed5a06;
+    border-color: #ed5a06;
+    margin: 15px;
+}
+//Labelled by Div
+.infoDiv {
+    height: 55vh;
+    overflow-y: scroll;
+    overflow-x: hidden
 }

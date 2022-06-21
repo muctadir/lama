@@ -125,12 +125,25 @@ def edit_labelling(*, user, membership):
         return make_response('Bad Request', 400)
     
     #Array to hold updated labellings
-    updated_labellings = [
-        {'u_id': args['labellings'][key]['u_id'],'a_id': args['a_id'], 'lt_id': args['labellings'][key]['lt_id'],
-                    'l_id': args['labellings'][key]['id']} for key in args['labellings']
-    ]
+    updated_labellings = []
 
-    print(updated_labellings)
+    # Get a list of labeltypes in the project
+    label_types = db.session.scalars(
+        select(LabelType.name).where(LabelType.p_id==args['p_id'])
+    ).all()
+
+    # For each label type, fo through all labellings given and add them to the list
+    for lt in label_types:
+        try: 
+            updated_labellings.extend([
+                {'u_id': args['labellings'][key][lt]['u_id'],'a_id': args['a_id'], 'lt_id': args['labellings'][key][lt]['lt_id'],
+                        'l_id': args['labellings'][key][lt]['id']} for key in args['labellings']
+        ])
+        # In the case of a key error, then there were no labellings provided for a certain label type
+        # Thus continue with the rest of the label types
+        except KeyError:
+            continue
+
     # Get project with supplied ID
     project = db.session.get(Project, args['p_id'])
     if not project:
