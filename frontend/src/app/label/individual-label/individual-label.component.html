@@ -55,7 +55,7 @@
                 Themes
             </div>
             <div *ngFor="let theme of label.getThemes()" class="labelThemes">
-                <p>{{theme.getName()}}</p>
+                <p (click)="reRouterTheme(theme.getId())" id="clickable">{{theme.getName()}}</p>
             </div>
         </div>
     </div>

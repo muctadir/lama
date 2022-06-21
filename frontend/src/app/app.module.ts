@@ -47,6 +47,7 @@ import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 // History imports
 import { HistoryComponent } from './modals/history/history.component';
+import { ThemeVisualComponent } from './theme/theme-visual/theme-visual.component';
 // Toast imports
 import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
 import { ToastsContainer } from './modals/toast-global/toast-container.component';
@@ -100,9 +101,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ThemeManagementComponent,
     SingleThemeViewComponent,
     ThemeInfoComponent,
-    SingleThemeViewComponent,
-    ModerationComponent,
+    SingleThemeViewComponent,    
+    ThemeVisualComponent,
     DeleteThemeComponent,
+    // Other components
+    ModerationComponent,
     HistoryComponent,
     ToastGlobalComponent,
     ToastsContainer,

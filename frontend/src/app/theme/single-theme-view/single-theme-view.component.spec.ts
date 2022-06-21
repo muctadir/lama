@@ -2,7 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbAccordion } from '@ng-bootstrap/ng-bootstrap';
+import { StringArtifact } from 'app/classes/stringartifact';
 import { Theme } from 'app/classes/theme';
+import { Label } from 'app/classes/label';
 import { SingleThemeViewComponent } from './single-theme-view.component';
 
 describe('SingleThemeViewComponent', () => {
@@ -134,6 +136,44 @@ describe('SingleThemeViewComponent', () => {
     // Checks whether the function works properly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
+  });
+
+  // Test the sortArtifacts function
+  it('Tests the sortArtifacts function', () => {
+    // Calls the sortArtifacts function and calls a fake
+    spyOn(component, "sortArtifacts").and.callFake( () => {
+      // Create fake artifacts
+      let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
+      let artifact2 = new StringArtifact(2, "Identifier 2", "Data 2");
+      let artifact3 = new StringArtifact(3, "Identifier 3", "Data 3");
+      // Make an array of artifacts that is unsorted
+      let artifacts = [artifact3, artifact1, artifact2]
+      if (artifacts != undefined){
+        // Sort the artifacts
+        artifacts.sort((a,b) => a.getId() - b.getId());
+      }
+      // Set the artifacts of the label with the sorted array
+      expect(artifacts).toEqual([artifact1, artifact2, artifact3])
+    })
+  });
+
+  // Test the getNonDoubleArtifacts function
+  it('Tests the getNonDoubleArtifacts function', () => {
+    // Calls the getNonDoubleArtifacts function and calls a fake
+    spyOn(component, "getNonDoubleArtifacts").and.callFake( (label: Label): StringArtifact[] => {
+      // Create fake artifact
+      let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
+      // Make an array of artifacts that is unsorted
+      let artifacts = [artifact1, artifact1];
+      if(artifacts != undefined){
+        // Remove the duplicates from the list
+        return Array.from(artifacts.reduce((m, t) => m.set(t.getId(), t), new Map()).values());
+      }
+      // Set the artifacts of the label with the sorted array
+      expect(artifacts).toEqual([artifact1]);
+      // Return array
+      return [];
+    })
   });
 
 });

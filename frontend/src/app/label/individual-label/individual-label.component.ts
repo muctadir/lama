@@ -140,6 +140,16 @@ export class IndividualLabelComponent {
   }
 
   /**
+   * Reroutes to the clicked theme
+   *
+   * @trigger theme name is pressed
+   */
+  reRouterTheme(id: number): void {
+    // Changes the route accordingly
+    this.router.navigate(['/project', this.p_id, 'singleTheme', id]);
+  }
+
+  /**
    * Opens modal to edit label
    */
   openEdit() {
