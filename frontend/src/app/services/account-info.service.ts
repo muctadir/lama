@@ -170,8 +170,8 @@ export class AccountInfoService {
 
   async loginUser(user: Record<string, any>): Promise<any> {
     try {
-      await this.requestHandler.post('auth/login', user, false);
-    } catch (e) {
+      return this.requestHandler.post('auth/login', user, false);
+    } catch (e: any) {
       throw e;
     }
   }
