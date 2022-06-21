@@ -20,6 +20,8 @@ export class AccountComponent {
   /* Error message that is displayed to the user */
   errorMsg: string = "";
 
+  constructor(private accountService: AccountInfoService) {}
+
   /**
    * Calls function responsible for getting the user data from the backend
    * 
@@ -49,10 +51,8 @@ export class AccountComponent {
    * @modifies user
    */
   async getInformation(){
-    let accountService = new AccountInfoService();
-
     try {
-      this.user = await accountService.userData();
+      this.user = await this.accountService.userData();
       this.errorMsg = "";
     } catch(e) {
       this.errorMsg = "An error occured when requesting the server for user data.";

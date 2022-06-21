@@ -4,6 +4,12 @@ $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
 
+#main-cont {
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 // Page Header container
 #titleRow {
     padding-bottom: 20px;

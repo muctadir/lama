@@ -61,6 +61,9 @@ svg.bi.bi-plus {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
 }
 
 #tableRow {

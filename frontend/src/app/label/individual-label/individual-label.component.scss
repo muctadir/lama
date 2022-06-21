@@ -6,6 +6,12 @@ p.header{
     padding-top: 10px;
 }
 
+#main-cont {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 // Subtitle
 .subTitle {
     padding-top: 10px;

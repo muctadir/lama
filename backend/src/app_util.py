@@ -115,7 +115,7 @@ def login_required(f):
         # Check that header for token is provided
         u_id_token = request.headers.get('u_id_token')
         if u_id_token is None:
-            return make_response('1 Unauthorized', 401)
+            return make_response('Authentication token not provided', 401)
         try:
             # Decode the token
             u_id = decode(u_id_token, app.secret_key, algorithms=['HS256'])['u_id_token']
@@ -123,10 +123,10 @@ def login_required(f):
             user = db.session.get(User, u_id)
             # Check to see if user exists
             if not user:
-                return make_response('2 Unauthorized', 401)
+                return make_response('User does not exist', 401)
             # Checks whether the user account is approved
             if user.status != UserStatus.approved:
-                return make_response('Unauthorized', 401)
+                return make_response('User account has been deactivated', 401)
             # Add the found user as a keyword argument
             # Note, this means every function decorated with this must have user as an argument
             if 'user' in getfullargspec(f).kwonlyargs:

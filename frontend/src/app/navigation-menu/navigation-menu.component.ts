@@ -3,7 +3,8 @@ import { Component, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutComponent } from 'app/modals/logout/logout.component';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-navigation-menu',
@@ -44,7 +45,9 @@ export class NavigationMenuComponent {
    * @trigger when the route changes
    * @modifies page 
    */
-  constructor(private router: Router, private modalService: NgbModal) {
+  constructor(private router: Router, 
+    private toastCommService: ToastCommService, 
+    private modalService: NgbModal) {
     // Ensures that the currently highlighted icon is correct
     this.evalURL(this.router.url);
 
@@ -120,12 +123,28 @@ export class NavigationMenuComponent {
   }
 
   /**
-   * Opens the logout modal
+   * Opens the confirm modal and log outs
    * 
    * @trigger logout button clicked
    */
   openLogout() : void {
-    this.modalService.open(LogoutComponent, {});
+    // opens logout modal
+    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+
+      // Listens for an event emitted by the modal
+    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+      // If a confirmEvent = true is emitted we delete the user
+      if($e) {
+        // Drops the session token
+        sessionStorage.removeItem('ses_token');
+
+        // Navigates to the login page
+        this.router.navigate(['/login'])
+
+        // Logged out popup
+        this.toastCommService.emitChange([true, "Logged out successfully"]);
+      }
+    })
   }
 
 }
