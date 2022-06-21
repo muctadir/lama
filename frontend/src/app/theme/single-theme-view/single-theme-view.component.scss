@@ -9,6 +9,12 @@ $light-grey-shade: #aaaaaa;
     padding-bottom: 20px;
 }
 
+// Container of the whole page
+#containerBody{
+    height: 100vh;
+    overflow-y: scroll;
+}
+
 // Page Title
 #pageTitle {
     font-size: 35px;
@@ -154,16 +160,10 @@ $light-grey-shade: #aaaaaa;
     border-radius: 10px;
 }
 
-//Table Scroll
-#tableScroll {
-    min-height: 50vh;
-    overflow-y: scroll;
-}
-
 // Scrolling for the accordion
 #accordionScroll {
     overflow-y: scroll;
-    height: 25vh;
+    height: 35vh;
 }
 
 // Edit Button

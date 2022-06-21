@@ -2,7 +2,7 @@
 <!-- @author: Veerle Furst -->
 
 <!-- big container -->
-<div class="container-fluid min-vh-100 d-flex flex-column">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="containerBody">
 
     <!-- Page Header -->
     <div class="row" id="titleRow">
@@ -71,7 +71,7 @@
     </div>
 
     <!--Bottom Half-->
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center bottomHalf">
         <div class="col-12">
             <!--Table to display labels and their artifacts TODO add to style sheet-->
             <table class="table table-borderless">
@@ -91,7 +91,7 @@
                                     <ngb-panel title="{{label.getName()}}">
                                         <ng-template ngbPanelContent>
                                             <!--Artifacts of label-->
-                                            <ngb-accordion *ngFor="let artifact of label.getArtifacts()" #acc="ngbAccordion" activeIds="ngb-panel-1">
+                                            <ngb-accordion *ngFor="let artifact of getNonDoubleArtifacts(label)" #acc="ngbAccordion" activeIds="ngb-panel-1">
                                                 <ngb-panel title="Artifact #{{artifact.getId()}}">
                                                     <!--Artifact Content-->
                                                     <ng-template ngbPanelContent>
