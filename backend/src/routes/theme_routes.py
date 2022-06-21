@@ -244,14 +244,15 @@ def create_theme(*, user):
     db.session.add(theme)
     # Flush updates the id of the theme object
     db.session.flush()
-    # Record the creation of this theme in the theme changelog
-    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
     make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
 
     # Make the labels the labels of the created theme
     make_labels(theme, args["labels"], args['p_id'], user.id)
+    
+    # Record the creation of this theme in the theme changelog
+    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Create the project
     try:
