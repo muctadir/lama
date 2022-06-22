@@ -6,6 +6,9 @@ import { EventEmitter } from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { LabellingDataService } from 'app/services/labelling-data.service';
+import { ReroutingService } from 'app/services/rerouting.service';
+import { Router } from '@angular/router';
 
 const test = ["soup", "sour", "ass"]
 
@@ -31,6 +34,8 @@ export class IndividualLabellingForm implements OnInit {
 
   model: any;
 
+  labels: Array<Label> = [];
+  allLabelsNames: string[] = [];
 
   // Implementation of the searching
   @ViewChild('instance', { static: true })
@@ -47,9 +52,13 @@ export class IndividualLabellingForm implements OnInit {
     const inputFocus$ = this.focus$;
 
     // Goes through the array of labels
+    // return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+    //   map(term => (term === '' ? test
+    //     : test.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    // );
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term => (term === '' ? test
-        : test.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+      map(term => (term === '' ? this.allLabelsNames
+        : this.allLabelsNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
   }
 
@@ -57,7 +66,10 @@ export class IndividualLabellingForm implements OnInit {
    * Constructor which:
    * 1. Creates a label form
    */
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, 
+    private labelDataService: LabellingDataService,
+    private reroutingService: ReroutingService,
+    private router: Router) {
     this.labelForm = this.formBuilder.group({
       labelType: [undefined, [Validators.required]],
       label: [undefined, [Validators.required]],
@@ -69,7 +81,10 @@ export class IndividualLabellingForm implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Gets the data
+    await this.getLabels();
+
     // Reset the label form
     this.labelForm.reset()
     this.selectedDesc = undefined;
@@ -95,7 +110,40 @@ export class IndividualLabellingForm implements OnInit {
     this.parentForm?.push(this.labelForm);
   }
 
-  onEnterLabel() {
-    alert("poop")
+  // onEnterLabel() {
+  //   alert("poop")
+  // }
+
+  async getLabels() {
+    let p_id = this.reroutingService.getProjectID(this.router.url);
+    let labels = await this.labelDataService.getLabelTypesWithLabels(parseInt(p_id));
+
+    for(let label in labels) {
+      if (labels[label].getId() == this.labelType?.getId()){
+        this.labels = labels[label].getLabels();
+      }
+    }
+
+    this.allLabelsNames = [];
+    for(let label in this.labels) {
+      this.allLabelsNames.push(this.labels[label].getName());
+    }
   }
+
+  /**
+   * Function to search through all labels
+   */
+   async onEnterLabel() : Promise<void> {
+    await this.getLabels();
+    var text = this.labelSearch.value.labelSearch;
+    for (let label of this.labels){
+      if(label.getName() == text){
+        this.labels = [label];
+      }
+    }
+
+    console.log(this.labels);
+  }
+
+
 }

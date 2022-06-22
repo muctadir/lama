@@ -118,10 +118,6 @@
                                 (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterLabel()"/>
                         </form>
                     </div>
-                    <!-- Column for reset button -->
-                    <div class="col-3 align-self-end">
-                        <button (click)="resetSearchLabels()" class="btn btn-secondary resetButton">Reset</button>
-                    </div>
                 </div>
                 <div class="col-sm-6">
                     <!-- Table for showing all labels -->
@@ -177,10 +173,6 @@
                                 [ngbTypeahead]="searchTheme" (focus)="focus1$.next($any($event).target.value)"
                                 (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterTheme()" />
                         </form>
-                    </div>
-                    <!-- Column for reset button -->
-                    <div class="col-3 align-self-end">
-                        <button (click)="resetSearchThemes()" class="btn btn-secondary resetButton">Reset</button>
                     </div>
                 </div>
                 <div class="col-sm-6">

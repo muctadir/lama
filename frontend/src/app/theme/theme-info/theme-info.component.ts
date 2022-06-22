@@ -419,7 +419,8 @@ export class ThemeInfoComponent implements OnInit {
   /**
    * Function to search through all labels
    */
-  onEnterLabel() : void {
+  async onEnterLabel() : Promise<void> {
+    await this.get_labels(this.p_id);
     var text = this.labelSearch.value.labelSearch;
     for (let label of this.allLabels){
       if(label.getName() == text){
@@ -427,32 +428,18 @@ export class ThemeInfoComponent implements OnInit {
       }
     }
   }
-
-  /**
-   * Function to reset the search of the labels  
-  */
-  resetSearchLabels(){
-    this.get_labels(this.p_id);
-  }
   
   /**
    * Function to search through all sub-themes
    */
-  onEnterTheme() : void {
+  async onEnterTheme() : Promise<void> {
+    await this.get_themes_without_parents(this.p_id, this.t_id);
     var text = this.themeSearch.value.themeSearch;
     for (let theme of this.allSubThemes){
       if(theme.getName() == text){
         this.allSubThemes = [theme];
       }
     }
-  }
-
-  /**
-   * Function to reset the search of the sub themes
-   */
-  resetSearchThemes(){
-    // Get all sub-themes again
-    this.get_themes_without_parents(this.p_id, this.t_id);
   }
 
 }

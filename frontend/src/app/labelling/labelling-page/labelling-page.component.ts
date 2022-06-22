@@ -278,6 +278,7 @@ export class LabellingPageComponent implements OnInit {
         p_id: this.p_id,
         resultArray: resultArray,
       };
+      console.log(dict);
       this.sendSubmission(dict);
       this.toastCommService.emitChange([true, "Artifact labelled successfully"]);
     } catch (e) {
@@ -297,6 +298,7 @@ export class LabellingPageComponent implements OnInit {
       // Check the labelling is valid
       if (el.status != 'VALID') {
         // Throw and error
+        console.log("we strand here");
         throw new Error('Submission invalid');
       }
       // Push valid results into result array
