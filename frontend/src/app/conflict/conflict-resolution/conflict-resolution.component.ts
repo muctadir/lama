@@ -15,6 +15,7 @@ import { ToastCommService } from 'app/services/toast-comm.service';
 import { MergeLabelFormComponent } from 'app/modals/merge-label-form/merge-label-form.component';
 import { Label } from 'app/classes/label';
 import { User } from 'app/classes/user';
+import { ProjectDataService } from 'app/services/project-data.service'
 
 @Component({
   selector: 'app-conflict-resolution',
@@ -47,6 +48,8 @@ export class ConflictResolutionComponent implements OnInit {
   users: User[];
   // Array of labels in the label type
   labels: Label[];
+  //Frozen status of project
+  frozen: boolean = true;
 
   /**
    * Information concerning the highlighting and cutting
@@ -68,7 +71,8 @@ export class ConflictResolutionComponent implements OnInit {
     private conflictDataService: ConflictDataService,
     private labellingDataService: LabellingDataService,
     private router: Router,
-    private toastCommService: ToastCommService) {
+    private toastCommService: ToastCommService,
+    private projectDataService: ProjectDataService) {
     //Reinitializing the variables
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.routeService = new ReroutingService();
@@ -112,6 +116,9 @@ export class ConflictResolutionComponent implements OnInit {
 
     // Get the labels in the label type
     await this.getLabelsByType(this.p_id, this.lt_id)
+
+    // Setting frozen status
+    this.frozen = await this.projectDataService.getFrozen();
   }
 
   /**

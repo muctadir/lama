@@ -16,7 +16,7 @@
         <!-- Create theme button -->
         <div class="col-2 buttonsDiv">
             <!-- Button for creating a new theme -->
-            <button class="form-control btn btn-secondary" id="createThemeButton" (click)="reRouter('createTheme')">Create Theme<i class="bi bi-plus createTheme"></i></button>   
+            <button class="form-control btn btn-secondary" id="createThemeButton" (click)="reRouter('createTheme')" [disabled]="frozen">Create Theme<i class="bi bi-plus createTheme"></i></button>   
         </div>
     </div>
 

@@ -12,6 +12,7 @@ import { Theme } from 'app/classes/theme';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
 import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { ProjectDataService } from 'app/services/project-data.service'
 
 @Component({
   selector: 'app-individual-label',
@@ -27,6 +28,7 @@ export class IndividualLabelComponent {
   p_id: number;
   label_id: number;
   labelCount: number;
+  frozen: boolean = true;
   /**
    * Constructor which:
    * 1. makes an empty label
@@ -41,7 +43,8 @@ export class IndividualLabelComponent {
     private modalService: NgbModal,
     private router: Router,
     private labellingDataService: LabellingDataService,
-    private toastCommService: ToastCommService
+    private toastCommService: ToastCommService,
+    private projectDataService: ProjectDataService
   ) {
     this.label = new Label(-1, '', '', '');
     this.routeService = new ReroutingService();
@@ -58,10 +61,11 @@ export class IndividualLabelComponent {
    * 1. Get label
    * 2. Get labelling
    */
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getLabel(this.p_id, this.label_id);
     this.getLabellings(this.p_id, this.label_id);
     this.getLabellingAmount();
+    this.frozen = await this.projectDataService.getFrozen();
   }
 
   /**

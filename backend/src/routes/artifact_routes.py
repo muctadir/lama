@@ -14,7 +14,7 @@ from src.models.auth_models import UserSchema
 from src.models.project_models import Project, Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
-from src.app_util import login_required
+from src.app_util import login_required, not_frozen
 from sqlalchemy.exc import OperationalError
 from src.models.auth_models import User, UserSchema
 from sqlalchemy import select, func, distinct
@@ -113,6 +113,7 @@ def get_artifacts(*, user, membership):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 @in_project
+@not_frozen
 def add_new_artifacts(*, user, membership):
     # Get args from request 
     args = request.json['params']
@@ -390,6 +391,7 @@ def get_labellers():
 @artifact_routes.route("/split", methods=["POST"])
 @login_required
 @in_project
+@not_frozen
 def post_split(*, user):
     
     args = request.json['params']
