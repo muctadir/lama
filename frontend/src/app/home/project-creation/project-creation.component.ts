@@ -122,11 +122,7 @@ export class ProjectCreationComponent implements OnInit {
           // Emits an error toast
           this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
         }
-      }      
-      // Calls function responsible for making the project creation request
-      await this.projectDataService.makeRequest(projectInformation);
-      // Emits a success toast
-      this.toastCommService.emitChange([true, "Project created sucessfully"]);
+      }
       // Navigates the user back to the home page
       this.router.navigate(["/home"]);
     } else {

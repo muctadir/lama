@@ -118,7 +118,6 @@ For creating a new project
 @project_routes.route("/creation", methods=["POST"])
 @login_required
 def create_project(*, user):
-    # TODO: Update how to get project_info once requestHandler is used
     # Get the information given by the frontend
     project_info = request.json
 
