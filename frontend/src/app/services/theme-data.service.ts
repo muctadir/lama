@@ -217,11 +217,24 @@ export class ThemeDataService {
       return message
 
       // Catch the error
-    } catch (e) {
-      // Emits an error toast
-      this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
-      // Return the response
-      return "An error occured when trying to create the theme.";
+    } catch (e: any) {
+      // Check if the error has invalid characters
+      if(e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+        // Return the response
+        return "An error occured when trying to edit the theme";
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+        // Return the response
+        return "An error occured when trying to edit the theme";
+      } else {
+        // Emits an error toast
+        this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
+        // Return the response
+        return "An error occured when trying to create the theme.";
+      }
     }
   }
 
@@ -245,11 +258,24 @@ export class ThemeDataService {
       }
       return message
       // Catch the error
-    } catch (e) {
-      // Emits an error toast
-      this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
-      // Return the response
-      return "An error occured when trying to edit the theme";
+    } catch (e: any) {
+      // Check if the error has invalid characters
+      if(e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+        // Return the response
+        return "An error occured when trying to edit the theme";
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+        // Return the response
+        return "An error occured when trying to edit the theme";
+      } else {
+        // Emits an error toast
+        this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
+        // Return the response
+        return "An error occured when trying to edit the theme";
+      }
     }
   }
 

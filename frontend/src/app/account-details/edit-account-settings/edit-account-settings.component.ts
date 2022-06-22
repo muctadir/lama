@@ -122,9 +122,19 @@ export class EditAccountSettingsComponent {
       // Emits a success toast
       this.toastCommService.emitChange([true, "Modification successful"]);
 
-    } catch(e) {
-      // Displays the error message
-      this.toastCommService.emitChange([false, "Please enter valid details!"]);
+    } catch(e: any) {
+      // Check if the error has invalid characters
+      if(e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      // Check if the error has whitespaces
+      } else if (e.response.data == "Input contains leading or trailing whitespaces"){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Please enter valid details!"]);
+      }
     }
   }
 
