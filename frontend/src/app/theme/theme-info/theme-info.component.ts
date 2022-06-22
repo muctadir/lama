@@ -74,7 +74,7 @@ export class ThemeInfoComponent implements OnInit {
 
   //Subthemes Added
   addedSubThemes: Array<Theme> = [];
-  //All sub-themes
+  // All sub-themes
   allSubThemes: Array<Theme> = [];
  
   constructor(private formBuilder: FormBuilder, 

@@ -153,7 +153,7 @@ export class ThemeManagementComponent {
     this.sortedDesc = sorted.Not
   }
 
-  //gets the search text
+  // Gets the search text
   async onEnter() {
 
     // Get p_id

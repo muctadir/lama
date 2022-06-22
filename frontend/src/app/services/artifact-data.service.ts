@@ -208,7 +208,7 @@ export class ArtifactDataService {
     );
 
     response.forEach((artifactInfo : Record<string, any>) => {
-      // Seperate information into an artifact and its labellings
+      // Separate information into an artifact and its labellings
       let artifactJson = artifactInfo['artifact'];
       let labellingsJson = artifactInfo['artifact_labellings'];
       

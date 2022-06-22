@@ -334,7 +334,7 @@ export class LabellingDataService {
     searchWords: string,
     p_id: number
   ): Promise<Array<Record<string, any>>> {
-    // Get the label information from the back end
+    // Get the label information from the backend
     return this.requestHandler.get(
       '/label/search',
       { p_id: p_id, search_words: searchWords },
