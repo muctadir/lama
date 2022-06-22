@@ -121,10 +121,17 @@ export class IndividualLabellingForm implements OnInit {
     }
   }
 
+  /**
+   * Function to get all labels in the project
+   * Also gets the names of all labels
+   */
   async getLabels() {
+    // Get the ptoject id
     let p_id = this.reroutingService.getProjectID(this.router.url);
+    // Get the labels
     let labels = await this.labelDataService.getLabelTypesWithLabels(parseInt(p_id));
 
+    // Recursion of some sort
     for(let label in labels) {
       if (labels[label].getId() == this.labelType?.getId()){
         this.labels = labels[label].getLabels();
