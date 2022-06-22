@@ -2,7 +2,7 @@
 
 from src import db # need this in every route
 from src.models.auth_models import User, UserSchema, UserStatus
-from src.app_util import check_args, check_email, check_password, check_username
+from src.app_util import check_args, check_email, check_password, check_username, check_string, check_whitespaces
 from flask import current_app as app
 from flask import make_response, request, Blueprint
 from sqlalchemy import select, update
@@ -55,6 +55,14 @@ def edit_user_information(*, user):
     if not check_args(required, args):
         return make_response(("Bad Request", 400))
 
+    # Check for whitespaces 
+    if check_whitespaces([args['username'], args['email'], args['description']]):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+    
+    # Check for invalid characters
+    if check_string([args['username'], args['email'], args['description']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Check required arguments are valid
     if not check_format(new_username, new_email, new_description)[0]:
         return make_response(("Bad Request", 400))
@@ -100,6 +108,14 @@ def edit_user_password(*, user):
 
     # Required arguments
     required = ["password", "newPassword", "id"] 
+
+    # Check required arguments are supplied
+    if not check_args(required, args):
+        return make_response(("Incorrect arguments supplied in request", 400))
+
+    # Check for invalid characters
+    if check_string([args['password'], args['newPassword']]):
+        return make_response("Input contains a forbidden character", 511)
     
     # checks whether the superadmin is making the request, based on that sets used user.id
     if user.super_admin:
@@ -115,10 +131,6 @@ def edit_user_password(*, user):
         # Check correct password
         if not check_password_hash(password, args["password"]):
             return make_response(("Incorrect password entered", 400))
-
-    # Check required arguments are supplied
-    if not check_args(required, args):
-        return make_response(("Incorrect arguments supplied in request", 400))
 
     # Check if new password is valid
     if not check_format_password(args["newPassword"])[0]:

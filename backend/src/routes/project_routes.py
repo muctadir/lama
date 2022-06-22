@@ -3,7 +3,6 @@
 # Ana-Maria Olteniceanu
 # Linh Nguyen
 
-from src.app_util import in_project
 from src.models.project_models import Membership
 from flask import current_app as app
 from src.models import db
@@ -12,7 +11,7 @@ from src.models.item_models import Artifact, LabelType, Labelling, Label
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, distinct
-from src.app_util import login_required, check_args, in_project
+from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, in_project
 from sqlalchemy.exc import OperationalError, IntegrityError
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
 
@@ -119,7 +118,6 @@ For creating a new project
 @project_routes.route("/creation", methods=["POST"])
 @login_required
 def create_project(*, user):
-    # TODO: Update how to get project_info once requestHandler is used
     # Get the information given by the frontend
     project_info = request.json
 
@@ -128,6 +126,7 @@ def create_project(*, user):
 
     # Required fields
     required = ["project", "labelTypes", "users"]
+
     # Check if all required arguments are there
     if not check_args(required, project_info):
         return make_response("Not all required arguments supplied", 400)
@@ -137,6 +136,14 @@ def create_project(*, user):
     # Check if all required arguments are there
     if not check_args(required, project_info["project"]):
         return make_response("Not all required arguments supplied", 400)
+    
+    # Check for invalid characters
+    if check_whitespaces([project_info['project']['name'], project_info['project']['description']]):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([project_info['project']['name'], project_info['project']['description']]):
+        return make_response("Input contains a forbidden character", 511)
 
     # Load the project data into a project object
     project_schema = ProjectSchema()

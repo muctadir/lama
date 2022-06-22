@@ -83,7 +83,7 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @trigger Create project button is clicked
    */
-  createProject() : void {
+  async createProject() : Promise<void> {
     // Creates object which will be returned to the backend
     let projectInformation: Record<string, any> = {};
     // Adds the projectname, project description and nr of labellers to the object
@@ -103,10 +103,26 @@ export class ProjectCreationComponent implements OnInit {
 
     // Checks whether the use input is correct
     if(this.checkProjectData(projectInformation)){
-      // Calls function responsible for making the project creation request
-      this.projectDataService.makeRequest(projectInformation);
-      // Emits a success toast
-      this.toastCommService.emitChange([true, "Project created sucessfully"]);
+      try {
+        // Calls function responsible for making the project creation request
+        await this.projectDataService.makeRequest(projectInformation);
+        // Emits a success toast
+        this.toastCommService.emitChange([true, "Project created sucessfully"]);
+        // Navigates the user back to the home page
+        this.router.navigate(["/home"]);
+      } catch(e: any){
+        // Check if the error has invalid characters
+        if(e.response.status == 511){
+          // Displays the error message
+          this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+        } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+          // Displays the error message
+          this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+        } else {
+          // Emits an error toast
+          this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
+        }
+      }
       // Navigates the user back to the home page
       this.router.navigate(["/home"]);
     } else {

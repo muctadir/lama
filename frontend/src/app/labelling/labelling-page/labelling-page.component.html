@@ -88,6 +88,7 @@
         <!-- Submission buttons -->
         <div id="butt">
           <button
+            [disabled]="!hidden"
             class="form-group btn btn-light float-right"
             (click)="skip()"
             id="skip-button"

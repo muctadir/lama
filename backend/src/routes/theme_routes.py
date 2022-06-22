@@ -7,7 +7,7 @@ from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from src.models.change_models import ChangeType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, or_
-from src.app_util import login_required, check_args, in_project
+from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces
 from src.routes.label_routes import get_label_info
 from sqlalchemy.exc import OperationalError
 from src.exc import ChangeSyntaxError
@@ -218,6 +218,14 @@ def create_theme(*, user):
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
 
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([args['name'], args['description']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Check if the theme name is unique
     if theme_name_taken(args["name"], 0):
         return make_response("Theme name already exists")
@@ -283,9 +291,17 @@ def edit_theme(*, user):
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
 
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([args['name'], args['description']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Check if the theme name is unique
     if theme_name_taken(args["name"], args["id"]):
-        return make_response("Theme name already exists")
+        return make_response("Theme name already exists", 400)
     
     # Get theme id
     t_id = args["id"]

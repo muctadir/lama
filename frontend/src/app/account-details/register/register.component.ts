@@ -105,7 +105,6 @@ export class RegisterComponent {
         this.route.navigate(['/login']);
       })
       .catch(error => {
-        console.log(error)
         this.toastCommService.emitChange([false, error.response.data]);
       })
 

@@ -56,6 +56,8 @@ export class LabellingPageComponent implements OnInit {
   startTime: any;
   endTime: any;
 
+  hidden: boolean = false;
+
   /**
    * Constructor passes in the modal service and the labelling data service
    * @param modalService
@@ -103,6 +105,8 @@ export class LabellingPageComponent implements OnInit {
      * If any of this fails the user is redirected back to the stats page.
      */
     // Gets the url again
+    this.hidden = false;
+
     this.url = this.router.url;
 
     this.labellings = new FormArray([]);
@@ -113,6 +117,8 @@ export class LabellingPageComponent implements OnInit {
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
+
+    this.hidden = true;
   }
 
   async loadPageContent() : Promise<void> {
@@ -389,7 +395,7 @@ export class LabellingPageComponent implements OnInit {
   
     // Make request to split
     let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
-    this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
+    this.toastCommService.emitChange([true, "Artifact was successfully split into artifact #" + splitId]);
 
     // Reloads the page
     await this.routeToLabel(this.artifact.getId());
