@@ -42,7 +42,7 @@ export class SingleArtifactViewComponent implements OnInit {
   a_id: number;
   // Initialize boolean value that represent whether the labels in this page have been changed
   changed: boolean;
-  // whether the project is frozen
+  // Whether the project is frozen
   frozen: boolean = true;
 
   /**
@@ -58,7 +58,7 @@ export class SingleArtifactViewComponent implements OnInit {
     private toastCommService: ToastCommService,
     private router: Router,
     private projectDataService: ProjectDataService) {
-    //Initializing variables
+    // Initializing variables
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.users = [];

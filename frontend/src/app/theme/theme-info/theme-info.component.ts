@@ -100,7 +100,7 @@ export class ThemeInfoComponent implements OnInit {
   async ngOnInit(){
     if (await this.projectDataService.getFrozen()){
       await this.router.navigate(['/project', this.p_id]);
-      this.toastCommService.emitChange([false, "Project frozen, you can not label"]);
+      this.toastCommService.emitChange([false, "Project frozen, you cannot label"]);
       return;
     }
 

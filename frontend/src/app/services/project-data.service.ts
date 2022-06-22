@@ -112,11 +112,18 @@ export class ProjectDataService {
     let response: any = await this.requestHandler.post("/project/creation", projectInformation, true);
   }
 
+  /**
+   * Gets frozen status of the project from the backend
+   * 
+   * @trigger on calling of function
+   */
   async getFrozen(): Promise<any> {
     try {
+      //Getting frozen status from backend
       let result = await this.requestHandler.get("/project/settings", {'p_id': this.rerouter.getProjectID(this.router.url)}, true);
       return result["frozen"];
     } catch {
+      //If there is an error with getting the data
       this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }

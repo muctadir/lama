@@ -117,7 +117,7 @@ export class ConflictResolutionComponent implements OnInit {
     // Get the labels in the label type
     await this.getLabelsByType(this.p_id, this.lt_id)
 
-    //Setting frozen status
+    // Setting frozen status
     this.frozen = await this.projectDataService.getFrozen();
   }
 

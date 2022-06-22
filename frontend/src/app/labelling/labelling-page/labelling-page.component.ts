@@ -106,7 +106,7 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
-    // if frozen reroute to stats
+    // If frozen reroute to stats
     if (await this.projectDataService.getFrozen()){
       await this.router.navigate(['/project', this.p_id]);
       this.toastCommService.emitChange([false, "Project frozen, you can not label"]);

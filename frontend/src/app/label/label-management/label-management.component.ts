@@ -35,10 +35,10 @@ export class LabelManagementComponent {
   url: string;
   labels: Array<Label>;
   labelAmount: { [id: number]: string };
-  //Frozen status
+  // Frozen status
   frozen: boolean = true;
 
-  //Pagination Settings
+  // Pagination Settings
   page: number;
   pageSize: number;
 
