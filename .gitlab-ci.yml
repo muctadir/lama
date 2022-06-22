@@ -70,3 +70,15 @@ build-image-backend:
     - docker build -t lamahost.win.tue.nl:81/lama-backend ./backend
     - docker push lamahost.win.tue.nl:81/lama-backend
 
+build-image-nginx:
+  stage: build-image
+  image: docker  
+  # needs: ['backend-test']
+  only:
+    - main 
+  retry: 2
+  script:
+    - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
+    - docker build -t lamahost.win.tue.nl:81/lama-nginx ./nginx
+    - docker push lamahost.win.tue.nl:81/lama-nginx
+
