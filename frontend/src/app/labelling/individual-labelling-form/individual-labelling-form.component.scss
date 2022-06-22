@@ -49,19 +49,3 @@ $orange-shade: #ed5a06;
   max-height: 200px;
   overflow-y: scroll;
 }
-
-/* Scrollbar related layout */
-// Scrollbar
-::ng-deep .dropdown-menu ::-webkit-scrollbar {
-  width: 10px;
-}
-// Scrollbar background
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-  border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-  background: #38474e; 
-  border-radius: 10px;
-}

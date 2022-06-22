@@ -6,9 +6,10 @@
             <span>{{ labelType?.getName() }}</span>
         </div>
         <!-- List of available labels -->
-        <div>
-            <label for="typeahead-basic">Search for a label:</label>
-            <input id="typeahead-basic" 
+        <form>
+            <label for="typeahead-focus">Search for a label:</label>
+            <input 
+                id="typeahead-focus-label" 
                 type="text" 
                 name="label" 
                 class="form-control" 
@@ -18,7 +19,7 @@
                 (click)="click$.next($any($event).target.value)" 
                 (selectItem)="clickLabel($event)"
                 #instance="ngbTypeahead" />
-        </div>
+        </form>
     </div>
     <div class="col-4" >
         <!-- Description of the labelType -->
