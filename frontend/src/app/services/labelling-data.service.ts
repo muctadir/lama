@@ -5,7 +5,6 @@ import { Theme } from 'app/classes/theme';
 import { User } from 'app/classes/user';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { ToastCommService } from './toast-comm.service';
-import { AbstractEmitterVisitor } from '@angular/compiler/src/output/abstract_emitter';
 
 @Injectable({
   providedIn: 'root',
