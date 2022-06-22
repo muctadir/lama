@@ -83,7 +83,7 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @trigger Create project button is clicked
    */
-  createProject() : void {
+  async createProject() : Promise<void> {
     // Creates object which will be returned to the backend
     let projectInformation: Record<string, any> = {};
     // Adds the projectname, project description and nr of labellers to the object
@@ -104,7 +104,7 @@ export class ProjectCreationComponent implements OnInit {
     // Checks whether the use input is correct
     if(this.checkProjectData(projectInformation)){
       // Calls function responsible for making the project creation request
-      this.projectDataService.makeRequest(projectInformation);
+      await this.projectDataService.makeRequest(projectInformation);
       // Emits a success toast
       this.toastCommService.emitChange([true, "Project created sucessfully"]);
       // Navigates the user back to the home page

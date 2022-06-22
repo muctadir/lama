@@ -22,9 +22,6 @@ export class HomePageComponent implements OnInit {
   /* Array with the projects that the user can view */
   projects: Project[] = [];
 
-  /* Error message that is displayed to the user */
-  errorMsg: string = "";
-
   /* Saves the user data */
   user: any;
 
