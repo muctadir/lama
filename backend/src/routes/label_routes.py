@@ -5,7 +5,7 @@ from src import db  # need this in every route
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
-from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args
+from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args, not_frozen
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
   Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
@@ -18,6 +18,7 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
+@not_frozen
 def create_label(*, user):
 
     args = request.json['params']
@@ -77,6 +78,7 @@ def create_label(*, user):
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
+@not_frozen
 def edit_label(*, user):
     # Get args
     args = request.json['params']
@@ -199,6 +201,7 @@ def get_single_label():
 @label_routes.route('/merge', methods=['POST'])
 @login_required
 @in_project
+@not_frozen
 def merge_route(*, user):
 
     args = request.json['params']
@@ -373,6 +376,7 @@ def get_label_artifacts(label, u_id, admin):
 @label_routes.route('/delete', methods=['POST'])
 @login_required
 @in_project
+@not_frozen
 def soft_delete_route(*, user):
     args = request.json['params']
     # Required args

@@ -7,7 +7,7 @@ from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
 from src.models.change_models import ChangeType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, or_
-from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces
+from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, not_frozen
 from src.routes.label_routes import get_label_info
 from sqlalchemy.exc import OperationalError
 from src.exc import ChangeSyntaxError
@@ -206,6 +206,7 @@ For creating a new theme
 @theme_routes.route("/create_theme", methods=["POST"])
 @login_required
 @in_project
+@not_frozen
 def create_theme(*, user):
 
     # The required arguments
@@ -279,6 +280,7 @@ For editing a theme
 @theme_routes.route("/edit_theme", methods=["POST"])
 @login_required
 @in_project
+@not_frozen
 def edit_theme(*, user):
 
     # The required arguments
@@ -363,6 +365,7 @@ For editing a theme
 @theme_routes.route("/delete_theme", methods=["POST"])
 @login_required
 @in_project
+@not_frozen
 def delete_theme(*, user):
 
     # The required arguments

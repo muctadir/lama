@@ -14,7 +14,7 @@
         <!--Add Artifact Button-->
         <div class="col">
             <span (click)="open()" class="float-end">
-                <button type="button" class="btn btn-secondary" id="addArtifactButton" >
+                <button type="button" class="btn btn-secondary" id="addArtifactButton" [disabled]="frozen">
                     Add Artifact
                     <!-- Displays the + icon next to "Add artifact" -->
                     <em class="bi bi-plus-lg"></em>

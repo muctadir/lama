@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
 import { FormBuilder } from '@angular/forms';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 // Enumeration for sorting 
 enum sorted {
@@ -34,8 +35,10 @@ export class LabelManagementComponent {
   url: string;
   labels: Array<Label>;
   labelAmount: { [id: number]: string };
+  // Frozen status
+  frozen: boolean = true;
 
-  //Pagination Settings
+  // Pagination Settings
   page: number;
   pageSize: number;
 
@@ -63,7 +66,8 @@ export class LabelManagementComponent {
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private projectDataService: ProjectDataService
   ) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
@@ -74,9 +78,9 @@ export class LabelManagementComponent {
     this.pageSize = 10;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getLabels();
-    // this.getLabelledCount();
+    this.frozen = await this.projectDataService.getFrozen();
   }
 
   // Open the modal and merge lables

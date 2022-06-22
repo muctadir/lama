@@ -7,11 +7,11 @@
         </div>
         <div class="col">
         <!-- Buttons for creating and adding labels -->
-            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
+            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" [disabled]="frozen">
                 Create label
                 <i class="bi bi-plus"></i>
             </button>
-            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()">
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()" [disabled]="frozen">
                 Merge labels
                 <i class="bi bi-plus"></i>
             </button>
