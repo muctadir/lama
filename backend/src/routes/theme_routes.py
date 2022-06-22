@@ -426,23 +426,19 @@ def search_route():
         )
     ).all()
 
-    # Schema for serialising labels
-    theme_schema = ThemeSchema()
-
-    # Convert the themes into a list of dictionaries
-    serialised_themes = theme_schema.dump(themes, many=True)
-
     # Columns we search through
     search_columns = ['id', 'name', 'description']
 
     # Get search results
-    results = search_func_all_res(args['search_words'], serialised_themes, 'id', search_columns)
+    results = search_func_all_res(args['search_words'], themes, 'id', search_columns)
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
     # Gets the actual label object from the search
     themes_results = [result['item'] for result in clean_results]
-
-    return make_response(jsonify(themes_results))
+    # Schema for serialising
+    theme_schema = ThemeSchema()
+    # Serialise results and jsonify
+    return make_response(jsonify(theme_schema.dump(themes_results, many=True)))
 
 # Function for getting the number of labels in the theme
 def get_theme_label_count(t_id):

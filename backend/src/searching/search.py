@@ -78,7 +78,7 @@ def best_match(results):
 """
 Searches for words in data
 @param search_words: string of multiple words
-@param data: a list of dictionaries to search through
+@param data: a list of objects to search through
 @param id_col: the name of the column containing the id
 @param data_cols: the columns to search through
 @returns a dictionary per item id of value {'id', 'dist', 'word', 'search', 'item'}
@@ -95,7 +95,7 @@ def search_func_all_res(search_words, data, id_col, data_cols):
         for search_word in search_words.split():
             # Search through all the data columns
             # Extract the data into a list
-            search_data = [str(item[data_col]) for data_col in data_cols]
+            search_data = [str(getattr(item, data_col)) for data_col in data_cols]
             # Concatenate the data into one string to search through
             joined_data = " ".join(search_data)
             # Get best search word result in artifact
@@ -103,7 +103,7 @@ def search_func_all_res(search_words, data, id_col, data_cols):
             # Make sure words are below min letter diff distance
             if len(result) != 0 and result[0] <= MIN_DIST:
                 matches = [
-                    item[id_col],
+                    getattr(item, id_col),
                     result,
                     search_word,
                     item

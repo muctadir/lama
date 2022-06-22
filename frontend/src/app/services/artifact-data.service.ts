@@ -197,12 +197,36 @@ export class ArtifactDataService {
     searchWords: string,
     p_id: number
   ): Promise<Array<StringArtifact>> {
+    // The artifacts
+    let artifacts: Array<StringArtifact> = new Array<StringArtifact>();
+
     // Get the artifact information from the back end
-    return this.requestHandler.get(
+    let response = await this.requestHandler.get(
       '/artifact/search',
       { p_id: p_id, search_words: searchWords },
       true
     );
+
+    response.forEach((artifactInfo : Record<string, any>) => {
+      // Seperate information into an artifact and its labellings
+      let artifactJson = artifactInfo['artifact'];
+      let labellingsJson = artifactInfo['artifact_labellings'];
+      
+      // Construct StringArtifact object
+      let artifact: StringArtifact = new StringArtifact(
+        artifactJson['id'],
+        artifactJson['identifier'],
+        artifactJson['data']
+      );
+      
+      // Update the artifacts labellings
+      artifact.setLabellings(labellingsJson);
+      // Add the artifact to the end result
+      artifacts.push(artifact);
+
+    });
+
+    return artifacts
 
   }
 
