@@ -176,7 +176,7 @@ export class LabelFormComponent implements OnInit {
         this.labelForm.controls['labelTypeId'].value
       );
       // Show success toast
-      this.toastCommService.emitChange([true, "Label edited successfully"]);
+      this.toastCommService.emitChange([true, "Label created successfully"]);
       // Close modal
       this.activeModal.close();
     } catch (e) {
@@ -199,6 +199,7 @@ export class LabelFormComponent implements OnInit {
       );
       // Close modal
       this.activeModal.close();
+      this.toastCommService.emitChange([true, "Edited label successfully"]);
     } catch (e) {
       // Throw error
       this.toastCommService.emitChange([false, "Something went wrong while submitting."]);

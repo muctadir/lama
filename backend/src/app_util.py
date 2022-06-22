@@ -14,7 +14,7 @@ from src import db # need this in every route
 from flask import current_app as app
 from flask import make_response, request
 from sqlalchemy.exc import OperationalError
-from sqlalchemy import select
+from sqlalchemy import false, select
 from inspect import getfullargspec
 import datetime
 
@@ -86,6 +86,32 @@ def check_password(password):
             re.match(specialRe, password) or \
             re.match(numberRe, password))
     return valid and complex
+
+def check_string(strings):
+    """
+    Checks the given string for the characters \ ; , #
+    @params strings: list of input strings
+    @return whether the string input includes a forbidden character
+    """
+    chars = ["\\", ";", ",", "#"]
+    for string in strings:
+        has_char = [char in string for char in chars]
+        if True in has_char:
+            # A string includes a forbidden character
+            return True
+    return False
+
+def check_whitespaces(strings):
+    """
+    Checks the given string has leading or trailing whitespaces
+    @params strings: list of input strings
+    @return whether the string input includes leading or trailing whitespace
+    """
+    for string in strings:
+        if string != string.strip():
+            # A string includes whitespace
+            return True
+    return False
 
 def get_all_subclasses(cls):
     """
@@ -190,7 +216,6 @@ def in_project(f):
     Requires 'p_id' to be in either the request body, or request parameters
     Optionally passes membership and/or user as a keyword argument
     """
-    # TODO: Check user status
     @wraps(f)
     def decorated_function(*args, user, **kwargs):
         if request.method == 'GET':
@@ -207,8 +232,8 @@ def in_project(f):
         
         membership = db.session.get(Membership, {'p_id': p_id, 'u_id': user.id})
 
-        # Check that membership exists
-        if not membership:
+        # Check that membership exists and that membership was not deleted.
+        if not membership or membership.deleted:
             return make_response('Unauthorized', 401)
 
         # Check if function requires certain keyword only arguments
@@ -219,6 +244,37 @@ def in_project(f):
 
         return f(*args, **kwargs)
 
+    return decorated_function
+
+def not_frozen(f):
+    """
+    Decorator that checks that the project is not frozen. This decorator needs to be placed _below_ the in_project decorator
+    Optionally passes project/user/membership as keyword only arguments.
+    """
+    @wraps(f)
+    def decorated_function(*args, user, membership, **kwargs):
+        # Get project that user is a member of
+        project = membership.project
+        # Checks that project exists
+        # Note that this should never happen, since the membership has a foreign key dependency on project
+        if not project:
+            return make_response("Internal Server Error", 500)
+        
+        # Checks that the project is not frozen
+        # The request should not be processed if the project is frozen
+        if project.frozen:
+            return make_response("Bad Request: Project Frozen", 400)
+
+        # TODO: There _has_ to be a better way of doing this
+        # Check if function requires certain keyword only arguments
+        if 'user' in getfullargspec(f).kwonlyargs:
+            kwargs['user'] = user
+        if 'membership' in getfullargspec(f).kwonlyargs:
+            kwargs['membership'] = membership
+        if 'project' in getfullargspec(f).kwonlyargs:
+            kwargs['project'] = project
+
+        return f(*args, **kwargs)
     return decorated_function
 
 """
@@ -337,7 +393,7 @@ def __parse_theme_children(change, username):
 A labelled string should be of the format:
 'label' ; label_type_name ; label_name
 or
-'edit' ; label_type_name ; old_label_name ; new_label_name
+'edit' ; label_type_name ; old_label_name ; new_label_name ; old_username
 """
 def __parse_labelled(change, username):
     description = change.description.split(' ; ')
@@ -347,9 +403,9 @@ def __parse_labelled(change, username):
                 raise ChangeSyntaxError
             return f"{username} labelled Artifact {change.name} with Label \"{description[2]}\" of type \"{description[1]}\""
         case 'edit':            
-            if len(description) != 4:
+            if len(description) != 5:
                 raise ChangeSyntaxError
-            return f"{username} changed Artifact {change.name}'s Label of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
+            return f"{username} changed {description[4]}'s labelling for Artifact {change.name} of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
         case _:
             raise ChangeSyntaxError
 

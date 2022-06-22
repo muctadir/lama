@@ -50,18 +50,6 @@
     background: #38474e; 
     border-radius: 10px;
 }
-//"Labelled by" section
-div.allUserLabels{
-    height: 50vh;
-    overflow-y: scroll
-}
-/*TODO: For some reason the variable defined in the root stylesheet is not working*/
-.labelTypeDescription {
-    border-left: 2px solid #ed5a06;
-    padding-left: 10px;
-    padding-bottom: 5px;
-    padding-top: 5px;
-}
 
 // Artifact identifier
 #artifactIdentifier{
@@ -88,7 +76,7 @@ div.allUserLabels{
     text-align: left;
 }
 
-//Name of labeller
+// Name of labeller
 #labeller{
     font-size: 17px;
     letter-spacing: 1px;
@@ -108,4 +96,16 @@ div.allUserLabels{
     height:1px; 
     width:80%; 
     border-width:0px;
+}
+// Save button
+.btn {
+    background-color: #ed5a06;
+    border-color: #ed5a06;
+    margin: 15px;
+}
+// Labelled by Div
+.infoDiv {
+    height: 55vh;
+    overflow-y: scroll;
+    overflow-x: hidden
 }

@@ -1,12 +1,11 @@
 # Author: Eduardo
 # Author: Bartjan
 # Author: Victoria
-from src.app_util import check_args
 from src import db  # need this in every route
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
-from src.app_util import login_required, in_project
+from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
   Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
@@ -27,21 +26,33 @@ def create_label(*, user):
 
     # Check whether the required arguments are delivered
     if not check_args(required, args):
-        print(args)
         return make_response('Bad Request', 400)
+    
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([args['labelName'], args['labelDescription']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
         return make_response('Bad request: Label name cannot have size <= 0', 400)
+
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
         return make_response('Bad request: Label description cannot have size <= 0', 400)
+
     # Check whether the label type exists
     label_type = db.session.get(LabelType, args['labelTypeId'])
     if not label_type:
         return make_response('Label type does not exist', 400)
+
     # # Check whether the labeltype is part of the project
     if label_type.p_id != args['p_id']:
         return make_response('Label type not in this project', 400)
+
     # Make the label
     label = Label(name=args['labelName'],
                   description=args['labelDescription'],
@@ -61,7 +72,7 @@ def create_label(*, user):
 
     return make_response('Created')
 
-# Author: Bartjan, Victoria
+# Author: Bartjan, Victoria, Linh, Jarl
 # Edit label
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
@@ -94,9 +105,13 @@ def edit_label(*, user):
     if label.description != args['labelDescription']:
         __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
     
+    # Check if the label name is unique
+    if label_name_taken(args["labelName"], 0):
+        return make_response("Label name already exists", 400)
+
     # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
-        __record_name_edit(label.id, label.name, args['p_id'], label.id, args['labelName'])
+        __record_name_edit(label.id, label.name, args['p_id'], user.id, args['labelName'])
 
     db.session.execute(
         update(Label)
@@ -106,6 +121,7 @@ def edit_label(*, user):
     try:
         db.session.commit()
     except OperationalError:
+
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response()
@@ -192,6 +208,14 @@ def merge_route(*, user):
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+    
+    # Check for invalid characters
+    if check_string([args['newLabelName'], args['newLabelDescription']]):
+        return make_response("Input contains a forbidden character", 511)
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
@@ -621,3 +645,20 @@ def __record_delete(l_id, name, p_id, u_id):
         change_type=ChangeType.deleted
     )
     db.session.add(change)
+
+"""
+Function that checks if a label name is already taken
+@params name: string, the name to be checked
+@returns true if name is already a label name and false otherwise
+@author Linh, Jarl
+"""
+def label_name_taken(name, t_id):
+    if bool(db.session.scalars(
+        select(Label)
+        .where(
+            Label.name==name,
+            Label.id!=t_id
+        ))
+        .first()):
+        return True
+    return False

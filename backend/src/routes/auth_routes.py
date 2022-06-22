@@ -4,7 +4,7 @@
 
 from operator import or_
 from src import db # need this in every route
-from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required
+from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required, check_string, check_whitespaces
 from src.models.auth_models import User, UserSchema, UserStatus
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
@@ -24,7 +24,6 @@ def register():
     See create_user() for default arguments
     """
     args = request.json['params']
-    print(args)
     # Required arguments
     required = ["username", "email", "password", "passwordR", "description"] 
 
@@ -35,7 +34,15 @@ def register():
     # Check that username/email are unique
     if taken(args["username"], args["email"]):
         return make_response(("Username or email taken", 400))
-
+    
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+     
+    # Check for invalid characters
+    if check_string(args):
+        return make_response("Input contains a forbidden character", 511)
+        
     # Check that arguments were formatted correctly
     check, reason = check_format(**args)
     if not check:
