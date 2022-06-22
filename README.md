@@ -12,7 +12,7 @@ This project aims to build upon the already existing [Labeling Machine tool](htt
 __________
 # Deployment Setup
 If the application is still deployed on the TU/e server
-1. Go to https://lamahost.win.tue.nl/api
+1. Go to https://lamahost.win.tue.nl/
 
 # Development Setup
 
