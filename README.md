@@ -8,7 +8,7 @@ This project aims to build upon the already existing [Labeling Machine tool](htt
 
 ----
 
-**Authors:** V. Bogachenkova, T. Bradley, E.J. Costa Martins, V. Fürst, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, A. Olteniceanu
+**Authors:** V. Bogachenkova, T. Bradley, E.J. Costa Martins, V. Fürst, B. Henkemans, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, A. Olteniceanu
 __________
 # Deployment Setup
 If the application is still deployed on the TU/e server
