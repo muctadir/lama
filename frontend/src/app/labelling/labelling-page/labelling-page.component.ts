@@ -56,6 +56,8 @@ export class LabellingPageComponent implements OnInit {
   startTime: any;
   endTime: any;
 
+  hidden: boolean = false;
+
   /**
    * Constructor passes in the modal service and the labelling data service
    * @param modalService
@@ -103,6 +105,8 @@ export class LabellingPageComponent implements OnInit {
      * If any of this fails the user is redirected back to the stats page.
      */
     // Gets the url again
+    this.hidden = false;
+
     this.url = this.router.url;
 
     this.labellings = new FormArray([]);
@@ -113,6 +117,8 @@ export class LabellingPageComponent implements OnInit {
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
+
+    this.hidden = true;
   }
 
   async loadPageContent() : Promise<void> {
