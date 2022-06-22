@@ -116,6 +116,7 @@
                 </div>
             </div>
             <div>
+                <!-- Only show the button if labels were changed -->
                 <div *ngIf="changed">
                     <!-- Save button -->
                     <button class="btn btn-secondary float-end" id="btn-save" (click)="updateLabellings()">
