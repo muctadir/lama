@@ -18,7 +18,6 @@ export class LabellingDataService {
    * Constructors for the request handler
    * @param toastCommService instance of ToastCommService
    */
-  
   constructor(private toastCommService: ToastCommService) {
     this.requestHandler = new RequestHandler(
       sessionStorage.getItem('ses_token')

@@ -51,14 +51,6 @@
     border-radius: 10px;
 }
 
-/*TODO: For some reason the variable defined in the root stylesheet is not working*/
-.labelTypeDescription {
-    border-left: 2px solid #ed5a06;
-    padding-left: 10px;
-    padding-bottom: 5px;
-    padding-top: 5px;
-}
-
 // Artifact identifier
 #artifactIdentifier{
     text-align: right
@@ -84,7 +76,7 @@
     text-align: left;
 }
 
-//Name of labeller
+// Name of labeller
 #labeller{
     font-size: 17px;
     letter-spacing: 1px;
@@ -105,13 +97,13 @@
     width:80%; 
     border-width:0px;
 }
-//Save button
+// Save button
 .btn {
     background-color: #ed5a06;
     border-color: #ed5a06;
     margin: 15px;
 }
-//Labelled by Div
+// Labelled by Div
 .infoDiv {
     height: 55vh;
     overflow-y: scroll;

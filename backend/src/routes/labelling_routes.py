@@ -124,7 +124,7 @@ def edit_labelling(*, user, membership):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     
-    #Array to hold updated labellings
+    # Array to hold updated labellings
     updated_labellings = []
 
     # Get a list of labeltypes in the project
@@ -132,7 +132,7 @@ def edit_labelling(*, user, membership):
         select(LabelType.name).where(LabelType.p_id==args['p_id'])
     ).all()
 
-    # For each label type, fo through all labellings given and add them to the list
+    # For each label type, go through all labellings given and add them to the list
     for lt in label_types:
         try: 
             updated_labellings.extend([
