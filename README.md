@@ -2,7 +2,7 @@
 
 ![LaMa logo](/frontend/assets/lama_nobg.png)
 ===
-LaMa is a Thematic Labelling web application that can be used by multiple users to analyse and label artifacts. This tool was developed y a team of 9 students for the Final Bachelor Project at the Eindoven University of Technology. 
+LaMa is a Thematic Labelling web application that can be used by multiple users to analyse and label artifacts. This tool was developed by a team of 9 students for the Final Bachelor Project at the Eindoven University of Technology. 
 
 This project aims to build upon the already existing [Labeling Machine tool](https://github.com/muctadir/labeling-machine) by extending it and adding new functionalities, which include but are not limited to a new API and remaking the User Interface (UI).
 
