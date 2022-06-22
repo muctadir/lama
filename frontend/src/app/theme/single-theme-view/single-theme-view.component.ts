@@ -5,10 +5,10 @@ import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
 import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
 import { StringArtifact } from 'app/classes/stringartifact';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -179,11 +179,20 @@ export class SingleThemeViewComponent {
         return;
       }
     }
-    // Open the modal
-    const modalRef = this.modalService.open(DeleteThemeComponent, {});
-    // Give the modal the project id and theme id
-    modalRef.componentInstance.p_id = this.p_id;
-    modalRef.componentInstance.t_id = this.t_id; 
+    // Open the modal    
+    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+
+    // Listens for an event emitted by the modal
+    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+      if($e) {
+        // Call the service to delete the theme
+        await this.themeDataService.delete_theme(this.p_id, this.t_id);
+        // Go back to the theme management page
+        this.router.navigate(['/project', this.p_id, 'thememanagement']);
+        // Shows that the deletion was successful
+        this.toastCommService.emitChange([true, "Deletion successful"]);
+      }
+    });
   }
 
   /**

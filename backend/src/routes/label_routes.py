@@ -71,7 +71,7 @@ def create_label(*, user):
 
     return make_response('Created')
 
-# Author: Bartjan, Victoria
+# Author: Bartjan, Victoria, Linh, Jarl
 # Edit label
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
@@ -104,9 +104,13 @@ def edit_label(*, user):
     if label.description != args['labelDescription']:
         __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
     
+    # Check if the label name is unique
+    if label_name_taken(args["labelName"], 0):
+        return make_response("Label name already exists", 400)
+
     # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
-        __record_name_edit(label.id, label.name, args['p_id'], label.id, args['labelName'])
+        __record_name_edit(label.id, label.name, args['p_id'], user.id, args['labelName'])
 
     db.session.execute(
         update(Label)
@@ -116,6 +120,7 @@ def edit_label(*, user):
     try:
         db.session.commit()
     except OperationalError:
+
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response()
@@ -585,3 +590,20 @@ def __record_delete(l_id, name, p_id, u_id):
         change_type=ChangeType.deleted
     )
     db.session.add(change)
+
+"""
+Function that checks if a label name is already taken
+@params name: string, the name to be checked
+@returns true if name is already a label name and false otherwise
+@author Linh, Jarl
+"""
+def label_name_taken(name, t_id):
+    if bool(db.session.scalars(
+        select(Label)
+        .where(
+            Label.name==name,
+            Label.id!=t_id
+        ))
+        .first()):
+        return True
+    return False
