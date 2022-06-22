@@ -146,7 +146,7 @@ Author: Linh Nguyen
 """
 def project_conflicts(p_id, admin, u_id):
     # Artifact IDs involved with this users
-    a_per_user = select(distinct(Labelling.a_id)).where(Labelling.u_id == u_id).subquery()
+    a_per_user = select(distinct(Labelling.a_id)).where(Labelling.u_id == u_id)
     # Number of differing labels per label type and artifact
     per_label_type = select(
         # Artifact id
@@ -185,7 +185,7 @@ def project_conflicts(p_id, admin, u_id):
     # Counts as a conflict if there is more than one distinct label for a label type
     ).where(
         per_label_type.c.label_count > 1
-    ).subquery()
+    )
 
     # Label types with conflicts
     label_types_with_conflicts = select(
@@ -194,7 +194,7 @@ def project_conflicts(p_id, admin, u_id):
     ).where(
     # Counts as a conflict if there is more than one distinct label for a label type
         per_label_type.c.label_count > 1
-    ).subquery()
+    )
 
     # Get the list of conflicts
     conflicts = db.session.execute(per_artifact).all()
@@ -296,7 +296,7 @@ def single_label_per_user():
         return make_response('Bad Request', 400)
 
     # Subquery to select the user ids of the users who made a labelling of this label id
-    user_per_lt = select(Labelling.u_id).where(Labelling.lt_id==args['lt_id']).subquery()
+    user_per_lt = select(Labelling.u_id).where(Labelling.lt_id==args['lt_id'])
 
     # Get the usernames, the label names and the descriptions of the labels given to this artifact
     userInfo = db.session.execute(select(distinct(User.username), User.id, Labelling.l_id, Label.name, Label.description)

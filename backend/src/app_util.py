@@ -337,7 +337,7 @@ def __parse_theme_children(change, username):
 A labelled string should be of the format:
 'label' ; label_type_name ; label_name
 or
-'edit' ; label_type_name ; old_label_name ; new_label_name
+'edit' ; label_type_name ; old_label_name ; new_label_name ; old_username
 """
 def __parse_labelled(change, username):
     description = change.description.split(' ; ')
@@ -347,9 +347,9 @@ def __parse_labelled(change, username):
                 raise ChangeSyntaxError
             return f"{username} labelled Artifact {change.name} with Label \"{description[2]}\" of type \"{description[1]}\""
         case 'edit':            
-            if len(description) != 4:
+            if len(description) != 5:
                 raise ChangeSyntaxError
-            return f"{username} changed Artifact {change.name}'s Label of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
+            return f"{username} changed {description[4]}'s labelling for Artifact {change.name} of type \"{description[1]}\" from \"{description[2]}\" to \"{description[3]}\""
         case _:
             raise ChangeSyntaxError
 
