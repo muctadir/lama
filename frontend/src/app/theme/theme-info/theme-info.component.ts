@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { InputCheckService } from 'app/services/input-check.service';
@@ -9,6 +9,9 @@ import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { ToastCommService } from 'app/services/toast-comm.service';
 import { ProjectDataService } from 'app/services/project-data.service';
+import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-theme-info',
@@ -33,6 +36,16 @@ export class ThemeInfoComponent implements OnInit {
     description: ""
   });
 
+  // Form for label search function
+  labelSearch = this.formBuilder.group({
+    labelSearch: ""
+  });
+
+  // Form for theme search function
+  themeSearch = this.formBuilder.group({
+    themeSearch: ""
+  });
+
   // Variable for the current theme
   theme: Theme;
 
@@ -45,15 +58,15 @@ export class ThemeInfoComponent implements OnInit {
   url: string;
   routeService: ReroutingService;
 
-  //highlight label variable
-  highlightedLabel: String = '';
-  //highlight subtheme variable
-  highlightedSubtheme: String = "";
+  // Highlight label variable
+  highlightedLabel: string = '';
+  // Highlight subtheme variable
+  highlightedSubtheme: string = "";
 
-  //Selected Labels description
-  selectedDescriptionLabel: String = '';
-  //Selected Theme description
-  selectedDescriptionTheme: String = '';
+  // Selected Labels description
+  selectedDescriptionLabel: string = '';
+  // Selected Theme description
+  selectedDescriptionTheme: string = '';
 
   // Labels Added
   addedLabels: Label[] = [];
@@ -62,7 +75,7 @@ export class ThemeInfoComponent implements OnInit {
 
   //Subthemes Added
   addedSubThemes: Array<Theme> = [];
-  //Hard coded sub-themes
+  // All sub-themes
   allSubThemes: Array<Theme> = [];
  
   constructor(private formBuilder: FormBuilder, 
@@ -335,6 +348,40 @@ export class ThemeInfoComponent implements OnInit {
       this.router.navigate(['/project', this.p_id, 'thememanagement']);
     } else {
       this.router.navigate(['/project', this.p_id, 'singleTheme', this.t_id]);
+    }
+  }
+
+  /**
+   * Function to search through all labels
+   */
+  async searchLabel() : Promise<void> {
+    // Get the text of the form
+    var text: string = this.labelSearch.value.labelSearch;
+    // Get all labels
+    await this.get_labels(this.p_id);
+    // If the string in not empty, we look for the labels that correspons
+    if (text != ""){
+      // Get the array of labels that are included in the search
+      let newArray = this.allLabels.filter(s => s.getName().toLowerCase().includes(text) || s.getName().toUpperCase().includes(text));
+      // Set the labels
+      this.allLabels = newArray;
+    }
+  }
+  
+  /**
+   * Function to search through all sub-themes
+   */
+  async searchTheme() : Promise<void> {
+    // Get the text of the form
+    var text: string = this.themeSearch.value.themeSearch;
+    // Get all labels
+    await this.get_themes_without_parents(this.p_id, this.t_id);
+    // If the string in not empty, we look for the labels that correspons
+    if (text != ""){
+      // Get the array of labels that are included in the search
+      let newArray = this.allSubThemes.filter(s => s.getName().toLowerCase().includes(text) || s.getName().toUpperCase().includes(text));
+      // Set the labels
+      this.allSubThemes = newArray;
     }
   }
 

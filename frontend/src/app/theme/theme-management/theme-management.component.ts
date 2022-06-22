@@ -66,7 +66,7 @@ export class ThemeManagementComponent {
   async ngOnInit(): Promise<void> {
     this.frozen = await this.projectDataService.getFrozen();
     // Get the theme information from the request handler
-    this.get_theme_management_info();
+    this.getThemes();
   }
 
 
@@ -89,8 +89,8 @@ export class ThemeManagementComponent {
   }
 
   // Function for getting the theme info
-  async get_theme_management_info(): Promise<void> {
-    this.themes = await this.themeDataService.theme_management_info(this.p_id);
+  async getThemes(): Promise<void> {
+    this.themes = await this.themeDataService.getThemes(this.p_id);
   }
 
   /**
@@ -162,10 +162,39 @@ export class ThemeManagementComponent {
     this.sortedDesc = sorted.Not
   }
 
-  //gets the search text
-  onEnter() {
-    var text = this.searchForm.value.search_term
-    alert("entered!!" + text + "");
+  // Gets the search text
+  async onEnter() {
+
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
+
+    // Search text
+    var text = this.searchForm.value.search_term;
+
+    // If nothing was searched
+    if(text.length == 0){
+      // Get all themes anew
+      this.getThemes();
+    } else {
+      // Otherwise search
+
+      // Pass the search word to services
+      let themesSearched = await this.themeDataService.search(text, p_id);
+
+      
+      // List for the artifacts resulting from the search
+      let themeList: Array<Theme> = [];
+      // For loop through all searched artifacts
+      for (let theme of themesSearched) {
+        // Make it an artifact object
+        let newTheme = new Theme(theme['id'], theme['name'], theme['description']);
+        // Append artifact to list
+        themeList.push(newTheme);
+      }
+
+      this.themes = themeList;
+
+    }
   }
 }
 

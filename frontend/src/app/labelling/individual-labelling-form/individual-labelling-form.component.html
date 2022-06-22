@@ -6,11 +6,20 @@
             <span>{{ labelType?.getName() }}</span>
         </div>
         <!-- List of available labels -->
-        <div>
-            <select class="form-control" formControlName="label" name="labels" [(ngModel)]="selectedLabel">
-                <option *ngFor="let label of labelType?.getLabels()" [ngValue]="label">{{ label.getName() }}</option>
-            </select>
-        </div>
+        <form>
+            <label for="typeahead-focus">Search for a label:</label>
+            <input 
+                id="typeahead-focus-label" 
+                type="text" 
+                name="label" 
+                class="form-control" 
+                [(ngModel)]="model"
+                [ngbTypeahead]="searchLabel" 
+                (focus)="focus$.next($any($event).target.value)"
+                (click)="click$.next($any($event).target.value)" 
+                (selectItem)="clickLabel($event)"
+                #instance="ngbTypeahead" />
+        </form>
     </div>
     <div class="col-4" >
         <!-- Description of the labelType -->

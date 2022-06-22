@@ -169,27 +169,27 @@ export class ArtifactManagementPageComponent {
       // Otherwise search
 
       // Pass the search word to services
-      let artifacts_searched = await this.artifactDataService.search(text, p_id);
+      let artifactsSearched = await this.artifactDataService.search(text, p_id);
 
       // List for the artifacts resulting from the search
-      let artifact_list: Array<StringArtifact> = [];
+      let artifactList: Array<StringArtifact> = [];
       // For loop through all searched artifacts
-      for (let search_artifact of artifacts_searched) {
+      for (let searchArtifact of artifactsSearched) {
         // Make it an artifact object
-        let newArtifact = new StringArtifact(search_artifact["id"], search_artifact["identifier"], search_artifact['data']);
+        let newArtifact = new StringArtifact(searchArtifact["id"], searchArtifact["identifier"], searchArtifact['data']);
         // Append artifact to list
-        artifact_list.push(newArtifact);
+        artifactList.push(newArtifact);
       }
       // Only show the resulting artifacts from the search
       // Update length and clear cache
-      this.nArtifacts = artifact_list.length;
+      this.nArtifacts = artifactList.length;
       this.artifacts = {};
       // Slice the resulting artifacts into pages
-      for (let i: number = 1; i <= Math.ceil(artifact_list.length / this.pageSize); i++) {
+      for (let i: number = 1; i <= Math.ceil(artifactList.length / this.pageSize); i++) {
         // Each page gets as many artifacts as can fit in a page
         // Last page may not have that many artifacts, hence Math.min to choose remaining artifacts instead
-        this.artifacts[i] = artifact_list.slice((i - 1) * this.pageSize, Math.min(
-          artifact_list.length,
+        this.artifacts[i] = artifactList.slice((i - 1) * this.pageSize, Math.min(
+          artifactList.length,
           i * this.pageSize
         ));
       }

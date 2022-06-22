@@ -28,7 +28,7 @@ export class ThemeDataService {
    * @param p_id 
    * @returns themes_list. List of themes. Each theme includes the oject and the number of labels within the theme
    */
-  async theme_management_info(p_id: number): Promise<Array<Theme>> {
+  async getThemes(p_id: number): Promise<Array<Theme>> {
     try {
       // Get request to the backend
       let response = await this.requestHandler.get('/theme/theme-management-info', { "p_id": p_id }, true);
@@ -296,6 +296,20 @@ export class ThemeDataService {
       // Return the response
       return "An error occured when trying to delete the theme";
     }
+  }
+
+  // Function for searching in backend
+  async search(
+    searchWords: string,
+    p_id: number
+  ): Promise<Array<Record<string, any>>> {
+    // Get the theme information from the back end
+    return this.requestHandler.get(
+      '/theme/search',
+      { p_id: p_id, search_words: searchWords },
+      true
+    );
+
   }
 
 }
