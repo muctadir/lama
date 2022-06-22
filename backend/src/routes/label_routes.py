@@ -461,24 +461,27 @@ def search_route():
         )
     ).all()
 
-    # Schema for serialising labels
-    label_schema = LabelSchema()
-
-    # Convert the labels into a list of dictionaries
-    # Add the label type name as a key in the dictionary
-    serialised_labels = [dict(label_schema.dump(label), type=type) for label, type in labels]
+    # Add the label type name as an attribute to the labels
+    # It does feel illegal to set an attribute that does not exist, but that's python for you
+    for label, type in labels:
+        label.type = type
+    
+    # Extract just the label object (removing the type name since it's already in the object)
+    labels = [label[0] for label in labels]
 
     # Columns we search through
-    search_columns = ['id', 'name', 'description']
+    search_columns = ['id', 'name', 'description', 'type']
 
     # Get search results
-    results = search_func_all_res(args['search_words'], serialised_labels, 'id', search_columns)
+    results = search_func_all_res(args['search_words'], labels, 'id', search_columns)
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
     # Gets the actual label object from the search
     labels_results = [result['item'] for result in clean_results]
-
-    return make_response(jsonify(labels_results))
+    # Schema for serialising
+    label_schema = LabelSchema()
+    # Serialise objects and jsonify them
+    return make_response(jsonify(label_schema.dump(labels_results, many=True)))
 
 """
 Records a creation of a label in the label changelog
