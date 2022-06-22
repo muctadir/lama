@@ -113,9 +113,7 @@
                     <div class="col">
                         <form [formGroup]="labelSearch">
                             <label for="typeahead-focus">Search for a label:</label>
-                            <input id="typeahead-focus-label" formControlName="labelSearch" type="text" name="label" class="form-control" [(ngModel)]="model"
-                                [ngbTypeahead]="searchLabel" (focus)="focus2$.next($any($event).target.value)"
-                                (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterLabel()"/>
+                            <input formControlName="labelSearch" type="text" class="form-control" (keyup)="searchLabel()"/>
                         </form>
                     </div>
                 </div>
@@ -169,9 +167,7 @@
                     <div class="col">
                         <form [formGroup]="themeSearch">
                             <label for="typeahead-focus">Search for a theme:</label>
-                            <input id="typeahead-focus-theme" formControlName="themeSearch" type="text" name="theme" class="form-control" [(ngModel)]="model1"
-                                [ngbTypeahead]="searchTheme" (focus)="focus1$.next($any($event).target.value)"
-                                (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" (keyup.enter)="onEnterTheme()" />
+                            <input formControlName="themeSearch" type="text" class="form-control" (keyup)="searchTheme()" />
                         </form>
                     </div>
                 </div>

@@ -71,56 +71,11 @@ export class ThemeInfoComponent implements OnInit {
   addedLabels: Label[] = [];
   // All labels
   allLabels: Array<Label> = [];
-  // All label names
-  allLabelsNames: string[] = [];
 
   //Subthemes Added
   addedSubThemes: Array<Theme> = [];
   //All sub-themes
   allSubThemes: Array<Theme> = [];
-  // All label names
-  allSubThemesNames: string[] = [];
-
-  // Model for the search autocomplete forms
-  model: any;
-  model1: any;
-
-  // Implementation of the searching
-  @ViewChild('instance', { static: true })
-  // Create autocomplete search instance
-  instance!: NgbTypeahead;
-  // Listeners for different click and focus events
-  click$ = new Subject<string>();
-  focus1$ = new Subject<string>();
-  click1$ = new Subject<string>();
-  focus2$ = new Subject<string>();
-  click2$ = new Subject<string>();  
-
-  // Search on labels to be added
-  searchLabel: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
-    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
-    const clicksWithClosedPopup$ = this.click2$.pipe(filter(() => !this.instance.isPopupOpen()));
-    const inputFocus$ = this.focus2$;
-
-    // Goes through the array of labels
-    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-      map(term => (term === '' ? this.allLabelsNames
-        : this.allLabelsNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
-    );
-  }
-
-  // Search on themes to be added
-  searchTheme: OperatorFunction<string, readonly string[]> = (text1$: Observable<string>) => {
-    const debouncedText1$ = text1$.pipe(debounceTime(200), distinctUntilChanged());
-    const clicksWithClosedPopup1$ = this.click1$.pipe(filter(() => !this.instance.isPopupOpen()));
-    const inputFocus1$ = this.focus1$;
-
-    // Goes through the array of themes
-    return merge(debouncedText1$, inputFocus1$, clicksWithClosedPopup1$).pipe(
-      map(term => (term === '' ? this.allSubThemesNames
-        : this.allSubThemesNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
-    );
-  }
  
   constructor(private formBuilder: FormBuilder, 
       private service: InputCheckService, 
@@ -159,22 +114,12 @@ export class ThemeInfoComponent implements OnInit {
       .then(() => {
         // Set the values of the page
         this.insertThemeInfo();
-        // Get the names of the labels
-        this.getLabelNames();
-        // Get the names of the sub-themes
-        this.getSubThemesNames();
       })      
     } else {
       // Get all possible themes
       this.get_themes_without_parents(this.p_id, 0);
       // Get all possible labels
-      this.get_labels(this.p_id)
-      .then(() => {
-        // Get the names of the labels
-        this.getLabelNames();
-        // Get the names of the sub-themes
-        this.getSubThemesNames();
-      })
+      this.get_labels(this.p_id);
     }
   }
 
@@ -224,24 +169,6 @@ export class ThemeInfoComponent implements OnInit {
       "name": this.theme.getName(),
       "description": this.theme.getDesc()
     })
-  }
-
-  /**
-   * Function to get the names of the labels in the array
-   */
-  getLabelNames(): void {
-    for (let label of this.allLabels){
-      this.allLabelsNames.push(label.getName());
-    }
-  }
-
-  /**
-   * Function to get the names of the sub-themes in the array
-   */
-  getSubThemesNames(): void {
-    for (let theme of this.allSubThemes){
-      this.allSubThemesNames.push(theme.getName());
-    }
   }
 
   // Function for creating a theme
@@ -419,26 +346,34 @@ export class ThemeInfoComponent implements OnInit {
   /**
    * Function to search through all labels
    */
-  async onEnterLabel() : Promise<void> {
+  async searchLabel() : Promise<void> {
+    // Get the text of the form
+    var text: string = this.labelSearch.value.labelSearch;
+    // Get all labels
     await this.get_labels(this.p_id);
-    var text = this.labelSearch.value.labelSearch;
-    for (let label of this.allLabels){
-      if(label.getName() == text){
-        this.allLabels = [label];
-      }
+    // If the string in not empty, we look for the labels that correspons
+    if (text != ""){
+      // Get the array of labels that are included in the search
+      let newArray = this.allLabels.filter(s => s.getName().toLowerCase().includes(text) || s.getName().toUpperCase().includes(text));
+      // Set the labels
+      this.allLabels = newArray;
     }
   }
   
   /**
    * Function to search through all sub-themes
    */
-  async onEnterTheme() : Promise<void> {
+  async searchTheme() : Promise<void> {
+    // Get the text of the form
+    var text: string = this.themeSearch.value.themeSearch;
+    // Get all labels
     await this.get_themes_without_parents(this.p_id, this.t_id);
-    var text = this.themeSearch.value.themeSearch;
-    for (let theme of this.allSubThemes){
-      if(theme.getName() == text){
-        this.allSubThemes = [theme];
-      }
+    // If the string in not empty, we look for the labels that correspons
+    if (text != ""){
+      // Get the array of labels that are included in the search
+      let newArray = this.allSubThemes.filter(s => s.getName().toLowerCase().includes(text) || s.getName().toUpperCase().includes(text));
+      // Set the labels
+      this.allSubThemes = newArray;
     }
   }
 
