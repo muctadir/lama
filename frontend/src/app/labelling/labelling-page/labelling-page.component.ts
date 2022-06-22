@@ -389,7 +389,7 @@ export class LabellingPageComponent implements OnInit {
   
     // Make request to split
     let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
-    this.toastCommService.emitChange([true, "Artifact successfully split into artifact #" + splitId]);
+    this.toastCommService.emitChange([true, "Artifact was successfully split into artifact #" + splitId]);
 
     // Reloads the page
     await this.routeToLabel(this.artifact.getId());

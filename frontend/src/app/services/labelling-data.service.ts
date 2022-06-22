@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
+import { User } from 'app/classes/user';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastCommService } from './toast-comm.service';
+import { AbstractEmitterVisitor } from '@angular/compiler/src/output/abstract_emitter';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +14,11 @@ export class LabellingDataService {
   // Initialise the Request handler
   requestHandler: RequestHandler;
 
-  // Constructors for the request handler
-  constructor() {
+  /**
+   * Constructors for the request handler
+   * @param toastCommService instance of ToastCommService
+   */
+  constructor(private toastCommService: ToastCommService) {
     this.requestHandler = new RequestHandler(
       sessionStorage.getItem('ses_token')
     );
@@ -195,6 +201,88 @@ export class LabellingDataService {
     });
 
     return labelTypes;
+  }
+
+  /**
+   * Update the labelling and return + send the updates to the backend
+   * 
+   * @param admin: bool, whether the user making the updates is admin or not
+   * @param p_id: number, the project id 
+   * @param a_id : number, the artifact id
+   * @param username : string, the username of the user making the updates
+   * @param label_per_user: Record<string, Record<string, any>>, a record containing: 
+   *  {
+   *    u_id: user ID
+        id: label ID
+        name: label name
+        description: label description
+        lt_id: label type ID
+   *  }
+   * @returns a set of the label names in the update 
+   */
+   async updateLabellings(admin: boolean, p_id: number, a_id: number, username: string,
+     label_per_user: Record<string, Record<string, any>>): Promise<void> {
+    try {
+      // If the current user is admin, send all labellings to the backend
+      if (admin) {
+        // Send project ID, label type ID, artifact ID and labelling updates to the backend
+        this.editLabelling(p_id, a_id, label_per_user)
+      }
+      // If the current user is not admin, only send the user's labellings to the backend
+      else {
+        // Record holding a single user's labellings
+        let singleUpdate: Record<string, any> = {};
+        // Assign the user's labellings to their username
+        singleUpdate[username] = label_per_user[username];
+        // Send project ID, label type ID, artifact ID and labelling updates to the backend
+        this.editLabelling(p_id, a_id, singleUpdate)
+      }
+    } 
+    catch (error) {
+      // If not posisble to update, sends an error
+      this.toastCommService.emitChange([false, "Something went wrong! Please try again."]);
+    }
+  }
+
+  /**
+   * Updates a single labelling 
+   * 
+   * @param user the username of the user who changed their labelling
+   * @param label the name of the label to which the user is changing their labelling
+   * @param labels list of labels that the label was selected from
+   */
+   updateLabelling(user: User, label: string, labels: Array<Label>, lt_id: number): Record<string, any> | null {
+    // Placeholder for new label value of labelling
+    let selectedLabel: Label;
+    try {
+      // Getting the label from a given name in the list of labels from this label type
+      selectedLabel = this.findLabel(labels, label);
+      // Change the labelling in the label_per_user array for user
+      return {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), 
+        "lt_name": selectedLabel.getType(), "id": selectedLabel.getId(), "u_id": user.getId(), "lt_id": lt_id};
+    } catch (error) {
+      // If label couldn't be found, show error
+      this.toastCommService.emitChange([false, "Label doesn't exist"]);
+      // Return nothing
+      return null
+    }
+  }
+
+  /**
+   * Finds a label object in an array of Labels from a given name
+   * 
+   * @param labels array of labels
+   * @param label the name of the label that needs to be found
+   */
+   findLabel(labels: Label[], label: string): Label {
+    //Running through each label in array and see if the label has the same name as (parameter) "label"
+    for (let eachLabel of labels) {
+      if (eachLabel.getName() == label) {
+        return eachLabel
+      }
+    }
+    //Return error if cannot find the label
+    throw new Error("Label name invalid")
   }
 
   /**

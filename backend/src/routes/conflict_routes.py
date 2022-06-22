@@ -274,9 +274,11 @@ Author: Linh Nguyen & Ana-Maria Olteniceanu
 Route to send labelling made by a specific user concerning a certain conflict to the frontend
 @returns list of dictionaries of the form:
 {
+    u_id: user ID
     id: label ID
     name: label name
     description: label description
+    lt_id: label type ID
 }
 """
 @conflict_routes.route("/LabelPerUser", methods=["GET"])
