@@ -23,12 +23,6 @@ export class IndividualLabellingForm implements OnInit {
 
   selectedDesc: string | undefined;
   labelForm: FormGroup;
-  selectedLabel : Label | undefined;
-
-  // Form for label search function
-  labelSearch = this.formBuilder.group({
-    labelSearch: ""
-  });
 
   model: any;
 
@@ -50,13 +44,9 @@ export class IndividualLabellingForm implements OnInit {
     const inputFocus$ = this.focus$;
 
     // Goes through the array of labels
-    // return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
-    //   map(term => (term === '' ? test
-    //     : test.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
-    // );
     return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term => (term === '' ? this.allLabelsNames
-        : this.allLabelsNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+        : this.allLabelsNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)))
     );
   }
 
@@ -108,9 +98,28 @@ export class IndividualLabellingForm implements OnInit {
     this.parentForm?.push(this.labelForm);
   }
 
-  // onEnterLabel() {
-  //   alert("poop")
-  // }
+  /**
+   * Function to select the label from the search dropdown
+   * 
+   * @param item the label name clicked / entered
+   */
+  clickLabel(item: any){
+    // Create a variable for the searched label
+    let searchedLabel: Label | undefined;
+    // For all labels, get the correct one
+    for (let label of this.labels){
+      if (label.getName() == item.item){
+        // Asign the searched label
+        searchedLabel = label;
+      }
+    }
+    // If the label exists
+    if (searchedLabel != undefined){
+      // We set the form value to this label
+      this.labelForm.controls['label'].setValue(searchedLabel)
+      this.selectedDesc = searchedLabel.getDesc()
+    }
+  }
 
   async getLabels() {
     let p_id = this.reroutingService.getProjectID(this.router.url);
@@ -122,26 +131,11 @@ export class IndividualLabellingForm implements OnInit {
       }
     }
 
+    // Get all label names
     this.allLabelsNames = [];
     for(let label in this.labels) {
       this.allLabelsNames.push(this.labels[label].getName());
     }
   }
-
-  /**
-   * Function to search through all labels
-   */
-   async onEnterLabel() : Promise<void> {
-    await this.getLabels();
-    var text = this.labelSearch.value.labelSearch;
-    for (let label of this.labels){
-      if(label.getName() == text){
-        this.labels = [label];
-      }
-    }
-
-    this.labelForm.controls['label'].patchValue(this.labels[0]);
-  }
-
 
 }
