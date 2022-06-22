@@ -114,7 +114,7 @@ def search_func_all_res(search_words, data, id_col, data_cols):
     return dictionary
             
 
-# groups the param list into a dictionary by ID
+# Groups the param list into a dictionary by ID
 # @param the list of arrays of type [id, [dist, word], search_word, item]
 # there is an entry in the list for each best word of the search words in each artifact
 def list_to_dictionary(param_list, id_col):
