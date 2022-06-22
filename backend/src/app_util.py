@@ -190,7 +190,6 @@ def in_project(f):
     Requires 'p_id' to be in either the request body, or request parameters
     Optionally passes membership and/or user as a keyword argument
     """
-    # TODO: Check user status
     @wraps(f)
     def decorated_function(*args, user, **kwargs):
         if request.method == 'GET':
@@ -207,8 +206,8 @@ def in_project(f):
         
         membership = db.session.get(Membership, {'p_id': p_id, 'u_id': user.id})
 
-        # Check that membership exists
-        if not membership:
+        # Check that membership exists and that membership was not deleted.
+        if not membership or membership.deleted:
             return make_response('Unauthorized', 401)
 
         # Check if function requires certain keyword only arguments
@@ -219,6 +218,37 @@ def in_project(f):
 
         return f(*args, **kwargs)
 
+    return decorated_function
+
+def not_frozen(f):
+    """
+    Decorator that checks that the project is not frozen. This decorator needs to be placed _below_ the in_project decorator
+    Optionally passes project/user/membership as keyword only arguments.
+    """
+    @wraps(f)
+    def decorated_function(*args, user, membership, **kwargs):
+        # Get project that user is a member of
+        project = membership.project
+        # Checks that project exists
+        # Note that this should never happen, since the membership has a foreign key dependency on project
+        if not project:
+            return make_response("Internal Server Error", 500)
+        
+        # Checks that the project is not frozen
+        # The request should not be processed if the project is frozen
+        if project.frozen:
+            return make_response("Bad Request: Project Frozen", 400)
+
+        # TODO: There _has_ to be a better way of doing this
+        # Check if function requires certain keyword only arguments
+        if 'user' in getfullargspec(f).kwonlyargs:
+            kwargs['user'] = user
+        if 'membership' in getfullargspec(f).kwonlyargs:
+            kwargs['membership'] = membership
+        if 'project' in getfullargspec(f).kwonlyargs:
+            kwargs['project'] = project
+
+        return f(*args, **kwargs)
     return decorated_function
 
 """
