@@ -73,7 +73,6 @@ build-image-backend:
 build-image-nginx:
   stage: build-image
   image: docker  
-  # needs: ['backend-test']
   only:
     - main 
   retry: 2

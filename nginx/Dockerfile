@@ -7,7 +7,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update \
     && apt-get install -y --no-install-recommends nginx \
     certbot \
-    python3-certbot-nginx \
+    python3-certbot-nginx 
 
 COPY default /etc/nginx/sites-enabled/default
 
