@@ -10,8 +10,6 @@ import { LabellingDataService } from 'app/services/labelling-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
 
-const test = ["soup", "sour", "ass"]
-
 @Component({
   selector: 'app-individual-labelling-form',
   templateUrl: './individual-labelling-form.component.html',
@@ -142,7 +140,7 @@ export class IndividualLabellingForm implements OnInit {
       }
     }
 
-    console.log(this.labels);
+    this.labelForm.controls['label'].patchValue(this.labels[0]);
   }
 
 
