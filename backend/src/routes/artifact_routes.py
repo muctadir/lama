@@ -97,28 +97,8 @@ def get_artifacts(*, user, membership):
                 Labelling.p_id == p_id)
         )
         
-    # List of artifacts to be passed to frontend
-    artifact_info = []
-
-    # Schema to serialize the artifact
-    artifact_schema = ArtifactSchema()
-    labelling_schema = LabellingSchema()
-
-    # For each displayed artifact
-    for artifact in artifacts:
-        # Convert artifact to JSON
-        artifact_json = artifact_schema.dump(artifact)
-        # Get the serialized labellings
-        labellings = labelling_schema.dump(artifact.labellings, many=True)
-
-        # Put all values into a dictionary
-        info = {
-            "artifact": artifact_json,
-            "artifact_labellings": labellings
-        }
-
-        # Append dictionary to list
-        artifact_info.append(info)
+    # List of artifacts and their labellings to be passed to frontend
+    artifact_info = [__get_artifact_info(artifact) for artifact in artifacts]
 
     response = {
         'info': artifact_info,
@@ -260,9 +240,6 @@ def search(*, user, membership):
     # Get the project id
     p_id = int(args['p_id'])
 
-    # Artifact schema for serializing
-    artifact_schema = ArtifactSchema()
-    
     # If the user is a admin
     if membership.admin:
         # Get all artifact
@@ -277,15 +254,21 @@ def search(*, user, membership):
                 Labelling.u_id == user.id).distinct()
         ).all()
 
+    # The columns we search through
+    search_columns = ['id', 'data']
+    
     # Getting result of search
-    results = search_func_all_res(args['search_words'], artifacts, 'id', 'data')
+    results = search_func_all_res(args['search_words'], artifacts, 'id', search_columns)
     # Take the best results
     clean_results = best_search_results(results, len(args['search_words'].split()))
-    # Gets the actual artifact from the search
+    # Gets the actual artifact object from the search
     artifacts_results = [result['item'] for result in clean_results]
 
+    # Get artifact info (it's already serialised)
+    info = [__get_artifact_info(artifact) for artifact in artifacts_results]
+
     # Return the list of artifacts from the search
-    return make_response(jsonify(artifact_schema.dump(artifacts_results, many=True)))
+    return make_response(jsonify(info))
 
 def __get_extended(artifact):
     # Children of the artifact
@@ -302,24 +285,6 @@ def __get_extended(artifact):
         "artifact_children": artifact_children,
         "artifact_labellings": labellings_formatted
     }
-
-
-def __get_labellings(artifact):
-    # Schema to serialize the labellings
-    labelling_schema = LabellingSchema()
-
-    # Get the labellings of this artifact
-    artifact_labellings = artifact.labellings
-
-    # Serialize all labellings
-    labellings = []
-    for labelling in artifact_labellings:
-        labelling_json = labelling_schema.dump(labelling)
-        labellings.append(labelling_json)
-
-    # Return labellings
-    return labellings
-
 
 def __aggregate_labellings(artifact):
     # Get all the labellings of the artifact
@@ -585,3 +550,29 @@ def __record_split(u_id, p_id, a_id, parent_id):
     )
 
     db.session.add(change)
+
+"""
+@param artifact : an artifact object
+@returns a dictionary of the form 
+{
+    'artifact' : the serialized artifact object
+    'artifact_labellings' : the serialized labellings of that artifact
+}
+"""
+def __get_artifact_info(artifact):
+    # Schema to serialize the artifact
+    artifact_schema = ArtifactSchema()
+    labelling_schema = LabellingSchema()
+
+    # Convert artifact to JSON
+    artifact_json = artifact_schema.dump(artifact)
+    # Get the serialized labellings
+    labellings = labelling_schema.dump(artifact.labellings, many=True)
+
+    # Put all values into a dictionary
+    info = {
+        "artifact": artifact_json,
+        "artifact_labellings": labellings
+    }
+
+    return info

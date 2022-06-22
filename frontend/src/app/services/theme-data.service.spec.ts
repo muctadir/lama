@@ -22,7 +22,7 @@ describe('ThemeDataService', () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "get");
     // Call the function
-    await service.theme_management_info(1);
+    await service.getThemes(1);
     // Test if the function works
     expect(spy).toHaveBeenCalled();
   });

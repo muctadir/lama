@@ -197,6 +197,9 @@ export class ArtifactDataService {
     searchWords: string,
     p_id: number
   ): Promise<Array<StringArtifact>> {
+    // The artifacts
+    let artifacts: Array<StringArtifact> = new Array<StringArtifact>();
+
     // Get the artifact information from the back end
     let response = await this.requestHandler.get(
       '/artifact/search',
@@ -204,11 +207,27 @@ export class ArtifactDataService {
       true
     );
 
-    // Get the artifact from the response
-    let artifacts = response;
+    response.forEach((artifactInfo : Record<string, any>) => {
+      // Separate information into an artifact and its labellings
+      let artifactJson = artifactInfo['artifact'];
+      let labellingsJson = artifactInfo['artifact_labellings'];
+      
+      // Construct StringArtifact object
+      let artifact: StringArtifact = new StringArtifact(
+        artifactJson['id'],
+        artifactJson['identifier'],
+        artifactJson['data']
+      );
+      
+      // Update the artifacts labellings
+      artifact.setLabellings(labellingsJson);
+      // Add the artifact to the end result
+      artifacts.push(artifact);
 
-    // Return the record
-    return artifacts;
+    });
+
+    return artifacts
+
   }
 
   /**

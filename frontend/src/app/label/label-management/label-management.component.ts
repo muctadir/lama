@@ -125,9 +125,38 @@ export class LabelManagementComponent {
   }
 
   // Gets the search text
-  onEnter() {
+  async onEnter() {
+
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
+
+    // Search text
     var text = this.searchForm.value.search_term;
-    alert('entered!!' + text + '');
+
+    // If nothing was searched
+    if(text.length == 0){
+      // Get all labels anew
+      this.getLabels();
+    } else {
+      // Otherwise search
+
+      // Pass the search word to services
+      let labelsSearched = await this.labellingDataService.search(text, p_id);
+
+      
+      // List for the labels resulting from the search
+      let labelList: Array<Label> = [];
+      // For loop through all searched labels
+      for (let label of labelsSearched) {
+        // Make it an label object
+        let newLabel = new Label(label['id'], label['name'], label['description'], label['type']);
+        // Append label to list
+        labelList.push(newLabel);
+      }
+
+      this.labels = labelList;
+
+    }
   }
 
   // Get the labelled count
@@ -136,7 +165,7 @@ export class LabelManagementComponent {
     let resultDict: { [id: number]: string } = {};
 
 
-    await this.labels.forEach(async (label: Label) => {
+    this.labels.forEach(async (label: Label) => {
       // Wait for the laeblling data service to get the labelling count
       const result = await this.labellingDataService.getLabellingCount({
         p_id: this.p_id,
@@ -152,7 +181,7 @@ export class LabelManagementComponent {
   /**
    * Function for sorting on name
    * 
-  */
+   */
   sortLabel(){
     // Check if it was sorted ascending
     if (this.sortedLabel == sorted.Asc){

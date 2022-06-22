@@ -9,6 +9,7 @@ from src.app_util import login_required, in_project, check_string, check_whitesp
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
   Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
+from src.searching.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -427,6 +428,60 @@ def count_usage_route():
         return make_response(str(count), 200)
     except OperationalError:
         return make_response('Internal Server Error', 500)
+
+# Author: Eduardo
+# Search labels
+@label_routes.route('/search', methods=['GET'])
+@login_required
+@in_project
+def search_route():
+
+    # Get arguments
+    args = request.args
+    # Required arguments
+    required = ('p_id', 'search_words')
+    
+    # Check if required agruments are supplied
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
+    
+    # Sanity conversion to int (for when checking for equality in sql)
+    p_id = int(args['p_id'])
+
+    # Get all the labels and the name of their label type
+    # Note that the label type name needs to be supplied for the Label class in the frontend
+    labels = db.session.execute(
+        select(
+            Label,
+            LabelType.name
+        ).where(
+            Label.p_id == p_id,
+            Label.lt_id == LabelType.id,
+            Label.deleted == False
+        )
+    ).all()
+
+    # Add the label type name as an attribute to the labels
+    # It does feel illegal to set an attribute that does not exist, but that's python for you
+    for label, type in labels:
+        label.type = type
+    
+    # Extract just the label object (removing the type name since it's already in the object)
+    labels = [label[0] for label in labels]
+
+    # Columns we search through
+    search_columns = ['id', 'name', 'description', 'type']
+
+    # Get search results
+    results = search_func_all_res(args['search_words'], labels, 'id', search_columns)
+    # Take the best results
+    clean_results = best_search_results(results, len(args['search_words'].split()))
+    # Gets the actual label object from the search
+    labels_results = [result['item'] for result in clean_results]
+    # Schema for serialising
+    label_schema = LabelSchema()
+    # Serialise objects and jsonify them
+    return make_response(jsonify(label_schema.dump(labels_results, many=True)))
 
 """
 Records a creation of a label in the label changelog
