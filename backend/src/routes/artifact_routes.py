@@ -133,7 +133,7 @@ def get_artifacts(*, user, membership):
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 @in_project
-def add_new_artifacts(*, user):
+def add_new_artifacts(*, user, membership):
     # Get args from request 
     args = request.json['params']
     # What args are required
@@ -181,7 +181,9 @@ def add_new_artifacts(*, user):
         print(e)
         return make_response('Internal Server Error', 503)
 
-    return make_response(identifier)
+    return make_response({
+        'identifier': identifier,
+        'admin': membership.admin})
 
 
 @artifact_routes.route("/singleArtifact", methods=["GET"])
