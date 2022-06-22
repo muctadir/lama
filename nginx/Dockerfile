@@ -8,7 +8,6 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends nginx \
     certbot \
     python3-certbot-nginx \
-    micro
 
 COPY default /etc/nginx/sites-enabled/default
 
