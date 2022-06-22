@@ -14,6 +14,7 @@ import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { LabellingDataService } from 'app/services/labelling-data.service';
 import { FormBuilder } from '@angular/forms';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-artifact-management-page',
@@ -47,6 +48,8 @@ export class ArtifactManagementPageComponent {
     search_term: ''
   });
 
+  frozen: boolean = true;
+
 
   /**
    * Constructor which:
@@ -59,7 +62,8 @@ export class ArtifactManagementPageComponent {
     private artifactDataService: ArtifactDataService,
     private labellingDataService: LabellingDataService,
     private router: Router, private formBuilder: FormBuilder,
-    private toastCommService: ToastCommService) {
+    private toastCommService: ToastCommService,
+    private projectDataService: ProjectDataService) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
     this.p_id = Number(this.routeService.getProjectID(this.url))
@@ -67,10 +71,11 @@ export class ArtifactManagementPageComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
 
     // Clear cache and get the artifacts from the backend
     this.artifacts = {};
-    this.getArtifacts();
+    await this.getArtifacts();
   }
 
   /**

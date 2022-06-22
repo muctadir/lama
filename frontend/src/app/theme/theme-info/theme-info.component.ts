@@ -8,6 +8,7 @@ import { FormBuilder } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-theme-info',
@@ -69,7 +70,8 @@ export class ThemeInfoComponent implements OnInit {
     private router: Router, 
     private themeDataService: ThemeDataService, 
     private labelDataService: LabellingDataService,
-    private toastCommService: ToastCommService) { 
+    private toastCommService: ToastCommService,
+    private projectDataService: ProjectDataService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -82,7 +84,13 @@ export class ThemeInfoComponent implements OnInit {
     this.t_id = 0;
   }
 
-  ngOnInit(){
+  async ngOnInit(){
+    if (await this.projectDataService.getFrozen()){
+      await this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Project frozen, you can not label"]);
+      return;
+    }
+
     // Set the create/edit booleans
     this.setBooleans();
     // Set the header of the page

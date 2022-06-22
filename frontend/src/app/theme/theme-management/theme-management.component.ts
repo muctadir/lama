@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { FormBuilder } from '@angular/forms';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 // Enumeration for sorting
 enum sorted {
@@ -45,7 +46,13 @@ export class ThemeManagementComponent {
     search_term: ''
   });
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private themeDataService: ThemeDataService) {
+  // True if the project is frozen
+  frozen: boolean = true;
+
+  constructor(private router: Router, 
+    private formBuilder: FormBuilder, 
+    private themeDataService: ThemeDataService,
+    private projectDataService: ProjectDataService) {
     // Initialize the array for the themes
     this.themes = new Array<Theme>();
     // Gets the url from the router
@@ -55,6 +62,13 @@ export class ThemeManagementComponent {
     // Use reroutingService to obtain the project ID
     this.p_id = Number(this.routeService.getProjectID(this.url));
   }
+
+  async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
+    // Get the theme information from the request handler
+    this.get_theme_management_info();
+  }
+
 
   /**
    * Reroutes to other pages
@@ -72,11 +86,6 @@ export class ThemeManagementComponent {
   reRouterTheme(new_page: string, theme_id: number): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, new_page, theme_id]);
-  }
-
-  ngOnInit(): void {
-    // Get the theme information from the request handler
-    this.get_theme_management_info();
   }
 
   // Function for getting the theme info

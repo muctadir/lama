@@ -4,7 +4,7 @@ from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select
 from sqlalchemy.exc import OperationalError, MultipleResultsFound
 from sqlalchemy.orm import aliased
-from src.app_util import login_required, in_project, time_from_seconds
+from src.app_util import login_required, in_project, time_from_seconds, not_frozen
 from src.models.item_models import Label, LabelType, Labelling, Artifact
 from src.models.change_models import ChangeType
 from src.models.auth_models import User
@@ -61,6 +61,7 @@ Author: B. Henkemans, V. Bogachenkova
 @labelling_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
+@not_frozen
 def post_labelling(*, user):
     
     args = request.json['params']
@@ -108,6 +109,7 @@ Editing existing labelling(s)
 @labelling_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
+@not_frozen
 def edit_labelling(*, user, membership):
     # Get args from request 
     args = request.json['params']

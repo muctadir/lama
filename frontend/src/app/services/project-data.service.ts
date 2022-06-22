@@ -1,9 +1,12 @@
 // Victoria Bogachenkova
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Project } from 'app/classes/project';
 
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
+import { ReroutingService } from './rerouting.service';
+import { ToastCommService } from './toast-comm.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +18,9 @@ export class ProjectDataService {
   /**
    * Constructor instantiates requestHandler
    */
-  constructor() {
+  constructor(private router: Router,
+    private toastCommService: ToastCommService,
+    private rerouter: ReroutingService) {
     this.sessionToken = sessionStorage.getItem('ses_token');
     this.requestHandler = new RequestHandler(this.sessionToken);
   }
@@ -105,6 +110,15 @@ export class ProjectDataService {
 
     // Makes the backend request to get the projects of which the user is a member
     let response: any = await this.requestHandler.post("/project/creation", projectInformation, true);
+  }
+
+  async getFrozen(): Promise<any> {
+    try {
+      let result = await this.requestHandler.get("/project/settings", {'p_id': this.rerouter.getProjectID(this.router.url)}, true);
+      return result["frozen"];
+    } catch {
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
+    }
   }
 
 

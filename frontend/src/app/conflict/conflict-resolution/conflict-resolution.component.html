@@ -15,7 +15,7 @@
         <div class="col-1 align-self-center">
             <div *ngIf="hightlightedText.length > 0" class="col-2">
                 <div id="artifactButtons">
-                    <i (click)="split()" class="bi bi-scissors"></i>
+                    <i (click)="split()" class="bi bi-scissors" *ngIf="!frozen"></i>
                 </div>
             </div>
         </div>
@@ -60,11 +60,11 @@
     <div class="row">
         <div class="col">
             <!-- Create label button -->
-            <button class="btn btn-secondary labelButtons" (click)="openCreateForm()">
+            <button class="btn btn-secondary labelButtons" (click)="openCreateForm()" [disabled]="frozen">
                 Create label
             </button>
             <!-- Merge label buttons -->
-            <button class="btn btn-secondary labelButtons" (click)="openMerge()">
+            <button class="btn btn-secondary labelButtons" (click)="openMerge()" [disabled]="frozen">
                 Merge labels
             </button>
         </div>
@@ -92,7 +92,7 @@
                     <div class="labelTypeDiv">
                         <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
                         <select class="form-control" name="labelsForm" #changedLabel
-                            [disabled]="!admin && user.getUsername() != username"
+                            [disabled]="frozen || (!admin && user.getUsername() != username)"
                             (change)="updateLabelling(user, changedLabel.value)">
                             <div>
                                 <!-- All labels from the label type are dropdown options -->
@@ -129,7 +129,7 @@
         <div class="col-6">
             <!-- Submit button -->
             <button type="button" class="btn btn-secondary text-nowrap float-end" id="submitLabellingButton"
-                (click)="updateLabellings()">
+                (click)="updateLabellings()" [disabled]="frozen">
                 Resolve
             </button>
         </div>

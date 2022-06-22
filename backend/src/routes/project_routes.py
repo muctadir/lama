@@ -11,7 +11,7 @@ from src.models.item_models import Artifact, LabelType, Labelling, Label
 from src.models.project_models import Project, Membership, ProjectSchema
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, distinct
-from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, in_project
+from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, in_project, not_frozen
 from sqlalchemy.exc import OperationalError, IntegrityError
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
 
@@ -294,6 +294,7 @@ For editing an existing project
 @project_routes.route("/edit", methods=["PATCH"])
 @login_required
 @in_project
+@not_frozen
 def edit_project(*, membership):
     # Check if the current user is project admin
     if (not membership.admin):

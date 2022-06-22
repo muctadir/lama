@@ -10,6 +10,7 @@ import { HistoryComponent } from 'app/modals/history/history.component';
 import { LabelType } from 'app/classes/label-type';
 import { User } from 'app/classes/user';
 import { Label } from 'app/classes/label';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-single-artifact-view',
@@ -41,6 +42,8 @@ export class SingleArtifactViewComponent implements OnInit {
   a_id: number;
   // Initialize boolean value that represent whether the labels in this page have been changed
   changed: boolean;
+  // whether the project is frozen
+  frozen: boolean = true;
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -53,7 +56,8 @@ export class SingleArtifactViewComponent implements OnInit {
     private artifactDataService: ArtifactDataService,
     private labellingDataService: LabellingDataService,
     private toastCommService: ToastCommService,
-    private router: Router) {
+    private router: Router,
+    private projectDataService: ProjectDataService) {
     //Initializing variables
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
@@ -78,6 +82,7 @@ export class SingleArtifactViewComponent implements OnInit {
    * @trigger on creation of component
    */
   async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
     // Reset the changed variable
     this.changed = false;
     // Reset the list of users

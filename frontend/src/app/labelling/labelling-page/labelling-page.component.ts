@@ -15,6 +15,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { FormArray, FormGroup } from '@angular/forms';
 import { ToastCommService } from 'app/services/toast-comm.service';
 import { AccountInfoService } from 'app/services/account-info.service';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-labelling-page',
@@ -69,7 +70,8 @@ export class LabellingPageComponent implements OnInit {
     private artifactDataService: ArtifactDataService,
     private router: Router,
     private toastCommService: ToastCommService,
-    private accountService: AccountInfoService
+    private accountService: AccountInfoService,
+    private projectDataService: ProjectDataService
   ) {
     /**
      * Preparing variables for information
@@ -104,9 +106,17 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
-    // Gets the url again
+    // if frozen reroute to stats
+    if (await this.projectDataService.getFrozen()){
+      await this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Project frozen, you can not label"]);
+      return;
+    }
+
+    // Waits on 
     this.hidden = false;
 
+    // Gets the url again
     this.url = this.router.url;
 
     this.labellings = new FormArray([]);
