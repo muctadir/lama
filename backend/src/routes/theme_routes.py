@@ -344,6 +344,7 @@ def edit_theme(*, user):
     # Set the sub_themes of the theme
     make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
     
+    # Check for cycles
     try:
         __get_children(t_id)
     except ThemeCycleDetected:
