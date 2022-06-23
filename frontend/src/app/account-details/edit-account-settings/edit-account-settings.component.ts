@@ -67,11 +67,8 @@ export class EditAccountSettingsComponent {
       "email": this.accountForm.value.email
     };
 
-    // Checks the input of the user
-    let validInput: boolean = this.checkInput();
-
     // Sends request to backend if input is valid, otherwise displays error message
-    if (validInput) {
+    if (this.checkInput()) {
       // Calls function responsible for making the request to the backend
       this.makeRequest(accountInformation)
     } else {
