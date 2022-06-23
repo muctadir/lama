@@ -123,7 +123,7 @@ export class ThemeVisualComponent implements OnInit {
     // Appends the circles for each node
     this.node.append("circle")
       .attr("r", 2.5)
-      .attr("fill", function (d: any) { console.log(d.data.type); return myColour(d.data.type) });
+      .attr("fill", function (d: any) { return myColour(d.data.type) });
 
     // Appends text for each node
     this.node.append("text")
