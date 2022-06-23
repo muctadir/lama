@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
-//import of d3
+// Import of d3
 import * as d3 from 'd3';
 
 
