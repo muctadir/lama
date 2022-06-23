@@ -13,7 +13,7 @@
 
         <!--Add Artifact Button-->
         <div class="col">
-            <span (click)="open()" class="float-end">
+            <span class="float-end">
                 <button type="button" class="btn btn-secondary" id="addArtifactButton" [disabled]="frozen" (click)="open()">
                     Add Artifact
                     <!-- Displays the + icon next to "Add artifact" -->
@@ -75,11 +75,11 @@
                     [collectionSize]="nArtifacts"
                     (pageChange)="getArtifacts()"
                     [maxSize]="5"
-                    [rotate]="true" 
+                    [rotate]="true"
                     [boundaryLinks]="true">
                 </ngb-pagination>
-            </div>        
-            
+            </div>
+
         </div>
     </div>
 </div>
