@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
@@ -32,6 +32,9 @@ export class ThemeVisualComponent implements OnInit {
   p_id: number;
   response: any;
 
+  pageX: any;
+  pageY: any;
+
   constructor(private themeDataService: ThemeDataService, private router: Router) {
     // Width with margins
     this.width = 900 - this.margin.left - this.margin.right;
@@ -61,6 +64,11 @@ export class ThemeVisualComponent implements OnInit {
     this.data = this.response
     console.log(this.data.name)
     this.data.name = "Current Project"
+
+    // Define the div for the tooltip
+    let div = d3.select("#treeChart").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
 
     // Initialise svg
     this.svg = d3.select('#treeChart')
@@ -127,7 +135,21 @@ export class ThemeVisualComponent implements OnInit {
     // Appends the circles for each node
     this.node.append("circle")
       .attr("r", 2.5)
-      .attr("fill", function (d: any) { return myColour(d.data.type) });
+      .attr("fill", function (d: any) { return myColour(d.data.type) })
+      .on("mouseover", function(event:any,d:any) {
+        console.log(d)
+        div.transition()
+          .duration(200)
+          .style("opacity", .9);
+        div.html("id: " + d.data.id + "<br/>" + "type: " +  d.data.type)
+          .style("left", (d.y + 100) + "px")
+          .style("top", (d.x - 25 ) + "px");
+        })
+      .on("mouseout", function(d:any) {
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);
+        });
 
     // Appends text for each node
     this.node.append("text")
