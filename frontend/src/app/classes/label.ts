@@ -35,6 +35,7 @@ export class Label {
      * @param id
      * @param name
      * @param desc
+     * @param type
      */
     constructor(id: number, name: string, desc: string, type: string) {
         this.id = id;
