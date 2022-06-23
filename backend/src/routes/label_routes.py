@@ -218,31 +218,37 @@ def merge_route(*, user):
 
     args = request.json['params']
     # Required parameters
-    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')
+    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')    
 
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
+    # Check whether the length of the label name is at least one character long
+    if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
+        return make_response('Label name cannot be empty')
 
-    # Check for invalid characters
-    if check_whitespaces(args):
+    # Check whether the length of label description is at least one character long
+    if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
+        return make_response('Label description cannot be empty', 400)
+
+    # Check for invalid whitespaces
+    if check_whitespaces([args['newLabelName'], args['newLabelDescription']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
     
     # Check for invalid characters
     if check_string([args['newLabelName']]):
         return make_response("Input contains a forbidden character", 511)
+    
+    # Check if label name is taken
+    if label_name_taken(args['newLabelName'], 0):
+        return make_response("Label name already exists", 400)
 
-    # Check whether the length of the label name is at least one character long
-    if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
-        return make_response('Label name cannot be empty')
-    # Check whether the length of label description is at least one character long
-    if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot be empty', 400)
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
-        return make_response('Bad request: Label ids must be unique', 400)
+        print(100)
+        return make_response('Label ids must be unique', 400)
 
     # Labels being merged
     labels = db.session.scalars(
@@ -255,15 +261,15 @@ def merge_route(*, user):
     
     # Check that the labels exist
     if len(labels) != len(label_ids):
-        return make_response('Bad request: One or more labels do not exist', 400)
+        return make_response('One or more labels do not exist', 400)
 
     for label in labels:
         # Check labels are in the same project (the one selected)
         if label.p_id != args['p_id']:
-            return make_response('Bad request: Labels must be in the same project', 400)
+            return make_response('Labels must be in the same project', 400)
         # Check labels are of the same type
         if label.lt_id != labels[0].lt_id:
-            return make_response('Bad request: Labels must be of the same type', 400)        
+            return make_response('Labels must be of the same type', 400)        
     
     # Create new label
     new_label = Label(
