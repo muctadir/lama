@@ -51,7 +51,7 @@ build-image-frontend:
   image: docker
   # needs: ['frontend-test']
   only:
-    - main 
+    - deployment-branch
   retry: 2
   script:
     - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
@@ -63,7 +63,7 @@ build-image-backend:
   image: docker  
   # needs: ['backend-test']
   only:
-    - main 
+    - deployment-branch
   retry: 2
   script:
     - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
@@ -74,7 +74,7 @@ build-image-nginx:
   stage: build-image
   image: docker  
   only:
-    - main 
+    - deployment-branch 
   retry: 2
   script:
     - echo testpassword | docker login -u testuser lamahost.win.tue.nl:81 --password-stdin
