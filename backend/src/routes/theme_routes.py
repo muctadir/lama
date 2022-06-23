@@ -348,7 +348,7 @@ def edit_theme(*, user):
     try:
         __get_children(t_id)
     except ThemeCycleDetected:
-        make_response("Your choice of subthemes would introduce a cycle", 400)
+        return make_response("Your choice of subthemes would introduce a cycle", 400)
 
     # Set the labels of the theme
     make_labels(theme, args["labels"], args['p_id'], user.id)
@@ -734,6 +734,20 @@ def __get_children(t_id):
     # We also append the number 0 to each result to distinguish the type
     try:
         results = db.session.execute(select(subthemes, 0)).all()
+
+        # Then we extend this result with all the labels for each theme included in the results
+        # A label may be used in many themes, this is fine
+        # We also append the number 1 to each result to distinguish the type
+        results += db.session.execute(select(
+            label_to_theme.c.t_id,
+            label_to_theme.c.l_id,
+            Label.name,
+            1
+        ).where(
+            Label.id == label_to_theme.c.l_id,
+            label_to_theme.c.t_id == subthemes.c.id
+        )).all()
+
     except OperationalError as e:
         # CTEs are limited so I am not aware of a way to stop the recursion early (DISTINCT not allowed for CTE)
         # So currently we catch an exception and check the error code
@@ -742,19 +756,6 @@ def __get_children(t_id):
         if e.orig.args[0] in [ThemeCycleDetected.MariaDB, ThemeCycleDetected.MySQLdb]:
             raise ThemeCycleDetected
         raise e
-
-    # Then we extend this result with all the labels for each theme included in the results
-    # A label may be used in many themes, this is fine
-    # We also append the number 1 to each result to distinguish the type
-    results += db.session.execute(select(
-        label_to_theme.c.t_id,
-        label_to_theme.c.l_id,
-        Label.name,
-        1
-    ).where(
-        Label.id == label_to_theme.c.l_id,
-        label_to_theme.c.t_id == subthemes.c.id
-    )).all()
 
     return results
 
