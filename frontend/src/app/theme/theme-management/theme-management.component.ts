@@ -60,13 +60,40 @@ export class ThemeManagementComponent {
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = Number(this.routeService.getProjectID(this.url));
+    this.p_id = Number(this.routeService.getProjectID(this.url));    
   }
 
   async ngOnInit(): Promise<void> {
     this.frozen = await this.projectDataService.getFrozen();
     // Get the theme information from the request handler
     this.getThemes();
+
+    // For search icon to search on click
+    this.searchClick();    
+  }
+
+  /**
+   * Function for searching based on clicking on the maginifying glass
+   */
+  searchClick(){
+    // Get the search image
+    let image = document.getElementById("searchBar")
+    if (image != null){
+      // On click event handler
+      image.onclick = (e) => {
+        if (image != null){
+          // Get placement of the image
+          var rect = image.getBoundingClientRect();
+          // Get clicked x coordinates
+          var x = e.clientX - rect.left;
+          // When clicked in the maginifying glass
+          if (x > 330){
+            // Search
+            this.onEnter()
+          }
+        }
+      }
+    }
   }
 
 
