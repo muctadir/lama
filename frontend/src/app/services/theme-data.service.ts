@@ -4,6 +4,7 @@ import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { ToastCommService } from './toast-comm.service';
+import { AxiosError } from 'axios';
 
 @Injectable({
   providedIn: 'root'
@@ -309,7 +310,41 @@ export class ThemeDataService {
       { p_id: p_id, search_words: searchWords },
       true
     );
+  }
 
+  /**
+   * Function to get the necessary data for theme visualisation.
+   * @param p_id: The id of the project to get the hierarchy of (the user must be a part of the project)
+   * @returns The project is passed, with labels and themes as descendants as a nested dictionary in a tree-like form. 
+   * Each dictionary is of the form:
+   * {
+   *   id: the id of the item (theme/label)
+   *   name: the name of the item (theme/label)
+   *   type: the type of the item, as a string 'Theme', 'Label', or 'Project'
+   *   children: a list of dictionaries of items that are children of this theme/project
+   * }
+   * The children key does not exist for labels, or themes without children.
+   * The top level dictionary represents the project that was passed
+   */
+   async themeVisData(p_id: number): Promise<Record<string, any>> {
+    try {
+      return this.requestHandler.get('/theme/themeVisData', { "p_id": p_id}, true);
+    } catch (e) {
+      // Emits an error toast
+      let message: string = "An unknown error occurred";
+      // Check type of error
+      if (e instanceof AxiosError) {
+        let err = e as AxiosError;
+        // Check status code is for 'Not Acceptable'
+        // This is the case for if the theme has cycles
+        if (err.response?.status as number == 406) {
+          // Pass on the error message
+          message = err.response?.data as string;
+        }
+      }
+      this.toastCommService.emitChange([false, message]);
+      throw e;
+    }
   }
 
 }
