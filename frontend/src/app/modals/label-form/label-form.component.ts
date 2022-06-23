@@ -188,8 +188,8 @@ export class LabelFormComponent implements OnInit {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
       } else {
-      // Throw error
-      this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
+        // Throw error
+        this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
       }
     }
   }
