@@ -36,38 +36,6 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
-  // Checks default value of errorMsg is empty string
-  it('Checks default value of errorMsg is empty string', () => {
-    expect(component.errorMsg).toBe("");
-  });
-
-
-  // Checks whether onRegister function provides error
-  // When called with unmodified forms
-  it('Checks the loginSubmit function using no form input', () => {
-    component.onRegister();
-
-    // Checks the error message
-    expect(component.errorMsg).toBe("Fill in username, password and valid email.");
-  });
-
-
-  // Checks whether onRegister function provides error when 1 input in incorrect
-  it('Checks whether onRegister function provides error when 1 input in incorrect', () => {
-    // Sets the data in the FormControl
-    component.username.setValue("testusername");
-    component.email.setValue("test@test");
-    component.password.setValue("testpassword123");
-    component.passwordR.setValue("testpassword123");
-
-    // Calls function
-    component.onRegister();
-
-    // Checks the error message
-    expect(component.errorMsg).toBe("Fill in username, password and valid email.");
-  });
-
   // Checks the onRegister function using dummy form input 
   // (username: testusername and password: testpassword)
   // it('Checks the loginSubmit function using dummy form input', () => {

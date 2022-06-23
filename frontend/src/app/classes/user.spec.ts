@@ -57,7 +57,15 @@ describe('User', () => {
 
     // Setting and getting the type of the user
     it('Should return the type of the user', () => {
-        const type = "user"
+        const type = true
+        user.setType(type)
+        expect(user.getType())
+            .toBe(type);
+    });
+
+    // Setting and getting the type of the user
+    it('Should return the type of the user', () => {
+        const type = false
         user.setType(type)
         expect(user.getType())
             .toBe(type);
