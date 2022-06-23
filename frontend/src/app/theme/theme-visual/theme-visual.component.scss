@@ -37,7 +37,7 @@ $light-grey-shade: #aaaaaa;
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
 
-//for each link between nodes
+// For each link between nodes
 ::ng-deep .link {
   fill: none;
   stroke: #555;
