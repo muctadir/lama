@@ -12,6 +12,7 @@ import { Theme } from 'app/classes/theme';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
 import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-individual-label',
@@ -111,21 +112,28 @@ export class IndividualLabelComponent {
    * Post of the soft delete
    */
   async postSoftDelete() {
-    try{
-      // Post the soft delete
-      await this.labellingDataService.postSoftDelete({
-        'p_id': this.p_id,
-        'l_id': this.label_id
-      });
-      // Navigate to the label management page
-      this.router.navigate(['project', this.p_id, 'labelmanagement']);
-      // Success message
-      this.toastCommService.emitChange([true, "Successfully deleted label"]);
-    } catch (e) {
-      this.toastCommService.emitChange([false, "Something went wrong!"]);
-      // Navigate to the project page
-      this.router.navigate(['project', this.p_id]);
-    }
+    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+    // Listens for an event emitted by the modal
+    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+      // If a confirmEvent = true is emitted we delete the user
+      if($e) {
+        try{
+          // Post the soft delete
+          await this.labellingDataService.postSoftDelete({
+            'p_id': this.p_id,
+            'l_id': this.label_id
+          });
+          // Navigate to the label management page
+          this.router.navigate(['project', this.p_id, 'labelmanagement']);
+          // Success message
+          this.toastCommService.emitChange([true, "Successfully deleted label"]);
+        } catch (e) {
+          this.toastCommService.emitChange([false, "Something went wrong!"]);
+          // Navigate to the project page
+          this.router.navigate(['project', this.p_id]);
+        }
+      }
+    })
   }
 
   /**
