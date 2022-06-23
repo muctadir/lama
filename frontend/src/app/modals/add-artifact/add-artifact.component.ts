@@ -125,6 +125,7 @@ export class AddArtifactComponent {
         }
 
         try {
+          // Add the artifacts to the backend
           await this.addArtifacts(p_id, allArtifacts)
         } catch(e) {
         }
@@ -188,6 +189,7 @@ export class AddArtifactComponent {
         let new_artifacts: Array<string> = [];
 
         try {
+          // Checks whether the content of the file is a string, and splits the string on newlines
           if (typeof (myReader.result) === 'string') {
             new_artifacts = myReader.result.split(/\r?\n/);
           }
