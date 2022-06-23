@@ -62,7 +62,6 @@ export class ThemeVisualComponent implements OnInit {
   initSvg() {
     // Assigns data to variable
     this.data = this.response
-    console.log(this.data.name)
     this.data.name = "Current Project"
 
     // Define the div for the tooltip
@@ -136,8 +135,8 @@ export class ThemeVisualComponent implements OnInit {
     this.node.append("circle")
       .attr("r", 2.5)
       .attr("fill", function (d: any) { return myColour(d.data.type) })
+      //tootip mouse hover added
       .on("mouseover", function(event:any,d:any) {
-        console.log(d)
         div.transition()
           .duration(200)
           .style("opacity", .9);
