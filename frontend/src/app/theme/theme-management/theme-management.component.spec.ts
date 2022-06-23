@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ThemeManagementComponent } from './theme-management.component';
 
-fdescribe('ThemeManagementComponent', () => {
+describe('ThemeManagementComponent', () => {
   let component: ThemeManagementComponent;
   let fixture: ComponentFixture<ThemeManagementComponent>;
   let router: Router;
