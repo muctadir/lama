@@ -65,11 +65,7 @@ $light-grey-shade: #aaaaaa;
 // Scroll Bar 
 ::-webkit-scrollbar {
   width: 10px;
-}
-
-// Scrollbar background
-::-webkit-scrollbar {
-  width: 10px;
+  height: 10px;
 }
 
 // Scrollbar background
