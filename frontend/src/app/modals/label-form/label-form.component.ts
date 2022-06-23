@@ -181,9 +181,10 @@ export class LabelFormComponent implements OnInit {
       this.activeModal.close();
     } catch (e: any) {
       // Check if the error has invalid characters
-      if(e.response.status == 511){
+      if (e.response.status == 511){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      // Check if error has invalid whitespaces
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
@@ -209,9 +210,23 @@ export class LabelFormComponent implements OnInit {
       // Close modal
       this.activeModal.close();
       this.toastCommService.emitChange([true, "Edited label successfully"]);
-    } catch (e) {
-      // Throw error
-      this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
+    } catch (e:any) {
+      // Check if the error has invalid characters
+      if (e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      // Check if error has invalid whitespaces
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      // Check if label name already exists
+      } else if (e.response.data == "Label name already exists"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label name already exists."]);
+      } else {
+        // Throw error
+        this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
+      }
     }
   }
 }

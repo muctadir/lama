@@ -84,21 +84,34 @@ def edit_label(*, user):
     args = request.json['params']
     # Required args
     required = ('labelId', 'labelName', 'labelDescription', 'p_id')
+
     # Checks if arguments were at least provided
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
     # Checks if the provided labelId is somewhat valid
     if args['labelId'] < 0:
         return make_response('Bad Request, labelId invalid', 400)
+
+    # Check for invalid characters
+    if check_whitespaces([args['labelName'], args['labelDescription']]):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([args['labelName']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Get label from database
     try:
         label = db.session.get(Label, args['labelId'])
     except OperationalError:
         # Something went wrong
         return make_response('Internal Server Error: Fetching label from database unsuccessful.', 500)
+
     # Check if the response contained a label
     if not label:
         return make_response('Label does not exist', 400)
+
     # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
@@ -108,7 +121,7 @@ def edit_label(*, user):
         __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
     
     # Check if the label name is unique
-    if label_name_taken(args["labelName"], 0):
+    if label_name_taken(args["labelName"], args['labelId']):
         return make_response("Label name already exists", 400)
 
     # Records a change in the name, only if the name has actually changed
@@ -123,7 +136,6 @@ def edit_label(*, user):
     try:
         db.session.commit()
     except OperationalError:
-
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response()
@@ -656,12 +668,12 @@ Function that checks if a label name is already taken
 @returns true if name is already a label name and false otherwise
 @author Linh, Jarl
 """
-def label_name_taken(name, t_id):
+def label_name_taken(name, label_id):
     if bool(db.session.scalars(
         select(Label)
         .where(
             Label.name==name,
-            Label.id!=t_id
+            Label.id != label_id
         ))
         .first()):
         return True
