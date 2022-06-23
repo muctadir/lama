@@ -60,7 +60,7 @@ def edit_user_information(*, user):
         return make_response("Input contains leading or trailing whitespaces", 400)
     
     # Check for invalid characters
-    if check_string([args['username'], args['email'], args['description']]):
+    if check_string([args['username'], args['email']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Check required arguments are valid

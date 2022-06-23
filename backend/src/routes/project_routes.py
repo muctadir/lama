@@ -143,7 +143,7 @@ def create_project(*, user):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
-    if check_string([project_info['project']['name'], project_info['project']['description']]):
+    if check_string([project_info['project']['name']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Load the project data into a project object

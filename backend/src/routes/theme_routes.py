@@ -226,7 +226,7 @@ def create_theme(*, user):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
-    if check_string([args['name'], args['description']]):
+    if check_string([args['name']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Check if the theme name is unique
@@ -300,7 +300,7 @@ def edit_theme(*, user):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
-    if check_string([args['name'], args['description']]):
+    if check_string([args['name']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Check if the theme name is unique
