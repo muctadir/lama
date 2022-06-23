@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
@@ -32,6 +32,9 @@ export class ThemeVisualComponent implements OnInit {
   p_id: number;
   response: any;
 
+  pageX: any;
+  pageY: any;
+
   constructor(private themeDataService: ThemeDataService, private router: Router) {
     // Width with margins
     this.width = 900 - this.margin.left - this.margin.right;
@@ -59,11 +62,18 @@ export class ThemeVisualComponent implements OnInit {
   initSvg() {
     // Assigns data to variable
     this.data = this.response
+    this.data.name = "Current Project"
+
+    // Define the div for the tooltip
+    let div = d3.select("#treeChart").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
     // Initialise svg
     this.svg = d3.select('#treeChart')
       .append('svg')
       .attr('width', '100vw')
-      .attr('height', '100vh')
+      .attr('height', '200vh')
 
     // Initialise g
     this.g = this.svg.append('g')
@@ -82,9 +92,9 @@ export class ThemeVisualComponent implements OnInit {
     } else {
       this.heightParam = 5;
     }
-    
+
     // Sets height of tree
-    this.height = node_count *  this.heightParam;
+    this.height = node_count * this.heightParam;
 
     // Sets tree
     this.tree = d3.tree()
@@ -103,7 +113,8 @@ export class ThemeVisualComponent implements OnInit {
     this.g.append("text").attr("dx", -55).attr("dy", 20).text("Project").style("font-size", "11px").attr("alignment-baseline", "middle")
     this.g.append("text").attr("dx", -55).attr("dy", 35).text("Theme").style("font-size", "11px").attr("alignment-baseline", "middle")
     this.g.append("text").attr("dx", -55).attr("dy", 50).text("Label").style("font-size", "11px").attr("alignment-baseline", "middle")
-    
+    this.g.append("rect").attr('x', -65).attr('y', 10).attr('width', 50).attr('height', 50).attr('stroke', 'grey').attr('fill', 'none').style("opcacity", 0.4);
+
     // Gets the links between nodes
     this.link = this.g.selectAll(".link")
       .data(this.tree(this.root).links())
@@ -123,7 +134,21 @@ export class ThemeVisualComponent implements OnInit {
     // Appends the circles for each node
     this.node.append("circle")
       .attr("r", 2.5)
-      .attr("fill", function (d: any) { return myColour(d.data.type) });
+      .attr("fill", function (d: any) { return myColour(d.data.type) })
+      //tootip mouse hover added
+      .on("mouseover", function(event:any,d:any) {
+        div.transition()
+          .duration(200)
+          .style("opacity", .9);
+        div.html("id: " + d.data.id + "<br/>" + "type: " +  d.data.type)
+          .style("left", (d.y + 100) + "px")
+          .style("top", (d.x - 25 ) + "px");
+        })
+      .on("mouseout", function(d:any) {
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);
+        });
 
     // Appends text for each node
     this.node.append("text")
