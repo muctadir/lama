@@ -249,12 +249,15 @@ export class ProjectCreationComponent implements OnInit {
    * @param id the id of the member that should be removed from the project
    * @modifes projectMembers
    */
-  removeMember(id:any){
+  removeMember(member: any){
     // Go through all members
     this.projectMembers.forEach((projectMembers, index)=>{
       // If clicked cross matches the person, splice them from the members
-      if(projectMembers.getUsername()==id){
+      if(projectMembers == member){
+        // Remove the person from the project members
         this.projectMembers.splice(index,1);
+        // Add the person to all members
+        this.allMembers.push(member);
       }
     });    
   }
@@ -275,11 +278,14 @@ export class ProjectCreationComponent implements OnInit {
     modalRef.componentInstance.addUserEvent.subscribe(($e: User) => {
       let user = $e;
 
-      //  Checks if the user is already added
-       if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
+      // Checks if the user is already added
+      if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
          // If not, we add them
         this.projectMembers.push(user);
-       }
+      }
+
+      // Remove user from all users
+      this.allMembers.splice(this.allMembers.indexOf(user), 1)
     })
   }
 
