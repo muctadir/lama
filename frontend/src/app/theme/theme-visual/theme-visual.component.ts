@@ -73,7 +73,7 @@ export class ThemeVisualComponent implements OnInit {
     this.svg = d3.select('#treeChart')
       .append('svg')
       .attr('width', '100vw')
-      .attr('height', '100vh')
+      .attr('height', '200vh')
 
     // Initialise g
     this.g = this.svg.append('g')
