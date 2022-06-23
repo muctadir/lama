@@ -695,9 +695,10 @@ Note that SQL has a limit on recursion depth. _Our_ database defaults to 1000. Y
 @param t_id: id of the theme to get subthemes and labels of
 @returns a list of tuples of the type
     (
+        The id of its super theme (or None if it does not have a super theme),
         The id of the child,
         Its name,
-        The id of its super theme (or None if it does not have a super theme),
+        Whether or not it has been deleted,
         Its type (0 for theme, 1 for label)
     )
 @raises ThemeCycleDetected if the recursion limit is reached (likely due to a cycle)
@@ -709,6 +710,7 @@ def __get_children(t_id):
         Theme.super_theme_id,
         Theme.id,
         Theme.name,
+        Theme.deleted
     ).where(
         Theme.id == t_id
     ).cte(
@@ -724,7 +726,8 @@ def __get_children(t_id):
         select(
             Theme.super_theme_id,
             Theme.id,
-            Theme.name
+            Theme.name,
+            Theme.deleted
         ).where(
             Theme.super_theme_id == subthemes_alias.c.id
         )
@@ -742,6 +745,7 @@ def __get_children(t_id):
             label_to_theme.c.t_id,
             label_to_theme.c.l_id,
             Label.name,
+            Label.deleted,
             1
         ).where(
             Label.id == label_to_theme.c.l_id,
@@ -767,6 +771,7 @@ Each dictionary is of the form:
 {
     id: the id of the item (theme/label)
     name: the name of the item (theme/label)
+    deleted: if the item is deleted
     type: the type of the item, as a string 'Theme' or 'Label'
     children: a list of dictionaries of items that are children of this theme
 }
@@ -791,8 +796,10 @@ def __grouped_children(t_id):
                 'id': result[1],
                 # The name of the child
                 'name': result[2],
+                # If the theme or label is deleted
+                'deleted': result[3],
                 # The type of the child
-                'type': 'Theme' if result[3] == 0 else 'Label'
+                'type': 'Theme' if result[4] == 0 else 'Label'
             }
         )
 
@@ -835,12 +842,14 @@ The project node has structure
 {
     'id' : p_id,
     'name' : project name,
+    'deleted' : False
     'type' : 'Project',
     'children' : [theme hierarchies for maximal themes, and loose labels]
 }
 @param p_id : the project to get the hierarchy of
 Returns the project hierarchy as described above, or None if the project with that id does not exist
 A loose label is one that is not assigned to a theme
+The deleted is still provided to make sure the node has the same structure as other nodes
 """
 def get_project_hierarchy(p_id):
     
@@ -867,6 +876,7 @@ def get_project_hierarchy(p_id):
     hierarchy = {
         'id' : project.id,
         'name' : project.name,
+        'deleted' : False,
         'type' : 'Project',
         'children' : grouped_themes
     }
