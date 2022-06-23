@@ -24,13 +24,9 @@ def create_label(*, user):
     args = request.json['params']
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
-
-    # Check whether the required arguments are delivered
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
     
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['labelName'], args['labelDescription']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -39,11 +35,19 @@ def create_label(*, user):
 
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
-        return make_response('Bad request: Label name cannot have size <= 0', 400)
+        return make_response('Label name cannot be empty', 400)
 
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot have size <= 0', 400)
+        return make_response('Label description cannot be empty', 400)
+    
+    # Check if label name is taken
+    if label_name_taken(args['labelName'], 0):
+        return make_response('Label name already exists', 400)
+    
+    # Check whether the required arguments are delivered
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     # Check whether the label type exists
     label_type = db.session.get(LabelType, args['labelTypeId'])
