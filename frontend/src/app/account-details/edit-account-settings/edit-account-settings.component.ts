@@ -131,6 +131,9 @@ export class EditAccountSettingsComponent {
       } else if (e.response.data == "Input contains leading or trailing whitespaces"){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else if (e.response.data == "Username or email taken"){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Username or email taken"]);
       } else {
         // Displays the error message
         this.toastCommService.emitChange([false, "Please enter valid details!"]);

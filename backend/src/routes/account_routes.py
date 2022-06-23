@@ -5,7 +5,7 @@ from src.models.auth_models import User, UserSchema, UserStatus
 from src.app_util import check_args, check_email, check_password, check_username, check_string, check_whitespaces
 from flask import current_app as app
 from flask import make_response, request, Blueprint
-from sqlalchemy import select, update
+from sqlalchemy import select, update, or_
 from src.app_util import login_required, super_admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import  OperationalError
@@ -62,6 +62,10 @@ def edit_user_information(*, user):
     # Check for invalid characters
     if check_string([args['username'], args['email']]):
         return make_response("Input contains a forbidden character", 511)
+    
+    # Check that username/email are unique
+    if taken(args["username"], args["email"]):
+        return make_response(("Username or email taken", 400))
 
     # Check required arguments are valid
     if not check_format(new_username, new_email, new_description)[0]:
@@ -201,3 +205,9 @@ def check_format_password(password):
         return (False, "Invalid password")
     else:
         return (True, "Success")
+
+# If there already exists a User with given username or email
+def taken(username, email):
+    violation = db.session.scalars(select(User).where(or_(User.username == username, User.email == email))).first()
+    print(violation)
+    return bool(violation)

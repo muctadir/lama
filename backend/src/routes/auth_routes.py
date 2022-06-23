@@ -166,5 +166,3 @@ def check_format(username, email, password, passwordR, description):
         return (False, "No description provided")
     else:
         return (True, "Success")
-
-# TODO logout
