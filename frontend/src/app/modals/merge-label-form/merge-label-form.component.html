@@ -1,103 +1,117 @@
-<!-- Author: Victoria Bogachenkoca -->
-
+<!-- Author: Bartjan Henkemans -->
+<!-- Author: Victoria Bogachenkova -->
 <div class="container" id="body">
-    <div class="row modal-header" class="title">
-        <!-- Title -->
-        <div class="col-12">
-            Merge Label
-        </div>
+  <div class="row modal-header" class="title">
+    <!-- Title -->
+    <div class="col-12">Merge Label</div>
+  </div>
+
+  <!-- Form -->
+  <div class="row modal-body" [formGroup]="form">
+    <!-- Left column -->
+    <div class="col-6">
+      <!-- Select label type title -->
+      <p class="subTitle">Select Label Type</p>
+      <!-- Input for label type -->
+      <div class="input-group">
+        <!-- Select for label type -->
+        <select
+          class="form-control"
+          id="label-type"
+          name="labels"
+          formControlName="labelType"
+        >
+          <option *ngFor="let labelType of labelTypes" [ngValue]="labelType">
+            {{ labelType.getName() }}
+          </option>
+        </select>
+      </div>
+      <!-- Select Labels -->
+      <p class="subTitle">Select Labels</p>
+      <!-- Add button -->
+      <button (click)="add()" type="button" class="btn btn-secondary float-end">
+        <i class="bi bi-plus"></i>
+      </button>
+      <!-- Get the labels of that label type -->
+      <div class="label-selection-form" [formGroup]="form">
+        <ng-container formArrayName="toBeMergedLabels">
+          <ng-container
+            *ngFor="let labelForm of toBeMergedLabels.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <div class="input-group label-selection">
+              <!-- Select multiple labels-->
+              <select class="form-control" formControlName="label">
+                <option
+                  *ngFor="let label of this.availableLabels"
+                  [ngValue]="label"
+                  [disabled]="used.includes(label)"
+                >
+                  {{ label.getName() }}
+                </option>
+              </select>
+              <div class="input-group-append">
+                <button
+                  (click)="rem(i)"
+                  type="button"
+                  class="btn btn-light"
+                  style="float: right"
+                >
+                  <!-- Plus icon -->
+                  <i class="bi bi-dash"></i>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
     </div>
-
-    <div class="row modal-body">
-        <div class="col-6">
-            <div class="form-group" >
-                <p class="subTitle">Select Label Type</p>
-                <select class="form-select" id="label-type" name="labels">
-                    <option *ngFor="let labeltype of labelTypes">{{ labeltype.getName()}}</option>
-                </select>
-            </div>
-             <!-- Add more labels -->
-             <button type="button" class="btn btn-secondary" id="addLabelButton" style="float:right;">
-                <!-- Plus icon -->
-                <i class="bi bi-plus"></i>
-            </button>
-
-            <div *ngFor="let label of labels| slice:0:2">
-                <div>
-                    <!-- Heading for merged label -->
-
-                    <div class="subTitle">
-                        <!-- Add more labels -->
-                        <button type="button" class="btn btn-secondary" id="deleteLabelButton" style="background-color: Transparent; border: none; color: black;">
-                            <!-- Plus icon -->
-                            <i class="bi bi-x"></i>
-                        </button>
-                        Label #{{ label.getId() }}
-                    </div>
-
-                    <ngb-accordion #acc="ngbAccordion">
-                        <ngb-panel>
-                            <ng-template ngbPanelTitle>
-                                <div class="form-group" >
-                                    <select class="form-select" id="label-type" name="labels">
-                                        <option *ngFor="let label of labels">{{ label.getName() }}</option>
-                                    </select>
-                                </div>
-                            </ng-template>
-                            <ng-template ngbPanelContent>
-                                <div>
-                                    <p id="artifactText">{{label.getDesc()}}</p>
-                                </div>
-                            </ng-template>
-                        </ngb-panel>
-                    </ngb-accordion>
-                </div>
-
-                <!-- <div class="accordion" id="accordionExample">
-                    <div class="accordion-item">
-                      <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="false" >
-                            {{ label.labelName }}
-                        </button>
-                      </h2>
-                      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            {{ label.labelDescription }}
-                        </div>
-                      </div>
-                    </div>
-                </div> -->
-            </div>
+    <div class="col-6">
+      <div>
+        <!-- Name given to merge -->
+        <div class="subTitle">Merge Name</div>
+        <input
+          type="text"
+          class="form-control"
+          id="label-name"
+          placeholder="Merge Name"
+          formControlName="mergerName"
+        />
+      </div>
+      <div>
+        <!-- Description -->
+        <div class="subTitle">Description</div>
+        <!-- Input area -->
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            rows="8"
+            placeholder="Description"
+            id="remark"
+            formControlName="mergerDescription"
+          ></textarea>
         </div>
-        <div class="col-6">
-            <div>
-                <!-- Name given to merge -->
-                <div class="subTitle">
-                    Merge Name
-                </div>
-                <input type="text" class="form-control" id="label-name" placeholder="Merge Name">
-            </div>
-            <div>
-                <!-- Description -->
-                <div class="subTitle">
-                    Description
-                </div>
-                <!-- Input area -->
-                <div class="form-group">
-                    <textarea class="form-control" rows="8" placeholder="Description" id="description"></textarea>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Buttons for cancelling and submitting -->
-    <div class="row" id="buttons-cancel-submit">
-        <div class="form-group" id="butt">
-            <!-- Submit button -->
-            <button class="btn btn-primary float-end" (click)="notImplemented()" id="btns-cancel-submit">Submit</button>
-            <!-- Cancel button -->
-            <button class="btn btn-secondary float-end"  id="btns-cancel-submit" (click)="activeModal.close('Close click')">Cancel</button>
-        </div>
+  <!-- Buttons for cancelling and submitting -->
+  <div class="row" id="buttons-cancel-submit">
+    <div class="form-group" id="butt">
+      <button
+        class="btn btn-light float-end"
+        id="btns-cancel-submit"
+        (click)="activeModal.close('Close click')"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary float-end"
+        (click)="submit()"
+        id="btns-cancel-submit"
+      >
+        Submit
+      </button>
     </div>
+  </div>
 </div>
-

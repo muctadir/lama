@@ -2,12 +2,18 @@
 <!-- @author: Veerle Furst -->
 
 <!-- big container -->
-<div class="container-fluid min-vh-100 d-flex flex-column">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
 
     <!-- Page Header -->
     <div class="row" id="titleRow">
-        <div class="col-12 header" id="pageTitle"> 
+        <!-- Displays the theme name -->
+        <div class="col-11 header" id="pageTitle"> 
             {{theme.getName()}}
+        </div>
+        <!-- Displays the history icon -->
+        <div class="col-1 d-flex justify-content-center" id="pageTitle">
+            <!-- When clicked calls openThemeHistory function -->
+            <em class="bi bi-clock-history" id="history-hover" (click)="openThemeHistory()" ngbTooltip="History"></em>
         </div>
     </div>
 
@@ -65,7 +71,7 @@
     </div>
 
     <!--Bottom Half-->
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center bottomHalf">
         <div class="col-12">
             <!--Table to display labels and their artifacts TODO add to style sheet-->
             <table class="table table-borderless">
@@ -85,13 +91,13 @@
                                     <ngb-panel title="{{label.getName()}}">
                                         <ng-template ngbPanelContent>
                                             <!--Artifacts of label-->
-                                            <ngb-accordion *ngFor="let artifact of label.getArtifacts()" #acc="ngbAccordion" activeIds="ngb-panel-1">
+                                            <ngb-accordion *ngFor="let artifact of getNonDoubleArtifacts(label)" #acc="ngbAccordion" activeIds="ngb-panel-1">
                                                 <ngb-panel title="Artifact #{{artifact.getId()}}">
                                                     <!--Artifact Content-->
                                                     <ng-template ngbPanelContent>
                                                         <div class="row">
                                                             <!--Artifact Text-->
-                                                            <div class="col-6">
+                                                            <div class="col-12">
                                                                 <p id="artifactText">{{artifact.getData()}}</p>
                                                             </div>
                                                         </div>
@@ -109,13 +115,25 @@
         </div>
 
     </div>
-    <!-- Back and Edit Buttons -->
-    <div class="col-6 align-self-end">
-        <div>
-            <!-- Create button --> 
-            <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton">Edit</button> 
-            <!-- Cancel button -->
-            <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
+
+    <!-- Row for the buttons -->
+    <div class="row buttonRow">
+        <!-- Delet button column -->
+        <div class="col align-self-start">
+            <div>
+                <!-- Delete button --> 
+                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton" [disabled]="frozen">Delete</button> 
+            </div>
+        </div>
+        <!-- Back and Edit Buttons -->
+        <div class="col-6 align-self-end">
+            <div>
+                <!-- Create button --> 
+                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton" [disabled]="frozen">Edit</button> 
+                <!-- Cancel button -->
+                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
+            </div>
         </div>
     </div>
+
 </div>

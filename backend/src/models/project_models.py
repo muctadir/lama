@@ -28,8 +28,7 @@ class Project(db.Model):
     # List of memberships this project is associated with
     memberships = relationship('Membership', back_populates='project')
     # List of users in the project
-    users = association_proxy('memberships', 'user',
-            creator=lambda user: Membership(u_id=user["u_id"], admin=user["admin"]))
+    users = association_proxy('memberships', 'user')
     
 class Membership(db.Model):
 

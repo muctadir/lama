@@ -1,0 +1,78 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #bfbfbf;
+
+// Header above the input fields
+#header {
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding-top: 10px;
+}
+
+// Padding between the buttons
+.padd {
+    margin-right: 10px;
+}
+
+// Markup of the cross to go back to the home page
+#back-button {
+    top: 5px;
+    left: 5px;
+    position: fixed;
+}
+
+// Moves the table down
+#table {
+    margin-top: 30px;
+}
+
+// Sets the style for the headers in the table
+.tableheader {
+    font-size: 15px;
+}
+
+// Sets the style for the content of the table
+.tablecontent {
+    font-size: 15px;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
+//Scroll Related Business
+.my-custom-scrollbar {
+    position:relative;
+    height: 80vh;
+    overflow: auto;
+    }
+.table-wrapper-scroll-y {
+    display: block;
+    }
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar {
+    width: 10px;
+}
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e; 
+    border-radius: 10px;
+}
+// Scroll bar
+#scrolly{
+    padding-right: 40px;
+    height: auto;
+}

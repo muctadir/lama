@@ -11,8 +11,9 @@ body{
     color: $grey-shade;
     font-size: 15px;
     letter-spacing: 1px;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
-
 // Top bar row
 #topBarRow{
     margin-left: 10px;
@@ -34,8 +35,9 @@ body{
 }
 
 // Container of all elements
-.container.main{
-    height: 90vh;
+.editSection {
+    height: 85vh;
+    overflow-y: hidden;
 }
 
 // Texts above each of the forms indicating what the form is for

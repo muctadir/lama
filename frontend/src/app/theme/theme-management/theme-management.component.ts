@@ -3,8 +3,16 @@ import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
-import axios from 'axios';
+import { ThemeDataService } from 'app/services/theme-data.service';
 import { FormBuilder } from '@angular/forms';
+import { ProjectDataService } from 'app/services/project-data.service';
+
+// Enumeration for sorting
+enum sorted {
+  Not = 0, // Not sorted
+  Asc = 1, // Sorted in ascending order
+  Des = 2 // Sorted in descending order
+}
 
 @Component({
   selector: 'app-theme-management',
@@ -22,18 +30,29 @@ export class ThemeManagementComponent {
   themes: Array<Theme>;
 
   //  Project id
-  p_id: string;
+  p_id: number;
 
   // Variables for routing
   url: string;
   routeService: ReroutingService;
+
+  //Variables for sorting - all are not sorted
+  sortedName = sorted.Not; // Theme name
+  sortedDesc = sorted.Not; // Theme description
+  sortedNOL = sorted.Not; // Number of labels
 
   // var for getting search text
   searchForm = this.formBuilder.group({
     search_term: ''
   });
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {
+  // True if the project is frozen
+  frozen: boolean = true;
+
+  constructor(private router: Router, 
+    private formBuilder: FormBuilder, 
+    private themeDataService: ThemeDataService,
+    private projectDataService: ProjectDataService) {
     // Initialize the array for the themes
     this.themes = new Array<Theme>();
     // Gets the url from the router
@@ -41,8 +60,42 @@ export class ThemeManagementComponent {
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = this.routeService.getProjectID(this.url);
+    this.p_id = Number(this.routeService.getProjectID(this.url));    
   }
+
+  async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
+    // Get the theme information from the request handler
+    this.getThemes();
+
+    // For search icon to search on click
+    this.searchClick();    
+  }
+
+  /**
+   * Function for searching based on clicking on the maginifying glass
+   */
+  searchClick(){
+    // Get the search image
+    let image = document.getElementById("searchBar")
+    if (image != null){
+      // On click event handler
+      image.onclick = (e) => {
+        if (image != null){
+          // Get placement of the image
+          var rect = image.getBoundingClientRect();
+          // Get clicked x coordinates
+          var x = e.clientX - rect.left;
+          // When clicked in the maginifying glass
+          if (x > 330){
+            // Search
+            this.onEnter()
+          }
+        }
+      }
+    }
+  }
+
 
   /**
    * Reroutes to other pages
@@ -62,60 +115,113 @@ export class ThemeManagementComponent {
     this.router.navigate(['/project', this.p_id, new_page, theme_id]);
   }
 
-  ngOnInit(): void {
+  // Function for getting the theme info
+  async getThemes(): Promise<void> {
+    this.themes = await this.themeDataService.getThemes(this.p_id);
+  }
 
-    // Get all themes
-    let token: string | null = sessionStorage.getItem('ses_token');
-    if (typeof token === "string") {
+  /**
+   * Function for sorting on name
+   * 
+  */
+  sortName(): void {
+    // Check if it was sorted ascending
+    if (this.sortedName == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedName = sorted.Des;
+      // Sort the array
+      this.themes.sort((a,b) => b.getName().localeCompare(a.getName()));
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedName == sorted.Des || this.sortedName == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedName = sorted.Asc;
+      // Sort the array
+      this.themes.sort((a,b) => a.getName().localeCompare(b.getName()));
+    }
+    // Set other sorts to not sorted
+    this.sortedDesc = sorted.Not;
+    this.sortedNOL = sorted.Not
+  }
 
-      // Get the informtion needed from the back end
-      axios.get('http://127.0.0.1:5000/theme/theme-management-info', {
-        headers: {
-          'u_id_token': token
-        },
-        params: {
-          "p_id": this.p_id
-        }
-      })
-        // When there is a response get the projects
-        .then(response => {
-          // Get the response data
-          let themes = response.data;
+  /**
+   * Function for sorting on description
+   * 
+  */
+  sortDesc(): void {
+    // Check if it was sorted ascending
+    if (this.sortedDesc == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedDesc = sorted.Des;
+      // Sort the array
+      this.themes.sort((a,b) => b.getDesc().localeCompare(a.getDesc()));
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedDesc == sorted.Des || this.sortedDesc == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedDesc = sorted.Asc;
+      // Sort the array
+      this.themes.sort((a,b) => a.getDesc().localeCompare(b.getDesc()));
+    }
+    // Set other sorts to not sorted
+    this.sortedName = sorted.Not;
+    this.sortedNOL = sorted.Not
+  }
 
-          // For each theme in the list
-          for (let theme of themes) {
+  /**
+   * Function for sorting on number of labels
+   * 
+  */
+  sortLabels(): void {
+    // Check if it was sorted ascending
+    if (this.sortedNOL == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedNOL = sorted.Des;
+      // Sort the array
+      this.themes.sort((a,b) => a.getNumberOfLabels() - b.getNumberOfLabels());
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedNOL == sorted.Des || this.sortedNOL == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedNOL = sorted.Asc;
+      // Sort the array
+      this.themes.sort((a,b) => b.getNumberOfLabels() - a.getNumberOfLabels());
+    }
+    // Set other sorts to not sorted
+    this.sortedName = sorted.Not;
+    this.sortedDesc = sorted.Not
+  }
 
-            // Get the theme information
-            let themeJson = theme["theme"];
-            themeJson["numberOfLabels"] = theme["number_of_labels"];
+  // Gets the search text
+  async onEnter() {
 
-            // Create a new theme object with all information
-            let newTheme: Theme = new Theme(themeJson['id'], themeJson["name"], themeJson["description"]);
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
 
-            // Put labels in the theme
-            newTheme.setNumberOfLabels(themeJson["numberOfLabels"])
+    // Search text
+    var text = this.searchForm.value.search_term;
 
-            // Add theme to list
-            this.themes.push(newTheme);
-          }
-        })
-        // If there is an error
-        // TODO change
-        .catch(error => {
-          console.log(error.response)
-        });
+    // If nothing was searched
+    if(text.length == 0){
+      // Get all themes anew
+      this.getThemes();
+    } else {
+      // Otherwise search
+
+      // Pass the search word to services
+      let themesSearched = await this.themeDataService.search(text, p_id);
+
+      
+      // List for the artifacts resulting from the search
+      let themeList: Array<Theme> = [];
+      // For loop through all searched artifacts
+      for (let theme of themesSearched) {
+        // Make it an artifact object
+        let newTheme = new Theme(theme['id'], theme['name'], theme['description']);
+        // Append artifact to list
+        themeList.push(newTheme);
+      }
+
+      this.themes = themeList;
 
     }
-  }
-
-  notImplemented(): void {
-    alert("Button has not been implemented yet.");
-  }
-
-  //gets the search text
-  onEnter() {
-    var text = this.searchForm.value.search_term
-    alert("entered!!" + text + "");
   }
 }
 

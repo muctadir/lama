@@ -15,11 +15,13 @@
             <!-- Dropdown for the account settings and logout -->
             <div ngbDropdown>
                 <!-- Icon of the dropdown, opens the dropdown when clicked -->
-                <em class="bi bi-person-circle" id="account-icon" ngbDropdownToggle></em>
+                <em class="bi bi-person-circle" id="account-icon" ngbDropdownToggle ngbTooltip="Account menu"></em>
                 <!-- Content of the dropdown -->
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                     <!-- Go to account settings page when clicked -->
                     <button class="button-layout" ngbDropdownItem [routerLink]="['/account']">Account Settings</button>
+                    <!-- Go to the user moderation page when clicked -->
+                    <button class="button-layout" ngbDropdownItem *ngIf="user && user.getType()" [routerLink]="['/moderation']">User Moderation</button>
                     <!-- Open logout modal when clicked -->
                     <button class="button-layout" ngbDropdownItem (click)="openLogout()">Log out</button>
                 </div>
@@ -31,13 +33,6 @@
                 <!-- Plus icon -->
                 <em class="bi bi-plus"></em>
             </button>
-        </div>
-    </div>
-    <!-- Row for the error message -->
-    <div class="row">
-        <div class="col">
-            <!-- Displays the error message only when it is non-empty -->
-            <div *ngIf="errorMsg">{{errorMsg}}</div>
         </div>
     </div>
 </div>
@@ -78,7 +73,7 @@
                 <div class="col-1">
                     <!-- If the user is an admin displays a key icon -->
                     <div *ngIf="project.getAdmin()">
-                        <em class="bi bi-key"></em> 
+                        <em class="bi bi-key" ngbTooltip="Admin"></em> 
                     </div>
                 </div>
                 
@@ -87,14 +82,14 @@
                     <!-- If the project is frozen displays a key icon -->
                     <div *ngIf="project.getFrozen()">
                         <!-- Snow icon -->
-                        <em class="bi bi-snow"></em>
+                        <em class="bi bi-snow" ngbTooltip="Frozen"></em>
                     </div>
                 </div>
 
                 <!-- Column for number of users -->
                 <div class="col-2">
                     <!-- Member icon -->
-                    <em class="bi bi-person"></em>
+                    <em class="bi bi-person" ngbTooltip="Nr of users"></em>
                     <!-- Displays the number of users in the project -->
                     <span class='numberOfUsers'>{{ project.getNumberOfUsers() }}</span>
                 </div>

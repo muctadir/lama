@@ -1,36 +1,68 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LabelingDataService } from 'app/services/labeling-data.service';
+import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-merge-label-form',
   templateUrl: './merge-label-form.component.html',
-  styleUrls: ['./merge-label-form.component.scss']
+  styleUrls: ['./merge-label-form.component.scss'],
 })
 export class MergeLabelFormComponent {
+
   routeService: ReroutingService;
-  labels: Array<Label>;
   url: string;
-  labelTypes: Array<LabelType>
+  labelTypes: Array<LabelType>;
+  form: FormGroup;
+  p_id: number;
+  availableLabels: Array<Label>;
+  formArray: FormArray;
+  used = new Array<Label>();
 
   /**
-   * Constructor which:
-   * 1. makes an empty label
-   * 2. makes an empty label type
-   * 3. makes a router service
-   * 4. gets the url
+   * Constuctor
+   * @param activeModal 
+   * @param router 
+   * @param labellingDataService 
+   * @param formBuilder 
+   * 
+   * 1. creates labels types array
+   * 2. creates forms array
+   * 3. gets router service
+   * 4. gets url
+   * 5. creates form
+   * 6. gets project id
+   * 7. creates avaliable labels array
    */
-   constructor(public activeModal: NgbActiveModal,
+  constructor(
+    public activeModal: NgbActiveModal,
     private router: Router,
-    private labelingDataService: LabelingDataService) {
-      this.labels = new Array<Label>();
-      this.labelTypes = new Array<LabelType>();
-      this.routeService = new ReroutingService();
-      this.url = this.router.url;
+    private labellingDataService: LabellingDataService,
+    private toastCommService: ToastCommService,
+    private formBuilder: FormBuilder
+  ) {
+    this.labelTypes = new Array<LabelType>();
+    this.formArray = this.formBuilder.array([]);
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+    this.form = this.formBuilder.group({
+      labelType: [undefined],
+      toBeMergedLabels: this.formArray,
+      mergerName: [undefined],
+      mergerDescription: [undefined],
+    });
+    this.p_id = parseInt(this.routeService.getProjectID(this.url));
+    this.availableLabels = new Array<Label>();
+  }
+
+  // Gets the ,erged labels
+  get toBeMergedLabels() {
+    return this.form.controls['toBeMergedLabels'] as FormArray;
   }
 
   /**
@@ -39,34 +71,81 @@ export class MergeLabelFormComponent {
    *  2. the labelId of the label is retrieved
    *  3. the label loading is started
    */
-   ngOnInit(): void {
-    let p_id = parseInt(this.routeService.getProjectID(this.url));
-    let labelID = parseInt(this.routeService.getLabelID(this.url));
-    this.getLabels(p_id);
-    this.getLabelTypes(p_id);
+  ngOnInit(): void {
+    this.getLabels();
+    this.form.get('labelType')?.valueChanges.subscribe((l: LabelType) => {
+      this.form.controls['toBeMergedLabels'].reset();
+      this.availableLabels = l.getLabels();
+    });
+
+    this.form.get('toBeMergedLabels')?.valueChanges.subscribe((c) => {
+      let used = new Array<Label>();
+      c.forEach((obj: any) => {
+        used.push(obj.label);
+      });
+      this.used = used;
+    });
   }
 
-  /**
-   * Async function which gets the label
-   */
-   async getLabels(p_id: number): Promise<void> {
-    const labels = await this.labelingDataService.getLabels(p_id);
-    this.labels = labels;
+  // Gets labels
+  async getLabels(): Promise<void> {
+    try {
+      // Wait for get label types with labels
+      const result = await this.labellingDataService.getLabelTypesWithLabels(
+        this.p_id
+      );
+      this.labelTypes = result;
+    } catch (e) {
+      this.toastCommService.emitChange([false, "Something went wrong when trying to supply the labels"])
+    }
   }
 
-  /**
-   * Async get labelTypes
-   * @param p_id
-   */
-  async getLabelTypes(p_id: number): Promise<void> {
-    const labelTypes = await this.labelingDataService.getLabelTypes(p_id);
-    this.labelTypes = labelTypes;
-    console.log(labelTypes);
+  // Add to form
+  add(): void {
+    const labelForm = this.formBuilder.group({
+      label: [undefined, Validators.required],
+    });
+    this.toBeMergedLabels.push(labelForm);
   }
 
-  // Not implemented function
-  notImplemented() {
-    alert("Not implemented");
+  // Remove from form
+  rem(i: number): void {
+    this.toBeMergedLabels.removeAt(i);
+  }
+
+  // Submit form
+  async submit(): Promise<void> {
+    // Check you are merging two or more labels
+    if (this.toBeMergedLabels.length < 2) {
+      this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
+      return 
+    }
+    // Puts the labels to be merged in array
+    const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
+
+    const mergedLabels = arrayResult.map(result => result['label'].getId());
+
+    try {
+      // Wait for the posting of the merging
+      let response = await this.labellingDataService.postMerge({
+        'mergedLabels': mergedLabels,
+        'newLabelName': this.form.get('mergerName')?.value,
+        'newLabelDescription': this.form.get('mergerDescription')?.value,
+        'labelTypeName': this.form.get('labelType')?.value.getName(),
+        'p_id': this.p_id
+      });
+      // Make toast signalling whether the merging was successful or not
+      if(response == "Success" ){
+        this.toastCommService.emitChange([true, "Labels merged successfully"])
+        // Close modal
+        this.activeModal.close()
+      }
+      else {
+        this.toastCommService.emitChange([false, response])
+      }
+    } catch (e) {
+      this.toastCommService.emitChange([false, "Something went wrong while merging"])
+    }
   }
 
 }

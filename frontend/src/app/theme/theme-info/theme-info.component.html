@@ -3,7 +3,7 @@
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
     <!-- Page Header -->
     <div class="row header">
-        <div class="col-10 header" id="pageTitle"> 
+        <div class="col-10 header" id="pageTitle">
             {{createEditThemeHeader}} Theme
         </div>
     </div>
@@ -24,11 +24,12 @@
                     <!-- Input form for name -->
                     <div id="nameInputCol">
                         <form [formGroup]="themeForm">
-                            <input class="form-control" formControlName="name" id="nameForm" type="text" placeholder="Name" required><br>
+                            <input class="form-control" formControlName="name" id="nameForm" type="text"
+                                placeholder="Name" required><br>
                         </form>
                     </div>
-                </div>   
-            </div> 
+                </div>
+            </div>
         </div>
 
         <!-- Right side of top half -->
@@ -42,10 +43,13 @@
                         Description
                     </div>
                     <!-- Input for the description -->
-                    <form [formGroup]="themeForm">
-                        <textarea class="form-control" placeholder="Description" id="descriptionArea" formControlName="description"></textarea>
-                    </form>
-                </div>             
+                    <div id="descriptionInput">
+                        <form [formGroup]="themeForm">
+                            <textarea class="form-control" placeholder="Description" id="descriptionArea"
+                                formControlName="description"></textarea>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -55,7 +59,7 @@
         <!-- Displays all labels section -->
         <div class="col-6">
             <!-- Labels header -->
-            <div class="nameHeader">                 
+            <div class="nameHeader">
                 Labels
             </div>
             <!-- List of all labels -->
@@ -65,7 +69,7 @@
                     <!-- Column for delete icon -->
                     <button class="btn x" type="button" (click)="removeLabel(label)">
                         <!-- Plus icon -->
-                        <span class="bi bi-x">                                  
+                        <span class="bi bi-x">
                         </span>
                     </button>
                 </div>
@@ -82,10 +86,10 @@
             <div id="addedSubthemesList">
                 <div *ngFor="let subtheme of addedSubThemes">
                     <span id="addedSubthemes">{{subtheme.getName()}}</span>
-                     <!-- Column for delete icon -->
-                     <button class="btn x" type="button" (click)="removeSubtheme(subtheme)">
+                    <!-- Column for delete icon -->
+                    <button class="btn x" type="button" (click)="removeSubtheme(subtheme)">
                         <!-- Plus icon -->
-                        <span class="bi bi-x">                                  
+                        <span class="bi bi-x">
                         </span>
                     </button>
                 </div>
@@ -97,20 +101,31 @@
     <div class="row" id="bottomHalf">
         <div class="col-6">
 
-            <!-- Add Labels Section --> 
+            <!-- Add Labels Section -->
             <div class="nameHeader">
                 Add Labels
             </div>
             <div class="row">
                 <!-- Add Labels Left side -->
-                <!-- TODO Filtering and Searching -->
+                <!-- Row for searching -->
+                <div class="row">
+                    <!-- Column for search bar -->
+                    <div class="col">
+                        <form [formGroup]="labelSearch">
+                            <label for="typeahead-focus">Search for a label:</label>
+                            <input formControlName="labelSearch" type="text" class="form-control" (keyup)="searchLabel()"/>
+                        </form>
+                    </div>
+                </div>
                 <div class="col-sm-6">
                     <!-- Table for showing all labels -->
                     <table class="table table-borderless">
                         <tbody>
                             <div id="divScroll">
                                 <!-- Click shows clicked labels description and highlights it-->
-                                <tr *ngFor="let label of allLabels" (click)="displayDescriptionLabel(label)" (click)="highlightLabel(label)"  [class.highlighted]="label.getName() === highlightedLabel">
+                                <tr *ngFor="let label of allLabels" (click)="displayDescriptionLabel(label)"
+                                    (click)="highlightLabel(label)"
+                                    [class.highlighted]="label.getName() === highlightedLabel">
                                     <td>
                                         <span class="addLabelsText">
                                             {{label.getName()}}
@@ -118,85 +133,97 @@
                                         <!--  Add label button -->
                                         <button class="btn" type="button" (click)="addLabel(label)">
                                             <!-- Plus icon -->
-                                            <span class="bi bi-plus">                                  
+                                            <span class="bi bi-plus">
                                             </span>
                                         </button>
-                                    </td>                                 
+                                    </td>
                                 </tr>
                             </div>
                         </tbody>
                     </table>
                 </div>
                 <!-- Add Labels right side Description part -->
-                <div class="col-sm-6">
-                    <p id="labelDescription">Description:</p>
+                <div class="col-sm-6" *ngIf="allLabels.length != 0">
+                    <p id="description">Label description:</p>
                     <div id="descriptionScroll">
-                        <div *ngIf="selectedDescriptionLabel != null">
+                        <div>
                             <p class="labelDescriptionText">{{selectedDescriptionLabel}}</p>
                         </div>
                     </div>
                 </div>
-            </div>          
+            </div>
         </div>
 
-        <!--bottom half right side--> 
-        <div class="col-6"> 
+        <!-- Bottom half right side -->
+        <div class="col-6">
 
-            <!-- Add Sub-Themes Section --> 
+            <!-- Add Sub-Themes Section -->
             <div class="nameHeader">
                 Add Sub-Themes
             </div>
             <div class="row">
-                <div class="col-sm-6">                    
+                <!-- Row for searching -->
+                <div class="row">
+                    <div class="col">
+                        <form [formGroup]="themeSearch">
+                            <label for="typeahead-focus">Search for a theme:</label>
+                            <input formControlName="themeSearch" type="text" class="form-control" (keyup)="searchTheme()" />
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-6">
                     <!-- Table for showing all Sub-Themes -->
                     <table class="table table-borderless">
                         <tbody>
                             <div id="divScroll">
                                 <!-- Click shows clicked Subtheme and highlights it-->
-                                <tr *ngFor="let subtheme of allSubThemes" (click)="displayDescriptionTheme(subtheme)" (click)="highlightSubtheme(subtheme)" [class.highlighted]="subtheme.getName() === highlightedSubtheme">
+                                <tr *ngFor="let subtheme of allSubThemes" (click)="displayDescriptionTheme(subtheme)"
+                                    (click)="highlightSubtheme(subtheme)"
+                                    [class.highlighted]="subtheme.getName() === highlightedSubtheme">
                                     <td>
                                         <span class="addSubthemeText">
                                             {{ subtheme.getName() }}
                                         </span>
                                         <!--  Add subtheme button -->
-                                        <button class="btn" type="button" id="addsubthemeButton" (click)="addSubtheme(subtheme)">
+                                        <button class="btn" type="button" id="addsubthemeButton"
+                                            (click)="addSubtheme(subtheme)">
                                             <!-- Plus icon -->
-                                            <span class="bi bi-plus">                                  
+                                            <span class="bi bi-plus">
                                             </span>
                                         </button>
-                                    </td>                                 
+                                    </td>
                                 </tr>
                             </div>
                         </tbody>
-                    </table> 
-                </div> 
+                    </table>
+                </div>
 
                 <!-- Add themes right side Description part -->
-                <div class="col-sm-6">
-                    <p id="labelDescription">Description:</p>
+                <div class="col-sm-6" *ngIf="allSubThemes.length != 0">
+                    <p id="description">Theme description:</p>
                     <div id="descriptionScroll">
-                        <div *ngIf="selectedDescriptionTheme != null">
+                        <div>
                             <p class="labelDescriptionText">{{selectedDescriptionTheme}}</p>
                         </div>
                     </div>
-                </div>    
-            </div>  
+                </div>
+            </div>
         </div>
     </div>
 
-    <!--Page Footer--> 
+    <!-- Page Footer -->
     <div class="row">
-        <!-- Error message -->
         <div class="col-6">
-            <div *ngIf="errorMsg" id="error-msg"><span id="errorMessage">{{errorMsg}}</span></div>
         </div>
-        <!--Create/Cancel buttons--> 
-        <div class="col-6 align-self-end" id="createCancelButtons">
+        <!-- Create/Cancel buttons-->
+        <div class="col-6 align-self-end">
             <div>
                 <!-- Create button -->
-                <button class="form-group btn btn-primary float-end" (click)="createTheme()" id="saveButton">Save</button> 
+                <button class="form-group btn btn-primary float-end" (click)="createTheme()"
+                    id="saveButton">Save</button>
                 <!-- Cancel button -->
-                <button class="form-group btn btn-secondary float-end" id="cancelButton" (click)="reRouter()">Cancel</button>
+                <button class="form-group btn btn-secondary float-end" id="cancelButton"
+                    (click)="reRouter()">Cancel</button>
             </div>
         </div>
     </div>

@@ -1,10 +1,14 @@
 <!-- Author: Victoria Bogachenkova -->
-<div class="container-fluid min-vh-100 d-flex flex-column">
+<div class="container-fluid min-vh-100 d-flex flex-column" id="main-cont">
     <!-- contains the page title and Artifact Identifier -->
     <div class="row">
         <!-- Label Name as title -->
-        <div id="artifactId" class="col-10">
+        <div id="artifactId" class="col-11">
             <p class="header">{{label.getName()}}</p>
+        </div>
+        <div class="col-1 d-flex justify-content-center">
+            <!-- When clicked calls openThemeHistory function -->
+            <em class="bi bi-clock-history" id="history-hover" (click)="openLabelHistory()" ngbTooltip="History"></em>
         </div>
     </div>
 
@@ -51,7 +55,7 @@
                 Themes
             </div>
             <div *ngFor="let theme of label.getThemes()" class="labelThemes">
-                <p>{{theme.getName()}}</p>
+                <p (click)="reRouterTheme(theme.getId())" id="clickable">{{theme.getName()}}</p>
             </div>
         </div>
     </div>
@@ -59,10 +63,11 @@
     <!-- Back and Edit Buttons -->
     <div class="col-6 align-self-end">
         <div>
-            <!-- Edit button -->
-            <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit">Edit</button>
-            <!-- Cancel button -->
-            <button class="btn btn-secondary float-end" (click)="reRouter()" id="btn-back">Back</button>
+          <button *ngIf="labelCount == 0" class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete" [disabled]="frozen">Delete</button>
+          <!-- Edit button -->
+          <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit" [disabled]="frozen">Edit</button>
+          <!-- Cancel button -->
+          <button class="btn btn-secondary float-end" (click)="reRouter()" id="btn-back">Back</button>
         </div>
     </div>
 </div>

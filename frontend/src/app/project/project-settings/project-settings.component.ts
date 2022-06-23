@@ -10,6 +10,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { EditModeService } from 'app/services/edit-mode.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 /* Project settings component */
 @Component({
@@ -21,7 +22,13 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 export class ProjectSettingsComponent implements OnInit {
   /* Current project */
   currentProject: Project;
-  
+
+  /* Current user ID */
+  currentUserId: number = 0;
+
+  /* Super admin ID */
+  superAdminID: number = 0;
+
   /* Array of current members of the project */
   projectMembers: User[] = [];
 
@@ -41,7 +48,7 @@ export class ProjectSettingsComponent implements OnInit {
   added: Record<number, any> = {};
   /* Dictionary containing removed members of the project in an edit session, with the key being the member's ID */
   removedMembers: Record<number, any> = {};
-  
+
   /* Array of label types for project */
   labelTypes: string[] = [];
   /* Boolean showing if the page is in edit mode, default is false */
@@ -57,8 +64,12 @@ export class ProjectSettingsComponent implements OnInit {
    * @param reroutingService instance of rerouting service
    * @param formBuilder instance of formbuilder
    */
-  constructor(private modalService: NgbModal, private router: Router, private reroutingService: ReroutingService, 
-    private formBuilder: FormBuilder, private editModeService: EditModeService) { 
+  constructor(private modalService: NgbModal, 
+    private router: Router, 
+    private reroutingService: ReroutingService,
+    private formBuilder: FormBuilder, 
+    private editModeService: EditModeService,
+    private toastCommService: ToastCommService) {
     //Initiliazing project with the retrieved project ID from URL
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
@@ -78,12 +89,12 @@ export class ProjectSettingsComponent implements OnInit {
    * Stores the users in the allMembers array
    * Gets project information from the backend
    * Store the project in currentProject
-   * 
+   *
    * @modifies allMembers, currentProject
    * @trigger on creation of component
    */
   ngOnInit(): void {
-    
+
     // Gets the authentication token from the session storage
     let token: string | null  = sessionStorage.getItem('ses_token');
 
@@ -97,9 +108,9 @@ export class ProjectSettingsComponent implements OnInit {
 
   /**
    * Gets all the users in the application from the backend
-   * 
+   *
    * @param token used for authenticating the user to the backend
-   * 
+   *
    * @trigger on component load
    * @modifies allMembers
    */
@@ -126,16 +137,16 @@ export class ProjectSettingsComponent implements OnInit {
         this.allMembers.push(newUser);
       }
     } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
   /**
    * Gets infromation from current project from the backend
-   * 
+   *
    * @param token used for authenticating the user to the backend
-   * 
+   *
    * @modifies currentProject, projectMembers, allProjectMembers, adminMembers, removed
    */
    async requestCurrentProject(token : string | null) : Promise<void> {
@@ -150,6 +161,9 @@ export class ProjectSettingsComponent implements OnInit {
       // Waits on the request
       let result = await response;
 
+      //Setting user ID
+      this.currentUserId = result.u_id
+
       //Setting project name, description, criteria, and frozen status
       this.setCurrenProjectInfo(result.name, result.description, result.criteria, result.frozen, undefined)
 
@@ -157,8 +171,12 @@ export class ProjectSettingsComponent implements OnInit {
       let members_of_project = result.users;
       for (let i = 0; i < members_of_project.length; i++) {
         //Adding only current members of the project to projectMembers
-        if(members_of_project[i].removed != 1) {
+        if (members_of_project[i].removed != 1) {
           this.projectMembers.push(new User(members_of_project[i].id, members_of_project[i].username));
+        }
+        //Setting the super admin ID
+        if (members_of_project[i].super_admin == true) {
+          this.superAdminID = members_of_project[i].id;
         }
         //Adding all members (old and current) of the project to allProjectMembers
         this.allProjectMembers[members_of_project[i].id] = new User(members_of_project[i].id, members_of_project[i].username);
@@ -183,17 +201,17 @@ export class ProjectSettingsComponent implements OnInit {
         numberOfLabellers: this.currentProject.getCriteria(),
       })
     } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
   /**
    * Sends (updated) information about the project and its members to the backend
-   * 
+   *
    * @param token used for authenticating the user to the backend
    * @param sendingInfo used for the information to be sent to the backend
-   * 
+   *
    * @modifies currentProject, projectMembers, allProjectMembers, removed
    */
   async sendUpdateRequest(token : string | null, sendingInfo: any) : Promise<void> {
@@ -203,7 +221,7 @@ export class ProjectSettingsComponent implements OnInit {
     try {
       // Makes the request and handles response
       // Makes the request to the backend for current project information
-      let response: any = requestHandler.patch("/project/edit", 
+      let response: any = requestHandler.patch("/project/edit",
       {'p_id': this.currentProject.getId(), 'project': sendingInfo["project"],
        'add': sendingInfo["add"], 'update': sendingInfo["update"]}, true);
 
@@ -222,10 +240,11 @@ export class ProjectSettingsComponent implements OnInit {
         this.removedMembers = [];
         this.added = [];
       }
+      this.toastCommService.emitChange([true, "Edit successful"]);
     }
     catch {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -240,19 +259,25 @@ export class ProjectSettingsComponent implements OnInit {
    * Exiting edit mode on frontend
    */
   unclickEdit(): void {
-    location.reload();
+    //Change back to non-edit view
+    this.editModeService.isInEditMode.next(false);
+    //Reinitializing arrays and original user list
+    this.projectMembers = [];
+    this.labelTypes = [];
+    this.allMembers = [];
+    this.ngOnInit();
   }
 
   /**
    * Responsible for editing project information. Gathers the data from the various forms,
    * creates a projectInformation record holding this information, which is then send to
-   * the backend for editing. 
-   * 
+   * the backend for editing.
+   *
    * @trigger "Save" button is clicked
    */
   async saveEdit(): Promise<void> {
     //Setting name, description, criteria, users and their admin status
-    this.setCurrenProjectInfo(this.projectForm.value.projectName, this.projectForm.value.projectDesc, 
+    this.setCurrenProjectInfo(this.projectForm.value.projectName, this.projectForm.value.projectDesc,
     this.projectForm.value.numberOfLabellers, false, this.projectMembers);
     //Change back to non-edit view
     this.editModeService.isInEditMode.next(false);
@@ -300,14 +325,14 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   /**
-   * Assigning project information to the object currentProject. 
-   * 
+   * Assigning project information to the object currentProject.
+   *
    * @param name string with the name of the project
    * @param desc string with description of project
    * @param criteria number of labellers that labels needed to be considered completed
    * @param frozen frozen status of the project
    * @param users list of users that are a part of this project
-   * 
+   *
    * @modifies currentProject, adminMembers
    */
   setCurrenProjectInfo(name: string, desc: string, criteria: number, frozen: boolean, users: User[] | undefined) : void {
@@ -323,7 +348,7 @@ export class ProjectSettingsComponent implements OnInit {
       this.currentProject.setUsers(users);
       //Check the checkboxes for all users
       for (let i = 0; i < this.projectMembers.length; i++) {
-        let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked; 
+        let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked;
         //Assign the values of the checkboxes according to whether they have been checked during edit mode
         this.adminMembers[this.projectMembers[i].getId()] = adminBool;
       }
@@ -331,19 +356,19 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   /**
-   * Add members to the project on the frontend. 
-   * 
+   * Add members to the project on the frontend.
+   *
    * @param user user to be added to project
    * @param admin admin status of the member to be added
-   * 
+   *
    * @modifies projectMembers, adminMembers, removed, added, allProjectMembers
    */
   addMember(user: User, admin: boolean) {
-    //If user is previously removed (from the front end, not yet in the back end)
+    // If user is previously removed (from the front end, not yet in the back end)
     if (user.getId() in this.removedMembers) {
-      //Remove them from the removed members list
+      // Remove them from the removed members list
       delete this.removedMembers[user.getId()]
-      //Change the user's removed status
+      // Change the user's removed status
       this.removed[user.getId()] = 0
     }
     else {
@@ -361,13 +386,14 @@ export class ProjectSettingsComponent implements OnInit {
     this.projectMembers.push(user);
     //Assigning the admin status to the user
     this.adminMembers[user.getId()] = admin;
+    this.toastCommService.emitChange([true, "User added"])
   }
 
   /**
-   * Remove members from the project on the frontend. 
-   * 
+   * Remove members from the project on the frontend.
+   *
    * @param user user to be added to project
-   * 
+   *
    * @modifies projectMembers, adminMembers, removed, added, allProjectMembers, removedMembers
    */
   removeMember(user: User) {
@@ -377,28 +403,23 @@ export class ProjectSettingsComponent implements OnInit {
       delete this.allProjectMembers[user.getId()]
       //Remove user from list of newly added users
       delete this.added[user.getId()]
-      //Remove user from project members list
-      let index = this.projectMembers.indexOf(user);
-      this.projectMembers.splice(index,1);
-      //Remove user as admin from admin status dictionary
-      this.adminMembers[user.getId()] = false;
     }
     else {
-      //Assign removed status to user
+      // Assign removed status to user
       this.removed[user.getId()] = 1;
-      //Add user to list of users that have been removed from project
+      // Add user to list of users that have been removed from project
       this.removedMembers[user.getId()] = user
-    }  
-    //Remove user from project members list
+    }
+    // Remove user from project members list
     let index = this.projectMembers.indexOf(user);
     this.projectMembers.splice(index,1);
-    //Remove user as admin from admin status dictionary
+    // Remove user as admin from admin status dictionary
     this.adminMembers[user.getId()] = false;
   }
 
   /**
    * Opens the add user modal, and displays all the users in the application in the modal.
-   * 
+   *
    * @modifies projectMembers
    */
    open() : void {
@@ -408,7 +429,7 @@ export class ProjectSettingsComponent implements OnInit {
     // passes all the users in the application to the modal
     modalRef.componentInstance.users = this.allMembers;
 
-    // Push the username into the members list 
+    // Push the username into the members list
     modalRef.componentInstance.addUserEvent.subscribe(($e: User) => {
       let user = $e;
 
@@ -422,10 +443,10 @@ export class ProjectSettingsComponent implements OnInit {
 
   /**
    * Change the frozen status of the project.
-   * 
+   *
    * @param frozenStatus frozen status of the project
    * @param editMode edit mode of the project
-   * 
+   *
    * @trigger Button "Freeze" or "Unfreeze" is clicked
    */
   changeFreezeProject(frozenStatus: boolean, editMode: boolean): void {
@@ -440,10 +461,10 @@ export class ProjectSettingsComponent implements OnInit {
 
   /**
    * Sends (updated) information about the project's frozen status to the backend
-   * 
+   *
    * @param token used for authenticating the user to the backend
    * @param sendingInfo used for the information to be sent to the backend
-   * 
+   *
    * @modifies currentProject, projectMembers, allProjectMembers, removed
    */
   async sendFreezeRequest(token: string | null, sendingInfo: any): Promise<void> {
@@ -457,12 +478,13 @@ export class ProjectSettingsComponent implements OnInit {
       // Waits on the request
       let result = await response;
       if (result == "Ok") {
-        console.log("Done")
+        // Emits an error toast
+        this.toastCommService.emitChange([true, "Success"]);
       }
     }
     catch {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 }

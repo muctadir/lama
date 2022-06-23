@@ -11,12 +11,6 @@
     letter-spacing: 1px;
 }
 
-//Labelled by text
-#labelledBy{
-    font-size: 18px;
-    letter-spacing: 1px;
-}
-
 // Container for the artifact
 .artifactContainer {
     max-height: 35vh;
@@ -34,6 +28,13 @@
     padding-bottom: 5px;
 }
 
+// Changes the cursor of the user when hovering history icon
+#history-hover {
+    cursor: pointer;
+    font-size: 30px;
+    margin-top: -20px;
+}
+
 
 // Scrollbar
 ::-webkit-scrollbar {
@@ -48,18 +49,6 @@
 ::-webkit-scrollbar-thumb {
     background: #38474e; 
     border-radius: 10px;
-}
-//"Labelled by" section
-div.allUserLabels{
-    height: 30vh;
-    overflow-y: scroll
-}
-/*TODO: For some reason the variable defined in the root stylesheet is not working*/
-.labelTypeDescription {
-    border-left: 2px solid #ed5a06;
-    padding-left: 10px;
-    padding-bottom: 5px;
-    padding-top: 5px;
 }
 
 // Artifact identifier
@@ -87,8 +76,8 @@ div.allUserLabels{
     text-align: left;
 }
 
-//Name of labeller
-#labellerName{
+// Name of labeller
+#labeller{
     font-size: 17px;
     letter-spacing: 1px;
     font-weight: 450;
@@ -107,4 +96,16 @@ div.allUserLabels{
     height:1px; 
     width:80%; 
     border-width:0px;
+}
+// Save button
+.btn {
+    background-color: #ed5a06;
+    border-color: #ed5a06;
+    margin: 15px;
+}
+// Labelled by Div
+.infoDiv {
+    height: 55vh;
+    overflow-y: scroll;
+    overflow-x: hidden
 }

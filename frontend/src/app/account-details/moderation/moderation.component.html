@@ -1,0 +1,78 @@
+<!-- Author Jarl Jansen -->
+<!-- Container with all the content -->
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <!-- Account information -->
+    <ng-container *ngIf="mode==0">
+        <!-- Button for going back to the home page -->
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-secondary text-nowrap" [routerLink]="['/home']" id="back-button">Back</button>
+            </div>
+        </div>
+
+        <!-- Adds the row of the header -->
+        <div class="row">
+            <div class="col-8 offset-2">
+                <!-- Header saying user moderation -->
+                <div id="header">
+                    User Moderation
+                </div>
+            </div>
+        </div>
+
+        <!-- Shows the table with all the users and their contribution -->
+        <div class="row" id="table">
+            <div class="col-10 offset-1">
+                <!-- Adds the fancy scrollbar into the page -->
+                <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+                    <table class="table table-hover" id="labelTable">
+                        <!--Table Headers-->
+                        <thead>
+                            <tr>
+                                <!-- Column with usernames -->
+                                <th scope="col" class="col-3"><p class="tableheader">User</p></th>
+                                <!-- Column with email -->
+                                <th scope="col" class="col-3"><p class="tableheader">Email</p></th>
+                                <!-- Column with description of the users -->
+                                <th scope="col" class="col-3"><p class="tableheader">Description</p></th>
+                                <!-- Column edit and delete button-->
+                                <th scope="col" class="col-3"><p class="tableheader">Modification</p></th>
+                            </tr>
+                        </thead>
+                        <!--Table Content-->
+                        <tbody>
+                            <!-- Loops through all the users in the application -->
+                            <tr *ngFor="let user of users">
+                                <!-- Displays the username of the user -->
+                                <td><p class="tablecontent">{{user.getUsername()}}</p></td>
+                                <!-- Displays the email of the user -->
+                                <td><p class="tablecontent">{{user.getEmail()}}</p></td>
+                                <!-- Displays the description of the user -->
+                                <td><p class="tablecontent">{{user.getDesc()}}</p></td>
+                                <!-- Displays the modification buttons -->
+                                <td>
+                                    <!-- Displays the edit button -->
+                                    <button class="btn btn-primary text-nowrap padd" (click)="editUser(user)">Edit</button>
+                                    <!-- Displays the softdelete button -->
+                                    <button class="btn btn-secondary text-nowrap" (click)="softDelete(user)">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    
+    <!-- Edit division -->
+    <ng-container *ngIf="mode==1">
+        <!-- Create app-edit-account-settings component, passes user data and listens for modeChange events -->
+        <app-edit-account-settings [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-edit-account-settings>
+    </ng-container>
+    
+    <!-- Change password -->
+    <ng-container *ngIf="mode==2">
+        <!-- Create app-account-change-password component, passes user data and listens for modeChange events -->
+        <app-account-change-password [userAccount]="user" [superAdmin]="true" (modeChangeEvent)="modeChange($event)"></app-account-change-password>
+    </ng-container>
+</div>
