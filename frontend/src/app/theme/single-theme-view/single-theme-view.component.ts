@@ -9,6 +9,7 @@ import { HistoryComponent } from 'app/modals/history/history.component';
 import { ToastCommService } from 'app/services/toast-comm.service';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -30,10 +31,13 @@ export class SingleThemeViewComponent {
   // Variable for the theme
   theme: Theme; 
 
+  frozen: boolean = true;
+
   constructor(private router: Router, 
     private themeDataService: ThemeDataService, 
     private modalService: NgbModal,
-    private toastCommService: ToastCommService) { 
+    private toastCommService: ToastCommService,
+    private projectDataService: ProjectDataService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -46,7 +50,8 @@ export class SingleThemeViewComponent {
     this.theme = new Theme(0, "", "")
   }
   
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
     // Get the information for the theme
     this.get_single_theme_info(this.p_id, this.t_id);
   }

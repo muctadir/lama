@@ -62,7 +62,7 @@ fdescribe('ThemeManagementComponent', () => {
   // Test the changePage function
   it('Tests if the get_theme_management_info function is called on initialization', () => {    
     // Create spy for get url call
-    let spy = spyOn(component, 'get_theme_management_info');
+    let spy = spyOn(component, 'getThemes');
     // Call ngOnInit
     component.ngOnInit();    
     // Checks whether the function is called in ngOnInit

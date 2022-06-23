@@ -77,7 +77,7 @@
                                                     <!-- If the current user doesn't have permission to modify the dropdown, then it is disabled -->
                                                     <select class="form-control" name="labels" id="formControl"
                                                         #changedLabel
-                                                        [disabled]="!admin && username != user.getUsername()"
+                                                        [disabled]="frozen || (!admin && username != user.getUsername())"
                                                         (change)="updateLabelling(user, changedLabel.value, labeltype.getId(), labeltype.getLabels())">
                                                         <div>
                                                             <!-- All labels from the label type are dropdown options -->
@@ -116,7 +116,8 @@
                 </div>
             </div>
             <div>
-                <div>
+                <!-- Only show the button if labels were changed -->
+                <div *ngIf="changed">
                     <!-- Save button -->
                     <button class="btn btn-secondary float-end" id="btn-save" (click)="updateLabellings()">
                         Save

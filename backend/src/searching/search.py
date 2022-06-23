@@ -75,44 +75,49 @@ def best_match(results):
     else:
         return results[0]
 
-
-#searches for words in all the artifacts
-#@param search_words: string of multiple words
-#@param artifacts: data with id and text data to search
-#@returns a dictionary per artifact id of value {'id', 'dist', 'word', 'search', 'item'}
-# where id is artifact id, dist is dist between search term and best word,
-# word is the best found word, search is the corresponding search word,
-# item is a ditctionary of id and data
-def search_func_all_res(search_words, data, id_col, data_col):
-    #initialise list to store all id params
+"""
+Searches for words in data
+@param search_words: string of multiple words
+@param data: a list of objects to search through
+@param id_col: the name of the column containing the id
+@param data_cols: the columns to search through
+@returns a dictionary per item id of value {'id', 'dist', 'word', 'search', 'item'}
+where id is item id, dist is dist between search term and best word,
+word is the best found word, search is the corresponding search word,
+item is a dictionary of id and data
+"""
+def search_func_all_res(search_words, data, id_col, data_cols):
+    # Initialise list to store all id params
     param_list = []
-    #enter the place we want to analyse the text
+    # Enter the place we want to analyse the text
     for item in data:
-        #print(type(item))
-        #go through each search word
+        # Go through each search word
         for search_word in search_words.split():
-            #stores the best machtes in artifact for all the search words
-            matches = []
-            #get best search word result in artifact
-            result = word_match(search_word, getattr(item, data_col))
-            #make sure words are below min letter diff distance
+            # Search through all the data columns
+            # Extract the data into a list
+            search_data = [str(getattr(item, data_col)) for data_col in data_cols]
+            # Concatenate the data into one string to search through
+            joined_data = " ".join(search_data)
+            # Get best search word result in artifact
+            result = word_match(search_word, joined_data)
+            # Make sure words are below min letter diff distance
             if len(result) != 0 and result[0] <= MIN_DIST:
-                if len(matches) == 0:
-                    matches.append(getattr(item, id_col))
-                matches.append(result)
-                matches.append(search_word)
-                matches.append(item)
-            if len(matches) != 0:
+                matches = [
+                    getattr(item, id_col),
+                    result,
+                    search_word,
+                    item
+                ]
                 param_list.append(matches)
-    #turn into a dictionary that is grouped by id
-    dictionary = list_to_dictionnary(param_list, id_col)
+    # Turn into a dictionary that is grouped by id
+    dictionary = list_to_dictionary(param_list, id_col)
     return dictionary
             
 
-#groups the param list into a dictionary by ID
-#@param the list of arrays of type [id, [dist, word], search_word, item]
+# Groups the param list into a dictionary by ID
+# @param the list of arrays of type [id, [dist, word], search_word, item]
 # there is an entry in the list for each best word of the search words in each artifact
-def list_to_dictionnary(param_list, id_col):
+def list_to_dictionary(param_list, id_col):
     # define a fuction for key
     def key_func(k):
         return k[id_col]

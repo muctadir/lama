@@ -145,9 +145,13 @@ export class AddArtifactComponent {
        * @param artifacts record, has the data of all the artifacts that need to be added
        */
   async addArtifacts(pid: number, artifacts: Record<string, any>[]) {
-    let identifier = await this.artifactDataService.addArtifacts(pid, artifacts);
+    let response = await this.artifactDataService.addArtifacts(pid, artifacts);
     // Indicates that the upload was successful
-    this.toastCommService.emitChange([true, "Upload successful. Artifact identifier: ".concat(identifier)])
+    this.toastCommService.emitChange([true, "Upload successful. Artifact identifier: ".concat(response['identifier'])])
+    if(!response['admin']) {
+      this.toastCommService.emitChange([false, 
+        "You are not admin, so you will not be able to see the artifacts you have not labelled"])
+    }
     this.error = false;
   }
 

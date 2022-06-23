@@ -13,4 +13,6 @@ RUN npm run build
 # Stage 2 [Build nginx for the handling of the traffic]
 FROM nginx:1.21.6-alpine
 
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=node /usr/local/app/dist/webapp /usr/share/nginx/html

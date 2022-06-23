@@ -75,9 +75,9 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @throws Error if artifacts.length <= 0
    * @throws Error if \exists i; 0 < i < artifacts.length; artifacts[i].length <= 0
-   * @returns Promise<boolean>
+   * @returns Promise<Record<string, any>>
    */
-  async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<any> {
+  async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<Record<string, any>> {
     // Check if the p_id is larger than 0
     if (p_id < 1) throw new Error("p_id cannot be less than 1")
     // Check if the list of artifacts is empty
@@ -197,6 +197,9 @@ export class ArtifactDataService {
     searchWords: string,
     p_id: number
   ): Promise<Array<StringArtifact>> {
+    // The artifacts
+    let artifacts: Array<StringArtifact> = new Array<StringArtifact>();
+
     // Get the artifact information from the back end
     let response = await this.requestHandler.get(
       '/artifact/search',
@@ -204,11 +207,27 @@ export class ArtifactDataService {
       true
     );
 
-    // Get the artifact from the response
-    let artifacts = response;
+    response.forEach((artifactInfo : Record<string, any>) => {
+      // Separate information into an artifact and its labellings
+      let artifactJson = artifactInfo['artifact'];
+      let labellingsJson = artifactInfo['artifact_labellings'];
+      
+      // Construct StringArtifact object
+      let artifact: StringArtifact = new StringArtifact(
+        artifactJson['id'],
+        artifactJson['identifier'],
+        artifactJson['data']
+      );
+      
+      // Update the artifacts labellings
+      artifact.setLabellings(labellingsJson);
+      // Add the artifact to the end result
+      artifacts.push(artifact);
 
-    // Return the record
-    return artifacts;
+    });
+
+    return artifacts
+
   }
 
   /**

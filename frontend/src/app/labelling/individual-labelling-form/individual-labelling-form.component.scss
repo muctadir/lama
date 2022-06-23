@@ -43,3 +43,9 @@ $orange-shade: #ed5a06;
 #description{
   resize: none;
 }
+
+// Make the dropdown scrollable
+::ng-deep .dropdown-menu{
+  max-height: 200px;
+  overflow-y: scroll;
+}

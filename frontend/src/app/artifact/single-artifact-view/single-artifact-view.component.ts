@@ -10,6 +10,7 @@ import { HistoryComponent } from 'app/modals/history/history.component';
 import { LabelType } from 'app/classes/label-type';
 import { User } from 'app/classes/user';
 import { Label } from 'app/classes/label';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-single-artifact-view',
@@ -23,7 +24,7 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the artifact
   artifact: StringArtifact;
   // Initialize list of users
-  users: Array<User>
+  users: Array<User>;
   // Initialize array of label types in the project
   labelTypes: Array<LabelType>;
   // Initialize the url
@@ -38,7 +39,11 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize the project id
   p_id: number;
   // Initialize the artifact id
-  a_id: number
+  a_id: number;
+  // Initialize boolean value that represent whether the labels in this page have been changed
+  changed: boolean;
+  // Whether the project is frozen
+  frozen: boolean = true;
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -51,8 +56,9 @@ export class SingleArtifactViewComponent implements OnInit {
     private artifactDataService: ArtifactDataService,
     private labellingDataService: LabellingDataService,
     private toastCommService: ToastCommService,
-    private router: Router) {
-    //Initializing variables
+    private router: Router,
+    private projectDataService: ProjectDataService) {
+    // Initializing variables
     this.routeService = new ReroutingService();
     this.artifact = new StringArtifact(0, 'null', 'null');
     this.users = [];
@@ -62,7 +68,8 @@ export class SingleArtifactViewComponent implements OnInit {
     this.admin = false;
     this.username = '';
     this.p_id = Number(this.routeService.getProjectID(this.url));
-    this.a_id = Number(this.routeService.getArtifactID(this.url));;
+    this.a_id = Number(this.routeService.getArtifactID(this.url));
+    this.changed = false;
   }
 
   /**
@@ -75,11 +82,15 @@ export class SingleArtifactViewComponent implements OnInit {
    * @trigger on creation of component
    */
   async ngOnInit(): Promise<void> {
-
+    this.frozen = await this.projectDataService.getFrozen();
+    // Reset the changed variable
+    this.changed = false;
+    // Reset the list of users
+    this.users = [];
     // Get the artifact data from the backend
-    this.getArtifact(this.a_id, this.p_id)
+    this.getArtifact(this.a_id, this.p_id);
     // Get the label types with their labels
-    await this.getLabelTypesWithLabels(this.p_id)
+    await this.getLabelTypesWithLabels(this.p_id);
   }
 
   /**
@@ -157,6 +168,7 @@ export class SingleArtifactViewComponent implements OnInit {
       // Place the remark back into the labelling
       this.userLabels[user.getUsername()][result["lt_name"]]["labelRemark"] = remark
     }
+    this.changed = true;
   }
 
   /**
@@ -174,6 +186,6 @@ export class SingleArtifactViewComponent implements OnInit {
     } catch (error) {
       this.toastCommService.emitChange([false, "Something went wrong while saving."])
     }
-    
+    this.ngOnInit()
   }
 }
