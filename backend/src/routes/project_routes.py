@@ -14,6 +14,7 @@ from sqlalchemy import select, func, update, distinct
 from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, in_project, not_frozen
 from sqlalchemy.exc import OperationalError, IntegrityError
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
+from collections import defaultdict
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 

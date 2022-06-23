@@ -4,13 +4,84 @@ $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
 
+// Page Body
+#body {
+  overflow-y: hidden;
+  max-height: 100vh;
+}
+
 // Page Title
 #pageTitle {
-    font-size: 35px;
-    padding-top: 10px;
-    text-align: left;
-    letter-spacing: 1px;
-    border-bottom: 1px; 
-    border-bottom-style: solid;
-    border-bottom-color: $light-grey-shade;
+  font-size: 35px;
+  padding-top: 10px;
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+// Tree Visualisation
+#treeChart {
+  position: relative;
+  height: 80vh;
+  width: 70vw;
+  border: 1px solid gray;
+  overflow: scroll;
+}
+
+// For the node text
+::ng-deep .node text {
+  font: 11px sans-serif;
+}
+
+// For the internal text
+::ng-deep .node--internal text {
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+// For each link between nodes
+::ng-deep .link {
+  fill: none;
+  stroke: #555;
+  stroke-opacity: 0.4;
+  stroke-width: 1.5px;
+}
+
+// For the svg component
+::ng-deep .g {
+  overflow-y: scroll;
+}
+
+
+// Scroll Related Business
+.my-custom-scrollbar {
+  position: relative;
+  height: 80vh;
+  overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+  display: block;
+}
+
+// Scroll Bar 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+// Scrollbar background
+::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 10px;
+}
+
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+  background: #38474e;
+  border-radius: 10px;
+}
+
+// Scroll bar
+#scrolly {
+  padding-right: 40px;
+  height: auto;
 }

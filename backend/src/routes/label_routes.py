@@ -666,3 +666,37 @@ def label_name_taken(name, t_id):
         .first()):
         return True
     return False
+
+"""
+Author: Eduardo Costa Martins
+@param p_id : The id of the project to get loose labels of
+@returns a list of dictionaries. Each dictionary represents a label in 'Node' form, for the hierarchy. That is:
+{
+    'id' : the id of the label
+    'name' : the name of the label
+    'type' : 'Label' (to distinguish from other nodes that do not represent labels)
+}
+"""
+def get_loose_labels(p_id):
+
+    # Select label id and name
+    loose_labels = db.session.execute(select(
+        Label.id,
+        Label.name
+    ).where(
+        # Label is in given project
+        Label.p_id == p_id,
+        # Label is not assigned to a theme
+        ~Label.id.in_(select(
+            label_to_theme.c.l_id
+        ))
+    )).all()
+    
+    # Convert to the Node format needed for the hierarchy
+    loose_labels = [{
+        'id' : loose_label[0],
+        'name' : loose_label[1],
+        'type' : 'Label'
+    } for loose_label in loose_labels]
+    
+    return loose_labels
