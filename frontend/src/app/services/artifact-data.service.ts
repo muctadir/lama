@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastCommService } from './toast-comm.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class ArtifactDataService {
   requestHandler: RequestHandler;
 
   // Constructors for the request handler
-  constructor() {
+  constructor(private toastCommService: ToastCommService) {
     this.requestHandler = new RequestHandler(
       sessionStorage.getItem('ses_token')
     );
@@ -92,7 +93,13 @@ export class ArtifactDataService {
         'array': artifacts
       }
       // Send the data to the database
-      return this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
+      try {
+        let result = await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
+        return result;
+      } catch {
+        this.toastCommService.emitChange([false, "File formatted incorrect."])
+        throw new Error("bad formatting");
+      }
     }
 
   /**

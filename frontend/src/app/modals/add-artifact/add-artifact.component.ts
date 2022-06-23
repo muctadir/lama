@@ -124,12 +124,15 @@ export class AddArtifactComponent {
           allArtifacts.push(artifactInformation);
         }
 
-        // Add the artifacts to the backend
-        await this.addArtifacts(p_id, allArtifacts)
+        try {
+          // Add the artifacts to the backend
+          await this.addArtifacts(p_id, allArtifacts)
+        } catch(e) {
+        }
         // Close modal
         this.activeModal.close();
 
-      })
+      });
     } catch (e) {
       // Ensures an error message is displayed
       this.toastCommService.emitChange([false, "Error uploading artifacts"])
@@ -185,9 +188,13 @@ export class AddArtifactComponent {
         // Array which will hold the uploaded artifacts
         let new_artifacts: Array<string> = [];
 
-        // Checks whether the content of the file is a string, and splits the string on newlines
-        if (typeof (myReader.result) === 'string') {
-          new_artifacts = myReader.result.split(/\r?\n/);
+        try {
+          // Checks whether the content of the file is a string, and splits the string on newlines
+          if (typeof (myReader.result) === 'string') {
+            new_artifacts = myReader.result.split(/\r?\n/);
+          }
+        } catch {
+          this.toastCommService.emitChange([false, "File not formatted correctly"]);
         }
 
         // Removes the artifacts which are only a newline
