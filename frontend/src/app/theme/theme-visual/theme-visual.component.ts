@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
-//import of d3
+// Import of d3
 import * as d3 from 'd3';
 
 
@@ -62,8 +62,8 @@ export class ThemeVisualComponent implements OnInit {
     // Initialise svg
     this.svg = d3.select('#treeChart')
       .append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%')
+      .attr('width', '100vw')
+      .attr('height', '100vh')
 
     // Initialise g
     this.g = this.svg.append('g')

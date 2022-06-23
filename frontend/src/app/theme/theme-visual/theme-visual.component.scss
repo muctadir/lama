@@ -18,30 +18,26 @@ $light-grey-shade: #aaaaaa;
   letter-spacing: 1px;
 }
 
-//Tree Visualisation
-#treeChart {
+// Tree Visualisation
+# TreeChart {
   position: relative;
-  height: 300vh;
+  height: 90vh;
+  width: 80vw;
   border: 1px solid gray;
+  overflow: scroll;
 }
 
-// Column of Tree
-#treeCol {
-  overflow-y: scroll;
-  height: 100vh;
-}
-
-// for the node text
+// For the node text
 ::ng-deep .node text {
   font: 11px sans-serif;
 }
 
-//for the internal text
+// For the internal text
 ::ng-deep .node--internal text {
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
 
-//for each link between nodes
+// For each link between nodes
 ::ng-deep .link {
   fill: none;
   stroke: #555;
@@ -49,7 +45,7 @@ $light-grey-shade: #aaaaaa;
   stroke-width: 1.5px;
 }
 
-//for the svg component
+// For the svg component
 ::ng-deep .g {
   overflow-y: scroll;
 }
@@ -78,7 +74,7 @@ $light-grey-shade: #aaaaaa;
 
 // Scrollbar background
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: white;
   border-radius: 10px;
 }
 
