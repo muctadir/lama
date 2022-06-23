@@ -264,19 +264,17 @@ export class ThemeDataService {
       if(e.response.status == 511){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
+      } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);
       } else {
         // Emits an error toast
         this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
       }
+      return "An error occured"
     }
   }
 

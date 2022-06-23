@@ -34,7 +34,7 @@ def create_label(*, user):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
-    if check_string([args['labelName'], args['labelDescription']]):
+    if check_string([args['labelName']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Check whether the length of the label name is at least one character long
@@ -217,7 +217,7 @@ def merge_route(*, user):
         return make_response("Input contains leading or trailing whitespaces", 400)
     
     # Check for invalid characters
-    if check_string([args['newLabelName'], args['newLabelDescription']]):
+    if check_string([args['newLabelName']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Check whether the length of the label name is at least one character long

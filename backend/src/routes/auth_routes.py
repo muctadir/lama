@@ -40,7 +40,7 @@ def register():
         return make_response("Input contains leading or trailing whitespaces", 400)
      
     # Check for invalid characters
-    if check_string(args):
+    if check_string([args['username'], args['email'], args['password']]):
         return make_response("Input contains a forbidden character", 511)
         
     # Check that arguments were formatted correctly

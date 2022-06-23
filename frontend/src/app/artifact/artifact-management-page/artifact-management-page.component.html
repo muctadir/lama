@@ -13,8 +13,8 @@
 
         <!--Add Artifact Button-->
         <div class="col">
-            <span (click)="open()" class="float-end">
-                <button type="button" class="btn btn-secondary" id="addArtifactButton" [disabled]="frozen">
+            <span class="float-end">
+                <button type="button" class="btn btn-secondary" id="addArtifactButton" [disabled]="frozen" (click)="open()">
                     Add Artifact
                     <!-- Displays the + icon next to "Add artifact" -->
                     <em class="bi bi-plus-lg"></em>
@@ -27,7 +27,7 @@
             <div class="col-5">
                 <div class="search__container">
                     <form [formGroup]="searchForm">
-                        <input class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                        <input id="searchBar" class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
                     </form>
                 </div>
             </div>
@@ -75,11 +75,11 @@
                     [collectionSize]="nArtifacts"
                     (pageChange)="getArtifacts()"
                     [maxSize]="5"
-                    [rotate]="true" 
+                    [rotate]="true"
                     [boundaryLinks]="true">
                 </ngb-pagination>
-            </div>        
-            
+            </div>
+
         </div>
     </div>
 </div>
