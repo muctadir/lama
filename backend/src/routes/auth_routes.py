@@ -149,7 +149,6 @@ def create_user(args):
 # If there already exists a User with given username or email
 def taken(username, email):
     violation = db.session.scalars(select(User).where(or_(User.username == username, User.email == email))).first()
-    print(violation)
     return bool(violation)
 
 # Checks validity of all required fields for User creation
@@ -166,5 +165,3 @@ def check_format(username, email, password, passwordR, description):
         return (False, "No description provided")
     else:
         return (True, "Success")
-
-# TODO logout

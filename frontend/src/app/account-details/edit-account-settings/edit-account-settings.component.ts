@@ -67,11 +67,8 @@ export class EditAccountSettingsComponent {
       "email": this.accountForm.value.email
     };
 
-    // Checks the input of the user
-    let validInput: boolean = this.checkInput();
-
     // Sends request to backend if input is valid, otherwise displays error message
-    if (validInput) {
+    if (this.checkInput()) {
       // Calls function responsible for making the request to the backend
       this.makeRequest(accountInformation)
     } else {
@@ -131,6 +128,9 @@ export class EditAccountSettingsComponent {
       } else if (e.response.data == "Input contains leading or trailing whitespaces"){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else if (e.response.data == "Username or email taken"){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Username or email taken"]);
       } else {
         // Displays the error message
         this.toastCommService.emitChange([false, "Please enter valid details!"]);
