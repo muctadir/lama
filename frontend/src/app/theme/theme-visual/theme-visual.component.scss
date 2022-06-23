@@ -21,14 +21,10 @@ $light-grey-shade: #aaaaaa;
 //Tree Visualisation
 #treeChart {
   position: relative;
-  height: 300vh;
+  height: 90vh;
+  width: 80vw;
   border: 1px solid gray;
-}
-
-// Column of Tree
-#treeCol {
-  overflow-y: scroll;
-  height: 100vh;
+  overflow: scroll;
 }
 
 // for the node text
@@ -78,7 +74,7 @@ $light-grey-shade: #aaaaaa;
 
 // Scrollbar background
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: white;
   border-radius: 10px;
 }
 
