@@ -4,35 +4,42 @@ from src.models.auth_models import User, UserStatus
 from src.routes.auth_routes import check_format, taken
 from werkzeug.security import check_password_hash
 from jwt import decode
+from src.conftest import RequestHandler
 
 # TODO: Test check_format() seperately
 
 def test_register(client, app):
 
-    return
+    request_handler = RequestHandler(app, client)
 
+    # Using db requires app context
     with app.app_context():
-        
-        entry = db.session.scalar(select(User).where(User.username == "Eduardo"))
-        assert not entry
+        # Assert that the user we are trying to create does not exist
+        assert not taken('Eduardo', 'god_level@programmer.com')
 
-        response = client.post('/auth/register', json={
+        # Register a new user
+        response = request_handler.post('/auth/register', {
             'username': "Eduardo",
             'email': "god_level@programmer.com",
             'password' : "secure-password",
             'passwordR' : "secure-password",
             'description' : "Help, how do I get out of here?"
-        })
+        }, False)
 
+        # Status code should be Created
         assert response.status_code == 201
 
+        # Get the user we created
         entry = db.session.scalar(select(User).where(User.username == "Eduardo"))
 
+        # Check that the user was created correctly
         assert entry.username == "Eduardo"
         assert check_password_hash(entry.password, "secure-password")
         assert entry.email == "god_level@programmer.com"
         assert entry.description == "Help, how do I get out of here?"
-        assert entry.status == UserStatus.pending
+        # assert entry.status == UserStatus.pending
+        # Note: since we did not implement super admin approval of users, the status defaults to approved
+        assert entry.status == UserStatus.approved
 
 def test_login(client, app):
     
@@ -54,9 +61,9 @@ def test_taken(app):
 
     with app.app_context():
         assert taken('user1', 'email@not.taken')
-        # assert taken('name_not_taken', 'user1@test.com')
-        # assert taken('ùser1', 'user1@test.com')
-        # assert not taken('name_not_taken', 'email@not.taken')
+        assert taken('name_not_taken', 'user1@test.com')
+        assert taken('ùser1', 'user1@test.com')
+        assert not taken('name_not_taken', 'email@not.taken')
 
 def login_helper(app, client, status, expected_code, expected_text, token_present):
 

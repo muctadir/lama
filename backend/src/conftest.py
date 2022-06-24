@@ -65,7 +65,7 @@ class RequestHandler:
 
         self.verify_authentication(auth)
 
-        response = client.post(path, json={'params': params}, headers=self.headers)
+        response = self.client.post(path, json={'params': params}, headers=self.headers)
 
         return response
 
@@ -74,7 +74,7 @@ class RequestHandler:
 
         self.verify_authentication(auth)
 
-        response = client.patch(path, json={'params': params}, headers=self.headers)
+        response = self.client.patch(path, json={'params': params}, headers=self.headers)
 
         return response
 
@@ -83,7 +83,7 @@ class RequestHandler:
 
         self.verify_authentication(auth)
 
-        response = client.get(path, query_string=params, headers=self.headers)
+        response = self.client.get(path, query_string=params, headers=self.headers)
 
         return response
     
