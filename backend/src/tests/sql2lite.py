@@ -1,6 +1,8 @@
 from pathlib import Path
 from sys import argv
 
+# This function takes a line of values and prepends the necessary INSERT text to create a new insert
+# It replaces \' (the single quote escape in MySQL) with '' (the single quote escape in SQLite)
 def __insert(prepend, line):
     return (prepend + line[:-2]+ ';\n').replace("\\'", "''")
 
