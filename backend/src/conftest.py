@@ -1,81 +1,98 @@
 from pytest import fixture
-from src import create_app
-from src import db
-from src.models.auth_models import User, UserStatus
-from src.models.item_models import Artifact
-from src.models.project_models import Project, Membership
+from src import create_app, db
+from src.exc import TestAuthenticationError
+from jwt import encode
 
+"""
+Author: Eduardo Costa Martins
+"""
 @fixture
 def app():
     app = create_app({'TESTING': True})
 
-    # Make mock data for testing
-    # Create some new users
-    for i in range(3):
-        user = User(username = "User" + str(i),
-            password = "idkman",
-            email = "someemail" + str(i) + "@gmail.com",
-            status = UserStatus.approved,
-            description = "something"
-            )
-
-        db.session.add(user)
+    # Database modifications require app context
+    with app.app_context():
+        
+        # Read the file with insert statements.
+        # Note: this cannot be the raw dump, it has to have been converted using sql2lite.py
+        with open("src/tests/lama_test.sql") as file:
+            
+            # SQLite does not have support for executing multiple statements at once
+            # so we insert one by one
+            for line in file.readlines():
+                # Execute the insert
+                db.session.execute(line)
+        # Commit all insertions
         db.session.commit()
-
-    # Make some projects
-    for i in range(4):
-        project = Project(name = "Project " + str(i),
-            description = "something",
-            criteria = 1,
-            frozen = i % 2 == 0
-            )
-
-        db.session.add(project)
-        db.session.commit()
-
-    # Get lists of the ids of all users and projects
-    user_ids = [id for id in db.session.query(User.id)]
-    project_ids = [id for id in db.session.query(Project.id)]
-
-    # Make relationships between the users and the projects
-    for u in range(3):
-        for p in range(4):
-            # Get the user and the project that are part of this membership
-            this_user = User.get(user_ids[u])
-            this_project = Project.get(project_ids[p])
-
-            # Create the membership
-            membership = Membership(pId = this_project.id,
-                uId = this_user.id,
-                admin = (u == 0 and p < 2) or (u == 1 and p > 1),
-                deleted = p == 3,
-                project = [this_project],
-                user = [this_user]
-                )
-
-            db.session.add(membership)
-            db.session.commit()
-
-            # Make artifacts for this project
-            for a in range(2):
-                artifact = Artifact(p_id = this_project.id,
-                    name = "Artifact " + str(a),
-                    project = this_project,
-                    identifier = 'Something',
-                    data = "blablahblahblah",
-                    completed = a == 0)
-
-                db.session.add(artifact)
-                db.session.commit()
 
     yield app
     # Tear-down goes here.
     # TODO: Delete migrations folder
 
+# To simulate requests
 @fixture
 def client(app):
     return app.test_client()
 
+# To simulate doing CLI commands (we probably won't need this one?)
 @fixture
 def runner(app):
     return app.test_cli_runner()
+
+"""
+Author: Eduardo Costa Martins
+This is supposed to simulate requests made using the frontend request handler.
+The only difference is that instead of returning the response data, it returns the entire response object
+This is done for testing purposes.
+"""
+class RequestHandler:
+
+    # Additional headers passed, on top of required ones such as content_type
+    headers = {}
+
+    def __init__(self, app, client, u_id=None):
+
+        self.app = app
+        self.client = client
+        # Optionally store the encoded u_id as the session token
+        if u_id is None:
+            self.session_token = None
+        else:
+            self.session_token = encode({'u_id_token': u_id}, app.secret_key, algorithm='HS256')
+
+    # Simulates a post request (with the params being nested in a dictionary)
+    def post(self, path, params, auth):
+
+        self.verify_authentication(auth)
+
+        response = self.client.post(path, json={'params': params}, headers=self.headers)
+
+        return response
+
+    # Simulates a patch request (with the params being nested in a dictionary)
+    def patch(self, path, params, auth):
+
+        self.verify_authentication(auth)
+
+        response = self.client.patch(path, json={'params': params}, headers=self.headers)
+
+        return response
+
+    # Simulates a get request
+    def get(self, path, params, auth):
+
+        self.verify_authentication(auth)
+
+        response = self.client.get(path, query_string=params, headers=self.headers)
+
+        return response
+    
+    # Sets the headers for a request based on whether or not authentication is required (and a session token is provided)
+    def verify_authentication(self, authentication_req):
+        
+        if authentication_req:
+            if self.session_token is None:
+                raise TestAuthenticationError
+            self.headers['u_id_token'] = self.session_token
+        else:
+            self.headers['u_id_token'] = ''
