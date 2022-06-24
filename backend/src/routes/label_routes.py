@@ -8,13 +8,17 @@ from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args, not_frozen
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelSchema, LabelType, \
-  Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
+    Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
 from src.searching.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
-# Author: Eduardo, Bartjan
-# Create a label
+"""
+    Author: Eduardo Costa Martins, Bartjan Henkemans
+    This route creates a label in the database
+"""
+
+
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
@@ -24,10 +28,10 @@ def create_label(*, user):
     args = request.json['params']
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
-    
-    # Check for invalid characters
-    if check_whitespaces([args['labelName'], args['labelDescription']]):
-        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check whether the required arguments are delivered
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     # Check for invalid characters
     if check_string([args['labelName']]):
@@ -40,14 +44,14 @@ def create_label(*, user):
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
         return make_response('Label description cannot be empty', 400)
-    
+
     # Check if label name is taken
     if label_name_taken(args['labelName'], 0):
         return make_response('Label name already exists', 400)
-    
-    # Check whether the required arguments are delivered
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
+
+    # Check for invalid characters
+    if check_whitespaces([args['labelName'], args['labelDescription']]):
+        return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check whether the label type exists
     label_type = db.session.get(LabelType, args['labelTypeId'])
@@ -70,8 +74,9 @@ def create_label(*, user):
         # Flushing updates the id of the label object
         db.session.flush()
         # Records the creation of the label in the label changelog
-        __record_creation(label.id, label.name, label_type.name, args['p_id'], user.id)
-        db.session.commit() 
+        __record_creation(label.id, label.name,
+                          label_type.name, args['p_id'], user.id)
+        db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
@@ -79,6 +84,8 @@ def create_label(*, user):
 
 # Author: Bartjan, Victoria, Linh, Jarl
 # Edit label
+
+
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
@@ -119,24 +126,26 @@ def edit_label(*, user):
     # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
-    
+
     # Records a change in the description, only if the description has actually changed
     if label.description != args['labelDescription']:
-        __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
-    
+        __record_description_edit(
+            label.id, args['labelName'], args['p_id'], user.id)
+
     # Check if the label name is unique
     if label_name_taken(args["labelName"], args['labelId']):
         return make_response("Label name already exists", 400)
 
     # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
-        __record_name_edit(label.id, label.name, args['p_id'], user.id, args['labelName'])
+        __record_name_edit(label.id, label.name,
+                           args['p_id'], user.id, args['labelName'])
 
     db.session.execute(
         update(Label)
         .where(Label.id == args['labelId']).values(name=args['labelName'], description=args['labelDescription'])
     )
-    
+
     try:
         db.session.commit()
     except OperationalError:
@@ -146,6 +155,8 @@ def edit_label(*, user):
 
 # Author: Bartjan, Victoria
 # Check whether the pID exists
+
+
 @label_routes.route('/allLabels', methods=['GET'])
 @login_required
 @in_project
@@ -162,7 +173,7 @@ def get_all_labels():
     # Get all the labels of a labelType
     labels = db.session.scalars(
         select(Label)
-        .where(Label.p_id == args['p_id'], 
+        .where(Label.p_id == args['p_id'],
                Label.deleted != 1)
     ).all()
 
@@ -202,7 +213,7 @@ def get_single_label():
     label_schema = LabelSchema()
     # Initialise theme schema
     theme_schema = ThemeSchema()
-    
+
     # Create a dictionary with label, label type and themes
     dict_json = jsonify({
         'label': label_schema.dump(label),
@@ -214,6 +225,8 @@ def get_single_label():
 
 # Author: Eduardo
 # Merge labels
+
+
 @label_routes.route('/merge', methods=['POST'])
 @login_required
 @in_project
@@ -222,7 +235,8 @@ def merge_route(*, user):
 
     args = request.json['params']
     # Required parameters
-    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')    
+    required = ('mergedLabels', 'newLabelName',
+                'newLabelDescription', 'p_id', 'labelTypeName')
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
@@ -235,11 +249,11 @@ def merge_route(*, user):
     # Check for invalid whitespaces
     if check_whitespaces([args['newLabelName'], args['newLabelDescription']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
-    
+
     # Check for invalid characters
     if check_string([args['newLabelName']]):
         return make_response("Input contains a forbidden character", 511)
-    
+
     # Check if label name is taken
     if label_name_taken(args['newLabelName'], 0):
         return make_response("Label name already exists", 400)
@@ -247,7 +261,7 @@ def merge_route(*, user):
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
@@ -262,7 +276,7 @@ def merge_route(*, user):
             Label.id.in_(label_ids)
         )
     ).all()
-    
+
     # Check that the labels exist
     if len(labels) != len(label_ids):
         return make_response('One or more labels do not exist', 400)
@@ -273,11 +287,11 @@ def merge_route(*, user):
             return make_response('Labels must be in the same project', 400)
         # Check labels are of the same type
         if label.lt_id != labels[0].lt_id:
-            return make_response('Labels must be of the same type', 400)        
-    
+            return make_response('Labels must be of the same type', 400)
+
     # Create new label
     new_label = Label(
-        name=args['newLabelName'], 
+        name=args['newLabelName'],
         description=args['newLabelDescription'],
         lt_id=labels[0].lt_id,
         p_id=args['p_id']
@@ -324,7 +338,8 @@ def merge_route(*, user):
         )
     ).all()
 
-    __record_merge(new_label, labels, args['p_id'], user.id, args['labelTypeName'], artifact_changes, theme_changes)
+    __record_merge(new_label, labels, args['p_id'], user.id,
+                   args['labelTypeName'], artifact_changes, theme_changes)
 
     # Update all labellings
     db.session.execute(
@@ -337,16 +352,16 @@ def merge_route(*, user):
     db.session.execute(
         insert(label_to_theme).from_select(
             # The columns we are inserting
-            ['t_id', 'l_id', 'p_id'], 
+            ['t_id', 'l_id', 'p_id'],
             # The selection we insert
             select(
                 # The theme ids being affected
                 theme_changes_ids.c.t_id,
                 # The new label id
-                new_label.id, 
+                new_label.id,
                 # The project id
                 args['p_id']
-            ) # Distinct in case some themes contain multiple of the labels being merged
+            )  # Distinct in case some themes contain multiple of the labels being merged
             .distinct()
         )
     )
@@ -366,7 +381,9 @@ def merge_route(*, user):
 # Function for getting the information (label, label_type, and artifacts) of a label
 # @param label
 # @param u_id - user id
-# @param admin 
+# @param admin
+
+
 def get_label_info(label, u_id, admin):
     # Schemas
     label_schema = LabelSchema()
@@ -383,7 +400,9 @@ def get_label_info(label, u_id, admin):
 # Only gets the artifacts that the user with a given id can see
 # @param label
 # @param u_id - user id
-# @param admin 
+# @param admin
+
+
 def get_label_artifacts(label, u_id, admin):
     if admin:
         return label.artifacts
@@ -395,6 +414,8 @@ def get_label_artifacts(label, u_id, admin):
 
 # Author: B. Henkemans
 # Soft delete labels route
+
+
 @label_routes.route('/delete', methods=['POST'])
 @login_required
 @in_project
@@ -416,7 +437,7 @@ def soft_delete_route(*, user):
     # Check if label is in the same project
     if label.p_id != int(args['p_id']):
         return make_response("Bad request", 400)
-    
+
     try:
         # Update the label and commit
         db.session.execute(
@@ -436,7 +457,7 @@ def soft_delete_route(*, user):
 @login_required
 @in_project
 def count_usage_route():
-    args = request.args 
+    args = request.args
     # Required args
     required = ['p_id', 'l_id']
     # Check Args
@@ -457,6 +478,8 @@ def count_usage_route():
 
 # Author: Eduardo
 # Search labels
+
+
 @label_routes.route('/search', methods=['GET'])
 @login_required
 @in_project
@@ -466,11 +489,11 @@ def search_route():
     args = request.args
     # Required arguments
     required = ('p_id', 'search_words')
-    
+
     # Check if required agruments are supplied
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # Sanity conversion to int (for when checking for equality in sql)
     p_id = int(args['p_id'])
 
@@ -491,7 +514,7 @@ def search_route():
     # It does feel illegal to set an attribute that does not exist, but that's python for you
     for label, type in labels:
         label.type = type
-    
+
     # Extract just the label object (removing the type name since it's already in the object)
     labels = [label[0] for label in labels]
 
@@ -499,15 +522,18 @@ def search_route():
     search_columns = ['id', 'name', 'description', 'type']
 
     # Get search results
-    results = search_func_all_res(args['search_words'], labels, 'id', search_columns)
+    results = search_func_all_res(
+        args['search_words'], labels, 'id', search_columns)
     # Take the best results
-    clean_results = best_search_results(results, len(args['search_words'].split()))
+    clean_results = best_search_results(
+        results, len(args['search_words'].split()))
     # Gets the actual label object from the search
     labels_results = [result['item'] for result in clean_results]
     # Schema for serialising
     label_schema = LabelSchema()
     # Serialise objects and jsonify them
     return make_response(jsonify(label_schema.dump(labels_results, many=True)))
+
 
 """
 Records a creation of a label in the label changelog
@@ -517,6 +543,8 @@ Records a creation of a label in the label changelog
 @param p_id: the id of the project the new label is in
 @param u_id: the id of the user that created the label
 """
+
+
 def __record_creation(l_id, l_name, lt_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -533,6 +561,7 @@ def __record_creation(l_id, l_name, lt_name, p_id, u_id):
 
     db.session.add(change)
 
+
 """
 Records the editing of label's name in the label changelog
 @param l_id: the id of the label edited
@@ -541,6 +570,8 @@ Records the editing of label's name in the label changelog
 @param p_id: the id of the project the label is in
 @param u_id: the id of the user that edited the label
 """
+
+
 def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -558,6 +589,7 @@ def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
 
     db.session.add(change)
 
+
 """
 Records the editing of label's name in the label changelog
 @param l_id: the id of the label edited
@@ -565,6 +597,8 @@ Records the editing of label's name in the label changelog
 @param p_id: the id of the project the label is in
 @param u_id: the id of the user that edited the label
 """
+
+
 def __record_description_edit(l_id, old_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -578,6 +612,7 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
     )
 
     db.session.add(change)
+
 
 """
 Records the merge of a list of labels in the label changelog
@@ -598,6 +633,8 @@ Records the merge of a list of labels in the label changelog
         name of a merged label that used to belong to the theme
     )
 """
+
+
 def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, theme_changes):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -630,7 +667,7 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
         name=a_id,
         change_type=ChangeType.merge,
         # Format the description for a merge encoding
-        description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
+        description=f"{new_label.name} ; {lt_name} ; {old_label_name}"
     ) for a_id, old_label_name in artifact_changes]
     db.session.add_all(changes)
 
@@ -646,9 +683,10 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
         name=t_name,
         change_type=ChangeType.merge,
         # Format the description for a merge encoding
-        description=f"{new_label.name} ; {lt_name} ; {old_label_name}" 
+        description=f"{new_label.name} ; {lt_name} ; {old_label_name}"
     ) for t_name, t_id, old_label_name in theme_changes]
     db.session.add_all(changes)
+
 
 """
 Records the deletion of a label in the label changelog
@@ -659,6 +697,8 @@ This change is still recorded in case the project is extended with a history pag
 @param p_id: The project id the label belong(ed/s) to
 @param u_id: The id of the user that deleted the label
 """
+
+
 def __record_delete(l_id, name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -672,22 +712,26 @@ def __record_delete(l_id, name, p_id, u_id):
     )
     db.session.add(change)
 
+
 """
 Function that checks if a label name is already taken
 @params name: string, the name to be checked
 @returns true if name is already a label name and false otherwise
 @author Linh, Jarl
 """
+
+
 def label_name_taken(name, label_id):
     if bool(db.session.scalars(
-        select(Label)
-        .where(
-            Label.name==name,
-            Label.id != label_id
-        ))
-        .first()):
+            select(Label)
+            .where(
+                Label.name == name,
+                Label.id != label_id
+            ))
+            .first()):
         return True
     return False
+
 
 """
 Author: Eduardo Costa Martins
@@ -699,6 +743,8 @@ Author: Eduardo Costa Martins
     'type' : 'Label' (to distinguish from other nodes that do not represent labels)
 }
 """
+
+
 def get_loose_labels(p_id):
 
     # Select label id and name
@@ -713,12 +759,12 @@ def get_loose_labels(p_id):
             label_to_theme.c.l_id
         ))
     )).all()
-    
+
     # Convert to the Node format needed for the hierarchy
     loose_labels = [{
-        'id' : loose_label[0],
-        'name' : loose_label[1],
-        'type' : 'Label'
+        'id': loose_label[0],
+        'name': loose_label[1],
+        'type': 'Label'
     } for loose_label in loose_labels]
-    
+
     return loose_labels
