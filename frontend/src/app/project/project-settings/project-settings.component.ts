@@ -168,8 +168,8 @@ export class ProjectSettingsComponent implements OnInit {
       this.setCurrenProjectInfo(result.name, result.description, result.criteria, result.frozen, undefined)
 
       //Setting project users
-      let members_of_project = result.users;
-      for (let member of members_of_project) {
+      let membersOfProject = result.users;
+      for (let member of membersOfProject) {
         //Adding only current members of the project to projectMembers
         if (member.removed != 1) {
           let newUser = new User(member.id, member.username)
@@ -183,7 +183,7 @@ export class ProjectSettingsComponent implements OnInit {
           }
         }
         //Setting the super admin ID
-        if (member.super_admin == true) {
+        if (member.super_admin) {
           this.superAdminID = member.id;
         }
         //Adding all members (old and current) of the project to allProjectMembers
@@ -197,8 +197,8 @@ export class ProjectSettingsComponent implements OnInit {
       this.currentProject.setUsers(this.projectMembers);
 
       //Setting current project's label types list
-      let labeltypes_of_project = result.labelType;
-      for (let labelType of labeltypes_of_project) {
+      let labeltypesOfProject = result.labelType;
+      for (let labelType of labeltypesOfProject) {
         this.labelTypes.push(labelType.label_type_name);
       }
 

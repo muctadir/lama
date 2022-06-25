@@ -174,16 +174,16 @@ export class ProjectCreationComponent implements OnInit {
     projectInformation["users"] = []
 
     // For each user get the admin status
-    for(let i=0; i< this.projectMembers.length; i++) {
+    for (let projectMember of this.projectMembers){
       // Boolean indicating whether the user is an admin
       let admin: boolean = false;
-      let adminCheckbox = document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getUsername()) as HTMLInputElement;
+      let adminCheckbox = document.getElementById("projectAdminCheckBox-" + projectMember.getUsername()) as HTMLInputElement;
       if (adminCheckbox != null) {
         admin = adminCheckbox?.checked;
       }
       // Push the user ids and admin status to list
       projectInformation["users"].push({
-        "u_id": this.projectMembers[i].getId(),
+        "u_id": projectMember.getId(),
         "admin": admin
       })
     }
@@ -251,9 +251,9 @@ export class ProjectCreationComponent implements OnInit {
    */
   removeMember(member: any){
     // Go through all members
-    this.projectMembers.forEach((projectMembers, index)=>{
+    this.projectMembers.forEach((projectMember, index)=>{
       // If clicked cross matches the person, splice them from the members
-      if(projectMembers == member){
+      if(projectMember == member){
         // Remove the person from the project members
         this.projectMembers.splice(index,1);
         // Add the person to all members
