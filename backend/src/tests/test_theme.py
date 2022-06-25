@@ -1,9 +1,6 @@
-import string
-from xml.dom.expatbuilder import theDOMImplementation
-from sqlalchemy import null, select
+from sqlalchemy import select
 from src import db
 from src.conftest import RequestHandler
-from src.app_util import check_args
 from src.models.item_models import Theme, Label
 from src.routes.theme_routes import get_theme_label_count, make_labels, make_sub_themes, theme_name_taken, get_project_hierarchy
 
@@ -19,7 +16,7 @@ def test_theme_management_info(app, client):
     response = request_handler.get("/theme/theme-management-info", {"": ""}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     # All themes for project 1
     theme_info = [
@@ -50,7 +47,7 @@ def test_single_theme_info(app, client):
     response = request_handler.get("/theme/single-theme-info", {"p_id": 1, "": ""}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     response = request_handler.get("/theme/single-theme-info", {"p_id": 1, "t_id": 7}, True)
     # Info for theme 7
@@ -84,7 +81,7 @@ def test_all_themes_no_parents(app, client):
     response = request_handler.get("/theme/possible-sub-themes", {"p_id": 1, "": ""}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     response = request_handler.get("/theme/possible-sub-themes", {"p_id": 1, "t_id": 7}, True)
     # Parent themes excluding theme 7
@@ -113,7 +110,7 @@ def test_create_theme(app, client):
     response = request_handler.post("/theme/create_theme", {"p_id": 1}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     # Theme info with whitespaces
     new_theme_info = {
@@ -127,7 +124,7 @@ def test_create_theme(app, client):
     response = request_handler.post("/theme/create_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Input contains leading or trailing whitespaces"
+    assert response.text == "Input contains leading or trailing whitespaces"
 
     # Theme info with forbidden character
     new_theme_info = {
@@ -141,7 +138,7 @@ def test_create_theme(app, client):
     response = request_handler.post("/theme/create_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 511
-    assert response.data.decode("UTF-8") == "Input contains a forbidden character"
+    assert response.text == "Input contains a forbidden character"
 
     # Theme info with already taken name
     new_theme_info = {
@@ -155,7 +152,7 @@ def test_create_theme(app, client):
     response = request_handler.post("/theme/create_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Theme name already exists"
+    assert response.text == "Theme name already exists"
 
     # app contect for database use
     with app.app_context():
@@ -171,10 +168,10 @@ def test_create_theme(app, client):
         response = request_handler.post("/theme/create_theme", new_theme_info, True)
         # Check if post was succesfull
         assert response.status_code == 200
-        assert response.data.decode("UTF-8") == "Theme created"
+        assert response.text == "Theme created"
 
         # Get the theme that was created
-        entry = db.session.scalar(select(Theme).where(Theme.name == "Theme name"))
+        entry = db.session.scalar(select(Theme).where(Theme.name == "Theme name", Theme.p_id == 1))
 
         # Check that the theme was created correctly
         assert entry.name == "Theme name"
@@ -182,11 +179,11 @@ def test_create_theme(app, client):
         assert entry.p_id == 1
         
         # Get added label
-        label = db.session.scalar(select(Label).where(Label.id == 1))
+        label = db.session.get(Label, 1)
         assert entry.labels == [label]
 
         # Get added theme
-        theme = db.session.scalar(select(Theme).where(Theme.id == 1))
+        theme = db.session.get(Theme, 1)
         assert entry.sub_themes == [theme]
     
 def test_edit_theme(app, client):
@@ -201,7 +198,7 @@ def test_edit_theme(app, client):
     response = request_handler.post("/theme/edit_theme", {"p_id": 1}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     # Theme info with whitespaces
     new_theme_info = {
@@ -216,7 +213,7 @@ def test_edit_theme(app, client):
     response = request_handler.post("/theme/edit_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Input contains leading or trailing whitespaces"
+    assert response.text == "Input contains leading or trailing whitespaces"
 
     # Theme info with forbidden character
     new_theme_info = {
@@ -231,7 +228,7 @@ def test_edit_theme(app, client):
     response = request_handler.post("/theme/edit_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 511
-    assert response.data.decode("UTF-8") == "Input contains a forbidden character"
+    assert response.text == "Input contains a forbidden character"
 
     # Theme info with already taken name
     new_theme_info = {
@@ -246,7 +243,7 @@ def test_edit_theme(app, client):
     response = request_handler.post("/theme/edit_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Theme name already exists"
+    assert response.text == "Theme name already exists"
 
     # Theme info with unknown id
     new_theme_info = {
@@ -261,7 +258,7 @@ def test_edit_theme(app, client):
     response = request_handler.post("/theme/edit_theme", new_theme_info, True)
     # Check if error was thrown, and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Bad request"
+    assert response.text == "Bad request"
 
     # TODO: check cycle error
     # Theme info with cycle
@@ -277,7 +274,7 @@ def test_edit_theme(app, client):
     # response = request_handler.post("/theme/edit_theme", new_theme_info, True)
     # # Check if error was thrown, and which one
     # assert response.status_code == 400
-    # assert response.data.decode("UTF-8") == "Your choice of subthemes would introduce a cycle"
+    # assert response.text == "Your choice of subthemes would introduce a cycle"
 
     # app contect for database use
     with app.app_context():
@@ -294,10 +291,10 @@ def test_edit_theme(app, client):
         response = request_handler.post("/theme/edit_theme", new_theme_info, True)
         # Check if post was succesfull
         assert response.status_code == 200
-        assert response.data.decode("UTF-8") == "Theme edited"
+        assert response.text == "Theme edited"
 
         # Get the theme that was created
-        entry = db.session.scalar(select(Theme).where(Theme.id == 1))
+        entry = db.session.get(Theme, 1)
 
         # Check that the theme was created correctly
         assert entry.name == "New positive emotions"
@@ -305,11 +302,11 @@ def test_edit_theme(app, client):
         assert entry.p_id == 1
         
         # Get added label
-        label = db.session.scalar(select(Label).where(Label.id == 1))
+        label = db.session.get(Label, 1)
         assert entry.labels == [label]
 
         # Get added theme
-        theme = db.session.scalar(select(Theme).where(Theme.id == 6))
+        theme = db.session.get(Theme, 6)
         assert entry.sub_themes == [theme]
     
 def test_delete_theme(app, client):
@@ -324,19 +321,26 @@ def test_delete_theme(app, client):
     response = request_handler.post("/theme/delete_theme", {"p_id": 1}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     # Post request
     response = request_handler.post("/theme/delete_theme", {"p_id": 1, "t_id": 0}, True)
     # Check if error was thrown, and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Bad request"
+    assert response.text == "Bad request"
 
     # Post request
     response = request_handler.post("/theme/delete_theme", {"p_id": 1, "t_id": 1}, True)
     # Check if deletion was succesful
     assert response.status_code == 200
-    assert response.data.decode("UTF-8") == "Theme deleted"
+    assert response.text == "Theme deleted"
+    # app contect for database use
+    with app.app_context():
+        # Get the theme that was deleted
+        theme = db.session.get(Theme, 1)
+        # Check if the theme was actually deleted
+        assert theme.deleted == True
+
 
 def test_search_theme(app, client):
     """
@@ -350,7 +354,7 @@ def test_search_theme(app, client):
     response = request_handler.get("/theme/search", {"p_id": 1}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
-    assert response.data.decode("UTF-8") == "Not all required arguments supplied"
+    assert response.text == "Not all required arguments supplied"
 
     # Searched info
     search_info = [
@@ -397,9 +401,9 @@ def test_theme_visual(app, client):
     assert response.json == vis_info
     assert response.status_code == 200
 
-def test_functions(app, client):
+def test_get_theme_label_count(app, client):
     """
-    Function to test whether the functions gives correct information
+    Function to test wether the get_theme_label_count function gives correct information
     """
 
     # app contect for database use
@@ -408,6 +412,14 @@ def test_functions(app, client):
         assert get_theme_label_count(1) == 2
         assert get_theme_label_count(2) == 6
 
+def test_make_labels(app, client):
+    """
+    Function to test wether the make_labels function gives correct information
+    """
+
+    # app contect for database use
+    with app.app_context():
+
         # Info for creating labels
         labels_info = [
             {"id": 1, "name": "Happy"},
@@ -415,7 +427,7 @@ def test_functions(app, client):
             {"id": 3, "name": "Excited"}
         ]
         # Get the theme we want to add these labels to
-        theme = db.session.scalar(select(Theme).where(Theme.id==1))
+        theme = db.session.get(Theme, 1)
         # Add the labels to the theme
         make_labels(theme, labels_info, 1, 1)
         # Get the added labels
@@ -423,6 +435,13 @@ def test_functions(app, client):
         # Check if the labels were added
         assert theme.labels == labels
 
+def test_make_sub_themes(app, client):
+    """
+    Function to test wether the make_sub_themes function gives correct information
+    """
+
+    # app contect for database use
+    with app.app_context():
         # Info for creating sub-themes
         sub_themes_info = [
             {"id": 2, "name": "Negative emotions"},
@@ -430,14 +449,21 @@ def test_functions(app, client):
             {"id": 4, "name": "Frontend technologies"}
         ]
         # Get the theme we want to add these labels to
-        theme = db.session.scalar(select(Theme).where(Theme.id==1))
+        theme = db.session.get(Theme, 1)
         # Add the labels to the theme
         make_sub_themes(theme, sub_themes_info, 1, 1)
         # Get the added labels
         sub_themes = db.session.scalars(select(Theme).where(Theme.id.in_([2,3,4]))).all()
         # Check if the labels were added
         assert theme.sub_themes == sub_themes
+    
+def test_theme_name_taken(app, client):
+    """
+    Function to test wether the theme_name_taken function gives correct information
+    """
 
+    # app contect for database use
+    with app.app_context():
         # Check if new name is not taken
         assert theme_name_taken("New name", 1) == False
         # Check if current name is not taken
@@ -445,36 +471,43 @@ def test_functions(app, client):
         # Check if taken name is taken
         assert theme_name_taken("Positive emotions", 2) == True
 
+def test_get_project_hierarchy(app, client):
+    """
+    Function to test wether the get_project_hierarchy function gives correct information
+    """
+
+    # app contect for database use
+    with app.app_context():
         # Check that no hierarchy is given for none-existing project
         assert get_project_hierarchy(0) == None
+
         # Check hierarchy of project 1
         project_hierarchy = {'id': 1, 'name': 'Project 1', 'type': 'Project', 'children': [
+            {'id': 3, 'name': 'Backend technology', 'type': 'Theme', 'children': [
+                {'id': 7, 'name': 'Database technology', 'type': 'Theme', 'children': [
+                    {'id': 11, 'name': 'SQL', 'type': 'Label'}]}, 
+                {'id': 11, 'name': 'SQL', 'type': 'Label'}, 
+                {'id': 13, 'name': 'Flask', 'type': 'Label'}]}, 
             {'id': 8, 'name': 'Empty theme', 'type': 'Theme'}, 
+            {'id': 4, 'name': 'Frontend technologies', 'type': 'Theme', 'children': [
+                {'id': 10, 'name': 'Angular', 'type': 'Label'}, 
+                {'id': 12, 'name': 'HTML', 'type': 'Label'}]}, 
+            {'id': 2, 'name': 'Negative emotions', 'type': 'Theme', 'children': [
+                {'id': 2, 'name': 'Sad', 'type': 'Label'}, 
+                {'id': 4, 'name': 'Angry ', 'type': 'Label'}, 
+                {'id': 5, 'name': 'Frustracted', 'type': 'Label'}, 
+                {'id': 6, 'name': 'Scared', 'type': 'Label'}, 
+                {'id': 7, 'name': 'Sleepy', 'type': 'Label'}, 
+                {'id': 16, 'name': 'Dissapointed', 'type': 'Label'}]}, 
             {'id': 6, 'name': 'Neutral emotions', 'type': 'Theme'}, 
             {'id': 1, 'name': 'Positive emotions', 'type': 'Theme', 'children': [
-                {'id': 3, 'name': 'Backend technology', 'type': 'Theme', 'children': [
-                    {'id': 7, 'name': 'Database technology', 'type': 'Theme', 'children': [
-                        {'id': 11, 'name': 'SQL', 'type': 'Label'}]}, 
-                    {'id': 11, 'name': 'SQL', 'type': 'Label'}, 
-                    {'id': 13, 'name': 'Flask', 'type': 'Label'}]}, 
-                {'id': 4, 'name': 'Frontend technologies', 'type': 'Theme', 'children': [
-                    {'id': 10, 'name': 'Angular', 'type': 'Label'}, 
-                    {'id': 12, 'name': 'HTML', 'type': 'Label'}]}, 
-                {'id': 2, 'name': 'Negative emotions', 'type': 'Theme', 'children': [
-                    {'id': 2, 'name': 'Sad', 'type': 'Label'}, 
-                    {'id': 4, 'name': 'Angry ', 'type': 'Label'}, 
-                    {'id': 5, 'name': 'Frustracted', 'type': 'Label'}, 
-                    {'id': 6, 'name': 'Scared', 'type': 'Label'}, 
-                    {'id': 7, 'name': 'Sleepy', 'type': 'Label'}, 
-                    {'id': 16, 'name': 'Dissapointed', 'type': 'Label'}]}, 
-                {'id': 1, 'name': 'Happy ', 'type': 'Label'}, 
-                {'id': 2, 'name': 'Sad', 'type': 'Label'}, 
-                {'id': 3, 'name': 'Excited', 'type': 'Label'}]}, 
+                {'id': 8, 'name': 'Curious', 'type': 'Label'}, 
+                {'id': 29, 'name': 'Fun life emotions', 'type': 'Label'}]}, 
             {'id': 5, 'name': 'Technology', 'type': 'Theme', 'children': [
                 {'id': 14, 'name': 'Laptop', 'type': 'Label'}, 
                 {'id': 15, 'name': 'Software', 'type': 'Label'}]}, 
-            {'id': 8, 'name': 'Curious', 'type': 'Label'}, 
             {'id': 9, 'name': 'Docker', 'type': 'Label'}, 
-            {'id': 29, 'name': 'Fun life emotions', 'type': 'Label'}, 
+            {'id': 3, 'name': 'Excited', 'type': 'Label'}, 
+            {'id': 1, 'name': 'Happy ', 'type': 'Label'}, 
             {'id': 17, 'name': 'New Technology', 'type': 'Label'}]}
         assert get_project_hierarchy(1) == project_hierarchy
