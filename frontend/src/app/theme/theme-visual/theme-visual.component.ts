@@ -139,19 +139,19 @@ export class ThemeVisualComponent implements OnInit {
     this.node.append("circle")
       .attr("r", 2.5)
       .attr("fill", function (d: any) {
-        //check if it is deleted
+        // Check if it is deleted
         if (d.data.deleted) {
           return "grey";
         } else { //else colour
           return myColour(d.data.type);
         }
       })
-      //tootip mouse hover added
+      // Tooltip mouse hover added
       .on("mouseover", function (event: any, d: any) {
         div.transition()
           .duration(200)
           .style("opacity", .9);
-        //text in the box
+        // Text shown in the box when you hover over a node with your mouse
         div.html("id: " + d.data.id + "<br/>" + "type: " + d.data.type + "<br/> deleted: " + d.data.deleted )
           .style("left", (d.y + 100) + "px")
           .style("top", (d.x - 25) + "px");
