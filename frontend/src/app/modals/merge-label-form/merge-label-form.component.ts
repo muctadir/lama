@@ -6,6 +6,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-merge-label-form',
@@ -42,6 +43,7 @@ export class MergeLabelFormComponent {
     public activeModal: NgbActiveModal,
     private router: Router,
     private labellingDataService: LabellingDataService,
+    private toastCommService: ToastCommService,
     private formBuilder: FormBuilder
   ) {
     this.labelTypes = new Array<LabelType>();
@@ -94,6 +96,7 @@ export class MergeLabelFormComponent {
       );
       this.labelTypes = result;
     } catch (e) {
+      this.toastCommService.emitChange([false, "Something went wrong when trying to supply the labels"])
     }
   }
 
@@ -113,26 +116,58 @@ export class MergeLabelFormComponent {
   // Submit form
   async submit(): Promise<void> {
     // Check you are merging two or more labels
-    if (this.toBeMergedLabels.length !== 2) {
-      throw new Error(
-        `Sorry, currently only merging of two labels is supported. ${this.toBeMergedLabels.length} !== 2`
-      );
+    if (this.toBeMergedLabels.length < 2) {
+      this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
+      return 
     }
-    // PUts the labels to be merged in array
-    const arrayResult = this.form.get('toBeMergedLabels')?.value;
+    // Puts the labels to be merged in array
+    const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
+
+    const mergedLabels = arrayResult.map(result => result['label'].getId());
 
     try {
       // Wait for the posting of the merging
-      await this.labellingDataService.postMerge({
-        'leftLabelId': arrayResult[0].label.getId(),
-        'rightLabelId': arrayResult[1].label.getId(),
+      let response = await this.labellingDataService.postMerge({
+        'mergedLabels': mergedLabels,
         'newLabelName': this.form.get('mergerName')?.value,
-        'newLabelDescription': this.form.get('mergerName')?.value,
+        'newLabelDescription': this.form.get('mergerDescription')?.value,
+        'labelTypeName': this.form.get('labelType')?.value.getName(),
         'p_id': this.p_id
       });
-      // Close modal
-      this.activeModal.close()
-    } catch (e) {
+      // Make toast signalling whether the merging was successful or not
+      if(response == "Success" ){
+        this.toastCommService.emitChange([true, "Labels merged successfully"])
+        // Close modal
+        this.activeModal.close()
+      }
+      else {
+        this.toastCommService.emitChange([false, response])
+      }
+    } catch (e:any) {
+      // Check if the error has invalid characters
+      if (e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      // Check if error has invalid whitespaces
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      // Check if the label name is empty
+      } else if (e.response.data == "Label name cannot be empty"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label name cannot be empty"]);
+      // Check if the label description is empty
+      } else if (e.response.data == "Label description cannot be empty"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label description cannot be empty"]);
+      // Check if label name already exists
+      } else if (e.response.data == "Label name already exists"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label name already exists."]);
+      } else {
+        // Throw error
+        this.toastCommService.emitChange([false, "Something went wrong while merging"]);
+      }
     }
   }
 

@@ -3,6 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from 'app/classes/project';
+import { ProjectDataService } from 'app/services/project-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { StatsDataService } from 'app/services/stats-data.service';
 
@@ -35,28 +36,37 @@ export class StatsComponent implements OnInit{
   // Initialize the number of conflicts in the project
   conflicts: number
 
+  // Initialize the number of labels in the project
+  labels: number;
+
+  frozen: boolean = true;
+
   /**
    * Initializes the router 
    * 
    * @param router instance of router
    */
    constructor(private router: Router,
-    private statsDataService: StatsDataService) { 
+    private statsDataService: StatsDataService,
+    private projectDataService: ProjectDataService) { 
       this.url = this.router.url;
       this.routeService = new ReroutingService();
       this.p_id = Number(this.routeService.getProjectID(this.url));
       this.project = new Project(0, "", "");
       this.user_contribution = [];
       this.conflicts = 0;
+      this.labels = 0;
   }
 
 
-  ngOnInit(): void {
-      // Get the project statistics from the back end
-      this.getProject(this.p_id);
-      
-      // Get the user statistics from the backend
-      this.getUserStats(this.p_id);
+  async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
+    
+    // Get the project statistics from the back end
+    await this.getProject(this.p_id);
+    
+    // Get the user statistics from the backend
+    await this.getUserStats(this.p_id);
   }
 
   /**
@@ -75,6 +85,8 @@ export class StatsComponent implements OnInit{
     this.project = data['project_data']
     // Pass the number of conflicts
     this.conflicts = data['conflicts']
+    // Pass the number of labels
+    this.labels = data['labels']
   }
 
   /**

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'app/classes/user';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 import { AccountInfoService } from 'app/services/account-info.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-moderation',
@@ -23,7 +26,9 @@ export class ModerationComponent {
    * @param accountService instance of the accountInfoService
    * @trigger on component creation
    */
-  constructor(private accountService: AccountInfoService) { }
+  constructor(private accountService: AccountInfoService,
+    private toastCommService: ToastCommService, 
+    private modalService: NgbModal) { }
 
   /**
    * Requests the server for the data of all users in the application
@@ -85,15 +90,24 @@ export class ModerationComponent {
    * @trigger delete button is clicked for @deluser
    */
   async softDelete(deluser: User): Promise<void> {
-    try {
-      // Makes the call to delete the user
-      await this.accountService.softDelUser(deluser);
-      // Reloads the user data
-      await this.getAllUsers();
-    } catch(e) {
-      // Logs the error if one were to occur
-      console.log(e);
-    }
-  }
+    let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
+    // Listens for an event emitted by the modal
+    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+      // If a confirmEvent = true is emitted we delete the user
+      if($e) {
+        try {
+          // Makes the call to delete the user
+          await this.accountService.softDelUser(deluser);
+          // Shows confirmation
+          this.toastCommService.emitChange([true, "User deleted successfully"]);
+          // Reloads the user data
+          await this.getAllUsers();
+        } catch {
+          // Logs the error if one were to occur
+          this.toastCommService.emitChange([false, "Something went wrong"])
+        }
+      }
+    })
+  }
 }

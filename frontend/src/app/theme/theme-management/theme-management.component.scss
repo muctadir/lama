@@ -21,22 +21,29 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Button for adding themes
-#createThemeButton{
+#createThemeButton {
     background-color: $white-shade;
     color: black;
     border: 2px solid;
     border-color: $grey-shade;
 }
+
+// Button for theme visualization
+#themeVisButton{
+    background-color: $orange-shade;
+    color: $white-shade;
+    border-color: $orange-shade;
+}
+
 // The plus for creating a theme
-.bi.bi-plus.createTheme{
+.bi.bi-plus.createTheme {
     color: black;
     margin-left: 5px;
 }
 
 // Div for the button for adding themes
-#addButton {
-    padding-top: 10px;
-    
+.buttonsDiv {
+    padding-top: 10px;    
 }
 
 .subTitle {
@@ -50,6 +57,11 @@ $light-grey-shade: #aaaaaa;
     border-bottom: 1px;
     border-bottom-style: solid;
     border-bottom-color: $grey-shade;
+}
+
+// Make the headers clickable
+.clickable:hover {
+    cursor: pointer;
 }
 
 // Centers the pagination to the middle of the page
@@ -106,7 +118,7 @@ box-shadow: 0 0 0 0.1rem $light-grey-shade;
     border-radius: 10px;
 }
 // Scroll bar
-#scrolly{
+#scrolly {
     padding-right: 40px;
     height: auto;
 }
@@ -155,6 +167,7 @@ box-shadow: 0 0 0 0.1rem $light-grey-shade;
             border-bottom: 1px solid #575756;
             border-radius: 0;
             background-position: 100% center;
+            cursor: pointer;
         }
     }
 }

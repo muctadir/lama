@@ -48,8 +48,6 @@
                                 <!-- Input field for the password -->
                                 <input type="password" class="form-control" placeholder="Password" formControlName="password">
                             </div>
-                            <!-- Potential error messages that should be displayed, displayed if non-empty -->
-                            <div *ngIf="errorMsg" id="error-msg">{{errorMsg}}</div>
                             <!-- Button for loggin in, calls loginSubmit on click -->
                             <button type="submit" class="btn btn-primary" id="login_button" (click)="loginSubmit()">Login</button>
                         </form>

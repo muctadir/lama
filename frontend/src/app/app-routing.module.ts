@@ -6,6 +6,7 @@ import { LoginGuardService } from './services/login-guard.service';
 // Authentication imports
 import { LoginComponent } from './account-details/login/login.component';
 import { RegisterComponent } from './account-details/register/register.component';
+import { SuperAdminGuardService } from './services/super-admin-guard.service';
 // Account page imports
 import { AccountComponent } from './account-details/account/account.component';
 // Home page imports
@@ -35,8 +36,10 @@ import { SingleArtifactViewComponent } from './artifact/single-artifact-view/sin
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
+import { ThemeVisualComponent } from './theme/theme-visual/theme-visual.component';
+
 import { ModerationComponent } from './account-details/moderation/moderation.component';
-import { SuperAdminGuardService } from './services/super-admin-guard.service';
+import { ToastCommService } from './services/toast-comm.service';
 
 
 /* All the routes within the application */
@@ -64,6 +67,7 @@ const routes: Routes = [
       {path: 'stats', component: StatsComponent, canActivate: [LoginGuardService]},
       // Labelling page route
       {path: 'labelling-page', component: LabellingPageComponent, canActivate: [LoginGuardService]},
+      {path: 'labelling-page/:labellingId', component: LabellingPageComponent, canActivate: [LoginGuardService]},
       // Create label route
       {path: 'create-label', component: LabelFormComponent, canActivate: [LoginGuardService]},
       // Artifact management route
@@ -78,6 +82,8 @@ const routes: Routes = [
       {path: 'thememanagement', component: ThemeManagementComponent, canActivate: [LoginGuardService]},
       // Create theme route
       {path: 'createTheme', component: ThemeInfoComponent, canActivate: [LoginGuardService]},
+      // Theme visualization route
+      {path: 'themeVisual', component: ThemeVisualComponent, canActivate: [LoginGuardService]},
       // Single theme route
       {path: 'singleTheme/:themeId', component: SingleThemeViewComponent, canActivate: [LoginGuardService]},
       // Edit theme route
@@ -85,7 +91,8 @@ const routes: Routes = [
       // Conflict route
       {path: 'conflict', component: ConflictPageComponent, canActivate: [LoginGuardService]},
       // Conflict resolution route
-      {path: 'conflictResolution', component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
+      {path: 'conflictResolution/:artifactId/:labelTypeId/:labelTypeName',
+       component: ConflictResolutionComponent, canActivate: [LoginGuardService]},
       // Load navigarion menu for every link in project
       {path: '', outlet: 'side-nav', component: NavigationMenuComponent}
     ]},

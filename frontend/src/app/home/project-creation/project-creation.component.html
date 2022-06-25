@@ -57,7 +57,7 @@
                         <!-- Button for adding new members, on click calls function open() -->
                         <button class="btn" type="button" id="addMembersButton" (click)="open()">
                             <!-- Members icon -->
-                            <em class="bi bi-plus members"></em>
+                            <em class="bi bi-plus members" ngbTooltip="Add users"></em>
                         </button>
                     </div>
                 </div>
@@ -169,7 +169,7 @@
         <button type="button" class="btn btn-secondary text-nowrap" routerLink="/home">
             Cancel
         </button>
-    
+        
         <!-- Submit button, calls the createProject function when clicked -->
         <button type="button" class="btn btn-secondary text-nowrap" id="createProjectButton" (click)="createProject()">
             Create Project

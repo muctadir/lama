@@ -14,6 +14,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-label-form',
@@ -44,7 +45,8 @@ export class LabelFormComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private labellingDataService: LabellingDataService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toastCommService: ToastCommService
   ) {
     this.labelTypes = new Array<LabelType>();
     this.routeService = new ReroutingService();
@@ -103,7 +105,7 @@ export class LabelFormComponent implements OnInit {
         this.submitPostToServer(label);
       } catch (e) {
         // Throw error
-        this.err = 'Invalid Form';
+        this.toastCommService.emitChange([false, "Invalid Input"]);
       }
     } else {
       try {
@@ -113,7 +115,7 @@ export class LabelFormComponent implements OnInit {
         this.submitPatchToServer(this.label);
       } catch (e) {
         // Throw error
-        this.err = 'Invalid Form';
+        this.toastCommService.emitChange([false, "Invalid Input"]);
       }
     }
   }
@@ -173,11 +175,35 @@ export class LabelFormComponent implements OnInit {
         label,
         this.labelForm.controls['labelTypeId'].value
       );
+      // Show success toast
+      this.toastCommService.emitChange([true, "Label created successfully"]);
       // Close modal
       this.activeModal.close();
-    } catch (e) {
-      // Throw error
-      this.err = 'Something went wrong while submitting.';
+    } catch (e: any) {
+      // Check if the error has invalid characters
+      if (e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      // Check if error has invalid whitespaces
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"])
+      // Check if the label name is empty
+      } else if (e.response.data == "Label name cannot be empty"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label name cannot be empty"]);
+      // Check if the label description is empty
+      } else if (e.response.data == "Label description cannot be empty"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label description cannot be empty"]);
+      // Check if label name already exists
+      } else if (e.response.data == "Label name already exists"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label name already exists."]);
+      } else {
+        // Throw error
+        this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
+      }
     }
   }
 
@@ -195,9 +221,24 @@ export class LabelFormComponent implements OnInit {
       );
       // Close modal
       this.activeModal.close();
-    } catch (e) {
-      // Throw error
-      this.err = 'Something went wrong while submitting.';
+      this.toastCommService.emitChange([true, "Edited label successfully"]);
+    } catch (e:any) {
+      // Check if the error has invalid characters
+      if (e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      // Check if error has invalid whitespaces
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      // Check if label name already exists
+      } else if (e.response.data == "Label name already exists"){
+        // Throw error
+        this.toastCommService.emitChange([false, "Label name already exists."]);
+      } else {
+        // Throw error
+        this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
+      }
     }
   }
 }

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
-import axios from 'axios';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastCommService } from './toast-comm.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,7 @@ export class ArtifactDataService {
   requestHandler: RequestHandler;
 
   // Constructors for the request handler
-  constructor() {
+  constructor(private toastCommService: ToastCommService) {
     this.requestHandler = new RequestHandler(
       sessionStorage.getItem('ses_token')
     );
@@ -24,11 +23,10 @@ export class ArtifactDataService {
    *
    * @params p_id: numberF
    * @pre p_id => 1
-   * @throws Error if token == null
    * @throws Error if p_id < 1
    * @returns Promise<Array<StringArtifact>>
    */
-  async getArtifacts(p_id: number, page: number, pageSize: number, seekIndex: number, seekPage: number): Promise<[number, Array<StringArtifact>]> {
+  async getArtifacts(p_id: number, page: number, pageSize: number, seekIndex: number, seekPage: number): Promise<[number, number, Array<StringArtifact>]> {
     // Check if the p_id is larger than 1
     if (p_id < 1) throw new Error("p_id cannot be less than 1");
 
@@ -63,7 +61,7 @@ export class ArtifactDataService {
     });
 
     // Return result
-    return [response['nArtifacts'], artifacts];
+    return [response['nArtifacts'], response['nLabelTypes'], artifacts];
 
   }
 
@@ -78,27 +76,31 @@ export class ArtifactDataService {
    * @throws Error if p_id < 1
    * @throws Error if artifacts.length <= 0
    * @throws Error if \exists i; 0 < i < artifacts.length; artifacts[i].length <= 0
-   * @returns Promise<boolean>
+   * @returns Promise<Record<string, any>>
    */
-     async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<void> {
-      // Check if the p_id is larger than 0
-      if (p_id < 1) throw new Error("p_id cannot be less than 1")
-      // Check if the list of artifacts is empty
-      if (artifacts.length <= 0) throw new Error("No artifacts have been submitted")
+  async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<Record<string, any>> {
+    // Check if the p_id is larger than 0
+    if (p_id < 1) throw new Error("p_id cannot be less than 1")
+    // Check if the list of artifacts is empty
+    if (artifacts.length <= 0) throw new Error("No artifacts have been submitted")
 
       // Check if the artifact has any data
       for (const element of artifacts) {
         if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
       }
-
+      // Record containting the artifacts
       let artifacts_rec = {
         'array': artifacts
       }
-
       // Send the data to the database
-      await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
+      try {
+        let result = await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
+        return result;
+      } catch {
+        this.toastCommService.emitChange([false, "File formatted incorrect."])
+        throw new Error("bad formatting");
+      }
     }
-
 
   /**
      * Function does call to backend to retrieve a single artifact
@@ -114,7 +116,6 @@ export class ArtifactDataService {
      * @returns Promise<StringArtifact>
      */
    async getArtifact(p_id: number, a_id: number): Promise<Record<string, any>> {
-
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');
     // Check if the session token exists
@@ -128,10 +129,8 @@ export class ArtifactDataService {
 
     // Resulting artifact
     let result: StringArtifact = new StringArtifact(0, 'null', 'null');
-
     // Get the artifact information from the back end
     let response = await this.requestHandler.get('/artifact/singleArtifact', { 'p_id': p_id, 'a_id': a_id, 'extended': true }, true);
-
     // Get the artifact from the response
     let artifact = response['artifact'];
 
@@ -147,10 +146,11 @@ export class ArtifactDataService {
       "result": result,
       "labellings": response["artifact_labellings"],
       "username": response["username"],
-      "admin": response["admin"]
+      "u_id": response["u_id"],
+      "admin": response["admin"],
+      "users": response["users"]
     }
   }
-
 
   /**
    * Function gets a single random artifact
@@ -198,11 +198,15 @@ export class ArtifactDataService {
       true
     );
   }
+
   // Function for searching in backend
   async search(
     searchWords: string,
     p_id: number
   ): Promise<Array<StringArtifact>> {
+    // The artifacts
+    let artifacts: Array<StringArtifact> = new Array<StringArtifact>();
+
     // Get the artifact information from the back end
     let response = await this.requestHandler.get(
       '/artifact/search',
@@ -210,11 +214,27 @@ export class ArtifactDataService {
       true
     );
 
-    // Get the artifact from the response
-    let artifacts = response;
+    response.forEach((artifactInfo : Record<string, any>) => {
+      // Separate information into an artifact and its labellings
+      let artifactJson = artifactInfo['artifact'];
+      let labellingsJson = artifactInfo['artifact_labellings'];
+      
+      // Construct StringArtifact object
+      let artifact: StringArtifact = new StringArtifact(
+        artifactJson['id'],
+        artifactJson['identifier'],
+        artifactJson['data']
+      );
+      
+      // Update the artifacts labellings
+      artifact.setLabellings(labellingsJson);
+      // Add the artifact to the end result
+      artifacts.push(artifact);
 
-    // Return the record
-    return artifacts;
+    });
+
+    return artifacts
+
   }
 
   /**
@@ -235,5 +255,32 @@ export class ArtifactDataService {
       },
       true
     );
+  }
+  /**
+   * Post the split to the database 
+   * 
+   * @param p_id 
+   * @param parent_id 
+   * @param identifier 
+   * @param start 
+   * @param end 
+   * @param data 
+   */
+  async postSplit(p_id: number, 
+    parent_id: number, 
+    identifier: string, 
+    start: number, 
+    end: number, 
+    data: string): Promise<any> {
+    return this.requestHandler.post('/artifact/split', {
+      p_id: p_id,
+      parent_id: parent_id,
+      identifier: identifier,
+      start: start,
+      end: end,
+      data: data
+    },
+    true
+    )
   }
 }

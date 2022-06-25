@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
+import { ToastCommService } from './toast-comm.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,11 @@ export class AccountInfoService {
 
   /**
    * Gets the token from the session storage and creates the requestHandler with the token
-   * 
+   *
    * @modifies @requestHandler
    * @trigger on creation
    */
-  constructor() {
+  constructor(private toastCommService: ToastCommService) {
     // Gets the token
     let token = sessionStorage.getItem('ses_token');
 
@@ -25,14 +26,14 @@ export class AccountInfoService {
 
   /**
    * Request the server for the user data and returns the user data in a User object
-   * 
+   *
    * @returns User object with user data
-   * @throws error when server request goes wrong 
+   * @throws error when server request goes wrong
    */
   async userData() : Promise<any> {
     // User object
     let user;
-    
+
     try {
       // Creates a request for the account information
       let response: any =  await this.requestHandler.get("/account/information", {}, true);
@@ -45,7 +46,7 @@ export class AccountInfoService {
 
       // Returns the user object
       return user;
-      
+
     } catch (e) {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");
@@ -55,8 +56,8 @@ export class AccountInfoService {
   /**
    * Returns an array with User objects of all users in the application
    * by first requested that data from the database
-   *  
-   * @returns array with all users in the app 
+   *
+   * @returns array with all users in the app
    */
   async allUsersData(): Promise<Array<User>> {
     let users: User[] = [];
@@ -85,7 +86,7 @@ export class AccountInfoService {
 
   /**
    * Makes a call to the server to delete the the user from the database
-   * 
+   *
    * @param toDel user to be deleted
    */
   async softDelUser(toDel: User) : Promise<void> {
@@ -103,8 +104,8 @@ export class AccountInfoService {
    * Makes a request to the backend with the session token
    * The backend returns an error if the session token is not valid
    * The backend returns a success package if it is valid
-   * Returns whether the backend response was valid or not valid 
-   * 
+   * Returns whether the backend response was valid or not valid
+   *
    * @returns whether authentication token is valid
    */
   async makeAuthRequest() : Promise<boolean> {
@@ -117,7 +118,8 @@ export class AccountInfoService {
 
       // Returns true if the token is valid
       return true;
-    } catch(e) {
+    } catch(e: any) {
+      this.toastCommService.emitChange([false, e.response.data]);
       // Returns false if the token is not valid
       return false;
     }
@@ -127,8 +129,8 @@ export class AccountInfoService {
    * Makes a request to the backend with the session token
    * The backend returns an error if the session token is not valid
    * The backend returns a success package if it is valid
-   * Returns whether the backend response was valid or not valid 
-   * 
+   * Returns whether the backend response was valid or not valid
+   *
    * @returns whether authentication token is valid
    */
    async makeSuperAuthRequest() : Promise<boolean> {
@@ -144,6 +146,35 @@ export class AccountInfoService {
     } catch(e) {
       // Returns false if the token is not valid
       return false;
+    }
+  }
+
+  /**
+   * Makes a post call to backend to register a user
+   *
+   * @params registerInformation, a record with the register information of the shape:
+   * {
+   *  username: the username of the user,
+   *  email: the email of the user,
+   *  description: the description of the user,
+   *  password: the password of the user
+   *  passwordR: the repeated instance of the user's password
+   * }
+   */
+  async registerUser(registerInformation: Record<string, any>): Promise<any> {
+    try {
+      await this.requestHandler.post('auth/register', registerInformation, false)
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+  async loginUser(user: Record<string, any>): Promise<any> {
+    try {
+      return this.requestHandler.post('auth/login', user, false);
+    } catch (e: any) {
+      throw e;
     }
   }
 }

@@ -7,11 +7,11 @@
         </div>
         <div class="col">
         <!-- Buttons for creating and adding labels -->
-            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" >
+            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" [disabled]="frozen">
                 Create label
                 <i class="bi bi-plus"></i>
             </button>
-            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()">
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()" [disabled]="frozen">
                 Merge labels
                 <i class="bi bi-plus"></i>
             </button>
@@ -23,7 +23,7 @@
         <div class="col-5">
             <div class="search__container">
                 <form [formGroup]="searchForm">
-                    <input class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                    <input id="searchBar" class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
                 </form>
             </div>
         </div>
@@ -39,14 +39,14 @@
                     <!--Table Headers-->
                     <thead>
                         <tr>
-                            <th scope="col"><p class="labelheader">Label</p></th>
-                            <th scope="col"><p class="labelheader">Label Type</p></th>
-                            <th scope="col"><p class="labelheader">Artifacts Labelled</p></th>
+                            <th scope="col"><p class="labelheader" (click)="sortLabel();"><span class="clickable">Label</span></p></th>
+                            <th scope="col"><p class="labelheader" (click)="sortLabelType();"><span class="clickable">Label Type</span></p></th>
+                            <th scope="col"><p class="labelheader" (click)="sortNumberOfArtifacts();"><span class="clickable">Artifacts Labelled</span></p></th>
                         </tr>
                     </thead>
                     <!--Table Content-->
                     <tbody>
-                        <tr *ngFor="let label of labels |  slice: (page-1) * pageSize : page * pageSize" (click)="reRouter(label.getId())">
+                        <tr *ngFor="let label of labels" (click)="reRouter(label.getId())">
                             <!-- Label name field -->
                             <td><p class="tablecontent">{{label.getName()}}</p></td>
                             <!-- Label type name field -->
@@ -56,17 +56,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <!--Pagination -->
-            <div id="center-pagination">
-                <ngb-pagination
-                    [(page)]="page"
-                    [pageSize]="pageSize"
-                    [collectionSize]="labels.length"
-                    [maxSize]="5"
-                    [rotate]="true" 
-                    [boundaryLinks]="true">
-                </ngb-pagination>
             </div>
         </div>
     </div>

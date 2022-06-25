@@ -1,6 +1,7 @@
 /**
  * @author B. Henkemans
  * @author T. Bradley
+ * @author Jarl Jansen
  */
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,7 +12,10 @@ import { LabelType } from 'app/classes/label-type';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
+import { ToastCommService } from 'app/services/toast-comm.service';
+import { AccountInfoService } from 'app/services/account-info.service';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-labelling-page',
@@ -31,7 +35,6 @@ export class LabellingPageComponent implements OnInit {
    */
   labellings: FormArray;
   form: FormGroup;
-  submitMessage: string;
   eventEmitter: EventEmitter<any>;
 
   /**
@@ -54,6 +57,8 @@ export class LabellingPageComponent implements OnInit {
   startTime: any;
   endTime: any;
 
+  hidden: boolean = false;
+
   /**
    * Constructor passes in the modal service and the labelling data service
    * @param modalService
@@ -63,7 +68,10 @@ export class LabellingPageComponent implements OnInit {
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
     private artifactDataService: ArtifactDataService,
-    private router: Router
+    private router: Router,
+    private toastCommService: ToastCommService,
+    private accountService: AccountInfoService,
+    private projectDataService: ProjectDataService
   ) {
     /**
      * Preparing variables for information
@@ -79,7 +87,6 @@ export class LabellingPageComponent implements OnInit {
     this.form = new FormGroup({
       labellings: this.labellings,
     });
-    this.submitMessage = '';
     this.eventEmitter = new EventEmitter<any>();
     /**
      * Setting up routing
@@ -89,7 +96,7 @@ export class LabellingPageComponent implements OnInit {
     this.p_id = parseInt(this.routeService.getProjectID(this.url));
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     /**
      * Getting information from the backend
      * This page has a couple of preconditions. These are checked at various points
@@ -99,13 +106,74 @@ export class LabellingPageComponent implements OnInit {
      * 3. The labels and their types are loaded.
      * If any of this fails the user is redirected back to the stats page.
      */
+    // If frozen reroute to stats
+    if (await this.projectDataService.getFrozen()){
+      await this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Project frozen, you can not label"]);
+      return;
+    }
+
+    // Waits on 
+    this.hidden = false;
+
+    // Gets the url again
+    this.url = this.router.url;
+
     this.labellings = new FormArray([]);
     this.eventEmitter.emit();
-    this.getRandomArtifact();
-    this.getLabelTypesWithLabels();
+
+    // Loads the page content
+    await this.loadPageContent();  
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
+
+    this.hidden = true;
+  }
+
+  async loadPageContent() : Promise<void> {
+    // Checks whether a labelling ID is provided
+    if(this.routeService.checkLabellingId(this.url)) {
+      // Shows labelling page of a specific artifact
+      await this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
+    } else {
+      // Shows labelling page of a random artifact
+      let errorOccured = await this.getRandomArtifact();
+      if (!errorOccured) {
+        return;
+      }
+    }
+    // Requests the label types and the corresponding labels
+    await this.getLabelTypesWithLabels();
+
+    // Gets user data
+    let user = await this.accountService.userData();
+
+    // Checks whether this user has already labelled the artifact, if so redirects to artifact management page
+    this.labellers.forEach(labeller => {
+      if (labeller["id"]==user["id"]) {
+        this.router.navigate(['/project', this.p_id, 'singleartifact', this.routeService.getThemeID(this.url)]);
+        this.toastCommService.emitChange([false, "You have already labelled this artifact"]);
+      }
+    });
+  }
+
+  /**
+   * Loads a specific artifact into the labelling page
+   * @param artID id of the artifact
+   */
+  async getNonRandomArtifact(artID: number): Promise<void> {
+    try {
+      // Gets the artifact data
+      let result = await this.artifactDataService.getArtifact(this.p_id, artID);
+      this.artifact = result["result"];
+    } catch {
+      // If an error occurs reroute to the stats page
+      this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Invalid request"]);
+    }
+    // Gets the people who have labelled the artifact already
+    await this.getLabellersGen();
   }
 
   /**
@@ -117,16 +185,33 @@ export class LabellingPageComponent implements OnInit {
    * 5. Puts labellers into variable
    * @param p_id
    */
-  async getRandomArtifact(): Promise<void> {
+  async getRandomArtifact(): Promise<boolean> {
     try {
       const artifact = await this.artifactDataService.getRandomArtifact(
         this.p_id
       );
       this.artifact = artifact;
     } catch {
-      this.router.navigate(['/project', this.p_id]);
+      if (this.artifact.getId() === -1) {
+        this.router.navigate(['/project', this.p_id]);
+        this.toastCommService.emitChange([false, "There are no artifacts to label."]);
+      } else{
+        this.router.navigate(['/project', this.p_id]);
+        this.toastCommService.emitChange([false, "There are no artifacts left to label!"]);
+      }
+      return false;
     }
 
+    await this.getLabellersGen();
+    return true;
+  }
+
+  /**
+   * Makes the request for all people who have already labelled an artifact
+   * @modifies this.labellers
+   */
+  async getLabellersGen(): Promise<void> {
+    // Makes the request
     try {
       const labellers = await this.artifactDataService.getLabellers(
         this.p_id,
@@ -134,11 +219,9 @@ export class LabellingPageComponent implements OnInit {
       );
       this.labellers = labellers;
     } catch {
+      // If an error occurs redirects to the stats page
       this.router.navigate(['/project', this.p_id]);
-    }
-
-    if (this.artifact.getId() === -1) {
-      this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Something went wrong. Please try again!"]);
     }
   }
 
@@ -161,17 +244,23 @@ export class LabellingPageComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then((data) => {
+    modal.result.then(() => {
+      // RESET THE FORM AND UPDATE WITH NEW LABEL
+      this.labellings = new FormArray([]);
       this.getLabelTypesWithLabels();
     });
   }
 
   /**
-   * Skip to another random artifact
+   * Skip to another random artifact 
+   * (if on the labelling page of a specific artifact, redirects to general labelling page)
    */
   skip(): void {
-    this.submitMessage = '';
-    this.ngOnInit();
+    if(this.routeService.checkLabellingId(this.url)) {
+      this.router.navigate(['/project', this.p_id, 'labelling-page']);
+    } else {
+      this.ngOnInit();
+    }
   }
 
   /**
@@ -205,10 +294,10 @@ export class LabellingPageComponent implements OnInit {
         p_id: this.p_id,
         resultArray: resultArray,
       };
-      this.submitMessage = '';
       this.sendSubmission(dict);
+      this.toastCommService.emitChange([true, "Artifact labelled successfully"]);
     } catch (e) {
-      this.submitMessage = 'Submission invalid';
+      this.toastCommService.emitChange([false, "Submission invalid"]);
     }
   }
 
@@ -221,16 +310,22 @@ export class LabellingPageComponent implements OnInit {
     // Create an array
     let resultArray: Array<Object> = Array<Object>();
     this.labellings.controls.forEach((el: any) => {
-      // Check the laeblling is valid
+      // Check the labelling is valid
       if (el.status != 'VALID') {
         // Throw and error
-        throw 'Submission invalid';
+        throw new Error('Submission invalid');
       }
       // Push valid results into result array
       resultArray.push({
         a_id: this.artifact?.getId(),
-        lt_id: el.get('labelType')?.value,
-        l_id: el.get('label')?.value,
+        label_type: {
+          id: el.get('labelType')?.value.getId(),
+          name: el.get('labelType')?.value.getName()
+        },
+        label: {
+          id: el.get('label')?.value.getId(),
+          name: el.get('label')?.value.getName()
+        },
         remark: el.get('remark')?.value,
         time: totalTime,
       });
@@ -247,13 +342,18 @@ export class LabellingPageComponent implements OnInit {
     try {
       // Wait for the submission
       await this.labellingDataService.postLabelling(dict);
-      // Reinitialise the page
-      this.ngOnInit();
+      if(this.routeService.checkLabellingId(this.url)) {
+        this.reRouter();
+      } else{
+        // Reinitialise the page
+        this.ngOnInit();
+      }
     } catch (err) {
       // Send error
-      this.submitMessage = 'Database error while submitting labelling.';
+      this.toastCommService.emitChange([false, "Database error while submitting labelling."]);
     }
   }
+
   /**
    * Error function for unimplemented features.
    */
@@ -261,32 +361,107 @@ export class LabellingPageComponent implements OnInit {
     throw new Error('This function has not been implemented yet.');
   }
 
-
-  ////TO BARTGANG: idk how to get the text to be selected againnnn
-    /**
+  /**
    * Function is ran on mouseDown or mouseUp and updates the current selection
    * of the artifact. If the selection is null or empty, the selection is set
    * to ""
-   * BROKEN
    */
-  //  selectedText(): void {
-  //   let hightlightedText: Selection | null = document.getSelection();
-  //   //gets the start and end indices of the highlighted bit
-  //   let startCharacter: number = hightlightedText?.anchorOffset!;
-  //   let endCharacter: number = hightlightedText?.focusOffset!;
-  //   //make sure they in the right order
-  //   if (startCharacter > endCharacter) {
-  //     startCharacter = hightlightedText?.focusOffset!;
-  //     endCharacter = hightlightedText?.anchorOffset!;
-  //   }
-  //   //put into global variable
-  //   this.selectionStartChar = startCharacter;
-  //   this.selectionEndChar = endCharacter;
-  //   //this is so the buttons still pop up, idk if we need it so ill ask bartgang
-  //   if (hightlightedText == null || hightlightedText.toString().length <= 0) {
-  //     this.hightlightedText = '';
-  //   } else {
-  //     this.hightlightedText = hightlightedText.toString();
-  //   }
-  // }
+  selectedText(): void {
+    let hightlightedText: Selection | null = document.getSelection();
+    //gets the start and end indices of the highlighted bit
+    let startCharacter: number = hightlightedText?.anchorOffset!;
+    let endCharacter: number = hightlightedText?.focusOffset!;
+    //make sure they in the right order
+    if (startCharacter > endCharacter) {
+      startCharacter = hightlightedText?.focusOffset!;
+      endCharacter = hightlightedText?.anchorOffset!;
+    }
+    //put into global variable
+    this.selectionStartChar = startCharacter;
+    this.selectionEndChar = endCharacter;
+    //this is so the buttons still pop up, idk if we need it so ill ask bartgang
+    if (hightlightedText == null || hightlightedText.toString().length <= 0) {
+      this.hightlightedText = '';
+    } else {
+      this.hightlightedText = hightlightedText.toString();
+    }
+  }
+
+  /**
+   * Splitting function, gets text without splitting words and gets start and end char
+   */
+  async split(): Promise<void> {
+    // Get start/end positions of highlight
+    let firstCharacter = this.selectionStartChar! - 1;
+    let lastCharacter = this.selectionEndChar! - 1;
+    // Fix positions to start/end of words that they clip
+    firstCharacter = this.startPosFixer(firstCharacter);
+    lastCharacter = this.endPosFixer(lastCharacter);
+    // Get the text represented by the rounded start and end
+    let splitText = this.artifact?.data.substring(
+      firstCharacter,
+      lastCharacter
+    );
+  
+    // Make request to split
+    let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
+    this.toastCommService.emitChange([true, "Artifact was successfully split into artifact #" + splitId]);
+
+    // Reloads the page
+    await this.routeToLabel(this.artifact.getId());
+  }
+
+  async routeToLabel(item: number | undefined) : Promise<void> {
+    await this.router.navigate(['/project', this.p_id, 'labelling-page', item]);
+    await this.ngOnInit();
+  }
+
+  // Fixes the position of the start character of a word
+  startPosFixer(startPos: number) {
+    // Gets char at start of the word
+    let chart = this.artifact?.data.charAt(startPos);
+    // Checks if it is at the correct position to begin with
+    if (chart == ' ' ) {
+      startPos = startPos + 1
+      return startPos
+    }
+    // Start bound check
+    if (startPos == 0) {
+      return startPos
+    }
+
+    // Else, move until we find the start of a word
+    while (chart != ' ' && startPos > 0) {
+      chart = this.artifact?.data.charAt(startPos);
+      startPos--;
+    }
+
+    // Last adjustmensts for when the text goes too far
+    if (startPos != 0) {
+      startPos++;
+    }
+    return startPos
+  }
+
+  // Fixes the position of the start character of a word
+  endPosFixer(endPos: number) {
+    // Gets char at end of the word
+    let chend = this.artifact?.data.charAt(endPos);
+    // See if the last char is correct to begin with
+    if (chend == ' ' || endPos == this.artifact.data.length) {
+      return endPos
+    }
+    // Fix such that the next word is not accidentally selected
+    if (this.artifact?.data.charAt(endPos - 1) == ' ') {
+      endPos--
+      return endPos
+    }
+    // Else, move until we find a space or hit the end of artifact
+    while (chend != ' ' && endPos < this.artifact?.data.length) {
+      chend = this.artifact?.data.charAt(endPos);
+      endPos++;
+    }
+
+    return endPos
+  }
 }

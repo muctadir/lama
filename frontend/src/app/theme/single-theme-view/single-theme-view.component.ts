@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
+import { Label } from 'app/classes/label';
 import { Router} from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
-import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
+import { HistoryComponent } from 'app/modals/history/history.component';
+import { ToastCommService } from 'app/services/toast-comm.service';
+import { StringArtifact } from 'app/classes/stringartifact';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
+import { ProjectDataService } from 'app/services/project-data.service';
 
 @Component({
   selector: 'app-single-theme-view',
@@ -26,10 +31,13 @@ export class SingleThemeViewComponent {
   // Variable for the theme
   theme: Theme; 
 
-  // Alert message for deleting theme
-  alertMessage = "";
+  frozen: boolean = true;
 
-  constructor(private router: Router, private themeDataService: ThemeDataService, private modalService: NgbModal) { 
+  constructor(private router: Router, 
+    private themeDataService: ThemeDataService, 
+    private modalService: NgbModal,
+    private toastCommService: ToastCommService,
+    private projectDataService: ProjectDataService) { 
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -42,7 +50,8 @@ export class SingleThemeViewComponent {
     this.theme = new Theme(0, "", "")
   }
   
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.frozen = await this.projectDataService.getFrozen();
     // Get the information for the theme
     this.get_single_theme_info(this.p_id, this.t_id);
   }
@@ -51,6 +60,45 @@ export class SingleThemeViewComponent {
   async get_single_theme_info(p_id: number, t_id: number){
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
+    // Sort the artifacts
+    this.sortArtifacts();
+  }
+
+  /**
+   * Function to sort the artifacts in a label
+   *
+   */
+  sortArtifacts(): void {
+    // Get the labels of the theme
+    let labels = this.theme.getLabels();
+    if(labels != undefined){
+      // For each label, get the artifacts
+      for (let label of labels){
+        // Get the artifacts
+        let artifacts = label.getArtifacts();
+        if (artifacts != undefined){
+          // Sort the artifacts
+          artifacts.sort((a,b) => a.getId() - b.getId());
+        }
+        // Set the artifacts of the label with the sorted array
+        label.setArtifacts(artifacts);
+      }
+    }
+  }
+
+  /**
+   * Function to get the artifacts of the label and remove the duplicates
+   * 
+   * @param label 
+   */
+  getNonDoubleArtifacts(label: Label): StringArtifact[] {
+    // Get the artifacts of the label
+    let artifacts = label.getArtifacts();
+    if(artifacts != undefined){
+      // Remove the duplicates from the list
+      return Array.from(artifacts.reduce((m, t) => m.set(t.getId(), t), new Map()).values());
+    }
+    return [];
   }
 
   /**
@@ -83,7 +131,7 @@ export class SingleThemeViewComponent {
    * Reroutes to other edit page of the theme
    * @trigger the edit button is clicked
   */
-   reRouterEdit() : void {
+  reRouterEdit() : void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, "editTheme", this.t_id]);
   }  
@@ -132,17 +180,36 @@ export class SingleThemeViewComponent {
       // Check the length of the arrays
       if(labels.length != 0 || children.length != 0){
         // Alert that the theme cannot be deleted
-        this.alertMessage = "This theme has sub-themes and/or labels, so it cannot be deleted";
+        this.toastCommService.emitChange([false, "This theme has sub-themes and/or labels, so it cannot be deleted"]);
         return;
       }
     }
-    // Open the modal
-    const modalRef = this.modalService.open(DeleteThemeComponent, {});
-    // Give the modal the project id and theme id
-    modalRef.componentInstance.p_id = this.p_id;
-    modalRef.componentInstance.t_id = this.t_id; 
-    // Give alert message
-    this.alertMessage = "";
+    // Open the modal    
+    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+
+    // Listens for an event emitted by the modal
+    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+      if($e) {
+        // Call the service to delete the theme
+        await this.themeDataService.delete_theme(this.p_id, this.t_id);
+        // Go back to the theme management page
+        this.router.navigate(['/project', this.p_id, 'thememanagement']);
+        // Shows that the deletion was successful
+        this.toastCommService.emitChange([true, "Deletion successful"]);
+      }
+    });
   }
 
+  /**
+   * Opens the modal displaying the theme history
+   * 
+   * @trigger on click of history icon
+   */
+  openThemeHistory(): void {
+    // opens theme history modal
+    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+
+    // passes all the users in the application to the modal
+    modalRef.componentInstance.history_type = "Theme";
+  }
 }

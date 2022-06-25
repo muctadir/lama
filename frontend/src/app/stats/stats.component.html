@@ -10,7 +10,7 @@
 
         <!-- Button for going to the labelling page -->  
         <div class="col">            
-            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="reRouter()">
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="reRouter()" [disabled]="frozen">
                 Start labelling
                 <em class="bi bi-plus"></em>
             </button>                
@@ -51,12 +51,17 @@
         </div>
 
         <!-- Conflicts stuff -->
-        <div class="col-2">{{ project.getNumberOfCLArtifacts() }} / {{ project.getNumberOfArtifacts() }}</div>
+        <div class="col-2">{{project.getNumberOfCLArtifacts()}} / {{project.getNumberOfArtifacts()}}</div>
         <div class="col">
             <div>
-                <p class="left">{{ conflicts }}</p> 
-                <em class="left bi bi-binoculars" id="bino-icon"></em>
+                <p class="left">{{conflicts}}</p> 
+                <em class="left bi bi-binoculars" id="bino-icon" ngbTooltip="Conflicts"></em>
             </div>
+            <div class="col" id="labels">
+                <div>
+                    <p class="left">{{labels}}</p> 
+                    <em class="left bi bi-tags def" id="label-icon" ngbTooltip="Labels"></em>
+                </div>
         </div>
     </div>
 
@@ -67,8 +72,8 @@
             <div>
                 <!--  -->
                 <div class="left page-splitter">User stats</div>
-                <em class="left bi bi-person" id="person-icon"></em>
-                <p class="left text-margin">{{ project.getNumberOfUsers() }}</p>
+                <em class="left bi bi-person" id="person-icon" ngbTooltip="Users"></em>
+                <p class="left text-margin">{{project.getNumberOfUsers()}}</p>
             </div>
         </div>
     </div>
@@ -96,10 +101,18 @@
                     <!--Table Content-->
                     <tbody>
                         <tr *ngFor="let user of user_contribution">
-                            <td><p class="tablecontent">{{user.username}}</p></td>
-                            <td><p class="tablecontent">{{user.nr_labelled}}</p></td>
-                            <td><p class="tablecontent">{{user.time}}</p></td>
-                            <td><p class="tablecontent">{{user.nr_conflicts}}</p></td>
+                            <!-- Table with stats per user -->
+                                <!-- User's username -->
+                                <td><p class="tablecontent">{{user.username}} 
+                                    <!-- If user is superadmin, write that -->
+                                    <ng-container *ngIf="user.superadmin">(Superadmin)</ng-container>
+                                </p></td>
+                                <!-- Number of artifacts the user labelled -->
+                                <td><p class="tablecontent">{{user.nr_labelled}}</p></td>
+                                <!-- Average time the user took to label artifacts -->
+                                <td><p class="tablecontent">{{user.time}}</p></td>
+                                <!-- Number of conflicts the user is involved in -->
+                                <td><p class="tablecontent">{{user.nr_conflicts}}</p></td>
                         </tr>
                     </tbody>
                 </table>

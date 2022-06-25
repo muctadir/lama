@@ -82,27 +82,29 @@ def get_label_types_wl():
 @login_required
 @in_project
 def get_labels_by_label_type():
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
-    required = ['p_id']
+    required = ['p_id', 'lt_id']
+
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
     
+    # Get all the labels of a labelType
+    labelType = db.session.scalar(
+        select(LabelType)
+        .where(
+            LabelType.id == args['lt_id']
+        )
+    )
+
     # Initialise label schema
     label_schema = LabelSchema()
-    # Initialise label type schema
-    label_type_schema = LabelTypeSchema()
-
-    # Group results
-    grouped_results = labels_by_label_type(args['p_id'])
-
-    # Convert dictionary to a list of pairs
-    # Each pair is of a label type and a list of labels belonging to that type
-    as_list = [(label_type_schema.dump(k), label_schema.dump(v, many=True)) for k, v in grouped_results.items()]
-
-    return jsonify(as_list)
+    
+    # Create dictionary with label type and labels
+    dict_json = label_schema.dump((labelType.labels).filter_by(deleted=0), many = True)
+    return make_response(jsonify(dict_json))
 
 """
 Author: Eduardo Costa Martins

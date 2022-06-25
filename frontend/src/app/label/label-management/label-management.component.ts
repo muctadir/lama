@@ -15,6 +15,14 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
 import { FormBuilder } from '@angular/forms';
+import { ProjectDataService } from 'app/services/project-data.service';
+
+// Enumeration for sorting 
+enum sorted {
+  Not = 0, // Not sorted
+  Asc = 1, // Sorted in ascending order
+  Des = 2 // Sorted in descending order
+}
 
 @Component({
   selector: 'app-label-management',
@@ -27,10 +35,17 @@ export class LabelManagementComponent {
   url: string;
   labels: Array<Label>;
   labelAmount: { [id: number]: string };
+  // Frozen status
+  frozen: boolean = true;
 
-  //Pagination Settings
+  // Pagination Settings
   page: number;
   pageSize: number;
+
+  //Variables for sorting - all are not sorted
+  sortedLabel = sorted.Not; // Label name
+  sortedLabelType = sorted.Not; // Label Type 
+  sortedNOA = sorted.Not; // Number of artifacts
 
   // Text from the search bar
   searchForm = this.formBuilder.group({
@@ -51,7 +66,8 @@ export class LabelManagementComponent {
     private modalService: NgbModal,
     private labellingDataService: LabellingDataService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private projectDataService: ProjectDataService
   ) {
     this.routeService = new ReroutingService();
     this.url = this.router.url;
@@ -62,9 +78,35 @@ export class LabelManagementComponent {
     this.pageSize = 10;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getLabels();
-    // this.getLabelledCount();
+    this.frozen = await this.projectDataService.getFrozen();
+    // Initialize searching click
+    this.searchClick();
+  }
+
+  /**
+   * Function for searching based on clicking on the maginifying glass
+   */
+   searchClick(){
+    // Get the search image
+    let image = document.getElementById("searchBar")
+    if (image != null){
+      // On click event handler
+      image.onclick = (e) => {
+        if (image != null){
+          // Get placement of the image
+          var rect = image.getBoundingClientRect();
+          // Get clicked x coordinates
+          var x = e.clientX - rect.left;
+          // When clicked in the maginifying glass
+          if (x > 330){
+            // Search
+            this.onEnter()
+          }
+        }
+      }
+    }
   }
 
   // Open the modal and merge lables
@@ -113,9 +155,38 @@ export class LabelManagementComponent {
   }
 
   // Gets the search text
-  onEnter() {
+  async onEnter() {
+
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
+
+    // Search text
     var text = this.searchForm.value.search_term;
-    alert('entered!!' + text + '');
+
+    // If nothing was searched
+    if(text.length == 0){
+      // Get all labels anew
+      this.getLabels();
+    } else {
+      // Otherwise search
+
+      // Pass the search word to services
+      let labelsSearched = await this.labellingDataService.search(text, p_id);
+
+      
+      // List for the labels resulting from the search
+      let labelList: Array<Label> = [];
+      // For loop through all searched labels
+      for (let label of labelsSearched) {
+        // Make it an label object
+        let newLabel = new Label(label['id'], label['name'], label['description'], label['type']);
+        // Append label to list
+        labelList.push(newLabel);
+      }
+
+      this.labels = labelList;
+
+    }
   }
 
   // Get the labelled count
@@ -124,7 +195,7 @@ export class LabelManagementComponent {
     let resultDict: { [id: number]: string } = {};
 
 
-    await this.labels.forEach(async (label: Label) => {
+    this.labels.forEach(async (label: Label) => {
       // Wait for the laeblling data service to get the labelling count
       const result = await this.labellingDataService.getLabellingCount({
         p_id: this.p_id,
@@ -135,5 +206,84 @@ export class LabelManagementComponent {
     });
     // Set the result equal to the label amount variable
     this.labelAmount = resultDict;
+  }
+
+  /**
+   * Function for sorting on name
+   * 
+   */
+  sortLabel(){
+    // Check if it was sorted ascending
+    if (this.sortedLabel == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedLabel = sorted.Des;
+      // Sort the array
+      this.labels.sort((a,b) => b.getName().localeCompare(a.getName()));
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedLabel == sorted.Des || this.sortedLabel == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedLabel = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a,b) => a.getName().localeCompare(b.getName()));
+    }
+    // Set other sorts to not sorted
+    this.sortedLabelType = sorted.Not;
+    this.sortedNOA = sorted.Not
+  }
+
+  /**
+   * Function for sorting on label type
+   * 
+  */
+  sortLabelType(){
+    // Check if it was sorted ascending
+    if (this.sortedLabelType == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedLabelType = sorted.Des;
+      // Sort the array
+      this.labels.sort((a,b) => b.getType().localeCompare(a.getType()));
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedLabelType == sorted.Des || this.sortedLabelType == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedLabelType = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a,b) => a.getType().localeCompare(b.getType()));
+    }
+    // Set other sorts to not sorted
+    this.sortedLabel = sorted.Not;
+    this.sortedNOA = sorted.Not
+  }
+
+  /**
+   * Function for sorting on number of artifacts
+   * 
+  */
+   sortNumberOfArtifacts(){
+    // Check if it was sorted ascending
+    if (this.sortedNOA == sorted.Asc){
+      // Make the sorted enum descending
+      this.sortedNOA = sorted.Des;
+      // Sort the array
+      this.labels.sort((a,b) => {
+        // Get the number of artifacts labelled
+        const n1 = parseInt(this.labelAmount[a.getId()]);
+        const n2 = parseInt(this.labelAmount[b.getId()]);
+        return n2 - n1;
+      });
+    // Check if it was sorted descending or not yet
+    } else if (this.sortedNOA == sorted.Des || this.sortedNOA == sorted.Not){
+      // Make the sorted enum ascending
+      this.sortedNOA = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a,b) => {
+        // Get the number of artifacts labelled
+        const n1 = parseInt(this.labelAmount[a.getId()]);
+        const n2 = parseInt(this.labelAmount[b.getId()]);
+        return n1 - n2;
+      });
+    }
+    // Set other sorts to not sorted
+    this.sortedLabel = sorted.Not;
+    this.sortedLabelType = sorted.Not
   }
 }

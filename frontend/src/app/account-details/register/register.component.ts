@@ -3,10 +3,11 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import axios from 'axios';
 import { AccountInformationFormComponent } from '../account-information-form/account-information-form.component';
 import { InputCheckService } from 'app/services/input-check.service';
+import { AccountInfoService } from 'app/services/account-info.service';
 import { Router } from '@angular/router';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-register',
@@ -32,16 +33,18 @@ export class RegisterComponent {
     this.desc = directive.description;
   }
 
-  /* String, when register data is incorrect will contain error */
-  errorMsg = "";
-
   /**
    * Initializes instance of InputCheckService
    * 
    * @param service instance of InputCheckService
+   * @param accountInfoService instance of AccountInfoService
    * @param route instance of Router
+   * @param toastCommService instance of ToastCommService
    */
-  constructor(private service: InputCheckService, private route: Router) { }
+  constructor(private service: InputCheckService,
+    private accountInfoService: AccountInfoService,
+    private route: Router,
+    private toastCommService: ToastCommService) { }
 
   /**
    * Checks whether the username/password is nonempty, and checks whether the email is valid.
@@ -50,23 +53,29 @@ export class RegisterComponent {
    * @modifies errorMsg
    * @trigger register button is clicked
    */
-  onRegister() : void {
+  onRegister(): void {
     // Checks input
-    let not_empty = this.service.checkFilled(this.username.value) && 
+    let not_empty = this.service.checkFilled(this.username.value) &&
       this.service.checkFilled(this.password.value) &&
       this.service.checkFilled(this.passwordR.value) &&
-      this.service.checkEmail(this.email.value);
+      this.service.checkFilled(this.email.value)
 
-    // Chooses desired behaviour based on validity of input
-    if (not_empty){
-      // Needed to not show the error
-      this.errorMsg = "";
-      // Calls method responsible for the actual registering
-      this.register()
-    } else {
-      // Case where username, password or email will not filled in / valid
-      this.errorMsg = "Fill in username, password and valid email.";
+    // Gives popup if one of the fields is not filled in
+    if (!not_empty) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "Please enter input in all input fields"]);
+      return;
     }
+
+    let valid_email = this.service.checkEmail(this.email.value);
+    // Gives popup if email is invalid
+    if (!valid_email) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "Please enter a valid email address"]);
+      return;
+    }
+
+    this.register()
   }
 
   /**
@@ -77,7 +86,7 @@ export class RegisterComponent {
    * @trigger register button clicked, valid input
    * @modifies errorMsg
    */
-  register() : void {
+  register(): void {
     // Information needed for backend
     let registerInformation = {
       username: this.username.value,
@@ -88,18 +97,16 @@ export class RegisterComponent {
     }
 
     // Post to backend
-    axios.post("http://127.0.0.1:5000/auth/register", registerInformation)
-    .then(response =>{
-      // Print the created message
-      this.errorMsg = response.data;
-
-      // Reroutes the user to the login page
-      this.route.navigate(['/login']);
-    })
-    .catch(error =>{
-      // Print the error message
-      this.errorMsg = error.response.data;
-    })
+    this.accountInfoService.registerUser(registerInformation)
+      .then(() => {
+        // Displays a success toast
+        this.toastCommService.emitChange([true, "Account created successfully!"]);
+        // Reroutes the user to the login page
+        this.route.navigate(['/login']);
+      })
+      .catch(error => {
+        this.toastCommService.emitChange([false, error.response.data]);
+      })
 
   }
 

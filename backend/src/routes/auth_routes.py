@@ -2,17 +2,17 @@
 # Jarl Jansen
 # Eduardo Costa Martins
 
+from operator import or_
 from src import db # need this in every route
-from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required
+from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required, check_string, check_whitespaces
 from src.models.auth_models import User, UserSchema, UserStatus
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
 from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode
-from functools import wraps
 
 auth_routes = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -23,8 +23,7 @@ def register():
     Registers a user when supplied username, email, password, and description
     See create_user() for default arguments
     """
-    args = request.json
-    
+    args = request.json['params']
     # Required arguments
     required = ["username", "email", "password", "passwordR", "description"] 
 
@@ -32,14 +31,22 @@ def register():
     if not check_args(required, args):
         return make_response(("Bad Request", 400))
 
+    # Check that username/email are unique
+    if taken(args["username"], args["email"]):
+        return make_response(("Username or email taken", 400))
+    
+    # Check for invalid characters
+    if check_whitespaces(args):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+     
+    # Check for invalid characters
+    if check_string([args['username'], args['email'], args['password']]):
+        return make_response("Input contains a forbidden character", 511)
+        
     # Check that arguments were formatted correctly
     check, reason = check_format(**args)
     if not check:
         return make_response((reason, 400))
-
-    # Check that username/email are unique
-    if taken(args["username"], args["email"]):
-        return make_response(("Username or email taken", 400))
     
     return create_user(args)
 
@@ -141,7 +148,7 @@ def create_user(args):
 
 # If there already exists a User with given username or email
 def taken(username, email):
-    violation = db.session.query(User).filter(User.username == username or User.email == email).first()
+    violation = db.session.scalars(select(User).where(or_(User.username == username, User.email == email))).first()
     return bool(violation)
 
 # Checks validity of all required fields for User creation
@@ -158,5 +165,3 @@ def check_format(username, email, password, passwordR, description):
         return (False, "No description provided")
     else:
         return (True, "Success")
-
-# TODO logout

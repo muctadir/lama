@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 // Authentication imports
 import { LoginComponent } from './account-details/login/login.component';
 import { RegisterComponent } from './account-details/register/register.component';
-import { LogoutComponent } from './modals/logout/logout.component';
 // Account imports
 import { AccountComponent } from './account-details/account/account.component';
 import { AccountInformationFormComponent } from './account-details/account-information-form/account-information-form.component';
@@ -45,11 +44,19 @@ import { ConflictResolutionComponent } from './conflict/conflict-resolution/conf
 import { ThemeManagementComponent } from './theme/theme-management/theme-management.component';
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
-import { DeleteThemeComponent } from 'app/modals/delete-theme/delete-theme.component';
+// History imports
+import { HistoryComponent } from './modals/history/history.component';
+import { ThemeVisualComponent } from './theme/theme-visual/theme-visual.component';
+// Toast imports
+import { ToastGlobalComponent } from './modals/toast-global/toast-global.component';
+import { ToastsContainer } from './modals/toast-global/toast-container.component';
+import { ToastCommService } from './services/toast-comm.service';
+// Account moderation imports
+import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModerationComponent } from './account-details/moderation/moderation.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +65,6 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     // Authentication components
     LoginComponent,
     RegisterComponent,
-    LogoutComponent,
     // Account components
     AccountComponent,
     AccountInformationFormComponent,
@@ -94,9 +100,14 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     ThemeManagementComponent,
     SingleThemeViewComponent,
     ThemeInfoComponent,
-    SingleThemeViewComponent,
+    SingleThemeViewComponent,    
+    ThemeVisualComponent,
+    // Other components
     ModerationComponent,
-    DeleteThemeComponent,
+    HistoryComponent,
+    ToastGlobalComponent,
+    ToastsContainer,
+    ConfirmModalComponent
   ],
   imports: [
     BrowserModule,
@@ -105,8 +116,9 @@ import { ModerationComponent } from './account-details/moderation/moderation.com
     ReactiveFormsModule,
     NgbModule
   ],
-  providers: [],
+  providers: [ToastCommService],
   bootstrap: [
-    AppComponent]
+    AppComponent
+  ]
 })
 export class AppModule { }

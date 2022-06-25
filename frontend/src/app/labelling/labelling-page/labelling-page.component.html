@@ -8,8 +8,7 @@
     </div>
     <div *ngIf="hightlightedText.length > 0" class="col-2">
       <div id="artifactButtons">
-        <i (click)="notImplemented()" class="bi bi-scissors"></i>
-        <i (click)="notImplemented()" class="bi bi-brush"></i>
+        <i (click)="split()" class="bi bi-scissors" ngbTooltip="Split artifact"></i>
       </div>
     </div>
   </div>
@@ -17,9 +16,9 @@
   <div class="row">
     <!-- Div containing the artifact -->
     <div class="artifactContainer" id="artifactContainer">
-      <!-- <p (mouseup)="selectedText()" (mousedown)="selectedText()">
+      <p (mouseup)="selectedText()" (mousedown)="selectedText()">
         {{ artifact?.getData()! }}
-      </p> -->
+      </p>
     </div>
 
     <!-- Labeller information -->
@@ -32,27 +31,34 @@
       </div>
     </div>
 
-    <!-- @TODO Information about the origin of the artifact -->
+    <!-- @TODO: Information about the origin of the artifact -->
     <!-- Currently not implemented -->
     <div class="col-6" id="split">
       <p class="float-end">
         <span *ngIf="artifact!.getNumberOfChildIds() == 0"></span>
         <span *ngIf="artifact!.getNumberOfChildIds() === 1">
-          Artifact was split into child artifact</span
+          Artifact was split into child artifact #</span
         >
         <span *ngIf="artifact!.getNumberOfChildIds() > 1"
-          >Artifact was split into children artifacts</span
-        >
+          >Artifact was split into children artifacts #
+        </span>
+
         <span *ngIf="artifact!.getNumberOfChildIds() > 0" id="split1">
-          #{{ artifact!.getChildIds() }}.</span
-        >
+          <span *ngFor="let item of artifact!.getChildIds()" (click)="routeToLabel(item)" id="hoverCurs">
+            {{item}},
+          </span>
+        </span>
+
         <br *ngIf="artifact!.getNumberOfChildIds() > 0" />
         <span *ngIf="artifact!.getParentId() != undefined"
           >Artifact was split from parent artifact</span
         >
         <span *ngIf="artifact!.getParentId() != undefined" id="split2">
-          #{{ artifact!.getParentId() }}.</span
-        >
+          #
+          <span (click)="routeToLabel(artifact!.getParentId())" id="hoverCurs">
+            {{ artifact!.getParentId() }}.
+          </span>
+        </span>
       </p>
     </div>
 
@@ -61,13 +67,10 @@
       <div class="col-3">
         <span id="LabellingTitle">Labelling</span>
         <span (click)="openCreateForm()" class=""
-          ><i class="bi bi-plus-lg"></i
+          ><i class="bi bi-plus-lg hoverNoColor" ngbTooltip="Create label"></i
         ></span>
       </div>
       <div class="col-9"></div>
-      <div class="col-3">
-        {{ submitMessage }}
-      </div>
       <div class="col-12" id="labelThing">
         <div *ngFor="let labelType of labelTypes" id="labelling-row">
           <app-individual-labelling-form
@@ -85,6 +88,7 @@
         <!-- Submission buttons -->
         <div id="butt">
           <button
+            [disabled]="!hidden"
             class="form-group btn btn-light float-right"
             (click)="skip()"
             id="skip-button"

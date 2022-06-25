@@ -10,6 +10,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { EditModeService } from 'app/services/edit-mode.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { RequestHandler } from 'app/classes/RequestHandler';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 /* Project settings component */
 @Component({
@@ -63,8 +64,12 @@ export class ProjectSettingsComponent implements OnInit {
    * @param reroutingService instance of rerouting service
    * @param formBuilder instance of formbuilder
    */
-  constructor(private modalService: NgbModal, private router: Router, private reroutingService: ReroutingService,
-    private formBuilder: FormBuilder, private editModeService: EditModeService) {
+  constructor(private modalService: NgbModal, 
+    private router: Router, 
+    private reroutingService: ReroutingService,
+    private formBuilder: FormBuilder, 
+    private editModeService: EditModeService,
+    private toastCommService: ToastCommService) {
     //Initiliazing project with the retrieved project ID from URL
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
@@ -132,8 +137,8 @@ export class ProjectSettingsComponent implements OnInit {
         this.allMembers.push(newUser);
       }
     } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -196,8 +201,8 @@ export class ProjectSettingsComponent implements OnInit {
         numberOfLabellers: this.currentProject.getCriteria(),
       })
     } catch(e) {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -235,10 +240,11 @@ export class ProjectSettingsComponent implements OnInit {
         this.removedMembers = [];
         this.added = [];
       }
+      this.toastCommService.emitChange([true, "Edit successful"]);
     }
     catch {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 
@@ -258,6 +264,7 @@ export class ProjectSettingsComponent implements OnInit {
     //Reinitializing arrays and original user list
     this.projectMembers = [];
     this.labelTypes = [];
+    this.allMembers = [];
     this.ngOnInit();
   }
 
@@ -357,11 +364,11 @@ export class ProjectSettingsComponent implements OnInit {
    * @modifies projectMembers, adminMembers, removed, added, allProjectMembers
    */
   addMember(user: User, admin: boolean) {
-    //If user is previously removed (from the front end, not yet in the back end)
+    // If user is previously removed (from the front end, not yet in the back end)
     if (user.getId() in this.removedMembers) {
-      //Remove them from the removed members list
+      // Remove them from the removed members list
       delete this.removedMembers[user.getId()]
-      //Change the user's removed status
+      // Change the user's removed status
       this.removed[user.getId()] = 0
     }
     else {
@@ -379,6 +386,7 @@ export class ProjectSettingsComponent implements OnInit {
     this.projectMembers.push(user);
     //Assigning the admin status to the user
     this.adminMembers[user.getId()] = admin;
+    this.toastCommService.emitChange([true, "User added"])
   }
 
   /**
@@ -395,22 +403,17 @@ export class ProjectSettingsComponent implements OnInit {
       delete this.allProjectMembers[user.getId()]
       //Remove user from list of newly added users
       delete this.added[user.getId()]
-      //Remove user from project members list
-      let index = this.projectMembers.indexOf(user);
-      this.projectMembers.splice(index,1);
-      //Remove user as admin from admin status dictionary
-      this.adminMembers[user.getId()] = false;
     }
     else {
-      //Assign removed status to user
+      // Assign removed status to user
       this.removed[user.getId()] = 1;
-      //Add user to list of users that have been removed from project
+      // Add user to list of users that have been removed from project
       this.removedMembers[user.getId()] = user
     }
-    //Remove user from project members list
+    // Remove user from project members list
     let index = this.projectMembers.indexOf(user);
     this.projectMembers.splice(index,1);
-    //Remove user as admin from admin status dictionary
+    // Remove user as admin from admin status dictionary
     this.adminMembers[user.getId()] = false;
   }
 
@@ -475,12 +478,13 @@ export class ProjectSettingsComponent implements OnInit {
       // Waits on the request
       let result = await response;
       if (result == "Ok") {
-        console.log("Done")
+        // Emits an error toast
+        this.toastCommService.emitChange([true, "Success"]);
       }
     }
     catch {
-      // Outputs an error
-      console.log("An error occured when loading data from the server");
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
   }
 }
