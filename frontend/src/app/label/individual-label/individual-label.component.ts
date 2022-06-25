@@ -116,6 +116,13 @@ export class IndividualLabelComponent {
    * Post of the soft delete
    */
   async postSoftDelete() {
+    let artifacts = this.label.getArtifacts()
+    if(artifacts != undefined){
+      if(artifacts.length != 0){
+        this.toastCommService.emitChange([false, "This label has been already used, so it cannot be deleted"]);
+        return;
+      }
+    }
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
