@@ -318,11 +318,13 @@ export class ThemeDataService {
    * {
    *   id: the id of the item (theme/label)
    *   name: the name of the item (theme/label)
+   *   deleted: whether or not the item is deleted (true/false)
    *   type: the type of the item, as a string 'Theme', 'Label', or 'Project'
    *   children: a list of dictionaries of items that are children of this theme/project
    * }
    * The children key does not exist for labels, or themes without children.
    * The top level dictionary represents the project that was passed
+   * The project counts as an undeleted item
    */
    async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {
