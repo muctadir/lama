@@ -416,8 +416,8 @@ def get_labellers(*, user, membership):
         return make_response('Bad Request', 400)
 
     # Check if the current user has access to the artifact
-    if not __check_artifact_access(membership.admin, user.id, args['a_id']):
-        return make_response("User has not labelled this artifact", 401)
+    # if not __check_artifact_access(membership.admin, user.id, args['a_id']):
+    #     return make_response("User has not labelled this artifact", 401)
 
     labellers = db.session.scalars(
         select(User)
