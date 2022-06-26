@@ -42,7 +42,7 @@ def create_label(*, user):
         return make_response('Label description cannot be empty', 400)
     
     # Check if label name is taken
-    if label_name_taken(args['labelName'], 0):
+    if label_name_taken(args['labelName'], 0, args['p_id']):
         return make_response('Label name already exists', 400)
     
     # Check whether the required arguments are delivered
@@ -121,7 +121,7 @@ def edit_label(*, user):
         return make_response('Label not part of project', 400)
     
     # Check if the label name is unique
-    if label_name_taken(args["labelName"], args['labelId']):
+    if label_name_taken(args["labelName"], args['labelId'], args['p_id']):
         return make_response("Label name already exists", 400)
 
     # Records a change in the name, only if the name has actually changed
@@ -245,7 +245,7 @@ def merge_route(*, user):
         return make_response("Input contains a forbidden character", 511)
     
     # Check if label name is taken
-    if label_name_taken(args['newLabelName'], 0):
+    if label_name_taken(args['newLabelName'], 0, args['p_id']):
         return make_response("Label name already exists", 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
@@ -676,13 +676,14 @@ def __record_delete(l_id, name, p_id, u_id):
 Function that checks if a label name is already taken
 @params name: string, the name to be checked
 @returns true if name is already a label name and false otherwise
-@author Linh, Jarl
+@author Linh, Jarl, Bartjan
 """
-def label_name_taken(name, label_id):
+def label_name_taken(name, label_id, p_id):
     if bool(db.session.scalars(
         select(Label)
         .where(
             Label.name==name,
+            Label.p_id == p_id,
             Label.id != label_id
         ))
         .first()):
