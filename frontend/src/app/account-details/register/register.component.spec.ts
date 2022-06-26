@@ -55,13 +55,10 @@ describe('RegisterComponent', () => {
     component.password.setValue("testpassword");
     component.passwordR.setValue("testpassword");
     component.desc.setValue("test description");
-
     // Creates spy on the register() function call
     let spy = spyOn(component, "register");
-
     // Calls function to be tested
     component.onRegister();
-
     // Checks whether register was called
     expect(spy).toHaveBeenCalled();
   });
@@ -73,13 +70,10 @@ describe('RegisterComponent', () => {
     component.password.setValue("testpassword");
     component.passwordR.setValue("testpassword");
     component.desc.setValue("test description");
-
     // Creates spy on the toast
     let spy = spyOn(component["toastCommService"], "emitChange");
-
     // Calls function to be tested
     component.onRegister();
-
     // Checks whether toast was created
     expect(spy).toHaveBeenCalledWith([false, "Please enter input in all input fields"]);
   });
@@ -91,13 +85,10 @@ describe('RegisterComponent', () => {
     component.password.setValue("testpassword");
     component.passwordR.setValue("testpassword");
     component.desc.setValue("test description");
-
     // Creates spy on the toast
     let spy = spyOn(component["toastCommService"], "emitChange");
-
     // Calls function to be tested
     component.onRegister();
-
     // Checks whether toast was created
     expect(spy).toHaveBeenCalledWith([false, "Please enter a valid email address"]);
   });
@@ -109,17 +100,15 @@ describe('RegisterComponent', () => {
     component.password.setValue("testpassword");
     component.passwordR.setValue("testpassword");
     component.desc.setValue("test description");
-
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Creates a spy for the accountInfoService backend call
     let spy = spyOn(component["accountInfoService"], "registerUser");
     // Creates spy for the router
     let spyRouter = spyOn(component["route"], "navigate");
-
     // Calls function to be tested
     await component.register();
-
+    // Input
     let input = {
       username: "testusername",
       email: "test@test.com",
@@ -127,7 +116,6 @@ describe('RegisterComponent', () => {
       password: "testpassword",
       passwordR: "testpassword",
     }
-
     // Checks whether register was called
     expect(spy).toHaveBeenCalledWith(input);
     // Checks toast emitted
@@ -143,16 +131,14 @@ describe('RegisterComponent', () => {
     component.password.setValue("testpassword");
     component.passwordR.setValue("testpassword");
     component.desc.setValue("test description");
-
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Creates a spy for the accountInfoService backend call, and returns an error
     let spy = spyOn(component["accountInfoService"], "registerUser")
       .and.throwError(new TestError("message", {data: "some error"}));
-
     // Calls function to be tested
     await component.register();
-
+    // Input
     let input = {
       username: "testusername",
       email: "test@test.com",
@@ -160,7 +146,6 @@ describe('RegisterComponent', () => {
       password: "testpassword",
       passwordR: "testpassword",
     }
-
     // Checks whether register was called
     expect(spy).toHaveBeenCalledWith(input);
     // Checks toast emitted

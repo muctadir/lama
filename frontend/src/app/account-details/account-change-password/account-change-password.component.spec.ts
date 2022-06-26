@@ -53,7 +53,6 @@ describe('AccountChangePasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
   it('Checks whether editPasswordF, stubbing all, valid input case', () => {
     // Creates a dummy user account
     component.userAccount = new User(5, "new_username");

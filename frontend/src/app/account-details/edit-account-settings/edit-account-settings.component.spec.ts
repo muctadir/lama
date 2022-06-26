@@ -49,13 +49,10 @@ describe('EditAccountSettingsComponent', () => {
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
     testUser.setDesc("Test description");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Calls the changes
     component.ngOnChanges();
-
     // Checks whether the username is correct
     expect(component.accountForm.value.username).toBe("username_test");
     // Checks whether the email is correct
@@ -70,20 +67,15 @@ describe('EditAccountSettingsComponent', () => {
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
     testUser.setDesc("Test description");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Loads the user data into the form
     component.ngOnChanges();
-
     // Creates the spies for the function calls
     let spyCheck = spyOn(component, "checkInput").and.returnValue(true);
     let spyRequest = spyOn(component, "makeRequest");
-
     // Calls function
     component.changeInformation();
-
     // Checks results
     expect(spyCheck).toHaveBeenCalled();
     expect(spyRequest).toHaveBeenCalledWith({"id": 8, 
@@ -96,17 +88,13 @@ describe('EditAccountSettingsComponent', () => {
   it('checks changeInformation with invalid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Creates the spies for the function calls
     let spyCheck = spyOn(component, "checkInput").and.returnValue(false);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Calls the function
     component.changeInformation();
-
     // Checks results
     expect(spyCheck).toHaveBeenCalled();
     expect(spyToast).toHaveBeenCalledWith([false, "Please fill in all forms correctly!"]);
@@ -118,16 +106,12 @@ describe('EditAccountSettingsComponent', () => {
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
     testUser.setDesc("desc");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Loads the user data into the form
     component.ngOnChanges();
-
     // Calls the function
     let result = component.checkInput();
-
     // Checks the result
     expect(result).toBeTruthy();
   });
@@ -138,16 +122,12 @@ describe('EditAccountSettingsComponent', () => {
     let testUser = new User(8, "");
     testUser.setEmail("test@test.com");
     testUser.setDesc("desc");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Loads the user data into the form
     component.ngOnChanges();
-
     // Calls the function
     let result = component.checkInput();
-
     // Checks the result
     expect(result).toBeFalsy();
   });
@@ -157,16 +137,12 @@ describe('EditAccountSettingsComponent', () => {
     let testUser = new User(8, "testname");
     testUser.setEmail("");
     testUser.setDesc("desc");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Loads the user data into the form
     component.ngOnChanges();
-
     // Calls the function
     let result = component.checkInput();
-
     // Checks the result
     expect(result).toBeFalsy();
   });
@@ -176,16 +152,12 @@ describe('EditAccountSettingsComponent', () => {
     let testUser = new User(8, "testname");
     testUser.setEmail("xx");
     testUser.setDesc("desc");
-
     // Sets the user info
     component.userAccount = testUser;
-
     // Loads the user data into the form
     component.ngOnChanges();
-
     // Calls the function
     let result = component.checkInput();
-
     // Checks the result
     expect(result).toBeFalsy();
   });
@@ -203,10 +175,8 @@ describe('EditAccountSettingsComponent', () => {
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails");
     let spyEvent = spyOn(component.modeChangeEvent, 'emit');
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Makes the request
     await component.makeRequest(input);
-
     // Checks the calls
     expect(spyRequest).toHaveBeenCalledWith(input);
     expect(spyEvent).toHaveBeenCalledWith(0);
@@ -223,15 +193,12 @@ describe('EditAccountSettingsComponent', () => {
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 511, data: "some_error_message"})
-
+    let dummyError = new TestError("bad error", {status: 511, data: "some_error_message"});
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Makes the request
     await component.makeRequest(input);
-
     // Checks the calls
     expect(spyRequest).toHaveBeenCalledWith(input);
     expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
@@ -247,15 +214,12 @@ describe('EditAccountSettingsComponent', () => {
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 420, data: "Input contains leading or trailing whitespaces"})
-
+    let dummyError = new TestError("bad error", {status: 420, data: "Input contains leading or trailing whitespaces"});
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Makes the request
     await component.makeRequest(input);
-
     // Checks the calls
     expect(spyRequest).toHaveBeenCalledWith(input);
     expect(spyToast).toHaveBeenCalledWith([false, "Input contains leading or trailing whitespaces"]);
@@ -271,15 +235,12 @@ describe('EditAccountSettingsComponent', () => {
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 420, data: "some_error_message"})
-
+    let dummyError = new TestError("bad error", {status: 420, data: "some_error_message"});
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Makes the request
     await component.makeRequest(input);
-
     // Checks the calls
     expect(spyRequest).toHaveBeenCalledWith(input);
     expect(spyToast).toHaveBeenCalledWith([false, "Please enter valid details!"]);

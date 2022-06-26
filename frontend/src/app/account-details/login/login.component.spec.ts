@@ -37,13 +37,10 @@ describe('LoginComponent', () => {
   it('Checks loginSubmit with valid input', () => {
     // Sets a valid input
     component.loginForm.setValue({username: 'username_test', password: 'password_test'});
-
     // Creates the spy for checklogin
     let spy = spyOn(component, "checkLogin");
-
     // Calls the function to be tested
     component.loginSubmit();
-
     // Checks results
     expect(component.loginForm.value.username).toBe("username_test");
     expect(component.loginForm.value.password).toBe("password_test");
@@ -53,13 +50,10 @@ describe('LoginComponent', () => {
   it('Checks loginSubmit with invalid username', () => {
     // Sets a valid input
     component.loginForm.setValue({username: '', password: 'password_test'});
-
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Calls the function to be tested
     component.loginSubmit();
-
     // Checks the results
     expect(component.loginForm.value.username).toBe("");
     expect(component.loginForm.value.password).toBe("password_test");
@@ -69,13 +63,10 @@ describe('LoginComponent', () => {
   it('Checks loginSubmit with invalid password', () => {
     // Sets a valid input
     component.loginForm.setValue({username: 'yayaya', password: ''});
-
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
-
     // Calls the function to be tested
     component.loginSubmit();
-
     // Checks the results
     expect(component.loginForm.value.username).toBe("yayaya");
     expect(component.loginForm.value.password).toBe("");
