@@ -6,9 +6,8 @@ import { StringArtifact } from 'app/classes/stringartifact';
 import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
 import { SingleThemeViewComponent } from './single-theme-view.component';
-import { Artifact } from 'app/classes/artifact';
 
-fdescribe('SingleThemeViewComponent', () => {
+describe('SingleThemeViewComponent', () => {
   let component: SingleThemeViewComponent;
   let fixture: ComponentFixture<SingleThemeViewComponent>;
   let router: Router;
