@@ -218,16 +218,15 @@ def in_project(f):
     """
     @wraps(f)
     def decorated_function(*args, user, **kwargs):
-        if request.method == 'GET':
+        if request.method == 'GET' and 'p_id' in request.args:
             p_id = request.args['p_id']
-        else:
-            # TODO: Change request handler to not have to use params and get rid of this first case
-            if 'params' in request.json and 'p_id' in request.json['params']:
-                p_id = request.json['params']['p_id']
-            elif 'p_id' in request.json:
+        elif 'params' in request.json and 'p_id' in request.json['params']:
+            p_id = request.json['params']['p_id']
+        elif 'p_id' in request.json:
                 p_id = request.json['p_id']
-            else:
-                return make_response('Bad Request, missing p_id', 400)
+        else:
+            print("e")
+            return make_response('Bad Request, missing p_id', 400)
         # Check that pId argument was provided
         if not p_id:
             return make_response('Unauthorized', 401)
