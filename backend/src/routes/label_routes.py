@@ -226,7 +226,7 @@ def merge_route(*, user):
     
     # Check if required args are present
     if not check_args(required, args):
-        return make_response('Bad Request', 400)
+        return make_response('Not all required arguments supplied', 400)
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
