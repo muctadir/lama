@@ -24,7 +24,7 @@ describe('Changelog', () => {
     const newName = "New Changelog Name";
     // Set name
     log2.setName(newName)
-    // Check
+    // Check if name is same
     expect(log2.getName())
       .toBe(newName)
   })
@@ -42,7 +42,7 @@ describe('Changelog', () => {
     const newTime = "New Changelog Timestamp";
     // Set Timestamp
     log2.setTimestamp(newTime)
-    // Check
+    // Check is timestamp is the same as expected
     expect(log2.getTimestamp())
       .toBe(newTime)
   })
@@ -60,7 +60,7 @@ describe('Changelog', () => {
     const newDesc = "New Changelog Description";
     // Set Description
     log2.setDesc(newDesc)
-    // Check
+    // Check if description is the same as expected
     expect(log2.getDesc())
       .toBe(newDesc)
   })
