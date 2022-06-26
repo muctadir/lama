@@ -245,7 +245,7 @@ export class ProjectCreationComponent implements OnInit {
    * @param id the id of the member that should be removed from the project
    * @modifes projectMembers
    */
-  removeMember(id:any) : void {
+  removeMember(member :any) : void {
     // Go through all members
     this.projectMembers.forEach((projectMember, index)=>{
       // If clicked cross matches the person, splice them from the members
