@@ -1,3 +1,6 @@
+/**
+ * @author T. Bradley
+ */
 export class Changelog {
 
     /* username of the user who made the change */

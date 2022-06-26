@@ -10,6 +10,12 @@ All of the classes
     <p>highlighted: any (highlight info of the artifact)</p>
 </details>
 
+<details><summary>Changelog</summary>
+    <b>name:</b> string </p><br>
+    <b>timestamp:</b> string </p><br>
+    <p>desc: string </p><br>
+</details>
+
 
 <details><summary>Label</summary>
     <b>id:</b> number </p><br>
@@ -27,7 +33,7 @@ All of the classes
 <details><summary>LabelType</summary>
     <b>id:</b> number </p><br>
     <b>name:</b> string </p><br>
-    <b>labels:</b> Array < Label > 
+    <b>labels:</b> Array < Label > </p>
 </details>
 
 
