@@ -316,6 +316,14 @@ def edit_project(*, membership):
     if not project:
         return make_response('Bad Request', 400)
 
+    # Check for invalid characters
+    if check_whitespaces([args['project']['name'], project_info['project']['description']]):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([project_info['project']['name']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Updating project information
     project_updated = update_project(args['project'])
     # Updating members admin status or removing members
@@ -334,7 +342,7 @@ def edit_project(*, membership):
         except IntegrityError:
             return make_response('Integrity Error')
         # Returning a response
-        return make_response('Ok')
+        return make_response('Ok', 201)
     else:
         return make_response('Error with saving')
 
@@ -359,6 +367,8 @@ def update_project(args):
     except OperationalError:
         #Returning an error response
         return make_response("Internal Server Error", 503)
+    except:
+        return make_response("An error has occurred", 400)
 
 """
 For updating members information
@@ -465,7 +475,7 @@ def freeze_project(*, membership):
         return make_response('Internal Server Error', 503)
 
     #Returning a response
-    return make_response('Ok')
+    return make_response('Ok', 200)
     
 """
 Author: Ana-Maria Olteniceanu
