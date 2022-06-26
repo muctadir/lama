@@ -489,7 +489,7 @@ def generate_artifact_identifier(p_id):
     h = blake2b()
 
     # Seed of the hash
-    identifiers = db.session.scalar(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id))
+    identifiers = db.session.scalars(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id)).all()
     # If no identifiers were found, then
     # make identifiers an empty list
     if identifiers is None:
