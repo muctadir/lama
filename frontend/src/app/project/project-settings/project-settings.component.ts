@@ -250,9 +250,18 @@ export class ProjectSettingsComponent implements OnInit {
       }
       this.toastCommService.emitChange([true, "Edit successful"]);
     }
-    catch {
-      // Emits an error toast
-      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
+    catch(e: any) {
+      if(e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else {
+        // Emits an error toast
+        this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
+      }
+      this.unclickEdit();
     }
   }
 
