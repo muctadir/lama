@@ -3,7 +3,6 @@
 # Eduardo Costa Martis
 # Thea Bradley
 
-from importlib.metadata import requires
 from src.models.project_models import Project
 from src.app_util import in_project
 from src.app_util import check_args
@@ -11,7 +10,7 @@ from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, LabelType
 from src.models.change_models import ChangeType
 from src.models.auth_models import UserSchema
-from src.models.project_models import Project, Membership
+from src.models.project_models import Project
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required, not_frozen
@@ -25,7 +24,8 @@ from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 
-
+# Route to return all the artifact data for a specific page
+# That is visible to the logged in user
 @artifact_routes.route("/artifactmanagement", methods=["GET"])
 @login_required
 @in_project
@@ -96,7 +96,6 @@ def get_artifacts(*, user, membership):
                 Labelling.u_id == user.id, 
                 Labelling.p_id == p_id)
         )
-        
     # List of artifacts and their labellings to be passed to frontend
     artifact_info = [__get_artifact_info(artifact) for artifact in artifacts]
 
@@ -109,7 +108,7 @@ def get_artifacts(*, user, membership):
     # Return the list of dictionaries
     return make_response(jsonify(response))
 
-
+# Route to create artifacts
 @artifact_routes.route("/creation", methods=["POST"])
 @login_required
 @in_project
@@ -166,7 +165,20 @@ def add_new_artifacts(*, user, membership):
         'identifier': identifier,
         'admin': membership.admin})
 
-
+"""
+Route to return the data of a single artifact 
+@returns a dictionary of shape
+{
+  "artifact": the  serialized requested artifact,
+  "username": the username of the user making the request,
+  "admin": true if the current user is project admin, false otherwise,
+  "users": serialized list of users who labelled this artifact
+}: 
+If extended == 'true', then the response also had the additional values:
+{
+  "artifact_children": list of the ids of the current artifact's children,
+  "artifact_labellings": formatted labellings of the artifact
+}"""
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 @in_project
@@ -181,6 +193,10 @@ def single_artifact(*, user, membership):
         return make_response('Bad Request', 400)
 
     a_id = args['a_id']
+
+    # Check if the user has access to this artifact
+    if not __check_artifact_access(membership.admin, user.id, a_id):
+        return make_response("User has not labelled this artifact", 401)
 
     # Get the current artifact
     artifact = __get_artifact(a_id)
@@ -224,6 +240,7 @@ def single_artifact(*, user, membership):
     # Return the dictionary
     return make_response(dict_json)
 
+# Route that returns artifacts based on a user's search terms
 @artifact_routes.route('/search', methods=['GET'])
 @login_required
 @in_project
@@ -271,6 +288,15 @@ def search(*, user, membership):
     # Return the list of artifacts from the search
     return make_response(jsonify(info))
 
+"""
+Function that returns a dictionary with the extended artifact information
+@param artifact: the artifact about which information is requested
+@returns a dictionary of form:
+{
+    "artifact_children": list of the ids of the current artifact's children,
+    "artifact_labellings": formatted labellings of the artifact
+}
+"""
 def __get_extended(artifact):
     # Children of the artifact
     artifact_children = []
@@ -287,6 +313,20 @@ def __get_extended(artifact):
         "artifact_labellings": labellings_formatted
     }
 
+"""
+A function that returns the formatted version of an artifact's labellings
+@param artifact: the artifact whose labellings are requested
+@returns a dictionary whose keys are the usernames of the users who labelled the artifact
+and with values that are dictionaries with each label type as key and values dictionary of form:
+{
+    'name': name of the label in the labelling,
+    'labelRemark': remark given to the current labelling,
+    'u_id': the id of the user who made the labelling,
+    'id': the label id of the label,
+    'description': the description of the label, 
+    'lt_id': id of the label type which is the key associated with this dictionary
+    }
+"""
 def __aggregate_labellings(artifact):
     # Get all the labellings of the artifact
     labellings = artifact.labellings
@@ -324,6 +364,7 @@ def __aggregate_labellings(artifact):
             result[user.username][labelling.label_type.name] = addition
         return result
         
+# Route that returns a random artifact
 @artifact_routes.route("/randomArtifact", methods=["GET"])
 @login_required
 @in_project
@@ -361,11 +402,11 @@ def random_artifact(*, user):
 
     return make_response(dict_json)
 
-
+# Route that returns the list of users who labelled a specific artifact
 @artifact_routes.route("/getLabellers", methods=["GET"])
 @login_required
 @in_project
-def get_labellers():
+def get_labellers(*, user, membership):
     # Get args from request
     args = request.args
     # What args are required
@@ -373,6 +414,11 @@ def get_labellers():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
+    # Check if the current user has access to the artifact
+    if not __check_artifact_access(membership.admin, user.id, args['a_id']):
+        return make_response("User has not labelled this artifact", 401)
+
     labellers = db.session.scalars(
         select(User)
         .where(
@@ -393,12 +439,21 @@ def get_labellers():
 @in_project
 @not_frozen
 def post_split(*, user):
-    
     args = request.json['params']
+    
     # What args are required
-    required = ('p_id', 'parent_id', 'identifier', 'start', 'end', 'data')
+    required = ['p_id', 'parent_id', 'identifier', 'start', 'end', 'data']
     # Check if required args are present
     if not check_args(required, args):
+        return make_response("Bad Request", 400)
+
+    # Check if the provided identifier matches the identifier of the parent artifact
+    # and if the data provided is the same as the substring indicated by start and end
+    if not (db.session.scalar(select(Artifact.identifier).where(
+        Artifact.id == args['parent_id'])) == args['identifier'] 
+        and
+        db.session.scalar(select(Artifact.data).where(
+            Artifact.id == args['parent_id']))[int(args['start']):int(args['end'])] == args['data']):
         return make_response("Bad Request", 400)
     # Declare new artifact
     new_artifact = Artifact(**args)
@@ -471,9 +526,14 @@ def __get_artifact(a_id):
 Generates a unique (in a project) artifact identifier
 Author: Ana-Maria Olteniceanu
 @params p_id: int, the project id for which you want to generate an identifier
-@returns a string which is a unique (within the project) artifact identifier f
+@pre p_id > 0
+@throws exception if p_id <= 0
+@returns a string which is a unique (within the project) artifact identifier
 """
 def generate_artifact_identifier(p_id):
+    # Check that p_id > 0
+    if p_id <= 0:
+        raise Exception("Invalid p_id")
     # Length of the identifier
     length = 5
 
@@ -506,7 +566,7 @@ def generate_artifact_identifier(p_id):
         stop += 1
     
     # Return the identifier
-    return identifier_upper[start:length]
+    return identifier_upper[start:stop]
 
 """
 Records the creation of a list of artifacts in the artifact changelog
@@ -578,3 +638,19 @@ def __get_artifact_info(artifact):
     }
 
     return info
+    
+"""
+Function that checks if a user has access to view a specific artifact
+@param admin: true if the current user is project admin, false otherwise
+@param u_id: the id of the current user
+@param a_id: the id of the current artifact
+@returns true if user has access to the artifact, false otherwise
+"""
+def __check_artifact_access(admin, u_id, a_id):
+    # Check if the current user has access to this artifact
+    if not admin:
+        return db.session.scalar(select(Labelling).where(
+            Labelling.u_id == u_id,
+            Labelling.a_id == a_id
+        )) != None
+    return True
