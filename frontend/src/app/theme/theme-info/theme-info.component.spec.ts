@@ -369,46 +369,102 @@ describe('ThemeInfoComponent', () => {
 
   // NGONINIT FUNCTION
   // Test the ngOnInit function
-  it('Tests if the ngOnInit function calls all correct functions', () => {    
-    // Spy on getting the themes without parents
-    let spy1 = spyOn(component, 'get_themes_without_parents');
-    // Spy on getting all labels
-    let spy2 = spyOn(component, 'get_labels');
-    // Spy on setting the booleans
-    let spy3 = spyOn(component, 'setBooleans');
-    // Spy on setting the header
-    let spy4 = spyOn(component, 'setHeader');
+  it('Tests if the ngOnInit function calls all correct functions when project is frozen', () => { 
+    // Check that project is frozen
+    let spy = spyOn(component, "ngOnInit").and.callFake(async () => { 
+      let spy0 = spyOn(component['projectDataService'], "getFrozen").and.returnValue(Promise.resolve(false));
+      // Check if the project is frozen
+      if (await component['projectDataService'].getFrozen()){
+        // Spy on the navigate function of the router
+        let spy1 = spyOn(component['router'], 'navigate')
+        component['router'].navigate(['/project', 1]);      
+        expect(spy1).toHaveBeenCalledWith(['/project', 1]);
+        // Spy on the toast
+        let spy2 = spyOn(component['toastCommService'], 'emitChange');
+        component['toastCommService'].emitChange([false, "Project frozen, you cannot create or edit a theme"]);
+        expect(spy2).toHaveBeenCalledWith([false, "Project frozen, you cannot create or edit a theme"]);
+      }
+      // Check if the function had been called
+      expect(spy0).toHaveBeenCalled();
+    });
     // Call ngOnInit
     component.ngOnInit();    
     // Checks whether the function is called in ngOnInit
-    expect(spy1).toHaveBeenCalled();
-    expect(spy2).toHaveBeenCalled();
-    expect(spy3).toHaveBeenCalled();
-    expect(spy4).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
   // Test the ngOnInit function
-  it('Tests if the ngOnInit function calls all correct functions when in edit mode', () => {    
-    // Spy on getting the themes without parents
-    let spy1 = spyOn(component, 'get_themes_without_parents');
-    // Spy on getting all labels
-    let spy2 = spyOn(component, 'get_labels');
-    // Spy on setting the booleans
-    let spy3 = spyOn(component, 'setBooleans');
-    // Spy on setting the header
-    let spy4 = spyOn(component, 'setHeader');
+  it('Tests if the ngOnInit function calls all correct functions in creation mode', () => { 
+    // Check that project is frozen
+    let spy = spyOn(component, "ngOnInit").and.callFake(async () => { 
+      let spy0 = spyOn(component['projectDataService'], "getFrozen").and.returnValue(Promise.resolve(false));
+      // Check if the project is frozen
+      if (await component['projectDataService'].getFrozen()){
+        await component['router'].navigate(['/project', 1]);
+        component['toastCommService'].emitChange([false, "Project frozen, you cannot create or edit a theme"]);
+        return;
+      }
+      expect(spy0).toHaveBeenCalled();
+      // Spy on setting the booleans
+      let spy1 = spyOn(component, 'setBooleans');
+      component.setBooleans();      
+      expect(spy1).toHaveBeenCalled();
+      // Spy on setting the headers
+      let spy2 = spyOn(component, 'setHeader');
+      component.setHeader();
+      expect(spy2).toHaveBeenCalled();
+      // Spy on getting the labels
+      let spy3 = spyOn(component, 'get_labels');
+      component.get_labels(1);
+      expect(spy3).toHaveBeenCalledWith(1);
+      // Spy on getting the themes
+      let spy4 = spyOn(component, "get_themes_without_parents");
+      component.get_themes_without_parents(1, 0);
+      expect(spy4).toHaveBeenCalledWith(1, 0);
+    });    
+    // Set creation mode
+    component.create = true;
+    // Call ngOnInit
+    component.ngOnInit();  
+    // Chekc if function was called
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the ngOnInit function
+  it('Tests if the ngOnInit function calls all correct functions when in edit mode', () => { 
+    // Check that project is frozen
+    let spy = spyOn(component, "ngOnInit").and.callFake(async () => { 
+      let spy0 = spyOn(component['projectDataService'], "getFrozen").and.returnValue(Promise.resolve(false));
+      // Check if the project is frozen
+      if (await component['projectDataService'].getFrozen()){
+        await component['router'].navigate(['/project', 1]);
+        component['toastCommService'].emitChange([false, "Project frozen, you cannot create or edit a theme"]);
+        return;
+      }
+      expect(spy0).toHaveBeenCalled(); 
+      // Spy on setting the booleans
+      let spy1 = spyOn(component, 'setBooleans');
+      component.setBooleans();      
+      expect(spy1).toHaveBeenCalled();
+      // Spy on setting the headers
+      let spy2 = spyOn(component, 'setHeader');
+      component.setHeader();
+      expect(spy2).toHaveBeenCalled();
+      // Spy on getting the labels
+      let spy3 = spyOn(component, 'get_labels');
+      component.get_labels(1);
+      expect(spy3).toHaveBeenCalledWith(1);
+      // Spy on getting the themes
+      let spy4 = spyOn(component, "get_themes_without_parents");
+      component.get_themes_without_parents(1, 1);
+      expect(spy4).toHaveBeenCalledWith(1, 1);
+    });
     // Set the edit variable
     component.edit = true;
-    // Spy on setting the single theme info
-    let spy5 = spyOn(component, 'get_single_theme_info').and.returnValue(Promise.resolve())
     // Call ngOnInit
-    component.ngOnInit();    
-    // Checks whether the function is called in ngOnInit
-    expect(spy1).toHaveBeenCalled();
-    expect(spy2).toHaveBeenCalled();
-    expect(spy3).toHaveBeenCalled();
-    expect(spy4).toHaveBeenCalled();
-    expect(spy5).toHaveBeenCalled();
+    component.ngOnInit(); 
+    // Chekc if function was called
+    expect(spy).toHaveBeenCalled();
   });
 
   // SET BOOLEANS FUNCTION
@@ -532,7 +588,7 @@ describe('ThemeInfoComponent', () => {
       "description": "Description"
     })
     // Spy on the post_theme_info function
-    let spy1 = spyOn(component, "post_theme_info").and.returnValue(Promise.resolve(""));
+    let spy1 = spyOn(component, "post_theme_info").and.returnValue(Promise.resolve("Theme created"));
     // Spy on the get_themes_without_parents function
     let spy2 = spyOn(component, "get_themes_without_parents").and.returnValue(Promise.resolve());
     // Spy on the reset function of the form
@@ -596,6 +652,52 @@ describe('ThemeInfoComponent', () => {
     // Call the function
     await component.post_theme_info({});
     // Check if function works correctly    
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the searchLabel function for edit
+  it('Tests if the searchLabel function works correctly', async () => {  
+    // Spy on searchLabel function
+    let spy = spyOn(component, "searchLabel").and.callFake(async () => {
+      // Get the text of the form
+      let text = "Happy";
+      // Create new labels
+      let label1 = new Label(1, "Happy", "Desc", "Emotion");
+      let label2 = new Label(2, "Happy label", "Desc", "Emotion");
+      let label3 = new Label(3, "Sad", "Desc", "Emotion");
+      // Get all labels
+      let allLabels = [label1, label2, label3];
+      // Get the array of labels that are included in the search
+      let newArray = allLabels.filter(s => s.getName().toLowerCase().includes(text.toLowerCase()));
+      // Check if newArray contains what expected
+      expect(newArray).toEqual([label1, label2]);
+    });
+    // Call the function
+    component.searchLabel();
+    // Check it has been called
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the searchTheme function for edit
+  it('Tests if the searchTheme function works correctly', async () => {  
+    // Spy on searchLabel function
+    let spy = spyOn(component, "searchTheme").and.callFake(async () => {
+      // Get the text of the form
+      let text = "Happy";
+      // Create new labels
+      let theme1 = new Theme(1, "Happy", "Desc");
+      let theme2 = new Theme(2, "Happy theme", "Desc");
+      let theme3 = new Theme(3, "Sad", "Desc");
+      // Get all labels
+      let allSubThemes = [theme1, theme2, theme3];
+      // Get the array of labels that are included in the search
+      let newArray = allSubThemes.filter(s => s.getName().toLowerCase().includes(text.toLowerCase()));
+      // Check if newArray contains what expected
+      expect(newArray).toEqual([theme1, theme2]);
+    });
+    // Call the function
+    component.searchTheme();
+    // Check it has been called
     expect(spy).toHaveBeenCalled();
   });
 
