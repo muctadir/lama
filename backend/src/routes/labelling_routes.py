@@ -180,7 +180,7 @@ def edit_labelling(*, user, membership):
         # and we are only joining on two elements (grouped into one)
         except MultipleResultsFound:
             return make_response('Not Acceptable', 506)
-    print(updated_labellings)
+            
     # Updating the information in the database
     try:
         db.session.bulk_update_mappings(Labelling, updated_labellings)
