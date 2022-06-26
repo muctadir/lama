@@ -383,18 +383,18 @@ def test_theme_visual(app, client):
 
     # Visualization info
     vis_info = {'children': [
-            {'children': [{'children': [{'id': 11, 'name': 'SQL', 'type': 'Label'}], 'id': 7, 'name': 'Database technology', 'type': 'Theme'}, {'id': 11, 'name': 'SQL', 'type': 'Label'}, {'id': 13, 'name': 'Flask', 'type': 'Label'}], 'id': 3, 'name': 'Backend technology', 'type': 'Theme'}, 
-            {'id': 8, 'name': 'Empty theme', 'type': 'Theme'}, 
-            {'children': [{'id': 10, 'name': 'Angular', 'type': 'Label'}, {'id': 12, 'name': 'HTML', 'type': 'Label'}], 'id': 4, 'name': 'Frontend technologies', 'type': 'Theme'}, 
-            {'children': [{'id': 2, 'name': 'Sad', 'type': 'Label'}, {'id': 4, 'name': 'Angry ', 'type': 'Label'}, {'id': 5, 'name': 'Frustracted', 'type': 'Label'}, {'id': 6, 'name': 'Scared', 'type': 'Label'}, {'id': 7, 'name': 'Sleepy', 'type': 'Label'}, {'id': 16, 'name': 'Dissapointed', 'type': 'Label'}], 'id': 2, 'name': 'Negative emotions', 'type': 'Theme'}, 
-            {'id': 6, 'name': 'Neutral emotions', 'type': 'Theme'}, 
-            {'children': [{'id': 8, 'name': 'Curious', 'type': 'Label'}, {'id': 29, 'name': 'Fun life emotions', 'type': 'Label'}], 'id': 1, 'name': 'Positive emotions', 'type': 'Theme'}, 
-            {'children': [{'id': 14, 'name': 'Laptop', 'type': 'Label'}, {'id': 15, 'name': 'Software', 'type': 'Label'}], 'id': 5, 'name': 'Technology', 'type': 'Theme'}, 
-            {'id': 9, 'name': 'Docker', 'type': 'Label'}, 
-            {'id': 3, 'name': 'Excited', 'type': 'Label'}, 
-            {'id': 1, 'name': 'Happy ', 'type': 'Label'}, 
-            {'id': 17, 'name': 'New Technology', 'type': 'Label'}
-        ], 'id': 1, 'name': 'Project 1', 'type': 'Project'}
+            {'children': [{'children': [{'id': 11, 'name': 'SQL', 'type': 'Label', 'deleted': False}], 'id': 7, 'name': 'Database technology', 'type': 'Theme', 'deleted': False}, {'id': 11, 'name': 'SQL', 'type': 'Label', 'deleted': False}, {'id': 13, 'name': 'Flask', 'type': 'Label', 'deleted': False}], 'id': 3, 'name': 'Backend technology', 'type': 'Theme', 'deleted': False}, 
+            {'id': 8, 'name': 'Empty theme', 'type': 'Theme', 'deleted': False}, 
+            {'children': [{'id': 10, 'name': 'Angular', 'type': 'Label', 'deleted': False}, {'id': 12, 'name': 'HTML', 'type': 'Label', 'deleted': False}], 'id': 4, 'name': 'Frontend technologies', 'type': 'Theme', 'deleted': False}, 
+            {'children': [{'id': 2, 'name': 'Sad', 'type': 'Label', 'deleted': False}, {'id': 4, 'name': 'Angry', 'type': 'Label', 'deleted': False}, {'id': 5, 'name': 'Frustracted', 'type': 'Label', 'deleted': False}, {'id': 6, 'name': 'Scared', 'type': 'Label', 'deleted': False}, {'id': 7, 'name': 'Sleepy', 'type': 'Label', 'deleted': False}, {'id': 16, 'name': 'Dissapointed', 'type': 'Label', 'deleted': False}], 'id': 2, 'name': 'Negative emotions', 'type': 'Theme', 'deleted': False}, 
+            {'id': 6, 'name': 'Neutral emotions', 'type': 'Theme', 'deleted': False}, 
+            {'children': [{'id': 8, 'name': 'Curious', 'type': 'Label', 'deleted': False}, {'id': 29, 'name': 'Fun life emotions', 'type': 'Label', 'deleted': False}], 'id': 1, 'name': 'Positive emotions', 'type': 'Theme', 'deleted': False}, 
+            {'children': [{'id': 14, 'name': 'Laptop', 'type': 'Label', 'deleted': False}, {'id': 15, 'name': 'Software', 'type': 'Label', 'deleted': False}], 'id': 5, 'name': 'Technology', 'type': 'Theme', 'deleted': False}, 
+            {'id': 9, 'name': 'Docker', 'type': 'Label', 'deleted': False}, 
+            {'id': 3, 'name': 'Excited', 'type': 'Label', 'deleted': False}, 
+            {'id': 1, 'name': 'Happy', 'type': 'Label', 'deleted': False}, 
+            {'id': 17, 'name': 'New Technology', 'type': 'Label', 'deleted': False}
+        ], 'id': 1, 'name': 'Project 1', 'type': 'Project', 'deleted': False}
     # Post request
     response = request_handler.get("/theme/themeVisData", {"p_id": 1}, True)
     # Check if visualazation data was gotten successfull
@@ -482,32 +482,32 @@ def test_get_project_hierarchy(app, client):
         assert get_project_hierarchy(0) == None
 
         # Check hierarchy of project 1
-        project_hierarchy = {'id': 1, 'name': 'Project 1', 'type': 'Project', 'children': [
-            {'id': 3, 'name': 'Backend technology', 'type': 'Theme', 'children': [
-                {'id': 7, 'name': 'Database technology', 'type': 'Theme', 'children': [
-                    {'id': 11, 'name': 'SQL', 'type': 'Label'}]}, 
-                {'id': 11, 'name': 'SQL', 'type': 'Label'}, 
-                {'id': 13, 'name': 'Flask', 'type': 'Label'}]}, 
-            {'id': 8, 'name': 'Empty theme', 'type': 'Theme'}, 
-            {'id': 4, 'name': 'Frontend technologies', 'type': 'Theme', 'children': [
-                {'id': 10, 'name': 'Angular', 'type': 'Label'}, 
-                {'id': 12, 'name': 'HTML', 'type': 'Label'}]}, 
-            {'id': 2, 'name': 'Negative emotions', 'type': 'Theme', 'children': [
-                {'id': 2, 'name': 'Sad', 'type': 'Label'}, 
-                {'id': 4, 'name': 'Angry ', 'type': 'Label'}, 
-                {'id': 5, 'name': 'Frustracted', 'type': 'Label'}, 
-                {'id': 6, 'name': 'Scared', 'type': 'Label'}, 
-                {'id': 7, 'name': 'Sleepy', 'type': 'Label'}, 
-                {'id': 16, 'name': 'Dissapointed', 'type': 'Label'}]}, 
-            {'id': 6, 'name': 'Neutral emotions', 'type': 'Theme'}, 
-            {'id': 1, 'name': 'Positive emotions', 'type': 'Theme', 'children': [
-                {'id': 8, 'name': 'Curious', 'type': 'Label'}, 
-                {'id': 29, 'name': 'Fun life emotions', 'type': 'Label'}]}, 
-            {'id': 5, 'name': 'Technology', 'type': 'Theme', 'children': [
-                {'id': 14, 'name': 'Laptop', 'type': 'Label'}, 
-                {'id': 15, 'name': 'Software', 'type': 'Label'}]}, 
-            {'id': 9, 'name': 'Docker', 'type': 'Label'}, 
-            {'id': 3, 'name': 'Excited', 'type': 'Label'}, 
-            {'id': 1, 'name': 'Happy ', 'type': 'Label'}, 
-            {'id': 17, 'name': 'New Technology', 'type': 'Label'}]}
+        project_hierarchy = {'id': 1, 'name': 'Project 1', 'deleted': False, 'type': 'Project', 'children': [
+            {'id': 3, 'name': 'Backend technology', 'deleted': False, 'type': 'Theme', 'children': [
+                {'id': 7, 'name': 'Database technology', 'deleted': False, 'type': 'Theme', 'children': [
+                    {'id': 11, 'name': 'SQL', 'deleted': False, 'type': 'Label'}]}, 
+                {'id': 11, 'name': 'SQL', 'deleted': False, 'type': 'Label'}, 
+                {'id': 13, 'name': 'Flask', 'deleted': False, 'type': 'Label'}]}, 
+            {'id': 8, 'name': 'Empty theme', 'deleted': False, 'type': 'Theme'}, 
+            {'id': 4, 'name': 'Frontend technologies', 'deleted': False, 'type': 'Theme', 'children': [
+                {'id': 10, 'name': 'Angular', 'deleted': False, 'type': 'Label'}, 
+                {'id': 12, 'name': 'HTML', 'deleted': False, 'type': 'Label'}]}, 
+            {'id': 2, 'name': 'Negative emotions', 'deleted': False, 'type': 'Theme', 'children': [
+                {'id': 2, 'name': 'Sad', 'deleted': False, 'type': 'Label'}, 
+                {'id': 4, 'name': 'Angry', 'deleted': False, 'type': 'Label'}, 
+                {'id': 5, 'name': 'Frustracted', 'deleted': False, 'type': 'Label'}, 
+                {'id': 6, 'name': 'Scared', 'deleted': False, 'type': 'Label'}, 
+                {'id': 7, 'name': 'Sleepy', 'deleted': False, 'type': 'Label'}, 
+                {'id': 16, 'name': 'Dissapointed', 'deleted': False, 'type': 'Label'}]}, 
+            {'id': 6, 'name': 'Neutral emotions', 'deleted': False, 'type': 'Theme'}, 
+            {'id': 1, 'name': 'Positive emotions', 'deleted': False, 'type': 'Theme', 'children': [
+                {'id': 8, 'name': 'Curious', 'deleted': False, 'type': 'Label'}, 
+                {'id': 29, 'name': 'Fun life emotions', 'deleted': False, 'type': 'Label'}]}, 
+            {'id': 5, 'name': 'Technology', 'deleted': False, 'type': 'Theme', 'children': [
+                {'id': 14, 'name': 'Laptop', 'deleted': False, 'type': 'Label'}, 
+                {'id': 15, 'name': 'Software', 'deleted': False, 'type': 'Label'}]}, 
+            {'id': 9, 'name': 'Docker', 'deleted': False, 'type': 'Label'}, 
+            {'id': 3, 'name': 'Excited', 'deleted': False, 'type': 'Label'}, 
+            {'id': 1, 'name': 'Happy', 'deleted': False, 'type': 'Label'}, 
+            {'id': 17, 'name': 'New Technology', 'deleted': False, 'type': 'Label'}]}
         assert get_project_hierarchy(1) == project_hierarchy

@@ -224,10 +224,10 @@ INSERT INTO `artifact_change` (`id`, `change_type`, `description`, `name`, `time
 INSERT INTO `artifact_change` (`id`, `change_type`, `description`, `name`, `timestamp`, `u_id`, `p_id`, `i_id`) VALUES (152, 'labelled', 'label ; Ideas ; Smart-genius idea', '13', '2022-06-21 10:29:26', 4, 2, 13);
 INSERT INTO `artifact_change` (`id`, `change_type`, `description`, `name`, `timestamp`, `u_id`, `p_id`, `i_id`) VALUES (153, 'labelled', 'label ; Ideas ; Funny idea', '61', '2022-06-21 10:30:04', 4, 2, 61);
 INSERT INTO `artifact_change` (`id`, `change_type`, `description`, `name`, `timestamp`, `u_id`, `p_id`, `i_id`) VALUES (154, 'labelled', 'label ; Ideas ; Funny idea', '59', '2022-06-21 10:31:40', 4, 2, 59);
-INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (1, 'Happy ', 2, 'happy label', 0, NULL, 1);
+INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (1, 'Happy', 2, 'happy label', 0, NULL, 1);
 INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (2, 'Sad', 2, 'Sad label', 0, NULL, 1);
 INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (3, 'Excited', 2, 'Excited label', 0, NULL, 1);
-INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (4, 'Angry ', 2, 'Angry label', 0, NULL, 1);
+INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (4, 'Angry', 2, 'Angry label', 0, NULL, 1);
 INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (5, 'Frustracted', 2, 'Frustracted label', 0, NULL, 1);
 INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (6, 'Scared', 2, 'Scared label', 0, NULL, 1);
 INSERT INTO `label` (`id`, `name`, `lt_id`, `description`, `deleted`, `child_id`, `p_id`) VALUES (7, 'Sleepy', 2, 'Sleepy label', 0, NULL, 1);
@@ -289,7 +289,7 @@ INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `tim
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (2, 11, 1, 15, 1, 'software', '00:00:13');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (2, 11, 2, 8, 1, 'curious', '00:00:13');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (3, 5, 1, 14, 1, 'laptop', '00:00:10');
-INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (3, 5, 2, 4, 1, 'angry ', '00:00:10');
+INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (3, 5, 2, 4, 1, 'angry', '00:00:10');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (3, 6, 1, 15, 1, 'software', '00:00:10');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (3, 6, 2, 6, 1, 'scared tech', '00:00:10');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (3, 7, 1, 14, 1, 'laptop tech', '00:00:15');
@@ -321,7 +321,7 @@ INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `tim
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 3, 1, 17, 1, 'software', '00:00:09');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 3, 2, 29, 1, 'happy', '00:00:09');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 8, 1, 9, 1, 'docker tech', '00:00:10');
-INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 8, 2, 29, 1, 'happy ', '00:00:10');
+INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 8, 2, 29, 1, 'happy', '00:00:10');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 9, 1, 15, 1, 'software', '00:00:09');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (6, 9, 2, 4, 1, 'angry', '00:00:09');
 INSERT INTO `labelling` (`u_id`, `a_id`, `lt_id`, `l_id`, `p_id`, `remark`, `time`) VALUES (11, 4, 1, 13, 1, 'backend', '00:00:13');
