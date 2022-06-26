@@ -1,9 +1,11 @@
 <!-- @Author Jarl Jansen -->
+
+<!-- Container holding the content of the page, takes up entire screen -->
 <div class="container-fluid min-vh-100 d-flex flex-column">
     <!-- Account information -->
     <ng-container *ngIf="mode==0">
-        <!-- Create app-account-information component, passes errorMsg, user data and listens for modeChange events -->
-        <app-account-information [errorM]="errorMsg" [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
+        <!-- Create app-account-information component, user data and listens for modeChange events -->
+        <app-account-information [userAccount]="user" (modeChangeEvent)="modeChange($event)"></app-account-information>
     </ng-container>
     
     <!-- Edit division -->

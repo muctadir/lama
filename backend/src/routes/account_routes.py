@@ -64,7 +64,7 @@ def edit_user_information(*, user):
         return make_response("Input contains a forbidden character", 511)
     
     # Check that username/email are unique
-    if taken(args["username"], args["email"], user):
+    if taken(args["username"], args["email"], args['id']):
         return make_response(("Username or email taken", 400))
 
     # Check required arguments are valid
@@ -207,7 +207,7 @@ def check_format_password(password):
         return (True, "Success")
 
 # If there already exists a User with given username or email
-def taken(username, email, user):
+def taken(username, email, user_id):
     violation = db.session.scalars(select(User)
-        .where(and_(or_(User.username == username, User.email == email)), User.id != user.id)).first()
+        .where(and_(or_(User.username == username, User.email == email)), User.id != user_id)).first()
     return bool(violation)

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { InputCheckService } from 'app/services/input-check.service';
@@ -9,9 +9,6 @@ import { Label } from 'app/classes/label';
 import { Theme } from 'app/classes/theme';
 import { ToastCommService } from 'app/services/toast-comm.service';
 import { ProjectDataService } from 'app/services/project-data.service';
-import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-theme-info',
@@ -98,9 +95,10 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   async ngOnInit(){
+    // Check if the project is frozen
     if (await this.projectDataService.getFrozen()){
       await this.router.navigate(['/project', this.p_id]);
-      this.toastCommService.emitChange([false, "Project frozen, you cannot label"]);
+      this.toastCommService.emitChange([false, "Project frozen, you cannot create or edit a theme"]);
       return;
     }
 
@@ -109,14 +107,15 @@ export class ThemeInfoComponent implements OnInit {
     // Set the header of the page
     this.setHeader();  
 
+    // Get all possible labels
+    this.get_labels(this.p_id);
+
     // If in edit mode, get the information and set values
-    if(this.edit){
+    if (this.edit) {      
       // Get theme id
       this.t_id = Number(this.routeService.getThemeID(this.url));
-      // Get all possible themes
+      // Get all possible themes, except this theme
       this.get_themes_without_parents(this.p_id, this.t_id);
-      // Get all possible labels
-      this.get_labels(this.p_id);
       // Get the current theme
       this.get_single_theme_info()
       .then(() => {
@@ -126,8 +125,6 @@ export class ThemeInfoComponent implements OnInit {
     } else {
       // Get all possible themes
       this.get_themes_without_parents(this.p_id, 0);
-      // Get all possible labels
-      this.get_labels(this.p_id);
     }
   }
 
@@ -362,7 +359,7 @@ export class ThemeInfoComponent implements OnInit {
     // If the string in not empty, we look for the labels that correspons
     if (text != ""){
       // Get the array of labels that are included in the search
-      let newArray = this.allLabels.filter(s => s.getName().toLowerCase().includes(text) || s.getName().toUpperCase().includes(text));
+      let newArray = this.allLabels.filter(s => s.getName().toLowerCase().includes(text.toLowerCase()));
       // Set the labels
       this.allLabels = newArray;
     }
@@ -379,7 +376,7 @@ export class ThemeInfoComponent implements OnInit {
     // If the string in not empty, we look for the labels that correspons
     if (text != ""){
       // Get the array of labels that are included in the search
-      let newArray = this.allSubThemes.filter(s => s.getName().toLowerCase().includes(text) || s.getName().toUpperCase().includes(text));
+      let newArray = this.allSubThemes.filter(s => s.getName().toLowerCase().includes(text.toLowerCase()));
       // Set the labels
       this.allSubThemes = newArray;
     }

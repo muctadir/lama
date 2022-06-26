@@ -54,18 +54,23 @@ describe('StatsComponent', () => {
   });
 
   // Checks if ngOnInit works correctly
-  it('Tests ngOnInit()', () => {
+  it('Tests ngOnInit()', async () => {
+    expect(component.frozen).toBeTruthy();
+
     // Spy on getProject and getUserStats and stub the calls
     spyOn(component, 'getProject');
     spyOn(component, 'getUserStats');
+    let spy = spyOn(component["projectDataService"], "getFrozen").and.returnValue(Promise.resolve(false));
 
     // Call the ngOnInit function
-    component.ngOnInit();
+    await component.ngOnInit();
 
     // Check that getProject and getUserStats were called
     // with the right parameter
     expect(component.getProject).toHaveBeenCalledWith(p_id);
     expect(component.getUserStats).toHaveBeenCalledWith(p_id);
+    expect(spy).toHaveBeenCalled();
+    expect(component.frozen).toBeFalsy();
   });
 
   // Checks if getProject function works correctly
