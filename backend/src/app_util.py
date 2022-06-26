@@ -83,12 +83,12 @@ def check_password(password):
     specialRe = r"(?=.*\W).*[\w]" # Special and non-special (note: underscore is non-special)
     numberRe = r"(?=.*[0-9]).*[^0-9]" # Number and non-number
     valid = len(password) <= 64 and len(password) == len(password.strip())
-    complex = len(password) >= 8 and \
+    complex_password = len(password) >= 8 and \
             password.lower() not in banned and \
             (re.match(caseRe, password) or \
             re.match(specialRe, password) or \
             re.match(numberRe, password))
-    return valid and complex
+    return bool(valid and complex_password)
 
 def check_string(strings):
     """
