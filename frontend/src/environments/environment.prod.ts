@@ -2,5 +2,5 @@
 export const environment = {
   production: true,
   //apiURL: 'https://lamahost.win.tue.nl/api' ,
-  apiURL: 'http://localhost:5000' ,
+  apiURL: 'http://localhost/api' ,
 };
