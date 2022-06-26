@@ -33,6 +33,7 @@ def check_args(required, args):
     return False
 
 def check_email(email):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     """
     @param email: a string
     @return : True <==> email is a validly formatted email
@@ -43,7 +44,9 @@ def check_email(email):
     See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#validation
         Note: this pattern does not work here
     """
-    return True
+    if(re.fullmatch(regex, email)):
+        return True
+    return False
 
 def check_username(username):
     """
@@ -80,12 +83,12 @@ def check_password(password):
     specialRe = r"(?=.*\W).*[\w]" # Special and non-special (note: underscore is non-special)
     numberRe = r"(?=.*[0-9]).*[^0-9]" # Number and non-number
     valid = len(password) <= 64 and len(password) == len(password.strip())
-    complex = len(password) >= 8 and \
+    complex_password = len(password) >= 8 and \
             password.lower() not in banned and \
             (re.match(caseRe, password) or \
             re.match(specialRe, password) or \
             re.match(numberRe, password))
-    return valid and complex
+    return bool(valid and complex_password)
 
 def check_string(strings):
     """

@@ -22,6 +22,10 @@ def get_user_information(*, user):
     # Get the logged in user
     user = db.session.execute(select(User).where(User.id == user.id)).scalars().all()
 
+    # Check if the user exists
+    if not user:
+        return make_response("Bad request", 400)
+
     # Get the information
     user_schema = UserSchema()
     response = user_schema.dump(user[0])
@@ -42,34 +46,34 @@ def edit_user_information(*, user):
     args = request.json
     args = args['params']
 
+    # Required arguments
+    required = ["username", "email", "description", "id"] 
+
+    # Check required arguments are supplied
+    if not check_args(required, args):
+        return make_response("Not all arguments supplied", 400)   
+    
     # Take the username, email and description
     edit_id = args["id"]
     new_username = args["username"]
     new_email = args["email"]
     new_description = args["description"]
 
-    # Required arguments
-    required = ["username", "email", "description", "id"] 
-
-    # Check required arguments are supplied
-    if not check_args(required, args):
-        return make_response(("Bad Request", 400))
-
     # Check for whitespaces 
-    if check_whitespaces([args['username'], args['email'], args['description']]):
+    if check_whitespaces([new_username, new_email, new_description]):
         return make_response("Input contains leading or trailing whitespaces", 400)
     
     # Check for invalid characters
-    if check_string([args['username'], args['email']]):
+    if check_string([new_username, new_email]):
         return make_response("Input contains a forbidden character", 511)
     
     # Check that username/email are unique
-    if taken(args["username"], args["email"], args['id']):
+    if taken(new_username, new_email, edit_id):
         return make_response(("Username or email taken", 400))
 
     # Check required arguments are valid
     if not check_format(new_username, new_email, new_description)[0]:
-        return make_response(("Bad Request", 400))
+        return make_response("Bad Request", 400)
     
     # Checks whether the request is made by a super-admin
     # if so use user_ID from the request, if not a superadmin use id derived from token
@@ -115,7 +119,7 @@ def edit_user_password(*, user):
 
     # Check required arguments are supplied
     if not check_args(required, args):
-        return make_response(("Incorrect arguments supplied in request", 400))
+        return make_response("Not all arguments supplied", 400)
 
     # Check for invalid characters
     if check_string([args['password'], args['newPassword']]):
@@ -134,11 +138,11 @@ def edit_user_password(*, user):
 
         # Check correct password
         if not check_password_hash(password, args["password"]):
-            return make_response(("Incorrect password entered", 400))
+            return make_response("Incorrect password entered", 400)
 
     # Check if new password is valid
     if not check_format_password(args["newPassword"])[0]:
-        return make_response(("Please enter a more secure password", 400))
+        return make_response("Please enter a more secure password", 400)
     
     # Hash new password
     hashed_password = generate_password_hash(args["newPassword"])
@@ -151,8 +155,12 @@ def edit_user_password(*, user):
             password = hashed_password
         )
     )
+
     # Commit the new information
-    db.session.commit()
+    try:
+        db.session.commit()
+    except OperationalError:
+        return make_response("Internal Server Error", 503)
     
     # Return a success message
     return make_response("Updated succesfully")
@@ -182,7 +190,10 @@ def soft_delete(*, super_admin):
     )
 
     # Commits the changes to the database
-    db.session.commit()
+    try:
+        db.session.commit()
+    except OperationalError:
+        return make_response("Internal Server Error", 503)
     
     # Return a success message
     return make_response("Updated succesfully")
