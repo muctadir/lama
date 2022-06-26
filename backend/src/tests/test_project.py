@@ -4,7 +4,24 @@ from sqlalchemy import select
 from src.conftest import RequestHandler
 from src.models.project_models import Project, Membership, User
 from src import db
-from src.routes.project_routes import update_project, update_members_in_project, add_members
+from src.routes.project_routes import update_project, update_members_in_project, add_members, get_serialized_users
+
+def test_home(app, client):
+    request_handler = RequestHandler(app, client, 4)
+
+    # Using db requires app context
+    with app.app_context():
+        response = request_handler.get('/project/home', {}, True)
+
+        assert response.status_code == 200
+
+        tet = response.json
+
+        assert len(tet) == 2
+        assert tet[0]['project']['id'] == 1
+        assert tet[0]['project']['name'] == "Project 1"
+        assert tet[1]['project']['id'] == 2
+        assert tet[1]['project']['name'] == "Project 2"
 
 def test_create(app, client):
     request_handler = RequestHandler(app, client, 1)
@@ -79,7 +96,7 @@ def test_edit(app, client):
     # Using db requires app context
     with app.app_context():
         project_info = {'id': 1, 'name': 'test_edit', 'description': 'test_edit desc', 'criteria': 2, 'frozen': False}
-        project_members = [{"id": 1, "name": "admin", "removed": False, "admin": True}, {"id": 2, "name": "user1", "removed": False, "admin": True}, {"id": 3, "name": "user2", "removed": False, "admin": False}]
+        project_members = {1: {"id": 1, "name": "admin", "removed": False, "admin": True}, 2: {"id": 2, "name": "user1", "removed": False, "admin": True}, 3: {"id": 3, "name": "user2", "removed": False, "admin": False}}
 
         insufficient_args_response = request_handler.patch('/project/edit', {
             'p_id': 1,
@@ -106,7 +123,7 @@ def test_edit(app, client):
 
         assert insufficient_project_args_response.status_code == 400
 
-        whitespace_project_response = request_handler.patch('/project/creation', {
+        whitespace_project_response = request_handler.patch('/project/edit', {
             'p_id': 1,
             'project': {'id': 1, 'name': ' test_edit', 'description': 'test_edit desc ', 'criteria': 2, 'frozen': False},
             'add': {},
@@ -115,7 +132,7 @@ def test_edit(app, client):
 
         assert whitespace_project_response.status_code == 400
 
-        invalid_name_response = request_handler.patch('/project/creation', {
+        invalid_name_response = request_handler.patch('/project/edit', {
             'p_id': 1,
             'project': {'id': 1, 'name': '#test_edit', 'description': 'test_edit desc', 'criteria': 2, 'frozen': False},
             'add': {},
@@ -127,7 +144,7 @@ def test_edit(app, client):
         # Edit a project
         response = request_handler.patch('/project/edit', {
             'p_id': "1",
-            'project': projectInfo,
+            'project': project_info,
             'add' : {},
             'update': project_members
         }, True)
@@ -144,7 +161,6 @@ def test_edit(app, client):
         assert entry.description == "test_edit desc"
         assert entry.criteria == 2
         assert entry.frozen == False
-        project_members = [{"id": 1, "name": "admin", "removed": False, "admin": True}, {"id": 2, "name": "user1", "removed": False, "admin": True}, {"id": 3, "name": "user2", "removed": False, "admin": False}]
         check_membership(1, 1, True, False)
         check_membership(1, 2, True, False)
         check_membership(1, 3, False, False)
@@ -230,9 +246,6 @@ def test_freeze(app, client):
         # Check that the user was created correctly
         assert entry.id == 1
         assert entry.frozen == True
-
-def test_get_serialized_users():
-    users
 
 def check_membership(p_id, u_id, admin, removed):
     entry = db.session.scalar(select(Membership).where(Membership.p_id == p_id, Membership.u_id == u_id))

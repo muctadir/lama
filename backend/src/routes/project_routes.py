@@ -317,11 +317,11 @@ def edit_project(*, membership):
         return make_response('Bad Request', 400)
 
     # Check for invalid characters
-    if check_whitespaces([args['project']['name'], project_info['project']['description']]):
+    if check_whitespaces([args['project']['name'], args['project']['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
-    if check_string([project_info['project']['name']]):
+    if check_string([args['project']['name']]):
         return make_response("Input contains a forbidden character", 511)
 
     # Updating project information
