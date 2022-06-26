@@ -13,3 +13,6 @@ class ThemeCycleDetected(Exception):
     MySQLdb = 3636
     # This number represents the error code for recursion limit in a MariaDB database.
     MariaDB = 1456
+
+class TestAuthenticationError(Exception):
+    pass

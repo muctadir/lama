@@ -24,13 +24,9 @@ def create_label(*, user):
     args = request.json['params']
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
-
-    # Check whether the required arguments are delivered
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
     
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['labelName'], args['labelDescription']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -39,11 +35,19 @@ def create_label(*, user):
 
     # Check whether the length of the label name is at least one character long
     if len(args['labelName']) <= 0:
-        return make_response('Bad request: Label name cannot have size <= 0', 400)
+        return make_response('Label name cannot be empty', 400)
 
     # Check whether the length of label description is at least one character long
     if len(args['labelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot have size <= 0', 400)
+        return make_response('Label description cannot be empty', 400)
+    
+    # Check if label name is taken
+    if label_name_taken(args['labelName'], 0):
+        return make_response('Label name already exists', 400)
+    
+    # Check whether the required arguments are delivered
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     # Check whether the label type exists
     label_type = db.session.get(LabelType, args['labelTypeId'])
@@ -84,21 +88,34 @@ def edit_label(*, user):
     args = request.json['params']
     # Required args
     required = ('labelId', 'labelName', 'labelDescription', 'p_id')
+
     # Checks if arguments were at least provided
     if not check_args(required, args):
         return make_response('Bad Request', 400)
+
     # Checks if the provided labelId is somewhat valid
     if args['labelId'] < 0:
         return make_response('Bad Request, labelId invalid', 400)
+
+    # Check for invalid characters
+    if check_whitespaces([args['labelName'], args['labelDescription']]):
+        return make_response("Input contains leading or trailing whitespaces", 400)
+
+    # Check for invalid characters
+    if check_string([args['labelName']]):
+        return make_response("Input contains a forbidden character", 511)
+
     # Get label from database
     try:
         label = db.session.get(Label, args['labelId'])
     except OperationalError:
         # Something went wrong
         return make_response('Internal Server Error: Fetching label from database unsuccessful.', 500)
+
     # Check if the response contained a label
     if not label:
         return make_response('Label does not exist', 400)
+
     # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
@@ -108,7 +125,7 @@ def edit_label(*, user):
         __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
     
     # Check if the label name is unique
-    if label_name_taken(args["labelName"], 0):
+    if label_name_taken(args["labelName"], args['labelId']):
         return make_response("Label name already exists", 400)
 
     # Records a change in the name, only if the name has actually changed
@@ -123,7 +140,6 @@ def edit_label(*, user):
     try:
         db.session.commit()
     except OperationalError:
-
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response()
@@ -206,31 +222,37 @@ def merge_route(*, user):
 
     args = request.json['params']
     # Required parameters
-    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')
+    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')    
 
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
+    # Check whether the length of the label name is at least one character long
+    if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
+        return make_response('Label name cannot be empty')
 
-    # Check for invalid characters
-    if check_whitespaces(args):
+    # Check whether the length of label description is at least one character long
+    if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
+        return make_response('Label description cannot be empty', 400)
+
+    # Check for invalid whitespaces
+    if check_whitespaces([args['newLabelName'], args['newLabelDescription']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
     
     # Check for invalid characters
     if check_string([args['newLabelName']]):
         return make_response("Input contains a forbidden character", 511)
+    
+    # Check if label name is taken
+    if label_name_taken(args['newLabelName'], 0):
+        return make_response("Label name already exists", 400)
 
-    # Check whether the length of the label name is at least one character long
-    if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
-        return make_response('Label name cannot be empty')
-    # Check whether the length of label description is at least one character long
-    if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
-        return make_response('Bad request: Label description cannot be empty', 400)
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
-        return make_response('Bad request: Label ids must be unique', 400)
+        print(100)
+        return make_response('Label ids must be unique', 400)
 
     # Labels being merged
     labels = db.session.scalars(
@@ -243,15 +265,15 @@ def merge_route(*, user):
     
     # Check that the labels exist
     if len(labels) != len(label_ids):
-        return make_response('Bad request: One or more labels do not exist', 400)
+        return make_response('One or more labels do not exist', 400)
 
     for label in labels:
         # Check labels are in the same project (the one selected)
         if label.p_id != args['p_id']:
-            return make_response('Bad request: Labels must be in the same project', 400)
+            return make_response('Labels must be in the same project', 400)
         # Check labels are of the same type
         if label.lt_id != labels[0].lt_id:
-            return make_response('Bad request: Labels must be of the same type', 400)        
+            return make_response('Labels must be of the same type', 400)        
     
     # Create new label
     new_label = Label(
@@ -656,12 +678,12 @@ Function that checks if a label name is already taken
 @returns true if name is already a label name and false otherwise
 @author Linh, Jarl
 """
-def label_name_taken(name, t_id):
+def label_name_taken(name, label_id):
     if bool(db.session.scalars(
         select(Label)
         .where(
             Label.name==name,
-            Label.id!=t_id
+            Label.id != label_id
         ))
         .first()):
         return True
@@ -674,15 +696,17 @@ Author: Eduardo Costa Martins
 {
     'id' : the id of the label
     'name' : the name of the label
+    'deleted' : if the label is soft deleted (True/False)
     'type' : 'Label' (to distinguish from other nodes that do not represent labels)
 }
 """
 def get_loose_labels(p_id):
 
-    # Select label id and name
+    # Select label id, name, and deleted status
     loose_labels = db.session.execute(select(
         Label.id,
-        Label.name
+        Label.name,
+        Label.deleted
     ).where(
         # Label is in given project
         Label.p_id == p_id,
@@ -696,6 +720,7 @@ def get_loose_labels(p_id):
     loose_labels = [{
         'id' : loose_label[0],
         'name' : loose_label[1],
+        'deleted' : loose_label[2],
         'type' : 'Label'
     } for loose_label in loose_labels]
     

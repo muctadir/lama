@@ -1,7 +1,9 @@
 // Veerle Furst
 // Jarl Jansen
+
 import { Component } from '@angular/core';
 import { AccountInfoService } from 'app/services/account-info.service';
+import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
   selector: 'app-account',
@@ -17,17 +19,21 @@ export class AccountComponent {
   /* Page currently getting viewed, 0 = info page, 1 = edit page, 2 = edit password page */
   mode: number = 0;
 
-  /* Error message that is displayed to the user */
-  errorMsg: string = "";
-
-  constructor(private accountService: AccountInfoService) {}
+  /**
+   * Initializes the services which will be used by this component
+   * 
+   * @param accountService instance of AccountInfoService
+   * @param toastCommService instance of ToastCommService
+   */
+  constructor(private accountService: AccountInfoService,
+    private toastCommService: ToastCommService) {}
 
   /**
    * Calls function responsible for getting the user data from the backend
    * 
    * @trigger on component load
    */
-  ngOnInit() {
+  ngOnInit() : void {
     this.getInformation()
   }
 
@@ -37,8 +43,9 @@ export class AccountComponent {
    * 
    * @param newMode new page to displayed
    * @modifies mode
+   * @trigger modeChangeEvent happens
    */
-  modeChange(newMode: number) {
+  modeChange(newMode: number) : void{
     // Changes page
     this.mode = newMode;
     // Reloads user data
@@ -50,12 +57,13 @@ export class AccountComponent {
    * 
    * @modifies user
    */
-  async getInformation(){
+  async getInformation() : Promise<void> {
+    // Tries to get the user account details from the backend
     try {
       this.user = await this.accountService.userData();
-      this.errorMsg = "";
     } catch(e) {
-      this.errorMsg = "An error occured when requesting the server for user data.";
+      // If an error occurs emits a toast saying an error occured.
+      this.toastCommService.emitChange([false, "An error occured when requesting the server for user data."]);
     }
   }
 }

@@ -128,6 +128,9 @@ export class LabellingPageComponent implements OnInit {
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
 
+    // Timeout to ensure that all components are loaded.
+    await new Promise(f => setTimeout(f, 1000));
+    
     this.hidden = true;
   }
 
@@ -236,6 +239,7 @@ export class LabellingPageComponent implements OnInit {
       this.labelTypes = labelTypes;
     } catch {
       this.router.navigate(['/project', this.p_id]);
+      this.toastCommService.emitChange([false, "Something went wrong. Please try again!"]);
     }
   }
 
@@ -355,13 +359,6 @@ export class LabellingPageComponent implements OnInit {
   }
 
   /**
-   * Error function for unimplemented features.
-   */
-  notImplemented(): void {
-    throw new Error('This function has not been implemented yet.');
-  }
-
-  /**
    * Function is ran on mouseDown or mouseUp and updates the current selection
    * of the artifact. If the selection is null or empty, the selection is set
    * to ""
@@ -411,6 +408,11 @@ export class LabellingPageComponent implements OnInit {
     await this.routeToLabel(this.artifact.getId());
   }
 
+  /**
+   * Navigates to a specific artifact on the labelling page
+   * 
+   * @param item id of artifact to show
+   */
   async routeToLabel(item: number | undefined) : Promise<void> {
     await this.router.navigate(['/project', this.p_id, 'labelling-page', item]);
     await this.ngOnInit();
