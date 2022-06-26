@@ -556,36 +556,66 @@ def test_artifact_changes(app, client):
 
     # Make a change to a labelling
     edit_params['labellings'][1]['labelling']['id'] = 10
-    response = user6_handler.patch('labelling/edit', edit_params, True)
+    response = admin_handler.patch('labelling/edit', edit_params, True)
     assert response.status_code == 200
-    user6_changes += 1
+    descriptions.append(f'admin changed user6\'s labelling for Artifact {a_id} of type "Technology" from "Docker" to "Angular"')
 
     # Check only the required users can see that change
     assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes
+    assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes + 1
     assert len(user7_handler.get('/change/changes', params, True).json) == user7_changes
+    
+    # Check order of changes and description
+    changes = admin_handler.get('/change/changes', params, True).json
 
-    # Split artifact
+    response_descriptions = [change['description'] for change in changes]
+    # Changes are shown in order from newest to oldest, so reverse
+    descriptions.reverse()
+
+    assert response_descriptions == descriptions
+
+def test_artifact_split(app, client):
+    # The user with this id is in Project 1, but not an admin
+    # The user has also not made any changes so far
+    user6_handler = RequestHandler(app, client, 7)
+    # Same with this user
+    user7_handler = RequestHandler(app, client, 8)
+    
+    # The user with this id is the super admin
+    admin_handler = RequestHandler(app, client, 1)
+
+    # Split artifact (move test to new function?)
     split_params = {
         'p_id': 1,
-        'parent_id': a_id,
-        'identifier': identifier,
+        'parent_id': 1,
+        'identifier': '2FA3F',
         'start': 0,
-        'end': 6,
-        'data': "Second"
+        'end': 5,
+        'data': "Lorem"
     }
     response = user7_handler.post('artifact/split', split_params, True)
     assert response.status_code == 200
-    # Check that the change is not recorded in the parent artifact
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes
-    assert len(user7_handler.get('/change/changes', params, True).json) == user7_changes
 
+    params = {
+        'p_id': 1,
+        'item_type': 'Artifact',
+        'i_id': 1
+    }
+
+    # Check that the change is not recorded in the parent artifact
+    assert len(user6_handler.get('/change/changes', params, True).json) == 0
+    assert len(user7_handler.get('/change/changes', params, True).json) == 0
+
+    # Get id of split artifact
     new_a_id = int(response.text)
 
     params['i_id'] = new_a_id
 
+    # Get changes in the split artifact
     # Check only the required users can see that change
+    changes = admin_handler.get('/change/changes', params, True).json
     assert len(user6_handler.get('/change/changes', params, True).json) == 0
-    assert len(admin_handler.get('/change/changes', params, True).json) == 1
+    assert len(changes) == 1
     assert len(user7_handler.get('/change/changes', params, True).json) == 1
+
+    assert changes[0]['description'] == f'user7 created Artifact {new_a_id} by splitting from Artifact 1'
