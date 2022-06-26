@@ -33,6 +33,7 @@ def check_args(required, args):
     return False
 
 def check_email(email):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     """
     @param email: a string
     @return : True <==> email is a validly formatted email
@@ -43,7 +44,9 @@ def check_email(email):
     See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#validation
         Note: this pattern does not work here
     """
-    return True
+    if(re.fullmatch(regex, email)):
+        return True
+    return False
 
 def check_username(username):
     """
