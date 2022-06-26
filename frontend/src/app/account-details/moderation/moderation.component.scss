@@ -44,6 +44,11 @@ $light-grey-shade: #bfbfbf;
     box-shadow: none;
 }
 
+// Border for the edit button
+#editButton{
+    border: $orange-shade;
+}
+
 //Scroll Related Business
 .my-custom-scrollbar {
     position:relative;

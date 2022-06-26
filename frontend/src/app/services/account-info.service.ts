@@ -172,8 +172,41 @@ export class AccountInfoService {
 
   async loginUser(user: Record<string, any>): Promise<any> {
     try {
-      return this.requestHandler.post('auth/login', user, false);
+      return await this.requestHandler.post('auth/login', user, false);
     } catch (e: any) {
+      throw e;
+    }
+  }
+
+
+  /**
+   * Makes request to the backend to edit password
+   * 
+   * @param passwordInformation object holding the old password, new password, and repeated new password
+   * @throws error if an error occurs 
+   */
+  async changePassword(passwordInformation: Record<string, any>) : Promise<void> {
+    try {
+      // Makes request to the backend
+      await this.requestHandler.post("/account/editPassword", passwordInformation, true);
+    } catch(e: any) {
+      // Throws the error if one were to occur
+      throw e;
+    }
+  }
+
+  /**
+   * Makes request to the backend to edit the account information
+   * 
+   * @param accountInformation object holding the id, username, email, description 
+   * @throws error if an error occurs
+   */
+  async changeAccountDetails(accountInformation: Record<string, any>) : Promise<void> {
+    // Tries to make the backend request
+    try {
+      await this.requestHandler.post("/account/edit", accountInformation, true);
+    } catch(e: any) {
+      // catches the error and throws it again
       throw e;
     }
   }

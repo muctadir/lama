@@ -65,7 +65,8 @@ export class ModerationComponent {
       // Gets the user data
       this.users = await this.accountService.allUsersData();
     } catch(e) {
-      console.log(e);
+      // Makes an error toast
+      this.toastCommService.emitChange([false, "An error occured when gathering data from the server"]);
     }
   }
 

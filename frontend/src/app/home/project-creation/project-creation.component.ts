@@ -41,19 +41,20 @@ export class ProjectCreationComponent implements OnInit {
     labeltypes: this.formBuilder.array([])
   });
 
-  /* Error message displayed to the user if input is incorrect */
-  errorMsg : string = "";
-
   /**
-   * Initializes the modal, router and formbuilder
+   * Initializes the modal, router, formbuilder, toastcommservice, inputCheckService
+   * 
    * @param modalService instance of modal
    * @param router instance of router
    * @param formBuilder instance of formbuilder
+   * @param toastCommService instance of ToastCommService
+   * @param service instance of InputCheckService
    */
   constructor(private modalService: NgbModal, private router: Router,
      private formBuilder: FormBuilder,
      private projectDataService: ProjectDataService,
-     private toastCommService: ToastCommService) {}
+     private toastCommService: ToastCommService,
+     private service: InputCheckService) {}
 
   /**
    * Gets all the users within the application from the backend
@@ -123,8 +124,6 @@ export class ProjectCreationComponent implements OnInit {
           this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
         }
       }
-      // Navigates the user back to the home page
-      this.router.navigate(["/home"]);
     } else {
       // Emits an error toast
       this.toastCommService.emitChange([false, "Please fill in all input fields!"]);
@@ -139,12 +138,9 @@ export class ProjectCreationComponent implements OnInit {
    * @returns whether the info satisfies these requirements
    */
   checkProjectData(projectInformation: Record<string, any>) : boolean {
-    // Initialize InputCheckService instance 
-    let service: InputCheckService = new InputCheckService();
-
     // Checks whether the project name/description is non-empty
-    let checkFilled: boolean = service.checkFilled(projectInformation["project"]["name"]) && 
-      service.checkFilled(projectInformation["project"]["description"])
+    let checkFilled: boolean = this.service.checkFilled(projectInformation["project"]["name"]) && 
+      this.service.checkFilled(projectInformation["project"]["description"])
 
     // checks whether the number of labeltypes is greater than 0
     let moreThanOneLabelType: boolean = projectInformation["labelTypes"].length > 0;
@@ -152,7 +148,7 @@ export class ProjectCreationComponent implements OnInit {
     // Checks whether all label types are non-empty
     let labelFilled: boolean = true;
     for(const labeltype of projectInformation["labelTypes"]) {
-      if(!service.checkFilled(labeltype)) {
+      if(!this.service.checkFilled(labeltype)) {
         labelFilled = false;
       }
     }
@@ -174,16 +170,16 @@ export class ProjectCreationComponent implements OnInit {
     projectInformation["users"] = []
 
     // For each user get the admin status
-    for(let i=0; i< this.projectMembers.length; i++) {
+    for (let projectMember of this.projectMembers){
       // Boolean indicating whether the user is an admin
       let admin: boolean = false;
-      let adminCheckbox = document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getUsername()) as HTMLInputElement;
+      let adminCheckbox = document.getElementById("projectAdminCheckBox-" + projectMember.getUsername()) as HTMLInputElement;
       if (adminCheckbox != null) {
         admin = adminCheckbox?.checked;
       }
       // Push the user ids and admin status to list
       projectInformation["users"].push({
-        "u_id": this.projectMembers[i].getId(),
+        "u_id": projectMember.getId(),
         "admin": admin
       })
     }
@@ -249,14 +245,17 @@ export class ProjectCreationComponent implements OnInit {
    * @param id the id of the member that should be removed from the project
    * @modifes projectMembers
    */
-  removeMember(id:any){
+  removeMember(id:any) : void {
     // Go through all members
-    this.projectMembers.forEach((projectMembers, index)=>{
+    this.projectMembers.forEach((projectMember, index)=>{
       // If clicked cross matches the person, splice them from the members
-      if(projectMembers.getUsername()==id){
+      if(projectMember == id){
+        // Remove the person from the project members
         this.projectMembers.splice(index,1);
+        // Add the person to all members
+        this.allMembers.push(id);
       }
-    });    
+    });
   }
 
   /**
@@ -275,11 +274,14 @@ export class ProjectCreationComponent implements OnInit {
     modalRef.componentInstance.addUserEvent.subscribe(($e: User) => {
       let user = $e;
 
-      //  Checks if the user is already added
-       if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
+      // Checks if the user is already added
+      if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
          // If not, we add them
         this.projectMembers.push(user);
-       }
+      }
+
+      // Remove user from all users
+      this.allMembers.splice(this.allMembers.indexOf(user), 1)
     })
   }
 

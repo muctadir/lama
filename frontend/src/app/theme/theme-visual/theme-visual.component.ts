@@ -4,6 +4,7 @@ import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
 // Import of d3
 import * as d3 from 'd3';
+import { getQueryPredicate } from '@angular/compiler/src/render3/view/util';
 
 
 @Component({
@@ -64,6 +65,7 @@ export class ThemeVisualComponent implements OnInit {
     this.data = this.response
     this.data.name = "Current Project"
 
+
     // Define the div for the tooltip
     let div = d3.select("#treeChart").append("div")
       .attr("class", "tooltip")
@@ -110,10 +112,12 @@ export class ThemeVisualComponent implements OnInit {
     this.g.append("circle").attr("cx", -60).attr("cy", 20).attr("r", 2.5).style("fill", "blue").style("opcacity", 0.7)
     this.g.append("circle").attr("cx", -60).attr("cy", 35).attr("r", 2.5).style("fill", "orange").style("opcacity", 0.7)
     this.g.append("circle").attr("cx", -60).attr("cy", 50).attr("r", 2.5).style("fill", "red").style("opcacity", 0.7)
+    this.g.append("circle").attr("cx", -60).attr("cy", 65).attr("r", 2.5).style("fill", "grey").style("opcacity", 0.7)
     this.g.append("text").attr("dx", -55).attr("dy", 20).text("Project").style("font-size", "11px").attr("alignment-baseline", "middle")
     this.g.append("text").attr("dx", -55).attr("dy", 35).text("Theme").style("font-size", "11px").attr("alignment-baseline", "middle")
     this.g.append("text").attr("dx", -55).attr("dy", 50).text("Label").style("font-size", "11px").attr("alignment-baseline", "middle")
-    this.g.append("rect").attr('x', -65).attr('y', 10).attr('width', 50).attr('height', 50).attr('stroke', 'grey').attr('fill', 'none').style("opcacity", 0.4);
+    this.g.append("text").attr("dx", -55).attr("dy", 65).text("Deleted").style("font-size", "11px").attr("alignment-baseline", "middle")
+    this.g.append("rect").attr('x', -65).attr('y', 10).attr('width', 60).attr('height', 65).attr('stroke', 'grey').attr('fill', 'none').style("opcacity", 0.4);
 
     // Gets the links between nodes
     this.link = this.g.selectAll(".link")
@@ -134,21 +138,29 @@ export class ThemeVisualComponent implements OnInit {
     // Appends the circles for each node
     this.node.append("circle")
       .attr("r", 2.5)
-      .attr("fill", function (d: any) { return myColour(d.data.type) })
-      //tootip mouse hover added
-      .on("mouseover", function(event:any,d:any) {
+      .attr("fill", function (d: any) {
+        // Check if it is deleted
+        if (d.data.deleted) {
+          return "grey";
+        } else { //else colour
+          return myColour(d.data.type);
+        }
+      })
+      // Tooltip mouse hover added
+      .on("mouseover", function (event: any, d: any) {
         div.transition()
           .duration(200)
           .style("opacity", .9);
-        div.html("id: " + d.data.id + "<br/>" + "type: " +  d.data.type)
+        // Text shown in the box when you hover over a node with your mouse
+        div.html("id: " + d.data.id + "<br/>" + "type: " + d.data.type + "<br/> deleted: " + d.data.deleted )
           .style("left", (d.y + 100) + "px")
-          .style("top", (d.x - 25 ) + "px");
-        })
-      .on("mouseout", function(d:any) {
+          .style("top", (d.x - 25) + "px");
+      })
+      .on("mouseout", function (d: any) {
         div.transition()
           .duration(500)
           .style("opacity", 0);
-        });
+      });
 
     // Appends text for each node
     this.node.append("text")

@@ -3,6 +3,7 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
+// Ensures that the page doesnt go out of view
 #main-cont {
     height: 100vh;
     overflow-y: scroll;
