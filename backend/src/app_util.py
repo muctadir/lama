@@ -370,12 +370,14 @@ def __parse_merge(change, username):
             names = description[2].split(',')
             if len(names) < 2:
                 raise ChangeSyntaxError
-            parsed_names = '"' + '", "'.join(names) + '"'
+            parsed_names = '["' + '", "'.join(names) + '"]'
             return f"{username} created Label \"{change.name}\" of type \"{description[1]}\" by merging labels {parsed_names}"
         case 'Artifact':
             return f"{username} changed a labelling for Artifact {change.name} of type \"{description[1]}\" from \"{description[2]}\" to \"{description[0]}\" as a result of a merge"
         case 'Theme':
             return f"Theme \"{change.name}\" had Label \"{description[2]}\" of type \"{description[1]}\" switched for \"{description[0]}\" as a result of a merge {username} made"
+        case _:
+            raise ChangeSyntaxError
 
 """
 A theme_children string should be of the format:

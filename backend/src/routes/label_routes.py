@@ -223,6 +223,10 @@ def merge_route(*, user):
     args = request.json['params']
     # Required parameters
     required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')    
+    
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Bad Request', 400)
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
@@ -243,10 +247,6 @@ def merge_route(*, user):
     # Check if label name is taken
     if label_name_taken(args['newLabelName'], 0):
         return make_response("Label name already exists", 400)
-
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
