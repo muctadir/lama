@@ -3,8 +3,6 @@
 # Eduardo Costa Martis
 # Thea Bradley
 
-from importlib.metadata import requires
-from msilib.schema import Error
 from src.models.project_models import Project
 from src.app_util import in_project
 from src.app_util import check_args
@@ -12,7 +10,7 @@ from src.models import db
 from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, LabelType
 from src.models.change_models import ChangeType
 from src.models.auth_models import UserSchema
-from src.models.project_models import Project, Membership
+from src.models.project_models import Project
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func
 from src.app_util import login_required, not_frozen
@@ -167,18 +165,20 @@ def add_new_artifacts(*, user, membership):
         'identifier': identifier,
         'admin': membership.admin})
 
-# Route to return the data of a single artifact of shape
-# {
-#   "artifact": the  serialized requested artifact,
-#   "username": the username of the user making the request,
-#   "admin": true if the current user is project admin, false otherwise,
-#   "users": serialized list of users who labelled this artifact
-# }: 
-# If extended == 'true', then the response also had the additional values:
-# {
-#   "artifact_children": list of the ids of the current artifact's children,
-#   "artifact_labellings": formatted labellings of the artifact
-# }
+"""
+Route to return the data of a single artifact 
+@returns a dictionary of shape
+{
+  "artifact": the  serialized requested artifact,
+  "username": the username of the user making the request,
+  "admin": true if the current user is project admin, false otherwise,
+  "users": serialized list of users who labelled this artifact
+}: 
+If extended == 'true', then the response also had the additional values:
+{
+  "artifact_children": list of the ids of the current artifact's children,
+  "artifact_labellings": formatted labellings of the artifact
+}"""
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 @in_project
