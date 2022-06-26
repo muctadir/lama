@@ -6,8 +6,9 @@ import { StringArtifact } from 'app/classes/stringartifact';
 import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
 import { SingleThemeViewComponent } from './single-theme-view.component';
+import { Artifact } from 'app/classes/artifact';
 
-describe('SingleThemeViewComponent', () => {
+fdescribe('SingleThemeViewComponent', () => {
   let component: SingleThemeViewComponent;
   let fixture: ComponentFixture<SingleThemeViewComponent>;
   let router: Router;
@@ -36,22 +37,70 @@ describe('SingleThemeViewComponent', () => {
 
   // Test the ngOnInit function
   it('Tests the ngOnInit function to single theme page', () => {
-    // Create spy for get url call
-    let spy = spyOn(component, "get_single_theme_info")
-    // Calls the ngOnInit function
-    component.ngOnInit();
+    // Creates a fake getFrozen function function
+    let spy1 = spyOn(component['projectDataService'], "getFrozen").and.callFake(async () => {
+      // Check if get_single_theme_info is called
+      let spy2 = spyOn(component, "get_single_theme_info");
+      component.get_single_theme_info(1, 1);
+      expect(spy2).toHaveBeenCalled();
+    })
+    // Calls ngOnInit
+    component.ngOnInit()
     // Checks whether the function works properly
-    expect(spy).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
   });
 
   // Test the get_single_theme_info function
   it('Tests the get_single_theme_info function to theme single page', async () => {
     // Create spy for get url call
-    let spy = spyOn(component['themeDataService'], "single_theme_info")
+    let spy1 = spyOn(component['themeDataService'], "single_theme_info")
+    // Create spy for the sort artifacts function
+    let spy2 = spyOn(component, "sortArtifacts")
     // Calls the get_single_theme_info function
     await component.get_single_theme_info(1,1);
     // Checks whether the function works properly
-    expect(spy).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
+
+  // Test the sortArtifacts function
+  it('Tests the sortArtifacts function to theme single page', async () => {
+    // Create a theme
+    let theme = new Theme(1, "New Theme", "Theme desc")
+    // Create labels
+    let fakeLabels = [new Label(1, "Label name", "Label desc", "Emotion"), new Label(2, "Label name 2", "Label desc 2", "Emotion")]
+    // Set labels of theme
+    theme.setLabels(fakeLabels)
+
+    // Spy on the function and call fake
+    spyOn(component, "sortArtifacts").and.callFake(() => {
+      // Get the labels of the theme and check
+      let spy1 = spyOn(theme, "getLabels");
+      let labels = theme.getLabels();
+      expect(spy1).toHaveBeenCalled();
+      if(labels != undefined){
+        // For each label, get the artifacts
+        for (let label of labels){
+          // Get the artifacts and check
+          let spy2 = spyOn(label, "getArtifacts");
+          let artifacts = label.getArtifacts();
+          expect(spy2).toHaveBeenCalled();
+          // Create 3 artifacts
+          let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
+          let artifact2 = new StringArtifact(2, "Identifier 2", "Data 2");
+          let artifact3 = new StringArtifact(3, "Identifier 3", "Data 3");
+          // Give label 1 artifacts
+          label.setArtifacts([artifact2, artifact3, artifact1])
+          if (artifacts != undefined){
+            // Sort the artifacts
+            artifacts.sort((a,b) => a.getId() - b.getId());
+          }
+          // Set the artifacts of the label with the sorted array
+          label.setArtifacts(artifacts);
+          expect(label.getArtifacts).toEqual([artifact1, artifact2, artifact3])
+        }
+      }
+    })
   });
   
   // Test the reRouter function
@@ -136,25 +185,6 @@ describe('SingleThemeViewComponent', () => {
     // Checks whether the function works properly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
-  });
-
-  // Test the sortArtifacts function
-  it('Tests the sortArtifacts function', () => {
-    // Calls the sortArtifacts function and calls a fake
-    spyOn(component, "sortArtifacts").and.callFake( () => {
-      // Create fake artifacts
-      let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
-      let artifact2 = new StringArtifact(2, "Identifier 2", "Data 2");
-      let artifact3 = new StringArtifact(3, "Identifier 3", "Data 3");
-      // Make an array of artifacts that is unsorted
-      let artifacts = [artifact3, artifact1, artifact2]
-      if (artifacts != undefined){
-        // Sort the artifacts
-        artifacts.sort((a,b) => a.getId() - b.getId());
-      }
-      // Set the artifacts of the label with the sorted array
-      expect(artifacts).toEqual([artifact1, artifact2, artifact3])
-    })
   });
 
   // Test the getNonDoubleArtifacts function
