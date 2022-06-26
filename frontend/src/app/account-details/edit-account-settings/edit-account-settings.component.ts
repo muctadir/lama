@@ -4,7 +4,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
-import { Router } from '@angular/router';
+import { AccountInfoService } from 'app/services/account-info.service';
 import { InputCheckService } from 'app/services/input-check.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
@@ -32,7 +32,10 @@ export class EditAccountSettingsComponent {
    * 
    * @param formBuilder instance of form builder
    */
-  constructor(private formBuilder: FormBuilder, private router: Router, private toastCommService: ToastCommService) { }
+  constructor(private formBuilder: FormBuilder, 
+    private toastCommService: ToastCommService,
+    private accountInfoService: AccountInfoService,
+    private service: InputCheckService) { }
 
   /**
    * When the userAccount gets modified it ensures that this change is communicated 
@@ -41,7 +44,7 @@ export class EditAccountSettingsComponent {
    * @trigger change occurs in the component
    * @modifies accountForm
    */
-  ngOnChanges() {
+  ngOnChanges() : void {
     this.accountForm.setValue({
       username: this.userAccount.getUsername(), 
       email: this.userAccount.getEmail(),
@@ -55,7 +58,7 @@ export class EditAccountSettingsComponent {
    * @trigger Change button is clicked
    * @modifies errorMsg
    */
-  changeInformation() {
+  changeInformation() : void {
     // Creates object which will be send to the backend
     let accountInformation: Record<string, any> = {};
     
@@ -84,13 +87,10 @@ export class EditAccountSettingsComponent {
    * @trigger on click of change button
    */
   checkInput() : boolean {
-    // Initializes inputCheckService
-    let service : InputCheckService = new InputCheckService();
-
     // Checks input
-    return service.checkFilled(this.accountForm.value.username) && 
-      service.checkFilled(this.accountForm.value.email) &&
-      service.checkEmail(this.accountForm.value.email);
+    return this.service.checkFilled(this.accountForm.value.username) && 
+      this.service.checkFilled(this.accountForm.value.email) &&
+      this.service.checkEmail(this.accountForm.value.email);
   }
 
   /**
@@ -99,26 +99,14 @@ export class EditAccountSettingsComponent {
    * @param accountInformation object containing account info
    * @trigger on click of change button
    */
-  async makeRequest(accountInformation: Record<string, any>) {
-    // Gets the authentication toekn
-    let token: string | null  = sessionStorage.getItem('ses_token');
-
-    // Initializes request handler and makes request
-    let requestHandler: RequestHandler = new RequestHandler(token);
+  async makeRequest(accountInformation: Record<string, any>) : Promise<void> {
+    // Tries to make the backend request
     try {
-      let response: any = requestHandler.post("/account/edit", accountInformation, true);
-
-      // Waits on the request
-      let result = await response;
-
+      await this.accountInfoService.changeAccountDetails(accountInformation);
       // Reloads the page, goes back to the info page
-      if (result.includes("Updated succesfully")) {
-        this.modeChangeEvent.emit(0);
-      }
-      
+      this.modeChangeEvent.emit(0);
       // Emits a success toast
       this.toastCommService.emitChange([true, "Modification successful"]);
-
     } catch(e: any) {
       // Check if the error has invalid characters
       if(e.response.status == 511){
