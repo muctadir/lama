@@ -696,15 +696,17 @@ Author: Eduardo Costa Martins
 {
     'id' : the id of the label
     'name' : the name of the label
+    'deleted' : if the label is soft deleted (True/False)
     'type' : 'Label' (to distinguish from other nodes that do not represent labels)
 }
 """
 def get_loose_labels(p_id):
 
-    # Select label id and name
+    # Select label id, name, and deleted status
     loose_labels = db.session.execute(select(
         Label.id,
-        Label.name
+        Label.name,
+        Label.deleted
     ).where(
         # Label is in given project
         Label.p_id == p_id,
@@ -718,6 +720,7 @@ def get_loose_labels(p_id):
     loose_labels = [{
         'id' : loose_label[0],
         'name' : loose_label[1],
+        'deleted' : loose_label[2],
         'type' : 'Label'
     } for loose_label in loose_labels]
     

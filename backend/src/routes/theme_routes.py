@@ -61,7 +61,7 @@ def theme_management_info():
     dict_json = jsonify(theme_info)
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(dict_json, 200)
 
 """
 For getting the theme information 
@@ -142,7 +142,7 @@ def single_theme_info(*, user, membership):
     dict_json = jsonify(info)
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(dict_json, 200)
 
 """
 For getting the all themes without parents 
@@ -192,7 +192,7 @@ def all_themes_no_parents():
     list_json = jsonify(themes_info)
 
     # Return the list of dictionaries
-    return make_response(list_json)
+    return make_response(list_json, 200)
 
 """
 For creating a new theme 
@@ -222,7 +222,7 @@ def create_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -231,7 +231,7 @@ def create_theme(*, user):
 
     # Check if the theme name is unique
     if theme_name_taken(args["name"], 0):
-        return make_response("Theme name already exists")
+        return make_response("Theme name already exists", 400)
 
     # Theme creation info
     theme_creation_info = {
@@ -296,7 +296,7 @@ def edit_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -434,11 +434,11 @@ def search_route():
     # Get arguments
     args = request.args
     # Required arguments
-    required = ('p_id', 'search_words')
+    required = ['p_id', 'search_words']
     
     # Check if required agruments are supplied
     if not check_args(required, args):
-        return make_response('Bad Request', 400)
+        return make_response('Not all required arguments supplied', 400)
     
     # Sanity conversion to int (for when checking for equality in sql)
     p_id = int(args['p_id'])
@@ -465,7 +465,7 @@ def search_route():
     # Schema for serialising
     theme_schema = ThemeSchema()
     # Serialise results and jsonify
-    return make_response(jsonify(theme_schema.dump(themes_results, many=True)))
+    return make_response(jsonify(theme_schema.dump(themes_results, many=True)), 200)
 
 """
 Author: Eduardo Costa Martins
@@ -496,10 +496,13 @@ def theme_vis_route():
     if not hierarchy:
         return make_response("Bad Request", 400)
 
-    return make_response(jsonify(hierarchy))
+    return make_response(jsonify(hierarchy), 200)
 
 
-# Function for getting the number of labels in the theme
+"""
+Function for getting the number of labels in the theme
+@params t_id: theme id
+"""
 def get_theme_label_count(t_id):
     return db.session.scalar(
             select(func.count(label_to_theme.c.l_id))
@@ -559,15 +562,13 @@ Function that checks if a theme name is already taken
 @returns true if name is already a theme name and false otherwise
 """
 def theme_name_taken(name, t_id):
-    if bool(db.session.scalars(
+    return bool(db.session.scalars(
         select(Theme)
         .where(
             Theme.name==name,
             Theme.id != t_id
         ))
-        .first()):
-        return True
-    return False
+        .first())
 
 
 """
@@ -695,9 +696,10 @@ Note that SQL has a limit on recursion depth. _Our_ database defaults to 1000. Y
 @param t_id: id of the theme to get subthemes and labels of
 @returns a list of tuples of the type
     (
+        The id of its super theme (or None if it does not have a super theme),
         The id of the child,
         Its name,
-        The id of its super theme (or None if it does not have a super theme),
+        Whether or not it has been deleted,
         Its type (0 for theme, 1 for label)
     )
 @raises ThemeCycleDetected if the recursion limit is reached (likely due to a cycle)
@@ -709,6 +711,7 @@ def __get_children(t_id):
         Theme.super_theme_id,
         Theme.id,
         Theme.name,
+        Theme.deleted
     ).where(
         Theme.id == t_id
     ).cte(
@@ -724,7 +727,8 @@ def __get_children(t_id):
         select(
             Theme.super_theme_id,
             Theme.id,
-            Theme.name
+            Theme.name,
+            Theme.deleted
         ).where(
             Theme.super_theme_id == subthemes_alias.c.id
         )
@@ -742,6 +746,7 @@ def __get_children(t_id):
             label_to_theme.c.t_id,
             label_to_theme.c.l_id,
             Label.name,
+            Label.deleted,
             1
         ).where(
             Label.id == label_to_theme.c.l_id,
@@ -767,6 +772,7 @@ Each dictionary is of the form:
 {
     id: the id of the item (theme/label)
     name: the name of the item (theme/label)
+    deleted: if the item is deleted
     type: the type of the item, as a string 'Theme' or 'Label'
     children: a list of dictionaries of items that are children of this theme
 }
@@ -791,8 +797,10 @@ def __grouped_children(t_id):
                 'id': result[1],
                 # The name of the child
                 'name': result[2],
+                # If the theme or label is deleted
+                'deleted': result[3],
                 # The type of the child
-                'type': 'Theme' if result[3] == 0 else 'Label'
+                'type': 'Theme' if result[4] == 0 else 'Label'
             }
         )
 
@@ -835,12 +843,14 @@ The project node has structure
 {
     'id' : p_id,
     'name' : project name,
+    'deleted' : False
     'type' : 'Project',
     'children' : [theme hierarchies for maximal themes, and loose labels]
 }
 @param p_id : the project to get the hierarchy of
 Returns the project hierarchy as described above, or None if the project with that id does not exist
 A loose label is one that is not assigned to a theme
+The deleted is still provided to make sure the node has the same structure as other nodes
 """
 def get_project_hierarchy(p_id):
     
@@ -867,6 +877,7 @@ def get_project_hierarchy(p_id):
     hierarchy = {
         'id' : project.id,
         'name' : project.name,
+        'deleted' : False,
         'type' : 'Project',
         'children' : grouped_themes
     }
