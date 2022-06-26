@@ -4,6 +4,7 @@ from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select
 from sqlalchemy.exc import OperationalError, MultipleResultsFound
 from sqlalchemy.orm import aliased
+from sqlalchemy.orm.exc import StaleDataError
 from src.app_util import login_required, in_project, time_from_seconds, not_frozen
 from src.models.item_models import Label, LabelType, Labelling, Artifact
 from src.models.change_models import ChangeType
@@ -179,9 +180,12 @@ def edit_labelling(*, user, membership):
         # and we are only joining on two elements (grouped into one)
         except MultipleResultsFound:
             return make_response('Not Acceptable', 506)
-
+            
     # Updating the information in the database
-    db.session.bulk_update_mappings(Labelling, updated_labellings)
+    try:
+        db.session.bulk_update_mappings(Labelling, updated_labellings)
+    except StaleDataError:
+        return make_response('The labelling being edited does not exist', 400)
 
     # Record the changes in the changelog
     __record_labelling_edits(args['p_id'], user.id, args['a_id'], changes)

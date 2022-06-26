@@ -120,10 +120,6 @@ def edit_label(*, user):
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
     
-    # Records a change in the description, only if the description has actually changed
-    if label.description != args['labelDescription']:
-        __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
-    
     # Check if the label name is unique
     if label_name_taken(args["labelName"], args['labelId']):
         return make_response("Label name already exists", 400)
@@ -131,6 +127,10 @@ def edit_label(*, user):
     # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
         __record_name_edit(label.id, label.name, args['p_id'], user.id, args['labelName'])
+        
+    # Records a change in the description, only if the description has actually changed
+    if label.description != args['labelDescription']:
+        __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
 
     db.session.execute(
         update(Label)
@@ -223,6 +223,10 @@ def merge_route(*, user):
     args = request.json['params']
     # Required parameters
     required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')    
+    
+    # Check if required args are present
+    if not check_args(required, args):
+        return make_response('Not all required arguments supplied', 400)
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
@@ -243,10 +247,6 @@ def merge_route(*, user):
     # Check if label name is taken
     if label_name_taken(args['newLabelName'], 0):
         return make_response("Label name already exists", 400)
-
-    # Check if required args are present
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']

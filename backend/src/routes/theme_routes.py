@@ -248,15 +248,15 @@ def create_theme(*, user):
     db.session.add(theme)
     # Flush updates the id of the theme object
     db.session.flush()
+    
+    # Record the creation of this theme in the theme changelog
+    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
     make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
 
     # Make the labels the labels of the created theme
     make_labels(theme, args["labels"], args['p_id'], user.id)
-    
-    # Record the creation of this theme in the theme changelog
-    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Create the project
     try:
@@ -323,12 +323,13 @@ def edit_theme(*, user):
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
     
-    # Records a changing of the description in the theme changelog, only if the description was actually changed
-    if theme.description != args['description']:
-        __record_description_edit(theme.id, args['name'], p_id, user.id)
     # Records the renaming in the theme changelog, only if the theme was actually renamed
     if theme.name != args['name']:
         __record_name_edit(theme.id, theme.name, p_id, user.id, args['name'])
+        
+    # Records a changing of the description in the theme changelog, only if the description was actually changed
+    if theme.description != args['description']:
+        __record_description_edit(theme.id, args['name'], p_id, user.id)
     
 
     # Change the theme information
@@ -530,7 +531,7 @@ def make_labels(theme, labels_info, p_id, u_id):
     # If the assigned labels have changed
     if set(labels) != set(theme.labels):
         theme.labels = labels
-        __record_chilren(theme.id, theme.name, p_id, u_id, label_names, 'label')
+        __record_children(theme.id, theme.name, p_id, u_id, label_names, 'label')
 
 """
 For getting the themes from the passed data
@@ -554,7 +555,7 @@ def make_sub_themes(theme, sub_themes_info, p_id, u_id):
     # If the assigned subthemes have changed
     if set(sub_themes) != set(theme.sub_themes):
         theme.sub_themes = sub_themes
-        __record_chilren(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
+        __record_children(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
 
 """
 Function that checks if a theme name is already taken
@@ -648,7 +649,7 @@ A child here refers to the labels or subthemes of a theme.
 @param c_names: a list of names of the children
 @param c_type: the type of child, EITHER 'label' OR 'subtheme'
 """
-def __record_chilren(t_id, t_name, p_id, u_id, c_names, c_type):
+def __record_children(t_id, t_name, p_id, u_id, c_names, c_type):
     # Check that the correct child type was provided
     if c_type != 'label' and c_type != 'subtheme':
         raise ChangeSyntaxError
