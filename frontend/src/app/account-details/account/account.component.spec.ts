@@ -35,10 +35,8 @@ describe('AccountComponent', () => {
   it('Checks whether ngOnInit calls getInformation', () => {
     // Creates a spy which spies on getInformation
     let ngSpy = spyOn(component, "getInformation");
-
     // Calls ngOnInit
-    component.ngOnInit()
-
+    component.ngOnInit();
     // Checks whether getInformation (spy) was called
     expect(ngSpy).toHaveBeenCalled();
   });
@@ -47,13 +45,10 @@ describe('AccountComponent', () => {
   it('Checks whether modeChange calls and changes variables correctly', () => {
     // Creates a spy which spies on getInformation
     let modeSpy = spyOn(component, "getInformation");
-
     // Checks that the mode variable is orignally 0
     expect(component.mode).toBe(0);
-
     // Calls the function modeChange
     component.modeChange(1);
-
     // Checks whether mode variable is changed to 1
     expect(component.mode).toBe(1);
     // Checks whether getInformation was called succesfully
@@ -64,10 +59,8 @@ describe('AccountComponent', () => {
   it('Checks whether getInformation calls accountService.userData()', async () => {
     // Creates the spy on userData()
     let dataSpy = spyOn(component["accountService"], "userData");
-
     // Calls the getInfo function
     await component.getInformation();
-
     // Checks whether userData was called
     expect(dataSpy).toHaveBeenCalled();
   });
@@ -78,16 +71,12 @@ describe('AccountComponent', () => {
     let userReturn = new User(8, "Lannes");
     // Sets a variable of the user object
     userReturn.setEmail("marshal@france.fr");
-
     // Spies on the userData function and returns the dummy user
     let dataSpy = spyOn(component["accountService"], "userData").and.returnValue(Promise.resolve(userReturn));
-
     // Calls the getInformation function
     await component.getInformation();
-
     // Expects that the userData function was called
     expect(dataSpy).toHaveBeenCalled();
-
     // Checks whether the user variable was updated correctly
     expect(component.user.getId()).toBe(userReturn.getId());
     expect(component.user.getUsername()).toBe(userReturn.getUsername());
@@ -99,11 +88,9 @@ describe('AccountComponent', () => {
     // Spies on userData and return error
     let dataSpy = spyOn(component["accountService"], "userData").and.throwError(new Error("error"));
     // Spies on the toastCommService in the catch statement
-    let toastSpy = spyOn(component["toastCommService"], "emitChange")
-
+    let toastSpy = spyOn(component["toastCommService"], "emitChange");
     // Calls getInformation
     await component.getInformation();
-
     // Expects that the userData function was called
     expect(dataSpy).toHaveBeenCalled();
     // Expects that the ToastCommService was called

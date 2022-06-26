@@ -59,18 +59,40 @@ describe('ThemeManagementComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/project', component.p_id, 'singleTheme', 4]);
   });
 
-  // Test the changePage function
-  it('Tests if the get_theme_management_info function is called on initialization', () => {    
-    // Create spy for get url call
-    let spy = spyOn(component, 'getThemes');
+  // Test the ngOnInit function
+  it('Tests if the ngOnInit function calls all needed functions', () => {   
+    let spy = spyOn(component, "ngOnInit").and.callFake(async () => {
+      // Create spy for the functions
+      let spy1 = spyOn(component['projectDataService'], 'getFrozen').and.returnValue(Promise.resolve(true));
+      let spy2 = spyOn(component, 'getThemes');
+      let spy3 = spyOn(component, 'searchClick');  
+      // Call the functions
+      component['projectDataService'].getFrozen();
+      component.getThemes();
+      component.searchClick(); 
+      // Checks whether the functions are called
+      expect(spy1).toHaveBeenCalled();
+      expect(spy2).toHaveBeenCalled();
+      expect(spy3).toHaveBeenCalled();
+    });  
     // Call ngOnInit
-    component.ngOnInit();    
+    component.ngOnInit(); 
+    // Check if ngOnInit has been called
+    expect(spy).toHaveBeenCalled()
+  });
+
+  // Test the getThemes function
+  it('Tests the getThemes function', async () => {    
+    // Create spy for get url call
+    let spy = spyOn(component['themeDataService'], 'getThemes');
+    // Call ngOnInit
+    await component.getThemes();    
     // Checks whether the function is called in ngOnInit
     expect(spy).toHaveBeenCalled();
   });
 
   // Test the sortName function
-  it('Tests if the sortName function', () => {    
+  it('Tests the sortName function', () => {    
     // Create spy for get url call
     let spy = spyOn(component['themes'], 'sort');
     // Call ngOnInit
@@ -80,7 +102,7 @@ describe('ThemeManagementComponent', () => {
   });
 
   // Test the sortDesc function
-  it('Tests if the sortDesc function', () => {    
+  it('Tests the sortDesc function', () => {    
     // Create spy for get url call
     let spy = spyOn(component['themes'], 'sort');
     // Call ngOnInit
@@ -90,12 +112,42 @@ describe('ThemeManagementComponent', () => {
   });
 
   // Test the sortLabels function
-  it('Tests if the sortLabels function', () => {    
+  it('Tests the sortLabels function', () => {    
     // Create spy for get url call
     let spy = spyOn(component['themes'], 'sort');
     // Call ngOnInit
     component.sortLabels();    
     // Checks whether the function is called in ngOnInit
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the onEnter function
+  it('Tests the onEnter function when no text', () => {    
+    // Create spy for get url call
+    let spy = spyOn(component, 'onEnter').and.callFake(async () => {
+      // Check getThemes function
+      let spy1 = spyOn(component, 'getThemes');
+      component.getThemes();    
+      expect(spy1).toHaveBeenCalled();
+    });
+    // Call function
+    component.onEnter();
+    // Check if it was called
+    expect(spy).toHaveBeenCalled();
+  });
+
+  // Test the onEnter function
+  it('Tests the onEnter function when there is text', () => {    
+    // Create spy for get url call
+    let spy = spyOn(component, 'onEnter').and.callFake(async () => {
+      // Check search function
+      let spy1 = spyOn(component['themeDataService'], 'search');
+      component['themeDataService'].search("Happy", 1);  
+      expect(spy1).toHaveBeenCalled();  
+    });
+    // Call function
+    component.onEnter();
+    // Check if it was called
     expect(spy).toHaveBeenCalled();
   });
 

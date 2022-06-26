@@ -171,12 +171,12 @@ describe('ThemeDataService', () => {
   // Test for create_theme function when successful
   it('Test for create_theme function when successful', async () => {
     // Spy on the get from the request handler
-    let spy = spyOn(service['requestHandler'], "post");
+    let spy = spyOn(service['requestHandler'], "post").and.returnValue(Promise.resolve("Theme created"));
     // Call the function
     let response = await service.create_theme({});
     // Test if the function works
     expect(spy).toHaveBeenCalled();
-    expect(response).toEqual("Theme created succesfully");
+    expect(response).toEqual("Theme created");
   });
   
   // Test for create_theme function when failed
@@ -186,7 +186,7 @@ describe('ThemeDataService', () => {
       try{
         // Create project in the backend
         let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function(){
-          throw new Error("Not all required arguments supplied");
+          throw new Error();
         })
         await service['requestHandler'].post('/theme/create_theme', {}, true);
         expect(spy1).toThrow();
@@ -206,12 +206,12 @@ describe('ThemeDataService', () => {
   // Test for edit_theme function when successful
   it('Test for edit_theme function when successful', async () => {
     // Spy on the get from the request handler
-    let spy = spyOn(service['requestHandler'], "post");
+    let spy = spyOn(service['requestHandler'], "post").and.returnValue(Promise.resolve("Theme edited"));
     // Call the function
     let response = await service.edit_theme({});
     // Test if the function works
     expect(spy).toHaveBeenCalled();
-    expect(response).toEqual("Theme edited succesfully");
+    expect(response).toEqual("Theme edited");
   });
   
   // Test for edit_theme function when failed
@@ -221,11 +221,11 @@ describe('ThemeDataService', () => {
       try{
         // Create project in the backend
         let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function(){
-          throw new Error("Not all required arguments supplied");
+          throw new Error();
         })
         await service['requestHandler'].post('/theme/edit_theme', {}, true);
         expect(spy1).toThrow();
-        return "Theme created succesfully";
+        return "Theme edited succesfully";
       // Catch the error
       } catch (e) {
         // Return the response
