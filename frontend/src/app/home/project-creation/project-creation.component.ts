@@ -249,11 +249,11 @@ export class ProjectCreationComponent implements OnInit {
     // Go through all members
     this.projectMembers.forEach((projectMember, index)=>{
       // If clicked cross matches the person, splice them from the members
-      if(projectMember == member){
+      if(projectMember == id){
         // Remove the person from the project members
         this.projectMembers.splice(index,1);
         // Add the person to all members
-        this.allMembers.push(member);
+        this.allMembers.push(id);
       }
     });
   }
