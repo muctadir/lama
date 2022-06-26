@@ -9,8 +9,6 @@
     <div class="row">
         <div class="col-12">
             <p class="header"> Create Project </p>
-            <!-- Error message displayed if user input is incorrect -->
-            <div *ngIf="errorMsg" id="errorMessage">{{errorMsg}}</div>
         </div>
     </div>
 
@@ -82,7 +80,7 @@
                                 <!-- Column for delete icon -->
                                 <div class="col-1">
                                     <!-- x icon, when clicked removes the member from the project -->
-                                    <em class="bi bi-x" (click)="removeMember(member.getUsername())"></em>
+                                    <em class="bi bi-x" (click)="removeMember(member)"></em>
                                 </div>
 
                                 <!-- Column for username -->

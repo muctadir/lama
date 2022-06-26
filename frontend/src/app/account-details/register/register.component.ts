@@ -50,7 +50,6 @@ export class RegisterComponent {
    * Checks whether the username/password is nonempty, and checks whether the email is valid.
    * If input is valid, calls method registering the user.
    * 
-   * @modifies errorMsg
    * @trigger register button is clicked
    */
   onRegister(): void {
@@ -80,13 +79,12 @@ export class RegisterComponent {
 
   /**
    * Communicates with the backend to register the user, if the user details
-   * do not satisfy requirments an error is returned and displayed to the user.
+   * do not satisfy requirements an error is displayed to the user.
    * If the user details are fine, then the user is redirected to the login page.
    * 
    * @trigger register button clicked, valid input
-   * @modifies errorMsg
    */
-  register(): void {
+  async register(): Promise<void> {
     // Information needed for backend
     let registerInformation = {
       username: this.username.value,
@@ -96,18 +94,17 @@ export class RegisterComponent {
       passwordR: this.passwordR.value,
     }
 
-    // Post to backend
-    this.accountInfoService.registerUser(registerInformation)
-      .then(() => {
-        // Displays a success toast
-        this.toastCommService.emitChange([true, "Account created successfully!"]);
-        // Reroutes the user to the login page
-        this.route.navigate(['/login']);
-      })
-      .catch(error => {
-        this.toastCommService.emitChange([false, error.response.data]);
-      })
-
+    // Tries to make a request to the backend
+    try {
+      // Makes the register request to the backend
+      await this.accountInfoService.registerUser(registerInformation)
+      // Displays a success toast
+      this.toastCommService.emitChange([true, "Account created successfully!"]);
+      // Reroutes the user to the login page
+      this.route.navigate(['/login']);
+    } catch(e: any) {
+      // Shows an error in the toast
+      this.toastCommService.emitChange([false, e.response.data]);
+    }
   }
-
 }

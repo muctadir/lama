@@ -61,7 +61,7 @@ def theme_management_info():
     dict_json = jsonify(theme_info)
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(dict_json, 200)
 
 """
 For getting the theme information 
@@ -142,7 +142,7 @@ def single_theme_info(*, user, membership):
     dict_json = jsonify(info)
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(dict_json, 200)
 
 """
 For getting the all themes without parents 
@@ -192,7 +192,7 @@ def all_themes_no_parents():
     list_json = jsonify(themes_info)
 
     # Return the list of dictionaries
-    return make_response(list_json)
+    return make_response(list_json, 200)
 
 """
 For creating a new theme 
@@ -222,7 +222,7 @@ def create_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -231,7 +231,7 @@ def create_theme(*, user):
 
     # Check if the theme name is unique
     if theme_name_taken(args["name"], 0):
-        return make_response("Theme name already exists")
+        return make_response("Theme name already exists", 400)
 
     # Theme creation info
     theme_creation_info = {
@@ -296,7 +296,7 @@ def edit_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -434,11 +434,11 @@ def search_route():
     # Get arguments
     args = request.args
     # Required arguments
-    required = ('p_id', 'search_words')
+    required = ['p_id', 'search_words']
     
     # Check if required agruments are supplied
     if not check_args(required, args):
-        return make_response('Bad Request', 400)
+        return make_response('Not all required arguments supplied', 400)
     
     # Sanity conversion to int (for when checking for equality in sql)
     p_id = int(args['p_id'])
@@ -465,7 +465,7 @@ def search_route():
     # Schema for serialising
     theme_schema = ThemeSchema()
     # Serialise results and jsonify
-    return make_response(jsonify(theme_schema.dump(themes_results, many=True)))
+    return make_response(jsonify(theme_schema.dump(themes_results, many=True)), 200)
 
 """
 Author: Eduardo Costa Martins
@@ -496,10 +496,13 @@ def theme_vis_route():
     if not hierarchy:
         return make_response("Bad Request", 400)
 
-    return make_response(jsonify(hierarchy))
+    return make_response(jsonify(hierarchy), 200)
 
 
-# Function for getting the number of labels in the theme
+"""
+Function for getting the number of labels in the theme
+@params t_id: theme id
+"""
 def get_theme_label_count(t_id):
     return db.session.scalar(
             select(func.count(label_to_theme.c.l_id))
@@ -559,15 +562,13 @@ Function that checks if a theme name is already taken
 @returns true if name is already a theme name and false otherwise
 """
 def theme_name_taken(name, t_id):
-    if bool(db.session.scalars(
+    return bool(db.session.scalars(
         select(Theme)
         .where(
             Theme.name==name,
             Theme.id != t_id
         ))
-        .first()):
-        return True
-    return False
+        .first())
 
 
 """
