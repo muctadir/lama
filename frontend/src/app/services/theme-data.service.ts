@@ -192,7 +192,8 @@ export class ThemeDataService {
       return allSubThemes
       //Catch the error
     } catch (e) {
-      console.log("An error occured when trying to get the themes without parents");
+      // Displays the error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get the themes without parents"]);
       return [];
     }
   }
@@ -223,19 +224,21 @@ export class ThemeDataService {
       if(e.response.status == 511){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
+      } else if (e.response.data == "Theme name already exists") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Theme name already exists"]);
+      } else if (e.response.data == "Input contains an illegal character") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
       } else {
         // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
-        // Return the response
-        return "An error occured when trying to create the theme.";
-      }
+        this.toastCommService.emitChange([false, "An error occured when trying to create the theme"]);
+      }     
+      // Return the response
+      return "An error occured";
     }
   }
 
@@ -264,6 +267,9 @@ export class ThemeDataService {
       if(e.response.status == 511){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      } else if (e.response.data == "Theme name already exists") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Theme name already exists"]);
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
