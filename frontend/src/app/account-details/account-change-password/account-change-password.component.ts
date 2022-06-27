@@ -56,10 +56,15 @@ export class AccountChangePasswordComponent {
       "newPassword": this.passwordForm.value.new_password
     };
 
-    // Checks input validity
-    let validInput = this.checkInput();
+    // Check if the passwords are equal
+    if (this.passwordForm.value.new_password != this.passwordForm.value.new_passwordR){
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "New passwords are not equal"]);
+      return
+    }
 
-    if (validInput) {
+    // Checks input validity
+    if (this.checkInput()) {
       // Makes change password request to backend
       this.makeRequest(passwordInformation);
     } else {
@@ -77,8 +82,7 @@ export class AccountChangePasswordComponent {
   checkInput() : boolean {
     // Checks input
     return (this.service.checkFilled(this.passwordForm.value.old_password) || this.superAdmin) && 
-      this.service.checkFilled(this.passwordForm.value.new_password) &&
-      (this.passwordForm.value.new_password == this.passwordForm.value.new_passwordR);
+      this.service.checkFilled(this.passwordForm.value.new_password);
   }
 
   /**
