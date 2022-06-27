@@ -273,7 +273,7 @@ def create_theme(*, user):
         else: 
             return make_response("Internal Server Error", 503) 
 
-    # Return the conformation
+    # Return the confirmation
     return make_response("Theme created", 201)
 
 """
