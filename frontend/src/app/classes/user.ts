@@ -79,7 +79,7 @@ export class User {
 
     /**
     * Gets the description of the user
-    * @params desc 
+    * @params desc
     */
     setDesc(desc: string) {
         this.description = desc;
@@ -95,7 +95,7 @@ export class User {
 
     /**
     * Gets the status of the user
-    * @params status 
+    * @params status
     */
     setStatus(status: string) {
         this.status = status;
@@ -111,7 +111,7 @@ export class User {
 
     /**
     * Gets the type of the user
-    * @params type 
+    * @params type
     */
     setType(type: boolean) {
         this.type = type;
