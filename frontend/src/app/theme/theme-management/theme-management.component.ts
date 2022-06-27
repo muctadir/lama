@@ -41,7 +41,7 @@ export class ThemeManagementComponent {
   sortedDesc = sorted.Not; // Theme description
   sortedNOL = sorted.Not; // Number of labels
 
-  // var for getting search text
+  // Variables for getting search text
   searchForm = this.formBuilder.group({
     search_term: ''
   });
@@ -50,9 +50,9 @@ export class ThemeManagementComponent {
   frozen: boolean = true;
 
   constructor(private router: Router, 
-    private formBuilder: FormBuilder, 
-    private themeDataService: ThemeDataService,
-    private projectDataService: ProjectDataService) {
+      private formBuilder: FormBuilder, 
+      private themeDataService: ThemeDataService,
+      private projectDataService: ProjectDataService) {
     // Initialize the array for the themes
     this.themes = new Array<Theme>();
     // Gets the url from the router
@@ -96,7 +96,6 @@ export class ThemeManagementComponent {
     }
   }
 
-
   /**
    * Reroutes to other pages
    * Has the project id
@@ -119,12 +118,12 @@ export class ThemeManagementComponent {
    * Function for getting the theme info
    */
   async getThemes(): Promise<void> {
+    // Call the service to get all themes
     this.themes = await this.themeDataService.getThemes(this.p_id);
   }
 
   /**
    * Function for sorting on name
-   * 
   */
   sortName(): void {
     // Check if it was sorted ascending
@@ -147,7 +146,6 @@ export class ThemeManagementComponent {
 
   /**
    * Function for sorting on description
-   * 
   */
   sortDesc(): void {
     // Check if it was sorted ascending
@@ -170,7 +168,6 @@ export class ThemeManagementComponent {
 
   /**
    * Function for sorting on number of labels
-   * 
   */
   sortLabels(): void {
     // Check if it was sorted ascending

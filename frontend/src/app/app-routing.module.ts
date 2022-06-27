@@ -37,9 +37,8 @@ import { ThemeManagementComponent } from './theme/theme-management/theme-managem
 import { SingleThemeViewComponent } from './theme/single-theme-view/single-theme-view.component';
 import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { ThemeVisualComponent } from './theme/theme-visual/theme-visual.component';
-
+// Other imports
 import { ModerationComponent } from './account-details/moderation/moderation.component';
-import { ToastCommService } from './services/toast-comm.service';
 
 
 /* All the routes within the application */

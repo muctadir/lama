@@ -5,12 +5,14 @@ import { User } from 'app/classes/user'
 describe('AccountInfoService', () => {
   let service: AccountInfoService;
 
+  // Initialize test environment
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(AccountInfoService);
   });
 
   it('should be created', () => {
+    // Check if service was created
     expect(service).toBeTruthy();
   });
 

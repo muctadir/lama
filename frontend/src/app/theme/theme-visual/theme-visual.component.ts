@@ -14,7 +14,7 @@ import { getQueryPredicate } from '@angular/compiler/src/render3/view/util';
 })
 
 export class ThemeVisualComponent implements OnInit {
-  // Declaring a lot off attributes
+  // Width variable
   width: number;
   // Height depends on end node count
   height: any;
@@ -23,7 +23,7 @@ export class ThemeVisualComponent implements OnInit {
   margin = { top: 20, right: 20, bottom: 30, left: 40 };
   svg: any;
   g: any;
-  // Relating to the tree
+  // Variables relating to the tree
   tree: any;
   root: any;
   link: any;
@@ -32,7 +32,7 @@ export class ThemeVisualComponent implements OnInit {
   data: any;
   p_id: number;
   response: any;
-
+  // X and Y coordinates of the page
   pageX: any;
   pageY: any;
 
@@ -43,6 +43,9 @@ export class ThemeVisualComponent implements OnInit {
     this.p_id = Number(new ReroutingService().getProjectID(this.router.url));
   }
 
+  /**
+   * Function that gets the data and intializes the svg
+   */
   async ngOnInit() {
     // Gets correct data
     await this.getData();
@@ -54,7 +57,8 @@ export class ThemeVisualComponent implements OnInit {
    * Function that gets the data for the visualization
    */
   async getData() {
-    this.response = await this.themeDataService.themeVisData(this.p_id)
+    // Call the service to get the theme visualization data
+    this.response = await this.themeDataService.themeVisData(this.p_id);
   }
 
   /**
@@ -62,9 +66,8 @@ export class ThemeVisualComponent implements OnInit {
    */
   initSvg() {
     // Assigns data to variable
-    this.data = this.response
-    this.data.name = "Current Project"
-
+    this.data = this.response;
+    this.data.name = "Current Project";
 
     // Define the div for the tooltip
     let div = d3.select("#treeChart").append("div")
