@@ -374,4 +374,14 @@ export class ConflictResolutionComponent implements OnInit {
 
     return endPos
   }
+
+  /**
+   * Function for rerouting the user
+   * 
+   * @Trigger clicked on the back button
+   */
+  reRouter(){
+    // Changes the route accordingly
+    this.router.navigate(['/project', this.p_id, 'conflict']);
+  }
 }

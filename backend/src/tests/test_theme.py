@@ -167,7 +167,7 @@ def test_create_theme(app, client):
         # Post request
         response = request_handler.post("/theme/create_theme", new_theme_info, True)
         # Check if post was succesfull
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert response.text == "Theme created"
 
         # Get the theme that was created

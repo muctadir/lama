@@ -50,7 +50,7 @@ def test_label_changes(app, client):
     descriptions = ['user5 created Label "test_label" of type "Technology"']
     user5_changes += 1
 
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     # Get the id of the new label
     with app.app_context():
@@ -282,7 +282,7 @@ def test_theme_changes(app, client):
         'p_id': 1
     }
     response = user5_handler.post('/theme/create_theme', create_params, True)
-    assert response.status_code == 200
+    assert response.status_code == 201
     # This list will store the descriptions of each change, in order, to compare to in the end
     descriptions = [
         'user5 created Theme "test_theme"',
@@ -325,13 +325,13 @@ def test_theme_changes(app, client):
     assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
     assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
     assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    
     # Edit theme description
     edit_params['description'] = 'A new description'
     response = user6_handler.post('/theme/edit_theme', edit_params, True)
     assert response.status_code == 200
     user6_changes += 1
     descriptions.append('user6 changed the description of Theme "new_name"')
-
     # Check only the required users can see that change
     assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
     assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
@@ -455,7 +455,7 @@ def test_artifact_changes(app, client):
 
     response = user6_handler.post('/artifact/creation', upload_params, True)
 
-    assert response.status_code == 200
+    assert response.status_code == 201
 
     user6_changes += 1
 
@@ -517,7 +517,7 @@ def test_artifact_changes(app, client):
         ]
     }
     response = user6_handler.post('/labelling/create', label_params, True)
-    assert response.status_code == 200
+    assert response.status_code == 201
     # There is a change for each labelling, which is one for each label type
     user6_changes += 2
     descriptions.extend([

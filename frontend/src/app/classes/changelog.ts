@@ -12,7 +12,7 @@ export class Changelog {
 
     /**
      * Creates the Changelog object
-     * 
+     *
      * @param name name of user making the change
      * @param timestamp time of change
      * @param desc description of the change

@@ -158,12 +158,11 @@ def add_new_artifacts(*, user, membership):
     try:
         db.session.commit()
     except OperationalError as e:
-        print(e)
         return make_response('Internal Server Error', 503)
 
     return make_response({
         'identifier': identifier,
-        'admin': membership.admin})
+        'admin': membership.admin}, 201)
 
 """
 Route to return the data of a single artifact 

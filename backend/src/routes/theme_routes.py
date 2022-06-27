@@ -220,7 +220,7 @@ def create_theme(*, user):
     # Check if all required arguments are there
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
-
+    
     # Check for invalid characters
     if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
@@ -230,8 +230,14 @@ def create_theme(*, user):
         return make_response("Input contains a forbidden character", 511)
 
     # Check if the theme name is unique
-    if theme_name_taken(args["name"], 0):
-        return make_response("Theme name already exists", 400)
+    try:
+        if theme_name_taken(args["name"], 0):
+            return make_response("Theme name already exists", 400)
+    except OperationalError as err:
+        if "Illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
 
     # Theme creation info
     theme_creation_info = {
@@ -261,11 +267,14 @@ def create_theme(*, user):
     # Create the project
     try:
         db.session.commit()   
-    except OperationalError:
-        return make_response("Internal Server Error", 503) 
+    except OperationalError as err:
+        if "Illegal mix of collations" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else: 
+            return make_response("Internal Server Error", 503) 
 
-    # Return the conformation
-    return make_response("Theme created", 200)
+    # Return the confirmation
+    return make_response("Theme created", 201)
 
 """
 For editing a theme 
@@ -303,9 +312,15 @@ def edit_theme(*, user):
     if check_string([args['name']]):
         return make_response("Input contains a forbidden character", 511)
 
-    # Check if the theme name is unique
-    if theme_name_taken(args["name"], args["id"]):
-        return make_response("Theme name already exists", 400)
+   	# Check if the theme name is unique
+    try:
+        if theme_name_taken(args["name"], args["id"]):
+            return make_response("Theme name already exists", 400)
+    except OperationalError as err:
+        if "illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
     
     # Get theme id
     t_id = args["id"]
