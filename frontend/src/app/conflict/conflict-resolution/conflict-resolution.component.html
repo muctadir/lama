@@ -123,15 +123,15 @@
 
     <!--Division around buttons-->
     <div class="row">
-        <div class="col-5">
-        </div>
         <!-- Division for save & cancel button -->
-        <div class="col-6">
+        <div class="col align-self-end">
             <!-- Submit button -->
             <button type="button" class="btn btn-secondary text-nowrap float-end" id="submitLabellingButton"
                 (click)="updateLabellings()" [disabled]="frozen">
                 Resolve
             </button>
+            <!-- Cancel button -->
+            <button class="btn btn-secondary float-end" (click)="reRouter()" id="backButton">Back</button>
         </div>
     </div>
 </div>
