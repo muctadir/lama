@@ -274,7 +274,7 @@ def create_theme(*, user):
             return make_response("Internal Server Error", 503) 
 
     # Return the conformation
-    return make_response("Theme created", 200)
+    return make_response("Theme created", 201)
 
 """
 For editing a theme 
@@ -314,7 +314,7 @@ def edit_theme(*, user):
 
    	# Check if the theme name is unique
     try:
-        if theme_name_taken(args["name"], 0):
+        if theme_name_taken(args["name"], args["id"]):
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
         if "illegal" in err.args[0]:

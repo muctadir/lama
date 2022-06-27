@@ -98,7 +98,7 @@ def post_labelling(*, user):
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
     # Make a response
-    return make_response()
+    return make_response("Labelling successful", 201)
     
 """
 Author: Linh Nguyen, Ana-Maria Olteniceanu, Eduardo Costa Martins

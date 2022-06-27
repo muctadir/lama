@@ -142,9 +142,9 @@ def create_user(args):
     try:
         db.session.add(new_user)
         db.session.commit()
-        return make_response(("Created", 201))
+        return make_response("Created", 201)
     except OperationalError:
-        return make_response(("Service Unavailable", 503))
+        return make_response("Service Unavailable", 503)
 
 # If there already exists a User with given username or email
 def taken(username, email):

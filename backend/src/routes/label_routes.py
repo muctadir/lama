@@ -82,7 +82,7 @@ def create_label(*, user):
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
-    return make_response('Created')
+    return make_response('Created', 201)
 
 # Author: Bartjan, Victoria, Linh, Jarl
 # Edit label
