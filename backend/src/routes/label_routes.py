@@ -24,6 +24,10 @@ def create_label(*, user):
     args = request.json['params']
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
+
+    # Check whether the required arguments are delivered
+    if not check_args(required, args):
+        return make_response('Not all required arguments supplied', 400)
     
     # Check for invalid characters
     if check_whitespaces([args['labelName'], args['labelDescription']]):
@@ -42,12 +46,15 @@ def create_label(*, user):
         return make_response('Label description cannot be empty', 400)
     
     # Check if label name is taken
-    if label_name_taken(args['labelName'], 0, args['p_id']):
-        return make_response('Label name already exists', 400)
-    
-    # Check whether the required arguments are delivered
-    if not check_args(required, args):
-        return make_response('Bad Request', 400)
+    try: 
+        if label_name_taken(args['labelName'], 0, args['p_id']):
+            return make_response('Label name already exists', 400)
+    except OperationalError as err:
+        print(err.args[0])
+        if "Illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
 
     # Check whether the label type exists
     label_type = db.session.get(LabelType, args['labelTypeId'])
@@ -121,8 +128,14 @@ def edit_label(*, user):
         return make_response('Label not part of project', 400)
     
     # Check if the label name is unique
-    if label_name_taken(args["labelName"], args['labelId'], args['p_id']):
-        return make_response("Label name already exists", 400)
+    try:
+        if label_name_taken(args["labelName"], args['labelId'], args['p_id']):
+            return make_response("Label name already exists", 400)
+    except OperationalError as err:
+        if "Illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
 
     # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
@@ -245,8 +258,14 @@ def merge_route(*, user):
         return make_response("Input contains a forbidden character", 511)
     
     # Check if label name is taken
-    if label_name_taken(args['newLabelName'], 0, args['p_id']):
-        return make_response("Label name already exists", 400)
+    try:
+        if label_name_taken(args['newLabelName'], 0, args['p_id']):
+            return make_response("Label name already exists", 400)
+    except OperationalError as err:
+        if "Illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
     
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
@@ -679,16 +698,14 @@ Function that checks if a label name is already taken
 @author Linh, Jarl, Bartjan
 """
 def label_name_taken(name, label_id, p_id):
-    if bool(db.session.scalars(
+    return bool(db.session.scalars(
         select(Label)
         .where(
             Label.name==name,
             Label.p_id == p_id,
             Label.id != label_id
         ))
-        .first()):
-        return True
-    return False
+        .first())
 
 """
 Author: Eduardo Costa Martins

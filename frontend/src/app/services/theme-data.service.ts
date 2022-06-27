@@ -273,6 +273,9 @@ export class ThemeDataService {
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else if (e.response.data == "Input contains an illegal character") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
       } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
         // Displays the error message
         this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);

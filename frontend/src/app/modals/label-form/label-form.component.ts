@@ -192,6 +192,9 @@ export class LabelFormComponent implements OnInit {
       } else if (e.response.data == "Label name cannot be empty"){
         // Throw error
         this.toastCommService.emitChange([false, "Label name cannot be empty"]);
+      } else if (e.response.data == "Input contains an illegal character") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
       // Check if the label description is empty
       } else if (e.response.data == "Label description cannot be empty"){
         // Throw error
@@ -231,6 +234,9 @@ export class LabelFormComponent implements OnInit {
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else if (e.response.data == "Input contains an illegal character") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
       // Check if label name already exists
       } else if (e.response.data == "Label name already exists"){
         // Throw error
