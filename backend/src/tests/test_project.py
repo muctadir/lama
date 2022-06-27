@@ -15,13 +15,34 @@ def test_home(app, client):
 
         assert response.status_code == 200
 
-        tet = response.json
+        list_of_projects = response.json
 
-        assert len(tet) == 2
-        assert tet[0]['project']['id'] == 1
-        assert tet[0]['project']['name'] == "Project 1"
-        assert tet[1]['project']['id'] == 2
-        assert tet[1]['project']['name'] == "Project 2"
+        assert len(list_of_projects) == 2
+        project_1_info = {'id': 1, 'name': 'Project 1', 'description': 'There are 11 conflicts and 11 users. There are 2 label types and 18 labels.  The settings are set to have a labeller count of 2. There are 6 project admins: user1, user2, user3, user4, user10 and admin. There are 7 themes, with one subtheme \\"Database technology\\" from \\"Backend technology\\"', 'criteria': 2, 'frozen': False}
+        project_2_info = {'id': 2, 'name': 'Project 2', 'description': 'This project has 1 label type, 7 labels, and 7 users.  There are 4 conflicts. The labeller count 3. The project admins are user1, user5, user10 and admin.', 'criteria': 3, 'frozen': False}
+        assert list_of_projects[0]['project'] == project_1_info
+        assert list_of_projects[1]['project'] == project_2_info
+        assert list_of_projects[0]['projectAdmin'] == True
+        assert list_of_projects[1]['projectAdmin'] == False
+        assert list_of_projects[0]['projectNrArtifacts'] == 11
+        assert list_of_projects[1]['projectNrArtifacts'] == 50
+        assert list_of_projects[0]['projectNrCLArtifacts'] == 3
+        assert list_of_projects[1]['projectNrCLArtifacts'] == 1
+        assert list_of_projects[0]['projectUsers'] == members([1,2,3,4,5,6,7,8,9,10,11])
+        assert list_of_projects[1]['projectUsers'] == members([1,2,3,4,5,6,11])
+
+def test_get_users(app, client):
+    request_handler = RequestHandler(app, client, 1)
+
+    # Using db requires app context
+    with app.app_context():
+        response = request_handler.get('/project/users', {}, True)
+
+        assert response.status_code == 200
+
+        list_of_users = response.json
+
+        assert list_of_users == members([2,3,4,5,6,7,8,9,10,11,12])
 
 def test_create(app, client):
     request_handler = RequestHandler(app, client, 1)
@@ -228,6 +249,13 @@ def test_add_members(app, client):
         check_membership(2, 7, True, False)
         check_membership(2, 8, False, False)
 
+def test_get_serialized_users():
+    newUser1 = User(1,'test1', 'testpassword','test@email.com','approved','desc1',False)
+    newUser2 = User(2,'test2', 'testpassword2','test2@email.com','approved','desc2',False)
+    serialized = [{'id': 1,'username': 'test1', 'email': 'test@email.com','status': 'approved','description': 'desc1', 'super_admin': False},
+     {'id': 2,'username': 'test2', 'email': 'test2@email.com','status': 'approved','description': 'desc2', 'super_admin': False}]
+    assert get_serialized_users([newUser1, newUser2]) == serialized
+
 def test_freeze(app, client):
     request_handler = RequestHandler(app, client, 1)
 
@@ -251,3 +279,23 @@ def check_membership(p_id, u_id, admin, removed):
     entry = db.session.scalar(select(Membership).where(Membership.p_id == p_id, Membership.u_id == u_id))
     assert entry.admin == admin
     assert entry.deleted == removed
+
+def members(ids_to_add):
+    admin = {'id': 1, 'username': 'admin', 'email': '', 'status': 'approved', 'description': 'Auto-generated super admin', 'super_admin': True}
+    user1 = {'id': 2, 'username': 'user1', 'email': 'user1@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user2 = {'id': 3, 'username': 'user2', 'email': 'user2@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user3 = {'id': 4, 'username': 'user3', 'email': 'user3@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user4 = {'id': 5, 'username': 'user4', 'email': 'user4@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user5 = {'id': 6, 'username': 'user5', 'email': 'user5@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user6 = {'id': 7, 'username': 'user6', 'email': 'user6@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user7 = {'id': 8, 'username': 'user7', 'email': 'user7@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user8 = {'id': 9, 'username': 'user8', 'email': 'user8@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user9 = {'id': 10, 'username': 'user9', 'email': 'user9@test.com', 'status': 'approved', 'description':  'test\\n', 'super_admin': False}
+    user10 = {'id': 11, 'username': 'user10','email': 'user10@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    user11 = {'id': 12, 'username': 'vicbog11', 'email': 'test@test.com', 'status': 'approved', 'description':  'test', 'super_admin': False}
+    
+    allmembers = [admin, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11]
+    
+    returned_list = [user for user in allmembers if user['id'] in ids_to_add]
+
+    return returned_list
