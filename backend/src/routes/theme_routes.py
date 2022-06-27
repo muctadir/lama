@@ -234,7 +234,6 @@ def create_theme(*, user):
         if theme_name_taken(args["name"], 0):
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
-        print(err.args[0])
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
         else:
