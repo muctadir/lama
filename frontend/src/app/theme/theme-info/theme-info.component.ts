@@ -207,20 +207,20 @@ export class ThemeInfoComponent implements OnInit {
       // Send the theme information to the backend
       let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
-      await this.get_themes_without_parents(this.p_id, 0);
-      // Reset the added arrays
-      this.addedLabels = [];
-      this.addedSubThemes = [];
-      // Reset the highlighted strings
-      this.highlightedSubtheme = "";
-      this.highlightedLabel = "";
-      // Reset description
-      this.selectedDescriptionLabel = '';
-      this.selectedDescriptionTheme = '';
-      // Give success message
-      this.errorMsg = response;  
-      // Rerouter to the theme management page if theme was created
+      await this.get_themes_without_parents(this.p_id, 0);      
+      // Rerouter and reset if theme was created
       if(response == "Theme created" || response == "Theme edited") {
+        // Reset the added arrays
+        this.addedLabels = [];
+        this.addedSubThemes = [];
+        // Reset the highlighted strings
+        this.highlightedSubtheme = "";
+        this.highlightedLabel = "";
+        // Reset description
+        this.selectedDescriptionLabel = '';
+        this.selectedDescriptionTheme = '';
+        // Give success message
+        this.errorMsg = response;  
         // Reset name and description forms
         this.themeForm.reset();
         this.reRouter(); 
