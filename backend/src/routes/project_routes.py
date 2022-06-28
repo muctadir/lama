@@ -185,7 +185,7 @@ def create_project(*, user):
     except OperationalError:
         return make_response('Internal Server Error', 503)
     
-    return make_response('OK', 200)
+    return make_response('Projetc created', 201)
 
 """
 Function to get a serialized list of users

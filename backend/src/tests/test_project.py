@@ -78,7 +78,7 @@ def test_create(app, client):
         }, True)
 
         # Status code should be Created
-        assert response.status_code == 200
+        assert response.status_code == 201
 
         # Get the user we created
         entry = db.session.scalar(select(Project).where(Project.id == 6))

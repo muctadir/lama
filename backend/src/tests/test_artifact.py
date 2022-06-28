@@ -422,27 +422,8 @@ def test_getLabellers_notAdmin(app, client):
 # Tests that a non-admin does not have access to see the labellers
 # of an artifact they have not labelled
 def test_getLabellerst_notAdmin_notLabelled(app, client):
-    # Request handler
-    request_handler = RequestHandler(app, client, 6)
-
-    # Make request to database for an artifact with labellers
-    response = request_handler.get('/artifact/getLabellers', {
-        'p_id': 1,
-        'a_id': 1
-    }, True)
-    # Check that the response has the right status code
-    assert(response.status_code == 401)
-
-    # Get a new request handler
-    request_handler = RequestHandler(app, client, 3)
-
-    # Make request to database for an artifact without labellers
-    response = request_handler.get('/artifact/getLabellers', {
-        'p_id': 2,
-        'a_id': 12
-    }, True)
-    # Check that the response has the right status code
-    assert(response.status_code == 401)
+    # Check if the data is received correctly 
+    getLabellers_help(app, client, 6, 1, 1)
 
 # Tests that artifact/split cannot be accessed
 # if the user is not logged in
@@ -852,7 +833,7 @@ def create_artifact_help(app, client, u_id, p_id, artifacts, admin):
             'artifacts': artifacts
         }, True)
         # Check that the status code is correct
-        assert(response.status_code == 200)
+        assert(response.status_code == 201)
 
         # Get the response data
         data = response.json
