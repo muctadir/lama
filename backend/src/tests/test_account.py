@@ -1,8 +1,8 @@
-from sqlalchemy import select
 from src import db
 from src.conftest import RequestHandler
 from src.models.auth_models import User, UserStatus
 from src.routes.account_routes import check_format, check_password_hash, check_format_password, taken
+
 
 def test_get_user_information(app, client):
     """
@@ -22,6 +22,7 @@ def test_get_user_information(app, client):
     assert response.json['description'] == "test"
     assert response.json['super_admin'] == False
     assert response.json['status'] == "approved"
+
 
 def test_edit_user_information(app, client):
     """
@@ -97,6 +98,7 @@ def test_edit_user_information(app, client):
         assert user.email == "user100@test.com"
         assert user.description == "test100"
 
+
 def test_edit_user_password_superadmin(app, client):
     """
     Function to check the editing of user password
@@ -151,6 +153,7 @@ def test_edit_user_password_superadmin(app, client):
         # Check if the user was actually updated
         user = db.session.get(User, 2)
         assert check_password_hash(user.password, "TESTUSER1234")
+
 
 def test_edit_user_password(app, client):
     """
@@ -218,7 +221,8 @@ def test_edit_user_password(app, client):
         # Check if the user was actually updated
         user = db.session.get(User, 2)
         assert check_password_hash(user.password, "TESTUSER1234")
-    
+
+
 def test_soft_delete(app, client):
     """
     Function to check the soft deleting of users
@@ -236,7 +240,8 @@ def test_soft_delete(app, client):
         # Check if the user was actually updated
         user = db.session.get(User, 2)
         assert user.status == UserStatus.deleted
-    
+
+
 def test_check_format(app, client):
     """
     Function to check the checking of format
@@ -246,16 +251,20 @@ def test_check_format(app, client):
     email = ""
     description = ""
     # Invalid username
-    assert check_format(username, email, description) == (False, "Invalid username")
+    assert check_format(username, email, description) == (
+        False, "Invalid username")
     username = "user1"
     # Invalid email
-    assert check_format(username, email, description) == (False, "Invalid email")
+    assert check_format(username, email, description) == (
+        False, "Invalid email")
     email = "test@test.com"
     # Invalid description
-    assert check_format(username, email, description) == (False, "No description provided")
+    assert check_format(username, email, description) == (
+        False, "No description provided")
     description = "description"
     # Valid info
     assert check_format(username, email, description) == (True, "Success")
+
 
 def test_check_format_password(app, client):
     """
@@ -271,6 +280,7 @@ def test_check_format_password(app, client):
     password = "TESTUSER123"
     # Valid password
     assert check_format_password(password) == (True, "Success")
+
 
 def test_taken(app, client):
     """
@@ -291,4 +301,3 @@ def test_taken(app, client):
     # Invalid password
     with app.app_context():
         assert taken(username, email, user_id) == True
-    

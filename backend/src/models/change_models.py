@@ -20,12 +20,14 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
+from src.models.item_models import ChangingItem
 from src.models import db, ma
 from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey, event, func
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, mapper
 from src.app_util import get_all_subclasses
 from enum import Enum
 from marshmallow import fields
+
 
 def create_change_schemas(Changes):
     # Event listener needs a function with no parameters, so we incorporate the parameter
@@ -42,30 +44,31 @@ def create_change_schemas(Changes):
                     model = cls
                     include_fk = True
                     load_instance = True
-                
+
                 # Marshmallow does not automatically convert to/from enums
                 # We link the attribute to functions that describe how to do so
-                change_type = fields.Method("get_approval", deserialize="load_approval")
+                change_type = fields.Method(
+                    "get_approval", deserialize="load_approval")
 
                 # The functions below describe how to serialize/deserialize enums
                 def get_approval(self, obj):
                     return obj.type
-                
+
                 def load_approval(self, value):
                     return ChangeType[value]
-                
+
                 schema_class_name = '%sSchema' % cls.__name__
 
                 # type function returns a class object
                 schema_class = type(
-                        schema_class_name,
-                        (ma.SQLAlchemyAutoSchema,), 
-                        {
-                                'change_type': change_type,
-                                'get_approval' : get_approval,
-                                'load_approval': load_approval,
-                                'Meta': Meta
-                        })
+                    schema_class_name,
+                    (ma.SQLAlchemyAutoSchema,),
+                    {
+                        'change_type': change_type,
+                        'get_approval': get_approval,
+                        'load_approval': load_approval,
+                        'Meta': Meta
+                    })
 
                 # Give each Change class an attribute __marshmallow__ that contains the class info for the schema
                 # Still needs to be instantiated to be used
@@ -73,6 +76,7 @@ def create_change_schemas(Changes):
                 setattr(cls, "__marshmallow__", schema_class)
 
     return create_change_schemas_fn
+
 
 def create_change_table(cls):
     """
@@ -83,13 +87,14 @@ def create_change_table(cls):
     """
     # type function can create classes
     change_class = type(
-            cls.__name__ + 'Change',  # Class name
-            (Change, db.Model),  # Base classes
-            {'__tablename__': cls.__tablename__ + '_change',
-             '__item_class__': cls} # Added attributes/methods
-            )
+        cls.__name__ + 'Change',  # Class name
+        (Change, db.Model),  # Base classes
+        {'__tablename__': cls.__tablename__ + '_change',
+         '__item_class__': cls}  # Added attributes/methods
+    )
     setattr(cls, "__change__", change_class)
     return change_class
+
 
 class ChangeType(Enum):
     """
@@ -146,34 +151,35 @@ class Change():
     @declared_attr
     def u_id(cls):
         return Column(Integer, ForeignKey('user.id'), nullable=False)
-    
+
     # user : User object corresponding to user that made the change
     @declared_attr
     def user(cls):
         # backref creates <item>.changes attribute in user containing list of changes the user made
         # for this type of item
         return relationship('User', backref=cls.__tablename__ + 's')
-    
+
     # p_id : project id that the item belongs to
     @declared_attr
     def p_id(cls):
         return Column(Integer, ForeignKey('project.id'), nullable=False)
     # i_id : item id that was changed
+
     @declared_attr
     def i_id(cls):
         return Column(Integer,
-                ForeignKey(cls.item_table_name + '.id'),
-                nullable=False)
-    
+                      ForeignKey(cls.item_table_name + '.id'),
+                      nullable=False)
+
     # item : Item object corresponding to item that was changed
     @declared_attr
     def item(cls):
         # Somehow SQLAlchemy does not understand how to join two pairs of foreign keys
         # So we have to spell it out for it in primary join
-        return relationship(cls.item_class_name, 
-                back_populates='changes',
-                primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.item_class_name, cls.__name__))
-    
+        return relationship(cls.item_class_name,
+                            back_populates='changes',
+                            primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.item_class_name, cls.__name__))
+
     id = Column(Integer, primary_key=True)
 
     # What kind of change is made? This exists for filtering and parsing
@@ -185,12 +191,12 @@ class Change():
 
     # Date and time when change was made
     timestamp = Column(DateTime, default=func.now())
-    
-from src.models.item_models import ChangingItem
+
 
 # TODO: Should make sure subclasses are not abstract before creating changelog for them
 #       or alternatively, make sure they inherit db.Model
 # If you want to import a Change class, you can just import this list
-Changes = [create_change_table(changing_item) for changing_item in get_all_subclasses(ChangingItem)]
+Changes = [create_change_table(changing_item)
+           for changing_item in get_all_subclasses(ChangingItem)]
 
 event.listen(mapper, 'after_configured', create_change_schemas(Changes))

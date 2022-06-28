@@ -18,7 +18,7 @@ from sqlalchemy.exc import OperationalError
 from src.models.auth_models import User, UserSchema
 from sqlalchemy import select, func, distinct
 from src.app_util import login_required, in_project
-from sqlalchemy.exc import  OperationalError
+from sqlalchemy.exc import OperationalError
 from src.searching.search import search_func_all_res, best_search_results
 from hashlib import blake2b
 
@@ -30,7 +30,7 @@ artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
 @login_required
 @in_project
 def get_artifacts(*, user, membership):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ('p_id', 'page', 'page_size', 'seek_index', 'seek_page')
@@ -50,7 +50,7 @@ def get_artifacts(*, user, membership):
     # Get the number of label types in the project
     n_label_types = db.session.scalar(
         select(func.count(distinct(LabelType.id)))
-        .where(LabelType.p_id==p_id)
+        .where(LabelType.p_id == p_id)
     )
 
     # We use seek method for pagination. Offset in SQL is slow since it still goes through
@@ -81,7 +81,7 @@ def get_artifacts(*, user, membership):
             select(Artifact)
             .where(
                 Artifact.id == Labelling.a_id,
-                Labelling.u_id == user.id, 
+                Labelling.u_id == user.id,
                 Labelling.p_id == p_id,
                 Artifact.id > seek_index)
             .distinct()
@@ -93,7 +93,7 @@ def get_artifacts(*, user, membership):
             select(func.count(distinct(Artifact.id)))
             .where(
                 Artifact.id == Labelling.a_id,
-                Labelling.u_id == user.id, 
+                Labelling.u_id == user.id,
                 Labelling.p_id == p_id)
         )
     # List of artifacts and their labellings to be passed to frontend
@@ -114,7 +114,7 @@ def get_artifacts(*, user, membership):
 @in_project
 @not_frozen
 def add_new_artifacts(*, user, membership):
-    # Get args from request 
+    # Get args from request
     args = request.json['params']
     # What args are required
     required = ['p_id', 'artifacts']
@@ -122,7 +122,7 @@ def add_new_artifacts(*, user, membership):
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-        
+
     # Get the information given by the frontend
     artifact_info = args['artifacts']['array']
 
@@ -153,7 +153,7 @@ def add_new_artifacts(*, user, membership):
 
     # Store the creations in the changelog
     __record_creations(artifact_ids, user.id, args['p_id'])
-    
+
     # Try commiting the changes
     try:
         db.session.commit()
@@ -163,6 +163,7 @@ def add_new_artifacts(*, user, membership):
     return make_response({
         'identifier': identifier,
         'admin': membership.admin}, 201)
+
 
 """
 Route to return the data of a single artifact 
@@ -177,12 +178,13 @@ If extended == 'true', then the response also had the additional values:
 {
   "artifact_children": list of the ids of the current artifact's children,
   "artifact_labellings": formatted labellings of the artifact
-}"""
+}
+"""
 @artifact_routes.route("/singleArtifact", methods=["GET"])
 @login_required
 @in_project
 def single_artifact(*, user, membership):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id', 'a_id', 'extended']
@@ -211,8 +213,8 @@ def single_artifact(*, user, membership):
 
     # Get users who labelled this artifact
     users = db.session.scalars(select(User)
-        .where(Labelling.p_id==args['p_id'], Labelling.u_id==User.id, Labelling.a_id==a_id)
-        .distinct()).all()
+                               .where(Labelling.p_id == args['p_id'], Labelling.u_id == User.id, Labelling.a_id == a_id)
+                               .distinct()).all()
 
     # Serialize users
     users_json = user_schema.dump(users, many=True)
@@ -244,7 +246,7 @@ def single_artifact(*, user, membership):
 @login_required
 @in_project
 def search(*, user, membership):
-    
+
     # Get arguments
     args = request.args
     # Required arguments
@@ -253,7 +255,7 @@ def search(*, user, membership):
     # Check if required agruments are supplied
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # Get the project id
     p_id = int(args['p_id'])
 
@@ -267,17 +269,19 @@ def search(*, user, membership):
         # Get all artifacts the user has labelled
         artifacts = db.session.scalars(
             select(Artifact).where(Artifact.p_id == p_id,
-                Labelling.a_id == Artifact.id,
-                Labelling.u_id == user.id).distinct()
+                                   Labelling.a_id == Artifact.id,
+                                   Labelling.u_id == user.id).distinct()
         ).all()
 
     # The columns we search through
     search_columns = ['id', 'data']
-    
+
     # Getting result of search
-    results = search_func_all_res(args['search_words'], artifacts, 'id', search_columns)
+    results = search_func_all_res(
+        args['search_words'], artifacts, 'id', search_columns)
     # Take the best results
-    clean_results = best_search_results(results, len(args['search_words'].split()))
+    clean_results = best_search_results(
+        results, len(args['search_words'].split()))
     # Gets the actual artifact object from the search
     artifacts_results = [result['item'] for result in clean_results]
 
@@ -286,6 +290,7 @@ def search(*, user, membership):
 
     # Return the list of artifacts from the search
     return make_response(jsonify(info))
+
 
 """
 Function that returns a dictionary with the extended artifact information
@@ -311,6 +316,7 @@ def __get_extended(artifact):
         "artifact_children": artifact_children,
         "artifact_labellings": labellings_formatted
     }
+
 
 """
 A function that returns the formatted version of an artifact's labellings
@@ -362,7 +368,7 @@ def __aggregate_labellings(artifact):
             # Put the addition in result, under the right user and the right label type
             result[user.username][labelling.label_type.name] = addition
         return result
-        
+
 # Route that returns a random artifact
 @artifact_routes.route("/randomArtifact", methods=["GET"])
 @login_required
@@ -439,7 +445,7 @@ def get_labellers(*, user, membership):
 @not_frozen
 def post_split(*, user):
     args = request.json['params']
-    
+
     # What args are required
     required = ['p_id', 'parent_id', 'identifier', 'start', 'end', 'data']
     # Check if required args are present
@@ -449,7 +455,7 @@ def post_split(*, user):
     # Check if the provided identifier matches the identifier of the parent artifact
     # and if the data provided is the same as the substring indicated by start and end
     if not (db.session.scalar(select(Artifact.identifier).where(
-        Artifact.id == args['parent_id'])) == args['identifier'] 
+        Artifact.id == args['parent_id'])) == args['identifier']
         and
         db.session.scalar(select(Artifact.data).where(
             Artifact.id == args['parent_id']))[int(args['start']):int(args['end'])] == args['data']):
@@ -474,7 +480,8 @@ def post_split(*, user):
 # Gets a random artifact which has not been already labelled by the user
 def get_random_artifact(u_id, p_id):
     # Criteria for artifact completion
-    criteria = db.session.scalar(select(Project.criteria).where(Project.id == p_id))
+    criteria = db.session.scalar(
+        select(Project.criteria).where(Project.id == p_id))
 
     # Artifact ids that have been labelled by enough people
     # NB: Even with conflicts, it still should not be seen by more people
@@ -521,6 +528,7 @@ def get_random_artifact(u_id, p_id):
 def __get_artifact(a_id):
     return db.session.get(Artifact, a_id)
 
+
 """
 Generates a unique (in a project) artifact identifier
 Author: Ana-Maria Olteniceanu
@@ -548,7 +556,8 @@ def generate_artifact_identifier(p_id):
     h = blake2b()
 
     # Seed of the hash
-    identifiers = db.session.scalars(select(distinct(Artifact.identifier)).where(Artifact.p_id==p_id)).all()
+    identifiers = db.session.scalars(
+        select(distinct(Artifact.identifier)).where(Artifact.p_id == p_id)).all()
     # If no identifiers were found, then
     # make identifiers an empty list
     if identifiers is None:
@@ -563,9 +572,10 @@ def generate_artifact_identifier(p_id):
     while identifier_upper[start:stop] in identifiers:
         start += 1
         stop += 1
-    
+
     # Return the identifier
     return identifier_upper[start:stop]
+
 
 """
 Records the creation of a list of artifacts in the artifact changelog
@@ -577,7 +587,7 @@ Records the creation of a list of artifacts in the artifact changelog
 def __record_creations(artifact_ids, u_id, p_id):
     # PascalCase because it is a class
     ArtifactChange = Artifact.__change__
-    
+
     # Record each creation as a separate change
     creations = [ArtifactChange(
         u_id=u_id,
@@ -586,8 +596,9 @@ def __record_creations(artifact_ids, u_id, p_id):
         change_type=ChangeType.create,
         name=a_id
     ) for a_id in artifact_ids]
-    
+
     db.session.add_all(creations)
+
 
 """
 Records an artifact split in the artifact changelog
@@ -611,6 +622,7 @@ def __record_split(u_id, p_id, a_id, parent_id):
     )
 
     db.session.add(change)
+
 
 """
 @param artifact : an artifact object
@@ -637,7 +649,8 @@ def __get_artifact_info(artifact):
     }
 
     return info
-    
+
+
 """
 Function that checks if a user has access to view a specific artifact
 @param admin: true if the current user is project admin, false otherwise

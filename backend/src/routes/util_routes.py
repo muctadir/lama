@@ -15,7 +15,9 @@ def health():
 def users():
     user_schema = UserSchema()
     try:
-        response = jsonify([user_schema.dump(user) for user in User.query.all()]) # cannot return lists -> convert to json
+        # cannot return lists -> convert to json
+        response = jsonify([user_schema.dump(user)
+                           for user in User.query.all()])
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     except OperationalError:

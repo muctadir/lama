@@ -1,23 +1,17 @@
 # TODO: Short description of each of these libraries.
 
-import click
 from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
-from src.models import db, ma
-import src.models.auth_models
-import src.models.project_models
-import src.models.item_models
+from src.models import db
 from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
-label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes, change_routes
+    label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes, change_routes
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
-from src.routes.change_routes import get_parsed_changes
-from src.models.item_models import Label
 
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
@@ -32,7 +26,6 @@ DRIVER = environ.get("DRIVER")
 URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
 
-
 # In the command line we have access to the `$ flask` command.
 # AppGroups allow us to define extensions for this command-line interface.
 # In this case, we can call `$ flask db-opt init` and `$ flask db-opt fill`.
@@ -45,7 +38,7 @@ db_opt = AppGroup("db-opt")
 @db_opt.command("init")
 def db_init():
     from src.models.auth_models import User, UserStatus
-    
+
     init()
     migrate(message="Initial migration")
     upgrade()
@@ -85,13 +78,11 @@ def fill():
     db.session.add_all(users)
     db.session.commit()
 
-    
-
     # Creates 3 projects, the second of which is frozen
     projects = [Project(
         name=f"Project {i}",
         description=f"Description for test project {i}",
-        frozen = i % 2
+        frozen=i % 2
     ) for i in range(1, 4)]
     db.session.add_all(projects)
     db.session.commit()
@@ -101,111 +92,110 @@ def fill():
     # No users to the third project
     # For each project, the first user is an admin, and the second user is soft-deleted
     memberships = [Membership(
-        p_id = 1,
-        u_id = i,
-        admin = i == 1,
-        deleted = i == 2
+        p_id=1,
+        u_id=i,
+        admin=i == 1,
+        deleted=i == 2
     ) for i in range(2, 7)]
     memberships.extend([Membership(
-        p_id = 2,
-        u_id = i,
-        admin = i == 5,
-        deleted = i == 6
+        p_id=2,
+        u_id=i,
+        admin=i == 5,
+        deleted=i == 6
     ) for i in range(5, 11)])
     memberships.extend([Membership(
-        p_id = 1,
-        u_id = 1,
-        admin = 1,
-        deleted = 0
+        p_id=1,
+        u_id=1,
+        admin=1,
+        deleted=0
     )])
     memberships.extend([Membership(
-        p_id = 2,
-        u_id = 1,
-        admin = 1,
-        deleted = 0
+        p_id=2,
+        u_id=1,
+        admin=1,
+        deleted=0
     )])
     memberships.extend([Membership(
-        p_id = 3,
-        u_id = 1,
-        admin = 1,
-        deleted = 0
+        p_id=3,
+        u_id=1,
+        admin=1,
+        deleted=0
     )])
     db.session.add_all(memberships)
     db.session.commit()
 
     # Creates 3 label types for the first project
     # Creates 4 label types for the second project
-    labeltypes =  [LabelType(
-        name = f"Label Type {i}",
-        id = i,
-        p_id = 1
+    labeltypes = [LabelType(
+        name=f"Label Type {i}",
+        id=i,
+        p_id=1
     ) for i in range(1, 4)]
     labeltypes.extend([LabelType(
-        name = f"Label Type {i}",
-        id = i,
-        p_id = 2
+        name=f"Label Type {i}",
+        id=i,
+        p_id=2
     ) for i in range(4, 8)])
     db.session.add_all(labeltypes)
     db.session.commit()
 
     # Creates 2 labels for the first label types and 3 for the other labels in project 1
     # Creates 3 labels for the first two label types in project 2
-    labels =  [Label(
-        id = i,
-        name = f"Label {i} (Label Type 1)",
+    labels = [Label(
+        id=i,
+        name=f"Label {i} (Label Type 1)",
         description=f"Description for label {i} for Label Type 1",
-        lt_id = 1,
-        p_id = 1
+        lt_id=1,
+        p_id=1
     ) for i in range(1, 3)]
     labels.extend([Label(
-        id = i,
-        name = f"Label {i} (Label Type 2)",
+        id=i,
+        name=f"Label {i} (Label Type 2)",
         description=f"Description for label {i} for Label Type 2",
-        lt_id = 2,
-        p_id = 1
+        lt_id=2,
+        p_id=1
     ) for i in range(3, 6)])
     labels.extend([Label(
-        id = i,
-        name = f"Label {i} (Label Type 3)",
+        id=i,
+        name=f"Label {i} (Label Type 3)",
         description=f"Description for label {i} for Label Type 3",
-        lt_id = 3,
-        p_id = 1
+        lt_id=3,
+        p_id=1
     ) for i in range(6, 9)])
     labels.extend([Label(
-        id = i,
-        name = f"Label {i} (Label Type 1)",
+        id=i,
+        name=f"Label {i} (Label Type 1)",
         description=f"Description for label {i} for Label Type 1",
-        lt_id = 1,
-        p_id = 2
+        lt_id=1,
+        p_id=2
     ) for i in range(9, 11)])
     labels.extend([Label(
-        id = i,
-        name = f"Label {i} (Label Type 2)",
+        id=i,
+        name=f"Label {i} (Label Type 2)",
         description=f"Description for label {i} for Label Type 2",
-        lt_id = 2,
-        p_id = 2
+        lt_id=2,
+        p_id=2
     ) for i in range(11, 13)])
     db.session.add_all(labels)
     db.session.commit()
 
-    # Creates 2 theme in project 1 
+    # Creates 2 theme in project 1
     # Creates 3 theme in project 2
     theme = [Theme(
-        id = i,
-        name = f"Theme {i}",
+        id=i,
+        name=f"Theme {i}",
         description=f"Description for theme {i}",
-        p_id = 1
+        p_id=1
     ) for i in range(1, 3)]
     theme.extend([Theme(
-        id = i,
-        name = f"Theme {i}",
+        id=i,
+        name=f"Theme {i}",
         description=f"Description for theme {i}",
-        p_id = 2
+        p_id=2
     ) for i in range(3, 6)])
     db.session.add_all(theme)
     db.session.commit()
 
-    
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
@@ -223,12 +213,12 @@ def create_app(config={'TESTING': False}):
     # Set this configuration to True if you want to see all of the SQL generated
     app.config['SQLALCHEMY_ECHO'] = False
     # To suppress this warning.
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # The db object is not a connection to a particular database, but rather the
     # interface by which SQLAlchemy exposes its functions.
     # We can reuse the same db object, even if we switch application objects.
-    db.init_app(app)    
+    db.init_app(app)
     mig = Migrate(app, db)
 
     # Since a new database is created when testing, we must migrate each time.
