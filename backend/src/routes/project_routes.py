@@ -460,6 +460,7 @@ For freezing a project
 @login_required
 @in_project
 def freeze_project(*, membership):
+    # Check if user is admin
     if not membership.admin:
         return make_response('This member is not admin', 401)
 
@@ -468,11 +469,13 @@ def freeze_project(*, membership):
     # Required args
     required = ['p_id', 'frozen']
 
+    # Check if the required arguments are required
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
     # Get project with supplied ID
     project = db.session.get(Project, args['p_id'])
+    # Check if the project exists
     if not project:
         return make_response('Project does not exist', 400)
 
