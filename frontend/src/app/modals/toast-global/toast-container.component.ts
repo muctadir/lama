@@ -1,6 +1,6 @@
-import {Component, TemplateRef} from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 
-import {AppToastService} from 'app/services/app-toast.service';
+import { AppToastService } from 'app/services/app-toast.service';
 
 
 @Component({
@@ -20,12 +20,12 @@ import {AppToastService} from 'app/services/app-toast.service';
       <ng-template #text>{{ toast.textOrTpl }}</ng-template>
     </ngb-toast>
   `,
-  host: {'class': 'toast-container position-fixed top-0 end-0 p-3', 'style': 'z-index: 1200'}
+  host: { 'class': 'toast-container position-fixed top-0 end-0 p-3', 'style': 'z-index: 1200' }
 })
 export class ToastsContainer {
-  constructor(public toastService: AppToastService) {}
+  constructor(public toastService: AppToastService) { }
 
-  isTemplate(toast: any) { 
-    return toast.textOrTpl instanceof TemplateRef; 
+  isTemplate(toast: any) {
+    return toast.textOrTpl instanceof TemplateRef;
   }
 }

@@ -11,8 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class TestError extends Error {
   response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -33,7 +33,7 @@ describe('RegisterComponent', () => {
       // Added the dependencies InputCheckService
       providers: [InputCheckService]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   /* Executed before each test case, creates a RegisterComponent */
@@ -135,7 +135,7 @@ describe('RegisterComponent', () => {
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Creates a spy for the accountInfoService backend call, and returns an error
     let spy = spyOn(component["accountInfoService"], "registerUser")
-      .and.throwError(new TestError("message", {data: "some error"}));
+      .and.throwError(new TestError("message", { data: "some error" }));
     // Calls function to be tested
     await component.register();
     // Input

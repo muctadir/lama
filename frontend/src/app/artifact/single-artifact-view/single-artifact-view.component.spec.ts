@@ -10,9 +10,9 @@ describe('SingleArtifactViewComponent', () => {
     await TestBed.configureTestingModule({
       // Adds the RouterTestingModule dependency
       imports: [RouterTestingModule],
-      declarations: [ SingleArtifactViewComponent ]
+      declarations: [SingleArtifactViewComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

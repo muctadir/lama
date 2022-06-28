@@ -8,14 +8,14 @@ $orange-shade: #ed5a06;
 
 // TOP BAR
 // Row of the top bar
-#topBarRow{
+#topBarRow {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
 }
 
 // Header saying "Projects"
-.header{
+.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
@@ -24,9 +24,9 @@ $orange-shade: #ed5a06;
 
 // CREATE PROJECT
 // Create project button on Home Page
-#createProjectButton{
+#createProjectButton {
     float: right;
-    margin-right: 10px;    
+    margin-right: 10px;
     margin-top: 10px;
     background-color: $white-shade;
     border: 2px solid;
@@ -35,7 +35,9 @@ $orange-shade: #ed5a06;
 }
 
 // Create project button on hover
-#createProjectButton:hover, #createProjectButton:focus, #createProjectButton:active{
+#createProjectButton:hover,
+#createProjectButton:focus,
+#createProjectButton:active {
     background-color: $white-shade;
 }
 
@@ -45,63 +47,71 @@ $orange-shade: #ed5a06;
 }
 
 // Create project text within button
-#createProjectText{
-    float:left;
-    margin-top: 4px; 
-    margin-right: 4px;   
+#createProjectText {
+    float: left;
+    margin-top: 4px;
+    margin-right: 4px;
 }
+
 // Create button plus
-.bi.bi-plus{
+.bi.bi-plus {
     font-size: 22px;
     color: $grey-shade;
 }
+
 // Account Settings icon
-.bi.bi-person-circle, .bi.bi-person-circle::before{
+.bi.bi-person-circle,
+.bi.bi-person-circle::before {
     float: right;
     vertical-align: middle;
     margin-top: 5px;
     margin-left: 5px;
-    color: $orange-shade;   
+    color: $orange-shade;
     font-size: 45px;
 }
 
 // Division around all projects
-.allProjects{
+.allProjects {
     margin: 4px 10px 4px 4px;
     padding: 4px;
     height: 80vh;
     overflow-y: scroll;
 }
+
 // SCROLLBAR
 // Scrollbar general
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: $white-shade; 
+    background: $white-shade;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: $grey-shade; 
+    background: $grey-shade;
     border-radius: 10px;
 }
+
 // Divisions for projects
-.projectParagraph{
+.projectParagraph {
     margin: 2% 5% 5% 10%;
     padding: 10px 5% 10px 5%;
     border-left: 2px solid;
     border-color: $grey-shade;
     cursor: pointer;
 }
+
 // Columns of the grid
-.col{
+.col {
     padding: 0px;
 }
 
 // Different look for project names
-.projectName{
+.projectName {
     font-size: 30px;
     letter-spacing: 1px;
     margin: 0px;
@@ -110,52 +120,56 @@ $orange-shade: #ed5a06;
 
 // PROGRESS BAR
 // The division of the progress
-.progress{
-    margin-top:5px;
+.progress {
+    margin-top: 5px;
     width: 100%;
     float: left;
     border-radius: 10px
 }
+
 // Actual progress bar
-.progress-bar{
+.progress-bar {
     background-color: $orange-shade;
     border-radius: 10px
 }
 
 // FROZEN AND ADMIN
 // Cols for admin and frozen
-.col-1{
+.col-1 {
     text-align: center;
 }
+
 // Admin icon
-.bi.bi-key{
+.bi.bi-key {
     font-size: 30px;
     color: $grey-shade;
 }
+
 // Frozen layout
-.bi.bi-snow{
+.bi.bi-snow {
     font-size: 20px;
     color: $grey-shade;
 }
 
 // NUMBER OF USERS
 // The numbers of users text
-.numberOfUsers{
+.numberOfUsers {
     float: right;
     margin-top: 12px;
 }
+
 // The user icon next to the number of user
-.bi.bi-person{
+.bi.bi-person {
     float: right;
     margin-left: 8px;
     margin-bottom: 10px;
-    color: $orange-shade;   
+    color: $orange-shade;
     font-size: 30px;
 }
 
 // Removes the arrow from the dropdown
 .dropdown-toggle::after {
-    display:none;
+    display: none;
 }
 
 // Sets the layout of the buttons in the dropdown menu for account settings

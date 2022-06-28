@@ -20,6 +20,7 @@ $white-shade: #FFFFFF;
 .coloredText {
     color: $main-color-1;
 }
+
 // Bold text
 .boldText {
     font-weight: 500;
@@ -30,6 +31,7 @@ $white-shade: #FFFFFF;
 #topBarRow {
     margin-bottom: 20px;
 }
+
 // Header
 .header {
     font-size: 35px;
@@ -45,6 +47,7 @@ $white-shade: #FFFFFF;
     border: 2px solid $main-color-1;
     border-radius: 10px;
 }
+
 // Scissors icon
 .bi.bi-scissors {
     margin-left: 8px;
@@ -62,6 +65,7 @@ $white-shade: #FFFFFF;
     height: 140px;
     overflow-y: scroll;
 }
+
 // Row where the split information is
 #splitRow {
     padding-left: 30px;
@@ -91,18 +95,21 @@ $white-shade: #FFFFFF;
     margin-left: 10px;
     margin-top: 25px;
 }
+
 // Header for the conflicting labels
 #conflictLabelsHeader {
     font-size: 20px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
+
 // Division around all labellers
 .labellerDiv {
     height: 300px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
 // EACH LABELLER
 // Rows of each labeller
 #labellerRow {
@@ -110,20 +117,23 @@ $white-shade: #FFFFFF;
     margin-right: 100px;
     padding-top: 10px;
 }
+
 // EACH LABEL TYPE
 .labelTypeDiv {
     height: 150x;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
 // Row for each label type
 #labelTypeRow {
     margin-top: 10px;
 }
+
 // REMARK
 // Remark column
 #remarkCol {
-    margin-left:50px;
+    margin-left: 50px;
 }
 
 // SELECT DROPDOWN
@@ -135,6 +145,7 @@ select {
     padding: 5px;
     margin-top: 10px;
 }
+
 // Disabled dropdown
 select:disabled {
     background-color: $light-grey-shade;
@@ -147,14 +158,16 @@ select:disabled {
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: $grey-shade; 
+    background: $grey-shade;
     border-radius: 10px;
 }
 
@@ -167,7 +180,7 @@ select:disabled {
 }
 
 //Back button
-#backButton{
+#backButton {
     width: 150px;
     margin: 10px;
     border: none;

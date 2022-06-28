@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ConflictResolutionComponent } from './conflict-resolution.component';
 
 describe('ConflictResolutionComponent', () => {
@@ -8,9 +7,9 @@ describe('ConflictResolutionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConflictResolutionComponent ]
+      declarations: [ConflictResolutionComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

@@ -50,11 +50,13 @@ export class StatsDataService {
     projectNew.setUsers(response["projectUsers"]);
 
     // Return project data
-    return { 'project_data': projectNew,
+    return {
+      'project_data': projectNew,
       // Return number of conflicts in project
-     'conflicts': response["conflicts"],
-     // Return number of labels in project
-     'labels':  response["labels"]}
+      'conflicts': response["conflicts"],
+      // Return number of labels in project
+      'labels': response["labels"]
+    }
   }
 
   /**

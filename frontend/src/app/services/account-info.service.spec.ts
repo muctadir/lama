@@ -18,17 +18,17 @@ describe('AccountInfoService', () => {
 
   it('Test for userData function', async () => {
     // Spy on the get from the request handler
-    let spy = spyOn(service, "userData").and.callFake( async () => {
+    let spy = spyOn(service, "userData").and.callFake(async () => {
       // Creates a request for the account information
       let spy1 = spyOn(service['requestHandler'], "get").and.returnValue(Promise.resolve({
         // Fake user response
         "id": 1,
         "username": "user",
-        "email": "email", 
+        "email": "email",
         "description": "desc",
         "super_admin": false
       }));
-      let response: any =  await service['requestHandler'].get("/account/information", {}, true);
+      let response: any = await service['requestHandler'].get("/account/information", {}, true);
       expect(spy1).toHaveBeenCalledWith("/account/information", {}, true)
 
       // Gets the user data from the database response and stores the data
@@ -43,10 +43,10 @@ describe('AccountInfoService', () => {
       expect(user.getEmail()).toEqual("email");
       expect(user.getDesc()).toEqual("desc");
       expect(user.getType()).toEqual(false);
-  });
-  // Call function and check if it was called
-  service.userData();
-  expect(spy).toHaveBeenCalled();
+    });
+    // Call function and check if it was called
+    service.userData();
+    expect(spy).toHaveBeenCalled();
   });
 
 });

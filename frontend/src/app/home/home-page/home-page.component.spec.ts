@@ -14,10 +14,10 @@ describe('HomePageComponent', () => {
   // Adds dependencies
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomePageComponent ],
+      declarations: [HomePageComponent],
       imports: [RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -32,10 +32,10 @@ describe('HomePageComponent', () => {
   });
 
   // Test to see if the ngOnInit function works correctly
-  it('Test for ngOnInit function', async () => {
+  it('should call all functions on intialization', async () => {
     // Spy on the function that is called
     let spy = spyOn(component, "getProjects");
-  
+
     // Creates a user
     let userReturn = new User(8, "Lannes");
     // Sets email of the user object
@@ -43,7 +43,7 @@ describe('HomePageComponent', () => {
 
     // Spies on the userData function and returns the user
     spyOn(component["accountService"], "userData").and.returnValue(Promise.resolve(userReturn));
-    
+
     // Call the function
     await component.ngOnInit();
 
@@ -56,10 +56,10 @@ describe('HomePageComponent', () => {
   });
 
   // Test to see if the getProjects function works correctly
-  it('Test for getProjects function', async () => {
+  it('should get all projects', async () => {
     // Create the project with constructor
     let projectNew = new Project(5, "testname", "testdesc");
-      
+
     // Set other variables
     projectNew.setFrozen(true);
     projectNew.setNumberOfArtifacts(5);

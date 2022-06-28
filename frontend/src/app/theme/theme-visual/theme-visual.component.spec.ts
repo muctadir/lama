@@ -8,9 +8,9 @@ describe('ThemeVisualComponent', () => {
   // Initialize test environement
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ThemeVisualComponent ]
+      declarations: [ThemeVisualComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   // Before each test

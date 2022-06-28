@@ -1,6 +1,6 @@
 //Linh Nguyen
 
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router'
@@ -55,7 +55,7 @@ export class ProjectSettingsComponent implements OnInit {
   isInEditMode: boolean = false;
 
   /* FormGroup which will hold the different information of the project */
-  projectForm : FormGroup;
+  projectForm: FormGroup;
 
   /**
    * Initializes the modal, router, rerouting service and formbuilder
@@ -64,22 +64,22 @@ export class ProjectSettingsComponent implements OnInit {
    * @param reroutingService instance of rerouting service
    * @param formBuilder instance of formbuilder
    */
-  constructor(private modalService: NgbModal, 
-    private router: Router, 
+  constructor(private modalService: NgbModal,
+    private router: Router,
     private reroutingService: ReroutingService,
-    private formBuilder: FormBuilder, 
+    private formBuilder: FormBuilder,
     private editModeService: EditModeService,
     private toastCommService: ToastCommService) {
     //Initiliazing project with the retrieved project ID from URL
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
     this.currentProject = new Project(projectID, "Project Name", "Project Description");
     this.projectForm = this.formBuilder.group({
-        projectName: "",
-        projectDesc: "",
-        numberOfLabellers: 2,
-      })
+      projectName: "",
+      projectDesc: "",
+      numberOfLabellers: 2,
+    })
     //Setting edit mode to value
-    this.editModeService.isInEditMode.subscribe( value => {
+    this.editModeService.isInEditMode.subscribe(value => {
       this.isInEditMode = value;
     })
   }
@@ -96,7 +96,7 @@ export class ProjectSettingsComponent implements OnInit {
   ngOnInit(): void {
 
     // Gets the authentication token from the session storage
-    let token: string | null  = sessionStorage.getItem('ses_token');
+    let token: string | null = sessionStorage.getItem('ses_token');
 
     if (typeof token === "string") {
       // Get all users within the tool
@@ -114,7 +114,7 @@ export class ProjectSettingsComponent implements OnInit {
    * @trigger on component load
    * @modifies allMembers
    */
-   async requestUsers(token : string | null) : Promise<void> {
+  async requestUsers(token: string | null): Promise<void> {
     // Initializes the request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
 
@@ -136,7 +136,7 @@ export class ProjectSettingsComponent implements OnInit {
         // pushes the new user to the array of all users
         this.allMembers.push(newUser);
       }
-    } catch(e) {
+    } catch (e) {
       // Emits an error toast
       this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
@@ -149,14 +149,14 @@ export class ProjectSettingsComponent implements OnInit {
    *
    * @modifies currentProject, projectMembers, allProjectMembers, adminMembers, removed
    */
-   async requestCurrentProject(token : string | null) : Promise<void> {
+  async requestCurrentProject(token: string | null): Promise<void> {
     // Initializes the request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
 
     // Makes the request and handles response
     try {
       // Makes the request to the backend for current project information
-      let response: any = requestHandler.get("/project/settings", {'p_id': this.currentProject.getId()}, true);
+      let response: any = requestHandler.get("/project/settings", { 'p_id': this.currentProject.getId() }, true);
 
       // Waits on the request
       let result = await response;
@@ -175,8 +175,8 @@ export class ProjectSettingsComponent implements OnInit {
           let newUser = new User(member.id, member.username)
           this.projectMembers.push(newUser);
           // Check if this user is in all members, and remove them
-          for (let memberObject of this.allMembers){
-            if (memberObject.getUsername() == member.username){
+          for (let memberObject of this.allMembers) {
+            if (memberObject.getUsername() == member.username) {
               // Remove the user from the allMembers list
               this.allMembers.splice(this.allMembers.indexOf(memberObject), 1)
             }
@@ -187,7 +187,7 @@ export class ProjectSettingsComponent implements OnInit {
           this.superAdminID = member.id;
         }
         //Adding all members (old and current) of the project to allProjectMembers
-        this.allProjectMembers[member.id] = new User(member.id, member.username);        
+        this.allProjectMembers[member.id] = new User(member.id, member.username);
         //Setting admin status of all members
         this.adminMembers[member.id] = member.admin;
         //Setting removed status of all members
@@ -208,7 +208,7 @@ export class ProjectSettingsComponent implements OnInit {
         projectDesc: this.currentProject.getDesc(),
         numberOfLabellers: this.currentProject.getCriteria(),
       })
-    } catch(e) {
+    } catch (e) {
       // Emits an error toast
       this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }
@@ -222,7 +222,7 @@ export class ProjectSettingsComponent implements OnInit {
    *
    * @modifies currentProject, projectMembers, allProjectMembers, removed
    */
-  async sendUpdateRequest(token : string | null, sendingInfo: any) : Promise<void> {
+  async sendUpdateRequest(token: string | null, sendingInfo: any): Promise<void> {
     // Initializes the request handler
     let requestHandler: RequestHandler = new RequestHandler(token);
 
@@ -230,8 +230,10 @@ export class ProjectSettingsComponent implements OnInit {
       // Makes the request and handles response
       // Makes the request to the backend for current project information
       let response: any = requestHandler.patch("/project/edit",
-      {'p_id': this.currentProject.getId(), 'project': sendingInfo["project"],
-       'add': sendingInfo["add"], 'update': sendingInfo["update"]}, true);
+        {
+          'p_id': this.currentProject.getId(), 'project': sendingInfo["project"],
+          'add': sendingInfo["add"], 'update': sendingInfo["update"]
+        }, true);
 
       // Waits on the request
       let result = await response;
@@ -250,8 +252,8 @@ export class ProjectSettingsComponent implements OnInit {
       }
       this.toastCommService.emitChange([true, "Edit successful"]);
     }
-    catch(e: any) {
-      if(e.response.status == 511){
+    catch (e: any) {
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
@@ -295,7 +297,7 @@ export class ProjectSettingsComponent implements OnInit {
   async saveEdit(): Promise<void> {
     //Setting name, description, criteria, users and their admin status
     this.setCurrenProjectInfo(this.projectForm.value.projectName, this.projectForm.value.projectDesc,
-    this.projectForm.value.numberOfLabellers, false, this.projectMembers);
+      this.projectForm.value.numberOfLabellers, false, this.projectMembers);
     //Change back to non-edit view
     this.editModeService.isInEditMode.next(false);
 
@@ -304,16 +306,16 @@ export class ProjectSettingsComponent implements OnInit {
     // Project information to be updated
     projectInformation["project"] = {
       "id": this.currentProject.getId(),
-      "name" : this.currentProject.getName(),
-      "description" : this.currentProject.getDesc(),
+      "name": this.currentProject.getName(),
+      "description": this.currentProject.getDesc(),
       "criteria": this.currentProject.getCriteria(),
       "frozen": this.currentProject.getFrozen()
     };
 
     //Dictionary with all updated project users (users with updated admin statuses and removed members)
-    let updateInfo: Record<string,any> = {};
+    let updateInfo: Record<string, any> = {};
     //Dictionary with all added project users
-    let addedInfo: Record<string,any> = {};
+    let addedInfo: Record<string, any> = {};
     for (let key in this.allProjectMembers) {
       let userInfo = {
         "id": this.allProjectMembers[key].getId(),
@@ -336,7 +338,7 @@ export class ProjectSettingsComponent implements OnInit {
     projectInformation["add"] = addedInfo;
 
     //Getting authenticating token
-    let token: string | null  = sessionStorage.getItem('ses_token');
+    let token: string | null = sessionStorage.getItem('ses_token');
     //Sending update to the backend
     this.sendUpdateRequest(token, projectInformation);
   }
@@ -352,7 +354,7 @@ export class ProjectSettingsComponent implements OnInit {
    *
    * @modifies currentProject, adminMembers
    */
-  setCurrenProjectInfo(name: string, desc: string, criteria: number, frozen: boolean, users: User[] | undefined) : void {
+  setCurrenProjectInfo(name: string, desc: string, criteria: number, frozen: boolean, users: User[] | undefined): void {
     //Setting name, description, criteria
     this.currentProject.setName(name);
     this.currentProject.setDesc(desc);
@@ -429,7 +431,7 @@ export class ProjectSettingsComponent implements OnInit {
     }
     // Remove user from project members list
     let index = this.projectMembers.indexOf(user);
-    this.projectMembers.splice(index,1);
+    this.projectMembers.splice(index, 1);
     // Add the remove user to all members    
     this.allMembers.push(user)
     // Remove user as admin from admin status dictionary
@@ -441,7 +443,7 @@ export class ProjectSettingsComponent implements OnInit {
    *
    * @modifies projectMembers
    */
-   open() : void {
+  open(): void {
     // opens the AddUsersModal
     const modalRef = this.modalService.open(AddUsersModalComponent);
 
@@ -453,10 +455,10 @@ export class ProjectSettingsComponent implements OnInit {
       let user = $e;
 
       //  Checks if the user is already added
-       if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
-         // If not, we add them
+      if (!this.projectMembers.some(e => e.getUsername() === user.getUsername())) {
+        // If not, we add them
         this.addMember(user, false);
-       }
+      }
     })
   }
 
@@ -470,12 +472,12 @@ export class ProjectSettingsComponent implements OnInit {
    */
   changeFreezeProject(frozenStatus: boolean, editMode: boolean): void {
     //Getting authenticating token
-    let token: string | null  = sessionStorage.getItem('ses_token');
+    let token: string | null = sessionStorage.getItem('ses_token');
     //Setting project's frozen status to true, and go back to non-edit mode
     this.currentProject.setFrozen(frozenStatus);
     this.editModeService.isInEditMode.next(editMode);
     //Update the frozen status to the back-end
-    this.sendFreezeRequest(token, {"p_id": this.currentProject.getId(),"frozen": frozenStatus});
+    this.sendFreezeRequest(token, { "p_id": this.currentProject.getId(), "frozen": frozenStatus });
   }
 
   /**
@@ -492,7 +494,7 @@ export class ProjectSettingsComponent implements OnInit {
     try {
       // Makes the request and handles response
       // Makes the request to the backend for current project information
-      let response: any = requestHandler.patch("/project/freeze", {'p_id': sendingInfo["p_id"], 'frozen': sendingInfo["frozen"]}, true);
+      let response: any = requestHandler.patch("/project/freeze", { 'p_id': sendingInfo["p_id"], 'frozen': sendingInfo["frozen"] }, true);
 
       // Waits on the request
       let result = await response;

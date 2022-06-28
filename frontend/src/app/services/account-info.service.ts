@@ -30,13 +30,13 @@ export class AccountInfoService {
    * @returns User object with user data
    * @throws error when server request goes wrong
    */
-  async userData() : Promise<any> {
+  async userData(): Promise<any> {
     // User object
     let user;
 
     try {
       // Creates a request for the account information
-      let response: any =  await this.requestHandler.get("/account/information", {}, true);
+      let response: any = await this.requestHandler.get("/account/information", {}, true);
 
       // Gets the user data from the database response and stores the data
       user = new User(response['id'], response['username']);
@@ -77,7 +77,7 @@ export class AccountInfoService {
         // pushes the new user to the array of all users
         users.push(newUser);
       }
-    } catch(e) {
+    } catch (e) {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");
     }
@@ -89,12 +89,12 @@ export class AccountInfoService {
    *
    * @param toDel user to be deleted
    */
-  async softDelUser(toDel: User) : Promise<void> {
+  async softDelUser(toDel: User): Promise<void> {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
-      await this.requestHandler.post("/account/soft_del", {"id": toDel.getId()}, true);
-    } catch(e) {
+      await this.requestHandler.post("/account/soft_del", { "id": toDel.getId() }, true);
+    } catch (e) {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");
     }
@@ -108,7 +108,7 @@ export class AccountInfoService {
    *
    * @returns whether authentication token is valid
    */
-  async makeAuthRequest() : Promise<boolean> {
+  async makeAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
       let response: any = this.requestHandler.get("/auth/check_login", {}, true);
@@ -118,7 +118,7 @@ export class AccountInfoService {
 
       // Returns true if the token is valid
       return true;
-    } catch(e: any) {
+    } catch (e: any) {
       this.toastCommService.emitChange([false, e.response.data]);
       // Returns false if the token is not valid
       return false;
@@ -133,7 +133,7 @@ export class AccountInfoService {
    *
    * @returns whether authentication token is valid
    */
-   async makeSuperAuthRequest() : Promise<boolean> {
+  async makeSuperAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
       let response: any = this.requestHandler.get("/auth/check_super_admin", {}, true);
@@ -143,7 +143,7 @@ export class AccountInfoService {
 
       // Returns true if the token is valid
       return true;
-    } catch(e) {
+    } catch (e) {
       // Returns false if the token is not valid
       return false;
     }
@@ -185,11 +185,11 @@ export class AccountInfoService {
    * @param passwordInformation object holding the old password, new password, and repeated new password
    * @throws error if an error occurs 
    */
-  async changePassword(passwordInformation: Record<string, any>) : Promise<void> {
+  async changePassword(passwordInformation: Record<string, any>): Promise<void> {
     try {
       // Makes request to the backend
       await this.requestHandler.post("/account/editPassword", passwordInformation, true);
-    } catch(e: any) {
+    } catch (e: any) {
       // Throws the error if one were to occur
       throw e;
     }
@@ -201,11 +201,11 @@ export class AccountInfoService {
    * @param accountInformation object holding the id, username, email, description 
    * @throws error if an error occurs
    */
-  async changeAccountDetails(accountInformation: Record<string, any>) : Promise<void> {
+  async changeAccountDetails(accountInformation: Record<string, any>): Promise<void> {
     // Tries to make the backend request
     try {
       await this.requestHandler.post("/account/edit", accountInformation, true);
-    } catch(e: any) {
+    } catch (e: any) {
       // catches the error and throws it again
       throw e;
     }

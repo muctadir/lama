@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="row" id="titleRow">
         <!-- Displays the theme name -->
-        <div class="col-11 header" id="pageTitle"> 
+        <div class="col-11 header" id="pageTitle">
             {{theme.getName()}}
         </div>
         <!-- Displays the history icon -->
@@ -21,31 +21,31 @@
     <div class="row" id="topHalfRow">
         <!-- Top Half Left-->
         <div class="col-6" id="topLeftCol">
-             <!-- Name Header-->
+            <!-- Name Header-->
             <div id="name">
                 Name
             </div>
             <!--Name-->
             <div>
-               <p id="themeNameText">{{theme.getName()}}</p> 
+                <p id="themeNameText">{{theme.getName()}}</p>
             </div>
-            <br/>
+            <br />
             <!--Label Count Header-->
             <div id="labelCount">
                 Label Count
             </div>
             <!--Label Count content-->
             <div>
-                <p id="labelCountText">{{theme.getNumberOfLabels()}}</p> 
+                <p id="labelCountText">{{theme.getNumberOfLabels()}}</p>
             </div>
-            <br/>
+            <br />
             <!--Parent-Theme Header-->
             <div id="parentThemes">
                 Parent-Theme
             </div>
             <!--Parent-Themes Content-->
             <p id="parentThemesText" (click)="goToTheme(theme.getParent())">{{getParentName()}}</p>
-            <br/>
+            <br />
             <!-- Sub-Themes Header-->
             <div id="subThemes">
                 Sub-Themes
@@ -65,7 +65,8 @@
             </div>
             <!--Description Field-->
             <div class="form-group">
-                <textarea class="form-control" id="themeDescription" rows="10" placeholder="Description" disabled>{{theme.getDesc()}}</textarea>
+                <textarea class="form-control" id="themeDescription" rows="10" placeholder="Description"
+                    disabled>{{theme.getDesc()}}</textarea>
             </div>
         </div>
     </div>
@@ -91,7 +92,8 @@
                                     <ngb-panel title="{{label.getName()}}">
                                         <ng-template ngbPanelContent>
                                             <!--Artifacts of label-->
-                                            <ngb-accordion *ngFor="let artifact of getNonDoubleArtifacts(label)" #acc="ngbAccordion" activeIds="ngb-panel-1">
+                                            <ngb-accordion *ngFor="let artifact of getNonDoubleArtifacts(label)"
+                                                #acc="ngbAccordion" activeIds="ngb-panel-1">
                                                 <ngb-panel title="Artifact #{{artifact.getId()}}">
                                                     <!--Artifact Content-->
                                                     <ng-template ngbPanelContent>
@@ -108,7 +110,7 @@
                                     </ngb-panel>
                                 </ngb-accordion>
                             </th>
-                        </tr>                    
+                        </tr>
                     </tbody>
                 </div>
             </table>
@@ -121,15 +123,17 @@
         <!-- Delet button column -->
         <div class="col align-self-start">
             <div>
-                <!-- Delete button --> 
-                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton" [disabled]="frozen">Delete</button> 
+                <!-- Delete button -->
+                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton"
+                    [disabled]="frozen">Delete</button>
             </div>
         </div>
         <!-- Back and Edit Buttons -->
         <div class="col-6 align-self-end">
             <div>
-                <!-- Create button --> 
-                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton" [disabled]="frozen">Edit</button> 
+                <!-- Create button -->
+                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton"
+                    [disabled]="frozen">Edit</button>
                 <!-- Cancel button -->
                 <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
             </div>

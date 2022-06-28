@@ -14,7 +14,7 @@ import { User } from 'app/classes/user';
 
 export class AccountInformationFormComponent implements OnInit {
   /* User info that should be displayed in the forms */
-  @Input () userInfo: User | undefined;
+  @Input() userInfo: User | undefined;
 
   /* Username form of the user account */
   public username: FormControl;
@@ -35,7 +35,7 @@ export class AccountInformationFormComponent implements OnInit {
   constructor() {
     this.username = new FormControl();
     this.email = new FormControl();
-    this.password= new FormControl();
+    this.password = new FormControl();
     this.passwordVerify = new FormControl();
     this.description = new FormControl();
   }
@@ -54,12 +54,12 @@ export class AccountInformationFormComponent implements OnInit {
     }
 
     // Sets the email if it is defined
-    if (this.userInfo?.getEmail() != undefined){
+    if (this.userInfo?.getEmail() != undefined) {
       this.email.setValue(this.userInfo.getEmail());
     }
 
     // Sets the description if it is defined
-    if (this.userInfo?.getDesc() != undefined){ 
+    if (this.userInfo?.getDesc() != undefined) {
       this.description.setValue(this.userInfo.getDesc());
     }
   }

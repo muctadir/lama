@@ -31,7 +31,7 @@ export class EditAccountSettingsComponent {
    * 
    * @param formBuilder instance of form builder
    */
-  constructor(private formBuilder: FormBuilder, 
+  constructor(private formBuilder: FormBuilder,
     private toastCommService: ToastCommService,
     private accountInfoService: AccountInfoService,
     private service: InputCheckService) { }
@@ -43,9 +43,9 @@ export class EditAccountSettingsComponent {
    * @trigger change occurs in the component
    * @modifies accountForm
    */
-  ngOnChanges() : void {
+  ngOnChanges(): void {
     this.accountForm.setValue({
-      username: this.userAccount.getUsername(), 
+      username: this.userAccount.getUsername(),
       email: this.userAccount.getEmail(),
       description: this.userAccount.getDesc()
     });
@@ -57,15 +57,15 @@ export class EditAccountSettingsComponent {
    * @trigger Change button is clicked
    * @modifies errorMsg
    */
-  changeInformation() : void {
+  changeInformation(): void {
     // Creates object which will be send to the backend
     let accountInformation: Record<string, any> = {};
-    
+
     // Enters the data into the object
     accountInformation = {
       "id": this.userAccount.getId(),
-      "username" : this.accountForm.value.username,
-      "description" : this.accountForm.value.description,
+      "username": this.accountForm.value.username,
+      "description": this.accountForm.value.description,
       "email": this.accountForm.value.email
     };
 
@@ -85,9 +85,9 @@ export class EditAccountSettingsComponent {
    * @returns whether input is valid
    * @trigger on click of change button
    */
-  checkInput() : boolean {
+  checkInput(): boolean {
     // Checks input
-    return this.service.checkFilled(this.accountForm.value.username) && 
+    return this.service.checkFilled(this.accountForm.value.username) &&
       this.service.checkFilled(this.accountForm.value.email) &&
       this.service.checkEmail(this.accountForm.value.email);
   }
@@ -98,7 +98,7 @@ export class EditAccountSettingsComponent {
    * @param accountInformation object containing account info
    * @trigger on click of change button
    */
-  async makeRequest(accountInformation: Record<string, any>) : Promise<void> {
+  async makeRequest(accountInformation: Record<string, any>): Promise<void> {
     // Tries to make the backend request
     try {
       await this.accountInfoService.changeAccountDetails(accountInformation);
@@ -106,16 +106,16 @@ export class EditAccountSettingsComponent {
       this.modeChangeEvent.emit(0);
       // Emits a success toast
       this.toastCommService.emitChange([true, "Modification successful"]);
-    } catch(e: any) {
+    } catch (e: any) {
       // Check if the error has invalid characters
-      if(e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if the error has whitespaces
-      } else if (e.response.data == "Input contains leading or trailing whitespaces"){
+        // Check if the error has whitespaces
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Username or email taken"){
+      } else if (e.response.data == "Username or email taken") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Username or email taken"]);
       } else {

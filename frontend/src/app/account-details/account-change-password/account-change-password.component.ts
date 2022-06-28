@@ -35,10 +35,10 @@ export class AccountChangePasswordComponent {
    * @param toastCommService instance of ToastCommService
    * @param accountInfoService instance of AccountInfoService
    */
-  constructor(private formBuilder: FormBuilder, 
+  constructor(private formBuilder: FormBuilder,
     private toastCommService: ToastCommService,
     private accountInfoService: AccountInfoService,
-    private service: InputCheckService) {}
+    private service: InputCheckService) { }
 
   /**
    * Function which will get verify whether the data filled in is valid, encapsulates it in object
@@ -46,18 +46,18 @@ export class AccountChangePasswordComponent {
    * 
    * @trigger user clicks change password button
    */
-  editPasswordF() : void {
+  editPasswordF(): void {
     // Object which will be send to the backend
     let passwordInformation: Record<string, any> = {};
     // Puts old password and new password in the object
     passwordInformation = {
       "id": this.userAccount.getId(),
-      "password" : this.passwordForm.value.old_password,
+      "password": this.passwordForm.value.old_password,
       "newPassword": this.passwordForm.value.new_password
     };
 
     // Check if the passwords are equal
-    if (this.passwordForm.value.new_password != this.passwordForm.value.new_passwordR){
+    if (this.passwordForm.value.new_password != this.passwordForm.value.new_passwordR) {
       // Emits an error toast
       this.toastCommService.emitChange([false, "New passwords are not equal"]);
       return
@@ -79,9 +79,9 @@ export class AccountChangePasswordComponent {
    * @returns whether user input is correct
    * @trigger user clicks change password button
    */
-  checkInput() : boolean {
+  checkInput(): boolean {
     // Checks input
-    return (this.service.checkFilled(this.passwordForm.value.old_password) || this.superAdmin) && 
+    return (this.service.checkFilled(this.passwordForm.value.old_password) || this.superAdmin) &&
       this.service.checkFilled(this.passwordForm.value.new_password);
   }
 
@@ -91,7 +91,7 @@ export class AccountChangePasswordComponent {
    * 
    * @param passwordInformation object holding old and new password
    */
-  async makeRequest(passwordInformation: Record<string, any>) : Promise<void> {
+  async makeRequest(passwordInformation: Record<string, any>): Promise<void> {
     // Tries making the request to the backend to change the password
     try {
       // Makes the request
@@ -100,9 +100,9 @@ export class AccountChangePasswordComponent {
       this.modeChangeEvent.emit(0);
       // Emits a success toast
       this.toastCommService.emitChange([true, "Password changed"]);
-    } catch(e: any) {
+    } catch (e: any) {
       // Check if the error has invalid characters
-      if(e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
       } else {

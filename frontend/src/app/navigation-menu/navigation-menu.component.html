@@ -27,15 +27,15 @@
                 <!-- Displays the link to the statistics page -->
                 <div *ngIf="collapsed" class="text-center">
                     <!-- Style of the icon depends on page currently getting viewed -->
-                    <a><em [ngClass]="{'bi': true, 'bi-bar-chart-line': true, 'def': page!=0, 'alt': page==0}" 
+                    <a><em [ngClass]="{'bi': true, 'bi-bar-chart-line': true, 'def': page!=0, 'alt': page==0}"
                             (click)="changePage('stats')"></em></a>
                 </div>
-                
+
                 <!-- Displays the stats text, and reroutes to stats page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
-                    <a [ngClass]="{'text-menu': page!=0, 'text-menu-alt': page==0}" 
-                    (click)="changePage('stats')">Statistics</a>
+                    <a [ngClass]="{'text-menu': page!=0, 'text-menu-alt': page==0}"
+                        (click)="changePage('stats')">Statistics</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -45,8 +45,8 @@
                 <!-- Displays the link to the labelling page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <!-- Style of the icon depends on page currently getting viewed -->
-                    <a><em [ngClass]="{'bi': true, 'bi-tags': true, 'def': page!=1, 'alt': page==1}" 
-                        (click)="changePage('labelling-page')"></em></a>
+                    <a><em [ngClass]="{'bi': true, 'bi-tags': true, 'def': page!=1, 'alt': page==1}"
+                            (click)="changePage('labelling-page')"></em></a>
                 </div>
 
                 <!-- Displays the labelling text, and reroutes to labelling page on click -->
@@ -62,15 +62,14 @@
                 <!-- Displays the artifact management page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
-                    <a [ngClass]="{'def': page!=2, 'alt': page==2}" 
-                    (click)="changePage('artifactmanagement')">AM</a>
+                    <a [ngClass]="{'def': page!=2, 'alt': page==2}" (click)="changePage('artifactmanagement')">AM</a>
                 </div>
 
                 <!-- Displays the artifact management text, and reroutes to AM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
-                    <a [ngClass]="{'text-menu': page!=2, 'text-menu-alt': page==2}" 
-                    (click)="changePage('artifactmanagement')">Artifact management</a>
+                    <a [ngClass]="{'text-menu': page!=2, 'text-menu-alt': page==2}"
+                        (click)="changePage('artifactmanagement')">Artifact management</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -80,15 +79,14 @@
                 <!-- Displays the label management page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
-                    <a [ngClass]="{'def': page!=3, 'alt': page==3}"
-                    (click)="changePage('labelmanagement')">LM</a>
+                    <a [ngClass]="{'def': page!=3, 'alt': page==3}" (click)="changePage('labelmanagement')">LM</a>
                 </div>
 
                 <!-- Displays the label management text, and reroutes to LM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
                     <a [ngClass]="{'text-menu': page!=3, 'text-menu-alt': page==3}"
-                    (click)="changePage('labelmanagement')">Label management</a>
+                        (click)="changePage('labelmanagement')">Label management</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -98,15 +96,14 @@
                 <!-- Displays the theme management page icon -->
                 <div *ngIf="collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
-                    <a [ngClass]="{'def': page!=4, 'alt': page==4}"
-                    (click)="changePage('thememanagement')">TM</a>
+                    <a [ngClass]="{'def': page!=4, 'alt': page==4}" (click)="changePage('thememanagement')">TM</a>
                 </div>
 
                 <!-- Displays the theme management text, and reroutes to TM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
                     <a [ngClass]="{'text-menu': page!=4, 'text-menu-alt': page==4}"
-                    (click)="changePage('thememanagement')">Theme management</a>
+                        (click)="changePage('thememanagement')">Theme management</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -117,14 +114,14 @@
                 <div *ngIf="collapsed" class="text-center">
                     <!-- Style of the icon depends on page currently getting viewed -->
                     <a><em [ngClass]="{'bi': true, 'bi bi-binoculars': true, 'def': page!=5, 'alt': page==5}"
-                        (click)="changePage('conflict')"></em></a>
+                            (click)="changePage('conflict')"></em></a>
                 </div>
 
                 <!-- Displays the conflict management text, and reroutes to CM page on click -->
                 <div *ngIf="!collapsed" class="text-center">
                     <!-- Style of the text depends on page currently getting viewed -->
                     <a [ngClass]="{'text-menu': page!=5, 'text-menu-alt': page==5}"
-                    (click)="changePage('conflict')">Conflict</a>
+                        (click)="changePage('conflict')">Conflict</a>
                 </div>
 
                 <!-- Line below the icon -->
@@ -140,14 +137,14 @@
                 <div *ngIf="collapsed" class="text-center">
                     <a>
                         <em [ngClass]="{'bi': true, 'bi bi-gear': true, 'def': page!=6, 'alt': page==6}"
-                        (click)="changePage('settings')">
+                            (click)="changePage('settings')">
                         </em>
                     </a>
                 </div>
                 <!-- Settings written out, displayed when navmenu is not collapsed -->
                 <div *ngIf="!collapsed" class="text-center">
                     <a [ngClass]="{'text-menu': page!=6, 'text-menu-alt': page==6}"
-                    (click)="changePage('settings')">Settings</a>
+                        (click)="changePage('settings')">Settings</a>
                 </div>
 
                 <!-- Line below the icon -->

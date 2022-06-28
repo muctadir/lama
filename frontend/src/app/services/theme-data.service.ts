@@ -221,7 +221,7 @@ export class ThemeDataService {
       // Catch the error
     } catch (e: any) {
       // Check if the error has invalid characters
-      if(e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
@@ -236,7 +236,7 @@ export class ThemeDataService {
       } else {
         // Emits an error toast
         this.toastCommService.emitChange([false, "An error occured when trying to create the theme"]);
-      }     
+      }
       // Return the response
       return "An error occured";
     }
@@ -264,7 +264,7 @@ export class ThemeDataService {
       // Catch the error
     } catch (e: any) {
       // Check if the error has invalid characters
-      if(e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
       } else if (e.response.data == "Theme name already exists") {
@@ -276,7 +276,7 @@ export class ThemeDataService {
       } else if (e.response.data == "Input contains an illegal character") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
+      } else if (e.response.data == "Your choice of subthemes would introduce a cycle") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);
       } else {
@@ -335,9 +335,9 @@ export class ThemeDataService {
    * The top level dictionary represents the project that was passed
    * The project counts as an undeleted item
    */
-   async themeVisData(p_id: number): Promise<Record<string, any>> {
+  async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {
-      return this.requestHandler.get('/theme/themeVisData', { "p_id": p_id}, true);
+      return this.requestHandler.get('/theme/themeVisData', { "p_id": p_id }, true);
     } catch (e) {
       // Emits an error toast
       let message: string = "An unknown error occurred";

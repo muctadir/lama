@@ -16,11 +16,11 @@ describe('LabellingTypeComponent', () => {
   // Sets dependencies
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IndividualLabellingForm ],
+      declarations: [IndividualLabellingForm],
       imports: [RouterTestingModule, ReactiveFormsModule, NgbTypeaheadModule, FormsModule],
       providers: [FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -51,7 +51,7 @@ describe('LabellingTypeComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyForm).toHaveBeenCalled();
     expect(spyForm2).toHaveBeenCalled();
-  }); 
+  });
 
   it('Tests ngOnInit with invalid input', async () => {
     // Creates the spies
@@ -73,7 +73,7 @@ describe('LabellingTypeComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyForm).toHaveBeenCalled();
     expect(spyForm2).toHaveBeenCalled();
-  }); 
+  });
 
   it('Tests ngOnInit with invalid input2', async () => {
     // Creates the spies
@@ -96,12 +96,12 @@ describe('LabellingTypeComponent', () => {
     expect(spyForm).toHaveBeenCalled();
     expect(spyForm2).toHaveBeenCalled();
   });
-  
+
   it('tests the clickLabel function', () => {
     // Creates dummy imput
     component.labels = [new Label(1, "label1", "desc1", "type1"), new Label(2, "label2", "desc2", "type2")];
     // Dummy input which will used in the function call
-    let item = {item: "label2"};
+    let item = { item: "label2" };
     // Creates a spy 
     let spy = spyOn(component.labelForm.controls['label'], "setValue");
 
@@ -121,7 +121,7 @@ describe('LabellingTypeComponent', () => {
     let spyReRouting = spyOn(component["reroutingService"], "getProjectID").and.returnValue("5");
     let spyLabel = spyOn(component["labelDataService"], "getLabelTypesWithLabels").and.returnValue(
       Promise.resolve([new LabelType(1, "labeltype1", [new Label(1, "l1", "d1", "1"), new Label(2, "l2", "d2", "1")]),
-        new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])]
+      new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])]
       )
     );
 

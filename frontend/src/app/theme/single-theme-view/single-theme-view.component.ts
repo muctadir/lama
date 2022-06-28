@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
-import { Router} from "@angular/router";
+import { Router } from "@angular/router";
 import { ReroutingService } from 'app/services/rerouting.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeDataService } from 'app/services/theme-data.service';
@@ -29,15 +29,15 @@ export class SingleThemeViewComponent {
   routeService: ReroutingService;
 
   // Variable for the theme
-  theme: Theme; 
+  theme: Theme;
 
   frozen: boolean = true;
 
-  constructor(private router: Router, 
-    private themeDataService: ThemeDataService, 
+  constructor(private router: Router,
+    private themeDataService: ThemeDataService,
     private modalService: NgbModal,
     private toastCommService: ToastCommService,
-    private projectDataService: ProjectDataService) { 
+    private projectDataService: ProjectDataService) {
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
@@ -49,7 +49,7 @@ export class SingleThemeViewComponent {
     // Initialize theme
     this.theme = new Theme(0, "", "")
   }
-  
+
   async ngOnInit(): Promise<void> {
     this.frozen = await this.projectDataService.getFrozen();
     // Get the information for the theme
@@ -57,7 +57,7 @@ export class SingleThemeViewComponent {
   }
 
   // Async function for getting the single theme info
-  async get_single_theme_info(p_id: number, t_id: number){
+  async get_single_theme_info(p_id: number, t_id: number) {
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
     // Sort the artifacts
@@ -71,14 +71,14 @@ export class SingleThemeViewComponent {
   sortArtifacts(): void {
     // Get the labels of the theme
     let labels = this.theme.getLabels();
-    if(labels != undefined){
+    if (labels != undefined) {
       // For each label, get the artifacts
-      for (let label of labels){
+      for (let label of labels) {
         // Get the artifacts
         let artifacts = label.getArtifacts();
-        if (artifacts != undefined){
+        if (artifacts != undefined) {
           // Sort the artifacts
-          artifacts.sort((a,b) => a.getId() - b.getId());
+          artifacts.sort((a, b) => a.getId() - b.getId());
         }
         // Set the artifacts of the label with the sorted array
         label.setArtifacts(artifacts);
@@ -94,7 +94,7 @@ export class SingleThemeViewComponent {
   getNonDoubleArtifacts(label: Label): StringArtifact[] {
     // Get the artifacts of the label
     let artifacts = label.getArtifacts();
-    if(artifacts != undefined){
+    if (artifacts != undefined) {
       // Remove the duplicates from the list
       return Array.from(artifacts.reduce((m, t) => m.set(t.getId(), t), new Map()).values());
     }
@@ -107,7 +107,7 @@ export class SingleThemeViewComponent {
    * 
    * @trigger back button is pressed
   */
-  reRouter() : void { 
+  reRouter(): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, 'thememanagement']);
   }
@@ -117,39 +117,39 @@ export class SingleThemeViewComponent {
    * Has the theme id
    * @trigger a child or parent theme is clicked
   */
-  reRouterTheme(theme_id: number) : void {
+  reRouterTheme(theme_id: number): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, "singleTheme", theme_id])
-    // And reload the page
-    .then(() => {
-      // Get the information for the theme
-      this.get_single_theme_info(this.p_id, theme_id);
-    });
-  }   
+      // And reload the page
+      .then(() => {
+        // Get the information for the theme
+        this.get_single_theme_info(this.p_id, theme_id);
+      });
+  }
 
   /**
    * Reroutes to other edit page of the theme
    * @trigger the edit button is clicked
   */
-  reRouterEdit() : void {
+  reRouterEdit(): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, "editTheme", this.t_id]);
-  }  
+  }
 
   // Function for making sure parent name is not undefined
   getParentName(): string {
-  // Get the parent
-  let parent = this.theme.getParent();
+    // Get the parent
+    let parent = this.theme.getParent();
     // Check is parent is undefined
-    if(parent != undefined){
-      if(parent.getName() != undefined){
+    if (parent != undefined) {
+      if (parent.getName() != undefined) {
         // If not return the name
         return parent.getName();
       } else {
         // Otherwise return ""
         return "";
       }
-    }   
+    }
     // Otherwise return ""
     return "";
   }
@@ -159,9 +159,9 @@ export class SingleThemeViewComponent {
    * 
    * @trigger a sub or super-theme is pressed
   */
-  goToTheme(theme: Theme | undefined){
+  goToTheme(theme: Theme | undefined) {
     // Check if we can get the id of the theme
-    if (theme != undefined){
+    if (theme != undefined) {
       this.reRouterTheme(theme.getId());
     }
   }
@@ -171,14 +171,14 @@ export class SingleThemeViewComponent {
    * 
    * @Trigger When the delete button is clicked
    */
-  deleteTheme(){
+  deleteTheme() {
     // Get the children and labels
     let children = this.theme.getChildren();
     let labels = this.theme.getLabels();
     // Check if the children and labels are undefined
-    if(children != undefined && labels != undefined){
+    if (children != undefined && labels != undefined) {
       // Check the length of the arrays
-      if(labels.length != 0 || children.length != 0){
+      if (labels.length != 0 || children.length != 0) {
         // Alert that the theme cannot be deleted
         this.toastCommService.emitChange([false, "This theme has sub-themes and/or labels, so it cannot be deleted"]);
         return;
@@ -189,7 +189,7 @@ export class SingleThemeViewComponent {
 
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
-      if($e) {
+      if ($e) {
         // Call the service to delete the theme
         await this.themeDataService.delete_theme(this.p_id, this.t_id);
         // Go back to the theme management page
@@ -207,7 +207,7 @@ export class SingleThemeViewComponent {
    */
   openThemeHistory(): void {
     // opens theme history modal
-    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+    let modalRef = this.modalService.open(HistoryComponent, { size: 'xl' });
 
     // passes all the users in the application to the modal
     modalRef.componentInstance.history_type = "Theme";

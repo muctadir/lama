@@ -18,7 +18,7 @@ describe('ThemeDataService', () => {
   });
 
   // Test for theme_management_info function
-  it('Test for theme_management_info function', async () => {
+  it('should call the request handler for the theme management info', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "get");
     // Call the function
@@ -28,7 +28,7 @@ describe('ThemeDataService', () => {
   });
 
   // Test for single_theme_info function
-  it('Test for single_theme_info function', async () => {
+  it('should call the request handler for the single theme info', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "get");
     // Call the function
@@ -38,7 +38,7 @@ describe('ThemeDataService', () => {
   });
 
   // Test for createChildren function
-  it('Test for createChildren function', async () => {
+  it('should create themes', async () => {
     // Information for two themes
     let theme_info = [{
       "id": 1,
@@ -54,11 +54,11 @@ describe('ThemeDataService', () => {
     let theme2 = new Theme(2, "Theme 2", "Desc 2");
 
     // Spy on the createChildern service and call a fake function
-    spyOn(service, "createChildren").and.callFake(function(): Array<Theme> {
+    spyOn(service, "createChildren").and.callFake(function (): Array<Theme> {
       // List for the children
       let childArray: Array<Theme> = [];
       // For each child make an object
-      for (let child of theme_info){
+      for (let child of theme_info) {
         // Spy on function
         let spy = spyOn(childArray, "push");
         // Add the child to the array
@@ -74,7 +74,7 @@ describe('ThemeDataService', () => {
   });
 
   // Test for createLabels function
-  it('Test for createLabels function', async () => {
+  it('should create labels', async () => {
     // Information for two labels
     let label_info = [{
       "id": 1,
@@ -92,20 +92,20 @@ describe('ThemeDataService', () => {
     let label2 = new Label(2, "Label 2", "Desc 2", "");
 
     // Spy on the createChildern service and call a fake function
-    spyOn(service, "createLabels").and.callFake(function(): Array<Label> {
+    spyOn(service, "createLabels").and.callFake(function (): Array<Label> {
       // List for the labels 
       let labelsArray: Array<Label> = [];
       // For each label in the list
-      for (let label of label_info){
+      for (let label of label_info) {
         // Make a new label object
         let newLabel = new Label(label["id"], label["name"], label["description"], label["label_type"])
 
         // Spy on createArtifacts function
         let spy = spyOn(service, "createArtifacts");
         // Create the artifacts
-        service.createArtifacts([]);   
+        service.createArtifacts([]);
         // Test if function was called
-        expect(spy).toHaveBeenCalled();  
+        expect(spy).toHaveBeenCalled();
 
         // Spy on function
         let spy2 = spyOn(labelsArray, "push");
@@ -122,7 +122,7 @@ describe('ThemeDataService', () => {
   });
 
   // Test for createArtifacts function
-  it('Test for createArtifacts function', async () => {
+  it('should create artifacts', async () => {
     // Information for two artifacts
     let artifact_info = [{
       "id": 1,
@@ -138,11 +138,11 @@ describe('ThemeDataService', () => {
     let artifact2 = new StringArtifact(2, "ABCED", "Data 2");
 
     // Spy on the createArtifacts service and call a fake function
-    spyOn(service, "createArtifacts").and.callFake(function(): Array<StringArtifact> {
+    spyOn(service, "createArtifacts").and.callFake(function (): Array<StringArtifact> {
       // List for the artifacts
       let artifactArray: Array<StringArtifact> = [];
       // For each artifact in the list
-      for (let artifact of artifact_info){
+      for (let artifact of artifact_info) {
         // Spy on function
         let spy = spyOn(artifactArray, "push");
         // Push the new artifact
@@ -158,7 +158,7 @@ describe('ThemeDataService', () => {
   });
 
   // Test for themes_without_parents function
-  it('Test for themes_without_parents function', async () => {
+  it('should call the request handler form the themes without parents', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "get");
     // Call the function
@@ -169,7 +169,7 @@ describe('ThemeDataService', () => {
 
   // CREATE THEME FUNCTION
   // Test for create_theme function when successful
-  it('Test for create_theme function when successful', async () => {
+  it('should call the request handler to create a theme', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "post").and.returnValue(Promise.resolve("Theme created"));
     // Call the function
@@ -178,20 +178,20 @@ describe('ThemeDataService', () => {
     expect(spy).toHaveBeenCalled();
     expect(response).toEqual("Theme created");
   });
-  
-  // Test for create_theme function when failed
-  it('Test for create_theme function when failed', async () => {
 
-    spyOn(service, "create_theme").and.callFake(async function(): Promise<string> {
-      try{
+  // Test for create_theme function when failed
+  it('should catch errors when trying to create a theme', async () => {
+
+    spyOn(service, "create_theme").and.callFake(async function (): Promise<string> {
+      try {
         // Create project in the backend
-        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function(){
+        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function () {
           throw new Error();
         })
         await service['requestHandler'].post('/theme/create_theme', {}, true);
         expect(spy1).toThrow();
         return "Theme created succesfully";
-      // Catch the error
+        // Catch the error
       } catch (e) {
         // Return the response
         return "An error occured when trying to create the theme.";
@@ -204,7 +204,7 @@ describe('ThemeDataService', () => {
 
   // EDIT THEME FUNCTION
   // Test for edit_theme function when successful
-  it('Test for edit_theme function when successful', async () => {
+  it('should call the request handler to edit a theme', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "post").and.returnValue(Promise.resolve("Theme edited"));
     // Call the function
@@ -213,20 +213,20 @@ describe('ThemeDataService', () => {
     expect(spy).toHaveBeenCalled();
     expect(response).toEqual("Theme edited");
   });
-  
-  // Test for edit_theme function when failed
-  it('Test for edit_theme function when failed', async () => {
 
-    spyOn(service, "edit_theme").and.callFake(async function(): Promise<string> {
-      try{
+  // Test for edit_theme function when failed
+  it('should catch errors when trying to edit a theme', async () => {
+
+    spyOn(service, "edit_theme").and.callFake(async function (): Promise<string> {
+      try {
         // Create project in the backend
-        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function(){
+        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function () {
           throw new Error();
         })
         await service['requestHandler'].post('/theme/edit_theme', {}, true);
         expect(spy1).toThrow();
         return "Theme edited succesfully";
-      // Catch the error
+        // Catch the error
       } catch (e) {
         // Return the response
         return "An error occured when trying to edit the theme.";
@@ -239,38 +239,37 @@ describe('ThemeDataService', () => {
 
   // DELETE THEME FUNCTION
   // Test for delete_theme function when successful
-  it('Test for delete_theme function when successful', async () => {
+  it('should call the request handler to delete a theme', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "post");
     // Call the function
-    let response = await service.delete_theme(0,0);
+    let response = await service.delete_theme(0, 0);
     // Test if the function works
     expect(spy).toHaveBeenCalled();
     expect(response).toEqual("Theme deleted succesfully");
   });
-  
-  // Test for delete_theme function when failed
-  it('Test for delete_theme function when failed', async () => {
 
-    spyOn(service, "delete_theme").and.callFake(async function(): Promise<string> {
-      try{
+  // Test for delete_theme function when failed
+  it('should catch errors when trying to delete a theme', async () => {
+
+    spyOn(service, "delete_theme").and.callFake(async function (): Promise<string> {
+      try {
         // Create project in the backend
-        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function(){
+        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function () {
           throw new Error("interal database error");
         })
         await service['requestHandler'].post('/theme/delete', {}, true);
         expect(spy1).toThrow();
         return "Theme deleted succesfully";
-      // Catch the error
+        // Catch the error
       } catch (e) {
         // Return the response
         return "An error occured when trying to delete the theme.";
       }
     })
-    let response = await service.delete_theme(0,0);
+    let response = await service.delete_theme(0, 0);
     // Test if the function works
     expect(response).toEqual("An error occured when trying to delete the theme.");
   });
-
 
 });

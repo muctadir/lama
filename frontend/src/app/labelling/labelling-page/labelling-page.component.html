@@ -25,9 +25,8 @@
     <div class="col-6">
       <div *ngIf="labellers.length != 0">
         Labeled by:
-        <span *ngFor="let labeller of labellers; let last = last"
-          >{{ labeller.username }}<span *ngIf="!last">, </span></span
-        >
+        <span *ngFor="let labeller of labellers; let last = last">{{ labeller.username }}<span *ngIf="!last">,
+          </span></span>
       </div>
     </div>
 
@@ -37,10 +36,8 @@
       <p class="float-end">
         <span *ngIf="artifact!.getNumberOfChildIds() == 0"></span>
         <span *ngIf="artifact!.getNumberOfChildIds() === 1">
-          Artifact was split into child artifact #</span
-        >
-        <span *ngIf="artifact!.getNumberOfChildIds() > 1"
-          >Artifact was split into children artifacts #
+          Artifact was split into child artifact #</span>
+        <span *ngIf="artifact!.getNumberOfChildIds() > 1">Artifact was split into children artifacts #
         </span>
 
         <span *ngIf="artifact!.getNumberOfChildIds() > 0" id="split1">
@@ -50,9 +47,7 @@
         </span>
 
         <br *ngIf="artifact!.getNumberOfChildIds() > 0" />
-        <span *ngIf="artifact!.getParentId() != undefined"
-          >Artifact was split from parent artifact</span
-        >
+        <span *ngIf="artifact!.getParentId() != undefined">Artifact was split from parent artifact</span>
         <span *ngIf="artifact!.getParentId() != undefined" id="split2">
           #
           <span (click)="routeToLabel(artifact!.getParentId())" id="hoverCurs">
@@ -66,18 +61,13 @@
     <div class="row">
       <div class="col-3">
         <span id="LabellingTitle">Labelling</span>
-        <span (click)="openCreateForm()" class=""
-          ><i class="bi bi-plus-lg hoverNoColor" ngbTooltip="Create label"></i
-        ></span>
+        <span (click)="openCreateForm()" class=""><i class="bi bi-plus-lg hoverNoColor"
+            ngbTooltip="Create label"></i></span>
       </div>
       <div class="col-9"></div>
       <div class="col-12" id="labelThing">
         <div *ngFor="let labelType of labelTypes" id="labelling-row">
-          <app-individual-labelling-form
-            [labelType]="labelType"
-            [parentForm]="labellings"
-            [reload]="eventEmitter"
-          >
+          <app-individual-labelling-form [labelType]="labelType" [parentForm]="labellings" [reload]="eventEmitter">
           </app-individual-labelling-form>
         </div>
       </div>
@@ -87,18 +77,10 @@
       <div class="col-2">
         <!-- Submission buttons -->
         <div id="butt">
-          <button
-            [disabled]="!hidden"
-            class="form-group btn btn-light float-right"
-            (click)="skip()"
-            id="skip-button"
-          >
+          <button [disabled]="!hidden" class="form-group btn btn-light float-right" (click)="skip()" id="skip-button">
             Skip
           </button>
-          <button
-            class="form-group btn btn-primary float-right"
-            (click)="submit()"
-          >
+          <button class="form-group btn btn-primary float-right" (click)="submit()">
             Submit
           </button>
         </div>

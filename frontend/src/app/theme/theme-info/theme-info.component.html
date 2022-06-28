@@ -113,7 +113,8 @@
                     <div class="col">
                         <form [formGroup]="labelSearch">
                             <label for="typeahead-focus">Search for a label:</label>
-                            <input formControlName="labelSearch" type="text" class="form-control" (keyup)="searchLabel()"/>
+                            <input formControlName="labelSearch" type="text" class="form-control"
+                                (keyup)="searchLabel()" />
                         </form>
                     </div>
                 </div>
@@ -167,7 +168,8 @@
                     <div class="col">
                         <form [formGroup]="themeSearch">
                             <label for="typeahead-focus">Search for a theme:</label>
-                            <input formControlName="themeSearch" type="text" class="form-control" (keyup)="searchTheme()" />
+                            <input formControlName="themeSearch" type="text" class="form-control"
+                                (keyup)="searchTheme()" />
                         </form>
                     </div>
                 </div>

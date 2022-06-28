@@ -12,13 +12,13 @@ describe('LabelManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LabelManagementComponent ],
+      declarations: [LabelManagementComponent],
       // Adding the RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbModal dependency
       providers: [NgbModal, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

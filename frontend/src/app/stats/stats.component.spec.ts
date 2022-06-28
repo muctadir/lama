@@ -36,10 +36,10 @@ describe('StatsComponent', () => {
       .compileComponents();
     statsDataService = TestBed.inject(StatsDataService);
     router = TestBed.inject(Router);
-    
+
     // When router.url gets called, return this string
     spyOnProperty(router, 'url', 'get').and.returnValue('/project/5/stats');
-    
+
   });
 
   beforeEach(() => {

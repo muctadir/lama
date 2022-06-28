@@ -107,7 +107,7 @@ describe('Theme', () => {
       .toEqual(parent)
   })
 
-  
+
   // Setting and getting the child themes
   it("should set and get the child themes", () => {
     // Create instances

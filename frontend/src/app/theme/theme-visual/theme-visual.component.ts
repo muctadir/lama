@@ -155,7 +155,7 @@ export class ThemeVisualComponent implements OnInit {
           .duration(200)
           .style("opacity", .9);
         // Text shown in the box when you hover over a node with your mouse
-        div.html("id: " + d.data.id + "<br/>" + "type: " + d.data.type + "<br/> deleted: " + d.data.deleted )
+        div.html("id: " + d.data.id + "<br/>" + "type: " + d.data.type + "<br/> deleted: " + d.data.deleted)
           .style("left", (d.y + 100) + "px")
           .style("top", (d.x - 25) + "px");
       })

@@ -39,11 +39,11 @@ export class AddArtifactComponent {
     private artifactDataService: ArtifactDataService,
     private toastCommService: ToastCommService,
     private router: Router) {
-       this.file = null;
-       this.p_id = 0;
-       this.routeService = new ReroutingService();
-       this.url = this.router.url;
-     }
+    this.file = null;
+    this.p_id = 0;
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+  }
 
   /**
    * Stores the file uploaded by the user to the @file variable
@@ -102,7 +102,7 @@ export class AddArtifactComponent {
         }
 
         // Stop if an error has been found
-        if (this.error)  return;
+        if (this.error) return;
 
         // Put the artifacts from the file in artifacts
         artifacts = added_artifacts;
@@ -127,7 +127,7 @@ export class AddArtifactComponent {
         try {
           // Add the artifacts to the backend
           await this.addArtifacts(p_id, allArtifacts)
-        } catch(e) {
+        } catch (e) {
         }
         // Close modal
         this.activeModal.close();
@@ -151,8 +151,8 @@ export class AddArtifactComponent {
     let response = await this.artifactDataService.addArtifacts(pid, artifacts);
     // Indicates that the upload was successful
     this.toastCommService.emitChange([true, "Upload successful. Artifact identifier: ".concat(response['identifier'])])
-    if(!response['admin']) {
-      this.toastCommService.emitChange([false, 
+    if (!response['admin']) {
+      this.toastCommService.emitChange([false,
         "You are not admin, so you will not be able to see the artifacts you have not labelled"])
     }
     this.error = false;

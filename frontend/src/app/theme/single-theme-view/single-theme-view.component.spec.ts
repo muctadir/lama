@@ -15,11 +15,11 @@ describe('SingleThemeViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       // Adding the NgbAccordion dependency, unsure why this needs to be imported for the test case
-      declarations: [ SingleThemeViewComponent, NgbAccordion ],
+      declarations: [SingleThemeViewComponent, NgbAccordion],
       // Adding the RouterTestingModule dependency
       imports: [RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
     router = TestBed.inject(Router);
   });
 
@@ -35,7 +35,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the ngOnInit function
-  it('Tests the ngOnInit function to single theme page', () => {
+  it('should call all functions on initialization', () => {
     // Creates a fake getFrozen function function
     let spy1 = spyOn(component['projectDataService'], "getFrozen").and.callFake(async () => {
       // Check if get_single_theme_info is called
@@ -50,20 +50,20 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the get_single_theme_info function
-  it('Tests the get_single_theme_info function to theme single page', async () => {
+  it('should get the information for a single theme', async () => {
     // Create spy for get url call
     let spy1 = spyOn(component['themeDataService'], "single_theme_info")
     // Create spy for the sort artifacts function
     let spy2 = spyOn(component, "sortArtifacts")
     // Calls the get_single_theme_info function
-    await component.get_single_theme_info(1,1);
+    await component.get_single_theme_info(1, 1);
     // Checks whether the function works properly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
   });
 
   // Test the sortArtifacts function
-  it('Tests the sortArtifacts function to theme single page', async () => {
+  it('should sort the artifacts on ID', async () => {
     // Create a theme
     let theme = new Theme(1, "New Theme", "Theme desc")
     // Create labels
@@ -77,9 +77,9 @@ describe('SingleThemeViewComponent', () => {
       let spy1 = spyOn(theme, "getLabels");
       let labels = theme.getLabels();
       expect(spy1).toHaveBeenCalled();
-      if(labels != undefined){
+      if (labels != undefined) {
         // For each label, get the artifacts
-        for (let label of labels){
+        for (let label of labels) {
           // Get the artifacts and check
           let spy2 = spyOn(label, "getArtifacts");
           let artifacts = label.getArtifacts();
@@ -90,9 +90,9 @@ describe('SingleThemeViewComponent', () => {
           let artifact3 = new StringArtifact(3, "Identifier 3", "Data 3");
           // Give label 1 artifacts
           label.setArtifacts([artifact2, artifact3, artifact1])
-          if (artifacts != undefined){
+          if (artifacts != undefined) {
             // Sort the artifacts
-            artifacts.sort((a,b) => a.getId() - b.getId());
+            artifacts.sort((a, b) => a.getId() - b.getId());
           }
           // Set the artifacts of the label with the sorted array
           label.setArtifacts(artifacts);
@@ -101,15 +101,15 @@ describe('SingleThemeViewComponent', () => {
       }
     })
   });
-  
+
   // Test the reRouter function
-  it('Tests the reRouter function from theme single page', () => {
+  it('should reroute to the theme management page', () => {
     // Set p_id and t_id in component
     component.p_id = 5;
     component.t_id = 1;
     // Create spy for get url call
-    spyOnProperty(router, 'url', 'get').and.returnValue('/project/'+component.p_id+'/singleTheme'+component.t_id);
-     // Create spy on the router.navigate function
+    spyOnProperty(router, 'url', 'get').and.returnValue('/project/' + component.p_id + '/singleTheme' + component.t_id);
+    // Create spy on the router.navigate function
     spyOn(router, 'navigate');
     // Calls the reRouter function
     component.reRouter();
@@ -118,14 +118,14 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the reRouterTheme function
-  it('Tests the reRouterTheme function from theme single page', async () => {
+  it('should reroute to the single theme page', async () => {
     // Variable for new theme id
     let newThemeId = 2;
     // Set p_id and t_id in component
     component.p_id = 5;
     component.t_id = 1;
     // Create spy for get url call
-    spyOnProperty(router, 'url', 'get').and.returnValue('/project/'+component.p_id+'/singleTheme'+component.t_id);
+    spyOnProperty(router, 'url', 'get').and.returnValue('/project/' + component.p_id + '/singleTheme' + component.t_id);
     // Create spy on the router.navigate function
     let spy1 = spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
     // Create spy on the get_single_theme_info function
@@ -138,12 +138,12 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the reRouterEdit function
-  it('Tests the reRouterEdit function from theme single page', () => {
+  it('should reroute to the edit theme page', () => {
     // Set p_id and t_id in component
     component.p_id = 5;
     component.t_id = 1;
     // Get a value from the router
-    spyOnProperty(router, 'url', 'get').and.returnValue('/project/'+component.p_id+'/singleTheme'+component.t_id);
+    spyOnProperty(router, 'url', 'get').and.returnValue('/project/' + component.p_id + '/singleTheme' + component.t_id);
     // Create spy on the router.navigate function
     let spy1 = spyOn(router, 'navigate');
     // Calls the reRouterEdit function
@@ -153,7 +153,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the getParentName function
-  it('Tests the getParentName function from theme single page', () => {
+  it('should get the theme parent', () => {
     // Create spy on the theme.getParent function
     let spy1 = spyOn(component['theme'], 'getParent');
     // Calls the getParentName function
@@ -163,7 +163,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the goToTheme function
-  it('Tests the goToTheme function from theme single page', () => {
+  it('should go the single theme page of a selected theme', () => {
     // Create a theme
     let theme = new Theme(1, "Theme 1", "Description 1");
     // Create spy on the reRouterTheme function
@@ -175,7 +175,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the deleteTheme function
-  it('Tests the deleteTheme function', () => {
+  it('should delete the theme', () => {
     // Spy on the functions that should have been called
     let spy1 = spyOn(component['theme'], 'getChildren');
     let spy2 = spyOn(component['theme'], 'getLabels');
@@ -187,14 +187,14 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the getNonDoubleArtifacts function
-  it('Tests the getNonDoubleArtifacts function', () => {
+  it('should get non duplicate artifacts', () => {
     // Calls the getNonDoubleArtifacts function and calls a fake
-    spyOn(component, "getNonDoubleArtifacts").and.callFake( (label: Label): StringArtifact[] => {
+    spyOn(component, "getNonDoubleArtifacts").and.callFake((label: Label): StringArtifact[] => {
       // Create fake artifact
       let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
       // Make an array of artifacts that is unsorted
       let artifacts = [artifact1, artifact1];
-      if(artifacts != undefined){
+      if (artifacts != undefined) {
         // Remove the duplicates from the list
         return Array.from(artifacts.reduce((m, t) => m.set(t.getId(), t), new Map()).values());
       }

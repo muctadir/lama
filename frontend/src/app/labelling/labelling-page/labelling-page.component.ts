@@ -107,7 +107,7 @@ export class LabellingPageComponent implements OnInit {
      * If any of this fails the user is redirected back to the stats page.
      */
     // If frozen reroute to stats
-    if (await this.projectDataService.getFrozen()){
+    if (await this.projectDataService.getFrozen()) {
       await this.router.navigate(['/project', this.p_id]);
       this.toastCommService.emitChange([false, "Project frozen, you can not label"]);
       return;
@@ -123,20 +123,20 @@ export class LabellingPageComponent implements OnInit {
     this.eventEmitter.emit();
 
     // Loads the page content
-    await this.loadPageContent();  
+    await this.loadPageContent();
 
     // Get the timestamp when this component is opened
     this.startTime = Date.now();
 
     // Timeout to ensure that all components are loaded.
     await new Promise(f => setTimeout(f, 1000));
-    
+
     this.hidden = true;
   }
 
-  async loadPageContent() : Promise<void> {
+  async loadPageContent(): Promise<void> {
     // Checks whether a labelling ID is provided
-    if(this.routeService.checkLabellingId(this.url)) {
+    if (this.routeService.checkLabellingId(this.url)) {
       // Shows labelling page of a specific artifact
       await this.getNonRandomArtifact(parseInt(this.routeService.getThemeID(this.url)));
     } else {
@@ -154,7 +154,7 @@ export class LabellingPageComponent implements OnInit {
 
     // Checks whether this user has already labelled the artifact, if so redirects to artifact management page
     this.labellers.forEach(labeller => {
-      if (labeller["id"]==user["id"]) {
+      if (labeller["id"] == user["id"]) {
         this.router.navigate(['/project', this.p_id, 'singleartifact', this.routeService.getThemeID(this.url)]);
         this.toastCommService.emitChange([false, "You have already labelled this artifact"]);
       }
@@ -198,7 +198,7 @@ export class LabellingPageComponent implements OnInit {
       if (this.artifact.getId() === -1) {
         this.router.navigate(['/project', this.p_id]);
         this.toastCommService.emitChange([false, "There are no artifacts to label."]);
-      } else{
+      } else {
         this.router.navigate(['/project', this.p_id]);
         this.toastCommService.emitChange([false, "There are no artifacts left to label!"]);
       }
@@ -260,7 +260,7 @@ export class LabellingPageComponent implements OnInit {
    * (if on the labelling page of a specific artifact, redirects to general labelling page)
    */
   skip(): void {
-    if(this.routeService.checkLabellingId(this.url)) {
+    if (this.routeService.checkLabellingId(this.url)) {
       this.router.navigate(['/project', this.p_id, 'labelling-page']);
     } else {
       this.ngOnInit();
@@ -346,9 +346,9 @@ export class LabellingPageComponent implements OnInit {
     try {
       // Wait for the submission
       await this.labellingDataService.postLabelling(dict);
-      if(this.routeService.checkLabellingId(this.url)) {
+      if (this.routeService.checkLabellingId(this.url)) {
         this.reRouter();
-      } else{
+      } else {
         // Reinitialise the page
         this.ngOnInit();
       }
@@ -399,7 +399,7 @@ export class LabellingPageComponent implements OnInit {
       firstCharacter,
       lastCharacter
     );
-  
+
     // Make request to split
     let splitId = await this.artifactDataService.postSplit(this.p_id, this.artifact.getId(), this.artifact.getIdentifier(), firstCharacter, lastCharacter, splitText);
     this.toastCommService.emitChange([true, "Artifact was successfully split into artifact #" + splitId]);
@@ -413,7 +413,7 @@ export class LabellingPageComponent implements OnInit {
    * 
    * @param item id of artifact to show
    */
-  async routeToLabel(item: number | undefined) : Promise<void> {
+  async routeToLabel(item: number | undefined): Promise<void> {
     await this.router.navigate(['/project', this.p_id, 'labelling-page', item]);
     await this.ngOnInit();
   }
@@ -423,7 +423,7 @@ export class LabellingPageComponent implements OnInit {
     // Gets char at start of the word
     let chart = this.artifact?.data.charAt(startPos);
     // Checks if it is at the correct position to begin with
-    if (chart == ' ' ) {
+    if (chart == ' ') {
       startPos = startPos + 1
       return startPos
     }

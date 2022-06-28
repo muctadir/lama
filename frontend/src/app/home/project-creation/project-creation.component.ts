@@ -2,7 +2,7 @@
 // Veerle Fürst
 // Jarl Jansen
 
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'app/classes/user';
 import { Router } from '@angular/router';
@@ -11,12 +11,6 @@ import { InputCheckService } from 'app/services/input-check.service';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { ProjectDataService } from 'app/services/project-data.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
-
-// Project object
-interface Project {
-  projectName: string,
-  projectDescription: string;
-}
 
 /* Project creation component */
 @Component({
@@ -28,12 +22,12 @@ interface Project {
 export class ProjectCreationComponent implements OnInit {
   /* Array of holding all possible members which can be added */
   allMembers: User[] = [];
- 
+
   /* Array with all members of the project getting created */
   projectMembers: User[] = [];
 
   /* FormGroup which will hold the different information of the project */
-  projectForm : FormGroup = this.formBuilder.group({
+  projectForm: FormGroup = this.formBuilder.group({
     projectName: '',
     projectDesc: '',
     labellerCount: 2,
@@ -51,10 +45,10 @@ export class ProjectCreationComponent implements OnInit {
    * @param service instance of InputCheckService
    */
   constructor(private modalService: NgbModal, private router: Router,
-     private formBuilder: FormBuilder,
-     private projectDataService: ProjectDataService,
-     private toastCommService: ToastCommService,
-     private service: InputCheckService) {}
+    private formBuilder: FormBuilder,
+    private projectDataService: ProjectDataService,
+    private toastCommService: ToastCommService,
+    private service: InputCheckService) { }
 
   /**
    * Gets all the users within the application from the backend
@@ -63,7 +57,7 @@ export class ProjectCreationComponent implements OnInit {
    * @modifies allMembers
    * @trigger on creation of component
    */
-  ngOnInit(): void { 
+  ngOnInit(): void {
     // Get all users within the tool
     this.getUsers();
   }
@@ -72,7 +66,7 @@ export class ProjectCreationComponent implements OnInit {
    * Gets all the users from project-data.service
    * 
    */
-   async getUsers(): Promise<void> {
+  async getUsers(): Promise<void> {
     const allMembers = await this.projectDataService.getUsers();
     this.allMembers = allMembers;
   }
@@ -84,26 +78,26 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @trigger Create project button is clicked
    */
-  async createProject() : Promise<void> {
+  async createProject(): Promise<void> {
     // Creates object which will be returned to the backend
     let projectInformation: Record<string, any> = {};
     // Adds the projectname, project description and nr of labellers to the object
     projectInformation["project"] = {
-      "name" : this.projectForm.value.projectName,
-      "description" : this.projectForm.value.projectDesc,
+      "name": this.projectForm.value.projectName,
+      "description": this.projectForm.value.projectDesc,
       "criteria": this.projectForm.value.labellerCount
     };
-    
+
     // Adds the users of the project to the object
     this.addUsers(projectInformation)
-    
+
     // Gets the array containing the different label types
     let labelTypes = this.labelTypeToArray();
     // Adds the labeltypes to the object
     projectInformation["labelTypes"] = labelTypes;
 
     // Checks whether the use input is correct
-    if(this.checkProjectData(projectInformation)){
+    if (this.checkProjectData(projectInformation)) {
       try {
         // Calls function responsible for making the project creation request
         await this.projectDataService.makeRequest(projectInformation);
@@ -111,9 +105,9 @@ export class ProjectCreationComponent implements OnInit {
         this.toastCommService.emitChange([true, "Project created sucessfully"]);
         // Navigates the user back to the home page
         this.router.navigate(["/home"]);
-      } catch(e: any){
+      } catch (e: any) {
         // Check if the error has invalid characters
-        if(e.response.status == 511){
+        if (e.response.status == 511) {
           // Displays the error message
           this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
         } else if (e.response.data == "Input contains leading or trailing whitespaces") {
@@ -137,9 +131,9 @@ export class ProjectCreationComponent implements OnInit {
    * @param projectInformation the project data that we will use to check these requirements
    * @returns whether the info satisfies these requirements
    */
-  checkProjectData(projectInformation: Record<string, any>) : boolean {
+  checkProjectData(projectInformation: Record<string, any>): boolean {
     // Checks whether the project name/description is non-empty
-    let checkFilled: boolean = this.service.checkFilled(projectInformation["project"]["name"]) && 
+    let checkFilled: boolean = this.service.checkFilled(projectInformation["project"]["name"]) &&
       this.service.checkFilled(projectInformation["project"]["description"])
 
     // checks whether the number of labeltypes is greater than 0
@@ -147,8 +141,8 @@ export class ProjectCreationComponent implements OnInit {
 
     // Checks whether all label types are non-empty
     let labelFilled: boolean = true;
-    for(const labeltype of projectInformation["labelTypes"]) {
-      if(!this.service.checkFilled(labeltype)) {
+    for (const labeltype of projectInformation["labelTypes"]) {
+      if (!this.service.checkFilled(labeltype)) {
         labelFilled = false;
       }
     }
@@ -157,7 +151,7 @@ export class ProjectCreationComponent implements OnInit {
     return checkFilled && labelFilled && moreThanOneLabelType;
   }
 
-  
+
   /**
    * Adds the users which the user has selected to add to the new project
    * to the projectInformation, so that the backend knows which users to add.
@@ -165,12 +159,12 @@ export class ProjectCreationComponent implements OnInit {
    * @param projectInformation Record holding the project information
    * @modifies projectInformation
    */
-  addUsers(projectInformation : Record<string, any>) : void {
+  addUsers(projectInformation: Record<string, any>): void {
     // Users within the project
     projectInformation["users"] = []
 
     // For each user get the admin status
-    for (let projectMember of this.projectMembers){
+    for (let projectMember of this.projectMembers) {
       // Boolean indicating whether the user is an admin
       let admin: boolean = false;
       let adminCheckbox = document.getElementById("projectAdminCheckBox-" + projectMember.getUsername()) as HTMLInputElement;
@@ -190,7 +184,7 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @returns FormArray with the different label types
    */
-  get labeltypes() : FormArray {
+  get labeltypes(): FormArray {
     return this.projectForm.controls["labeltypes"] as FormArray;
   }
 
@@ -199,9 +193,9 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @modifies projectForm
    */
-  addLabelType() : void {
+  addLabelType(): void {
     // Create the new formGroup
-    const labelTypeForm : FormGroup = this.formBuilder.group({
+    const labelTypeForm: FormGroup = this.formBuilder.group({
       label: ''
     });
     // Adds the formGroup to the formArray containing the different label types.
@@ -215,7 +209,7 @@ export class ProjectCreationComponent implements OnInit {
    * @param labelTypeIndex the index of the label type which should be removed
    * @trigger remove button of the labelTypeIndex is clicked
    */
-  deleteLabelType(labelTypeIndex: number) : void {
+  deleteLabelType(labelTypeIndex: number): void {
     this.labeltypes.removeAt(labelTypeIndex);
   }
 
@@ -226,13 +220,13 @@ export class ProjectCreationComponent implements OnInit {
    * @returns Array containing the different labeltypes.
    * @trigger Create project button is clicked
    */
-  labelTypeToArray() : Array<string> {
+  labelTypeToArray(): Array<string> {
     // Gets the iterator of labelTypes
     let labelTypes = this.projectForm.value.labeltypes.values();
     // Creates the new array which will will be returned
     let labelTypesArray = [];
     // Iterates over the labelTypes, adds each labeltype to the array
-    for(var element of labelTypes) {
+    for (var element of labelTypes) {
       labelTypesArray.push(element['label']);
     }
     // Returns the array
@@ -245,13 +239,13 @@ export class ProjectCreationComponent implements OnInit {
    * @param id the id of the member that should be removed from the project
    * @modifes projectMembers
    */
-  removeMember(member :any) : void {
+  removeMember(member: any): void {
     // Go through all members
-    this.projectMembers.forEach((projectMember, index)=>{
+    this.projectMembers.forEach((projectMember, index) => {
       // If clicked cross matches the person, splice them from the members
-      if(projectMember == member){
+      if (projectMember == member) {
         // Remove the person from the project members
-        this.projectMembers.splice(index,1);
+        this.projectMembers.splice(index, 1);
         // Add the person to all members
         this.allMembers.push(member);
       }
@@ -263,7 +257,7 @@ export class ProjectCreationComponent implements OnInit {
    * 
    * @modifies projectMembers
    */
-  open() : void {
+  open(): void {
     // opens the AddUsersModal
     const modalRef = this.modalService.open(AddUsersModalComponent);
 
@@ -275,8 +269,8 @@ export class ProjectCreationComponent implements OnInit {
       let user = $e;
 
       // Checks if the user is already added
-      if(!this.projectMembers.some(e => e.getUsername() === user.getUsername())){
-         // If not, we add them
+      if (!this.projectMembers.some(e => e.getUsername() === user.getUsername())) {
+        // If not, we add them
         this.projectMembers.push(user);
       }
 

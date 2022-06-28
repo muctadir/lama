@@ -15,9 +15,9 @@ describe('AccountComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountComponent ]
+      declarations: [AccountComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -55,7 +55,7 @@ describe('AccountComponent', () => {
     expect(modeSpy).toHaveBeenCalled();
   });
 
-  
+
   it('Checks whether getInformation calls accountService.userData()', async () => {
     // Creates the spy on userData()
     let dataSpy = spyOn(component["accountService"], "userData");

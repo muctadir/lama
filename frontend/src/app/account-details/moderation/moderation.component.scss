@@ -45,39 +45,45 @@ $light-grey-shade: #bfbfbf;
 }
 
 // Border for the edit button
-#editButton{
+#editButton {
     border: $orange-shade;
 }
 
 //Scroll Related Business
 .my-custom-scrollbar {
-    position:relative;
+    position: relative;
     height: 80vh;
     overflow: auto;
-    }
+}
+
 .table-wrapper-scroll-y {
     display: block;
-    }
+}
+
 //Scroll Bar 
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }
+
 // Scroll bar
-#scrolly{
+#scrolly {
     padding-right: 40px;
     height: auto;
 }

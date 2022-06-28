@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
-import { StringArtifact } from 'app/classes/stringartifact';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ArtifactManagementPageComponent } from './artifact-management-page.component';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
-import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
 
 describe('ArtifactManagementPageComponent', () => {
   /* Objects to be used in testing */
@@ -16,11 +14,6 @@ describe('ArtifactManagementPageComponent', () => {
   let a_id = 1;
   // Current url
   let url = 'project/1/artifactmanagement';
-  // List of StringArtifacts
-  let artifacts = [
-    new StringArtifact(1, 'IDENT', "Some artifact"),
-    new StringArtifact(2, 'IDENT', "Another artifact")
-  ];
 
   let component: ArtifactManagementPageComponent;
   let fixture: ComponentFixture<ArtifactManagementPageComponent>;
@@ -31,8 +24,6 @@ describe('ArtifactManagementPageComponent', () => {
   let router: Router;
   // Instantiation of NgbModal
   let modalService: NgbModal;
-  // Instantiation of NgbModalRef
-  let modalRef: NgbModalRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -43,7 +34,7 @@ describe('ArtifactManagementPageComponent', () => {
       providers: [NgbActiveModal, FormBuilder]
     })
       .compileComponents();
-      // Inject the artifact data service into the component's constructor
+    // Inject the artifact data service into the component's constructor
     artifactDataService = TestBed.inject(ArtifactDataService);
     // Inject the router into the component's constructor
     router = TestBed.inject(Router);

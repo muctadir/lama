@@ -10,15 +10,15 @@ describe('NavigationMenuComponent', () => {
   let component: NavigationMenuComponent;
   let fixture: ComponentFixture<NavigationMenuComponent>;
   let router: Router;
-  
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavigationMenuComponent ],
+      declarations: [NavigationMenuComponent],
       // Adds the RouterTestingModule dependency
       imports: [RouterTestingModule],
     })
-    .compileComponents();
+      .compileComponents();
     router = TestBed.inject(Router);
   });
 
@@ -40,7 +40,7 @@ describe('NavigationMenuComponent', () => {
     let spy = spyOn(component, "evalURL");
 
     // Calls ngOnInit
-    component.ngOnInit(); 
+    component.ngOnInit();
 
     // Checks whether evalURL was called correctly
     expect(spy).toHaveBeenCalledWith("/project/5/stats");
@@ -58,12 +58,12 @@ describe('NavigationMenuComponent', () => {
     // Create spy for get url call
     spyOnProperty(router, 'url', 'get').and.returnValue('/project/5/stats');
 
-     // Create spy on the router.navigate function, and stubs the call (doesnt do anything)
+    // Create spy on the router.navigate function, and stubs the call (doesnt do anything)
     spyOn(router, 'navigate');
-    
+
     // Calls the changePage function
     component.changePage("thememanagement");
-    
+
     // Checks whether the function works properly
     expect(router.navigate).toHaveBeenCalledWith(['/project', '5', 'thememanagement']);
   });

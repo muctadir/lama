@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { IndividualLabelComponent } from './individual-label.component';
 
 describe('IndividualLabelComponent', () => {
@@ -11,13 +9,13 @@ describe('IndividualLabelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IndividualLabelComponent ],
+      declarations: [IndividualLabelComponent],
       // Addis RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbActiveModal dependency
       providers: [NgbActiveModal]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

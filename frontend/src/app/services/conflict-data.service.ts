@@ -10,7 +10,7 @@ export class ConflictDataService {
   /* Session token for authentication */
   private sessionToken: string | null;
 
-  constructor() { 
+  constructor() {
     this.sessionToken = sessionStorage.getItem('ses_token');
     this.requestHandler = new RequestHandler(this.sessionToken);
   }
@@ -32,23 +32,23 @@ export class ConflictDataService {
     // Array with results
     let result: Array<any> = new Array<any>();
 
-      // Makes the request to the backend for all users in the application
-      let response: any = await this.requestHandler.get(
-        "/conflict/conflictmanagement", {'p_id': p_id}, true);
+    // Makes the request to the backend for all users in the application
+    let response: any = await this.requestHandler.get(
+      "/conflict/conflictmanagement", { 'p_id': p_id }, true);
 
-      // Add the information form each conflict to result
-      response.forEach((conflict: any) => {
-        result.push({
-          'conflictName': conflict.a_id,
-          'conflictData': conflict.a_data,
-          'conflictLTid': conflict.lt_id,
-          'conflictLT': conflict.lt_name,
-          'conflictUsers': conflict.users
-        })
-      });
+    // Add the information form each conflict to result
+    response.forEach((conflict: any) => {
+      result.push({
+        'conflictName': conflict.a_id,
+        'conflictData': conflict.a_data,
+        'conflictLTid': conflict.lt_id,
+        'conflictLT': conflict.lt_name,
+        'conflictUsers': conflict.users
+      })
+    });
 
-      // Return the result
-      return result;
+    // Return the result
+    return result;
   }
 
   /**
@@ -60,8 +60,8 @@ export class ConflictDataService {
    */
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<Record<string, any>> {
     // Make call to the backend to get label and return the response
-    let response = await this.requestHandler.get('/conflict/LabelPerUser', 
-    {'p_id': p_id, 'a_id': a_id, 'lt_id': lt_id}, true);
+    let response = await this.requestHandler.get('/conflict/LabelPerUser',
+      { 'p_id': p_id, 'a_id': a_id, 'lt_id': lt_id }, true);
     return response
   }
 
@@ -73,8 +73,8 @@ export class ConflictDataService {
    */
   async getLabelsByType(p_id: number, lt_id: number): Promise<Array<Record<string, any>>> {
     // Make call to the backend to get labels from a label type in a project and return the response
-    let response = await this.requestHandler.get('/labeltype/labelsByType', 
-    {'p_id': p_id, 'lt_id': lt_id}, true);
+    let response = await this.requestHandler.get('/labeltype/labelsByType',
+      { 'p_id': p_id, 'lt_id': lt_id }, true);
     return response;
   }
 }

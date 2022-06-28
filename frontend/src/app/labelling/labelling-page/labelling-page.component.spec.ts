@@ -16,10 +16,10 @@ describe('LabellingPageComponent', () => {
   // Adds router dependency
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LabellingPageComponent ],
+      declarations: [LabellingPageComponent],
       imports: [RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -68,7 +68,7 @@ describe('LabellingPageComponent', () => {
     // Checks the variables
     expect(component.hidden).toBe(true);
     expect(component.startTime).toBeDefined();
-  });  
+  });
 
   it('tests loadPageContent if = false', async () => {
     // Creates the spies
@@ -81,7 +81,7 @@ describe('LabellingPageComponent', () => {
     // Checks the result
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
-  });  
+  });
 
   it('tests loadPageContent if = true', async () => {
     // Sets current url
@@ -107,14 +107,14 @@ describe('LabellingPageComponent', () => {
     expect(spy2).toHaveBeenCalledWith(5);
     expect(spy3).toHaveBeenCalled();
     expect(spy4).toHaveBeenCalled();
-    expect(spy5).toHaveBeenCalledWith(['/project', 3 ,'singleartifact', "5"]);
+    expect(spy5).toHaveBeenCalledWith(['/project', 3, 'singleartifact', "5"]);
     expect(spy6).toHaveBeenCalledWith([false, "You have already labelled this artifact"]);
     expect(spy7).toHaveBeenCalled();
-  }); 
+  });
 
   it('tests getNonRandomArtifact without error', async () => {
     // Artifact to return
-    let output = {"result": new StringArtifact(3, "abc", "a long text")}
+    let output = { "result": new StringArtifact(3, "abc", "a long text") }
 
     // Creates the spies
     let spy = spyOn(component["artifactDataService"], "getArtifact").and.returnValue(Promise.resolve(output));
@@ -127,7 +127,7 @@ describe('LabellingPageComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
     expect(component.artifact).toEqual(new StringArtifact(3, "abc", "a long text"));
-  });  
+  });
 
   it('tests getNonRandomArtifact with error', async () => {
     // Creates the spies
@@ -144,7 +144,7 @@ describe('LabellingPageComponent', () => {
     expect(spy2).toHaveBeenCalled();
     expect(spy3).toHaveBeenCalled();
     expect(spy4).toHaveBeenCalledWith([false, "Invalid request"]);
-  }); 
+  });
 
   it('tests getRandomArtifact without error', async () => {
     // Artifact to return
@@ -162,7 +162,7 @@ describe('LabellingPageComponent', () => {
     expect(spy2).toHaveBeenCalled();
     // Checks return value
     expect(final).toBeTruthy();
-  }); 
+  });
 
   it('tests getRandomArtifact with error case 1', async () => {
     // Sets component basic values
@@ -182,7 +182,7 @@ describe('LabellingPageComponent', () => {
     expect(spy3).toHaveBeenCalledWith([false, "There are no artifacts to label."]);
     // Checks return value
     expect(final).toBeFalsy();
-  }); 
+  });
 
   it('tests getRandomArtifact with error case 2', async () => {
     // Sets component basic values
@@ -206,7 +206,7 @@ describe('LabellingPageComponent', () => {
   });
 
   it('tests getLabellersGen without error', async () => {
-    let labellers = ["one", "two", "test"]; 
+    let labellers = ["one", "two", "test"];
     // Creates the spies
     let spy = spyOn(component["artifactDataService"], "getLabellers").and.returnValue(Promise.resolve(labellers));
 
@@ -238,7 +238,7 @@ describe('LabellingPageComponent', () => {
 
   it('getLabelTypesWithLabels non error case', async () => {
     let input = [new LabelType(1, "labeltype1", [new Label(1, "l1", "d1", "1"), new Label(2, "l2", "d2", "1")]),
-      new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])];
+    new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])];
     // Creates the spies
     let spy = spyOn(component["labellingDataService"], "getLabelTypesWithLabels").and.returnValue(Promise.resolve(input));
 
@@ -327,7 +327,7 @@ describe('LabellingPageComponent', () => {
     // Does the checks
     expect(component.endTime).toBeDefined();
     expect(spy).toHaveBeenCalled();
-    expect(spy2).toHaveBeenCalledWith({p_id: 5, resultArray: [1, 2, 3]});
+    expect(spy2).toHaveBeenCalledWith({ p_id: 5, resultArray: [1, 2, 3] });
     expect(spy3).toHaveBeenCalledWith([true, "Artifact labelled successfully"]);
   });
 
@@ -405,7 +405,7 @@ describe('LabellingPageComponent', () => {
   it('selectedText test where start char > end char', () => {
     // Creates spies for function calls
     // @ts-ignore: Complains about type, but should be fine for test case
-    let spyLabel = spyOn(document, "getSelection").and.returnValue({anchorOffset: 300, focusOffset: 200});
+    let spyLabel = spyOn(document, "getSelection").and.returnValue({ anchorOffset: 300, focusOffset: 200 });
 
     // Makes the function call
     component.selectedText();
@@ -416,7 +416,7 @@ describe('LabellingPageComponent', () => {
     expect(component.selectionStartChar).toBe(200);
     expect(component.selectionEndChar).toBe(300);
     // Checks whether we are indeed in second case
-    expect(component.hightlightedText).toBe({anchorOffset: 300, focusOffset: 200}.toString());
+    expect(component.hightlightedText).toBe({ anchorOffset: 300, focusOffset: 200 }.toString());
   });
 
   it('selectedText test where nothing selected', () => {

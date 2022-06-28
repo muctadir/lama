@@ -23,7 +23,7 @@ export class ThemeInfoComponent implements OnInit {
   edit = false;
   // Header of the page
   createEditThemeHeader: string = "";
-   
+
   // Error message string
   errorMsg = "";
 
@@ -74,29 +74,29 @@ export class ThemeInfoComponent implements OnInit {
   addedSubThemes: Array<Theme> = [];
   // All sub-themes
   allSubThemes: Array<Theme> = [];
- 
-  constructor(private formBuilder: FormBuilder, 
-    private service: InputCheckService, 
-    private router: Router, 
-    private themeDataService: ThemeDataService, 
+
+  constructor(private formBuilder: FormBuilder,
+    private service: InputCheckService,
+    private router: Router,
+    private themeDataService: ThemeDataService,
     private labelDataService: LabellingDataService,
     private toastCommService: ToastCommService,
-    private projectDataService: ProjectDataService) { 
+    private projectDataService: ProjectDataService) {
     // Gets the url from the router
     this.url = this.router.url
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = Number(this.routeService.getProjectID(this.url));    
+    this.p_id = Number(this.routeService.getProjectID(this.url));
     // Initialize theme
     this.theme = new Theme(0, "", "");
     // Initialize themeId
     this.t_id = 0;
   }
 
-  async ngOnInit(){
+  async ngOnInit() {
     // Check if the project is frozen
-    if (await this.projectDataService.getFrozen()){
+    if (await this.projectDataService.getFrozen()) {
       await this.router.navigate(['/project', this.p_id]);
       this.toastCommService.emitChange([false, "Project frozen, you cannot create or edit a theme"]);
       return;
@@ -105,23 +105,23 @@ export class ThemeInfoComponent implements OnInit {
     // Set the create/edit booleans
     this.setBooleans();
     // Set the header of the page
-    this.setHeader();  
+    this.setHeader();
 
     // Get all possible labels
     this.get_labels(this.p_id);
 
     // If in edit mode, get the information and set values
-    if (this.edit) {      
+    if (this.edit) {
       // Get theme id
       this.t_id = Number(this.routeService.getThemeID(this.url));
       // Get all possible themes, except this theme
       this.get_themes_without_parents(this.p_id, this.t_id);
       // Get the current theme
       this.get_single_theme_info()
-      .then(() => {
-        // Set the values of the page
-        this.insertThemeInfo();
-      })      
+        .then(() => {
+          // Set the values of the page
+          this.insertThemeInfo();
+        })
     } else {
       // Get all possible themes
       this.get_themes_without_parents(this.p_id, 0);
@@ -131,7 +131,7 @@ export class ThemeInfoComponent implements OnInit {
   // Function for setting the edit/create booleans
   setBooleans(): void {
     // Set the booleans accordingly
-    if (this.url.indexOf("create") > -1){
+    if (this.url.indexOf("create") > -1) {
       this.edit = false;
       this.create = true;
     } else {
@@ -143,7 +143,7 @@ export class ThemeInfoComponent implements OnInit {
   // Function for setting the header of the page
   setHeader(): void {
     // Get the header based on the booleans
-    if (this.create){
+    if (this.create) {
       this.createEditThemeHeader = "Create";
     } else {
       this.createEditThemeHeader = "Edit";
@@ -160,13 +160,13 @@ export class ThemeInfoComponent implements OnInit {
     // Get the labels of the theme
     let labels = this.theme.getLabels()
     // Set the labels of the theme in the page
-    if(labels != undefined){
+    if (labels != undefined) {
       this.addedLabels = labels;
     }
     // Get the children of the theme
     let children = this.theme.getChildren()
     // Set the children of the theme in the page
-    if(children != undefined){
+    if (children != undefined) {
       this.addedSubThemes = children;
     }
     // Set the name and description
@@ -179,13 +179,13 @@ export class ThemeInfoComponent implements OnInit {
   // Function for creating a theme
   async createTheme(): Promise<void> {
     // Checks input
-    let not_empty = this.service.checkFilled(this.themeForm.value.name) && 
+    let not_empty = this.service.checkFilled(this.themeForm.value.name) &&
       this.service.checkFilled(this.themeForm.value.description);
-                
+
     // Chooses desired behaviour based on validity of input
     if (not_empty) {
       let themeInfo;
-      if(this.create){
+      if (this.create) {
         themeInfo = {
           "name": this.themeForm.value.name,
           "description": this.themeForm.value.description,
@@ -203,13 +203,13 @@ export class ThemeInfoComponent implements OnInit {
           "p_id": this.p_id
         }
       }
-      
+
       // Send the theme information to the backend
       let response = await this.post_theme_info(themeInfo);
       // Get all possible themes
-      await this.get_themes_without_parents(this.p_id, 0);      
+      await this.get_themes_without_parents(this.p_id, 0);
       // Rerouter and reset if theme was created
-      if(response == "Theme created" || response == "Theme edited") {
+      if (response == "Theme created" || response == "Theme edited") {
         // Reset the added arrays
         this.addedLabels = [];
         this.addedSubThemes = [];
@@ -220,11 +220,11 @@ export class ThemeInfoComponent implements OnInit {
         this.selectedDescriptionLabel = '';
         this.selectedDescriptionTheme = '';
         // Give success message
-        this.errorMsg = response;  
+        this.errorMsg = response;
         // Reset name and description forms
         this.themeForm.reset();
-        this.reRouter(); 
-      }  
+        this.reRouter();
+      }
     } else {
       // Displays error message
       this.toastCommService.emitChange([false, "Name or description not filled in"]);
@@ -242,13 +242,13 @@ export class ThemeInfoComponent implements OnInit {
     // Put the gotten themes into the list of themes
     this.allLabels = await this.labelDataService.getLabels(p_id);
   }
-  
+
   // Async function for posting the new theme info
   async post_theme_info(theme_info: any): Promise<string> {
-    if (this.create){
+    if (this.create) {
       // Send info to backend
       return this.themeDataService.create_theme(theme_info);
-    } else if (this.edit){
+    } else if (this.edit) {
       return this.themeDataService.edit_theme(theme_info);
     } else {
       return "Error has occured when saving the theme";
@@ -259,8 +259,8 @@ export class ThemeInfoComponent implements OnInit {
   //Adds labels to added labels array.
   addLabel(label: Label): void {
     // Check if the label was already added
-    for (var addedLabel of this.addedLabels){
-      if (addedLabel.getId() == label.getId()){
+    for (var addedLabel of this.addedLabels) {
+      if (addedLabel.getId() == label.getId()) {
         // Then return
         return;
       }
@@ -272,8 +272,8 @@ export class ThemeInfoComponent implements OnInit {
   //Function for adding subtheme to added subthemes array
   addSubtheme(subTheme: Theme): void {
     // Check if the sub-theme was already added
-    for (var addedSubTheme of this.addedSubThemes){
-      if (addedSubTheme.getId() == subTheme.getId()){
+    for (var addedSubTheme of this.addedSubThemes) {
+      if (addedSubTheme.getId() == subTheme.getId()) {
         // Then return
         return;
       }
@@ -285,12 +285,12 @@ export class ThemeInfoComponent implements OnInit {
   // REMOVING LABELS / THEMES
   // Function for removing label
   removeLabel(label: Label): void {
-    
+
     // Go through all labels
-    this.addedLabels.forEach((addedLabels, index)=>{
+    this.addedLabels.forEach((addedLabels, index) => {
       // If clicked cross matches the label, splice them from the labels
-      if(addedLabels==label){
-        this.addedLabels.splice(index,1);
+      if (addedLabels == label) {
+        this.addedLabels.splice(index, 1);
       }
     });
   }
@@ -298,19 +298,19 @@ export class ThemeInfoComponent implements OnInit {
   // Function for removing subtheme
   removeSubtheme(subTheme: Theme): void {
     // Go through all labels
-    this.addedSubThemes.forEach((addedSubThemes, index)=>{
+    this.addedSubThemes.forEach((addedSubThemes, index) => {
       // If clicked cross matches the label, splice them from the labels
-      if(addedSubThemes==subTheme){
-        this.addedSubThemes.splice(index,1);
+      if (addedSubThemes == subTheme) {
+        this.addedSubThemes.splice(index, 1);
       }
-    });   
+    });
     // Put the sub-theme back into the allSubThemes list
-    if(this.edit){
+    if (this.edit) {
       // Check if the theme is already in the array
-      if(this.allSubThemes.indexOf(subTheme) < 0){
+      if (this.allSubThemes.indexOf(subTheme) < 0) {
         this.allSubThemes.push(subTheme);
       }
-    } 
+    }
   }
 
   // HIGHLIGHTING
@@ -339,8 +339,8 @@ export class ThemeInfoComponent implements OnInit {
    * 
    * @trigger back button is pressed
   */
-  reRouter() : void {    
-    if(this.create){
+  reRouter(): void {
+    if (this.create) {
       // Changes the route accordingly
       this.router.navigate(['/project', this.p_id, 'thememanagement']);
     } else {
@@ -351,30 +351,30 @@ export class ThemeInfoComponent implements OnInit {
   /**
    * Function to search through all labels
    */
-  async searchLabel() : Promise<void> {
+  async searchLabel(): Promise<void> {
     // Get the text of the form
     var text: string = this.labelSearch.value.labelSearch;
     // Get all labels
     await this.get_labels(this.p_id);
     // If the string in not empty, we look for the labels that correspons
-    if (text != ""){
+    if (text != "") {
       // Get the array of labels that are included in the search
       let newArray = this.allLabels.filter(s => s.getName().toLowerCase().includes(text.toLowerCase()));
       // Set the labels
       this.allLabels = newArray;
     }
   }
-  
+
   /**
    * Function to search through all sub-themes
    */
-  async searchTheme() : Promise<void> {
+  async searchTheme(): Promise<void> {
     // Get the text of the form
     var text: string = this.themeSearch.value.themeSearch;
     // Get all labels
     await this.get_themes_without_parents(this.p_id, this.t_id);
     // If the string in not empty, we look for the labels that correspons
-    if (text != ""){
+    if (text != "") {
       // Get the array of labels that are included in the search
       let newArray = this.allSubThemes.filter(s => s.getName().toLowerCase().includes(text.toLowerCase()));
       // Set the labels

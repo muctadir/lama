@@ -118,7 +118,7 @@ export class MergeLabelFormComponent {
     // Check you are merging two or more labels
     if (this.toBeMergedLabels.length < 2) {
       this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
-      return 
+      return
     }
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
@@ -135,7 +135,7 @@ export class MergeLabelFormComponent {
         'p_id': this.p_id
       });
       // Make toast signalling whether the merging was successful or not
-      if(response == "Success" ){
+      if (response == "Success") {
         this.toastCommService.emitChange([true, "Labels merged successfully"])
         // Close modal
         this.activeModal.close()
@@ -143,25 +143,25 @@ export class MergeLabelFormComponent {
       else {
         this.toastCommService.emitChange([false, response])
       }
-    } catch (e:any) {
+    } catch (e: any) {
       // Check if the error has invalid characters
-      if (e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
+        // Check if error has invalid whitespaces
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      // Check if the label name is empty
-      } else if (e.response.data == "Label name cannot be empty"){
+        // Check if the label name is empty
+      } else if (e.response.data == "Label name cannot be empty") {
         // Throw error
         this.toastCommService.emitChange([false, "Label name cannot be empty"]);
-      // Check if the label description is empty
-      } else if (e.response.data == "Label description cannot be empty"){
+        // Check if the label description is empty
+      } else if (e.response.data == "Label description cannot be empty") {
         // Throw error
         this.toastCommService.emitChange([false, "Label description cannot be empty"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
+        // Check if label name already exists
+      } else if (e.response.data == "Label name already exists") {
         // Throw error
         this.toastCommService.emitChange([false, "Label name already exists."]);
       } else {

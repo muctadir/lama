@@ -8,9 +8,9 @@ describe('ToastGlobalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ToastGlobalComponent ]
+      declarations: [ToastGlobalComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

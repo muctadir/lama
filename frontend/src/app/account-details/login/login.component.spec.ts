@@ -19,7 +19,7 @@ describe('LoginComponent', () => {
       // Added the dependencies InputCheckService, FormBuilder
       providers: [InputCheckService, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   /* Executed before each test case, creates a LoginComponent */
@@ -36,7 +36,7 @@ describe('LoginComponent', () => {
 
   it('Checks loginSubmit with valid input', () => {
     // Sets a valid input
-    component.loginForm.setValue({username: 'username_test', password: 'password_test'});
+    component.loginForm.setValue({ username: 'username_test', password: 'password_test' });
     // Creates the spy for checklogin
     let spy = spyOn(component, "checkLogin");
     // Calls the function to be tested
@@ -49,7 +49,7 @@ describe('LoginComponent', () => {
 
   it('Checks loginSubmit with invalid username', () => {
     // Sets a valid input
-    component.loginForm.setValue({username: '', password: 'password_test'});
+    component.loginForm.setValue({ username: '', password: 'password_test' });
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Calls the function to be tested
@@ -62,7 +62,7 @@ describe('LoginComponent', () => {
 
   it('Checks loginSubmit with invalid password', () => {
     // Sets a valid input
-    component.loginForm.setValue({username: 'yayaya', password: ''});
+    component.loginForm.setValue({ username: 'yayaya', password: '' });
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Calls the function to be tested

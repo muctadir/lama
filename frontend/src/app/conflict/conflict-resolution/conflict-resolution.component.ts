@@ -380,7 +380,7 @@ export class ConflictResolutionComponent implements OnInit {
    * 
    * @Trigger clicked on the back button
    */
-  reRouter(){
+  reRouter() {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, 'conflict']);
   }

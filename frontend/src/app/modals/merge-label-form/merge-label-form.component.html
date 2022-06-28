@@ -15,12 +15,7 @@
       <!-- Input for label type -->
       <div class="input-group">
         <!-- Select for label type -->
-        <select
-          class="form-control"
-          id="label-type"
-          name="labels"
-          formControlName="labelType"
-        >
+        <select class="form-control" id="label-type" name="labels" formControlName="labelType">
           <option *ngFor="let labelType of labelTypes" [ngValue]="labelType">
             {{ labelType.getName() }}
           </option>
@@ -35,28 +30,16 @@
       <!-- Get the labels of that label type -->
       <div class="label-selection-form" [formGroup]="form">
         <ng-container formArrayName="toBeMergedLabels">
-          <ng-container
-            *ngFor="let labelForm of toBeMergedLabels.controls; let i = index"
-            [formGroupName]="i"
-          >
+          <ng-container *ngFor="let labelForm of toBeMergedLabels.controls; let i = index" [formGroupName]="i">
             <div class="input-group label-selection">
               <!-- Select multiple labels-->
               <select class="form-control" formControlName="label">
-                <option
-                  *ngFor="let label of this.availableLabels"
-                  [ngValue]="label"
-                  [disabled]="used.includes(label)"
-                >
+                <option *ngFor="let label of this.availableLabels" [ngValue]="label" [disabled]="used.includes(label)">
                   {{ label.getName() }}
                 </option>
               </select>
               <div class="input-group-append">
-                <button
-                  (click)="rem(i)"
-                  type="button"
-                  class="btn btn-light"
-                  style="float: right"
-                >
+                <button (click)="rem(i)" type="button" class="btn btn-light" style="float: right">
                   <!-- Plus icon -->
                   <i class="bi bi-dash"></i>
                 </button>
@@ -70,26 +53,15 @@
       <div>
         <!-- Name given to merge -->
         <div class="subTitle">Merge Name</div>
-        <input
-          type="text"
-          class="form-control"
-          id="label-name"
-          placeholder="Merge Name"
-          formControlName="mergerName"
-        />
+        <input type="text" class="form-control" id="label-name" placeholder="Merge Name" formControlName="mergerName" />
       </div>
       <div>
         <!-- Description -->
         <div class="subTitle">Description</div>
         <!-- Input area -->
         <div class="form-group">
-          <textarea
-            class="form-control"
-            rows="8"
-            placeholder="Description"
-            id="remark"
-            formControlName="mergerDescription"
-          ></textarea>
+          <textarea class="form-control" rows="8" placeholder="Description" id="remark"
+            formControlName="mergerDescription"></textarea>
         </div>
       </div>
     </div>
@@ -98,18 +70,10 @@
   <!-- Buttons for cancelling and submitting -->
   <div class="row" id="buttons-cancel-submit">
     <div class="form-group" id="butt">
-      <button
-        class="btn btn-primary float-end"
-        (click)="submit()"
-        id="btns-cancel-submit"
-      >
+      <button class="btn btn-primary float-end" (click)="submit()" id="btns-cancel-submit">
         Submit
       </button>
-      <button
-        class="btn btn-secondary float-end"
-        id="btns-cancel-submit"
-        (click)="activeModal.close('Close click')"
-      >
+      <button class="btn btn-secondary float-end" id="btns-cancel-submit" (click)="activeModal.close('Close click')">
         Cancel
       </button>
     </div>

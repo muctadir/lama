@@ -160,7 +160,7 @@ export class SingleArtifactViewComponent implements OnInit {
     // Get the updated labelling
     let result = this.labellingDataService.updateLabelling(user, label, labels, lt_id)
     // If the updated labelling was received
-    if(result != null) {
+    if (result != null) {
       // Store the labelling remark
       let remark = this.userLabels[user.getUsername()][result["lt_name"]]["labelRemark"]
       // Update the labelling in userLabels
@@ -182,7 +182,7 @@ export class SingleArtifactViewComponent implements OnInit {
         this.admin, this.p_id, this.a_id, this.username, this.userLabels)
       // If the request was met successfully, display a success toast
       this.toastCommService.emitChange([true, "New labels saved successfully!"])
-    // If there was an error while saving the labellings, display an error toast
+      // If there was an error while saving the labellings, display an error toast
     } catch (error) {
       this.toastCommService.emitChange([false, "Something went wrong while saving."])
     }

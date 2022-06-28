@@ -37,7 +37,7 @@ describe('ThemeInfoComponent', () => {
 
   // REROUTER FUNCTIONS
   // Test the reRouter function when in creation
-  it('Tests the reRouter function to theme management page', () => {
+  it('should reroute to the theme management page', () => {
     // Set p_id in component
     component.p_id = 5;
     // Make create boolean true
@@ -53,7 +53,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the reRouter function when in edit
-  it('Tests the reRouter function to singleTheme page', () => {
+  it('should reroute to the singleTheme page', () => {
     // Set p_id in component
     component.p_id = 5;
     // Set t_id in component
@@ -72,7 +72,7 @@ describe('ThemeInfoComponent', () => {
 
   // HIGHLIGHTED DESCRIPTIONS FUNCTION
   // Test whether the highlighted theme description is correctly set
-  it('Tests the displayDescriptionTheme function', () => {
+  it('should highlight the selected theme description', () => {
     // Create the description
     let themeDesc = "Description";
     // Create a theme
@@ -87,7 +87,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether the highlighted label description is correctly set
-  it('Tests the displayDescriptionLabel function', () => {
+  it('should highlight the selected label description', () => {
     // Create the description
     let labelDesc = "Description";
     // Create a theme
@@ -103,7 +103,7 @@ describe('ThemeInfoComponent', () => {
 
   // HIGHLIGHTED THEME/LABEL FUNCTION
   // Test whether the highlighted sub-theme is correctly set
-  it('Tests the highlightSubtheme function', () => {
+  it('should highlight the selected theme', () => {
     // Create the description
     let themeName = "Theme 1";
     // Create a theme
@@ -118,7 +118,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether the highlighted label is correctly set
-  it('Tests the highlightLabel function', () => {
+  it('should highlight the selected label', () => {
     // Create the description
     let labelName = "Label 1";
     // Create a theme
@@ -134,7 +134,7 @@ describe('ThemeInfoComponent', () => {
 
   // SUBTHEME REMOVAL FUNCTION
   // Test whether removing subthemes works for creation
-  it('Tests the removeSubtheme function for creation', () => {
+  it('should remove the theme when in creation mode', () => {
     // Create two themes
     let theme1 = new Theme(1, "", "");
     let theme2 = new Theme(2, "", "");
@@ -157,7 +157,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether removing subthemes works for edit
-  it('Tests the removeSubtheme function for edit', () => {
+  it('should remove the theme when in edit mode', () => {
     // Create two themes
     let theme1 = new Theme(1, "", "");
     let theme2 = new Theme(2, "", "");
@@ -179,7 +179,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether removing subthemes works for edit 2
-  it('Tests the removeSubtheme function for edit 2', () => {
+  it('should remove the theme when in edit mode 2', () => {
     // Create two themes
     let theme1 = new Theme(1, "", "");
     let theme2 = new Theme(2, "", "");
@@ -204,7 +204,7 @@ describe('ThemeInfoComponent', () => {
 
   // LABEL REMOVAL FUNCTION
   // Test whether removing labels works for creation
-  it('Tests the removeLabel function for creation', () => {
+  it('should remove the label when in creation mode', () => {
     // Create two themes
     let label1 = new Label(1, "", "", "");
     let label2 = new Label(2, "", "", "");
@@ -226,8 +226,8 @@ describe('ThemeInfoComponent', () => {
     expect(component.allLabels).toEqual(allLabels);
   });
 
-  // Test whether removing subthemes works for creation
-  it('Tests the removeSubtheme function for creation', () => {
+  // Test whether removing labels works for creation
+  it('should remove the label when in creation mode 2', () => {
     // Create two themes
     let label1 = new Label(1, "", "", "");
     let label2 = new Label(2, "", "", "");
@@ -251,7 +251,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether removing labels works for edit
-  it('Tests the removeLabel function for edit', () => {
+  it('should remove the label when in edit mode', () => {
     // Create two themes
     let label1 = new Label(1, "", "", "");
     let label2 = new Label(2, "", "", "");
@@ -276,7 +276,7 @@ describe('ThemeInfoComponent', () => {
 
   // ADDING SUBTHEMES FUNCTION
   // Test whether adding subthemes works for creation
-  it('Tests the addSubtheme function for creation', () => {
+  it('should add the theme when in creation mode', () => {
     // Create two themes
     let theme1 = new Theme(1, "", "");
     let theme2 = new Theme(2, "", "");
@@ -299,7 +299,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether adding subthemes works for edit
-  it('Tests the addSubtheme function for edit', () => {
+  it('should add the theme when in edit mode', () => {
     // Create two themes
     let theme1 = new Theme(1, "", "");
     let theme2 = new Theme(2, "", "");
@@ -322,7 +322,7 @@ describe('ThemeInfoComponent', () => {
 
   // ADDING LABELS FUNCTION
   // Test whether adding labels works for creation
-  it('Tests the addLabel function for creation', () => {
+  it('should add the label when in creation mode', () => {
     // Create two themes
     let label1 = new Label(1, "", "", "");
     let label2 = new Label(2, "", "", "");
@@ -345,7 +345,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test whether adding labels works for edit
-  it('Tests the addLabel function for edit', () => {
+  it('should add the label when in edit mode', () => {
     // Create two themes
     let label1 = new Label(1, "", "", "");
     let label2 = new Label(2, "", "", "");
@@ -369,7 +369,7 @@ describe('ThemeInfoComponent', () => {
 
   // NGONINIT FUNCTION
   // Test the ngOnInit function
-  it('Tests if the ngOnInit function calls all correct functions when project is frozen', () => { 
+  it('should call all functions on initialization', () => { 
     // Check that project is frozen
     let spy = spyOn(component, "ngOnInit").and.callFake(async () => { 
       let spy0 = spyOn(component['projectDataService'], "getFrozen").and.returnValue(Promise.resolve(false));
@@ -394,7 +394,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the ngOnInit function
-  it('Tests if the ngOnInit function calls all correct functions in creation mode', () => { 
+  it('should call all functions on initialization when in creation mode', () => { 
     // Check that project is frozen
     let spy = spyOn(component, "ngOnInit").and.callFake(async () => { 
       let spy0 = spyOn(component['projectDataService'], "getFrozen").and.returnValue(Promise.resolve(false));
@@ -431,7 +431,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the ngOnInit function
-  it('Tests if the ngOnInit function calls all correct functions when in edit mode', () => { 
+  it('should call all functions on initialization when in edit mode', () => { 
     // Check that project is frozen
     let spy = spyOn(component, "ngOnInit").and.callFake(async () => { 
       let spy0 = spyOn(component['projectDataService'], "getFrozen").and.returnValue(Promise.resolve(false));
@@ -469,7 +469,7 @@ describe('ThemeInfoComponent', () => {
 
   // SET BOOLEANS FUNCTION
   // Test the setBooleans function for create
-  it('Tests if the setBooleans function sets the create value correctly', () => {
+  it('should set the create boolean', () => {
     // Set the component url
     component.url = "/project/3/createTheme";
     // Create spy for function
@@ -483,7 +483,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the setBooleans function for edit
-  it('Tests if the setBooleans function sets the edit value correctly', () => {    
+  it('should set the edit boolean', () => {    
     // Set the component url
     component.url = "/project/3/editTheme/1";
     // Create spy for function
@@ -498,7 +498,7 @@ describe('ThemeInfoComponent', () => {
 
   // SET HEADER FUNCTION
   // Test the setHeader function for creation
-  it('Tests if the setHeader function sets the create value correctly', () => {    
+  it('should set the create header', () => {    
     // Set the component edit
     component.edit = false;
     // Set the component create
@@ -513,7 +513,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the setHeader function for edit
-  it('Tests if the setHeader function sets the edit value correctly', () => {    
+  it('should set the edit header', () => {    
     // Set the component edit
     component.edit = true;
     // Set the component create
@@ -529,7 +529,7 @@ describe('ThemeInfoComponent', () => {
 
   // GET_SINGLE_THEME_INFO FUNCTION
   // Test the get_single_theme_info function
-  it('Tests if the get_single_theme_info function calls single_theme_info correctly', () => {  
+  it('should get all the single theme info', () => {  
     let theme1 = new Theme(0, "", "");
     // Spy on the single_theme_info function
     let spy = spyOn(component['themeDataService'], "single_theme_info").and.returnValue(Promise.resolve(theme1));
@@ -542,7 +542,7 @@ describe('ThemeInfoComponent', () => {
 
   // INSERT THEME INFO FUNCTION
   // Test the insertThemeInfo function
-  it('Tests if the insertThemeInfo function calls its functions correctly', () => {  
+  it('should set theme info', () => {  
     // Set the theme
     let theme = new Theme(1, "", "");
     component.theme = theme;
@@ -561,7 +561,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the insertThemeInfo function
-  it('Tests if the insertThemeInfo function works correctly', () => {  
+  it('should send theme info', () => {  
     // Create the theme, children, and labels
     let theme = new Theme(1, "Name", "Description");
     let child = new Theme(2, "child", "");
@@ -581,7 +581,7 @@ describe('ThemeInfoComponent', () => {
 
   // CREATE THEME FUNCTION
   // Test the createTheme function
-  it('Tests if the createTheme function calls its functions correctly', async () => {  
+  it('should create the theme', async () => {  
     // Make sure the form is not empty
     component.themeForm.setValue({
       "name": "Name",
@@ -606,7 +606,7 @@ describe('ThemeInfoComponent', () => {
 
   // GET_THEMES_WITHOUT_PARENTS FUNTION
   // Test the get_themes_without_parents function
-  it('Tests if the get_themes_without_parents function calls its functions correctly', async () => {
+  it('should get the themes without parents', async () => {
     // Spy on the themes_without_parents function of the dataservice
     let spy = spyOn(component['themeDataService'], "themes_without_parents").and.returnValue(Promise.resolve([]));
     // Call the function
@@ -617,7 +617,7 @@ describe('ThemeInfoComponent', () => {
 
   // GET LABELS FUNCTION
   // Test the get_labels function
-  it('Tests if the get_labels function calls its functions correctly', async () => {  
+  it('should get all labels', async () => {  
     // Set the component pid
     component.p_id = 1;
     // Spy on the themes_without_parents function of the dataservice
@@ -630,7 +630,7 @@ describe('ThemeInfoComponent', () => {
 
   // POST_THEME_INFO FUNCTION
   // Test the post_theme_info function for creation
-  it('Tests if the post_theme_info function calls its functions correctly for creation', async () => {  
+  it('should post theme info to the backend when in creation mode', async () => {  
     // Set the create and edit booleans
     component.create = true;
     component.edit = false;
@@ -643,7 +643,7 @@ describe('ThemeInfoComponent', () => {
   });
 
   // Test the post_theme_info function for edit
-  it('Tests if the post_theme_info function calls its functions correctly for edit', async () => {  
+  it('should post theme info to the backend when in edit mode', async () => {  
     // Set the create and edit booleans
     component.create = false;
     component.edit = true;
@@ -655,8 +655,8 @@ describe('ThemeInfoComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  // Test the searchLabel function for edit
-  it('Tests if the searchLabel function works correctly', async () => {  
+  // Test the searchLabel function
+  it('should search labels', async () => {  
     // Spy on searchLabel function
     let spy = spyOn(component, "searchLabel").and.callFake(async () => {
       // Get the text of the form
@@ -678,8 +678,8 @@ describe('ThemeInfoComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  // Test the searchTheme function for edit
-  it('Tests if the searchTheme function works correctly', async () => {  
+  // Test the searchTheme function
+  it('should search themes', async () => {  
     // Spy on searchLabel function
     let spy = spyOn(component, "searchTheme").and.callFake(async () => {
       // Get the text of the form

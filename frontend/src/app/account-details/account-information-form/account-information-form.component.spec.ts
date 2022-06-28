@@ -15,10 +15,10 @@ describe('AccountInformationFormComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountInformationFormComponent ],
+      declarations: [AccountInformationFormComponent],
       imports: [ReactiveFormsModule, FormsModule],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

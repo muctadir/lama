@@ -12,11 +12,11 @@ describe('AddArtifactComponent', () => {
     await TestBed.configureTestingModule({
       // Adds the RouterTestingModule dependency
       imports: [RouterTestingModule],
-      declarations: [ AddArtifactComponent ],
+      declarations: [AddArtifactComponent],
       // Adds NgbActiveModal dependency
       providers: [NgbActiveModal]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

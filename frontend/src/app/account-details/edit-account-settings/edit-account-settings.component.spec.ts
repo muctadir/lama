@@ -7,8 +7,8 @@ import { User } from 'app/classes/user';
 export class TestError extends Error {
   response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -26,11 +26,11 @@ describe('EditAccountSettingsComponent', () => {
     await TestBed.configureTestingModule({
       // Adds the RouterTestingModule dependency
       imports: [ReactiveFormsModule],
-      declarations: [ EditAccountSettingsComponent ],
+      declarations: [EditAccountSettingsComponent],
       // Adds FormBuilder dependency
       providers: [FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -78,10 +78,12 @@ describe('EditAccountSettingsComponent', () => {
     component.changeInformation();
     // Checks results
     expect(spyCheck).toHaveBeenCalled();
-    expect(spyRequest).toHaveBeenCalledWith({"id": 8, 
-    "username": "username_test", 
-    "description" : "Test description", 
-    "email": "test@test.com"});
+    expect(spyRequest).toHaveBeenCalledWith({
+      "id": 8,
+      "username": "username_test",
+      "description": "Test description",
+      "email": "test@test.com"
+    });
   });
 
 
@@ -167,7 +169,7 @@ describe('EditAccountSettingsComponent', () => {
     let input = {
       "id": 5,
       "username": "testname",
-      "description" : "desctest",
+      "description": "desctest",
       "email": "email@test.com"
     };
 
@@ -188,12 +190,12 @@ describe('EditAccountSettingsComponent', () => {
     let input = {
       "id": 5,
       "username": "",
-      "description" : "",
+      "description": "",
       "email": ""
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 511, data: "some_error_message"});
+    let dummyError = new TestError("bad error", { status: 511, data: "some_error_message" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -209,12 +211,12 @@ describe('EditAccountSettingsComponent', () => {
     let input = {
       "id": 5,
       "username": "",
-      "description" : "",
+      "description": "",
       "email": ""
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 420, data: "Input contains leading or trailing whitespaces"});
+    let dummyError = new TestError("bad error", { status: 420, data: "Input contains leading or trailing whitespaces" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -230,12 +232,12 @@ describe('EditAccountSettingsComponent', () => {
     let input = {
       "id": 5,
       "username": "",
-      "description" : "",
+      "description": "",
       "email": ""
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 420, data: "some_error_message"});
+    let dummyError = new TestError("bad error", { status: 420, data: "some_error_message" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");

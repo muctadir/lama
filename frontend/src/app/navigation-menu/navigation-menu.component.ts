@@ -16,11 +16,11 @@ export class NavigationMenuComponent {
    * Changes the sizing of the navigation component 
    * based on whether the menu should be collapsed or not
    */
-  @HostBinding('style.width') get className() { 
+  @HostBinding('style.width') get className() {
     // if the navigation bar is collapsed set size to col-1
     if (this.collapsed) {
       return '8.3333333333%';
-    } 
+    }
     // if the navigation bar is not collapsed set size to col-3
     else {
       return '25%';
@@ -46,8 +46,8 @@ export class NavigationMenuComponent {
    * 
    * @trigger when the route changes
    */
-  constructor(private router: Router, 
-    private toastCommService: ToastCommService, 
+  constructor(private router: Router,
+    private toastCommService: ToastCommService,
     private modalService: NgbModal,
     private routeService: ReroutingService) {
   }
@@ -57,7 +57,7 @@ export class NavigationMenuComponent {
    * 
    * @trigger on component creation, and when route is changed
    */
-  ngOnInit() : void {
+  ngOnInit(): void {
     // Ensures that the currently highlighted icon is correct
     this.evalURL(this.router.url);
 
@@ -77,7 +77,7 @@ export class NavigationMenuComponent {
    * @param new_route the url
    * @modifies page
    */
-  evalURL(new_route: string) : void {
+  evalURL(new_route: string): void {
     if (new_route.includes("stats")) {
       // highlights stats page icon
       this.page = 0;
@@ -98,7 +98,7 @@ export class NavigationMenuComponent {
       this.page = 5;
     } else if (new_route.includes("settings")) {
       // highlights settings page icon
-      this.page =6;
+      this.page = 6;
     }
   }
 
@@ -108,7 +108,7 @@ export class NavigationMenuComponent {
    * @trigger when the top most icon is clicked in the navigation menu
    * @modifies collapsed
    */
-  changeSize() : void {
+  changeSize(): void {
     this.collapsed = !this.collapsed;
   }
 
@@ -118,10 +118,10 @@ export class NavigationMenuComponent {
    * @param next_page new page the user wants to see
    * @trigger onclick nav menu
    */
-  changePage(next_page : string) : void  {
+  changePage(next_page: string): void {
     // Use reroutingService to obtain the project ID
     let p_id = this.routeService.getProjectID(this.router.url);
-    
+
     // Changes the route to the requested page
     this.router.navigate(['/project', p_id, next_page]);
   }
@@ -131,14 +131,14 @@ export class NavigationMenuComponent {
    * 
    * @trigger logout button clicked
    */
-  openLogout() : void {
+  openLogout(): void {
     // opens logout modal
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       // If a confirmEvent = true is emitted we delete the user
-      if($e) {
+      if ($e) {
         // Drops the session token
         sessionStorage.removeItem('ses_token');
 

@@ -84,19 +84,19 @@ export class ArtifactManagementPageComponent {
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-   searchClick(){
+  searchClick() {
     // Get the search image
     let image = document.getElementById("searchBar")
-    if (image != null){
+    if (image != null) {
       // On click event handler
       image.onclick = (e) => {
-        if (image != null){
+        if (image != null) {
           // Get placement of the image
           var rect = image.getBoundingClientRect();
           // Get clicked x coordinates
           var x = e.clientX - rect.left;
           // When clicked in the maginifying glass
-          if (x > 330){
+          if (x > 330) {
             // Search
             this.onEnter()
           }
@@ -168,7 +168,7 @@ export class ArtifactManagementPageComponent {
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
-  
+
   // Open the modal
   open() {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
@@ -176,8 +176,8 @@ export class ArtifactManagementPageComponent {
       this.ngOnInit();
     });
 
-  }  
-  
+  }
+
   // Gets the search text
   async onEnter() {
 
@@ -188,7 +188,7 @@ export class ArtifactManagementPageComponent {
     var text = this.searchForm.value.search_term;
 
     // If nothing was searched
-    if(text.length == 0){
+    if (text.length == 0) {
       // Clear cache and show all artifacts
       this.artifacts = {};
       await this.getArtifacts();
@@ -227,8 +227,8 @@ export class ArtifactManagementPageComponent {
    * Function that returns the number of users who gave a set of labellings
    * @param labellings: number, the number of labellings
    */
-  getNumberUsers(labellings: number): string|number{
-    if(labellings % this.nLabelTypes != 0) {
+  getNumberUsers(labellings: number): string | number {
+    if (labellings % this.nLabelTypes != 0) {
       this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
       return "Cannot compute";
     }

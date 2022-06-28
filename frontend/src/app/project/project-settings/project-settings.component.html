@@ -2,7 +2,7 @@
 
 <body>
     <!-- Conatiner for the top row -->
-    <div class="container" id="topBarRow"> 
+    <div class="container" id="topBarRow">
         <div class="row">
             <p *ngIf="!isInEditMode" class="header"> Project Settings </p>
             <p *ngIf="isInEditMode" class="header"> Edit Project </p>
@@ -24,14 +24,16 @@
                     <!-- Project Name field -->
                     <div class="form-group">
                         <label for="projectName" id="field_text">Project Name:</label><br>
-                        <input id="projectName" formControlName="projectName" class="form-control" type="text" placeholder="Project Name" value={{currentProject.getName()}} required><br>
+                        <input id="projectName" formControlName="projectName" class="form-control" type="text"
+                            placeholder="Project Name" value={{currentProject.getName()}} required><br>
                     </div>
-                    
+
                     <!-- Description field -->
                     <div class="form-group">
                         <label for="projectDescription" id="field_text">Description:</label><br>
-                        <textarea formControlName="projectDesc" id="projectDescriptionForm" class="form-control" rows="10" placeholder="Project Description" value={{currentProject.getDesc()}}></textarea>
-                    </div>  
+                        <textarea formControlName="projectDesc" id="projectDescriptionForm" class="form-control"
+                            rows="10" placeholder="Project Description" value={{currentProject.getDesc()}}></textarea>
+                    </div>
                 </form>
 
                 <!-- Response division -->
@@ -43,8 +45,8 @@
 
             <!-- Right side of the page (members, labeller count, label types) -->
             <div class="col-6">
-                 <!-- Division around the whole members section -->
-                 <div class="projectSettingsDivParent">
+                <!-- Division around the whole members section -->
+                <div class="projectSettingsDivParent">
                     <!-- "Members" header -->
                     <div class="row">
                         <div class="col">
@@ -69,7 +71,7 @@
                                     <p class="projectAdminSpan">Project admin</p>
                                 </div>
                             </div>
-                            
+
                             <!-- Row for the super admin on top-->
                             <div class="row align-items-center">
                                 <!-- Column for delete icon -->
@@ -83,8 +85,9 @@
                                 <!-- Column for checkbox -->
                                 <div class="col-4 checkboxCol">
                                     <!-- Checkbox with id of the admin connected to the checkbox-->
-                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + superAdminID }}" [checked]="adminMembers[superAdminID]" disabled="true">
-                                </div>                                        
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + superAdminID }}"
+                                        [checked]="adminMembers[superAdminID]" disabled="true">
+                                </div>
                             </div>
 
                             <!-- Row for the current user on top-->
@@ -100,14 +103,16 @@
                                 <!-- Column for checkbox -->
                                 <div class="col-4 checkboxCol">
                                     <!-- Checkbox with id of the user connected to the checkbox-->
-                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + currentUserId }}" [checked]="adminMembers[currentUserId]" disabled="true">
-                                </div>                                        
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + currentUserId }}"
+                                        [checked]="adminMembers[currentUserId]" disabled="true">
+                                </div>
                             </div>
 
                             <!-- Name and checkbox per member (other than current user) of the project -->
-                            <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
+                            <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;">
                                 <!-- Row for the delete, name and project admin of users who are not the current user or the super admin -->
-                                <div *ngIf="member.getId() != currentUserId && member.getId() != superAdminID" class="row align-items-center">
+                                <div *ngIf="member.getId() != currentUserId && member.getId() != superAdminID"
+                                    class="row align-items-center">
                                     <!-- Column for delete icon -->
                                     <div class="col-1">
                                         <!-- x icon -->
@@ -122,25 +127,29 @@
                                     <!-- Column for checkbox -->
                                     <div class="col-4 checkboxCol">
                                         <!-- Checkbox with id of the user connected to the checkbox-->
-                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}" [checked]="adminMembers[member.getId()]">
-                                    </div>                                        
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBox-' + member.getId() }}"
+                                            [checked]="adminMembers[member.getId()]">
+                                    </div>
                                 </div>
                             </label>
                         </div>
                     </div>
                 </div>
                 <!-- Division around the labeller count -->
-                <form id="constraintForm" [formGroup]="projectForm" >      
+                <form id="constraintForm" [formGroup]="projectForm">
                     <div class="form-group projectSettingsDivParent">
-                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
+                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller
+                                Count</span></label>
                         <!-- Division around the input -->
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
                             <div id="labellerCountDiv">
-                                <input type="number" class="form-control" formControlName="numberOfLabellers" value={{currentProject.getCriteria()}} min="2" max="20" style="max-width: 20%;" id = "numberOfLabellers">
+                                <input type="number" class="form-control" formControlName="numberOfLabellers"
+                                    value={{currentProject.getCriteria()}} min="2" max="20" style="max-width: 20%;"
+                                    id="numberOfLabellers">
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </form>
 
                 <!-- Division around the label types -->
@@ -166,74 +175,77 @@
         <!--Division around buttons-->
         <div class="row justify-content-between">
             <div class="col-5">
-            <!-- Freeze button -->
-                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-start" id="freezeProjectButton" (click)="changeFreezeProject(true, false)">
+                <!-- Freeze button -->
+                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-start"
+                    id="freezeProjectButton" (click)="changeFreezeProject(true, false)">
                     Freeze
                 </button>
             </div>
             <!-- Division for save & cancel button -->
             <div class="col-6">
                 <!-- Save button -->
-                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-end" id="saveProjectButton" (click)="saveEdit()">
+                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-end"
+                    id="saveProjectButton" (click)="saveEdit()">
                     Save
                 </button>
                 <!-- Cancel button -->
-                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-end" id="cancelProjectEditButton" (click)="unclickEdit()">
+                <button *ngIf="isInEditMode" type="button" class="btn btn-secondary text-nowrap float-end"
+                    id="cancelProjectEditButton" (click)="unclickEdit()">
                     Cancel
                 </button>
             </div>
         </div>
     </div>
-    
+
     <!--Container if not in edit mode-->
     <div *ngIf="!isInEditMode" class="container main editSection">
         <!-- Row for all settings -->
         <div class="row justify-content-between">
             <!-- Left side of the page (project name and description) -->
             <div class="col-5">
-                    <!-- Username field -->
-                    <div class="form-group">
-                        <label for="projectName" id="field_text">Project Name:</label><br>
-                        {{currentProject.getName()}}
-                    </div>                    
-                    <!-- Description field -->
-                    <div class="form-group">
-                        <label for="projectDescription" id="field_text">Description:</label><br>
-                        <p>{{currentProject.getDesc()}}</p>
-                    </div>  
-                    <!-- Response division -->
-                    <div id="responseDiv">
-                        <!-- Response -->
-                        <p id="createProjectResponse"></p>
-                    </div>
+                <!-- Username field -->
+                <div class="form-group">
+                    <label for="projectName" id="field_text">Project Name:</label><br>
+                    {{currentProject.getName()}}
                 </div>
+                <!-- Description field -->
+                <div class="form-group">
+                    <label for="projectDescription" id="field_text">Description:</label><br>
+                    <p>{{currentProject.getDesc()}}</p>
+                </div>
+                <!-- Response division -->
+                <div id="responseDiv">
+                    <!-- Response -->
+                    <p id="createProjectResponse"></p>
+                </div>
+            </div>
             <!-- Right side of the page (members, labeller count, label types) -->
             <div class="col-6">
                 <!-- Division around the whole members section -->
                 <div class="projectSettingsDivParent">
-                   <!-- "Members" header -->
-                   <div class="row">
-                       <div class="col">
-                           <span class="settingsHeader">Members</span>
-                       </div>
-                       <!-- Col for adding users button -->
-                       <div class="col-2">
-                       </div>
-                   </div>
+                    <!-- "Members" header -->
+                    <div class="row">
+                        <div class="col">
+                            <span class="settingsHeader">Members</span>
+                        </div>
+                        <!-- Col for adding users button -->
+                        <div class="col-2">
+                        </div>
+                    </div>
 
-                   <!-- Division around the all members -->
-                   <div class="projectSettingsDiv">
-                       <div id="membersDiv">
-                           <!-- Row for the 'Project admin' words -->
+                    <!-- Division around the all members -->
+                    <div class="projectSettingsDiv">
+                        <div id="membersDiv">
+                            <!-- Row for the 'Project admin' words -->
                             <div class="row align-items-center">
                                 <!--Column to keep projectAdmin centered-->
                                 <div class="col-8">
-                                </div>   
+                                </div>
                                 <div class="col-4">
-                                   <p class="projectAdminSpan">Project admin</p>
+                                    <p class="projectAdminSpan">Project admin</p>
                                 </div>
                             </div>
-                           
+
                             <!-- Row for the super admin on top-->
                             <div class="row align-items-center">
 
@@ -245,8 +257,9 @@
                                 <!-- Column for checkbox -->
                                 <div class="col-4 checkboxCol">
                                     <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + superAdminID }}" [checked]="adminMembers[superAdminID]" disabled="true">
-                                </div>                                        
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + superAdminID }}"
+                                        [checked]="adminMembers[superAdminID]" disabled="true">
+                                </div>
                             </div>
 
                             <!-- Row for the current user (who is not a super admin) on top-->
@@ -259,24 +272,27 @@
                                 <!-- Column for checkbox -->
                                 <div class="col-4 checkboxCol">
                                     <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + currentUserId }}" [checked]="adminMembers[currentUserId]" disabled="true">
-                                </div>                                        
+                                    <input type="checkbox" id="{{ 'projectAdminCheckBox-' + currentUserId }}"
+                                        [checked]="adminMembers[currentUserId]" disabled="true">
+                                </div>
                             </div>
 
                             <!-- Name and checkbox per other members (non-admin and not current users) of the project -->
-                            <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;"> 
-                               <!-- Row for the delete, name and project admin of other members (non-admin and not current users)-->
-                                <div *ngIf="member.getId() != currentUserId  && member.getId() != superAdminID" class="row align-items-center">
+                            <label *ngFor="let member of currentProject.getUsers()" for="user" style="display: block;">
+                                <!-- Row for the delete, name and project admin of other members (non-admin and not current users)-->
+                                <div *ngIf="member.getId() != currentUserId  && member.getId() != superAdminID"
+                                    class="row align-items-center">
                                     <!-- Column for username -->
                                     <div class="col-8">
                                         {{ member.getUsername() }}
                                     </div>
-                                   <!-- Column for checkbox -->
-                                   <div class="col-4 checkboxCol">
-                                       <!-- Checkbox with id of the user (userName) connected to the checkbox-->
-                                       <!-- Checkbox disabled since not in edit mode-->
-                                       <input type="checkbox" id="{{ 'projectAdminCheckBoxHome-' + member.getId()}}" [checked]="adminMembers[member.getId()]" disabled="true">
-                                    </div>                                        
+                                    <!-- Column for checkbox -->
+                                    <div class="col-4 checkboxCol">
+                                        <!-- Checkbox with id of the user (userName) connected to the checkbox-->
+                                        <!-- Checkbox disabled since not in edit mode-->
+                                        <input type="checkbox" id="{{ 'projectAdminCheckBoxHome-' + member.getId()}}"
+                                            [checked]="adminMembers[member.getId()]" disabled="true">
+                                    </div>
                                 </div>
                             </label>
                         </div>
@@ -284,9 +300,10 @@
                 </div>
 
                 <!-- Division around the labeller count -->
-                <form id="constraintForm">      
+                <form id="constraintForm">
                     <div class="form-group projectSettingsDivParent">
-                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller Count</span></label>
+                        <label for="exampleFormControlSelect1"><span class="settingsHeader">Labeller
+                                Count</span></label>
                         <!-- Division around the input -->
                         <div class="projectSettingsDiv">
                             <!-- Labeller count input -->
@@ -294,9 +311,9 @@
                                 {{currentProject.getCriteria()}}
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </form>
-           
+
                 <!-- Division around the label types -->
                 <div class="projectSettingsDivParent">
                     <span class="settingsHeader"> Label Type </span>
@@ -306,8 +323,8 @@
                         <div id="labelTypeDiv">
                             <div id="labelTypeList" *ngFor="let labelType of labelTypes">
                                 <div>
-                                <!-- Text field for the label type -->
-                                   {{ labelType }}
+                                    <!-- Text field for the label type -->
+                                    {{ labelType }}
                                 </div>
                             </div>
                         </div>
@@ -315,13 +332,16 @@
                 </div>
             </div>
         </div>
-                
+
         <div class="row justify-content-end">
             <!-- Edit button -->
-            <button *ngIf="!isInEditMode && !currentProject.getFrozen() && adminMembers[currentUserId]" type="button" class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
+            <button *ngIf="!isInEditMode && !currentProject.getFrozen() && adminMembers[currentUserId]" type="button"
+                class="btn btn-secondary text-nowrap float-end" id="editProjectButton" (click)="clickEdit()">
                 Edit
             </button>
-            <button *ngIf="currentProject.getFrozen() && adminMembers[currentUserId]" type="button" class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton" (click)="changeFreezeProject(false, false)">
+            <button *ngIf="currentProject.getFrozen() && adminMembers[currentUserId]" type="button"
+                class="btn btn-secondary text-nowrap float-end" id="unfreezeProjectButton"
+                (click)="changeFreezeProject(false, false)">
                 Unfreeze
             </button>
         </div>

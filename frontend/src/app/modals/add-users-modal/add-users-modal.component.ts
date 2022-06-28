@@ -1,7 +1,6 @@
 //Linh Nguyen
-import { Input, Output, EventEmitter } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, OnInit } from '@angular/core';
+import { Input, Output, EventEmitter, Component } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'app/classes/user';
 
 @Component({
@@ -21,7 +20,7 @@ export class AddUsersModalComponent {
    * 
    * @param activeModal instance of NgbActiveModal
    */
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal) { }
 
   /**
    * Function which emits the user clicked on by the user
@@ -29,7 +28,7 @@ export class AddUsersModalComponent {
    * @param user that has been clicked on
    * @trigger user is clicked on in the modal
    */
-  addUser(user: User) : void {
+  addUser(user: User): void {
     this.addUserEvent.emit(user);
   }
 

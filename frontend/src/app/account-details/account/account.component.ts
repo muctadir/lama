@@ -26,14 +26,14 @@ export class AccountComponent {
    * @param toastCommService instance of ToastCommService
    */
   constructor(private accountService: AccountInfoService,
-    private toastCommService: ToastCommService) {}
+    private toastCommService: ToastCommService) { }
 
   /**
    * Calls function responsible for getting the user data from the backend
    * 
    * @trigger on component load
    */
-  ngOnInit() : void {
+  ngOnInit(): void {
     this.getInformation()
   }
 
@@ -45,7 +45,7 @@ export class AccountComponent {
    * @modifies mode
    * @trigger modeChangeEvent happens
    */
-  modeChange(newMode: number) : void{
+  modeChange(newMode: number): void {
     // Changes page
     this.mode = newMode;
     // Reloads user data
@@ -57,11 +57,11 @@ export class AccountComponent {
    * 
    * @modifies user
    */
-  async getInformation() : Promise<void> {
+  async getInformation(): Promise<void> {
     // Tries to get the user account details from the backend
     try {
       this.user = await this.accountService.userData();
-    } catch(e) {
+    } catch (e) {
       // If an error occurs emits a toast saying an error occured.
       this.toastCommService.emitChange([false, "An error occured when requesting the server for user data."]);
     }

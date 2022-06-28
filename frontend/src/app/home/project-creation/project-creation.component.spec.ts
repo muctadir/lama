@@ -11,8 +11,8 @@ import { ProjectCreationComponent } from './project-creation.component';
 export class TestError extends Error {
   response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -25,13 +25,13 @@ describe('ProjectCreationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProjectCreationComponent ],
+      declarations: [ProjectCreationComponent],
       // Adds RouterTestingModule dependency
       imports: [RouterTestingModule, ReactiveFormsModule],
       // Adds NgbActiveModal and FormBuilder dependencies
       providers: [NgbActiveModal, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -45,7 +45,7 @@ describe('ProjectCreationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('tests ngOnInit', () => {
+  it('should call all functions on initialization', () => {
     // Creates the spy
     let spy = spyOn(component, "getUsers");
 
@@ -56,7 +56,7 @@ describe('ProjectCreationComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('tests getUsers', async () => {
+  it('should get all users', async () => {
     // Dummy input
     let result = [new User(3, "name1"), new User(8, "name2")];
 
@@ -72,7 +72,7 @@ describe('ProjectCreationComponent', () => {
     expect(component.allMembers).toBe(result);
   });
 
-  it('Create project with valid data and no errors', async () => {
+  it('should create a project', async () => {
     // Sets a valid input
     let formBuilder = new FormBuilder();
     let projectForm = formBuilder.group({
@@ -89,8 +89,8 @@ describe('ProjectCreationComponent', () => {
     // Spies on addUser function and does dummy input for it
     let addUsersSpy = spyOn(component, "addUsers").and.callFake(param => {
       param["users"] = [];
-      param["users"].push({"u_id": 1, "admin": true});
-      param["users"].push({"u_id": 2, "admin": false});
+      param["users"].push({ "u_id": 1, "admin": true });
+      param["users"].push({ "u_id": 2, "admin": false });
     });
 
     // Spies on labelTypeToArray function and provides dummy return values
@@ -114,13 +114,13 @@ describe('ProjectCreationComponent', () => {
     // More complex dummy object used for testing
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "testname",
-      "description" : "testdesc",
+      "name": "testname",
+      "description": "testdesc",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 1, "admin": true});
-    example2["users"].push({"u_id": 2, "admin": false});
+    example2["users"].push({ "u_id": 1, "admin": true });
+    example2["users"].push({ "u_id": 2, "admin": false });
     example2["labelTypes"] = ["label1", "label2"];
 
     // Tests checking whether execution is correct
@@ -130,7 +130,7 @@ describe('ProjectCreationComponent', () => {
     expect(routerSpy).toHaveBeenCalledWith(["/home"]);
   });
 
-  it('Create project with invalid input and no errors', async () => {
+  it('should catch error for incalid input', async () => {
     // Spies on addUsers
     let addUsersSpy = spyOn(component, "addUsers")
     // Spies on labelTypeToArray function
@@ -152,7 +152,7 @@ describe('ProjectCreationComponent', () => {
     expect(toastSpy).toHaveBeenCalledWith([false, "Please fill in all input fields!"]);
   });
 
-  it('Create project with valid input and error 511', async () => {
+  it('should catch error 511', async () => {
     // Spies on addUsers
     let addUsersSpy = spyOn(component, "addUsers")
     // Spies on labelTypeToArray function
@@ -160,7 +160,7 @@ describe('ProjectCreationComponent', () => {
     // Spies on checkProjectData function and returns true
     let checkSpy = spyOn(component, "checkProjectData").and.returnValue(true);
     // Spies on makeRequest function
-    let requestSpy = spyOn(component["projectDataService"], "makeRequest").and.throwError(new TestError("msg", {status: 511}));
+    let requestSpy = spyOn(component["projectDataService"], "makeRequest").and.throwError(new TestError("msg", { status: 511 }));
     // Spies on the toast emit function
     let toastSpy = spyOn(component["toastCommService"], "emitChange");
 
@@ -175,7 +175,7 @@ describe('ProjectCreationComponent', () => {
     expect(toastSpy).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
   });
 
-  it('Create project with valid input and error data special', async () => {
+  it('should catch error for invalid input', async () => {
     // Spies on addUsers
     let addUsersSpy = spyOn(component, "addUsers")
     // Spies on labelTypeToArray function
@@ -184,7 +184,7 @@ describe('ProjectCreationComponent', () => {
     let checkSpy = spyOn(component, "checkProjectData").and.returnValue(true);
     // Spies on makeRequest function
     let requestSpy = spyOn(component["projectDataService"], "makeRequest")
-      .and.throwError(new TestError("msg", {data: "Input contains leading or trailing whitespaces"}));
+      .and.throwError(new TestError("msg", { data: "Input contains leading or trailing whitespaces" }));
     // Spies on the toast emit function
     let toastSpy = spyOn(component["toastCommService"], "emitChange");
 
@@ -200,7 +200,7 @@ describe('ProjectCreationComponent', () => {
   });
 
 
-  it('Create project with valid input and error', async () => {
+  it('should catch creation error', async () => {
     // Spies on addUsers
     let addUsersSpy = spyOn(component, "addUsers")
     // Spies on labelTypeToArray function
@@ -209,7 +209,7 @@ describe('ProjectCreationComponent', () => {
     let checkSpy = spyOn(component, "checkProjectData").and.returnValue(true);
     // Spies on makeRequest function
     let requestSpy = spyOn(component["projectDataService"], "makeRequest")
-      .and.throwError(new TestError("msg", {data: ""}));
+      .and.throwError(new TestError("msg", { data: "" }));
     // Spies on the toast emit function
     let toastSpy = spyOn(component["toastCommService"], "emitChange");
 
@@ -225,119 +225,119 @@ describe('ProjectCreationComponent', () => {
   });
 
 
-  it('Checks checkProjectInput with valid data', () => {
+  it('should check the project input', () => {
     // More complex dummy object used for testing
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "testname",
-      "description" : "testdesc",
+      "name": "testname",
+      "description": "testdesc",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 1, "admin": true});
-    example2["users"].push({"u_id": 2, "admin": false});
+    example2["users"].push({ "u_id": 1, "admin": true });
+    example2["users"].push({ "u_id": 2, "admin": false });
     example2["labelTypes"] = ["label1", "label2"];
 
     // Calls the function to be tested
     let result = component.checkProjectData(example2);
 
     // Checks result
-    expect(result).toBeTruthy();    
+    expect(result).toBeTruthy();
   });
 
 
-  it('Checks checkProjectInput with invalid name', () => {
+  it('should catch invalid name', () => {
     // More complex dummy object used for testing
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "",
-      "description" : "testdesc",
+      "name": "",
+      "description": "testdesc",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 1, "admin": true});
-    example2["users"].push({"u_id": 2, "admin": false});
+    example2["users"].push({ "u_id": 1, "admin": true });
+    example2["users"].push({ "u_id": 2, "admin": false });
     example2["labelTypes"] = ["label1", "label2"];
 
     // Calls the function to be tested
     let result = component.checkProjectData(example2);
 
     // Checks result
-    expect(result).toBeFalsy();    
+    expect(result).toBeFalsy();
   });
 
-  it('Checks checkProjectInput with invalid desc', () => {
+  it('should catch invalid description', () => {
     // More complex dummy object used for testing
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "something",
-      "description" : "",
+      "name": "something",
+      "description": "",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 1, "admin": true});
-    example2["users"].push({"u_id": 2, "admin": false});
+    example2["users"].push({ "u_id": 1, "admin": true });
+    example2["users"].push({ "u_id": 2, "admin": false });
     example2["labelTypes"] = ["label1", "label2"];
 
     // Calls the function to be tested
     let result = component.checkProjectData(example2);
 
     // Checks result
-    expect(result).toBeFalsy();    
+    expect(result).toBeFalsy();
   });
 
-  it('Checks checkProjectInput with 0 labels', () => {
+  it('should catch zero labels given', () => {
     // More complex dummy object used for testing
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "something",
-      "description" : "tester",
+      "name": "something",
+      "description": "tester",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 1, "admin": true});
-    example2["users"].push({"u_id": 2, "admin": false});
+    example2["users"].push({ "u_id": 1, "admin": true });
+    example2["users"].push({ "u_id": 2, "admin": false });
     example2["labelTypes"] = [];
 
     // Calls the function to be tested
     let result = component.checkProjectData(example2);
 
     // Checks result
-    expect(result).toBeFalsy();    
+    expect(result).toBeFalsy();
   });
 
-  it('Checks checkProjectInput with an empty labels', () => {
+  it('should catch empty labels', () => {
     // More complex dummy object used for testing
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "something",
-      "description" : "tester",
+      "name": "something",
+      "description": "tester",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 1, "admin": true});
-    example2["users"].push({"u_id": 2, "admin": false});
+    example2["users"].push({ "u_id": 1, "admin": true });
+    example2["users"].push({ "u_id": 2, "admin": false });
     example2["labelTypes"] = ["test", ""];
 
     // Calls the function to be tested
     let result = component.checkProjectData(example2);
 
     // Checks result
-    expect(result).toBeFalsy();    
+    expect(result).toBeFalsy();
   });
 
-  it('Checks addUsers', () => {
+  it('should add users', () => {
     // Makes dummy input
     let example1: Record<string, any> = {};
     example1["project"] = {
-      "name" : "something",
-      "description" : "tester",
+      "name": "something",
+      "description": "tester",
       "criteria": 2
     };
 
     // Spies on document getElementById
     // @ts-ignore: type
-    spyOn(document, "getElementById").and.returnValue({checked: true})
+    spyOn(document, "getElementById").and.returnValue({ checked: true })
 
     // adds user to the component
     component.projectMembers = [new User(5, "karl")];
@@ -348,49 +348,49 @@ describe('ProjectCreationComponent', () => {
     // More complex dummy object used for testing result
     let example2: Record<string, any> = {};
     example2["project"] = {
-      "name" : "something",
-      "description" : "tester",
+      "name": "something",
+      "description": "tester",
       "criteria": 2
     };
     example2["users"] = [];
-    example2["users"].push({"u_id": 5, "admin": true});
+    example2["users"].push({ "u_id": 5, "admin": true });
 
     // Checks result
-    expect(example1).toEqual(example2);    
+    expect(example1).toEqual(example2);
   });
 
-  it('tests addLabelType', () => {
+  it('should add label types', () => {
     // Creates the spy
     let spy = spyOn(component.labeltypes, "push");
 
     // Calls the function to be tested
     component.addLabelType();
-    
+
     // Checks whether the spy was called correctly
     expect(spy).toHaveBeenCalled();
   });
 
 
-  it('tests deleteLabelType', () => {
+  it('shoudl delete label type', () => {
     // Creates the spy
     let spy = spyOn(component.labeltypes, "removeAt");
 
     // Calls the function to be tested
     component.deleteLabelType(5);
-    
+
     // Checks whether the spy was called correctly
     expect(spy).toHaveBeenCalled();
   });
 
 
-  it('tests removeMember', () => {
+  it('should remove a member', () => {
     // Creates dummy data for allMembers array
     let userArray = [new User(1, "aaa"), new User(2, "bbb"), new User(3, "ccc")];
     component.projectMembers = userArray;
 
     // Calls the function to be tested
     component.removeMember("bbb");
-    
+
     // Checks whether the spy was called correctly
     expect(component.projectMembers).toEqual([new User(1, "aaa"), new User(3, "ccc")]);
   });

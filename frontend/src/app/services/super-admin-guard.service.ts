@@ -13,18 +13,18 @@ export class SuperAdminGuardService implements CanActivate {
    * 
    * @param router instance of router
    */
-   constructor(private router: Router, private accountService: AccountInfoService) { }
+  constructor(private router: Router, private accountService: AccountInfoService) { }
 
-   /**
-   * Function which returns whether the user is allowed to visit the page, 
-   * also redirects to the home page if the user is not allowed to visit the page
-   * 
-   * @returns whether user is allowed to visit the page
-   * @trigger user visits page with canActivate guard
-   */
+  /**
+  * Function which returns whether the user is allowed to visit the page, 
+  * also redirects to the home page if the user is not allowed to visit the page
+  * 
+  * @returns whether user is allowed to visit the page
+  * @trigger user visits page with canActivate guard
+  */
   async canActivate(): Promise<boolean> {
     // Makes call to backend checking whether user token is valid
-    if(await this.accountService.makeSuperAuthRequest()) {
+    if (await this.accountService.makeSuperAuthRequest()) {
       // Returns that the user is allowed to view the page
       return true
     } else {
@@ -34,5 +34,5 @@ export class SuperAdminGuardService implements CanActivate {
       return false
     }
   }
-   
+
 }

@@ -1,48 +1,54 @@
+// Title of the page
 #pageTitle {
     padding-top: 10px;
     border-bottom: 1px;
     border-bottom-style: solid;
 }
 
-#artifactId, #artifactButtons {
+// Text for artifact id and buttons
+#artifactId,
+#artifactButtons {
     font-size: 36px;
     letter-spacing: 1px;
 }
+
+// Artifact button
 #artifactButtons {
     text-align: right;
 }
 
-
+// Label type title
 .labelTypeTitle {
     font-size: 17px;
     letter-spacing: 1px;
 }
 
-.descriptionTitle{
+// Description title
+.descriptionTitle {
     font-size: 19px;
     padding-bottom: 2px;
     height: 28px;
 }
-.descriptionText{
+
+// Description text
+.descriptionText {
     max-height: 20vh;
     font-size: 16px;
     overflow-y: scroll;
 }
 
+// Artifact container
 .artifactContainer {
     max-height: 30vh;
     border-bottom: 1px;
     border-bottom-style: solid;
-}
-
-div.artifactContainer{
-    //margin: 4px 120px 4px 4px;
     padding-bottom: 4px;
     min-height: 40vh;
     overflow-y: scroll;
 }
 
-#names{
+// Names of the people
+#names {
     padding-top: 3px;
     padding-bottom: 5px;
 }
@@ -52,11 +58,13 @@ div.artifactContainer{
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
     background: #38474e;
@@ -64,7 +72,7 @@ div.artifactContainer{
 }
 
 
-/*TODO: For some reason the variable defined in the root stylesheet is not working*/
+// Label description
 .labelDescription {
     border-left: 2px solid #ed5a06;
     padding-left: 10px;
@@ -72,36 +80,36 @@ div.artifactContainer{
     padding-top: 5px;
 }
 
-#labelThing{
+#labelThing {
     overflow-y: scroll;
     max-height: 40vh;
 }
 
-#body{
+#body {
     margin: 0;
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-#remark{
+#remark {
     max-height: 29vh;
     resize: none;
 }
 
 // Division of the buttons
-#butt{
+#butt {
     margin-top: 10px;
 }
 
 // Submit button
-#btn-submit{
+#btn-submit {
     border: none;
     background-color: #ed5a06;
 }
 
 // Skip button
-#skip-button{
+#skip-button {
     margin-right: 10px;
     border: none;
 }

@@ -181,26 +181,26 @@ export class LabelFormComponent implements OnInit {
       this.activeModal.close();
     } catch (e: any) {
       // Check if the error has invalid characters
-      if (e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
+        // Check if error has invalid whitespaces
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"])
-      // Check if the label name is empty
-      } else if (e.response.data == "Label name cannot be empty"){
+        // Check if the label name is empty
+      } else if (e.response.data == "Label name cannot be empty") {
         // Throw error
         this.toastCommService.emitChange([false, "Label name cannot be empty"]);
       } else if (e.response.data == "Input contains an illegal character") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      // Check if the label description is empty
-      } else if (e.response.data == "Label description cannot be empty"){
+        // Check if the label description is empty
+      } else if (e.response.data == "Label description cannot be empty") {
         // Throw error
         this.toastCommService.emitChange([false, "Label description cannot be empty"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
+        // Check if label name already exists
+      } else if (e.response.data == "Label name already exists") {
         // Throw error
         this.toastCommService.emitChange([false, "Label name already exists."]);
       } else {
@@ -225,20 +225,20 @@ export class LabelFormComponent implements OnInit {
       // Close modal
       this.activeModal.close();
       this.toastCommService.emitChange([true, "Edited label successfully"]);
-    } catch (e:any) {
+    } catch (e: any) {
       // Check if the error has invalid characters
-      if (e.response.status == 511){
+      if (e.response.status == 511) {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
+        // Check if error has invalid whitespaces
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
       } else if (e.response.data == "Input contains an illegal character") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
+        // Check if label name already exists
+      } else if (e.response.data == "Label name already exists") {
         // Throw error
         this.toastCommService.emitChange([false, "Label name already exists."]);
       } else {

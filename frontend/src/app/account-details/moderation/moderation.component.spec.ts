@@ -15,10 +15,10 @@ describe('ModerationComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ModerationComponent ],
+      declarations: [ModerationComponent],
       imports: [RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

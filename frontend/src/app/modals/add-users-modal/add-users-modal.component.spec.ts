@@ -8,11 +8,11 @@ describe('AddUsersModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddUsersModalComponent ],
+      declarations: [AddUsersModalComponent],
       // Adds NgbActiveModal dependency
       providers: [NgbActiveModal]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
