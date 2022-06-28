@@ -4,7 +4,7 @@ import { ConflictDataService } from './conflict-data.service';
 /**
  * Test bed for the conflict data service
  */
-fdescribe('ConflictDataService', () => {
+describe('ConflictDataService', () => {
   let service: ConflictDataService;
 
   beforeEach(() => {
