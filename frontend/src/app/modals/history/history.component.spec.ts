@@ -3,7 +3,7 @@ import { HistoryComponent } from './history.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RouterTestingModule } from '@angular/router/testing';
 
-fdescribe('HistoryComponent', () => {
+describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
 
