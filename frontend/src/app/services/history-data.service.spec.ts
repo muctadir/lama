@@ -6,7 +6,7 @@ import { HistoryDataService } from './history-data.service';
 /**
  * Test bed for the history data service
  */
-fdescribe('HistoryDataService', () => {
+describe('HistoryDataService', () => {
   let service: HistoryDataService;
 
   beforeEach(() => {
@@ -89,6 +89,5 @@ fdescribe('HistoryDataService', () => {
     // Checks the conditions that need to be hold
     expect(error).toEqual(new Error("invalid input given"));
   });
-
 
 });
