@@ -4,7 +4,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ConfirmModalComponent } from './confirm-modal.component';
 
-fdescribe('ConfirmModalComponent', () => {
+describe('ConfirmModalComponent', () => {
   let component: ConfirmModalComponent;
   let fixture: ComponentFixture<ConfirmModalComponent>;
 
