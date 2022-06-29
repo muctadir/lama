@@ -24,36 +24,32 @@ describe('AccountInfoService', () => {
   });
 
   it('Test for userData function', async () => {
-    // Spy on the get from the request handler
-    let spy = spyOn(service, "userData").and.callFake( async () => {
-      // Creates a request for the account information
-      let spy1 = spyOn(service['requestHandler'], "get").and.returnValue(Promise.resolve({
-        // Fake user response
-        "id": 1,
-        "username": "user",
-        "email": "email", 
-        "description": "desc",
-        "super_admin": false
-      }));
-      let response: any =  await service['requestHandler'].get("/account/information", {}, true);
-      expect(spy1).toHaveBeenCalledWith("/account/information", {}, true)
+    // Creates a request for the account information
+    let spy1 = spyOn(service['requestHandler'], "get").and.returnValue(Promise.resolve({
+      // Fake user response
+      "id": 1,
+      "username": "user",
+      "email": "email", 
+      "description": "desc",
+      "super_admin": false
+    }));
 
-      // Gets the user data from the database response and stores the data
-      let user = new User(response['id'], response['username']);
-      user.setEmail(response['email']);
-      user.setDesc(response['description']);
-      user.setType(response['super_admin']);
+    let response: User = await service.userData();
+    expect(spy1).toHaveBeenCalledWith("/account/information", {}, true)
 
-      // Check if user stuff was set
-      expect(user.getId()).toEqual(1);
-      expect(user.getUsername()).toEqual("user");
-      expect(user.getEmail()).toEqual("email");
-      expect(user.getDesc()).toEqual("desc");
-      expect(user.getType()).toEqual(false);
-  });
-  // Call function and check if it was called
-  service.userData();
-  expect(spy).toHaveBeenCalled();
+    // Gets the user data from the database response and stores the data
+    let user = new User(1, "user");
+    user.setEmail("email");
+    user.setDesc("desc");
+    user.setType(false);
+
+    // Check if user stuff was set
+    expect(user.getId()).toEqual(1);
+    expect(user.getUsername()).toEqual("user");
+    expect(user.getEmail()).toEqual("email");
+    expect(user.getDesc()).toEqual("desc");
+    expect(user.getType()).toEqual(false);
+    expect(user).toEqual(response);
   });
 
   it('should get the users data from the backend', async () => {
