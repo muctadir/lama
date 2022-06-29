@@ -82,7 +82,7 @@ export class ArtifactManagementPageComponent {
   }
 
   /**
-   * Function for searching based on clicking on the maginifying glass
+   * Function for searching based on clicking on the magnifying glass
    */
    searchClick(){
     // Get the search image
@@ -107,8 +107,6 @@ export class ArtifactManagementPageComponent {
 
   /**
    * Sets the artifacts of a specific project from artifact-data.service
-   * 
-   * @param p_id the id of the project
    */
   async getArtifacts(): Promise<void> {
 
@@ -141,8 +139,10 @@ export class ArtifactManagementPageComponent {
     for (let i: number = page - 1; i >= 1; i--) {
       // See if we have already retrieved artifacts for that page
       if (this.artifacts.hasOwnProperty(i)) {
+        console.log("sus")
         // Get the artifacts for that page
         let artifacts: StringArtifact[] = this.artifacts[i];
+        console.log
         // Get the index of the last artifact (the largest index)
         let seekIndex: number = artifacts[artifacts.length - 1].getId();
         // The index can be used to exclude artifacts from the query (before the offset)
@@ -183,10 +183,8 @@ export class ArtifactManagementPageComponent {
 
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Search text
     var text = this.searchForm.value.search_term;
-
     // If nothing was searched
     if(text.length == 0){
       // Clear cache and show all artifacts
@@ -197,7 +195,7 @@ export class ArtifactManagementPageComponent {
 
       // Pass the search word to services
       let artifactsSearched = await this.artifactDataService.search(text, p_id);
-
+      
       // List for the artifacts resulting from the search
       let artifactList: Array<StringArtifact> = [];
       // For loop through all searched artifacts
@@ -228,7 +226,7 @@ export class ArtifactManagementPageComponent {
    * @param labellings: number, the number of labellings
    */
   getNumberUsers(labellings: number): string|number{
-    if(labellings % this.nLabelTypes != 0) {
+    if(this.nLabelTypes == 0 || labellings % this.nLabelTypes != 0) {
       this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
       return "Cannot compute";
     }
