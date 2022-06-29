@@ -5,7 +5,7 @@ import { LoginGuardService } from '../services/login-guard.service';
 /**
  * Test bed for the loginGuard Service
  */
-fdescribe('LoginGuardService', () => {
+describe('LoginGuardService', () => {
   let service: LoginGuardService;
 
   beforeEach(() => {
