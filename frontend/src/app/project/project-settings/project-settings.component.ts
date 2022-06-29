@@ -168,30 +168,38 @@ export class ProjectSettingsComponent implements OnInit {
       this.setCurrenProjectInfo(result.name, result.description, result.criteria, result.frozen, undefined)
 
       //Setting project users
-      let members_of_project = result.users;
-      for (let i = 0; i < members_of_project.length; i++) {
+      let membersOfProject = result.users;
+      for (let member of membersOfProject) {
         //Adding only current members of the project to projectMembers
-        if (members_of_project[i].removed != 1) {
-          this.projectMembers.push(new User(members_of_project[i].id, members_of_project[i].username));
+        if (member.removed != 1) {
+          let newUser = new User(member.id, member.username)
+          this.projectMembers.push(newUser);
+          // Check if this user is in all members, and remove them
+          for (let memberObject of this.allMembers){
+            if (memberObject.getUsername() == member.username){
+              // Remove the user from the allMembers list
+              this.allMembers.splice(this.allMembers.indexOf(memberObject), 1)
+            }
+          }
         }
         //Setting the super admin ID
-        if (members_of_project[i].super_admin == true) {
-          this.superAdminID = members_of_project[i].id;
+        if (member.super_admin) {
+          this.superAdminID = member.id;
         }
         //Adding all members (old and current) of the project to allProjectMembers
-        this.allProjectMembers[members_of_project[i].id] = new User(members_of_project[i].id, members_of_project[i].username);
+        this.allProjectMembers[member.id] = new User(member.id, member.username);        
         //Setting admin status of all members
-        this.adminMembers[members_of_project[i].id] = members_of_project[i].admin;
+        this.adminMembers[member.id] = member.admin;
         //Setting removed status of all members
-        this.removed[members_of_project[i].id] = +(members_of_project[i].removed);
+        this.removed[member.id] = +(member.removed);
       }
       //Setting current project's member list
       this.currentProject.setUsers(this.projectMembers);
 
       //Setting current project's label types list
-      let labeltypes_of_project = result.labelType;
-      for (let i = 0; i < labeltypes_of_project.length; i++) {
-        this.labelTypes.push(labeltypes_of_project[i].label_type_name);
+      let labeltypesOfProject = result.labelType;
+      for (let labelType of labeltypesOfProject) {
+        this.labelTypes.push(labelType.label_type_name);
       }
 
       //Setting values of the forms based on the current project's existing information
@@ -242,9 +250,18 @@ export class ProjectSettingsComponent implements OnInit {
       }
       this.toastCommService.emitChange([true, "Edit successful"]);
     }
-    catch {
-      // Emits an error toast
-      this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
+    catch(e: any) {
+      if(e.response.status == 511){
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else {
+        // Emits an error toast
+        this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
+      }
+      this.unclickEdit();
     }
   }
 
@@ -347,10 +364,10 @@ export class ProjectSettingsComponent implements OnInit {
     if (users != undefined) {
       this.currentProject.setUsers(users);
       //Check the checkboxes for all users
-      for (let i = 0; i < this.projectMembers.length; i++) {
-        let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + this.projectMembers[i].getId())).checked;
+      for (let member of this.projectMembers) {
+        let adminBool = (<HTMLInputElement>document.getElementById("projectAdminCheckBox-" + member.getId())).checked;
         //Assign the values of the checkboxes according to whether they have been checked during edit mode
-        this.adminMembers[this.projectMembers[i].getId()] = adminBool;
+        this.adminMembers[member.getId()] = adminBool;
       }
     }
   }
@@ -370,8 +387,7 @@ export class ProjectSettingsComponent implements OnInit {
       delete this.removedMembers[user.getId()]
       // Change the user's removed status
       this.removed[user.getId()] = 0
-    }
-    else {
+    } else {
       //Add user to list of project members (old and current)
       this.allProjectMembers[user.getId()] = user;
       //Add user to list of newly added users
@@ -384,6 +400,8 @@ export class ProjectSettingsComponent implements OnInit {
     }
     //Push user back into project members list
     this.projectMembers.push(user);
+    // Remove the user from all users
+    this.allMembers.splice(this.allMembers.indexOf(user), 1)
     //Assigning the admin status to the user
     this.adminMembers[user.getId()] = admin;
     this.toastCommService.emitChange([true, "User added"])
@@ -403,8 +421,7 @@ export class ProjectSettingsComponent implements OnInit {
       delete this.allProjectMembers[user.getId()]
       //Remove user from list of newly added users
       delete this.added[user.getId()]
-    }
-    else {
+    } else {
       // Assign removed status to user
       this.removed[user.getId()] = 1;
       // Add user to list of users that have been removed from project
@@ -413,6 +430,8 @@ export class ProjectSettingsComponent implements OnInit {
     // Remove user from project members list
     let index = this.projectMembers.indexOf(user);
     this.projectMembers.splice(index,1);
+    // Add the remove user to all members    
+    this.allMembers.push(user)
     // Remove user as admin from admin status dictionary
     this.adminMembers[user.getId()] = false;
   }

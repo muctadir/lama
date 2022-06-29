@@ -192,7 +192,8 @@ export class ThemeDataService {
       return allSubThemes
       //Catch the error
     } catch (e) {
-      console.log("An error occured when trying to get the themes without parents");
+      // Displays the error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get the themes without parents"]);
       return [];
     }
   }
@@ -223,19 +224,21 @@ export class ThemeDataService {
       if(e.response.status == 511){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
+      } else if (e.response.data == "Theme name already exists") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Theme name already exists"]);
+      } else if (e.response.data == "Input contains an illegal character") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
       } else {
         // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
-        // Return the response
-        return "An error occured when trying to create the theme.";
-      }
+        this.toastCommService.emitChange([false, "An error occured when trying to create the theme"]);
+      }     
+      // Return the response
+      return "An error occured";
     }
   }
 
@@ -264,9 +267,15 @@ export class ThemeDataService {
       if(e.response.status == 511){
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
+      } else if (e.response.data == "Theme name already exists") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Theme name already exists"]);
       } else if (e.response.data == "Input contains leading or trailing whitespaces") {
         // Displays the error message
         this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
+      } else if (e.response.data == "Input contains an illegal character") {
+        // Displays the error message
+        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
       } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
         // Displays the error message
         this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);
@@ -318,11 +327,13 @@ export class ThemeDataService {
    * {
    *   id: the id of the item (theme/label)
    *   name: the name of the item (theme/label)
+   *   deleted: whether or not the item is deleted (true/false)
    *   type: the type of the item, as a string 'Theme', 'Label', or 'Project'
    *   children: a list of dictionaries of items that are children of this theme/project
    * }
    * The children key does not exist for labels, or themes without children.
    * The top level dictionary represents the project that was passed
+   * The project counts as an undeleted item
    */
    async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {

@@ -61,7 +61,7 @@ def theme_management_info():
     dict_json = jsonify(theme_info)
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(dict_json, 200)
 
 """
 For getting the theme information 
@@ -142,7 +142,7 @@ def single_theme_info(*, user, membership):
     dict_json = jsonify(info)
 
     # Return the list of dictionaries
-    return make_response(dict_json)
+    return make_response(dict_json, 200)
 
 """
 For getting the all themes without parents 
@@ -192,7 +192,7 @@ def all_themes_no_parents():
     list_json = jsonify(themes_info)
 
     # Return the list of dictionaries
-    return make_response(list_json)
+    return make_response(list_json, 200)
 
 """
 For creating a new theme 
@@ -220,9 +220,9 @@ def create_theme(*, user):
     # Check if all required arguments are there
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
-
+    
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -230,8 +230,14 @@ def create_theme(*, user):
         return make_response("Input contains a forbidden character", 511)
 
     # Check if the theme name is unique
-    if theme_name_taken(args["name"], 0):
-        return make_response("Theme name already exists")
+    try:
+        if theme_name_taken(args["name"], 0):
+            return make_response("Theme name already exists", 400)
+    except OperationalError as err:
+        if "Illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
 
     # Theme creation info
     theme_creation_info = {
@@ -248,24 +254,27 @@ def create_theme(*, user):
     db.session.add(theme)
     # Flush updates the id of the theme object
     db.session.flush()
+    
+    # Record the creation of this theme in the theme changelog
+    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
     make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
 
     # Make the labels the labels of the created theme
     make_labels(theme, args["labels"], args['p_id'], user.id)
-    
-    # Record the creation of this theme in the theme changelog
-    __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Create the project
     try:
         db.session.commit()   
-    except OperationalError:
-        return make_response("Internal Server Error", 503) 
+    except OperationalError as err:
+        if "Illegal mix of collations" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else: 
+            return make_response("Internal Server Error", 503) 
 
-    # Return the conformation
-    return make_response("Theme created", 200)
+    # Return the confirmation
+    return make_response("Theme created", 201)
 
 """
 For editing a theme 
@@ -296,16 +305,22 @@ def edit_theme(*, user):
         return make_response("Not all required arguments supplied", 400)
 
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
     if check_string([args['name']]):
         return make_response("Input contains a forbidden character", 511)
 
-    # Check if the theme name is unique
-    if theme_name_taken(args["name"], args["id"]):
-        return make_response("Theme name already exists", 400)
+   	# Check if the theme name is unique
+    try:
+        if theme_name_taken(args["name"], args["id"]):
+            return make_response("Theme name already exists", 400)
+    except OperationalError as err:
+        if "illegal" in err.args[0]:
+            return make_response("Input contains an illegal character", 400)
+        else:
+            return make_response("Bad request", 400)
     
     # Get theme id
     t_id = args["id"]
@@ -323,12 +338,13 @@ def edit_theme(*, user):
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
     
-    # Records a changing of the description in the theme changelog, only if the description was actually changed
-    if theme.description != args['description']:
-        __record_description_edit(theme.id, args['name'], p_id, user.id)
     # Records the renaming in the theme changelog, only if the theme was actually renamed
     if theme.name != args['name']:
         __record_name_edit(theme.id, theme.name, p_id, user.id, args['name'])
+        
+    # Records a changing of the description in the theme changelog, only if the description was actually changed
+    if theme.description != args['description']:
+        __record_description_edit(theme.id, args['name'], p_id, user.id)
     
 
     # Change the theme information
@@ -434,11 +450,11 @@ def search_route():
     # Get arguments
     args = request.args
     # Required arguments
-    required = ('p_id', 'search_words')
+    required = ['p_id', 'search_words']
     
     # Check if required agruments are supplied
     if not check_args(required, args):
-        return make_response('Bad Request', 400)
+        return make_response('Not all required arguments supplied', 400)
     
     # Sanity conversion to int (for when checking for equality in sql)
     p_id = int(args['p_id'])
@@ -465,7 +481,7 @@ def search_route():
     # Schema for serialising
     theme_schema = ThemeSchema()
     # Serialise results and jsonify
-    return make_response(jsonify(theme_schema.dump(themes_results, many=True)))
+    return make_response(jsonify(theme_schema.dump(themes_results, many=True)), 200)
 
 """
 Author: Eduardo Costa Martins
@@ -496,10 +512,13 @@ def theme_vis_route():
     if not hierarchy:
         return make_response("Bad Request", 400)
 
-    return make_response(jsonify(hierarchy))
+    return make_response(jsonify(hierarchy), 200)
 
 
-# Function for getting the number of labels in the theme
+"""
+Function for getting the number of labels in the theme
+@params t_id: theme id
+"""
 def get_theme_label_count(t_id):
     return db.session.scalar(
             select(func.count(label_to_theme.c.l_id))
@@ -527,7 +546,7 @@ def make_labels(theme, labels_info, p_id, u_id):
     # If the assigned labels have changed
     if set(labels) != set(theme.labels):
         theme.labels = labels
-        __record_chilren(theme.id, theme.name, p_id, u_id, label_names, 'label')
+        __record_children(theme.id, theme.name, p_id, u_id, label_names, 'label')
 
 """
 For getting the themes from the passed data
@@ -551,7 +570,7 @@ def make_sub_themes(theme, sub_themes_info, p_id, u_id):
     # If the assigned subthemes have changed
     if set(sub_themes) != set(theme.sub_themes):
         theme.sub_themes = sub_themes
-        __record_chilren(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
+        __record_children(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
 
 """
 Function that checks if a theme name is already taken
@@ -559,15 +578,13 @@ Function that checks if a theme name is already taken
 @returns true if name is already a theme name and false otherwise
 """
 def theme_name_taken(name, t_id):
-    if bool(db.session.scalars(
+    return bool(db.session.scalars(
         select(Theme)
         .where(
             Theme.name==name,
             Theme.id != t_id
         ))
-        .first()):
-        return True
-    return False
+        .first())
 
 
 """
@@ -647,7 +664,7 @@ A child here refers to the labels or subthemes of a theme.
 @param c_names: a list of names of the children
 @param c_type: the type of child, EITHER 'label' OR 'subtheme'
 """
-def __record_chilren(t_id, t_name, p_id, u_id, c_names, c_type):
+def __record_children(t_id, t_name, p_id, u_id, c_names, c_type):
     # Check that the correct child type was provided
     if c_type != 'label' and c_type != 'subtheme':
         raise ChangeSyntaxError
@@ -695,9 +712,10 @@ Note that SQL has a limit on recursion depth. _Our_ database defaults to 1000. Y
 @param t_id: id of the theme to get subthemes and labels of
 @returns a list of tuples of the type
     (
+        The id of its super theme (or None if it does not have a super theme),
         The id of the child,
         Its name,
-        The id of its super theme (or None if it does not have a super theme),
+        Whether or not it has been deleted,
         Its type (0 for theme, 1 for label)
     )
 @raises ThemeCycleDetected if the recursion limit is reached (likely due to a cycle)
@@ -709,6 +727,7 @@ def __get_children(t_id):
         Theme.super_theme_id,
         Theme.id,
         Theme.name,
+        Theme.deleted
     ).where(
         Theme.id == t_id
     ).cte(
@@ -724,7 +743,8 @@ def __get_children(t_id):
         select(
             Theme.super_theme_id,
             Theme.id,
-            Theme.name
+            Theme.name,
+            Theme.deleted
         ).where(
             Theme.super_theme_id == subthemes_alias.c.id
         )
@@ -742,6 +762,7 @@ def __get_children(t_id):
             label_to_theme.c.t_id,
             label_to_theme.c.l_id,
             Label.name,
+            Label.deleted,
             1
         ).where(
             Label.id == label_to_theme.c.l_id,
@@ -767,6 +788,7 @@ Each dictionary is of the form:
 {
     id: the id of the item (theme/label)
     name: the name of the item (theme/label)
+    deleted: if the item is deleted
     type: the type of the item, as a string 'Theme' or 'Label'
     children: a list of dictionaries of items that are children of this theme
 }
@@ -791,8 +813,10 @@ def __grouped_children(t_id):
                 'id': result[1],
                 # The name of the child
                 'name': result[2],
+                # If the theme or label is deleted
+                'deleted': result[3],
                 # The type of the child
-                'type': 'Theme' if result[3] == 0 else 'Label'
+                'type': 'Theme' if result[4] == 0 else 'Label'
             }
         )
 
@@ -835,12 +859,14 @@ The project node has structure
 {
     'id' : p_id,
     'name' : project name,
+    'deleted' : False
     'type' : 'Project',
     'children' : [theme hierarchies for maximal themes, and loose labels]
 }
 @param p_id : the project to get the hierarchy of
 Returns the project hierarchy as described above, or None if the project with that id does not exist
 A loose label is one that is not assigned to a theme
+The deleted is still provided to make sure the node has the same structure as other nodes
 """
 def get_project_hierarchy(p_id):
     
@@ -867,6 +893,7 @@ def get_project_hierarchy(p_id):
     hierarchy = {
         'id' : project.id,
         'name' : project.name,
+        'deleted' : False,
         'type' : 'Project',
         'children' : grouped_themes
     }

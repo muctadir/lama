@@ -99,6 +99,6 @@ def login_helper(app, client, login_details, expected_text, u_id=None):
         assert u_id_token
         assert decode(u_id_token, app.secret_key, algorithms=['HS256'])['u_id_token'] == u_id
     else:
-        # FOr a failure we expect there not be a token
+        # For a failure we expect there not be a token
         assert not response.headers.get('u_id_token')
         assert not response.headers.get('Access-Control-Expose-Headers')
