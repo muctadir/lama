@@ -6,7 +6,9 @@ import { Project } from 'app/classes/project';
   providedIn: 'root'
 })
 export class StatsDataService {
+  /* Request handler to deal with requests */
   private requestHandler: RequestHandler;
+  /* Session token for authentication */
   private sessionToken: string | null;
 
   constructor() {
@@ -20,7 +22,7 @@ export class StatsDataService {
      * @params p_id: number
      * @pre p_id => 1
      * @throws Error if p_id < 1
-     * @returns Promise<Array<StringArtifact>>
+     * @returns Promise<Record<string, any>>
      */
   async getProject(p_id: number): Promise<Record<string, any>> {
     // Check if the p_id is larger than 1
@@ -63,7 +65,6 @@ export class StatsDataService {
      * @params p_id: number
      * @pre p_id => 1
      * @throws Error if p_id < 1
-     * @returns Promise<Array<StringArtifact>>
      */
   async getUserStats(p_id: number) {
     // Check if the p_id is larger than 1

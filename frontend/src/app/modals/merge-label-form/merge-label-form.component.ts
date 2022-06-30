@@ -144,30 +144,8 @@ export class MergeLabelFormComponent {
         this.toastCommService.emitChange([false, response])
       }
     } catch (e:any) {
-      // Check if the error has invalid characters
-      if (e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      // Check if the label name is empty
-      } else if (e.response.data == "Label name cannot be empty"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name cannot be empty"]);
-      // Check if the label description is empty
-      } else if (e.response.data == "Label description cannot be empty"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label description cannot be empty"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name already exists."]);
-      } else {
-        // Throw error
-        this.toastCommService.emitChange([false, "Something went wrong while merging"]);
-      }
+      // Throw error
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 
