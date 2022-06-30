@@ -38,7 +38,7 @@ export class LabellingPageComponent implements OnInit {
   eventEmitter: EventEmitter<any>;
 
   /**
-   * Information concerning the highlighting and cutting
+   * Information concerning the cutting
    */
   hightlightedText: string = '';
   selectionStartChar?: number;
