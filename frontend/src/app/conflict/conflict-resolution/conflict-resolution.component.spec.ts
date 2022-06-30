@@ -8,7 +8,7 @@ import { ConflictResolutionComponent } from './conflict-resolution.component';
 /**
  * Test bed for conflict resolution component
  */
-fdescribe('ConflictResolutionComponent', () => {
+describe('ConflictResolutionComponent', () => {
   let component: ConflictResolutionComponent;
   let fixture: ComponentFixture<ConflictResolutionComponent>;
 
