@@ -527,5 +527,16 @@ describe('LabellingPageComponent', () => {
 
     // Tests the results
     expect(result).toBe(3);
-  })
+  });
+
+  it('should test endPosFixer case 3', () => {
+    // Sets the artifact
+    component.artifact = new StringArtifact(1, "xyz", "ab cdd ");
+
+    // Calls the function to be tested
+    let result = component.endPosFixer(3);
+
+    // Tests the results
+    expect(result).toBe(2);
+  });
 });
