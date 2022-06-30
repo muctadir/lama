@@ -84,17 +84,15 @@ export class ArtifactManagementPageComponent {
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-  searchClick() {
+  searchClick(){
     // Get the search image
-    let image = document.getElementById("searchBar")
-    if (image != null) {
+    let searchBar = document.getElementById("searchBar")
+    if (searchBar != null){
       // On click event handler
-      image.onclick = (e) => {
-        if (image != null) {
-          // Get placement of the image
-          var rect = image.getBoundingClientRect();
+      searchBar.onclick = (e) => {
+        if (searchBar != null){
           // Get clicked x coordinates
-          var x = e.clientX - rect.left;
+          var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
           if (x > 330) {
             // Search
@@ -175,18 +173,14 @@ export class ArtifactManagementPageComponent {
     modalRef.result.then((data) => {
       this.ngOnInit();
     });
-
-  }
-
+  }  
+  
   // Gets the search text
   async onEnter() {
-
-    // Get p_id
-    let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Search text
     var text = this.searchForm.value.search_term;
-
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
     // If nothing was searched
     if (text.length == 0) {
       // Clear cache and show all artifacts

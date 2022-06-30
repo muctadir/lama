@@ -75,17 +75,15 @@ export class ThemeManagementComponent {
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-  searchClick() {
+   searchClick(){
     // Get the search image
-    let image = document.getElementById("searchBar")
-    if (image != null) {
+    let searchBar = document.getElementById("searchBar")
+    if (searchBar != null){
       // On click event handler
-      image.onclick = (e) => {
-        if (image != null) {
-          // Get placement of the image
-          var rect = image.getBoundingClientRect();
+      searchBar.onclick = (e) => {
+        if (searchBar != null){
           // Get clicked x coordinates
-          var x = e.clientX - rect.left;
+          var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
           if (x > 330) {
             // Search

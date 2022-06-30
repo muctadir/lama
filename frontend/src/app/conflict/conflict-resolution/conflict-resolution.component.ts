@@ -52,7 +52,7 @@ export class ConflictResolutionComponent implements OnInit {
   frozen: boolean = true;
 
   /**
-   * Information concerning the highlighting and cutting
+   * Information concerning the cutting
    */
   hightlightedText: string = '';
   selectionStartChar?: number;
@@ -299,7 +299,7 @@ export class ConflictResolutionComponent implements OnInit {
     this.toastCommService.emitChange([true, "Artifact was successfully split into artifact #" + splitId]);
   }
 
-  /**
+ /**
  * Function is ran on mouseDown or mouseUp and updates the current selection
  * of the artifact. If the selection is null or empty, the selection is set
  * to ""

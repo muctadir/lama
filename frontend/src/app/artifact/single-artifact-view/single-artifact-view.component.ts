@@ -32,12 +32,13 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize record of labels given per label type + remarks
   userLabels: Record<string, Record<string, any>>;
 
+  
+  // Initialize the project id
+  p_id: number;
   // Initialize boolean value that represents whether the current user is admin
   admin: boolean;
   // Initialize the username of the current user
   username: string;
-  // Initialize the project id
-  p_id: number;
   // Initialize the artifact id
   a_id: number;
   // Initialize boolean value that represent whether the labels in this page have been changed

@@ -29,7 +29,10 @@ export class EditAccountSettingsComponent {
   /**
    * Initializes the form builder
    * 
-   * @param formBuilder instance of form builder
+   * @param formBuilder instance of FormBuilder
+   * @param toastCommService instance of ToastCommService
+   * @param accountInfoService instance of AccountInfoService
+   * @param service instance of the InputCheckService
    */
   constructor(private formBuilder: FormBuilder,
     private toastCommService: ToastCommService,

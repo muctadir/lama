@@ -235,14 +235,13 @@ def project_conflicts(p_id, admin, u_id):
             "lt_id": conflict[1],
             "lt_name": conflict_label_types[conflict[1]].name,
             "users": user_schema.dump(users, many=True)
-        }
+            }
+        
         # Add the dictionary to the list of dictionaries
         info_list.append(info)
 
-    # Jsonify the list of dictionaries
-    json_list = jsonify(info_list)
     # Return the list
-    return json_list
+    return info_list
 
 
 """
@@ -274,13 +273,11 @@ def conflict_management_page(*, user, membership):
     # Assigning project ID
     p_id = args['p_id']
 
-    return make_response(project_conflicts(p_id, membership.admin, user.id))
-
-
+    return make_response(jsonify(project_conflicts(p_id, membership.admin, user.id)))
 """
 Author: Linh Nguyen & Ana-Maria Olteniceanu
 Route to send labelling made by a specific user concerning a certain conflict to the frontend
-@returns list of dictionaries of the form:
+@returns dictionary with username as key and value is dictionary of the form:
 {
     u_id: user ID
     id: label ID

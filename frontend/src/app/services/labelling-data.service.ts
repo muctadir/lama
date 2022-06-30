@@ -153,11 +153,7 @@ export class LabellingDataService {
    * @param label: Label
    * @param labelTypeId: number
    */
-  async editLabel(
-    p_id: number,
-    label: Label,
-    labelTypeId: number
-  ): Promise<void> {
+  async editLabel(p_id: number, label: Label): Promise<void> {
     // Content of the patch
     let content: Object = {
       labelId: label.getId(),
@@ -312,7 +308,7 @@ export class LabellingDataService {
    * @param dict  - dictionary
    */
   async postMerge(dict: Object): Promise<string> {
-    return await this.requestHandler.post('/label/merge', dict, true);
+    return this.requestHandler.post('/label/merge', dict, true);
   }
 
   /**
@@ -328,20 +324,12 @@ export class LabellingDataService {
    * @param dict  - dictionary
    */
   async getLabellingCount(dict: Object): Promise<string> {
-    return await this.requestHandler.get('/label/count_usage', dict, true);
+    return this.requestHandler.get('/label/count_usage', dict, true);
   }
 
   // Function for searching in backend
-  async search(
-    searchWords: string,
-    p_id: number
-  ): Promise<Array<Record<string, any>>> {
+  async search(searchWords: string, p_id: number): Promise<Array<Record<string, any>>> {
     // Get the label information from the backend
-    return this.requestHandler.get(
-      '/label/search',
-      { p_id: p_id, search_words: searchWords },
-      true
-    );
-
+    return this.requestHandler.get('/label/search', { p_id: p_id, search_words: searchWords }, true);
   }
 }

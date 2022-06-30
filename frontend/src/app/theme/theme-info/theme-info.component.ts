@@ -184,24 +184,18 @@ export class ThemeInfoComponent implements OnInit {
 
     // Chooses desired behaviour based on validity of input
     if (not_empty) {
-      let themeInfo;
-      if (this.create) {
-        themeInfo = {
-          "name": this.themeForm.value.name,
-          "description": this.themeForm.value.description,
-          "labels": this.addedLabels,
-          "sub_themes": this.addedSubThemes,
-          "p_id": this.p_id
-        }
-      } else {
-        themeInfo = {
-          "id": this.theme.getId(),
-          "name": this.themeForm.value.name,
-          "description": this.themeForm.value.description,
-          "labels": this.addedLabels,
-          "sub_themes": this.addedSubThemes,
-          "p_id": this.p_id
-        }
+      // Make record for the theme information
+      let themeInfo: Record<string, any> = {
+        "name": this.themeForm.value.name,
+        "description": this.themeForm.value.description,
+        "labels": this.addedLabels,
+        "sub_themes": this.addedSubThemes,
+        "p_id": this.p_id
+      }
+      // When in edit
+      if(this.edit){
+        // Add the id of the slected theme
+        themeInfo['id'] = this.theme.getId();
       }
 
       // Send the theme information to the backend

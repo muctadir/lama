@@ -34,11 +34,12 @@ export class AccountChangePasswordComponent {
    * @param formBuilder instance of FormBuilder
    * @param toastCommService instance of ToastCommService
    * @param accountInfoService instance of AccountInfoService
+   * @param service instance of the InputCheckService
    */
   constructor(private formBuilder: FormBuilder,
     private toastCommService: ToastCommService,
     private accountInfoService: AccountInfoService,
-    private service: InputCheckService) { }
+    private inputCheckService: InputCheckService) {}
 
   /**
    * Function which will get verify whether the data filled in is valid, encapsulates it in object
@@ -81,8 +82,9 @@ export class AccountChangePasswordComponent {
    */
   checkInput(): boolean {
     // Checks input
-    return (this.service.checkFilled(this.passwordForm.value.old_password) || this.superAdmin) &&
-      this.service.checkFilled(this.passwordForm.value.new_password);
+    return (this.inputCheckService.checkFilled(this.passwordForm.value.old_password) || this.superAdmin) && 
+      this.inputCheckService.checkFilled(this.passwordForm.value.new_password) &&
+      (this.passwordForm.value.new_password == this.passwordForm.value.new_passwordR);
   }
 
   /**
