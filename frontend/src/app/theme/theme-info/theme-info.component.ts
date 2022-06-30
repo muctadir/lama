@@ -103,9 +103,7 @@ export class ThemeInfoComponent implements OnInit {
     }
 
     // Set the create/edit booleans
-    this.setBooleans();
-    // Set the header of the page
-    this.setHeader();
+    this.setBooleansAndHeaders();
 
     // Get all possible labels
     this.get_labels(this.p_id);
@@ -129,23 +127,17 @@ export class ThemeInfoComponent implements OnInit {
   }
 
   // Function for setting the edit/create booleans
-  setBooleans(): void {
+  setBooleansAndHeaders(): void {
     // Set the booleans accordingly
     if (this.url.indexOf("create") > -1) {
       this.edit = false;
       this.create = true;
+      // Set the header
+      this.createEditThemeHeader = "Create";
     } else {
       this.edit = true;
       this.create = false;
-    }
-  }
-
-  // Function for setting the header of the page
-  setHeader(): void {
-    // Get the header based on the booleans
-    if (this.create) {
-      this.createEditThemeHeader = "Create";
-    } else {
+      // Set the header
       this.createEditThemeHeader = "Edit";
     }
   }
