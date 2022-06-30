@@ -129,12 +129,13 @@ export class ProjectSettingsComponent implements OnInit {
       // Loops over the response of the server and parses the response into the allMembers array
       for (let user of result) {
         // creates the object
-        let newUser = new User(user.id, user.username);
-        // passes additional data to the newly created user object
-        newUser.setEmail(user.email);
-        newUser.setDesc(user.description);
+        let createUser = new User(user.id, user.username);
+        // Sets email of new user
+        createUser.setEmail(user.email);
+        // Sets the description of the new user
+        createUser.setDesc(user.description);
         // pushes the new user to the array of all users
-        this.allMembers.push(newUser);
+        this.allMembers.push(createUser);
       }
     } catch(e) {
       // Emits an error toast
@@ -251,16 +252,8 @@ export class ProjectSettingsComponent implements OnInit {
       this.toastCommService.emitChange([true, "Edit successful"]);
     }
     catch(e: any) {
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
-      }
+      // Emits an error toast
+      this.toastCommService.emitChange([false, e.response.data]);
       this.unclickEdit();
     }
   }

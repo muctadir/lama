@@ -153,11 +153,7 @@ export class LabellingDataService {
    * @param label: Label
    * @param labelTypeId: number
    */
-  async editLabel(
-    p_id: number,
-    label: Label,
-    labelTypeId: number
-  ): Promise<void> {
+  async editLabel(p_id: number, label: Label): Promise<void> {
     // Content of the patch
     let content: Object = {
       labelId: label.getId(),
@@ -219,8 +215,8 @@ export class LabellingDataService {
    *  }
    * @returns a set of the label names in the update 
    */
-   async updateLabellings(admin: boolean, p_id: number, a_id: number, username: string,
-     label_per_user: Record<string, Record<string, any>>): Promise<void> {
+  async updateLabellings(admin: boolean, p_id: number, a_id: number, username: string,
+    label_per_user: Record<string, Record<string, any>>): Promise<void> {
     try {
       // If the current user is admin, send all labellings to the backend
       if (admin) {
@@ -236,7 +232,7 @@ export class LabellingDataService {
         // Send project ID, label type ID, artifact ID and labelling updates to the backend
         this.editLabelling(p_id, a_id, singleUpdate)
       }
-    } 
+    }
     catch (error) {
       // If not posisble to update, sends an error
       this.toastCommService.emitChange([false, "Something went wrong! Please try again."]);
@@ -250,15 +246,17 @@ export class LabellingDataService {
    * @param label the name of the label to which the user is changing their labelling
    * @param labels list of labels that the label was selected from
    */
-   updateLabelling(user: User, label: string, labels: Array<Label>, lt_id: number): Record<string, any> | null {
+  updateLabelling(user: User, label: string, labels: Array<Label>, lt_id: number): Record<string, any> | null {
     // Placeholder for new label value of labelling
     let selectedLabel: Label;
     try {
       // Getting the label from a given name in the list of labels from this label type
       selectedLabel = this.findLabel(labels, label);
       // Change the labelling in the label_per_user array for user
-      return {"description": selectedLabel.getDesc(), "name": selectedLabel.getName(), 
-        "lt_name": selectedLabel.getType(), "id": selectedLabel.getId(), "u_id": user.getId(), "lt_id": lt_id};
+      return {
+        "description": selectedLabel.getDesc(), "name": selectedLabel.getName(),
+        "lt_name": selectedLabel.getType(), "id": selectedLabel.getId(), "u_id": user.getId(), "lt_id": lt_id
+      };
     } catch (error) {
       // If label couldn't be found, show error
       this.toastCommService.emitChange([false, "Label doesn't exist"]);
@@ -273,7 +271,7 @@ export class LabellingDataService {
    * @param labels array of labels
    * @param label the name of the label that needs to be found
    */
-   findLabel(labels: Label[], label: string): Label {
+  findLabel(labels: Label[], label: string): Label {
     //Running through each label in array and see if the label has the same name as (parameter) "label"
     for (let eachLabel of labels) {
       if (eachLabel.getName() == label) {
@@ -294,7 +292,7 @@ export class LabellingDataService {
   async editLabelling(p_id: number, a_id: number, labellings: Record<string, Record<string, any>>) {
     // Make call to backend and get its reponse
     await this.requestHandler.patch('/labelling/edit',
-     {'p_id': p_id, 'a_id': a_id, 'labellings': labellings}, true)
+      { 'p_id': p_id, 'a_id': a_id, 'labellings': labellings }, true)
   }
 
   /**
@@ -310,7 +308,7 @@ export class LabellingDataService {
    * @param dict  - dictionary
    */
   async postMerge(dict: Object): Promise<string> {
-    return await this.requestHandler.post('/label/merge', dict, true);
+    return this.requestHandler.post('/label/merge', dict, true);
   }
 
   /**
@@ -326,20 +324,12 @@ export class LabellingDataService {
    * @param dict  - dictionary
    */
   async getLabellingCount(dict: Object): Promise<string> {
-    return await this.requestHandler.get('/label/count_usage', dict, true);
+    return this.requestHandler.get('/label/count_usage', dict, true);
   }
 
   // Function for searching in backend
-  async search(
-    searchWords: string,
-    p_id: number
-  ): Promise<Array<Record<string, any>>> {
+  async search(searchWords: string, p_id: number): Promise<Array<Record<string, any>>> {
     // Get the label information from the backend
-    return this.requestHandler.get(
-      '/label/search',
-      { p_id: p_id, search_words: searchWords },
-      true
-    );
-
+    return this.requestHandler.get('/label/search', { p_id: p_id, search_words: searchWords }, true);
   }
 }

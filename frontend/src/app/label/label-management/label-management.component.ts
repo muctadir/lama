@@ -2,12 +2,8 @@
  * @author Bartjan Henkemans
  * @author Victoria Boganchenkova
  */
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import {
-  NgbModal,
-  NgbActiveModal,
-  NgbModalRef,
-} from '@ng-bootstrap/ng-bootstrap';
+import { Component} from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MergeLabelFormComponent } from 'app/modals/merge-label-form/merge-label-form.component';
 import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Label } from 'app/classes/label';
@@ -90,15 +86,13 @@ export class LabelManagementComponent {
    */
    searchClick(){
     // Get the search image
-    let image = document.getElementById("searchBar")
-    if (image != null){
+    let searchBar = document.getElementById("searchBar")
+    if (searchBar != null){
       // On click event handler
-      image.onclick = (e) => {
-        if (image != null){
-          // Get placement of the image
-          var rect = image.getBoundingClientRect();
+      searchBar.onclick = (e) => {
+        if (searchBar != null){
           // Get clicked x coordinates
-          var x = e.clientX - rect.left;
+          var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
           if (x > 330){
             // Search
@@ -159,20 +153,16 @@ export class LabelManagementComponent {
 
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Search text
-    var text = this.searchForm.value.search_term;
-
+    var searchText = this.searchForm.value.search_term;
     // If nothing was searched
-    if(text.length == 0){
+    if(searchText.length == 0){
       // Get all labels anew
       this.getLabels();
+    // Otherwise search
     } else {
-      // Otherwise search
-
       // Pass the search word to services
-      let labelsSearched = await this.labellingDataService.search(text, p_id);
-
+      let labelsSearched = await this.labellingDataService.search(searchText, p_id);
       
       // List for the labels resulting from the search
       let labelList: Array<Label> = [];
