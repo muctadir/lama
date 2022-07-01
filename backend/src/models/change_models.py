@@ -51,7 +51,7 @@ def create_change_schemas(Changes):
 
                 # The functions below describe how to serialize/deserialize enums
                 def get_approval(self, obj):
-                    return obj.type
+                    return obj.change_type.name
 
                 def load_approval(self, value):
                     return ChangeType[value]

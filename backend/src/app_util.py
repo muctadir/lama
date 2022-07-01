@@ -3,20 +3,15 @@ Authors: Eduardo Costa Martins
 """
 
 import re
-from src.models.auth_models import UserStatus
 from jwt import decode
 from jwt.exceptions import InvalidSignatureError
 from functools import wraps
-from src.models.auth_models import User
-from src.models.project_models import Membership
 from src import db  # need this in every route
 from flask import current_app as app
 from flask import make_response, request
 from sqlalchemy.exc import OperationalError
 from inspect import getfullargspec
-import datetime
-from sqlalchemy import false, select
-
+from datetime import time
 
 def check_args(required, args):
     """
@@ -140,6 +135,7 @@ def get_all_subclasses(cls):
 
 
 def login_required(f):
+    from src.models.auth_models import User, UserStatus
     """
     Decorator that checks to see if the frontend is authorized (sending a valid token)
     and then passes on the corresponding user object to the decorated function
@@ -173,7 +169,6 @@ def login_required(f):
             return f(*args, **kwargs)
         except OperationalError as e:
             # Database error
-            print(e)
             return make_response('Service Unavailable', 503)
         except InvalidSignatureError:
             # Token is signed incorrectly
@@ -182,6 +177,7 @@ def login_required(f):
 
 
 def super_admin_required(f):
+    from src.models.auth_models import User
     """
     Decorator that checks to see if the frontend is authorized (sending a valid token)
     with a super admin.
@@ -227,6 +223,7 @@ def super_admin_required(f):
 
 
 def in_project(f):
+    from src.models.project_models import Membership
     """
     Decorator that checks if the user is in a certain project. This decorator needs to be placed _below_ the login_required decorator
     Requires 'p_id' to be in either the request body, or request parameters
@@ -308,4 +305,4 @@ def time_from_seconds(seconds):
     hours = int((minutes - minutes_leftover) / 60)
 
     # Return the time
-    return datetime.time(hours, minutes_leftover, seconds_leftover)
+    return time(hours, minutes_leftover, seconds_leftover)
