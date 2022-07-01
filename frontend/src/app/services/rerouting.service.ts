@@ -44,7 +44,6 @@ export class ReroutingService {
    * Gets the label ID from a url string
    * @param url_path the url in string format
    * @returns label ID
-   * TODO: check whether this url even has a labelId
    */
   getLabelID(url_path: string): string {
     // Get position of third slash

@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, ElementRef, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
 // Import of d3
 import * as d3 from 'd3';
-import { getQueryPredicate } from '@angular/compiler/src/render3/view/util';
 
 
 @Component({
