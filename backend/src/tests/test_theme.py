@@ -61,6 +61,20 @@ def test_single_theme_info(app, client):
     assert response.status_code == 400
     assert response.text == "Not all required arguments supplied"
 
+    # When t_id does not exist
+    response = request_handler.get(
+        "/theme/single-theme-info", {"p_id": 1, "t_id": 9}, True)
+    # Check if eror was thrown and which one
+    assert response.status_code == 400
+    assert response.text == "Bad request"
+
+    # When the theme is in a different project
+    response = request_handler.get(
+        "/theme/single-theme-info", {"p_id": 2, "t_id": 8}, True)
+    # Check if eror was thrown and which one
+    assert response.status_code == 400
+    assert response.text == "Bad request"
+
     response = request_handler.get(
         "/theme/single-theme-info", {"p_id": 1, "t_id": 7}, True)
     # Info for theme 7
@@ -305,6 +319,39 @@ def test_edit_theme(app, client):
     # assert response.status_code == 400
     # assert response.text == "Your choice of subthemes would introduce a cycle"
 
+    # When t_id does not exist
+    # Theme info with unknown id
+    new_theme_info = {
+        "id": 9,
+        "name": "New name",
+        "description": "New desc",
+        "labels": [],
+        "sub_themes": [],
+        "p_id": 1
+    }
+    # Post request
+    response = request_handler.post("/theme/edit_theme", new_theme_info, True)
+    # Check if eror was thrown and which one
+    assert response.status_code == 400
+    assert response.text == "Bad request"
+
+    # When the theme is in a different project
+    # When t_id does not exist
+    # Theme info with unknown id
+    new_theme_info = {
+        "id": 8,
+        "name": "New name",
+        "description": "New desc",
+        "labels": [],
+        "sub_themes": [],
+        "p_id": 2
+    }
+    # Post request
+    response = request_handler.post("/theme/edit_theme", new_theme_info, True)
+    # Check if eror was thrown and which one
+    assert response.status_code == 400
+    assert response.text == "Bad request"
+
     # app contect for database use
     with app.app_context():
         # Theme info with labels and sub-themes
@@ -358,6 +405,13 @@ def test_delete_theme(app, client):
     response = request_handler.post(
         "/theme/delete_theme", {"p_id": 1, "t_id": 0}, True)
     # Check if error was thrown, and which one
+    assert response.status_code == 400
+    assert response.text == "Bad request"
+
+    # When the theme is in a different project
+    response = request_handler.post(
+        "/theme/delete_theme", {"p_id": 2, "t_id": 1}, True)
+    # Check if eror was thrown and which one
     assert response.status_code == 400
     assert response.text == "Bad request"
 
@@ -415,7 +469,7 @@ def test_theme_visual(app, client):
     request_handler = RequestHandler(app, client, 1)
 
     # When p_id is not given
-    response = request_handler.get("/theme/themeVisData", {}, True)
+    response = request_handler.get("/theme/themeVisData", {"t_id": 3}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 400
 
