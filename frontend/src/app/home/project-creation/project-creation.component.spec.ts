@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'app/classes/user';
-
 import { ProjectCreationComponent } from './project-creation.component';
 
 // Class used to create custom errors
@@ -160,7 +158,7 @@ describe('ProjectCreationComponent', () => {
     // Spies on checkProjectData function and returns true
     let checkSpy = spyOn(component, "checkProjectData").and.returnValue(true);
     // Spies on makeRequest function
-    let requestSpy = spyOn(component["projectDataService"], "makeRequest").and.throwError(new TestError("msg", { status: 511 }));
+    let requestSpy = spyOn(component["projectDataService"], "makeRequest").and.throwError(new TestError("msg", { data: "Input contains a forbidden character" }));
     // Spies on the toast emit function
     let toastSpy = spyOn(component["toastCommService"], "emitChange");
 
@@ -172,7 +170,7 @@ describe('ProjectCreationComponent', () => {
     expect(addLabelSpy).toHaveBeenCalled();
     expect(checkSpy).toHaveBeenCalled();
     expect(requestSpy).toHaveBeenCalled();
-    expect(toastSpy).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
+    expect(toastSpy).toHaveBeenCalledWith([false, "Input contains a forbidden character"]);
   });
 
   it('should catch error for invalid input', async () => {
@@ -209,7 +207,7 @@ describe('ProjectCreationComponent', () => {
     let checkSpy = spyOn(component, "checkProjectData").and.returnValue(true);
     // Spies on makeRequest function
     let requestSpy = spyOn(component["projectDataService"], "makeRequest")
-      .and.throwError(new TestError("msg", { data: "" }));
+      .and.throwError(new TestError("msg", { data: "An error occured while creating the theme" }));
     // Spies on the toast emit function
     let toastSpy = spyOn(component["toastCommService"], "emitChange");
 
@@ -385,13 +383,17 @@ describe('ProjectCreationComponent', () => {
 
   it('should remove a member', () => {
     // Creates dummy data for allMembers array
-    let userArray = [new User(1, "aaa"), new User(2, "bbb"), new User(3, "ccc")];
+    let user1 = new User(1, "aaa");
+    let user2 = new User(2, "bbb");
+    let user3 = new User(3, "ccc");
+    let userArray = [user1, user2, user3];
+    // Sets all project members
     component.projectMembers = userArray;
 
     // Calls the function to be tested
-    component.removeMember("bbb");
+    component.removeMember(user2);
 
     // Checks whether the spy was called correctly
-    expect(component.projectMembers).toEqual([new User(1, "aaa"), new User(3, "ccc")]);
+    expect(component.projectMembers).toEqual([user1, user3]);
   });
 });

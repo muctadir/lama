@@ -405,22 +405,18 @@ describe('ThemeInfoComponent', () => {
         return;
       }
       expect(spy0).toHaveBeenCalled();
-      // Spy on setting the booleans
-      let spy1 = spyOn(component, 'setBooleans');
-      component.setBooleans();      
+      // Spy on setting the booleans and headers
+      let spy1 = spyOn(component, 'setBooleansAndHeaders');
+      component.setBooleansAndHeaders();      
       expect(spy1).toHaveBeenCalled();
-      // Spy on setting the headers
-      let spy2 = spyOn(component, 'setHeader');
-      component.setHeader();
-      expect(spy2).toHaveBeenCalled();
       // Spy on getting the labels
-      let spy3 = spyOn(component, 'get_labels');
+      let spy2 = spyOn(component, 'get_labels');
       component.get_labels(1);
-      expect(spy3).toHaveBeenCalledWith(1);
+      expect(spy2).toHaveBeenCalledWith(1);
       // Spy on getting the themes
-      let spy4 = spyOn(component, "get_themes_without_parents");
+      let spy3 = spyOn(component, "get_themes_without_parents");
       component.get_themes_without_parents(1, 0);
-      expect(spy4).toHaveBeenCalledWith(1, 0);
+      expect(spy3).toHaveBeenCalledWith(1, 0);
     });    
     // Set creation mode
     component.create = true;
@@ -442,14 +438,10 @@ describe('ThemeInfoComponent', () => {
         return;
       }
       expect(spy0).toHaveBeenCalled(); 
-      // Spy on setting the booleans
-      let spy1 = spyOn(component, 'setBooleans');
-      component.setBooleans();      
+      // Spy on setting the booleans and headers
+      let spy1 = spyOn(component, 'setBooleansAndHeaders');
+      component.setBooleansAndHeaders();      
       expect(spy1).toHaveBeenCalled();
-      // Spy on setting the headers
-      let spy2 = spyOn(component, 'setHeader');
-      component.setHeader();
-      expect(spy2).toHaveBeenCalled();
       // Spy on getting the labels
       let spy3 = spyOn(component, 'get_labels');
       component.get_labels(1);
@@ -467,15 +459,15 @@ describe('ThemeInfoComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  // SET BOOLEANS FUNCTION
+  // SET BOOLEANS AND HEADERS FUNCTION
   // Test the setBooleans function for create
   it('should set the create boolean', () => {
     // Set the component url
     component.url = "/project/3/createTheme";
     // Create spy for function
-    let spy = spyOn(component, "setBooleans").and.callThrough();
+    let spy = spyOn(component, "setBooleansAndHeaders").and.callThrough();
     // Call the function
-    component.setBooleans();
+    component.setBooleansAndHeaders();
     // Check if function works correctly
     expect(spy).toHaveBeenCalled()
     expect(component.create).toEqual(true);
@@ -487,44 +479,13 @@ describe('ThemeInfoComponent', () => {
     // Set the component url
     component.url = "/project/3/editTheme/1";
     // Create spy for function
-    let spy = spyOn(component, "setBooleans").and.callThrough();
+    let spy = spyOn(component, "setBooleansAndHeaders").and.callThrough();
     // Call the function
-    component.setBooleans();
+    component.setBooleansAndHeaders();
     // Check if function works correctly
     expect(spy).toHaveBeenCalled()
     expect(component.edit).toEqual(true);
     expect(component.create).toEqual(false);
-  });
-
-  // SET HEADER FUNCTION
-  // Test the setHeader function for creation
-  it('should set the create header', () => {    
-    // Set the component edit
-    component.edit = false;
-    // Set the component create
-    component.create = true;
-    // Create spy for function
-    let spy = spyOn(component, "setHeader").and.callThrough();
-    // Call the function
-    component.setHeader();
-    // Check if function works correctly
-    expect(spy).toHaveBeenCalled()
-    expect(component.createEditThemeHeader).toEqual("Create");
-  });
-
-  // Test the setHeader function for edit
-  it('should set the edit header', () => {    
-    // Set the component edit
-    component.edit = true;
-    // Set the component create
-    component.create = false;
-    // Create spy for function
-    let spy = spyOn(component, "setHeader").and.callThrough();
-    // Call the function
-    component.setHeader();
-    // Check if function works correctly
-    expect(spy).toHaveBeenCalled()
-    expect(component.createEditThemeHeader).toEqual("Edit");
   });
 
   // GET_SINGLE_THEME_INFO FUNCTION
