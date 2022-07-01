@@ -10,7 +10,7 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
-from src.models import db, ma
+from src.models import db
 from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -46,21 +46,3 @@ class Membership(db.Model):
     # Project and user in the relationship
     project = relationship('Project', back_populates='memberships')
     user = relationship('User', back_populates='memberships')
-
-from src.models.auth_models import User
-from src.models.item_models import Labelling
-
-class ProjectSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Project
-        include_fk = True
-        load_instance = True
-
-
-class MembershipSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Membership
-        include_fk = True
-        load_instance = True

@@ -3,7 +3,7 @@
 
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
+from src.models.item_models import Theme, Label, label_to_theme
 from src.models.change_models import ChangeType
 from src.models.project_models import Project
 from flask import jsonify, Blueprint, make_response, request
@@ -49,7 +49,7 @@ def theme_management_info():
     ).all()
 
     # Schemas to serialize
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # List for theme information
     theme_info = [{
@@ -90,7 +90,7 @@ def single_theme_info(*, user, membership):
         return make_response("Not all required arguments supplied", 400)
 
     # Schemas to serialize
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # Get the theme id
     t_id = int(args["t_id"])
@@ -170,7 +170,7 @@ def all_themes_no_parents():
         return make_response("Not all required arguments supplied", 400)
 
     # Schema to serialize
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # Get the project id
     p_id = int(args["p_id"])
@@ -251,7 +251,7 @@ def create_theme(*, user):
     }
 
     # Load the theme data into a theme object
-    thema_schema = ThemeSchema()
+    thema_schema = Theme.__marshmallow__()
     theme = thema_schema.load(theme_creation_info)
 
     # Add the theme to the database
@@ -486,7 +486,7 @@ def search_route():
     # Gets the actual label object from the search
     themes_results = [result['item'] for result in clean_results]
     # Schema for serialising
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
     # Serialise results and jsonify
     return make_response(jsonify(theme_schema.dump(themes_results, many=True)), 200)
 

@@ -4,17 +4,15 @@
 # Linh Nguyen
 
 from src.models.project_models import Membership
-from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.auth_models import User, UserStatus
 from src.models.item_models import Artifact, LabelType, Labelling, Label
-from src.models.project_models import Project, Membership, ProjectSchema
+from src.models.project_models import Project, Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, distinct
 from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, in_project, not_frozen
 from sqlalchemy.exc import OperationalError, IntegrityError
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
-from collections import defaultdict
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -47,7 +45,7 @@ def home_page(*, user):
     projects_info = []
 
     # Schema to serialize the Project
-    project_schema = ProjectSchema()
+    project_schema = Project.__marshmallow__()
 
     # For loop for admin, users, #artifacts
     for membership_project in projects_of_user:
@@ -150,7 +148,7 @@ def create_project(*, user):
         return make_response("Input contains a forbidden character", 511)
 
     # Load the project data into a project object
-    project_schema = ProjectSchema()
+    project_schema = Project.__marshmallow__()
     project = project_schema.load(project_info["project"])
 
     # Add the project to the database
@@ -200,7 +198,7 @@ Function to get a serialized list of users
 """
 def get_serialized_users(users):
     # Schema to serialize the Users
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     return user_schema.dump(users, many=True)
 
@@ -526,9 +524,9 @@ def single_project():
     project = __get_project(p_id)
 
     # Schema to serialize the Project
-    project_schema = ProjectSchema()
+    project_schema = Project.__marshmallow__()
     # Schema to serialize the User
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     # Convert project to JSON
     project_json = project_schema.dump(project)

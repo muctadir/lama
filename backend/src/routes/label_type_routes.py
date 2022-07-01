@@ -3,11 +3,10 @@
 # Author: Eduardo Costa Martins
 from src.app_util import check_args
 from src import db  # need this in every route
-from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update
+from sqlalchemy import select
 from src.app_util import login_required, in_project
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema
+from src.models.item_models import Label, LabelType
 from collections import defaultdict
 
 label_type_routes = Blueprint("labeltype", __name__, url_prefix="/labeltype")
@@ -34,7 +33,7 @@ def get_label_types():
     ).scalars().all()
 
     # Initialise label type schema
-    label_type_schema = LabelTypeSchema()
+    label_type_schema = LabelType.__marshmallow__()
     # Jsonify label type schema
     label_type_json = jsonify(label_type_schema.dump(label_types, many=True))
 
@@ -64,9 +63,9 @@ def get_label_types_wl():
     ).all()
 
     # Initialise label type schema
-    label_type_schema = LabelTypeSchema()
+    label_type_schema = LabelType.__marshmallow__()
     # Initialise label schema
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
 
     # Create dictionary with label type and labels
     dict_json = jsonify([{
@@ -100,7 +99,7 @@ def get_labels_by_label_type():
     )
 
     # Initialise label schema
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
 
     # Create dictionary with label type and labels
     dict_json = label_schema.dump(

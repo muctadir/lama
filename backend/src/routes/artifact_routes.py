@@ -4,21 +4,15 @@
 # Thea Bradley
 
 from src.models.project_models import Project
-from src.app_util import in_project
-from src.app_util import check_args
 from src.models import db
-from src.models.item_models import Artifact, ArtifactSchema, Labelling, LabellingSchema, LabelType
+from src.models.item_models import Artifact, Labelling, LabelType
 from src.models.change_models import ChangeType
-from src.models.auth_models import UserSchema
 from src.models.project_models import Project
 from flask import jsonify, Blueprint, make_response, request
-from sqlalchemy import select, func
-from src.app_util import login_required, not_frozen
-from sqlalchemy.exc import OperationalError
-from src.models.auth_models import User, UserSchema
 from sqlalchemy import select, func, distinct
-from src.app_util import login_required, in_project
+from src.app_util import login_required, not_frozen, in_project, check_args
 from sqlalchemy.exc import OperationalError
+from src.models.auth_models import User
 from src.searching.search import search_func_all_res, best_search_results
 from hashlib import blake2b
 
@@ -130,7 +124,7 @@ def add_new_artifacts(*, user, membership):
     artifact_object = []
 
     # Schema to serialize the Artifact
-    artifact_schema = ArtifactSchema()
+    artifact_schema = Artifact.__marshmallow__()
 
     # Generate a unique identifier
     identifier = generate_artifact_identifier(args['p_id'])
@@ -203,10 +197,10 @@ def single_artifact(*, user, membership):
     artifact = __get_artifact(a_id)
 
     # Schema to serialize the artifact
-    artifact_schema = ArtifactSchema()
+    artifact_schema = Artifact.__marshmallow__()
 
     # Schema to serialize users
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     # Convert artifact to JSON
     artifact_json = artifact_schema.dump(artifact)
@@ -397,7 +391,7 @@ def random_artifact(*, user):
         .where(artifact.id == Artifact.parent_id)
     ).all()
     # Schemas to serialize the artifact
-    artifact_schema = ArtifactSchema()
+    artifact_schema = Artifact.__marshmallow__()
 
     dict_json = jsonify({
         'artifact': artifact_schema.dump(artifact),
@@ -432,7 +426,7 @@ def get_labellers(*, user, membership):
         )
         .distinct()
     ).all()
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
     json_labellers = jsonify(user_schema.dump(labellers, many=True))
 
     return make_response(json_labellers)
@@ -634,8 +628,8 @@ def __record_split(u_id, p_id, a_id, parent_id):
 """
 def __get_artifact_info(artifact):
     # Schema to serialize the artifact
-    artifact_schema = ArtifactSchema()
-    labelling_schema = LabellingSchema()
+    artifact_schema = Artifact.__marshmallow__()
+    labelling_schema = Labelling.__marshmallow__()
 
     # Convert artifact to JSON
     artifact_json = artifact_schema.dump(artifact)

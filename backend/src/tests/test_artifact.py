@@ -1,6 +1,6 @@
 from sqlalchemy import select, distinct, func
-from src.models.item_models import Artifact, Labelling, ArtifactSchema
-from src.models.auth_models import UserSchema, User
+from src.models.item_models import Artifact, Labelling
+from src.models.auth_models import User
 from src.models.project_models import Project
 from src import db
 from src.exc import TestAuthenticationError
@@ -681,7 +681,7 @@ def getLabellers_help(app, client, u_id, p_id, a_id):
     request_handler = RequestHandler(app, client, u_id)
 
     # Schema to serialize users
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     # Using db requires app context
     with app.app_context():
@@ -772,9 +772,9 @@ def singleArtifact_help(app, client, u_id, a_id, p_id, admin, username, extended
     request_handler = RequestHandler(app, client, u_id)
 
     # Schema to serialize the artifact
-    artifact_schema = ArtifactSchema()
+    artifact_schema = Artifact.__marshmallow__()
     # Schema to serialize users
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     # Using db requires app context
     with app.app_context():
