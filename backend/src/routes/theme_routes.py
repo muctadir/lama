@@ -334,11 +334,9 @@ def edit_theme(*, user):
 
     # Get the corresponding theme
     theme = db.session.get(Theme, t_id)
-    print(theme)
 
     # Check if the theme exists
     if not theme:
-        print("hello")
         return make_response("Bad request", 400)
 
     # Check if theme is in given project

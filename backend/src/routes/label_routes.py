@@ -50,7 +50,6 @@ def create_label(*, user):
         if label_name_taken(args['labelName'], 0, args['p_id']):
             return make_response('Label name already exists', 400)
     except OperationalError as err:
-        print(err.args[0])
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
         else:
@@ -274,7 +273,6 @@ def merge_route(*, user):
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
-        print(100)
         return make_response('Label ids must be unique', 400)
 
     # Labels being merged

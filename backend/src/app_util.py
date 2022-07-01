@@ -214,7 +214,6 @@ def super_admin_required(f):
             return f(*args, **kwargs)
         except OperationalError as e:
             # Database error
-            print(e)
             return make_response('Service Unavailable', 503)
         except InvalidSignatureError:
             # Token is signed incorrectly
