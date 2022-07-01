@@ -46,7 +46,7 @@ describe('LabelFormComponent', () => {
   it('should get label types', async () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabelTypes")
-    // Calls the get_single_theme_info function
+    // Calls the getLabelTypes function
     await component.getLabelTypes();
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
@@ -58,7 +58,7 @@ describe('LabelFormComponent', () => {
     let label = new Label(1, "label 1", "label 1 desc", "label type 1");
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "editLabel")
-    // Calls the get_single_theme_info function
+    // Calls the submitPatchToServer function
     await component.submitPatchToServer(label);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe('LabelFormComponent', () => {
     let label = new Label(1, "label 1", "label 1 desc", "label type 1");
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "submitLabel")
-    // Calls the get_single_theme_info function
+    // Calls the submitPostToServer function
     await component.submitPostToServer(label);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();

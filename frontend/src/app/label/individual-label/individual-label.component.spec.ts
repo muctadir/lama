@@ -52,7 +52,7 @@ describe('IndividualLabelComponent', () => {
   it('Tests the getLabel function to individual Label management page', async () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabel")
-    // Calls the get_single_theme_info function
+    // Calls the getLabel function
     await component.getLabel(1,1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe('IndividualLabelComponent', () => {
   it('Tests the getLabellingAmount function to individual Label management page', async () => {
     // Create spy for getLabellings call
     let spy = spyOn(component['labellingDataService'], "getLabellingCount")
-    // Calls the getLabellings function
+    // Calls the getLabellingAmount function
     await component.getLabellingAmount();
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
