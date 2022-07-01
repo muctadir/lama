@@ -18,7 +18,7 @@ export class TestError extends Error {
 /**
  * Test bed for the merge label component
  */
-fdescribe('MergeLabelFormComponent', () => {
+describe('MergeLabelFormComponent', () => {
   let component: MergeLabelFormComponent;
   let fixture: ComponentFixture<MergeLabelFormComponent>;
 
