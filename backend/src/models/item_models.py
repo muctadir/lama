@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db, ma
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint, ForeignKeyConstraint
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
 from marshmallow import fields, post_dump
@@ -261,7 +261,9 @@ label_to_theme = Table('label_to_theme', db.Model.metadata,
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
 # i.e., do not use this package at the top level
+from src.models.auth_models import User
 # Changes is a list with all the Change classes
+from src.models.change_models import Changes
 
 
 class LabelTypeSchema(ma.SQLAlchemyAutoSchema):

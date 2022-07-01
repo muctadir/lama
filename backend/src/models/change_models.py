@@ -192,6 +192,7 @@ class Change():
     # Date and time when change was made
     timestamp = Column(DateTime, default=func.now())
 
+from src.models.item_models import ChangingItem
 
 # TODO: Should make sure subclasses are not abstract before creating changelog for them
 #       or alternatively, make sure they inherit db.Model

@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db, ma  # need this in every model
-from sqlalchemy import Column, Integer, String, Text, Boolean
+from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from enum import Enum
@@ -62,6 +62,8 @@ class User(db.Model):
 
 # Note: This is a circular import, but not a circular dependency so nothing breaks
 # i.e., do not use this package at the top level
+from src.models.project_models import Membership
+from src.models.item_models import Labelling
 
 
 class UserSchema(ma.SQLAlchemyAutoSchema):

@@ -47,6 +47,8 @@ class Membership(db.Model):
     project = relationship('Project', back_populates='memberships')
     user = relationship('User', back_populates='memberships')
 
+from src.models.auth_models import User
+from src.models.item_models import Labelling
 
 class ProjectSchema(ma.SQLAlchemyAutoSchema):
 
