@@ -20,7 +20,6 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
-from src.models.item_models import ChangingItem
 from src.models import db, ma
 from sqlalchemy import Column, Integer, DateTime, Text, ForeignKey, event, func
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, mapper
