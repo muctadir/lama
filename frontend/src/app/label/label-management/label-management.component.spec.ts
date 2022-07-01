@@ -50,7 +50,7 @@ describe('LabelManagementComponent', () => {
   it('should test getLabels function on Label management page', async () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabels")
-    // Calls the get_single_theme_info function
+    // Calls the getLabels function
     await component.getLabels();
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe('LabelManagementComponent', () => {
   it('Tests if the sortDesc function', () => {    
     // Create spy for get url call
     let spy = spyOn(component['labels'], 'sort');
-    // Call ngOnInit
+    // Calls the sortLabel function
     component.sortLabel();    
     // Checks whether the function is called in ngOnInit
     expect(spy).toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe('LabelManagementComponent', () => {
   it('Tests if the sortDesc function', () => {    
     // Create spy for get url call
     let spy = spyOn(component['labels'], 'sort');
-    // Call ngOnInit
+    // Calls the sortLabelType function
     component.sortLabelType();    
     // Checks whether the function is called in ngOnInit
     expect(spy).toHaveBeenCalled();
@@ -97,7 +97,7 @@ describe('LabelManagementComponent', () => {
   it('Tests if the sortDesc function', () => {    
     // Create spy for get url call
     let spy = spyOn(component['labels'], 'sort');
-    // Call ngOnInit
+    // Calls the sortNumberOfArtifacts function
     component.sortNumberOfArtifacts();    
     // Checks whether the function is called in ngOnInit
     expect(spy).toHaveBeenCalled();
