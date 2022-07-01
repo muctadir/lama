@@ -108,7 +108,7 @@ describe('ProjectSettingsComponent', () => {
     component.allMembers = [user];
 
     // Creates a spy for the backend call, returns dummy values
-    let spy = spyOn(component["requestHandler"], "get").and.returnValue(Promise.resolve(
+    spyOn(component["requestHandler"], "get").and.returnValue(Promise.resolve(
       {
         u_id: 1,
         name: "project1",
@@ -152,7 +152,6 @@ describe('ProjectSettingsComponent', () => {
 
     let u1 = new User(1, "user1");
     let u2 = new User(2, "user2");
-    let u3 = new User(3, "user3");
     proj.setUsers([u1, u2]);
 
     // Checks whether the project was created correctly
