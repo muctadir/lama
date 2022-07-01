@@ -7,8 +7,8 @@ from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args, not_frozen
 from src.models.change_models import ChangeType
-from src.models.item_models import Label, LabelSchema, LabelType, \
-    Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
+from src.models.item_models import Label, LabelType, \
+    Labelling, Artifact, label_to_theme, Theme
 from src.searching.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
@@ -50,7 +50,6 @@ def create_label(*, user):
         if label_name_taken(args['labelName'], 0, args['p_id']):
             return make_response('Label name already exists', 400)
     except OperationalError as err:
-        print(err.args[0])
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
         else:
@@ -183,7 +182,7 @@ def get_all_labels():
     ).all()
 
     # Initialise label schema
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
 
     # Send the label object, and the name of its type for each label
     label_data = jsonify([{
@@ -215,9 +214,9 @@ def get_single_label():
         return make_response('Label does not exist', 400)
 
     # Initialise label schema
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
     # Initialise theme schema
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # Create a dictionary with label, label type and themes
     dict_json = jsonify({
@@ -274,7 +273,6 @@ def merge_route(*, user):
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
-        print(100)
         return make_response('Label ids must be unique', 400)
 
     # Labels being merged
@@ -393,8 +391,8 @@ def merge_route(*, user):
 # @param admin
 def get_label_info(label, u_id, admin):
     # Schemas
-    label_schema = LabelSchema()
-    artifact_schema = ArtifactSchema()
+    label_schema = Label.__marshmallow__()
+    artifact_schema = Artifact.__marshmallow__()
     # Info of the label
     info = {
         "label": label_schema.dump(label),
@@ -531,7 +529,7 @@ def search_route():
     # Gets the actual label object from the search
     labels_results = [result['item'] for result in clean_results]
     # Schema for serialising
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
     # Serialise objects and jsonify them
     return make_response(jsonify(label_schema.dump(labels_results, many=True)))
 

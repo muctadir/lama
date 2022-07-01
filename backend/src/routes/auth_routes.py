@@ -5,7 +5,7 @@
 from operator import or_
 from src import db  # need this in every route
 from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required, check_string, check_whitespaces
-from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.auth_models import User, UserStatus
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, or_
@@ -63,7 +63,7 @@ def pending():
     if not check_args(required, args):
         return make_response("Bad Request", 400)
 
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
     # Get all users with pending status
     users = db.session.scalars(select(User).where(
         User.status == UserStatus.pending)).all()

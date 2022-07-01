@@ -10,13 +10,11 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
-from src.models import db, ma  # need this in every model
-from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey
+from src.models import db
+from sqlalchemy import Column, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from enum import Enum
-from marshmallow import fields
-
 
 class UserStatus(Enum):
     """
@@ -58,30 +56,3 @@ class User(db.Model):
     artifacts = association_proxy('labellings', 'artifact')
     # List of highlights the user has made
     highlights = relationship('Highlight', back_populates='user')
-
-
-# Note: This is a circular import, but not a circular dependency so nothing breaks
-# i.e., do not use this package at the top level
-from src.models.project_models import Membership
-from src.models.item_models import Labelling
-
-
-class UserSchema(ma.SQLAlchemyAutoSchema):
-    def __init__(self, *args, **kwargs):
-        # Exclude the password row when serializing a user
-        super(UserSchema, self).__init__(exclude=['password'], *args, **kwargs)
-
-    class Meta:
-        model = User
-        # Include foreign keys (not useful now, but maybe later)
-        include_fk = True
-
-    # Enum fields are not automatically serialized/deserialized
-    status = fields.Method("get_approval", deserialize="load_approval")
-    # The functions below describe how to serialize/deserialize enums
-
-    def get_approval(self, obj):
-        return obj.status.name
-
-    def load_approval(self, value):
-        return UserStatus[value]

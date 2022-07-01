@@ -1,7 +1,7 @@
 # Veerle Furst
 
 from src import db  # need this in every route
-from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.auth_models import User, UserStatus
 from src.app_util import check_args, check_email, check_password, check_username, check_string, check_whitespaces
 from flask import current_app as app
 from flask import make_response, request, Blueprint
@@ -28,7 +28,7 @@ def get_user_information(*, user):
         return make_response("Bad request", 400)
 
     # Get the information
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
     response = user_schema.dump(user[0])
 
     # Respond the information

@@ -1,5 +1,5 @@
 from sqlite3 import OperationalError
-from src.models.auth_models import User, UserSchema
+from src.models.auth_models import User
 from flask import request, jsonify, Blueprint
 
 util_routes = Blueprint("util_routes", __name__)
@@ -13,7 +13,7 @@ def health():
 # Route for getting users
 @util_routes.route("/users", methods=["GET"])
 def users():
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
     try:
         # cannot return lists -> convert to json
         response = jsonify([user_schema.dump(user)

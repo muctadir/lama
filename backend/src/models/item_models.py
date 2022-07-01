@@ -10,11 +10,10 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
-from src.models import db, ma
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint, ForeignKeyConstraint
+from src.models import db
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
-from marshmallow import fields, post_dump
 
 
 @declarative_mixin
@@ -258,73 +257,3 @@ label_to_theme = Table('label_to_theme', db.Model.metadata,
                        Column('l_id', Integer, ForeignKey(
                            'label.id'), primary_key=True)
                        )
-
-# Note: This is a circular import, but not a circular dependency so nothing breaks
-# i.e., do not use this package at the top level
-from src.models.auth_models import User
-# Changes is a list with all the Change classes
-from src.models.change_models import Changes
-
-
-class LabelTypeSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = LabelType
-        include_fk = True
-        load_instance = True
-
-
-class ArtifactSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Artifact
-        include_fk = True
-        load_instance = True
-
-
-class LabelSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Label
-        include_fk = True
-        load_instance = True
-
-    # The frontend Label class requires the label type name to be constructed
-    # So sometimes we add the type attribute to label objects
-    # Since it's not a default attribute, it's not automatically serialized so we add a new field
-    type = fields.Method("get_type")
-
-    # Gets the type name, and defaults to None if it does not exist
-    def get_type(self, obj):
-        return getattr(obj, 'type', None)
-
-    # This will remove the type attribute if it is None
-    @post_dump
-    def remove_none_type(self, data, **kwargs):
-        if not data['type']:
-            del data['type']
-        return data
-
-
-class ThemeSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Theme
-        include_fk = True
-        load_instance = True
-
-
-class LabellingSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Labelling
-        include_fk = True
-        load_instance = True
-
-
-class HighlightSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Highlight
-        include_fk = True
-        load_instance = True

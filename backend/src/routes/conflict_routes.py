@@ -6,7 +6,7 @@ from src.models.item_models import Artifact, LabelType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
 from src.models.item_models import Labelling, Label
-from src.models.auth_models import UserSchema, User
+from src.models.auth_models import User
 from src.models import db
 from src.app_util import login_required, check_args, in_project
 
@@ -222,7 +222,7 @@ def project_conflicts(p_id, admin, u_id):
     info_list = []
 
     # User schema to serialize users
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     # Add a dictionary of conflict data to the list of dictionaries
     for conflict in conflicts:
