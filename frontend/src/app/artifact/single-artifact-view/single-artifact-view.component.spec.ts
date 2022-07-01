@@ -282,6 +282,9 @@ describe('SingleArtifactViewComponent', () => {
     // Spy on labellingDataService.updateLabellings and throw an error
     spyOn(component['labellingDataService'], 'updateLabellings').and.throwError("Test error.")
 
+    // Spy on toastCommService.emitChange and stub the call
+    spyOn(component["toastCommService"], "emitChange");
+
     // Call the function and wait until it's done
     component.updateLabellings().then(async () => {
       // Check that labellingDataService.updateLabellings is called with the right parameters
