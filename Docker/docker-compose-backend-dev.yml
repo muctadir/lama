@@ -7,7 +7,7 @@ services:
       - "80:80"
         
   lama-mysql:
-    image: mysql:8.0.29
+    image: mysql:8-oracle
     container_name: lama-mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootPassword
