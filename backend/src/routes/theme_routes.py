@@ -300,7 +300,7 @@ For editing a theme
 def edit_theme(*, user):
 
     # The required arguments
-    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
+    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]    
 
     # Get args
     args = request.json['params']
@@ -317,12 +317,12 @@ def edit_theme(*, user):
     if check_string([args['name']]):
         return make_response("Input contains a forbidden character", 511)
 
-        # Check if the theme name is unique
+    # Check if the theme name is unique
     try:
         if theme_name_taken(args["name"], args["id"]):
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
-        if "illegal" in err.args[0]:
+        if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
         else:
             return make_response("Bad request", 400)
@@ -334,9 +334,11 @@ def edit_theme(*, user):
 
     # Get the corresponding theme
     theme = db.session.get(Theme, t_id)
+    print(theme)
 
     # Check if the theme exists
     if not theme:
+        print("hello")
         return make_response("Bad request", 400)
 
     # Check if theme is in given project
