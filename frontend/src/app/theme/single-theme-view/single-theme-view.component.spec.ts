@@ -7,6 +7,8 @@ import { Theme } from 'app/classes/theme';
 import { Label } from 'app/classes/label';
 import { SingleThemeViewComponent } from './single-theme-view.component';
 import { HistoryComponent } from 'app/modals/history/history.component';
+import { of } from 'rxjs';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 
 describe('SingleThemeViewComponent', () => {
   let component: SingleThemeViewComponent;
@@ -184,15 +186,149 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the deleteTheme function
-  it('Tests the deleteTheme function', () => {
+  it('should delete the theme and display success toast', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(true);
+    // List of hardcoded themes
+    let themes: Theme[] = [];
+    // List of hardcoded labels
+    let labels: Label[] = [];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the theme id
+    component.t_id = 3;
+
     // Spy on the functions that should have been called
-    let spy1 = spyOn(component['theme'], 'getChildren');
-    let spy2 = spyOn(component['theme'], 'getLabels');
-    // Calls the goToTheme function
-    component.deleteTheme();
+    let spy1 = spyOn(component['theme'], 'getChildren').and.returnValue(themes);
+    let spy2 = spyOn(component['theme'], 'getLabels').and.returnValue(labels);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['themeDataService'], 'delete_theme');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.deleteTheme();
+
     // Checks whether the function works properly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
+    expect(modal_spy).toHaveBeenCalledWith(ConfirmModalComponent, {});
+    expect(delete_spy).toHaveBeenCalledWith(1, 3)
+    expect(navigate_spy).toHaveBeenCalledWith(['/project', 1, 'thememanagement'])
+    expect(toast_spy).toHaveBeenCalledWith([true, "Deletion successful"])
+  });
+
+  // Test that the deleteTheme function does nothing if the confirm modal returns false
+  it('should not do anything', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(false);
+    // List of hardcoded themes
+    let themes: Theme[] = [];
+    // List of hardcoded labels
+    let labels: Label[] = [];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the theme id
+    component.t_id = 3;
+
+    // Spy on the functions that should have been called
+    let spy1 = spyOn(component['theme'], 'getChildren').and.returnValue(themes);
+    let spy2 = spyOn(component['theme'], 'getLabels').and.returnValue(labels);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['themeDataService'], 'delete_theme');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.deleteTheme();
+
+    // Checks whether the function works properly
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(modal_spy).toHaveBeenCalledWith(ConfirmModalComponent, {});
+    expect(delete_spy).not.toHaveBeenCalled();
+    expect(navigate_spy).not.toHaveBeenCalled();
+    expect(toast_spy).not.toHaveBeenCalledWith([true, "Deletion successful"]);
+    expect(toast_spy).not.toHaveBeenCalledWith([false,
+      "This theme has sub-themes and/or labels, so it cannot be deleted"]);
+  });
+
+  // Test that the deleteTheme displays a failure toast when the theme has labels
+  it('should display failure toast when the theme has labels', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(false);
+    // List of hardcoded themes
+    let themes: Theme[] = [];
+    // List of hardcoded labels
+    let labels: Label[] = [new Label(1, "Label 1", "Label 1", "Type"), new Label(2, "Label 2", "Label 2", "Type")];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the theme id
+    component.t_id = 3;
+
+    // Spy on the functions that should have been called
+    let spy1 = spyOn(component['theme'], 'getChildren').and.returnValue(themes);
+    let spy2 = spyOn(component['theme'], 'getLabels').and.returnValue(labels);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['themeDataService'], 'delete_theme');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.deleteTheme();
+
+    // Checks whether the function works properly
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(modal_spy).not.toHaveBeenCalled();
+    expect(delete_spy).not.toHaveBeenCalled();
+    expect(navigate_spy).not.toHaveBeenCalled();
+    expect(toast_spy).not.toHaveBeenCalledWith([true, "Deletion successful"]);
+    expect(toast_spy).toHaveBeenCalledWith([false,
+      "This theme has sub-themes and/or labels, so it cannot be deleted"]);
+  });
+
+  // Test that the deleteTheme displays a failure toast when the theme has themes
+  it('should display failure toast when the theme has labels', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(false);
+    // List of hardcoded themes
+    let themes: Theme[] = [new Theme(1, "Theme 1", "Theme 1"), new Theme(2, "Theme 2", "Theme 2")];
+    // List of hardcoded labels
+    let labels: Label[] = [];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the theme id
+    component.t_id = 3;
+
+    // Spy on the functions that should have been called
+    let spy1 = spyOn(component['theme'], 'getChildren').and.returnValue(themes);
+    let spy2 = spyOn(component['theme'], 'getLabels').and.returnValue(labels);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['themeDataService'], 'delete_theme');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.deleteTheme();
+
+    // Checks whether the function works properly
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(modal_spy).not.toHaveBeenCalled();
+    expect(delete_spy).not.toHaveBeenCalled();
+    expect(navigate_spy).not.toHaveBeenCalled();
+    expect(toast_spy).not.toHaveBeenCalledWith([true, "Deletion successful"]);
+    expect(toast_spy).toHaveBeenCalledWith([false,
+      "This theme has sub-themes and/or labels, so it cannot be deleted"]);
   });
 
   // Test the getNonDoubleArtifacts function
@@ -214,7 +350,7 @@ describe('SingleThemeViewComponent', () => {
     })
   });
 
-  
+
   // Tesst if the openThemeHistory function works correctly
   it('should openThemeHistory the artifact upload modal', async () => {
     // Instance of NgbModalRef

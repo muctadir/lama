@@ -71,7 +71,7 @@ export class HomePageComponent implements OnInit {
    * @trigger click on logout button
    */
   openLogout() : void {
-    // opens logout modal
+    // Opens logout modal
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
       // Listens for an event emitted by the modal

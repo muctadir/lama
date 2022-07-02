@@ -97,6 +97,7 @@ export class ModerationComponent {
     modalRefrence.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       // If a confirmEvent = true is emitted we delete the user
       if($e) {
+        console.log($e)
         try {
           // Makes the call to delete the user
           await this.accountService.softDelUser(deluser);

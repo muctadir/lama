@@ -126,7 +126,7 @@ export class IndividualLabelComponent {
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
-      // If a confirmEvent = true is emitted we delete the user
+      // If a confirmEvent = true is emitted we delete the label
       if($e) {
         try{
           // Post the soft delete

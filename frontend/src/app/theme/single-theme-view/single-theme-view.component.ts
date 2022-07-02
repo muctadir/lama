@@ -190,6 +190,7 @@ export class SingleThemeViewComponent {
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       if($e) {
+        console.log($e)
         // Call the service to delete the theme
         await this.themeDataService.delete_theme(this.p_id, this.t_id);
         // Go back to the theme management page
