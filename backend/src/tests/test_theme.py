@@ -560,6 +560,17 @@ def test_make_labels(app, client):
         labels = [label for label in theme.labels]
         assert labels == exp_labels
 
+        # Try adding a label in a different project
+        # Info for creating labels
+        labels_info = [
+            {"id": 1, "name": "Happy"},
+            {"id": 18, "name": "New"},
+            {"id": 3, "name": "Excited"}
+        ]
+        with raises(ValueError) as err_info:
+            make_labels(theme, labels_info, 1)
+        assert str(err_info.value) == "Label not in correct project, id: 18"
+
     # We need to delete a label to test adding it as a subtheme
     response = request_handler.post('/label/delete', {'l_id': 1, 'p_id': 1}, True)
     assert response.status_code == 200
@@ -574,8 +585,9 @@ def test_make_labels(app, client):
         # Try assign labels to theme 1
         theme = db.session.get(Theme, 1)
         # Test that exception is raised
-        with raises(ValueError):
+        with raises(ValueError) as err_info:
             make_labels(theme, labels_info, 1)
+        assert str(err_info.value) == "Deleted label added, id: 1"
 
 
 def test_make_sub_themes(app, client):
