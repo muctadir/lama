@@ -603,15 +603,34 @@ def test_make_sub_themes(app, client):
         # Add the subthemes to the theme
         with raises(ThemeCycleDetected):
             make_sub_themes(theme, sub_themes_info, 1)
+
+        # 3) trying to add a subtheme that already has a super theme
+        sub_themes_info = [2, 7, 4]
+        with raises(ValueError) as err_info:
+            make_sub_themes(theme, sub_themes_info, 1)
+        assert str(err_info.value) == "Theme already has a super theme, id: 7"
         
         # Testing normal cases
+        # Setting subthemes to the existing ones
+        
+        theme = db.session.get(Theme, 3)
+        sub_themes_info = [7]
+        make_sub_themes(theme, sub_themes_info, 1)
+        # Get the added themes
+        exp_sub_themes = db.session.scalars(
+            select(Theme).where(Theme.id.in_(sub_themes_info))).all()
+        # Check if the themes were added
+        # We do this list comprehension because the loading is dynamic, so we need to extract all the values
+        sub_themes = [theme for theme in theme.sub_themes]
+        assert sub_themes == exp_sub_themes
+
         # Info for creating sub-themes
-        sub_themes_info = [2, 3, 4]
+        sub_themes_info = [1, 2, 4]
         # Add the subthemes to the theme
         make_sub_themes(theme, sub_themes_info, 1)
         # Get the added themes
         exp_sub_themes = db.session.scalars(
-            select(Theme).where(Theme.id.in_([2, 3, 4]))).all()
+            select(Theme).where(Theme.id.in_(sub_themes_info))).all()
         # Check if the themes were added
         # We do this list comprehension because the loading is dynamic, so we need to extract all the values
         sub_themes = [theme for theme in theme.sub_themes]
@@ -627,8 +646,41 @@ def test_make_sub_themes(app, client):
         # Try assign subthemes to theme 3
         theme = db.session.get(Theme, 3)
         # Test that exception is raised
-        with raises(ValueError):
+        with raises(ValueError) as err_info:
             make_sub_themes(theme, sub_themes_info, 1)
+        # Check message of the exception is correct
+        assert str(err_info.value) == "Deleted theme added, id: 1"
+    
+    # We need to create a theme in a different project (since one does not exist in the test database)
+    # This it to test adding a theme in a different project
+    create_params = {
+        'name': "test_theme",
+        'description': "test theme",
+        'labels': [],
+        'sub_themes': [],
+        'p_id': 2
+    }
+    response = request_handler.post('/theme/create_theme', create_params, True)
+    assert response.status_code == 201
+    
+    with app.app_context():
+        # Get the id of the newly created theme
+        new_t_id = db.session.scalar(
+            select(
+                Theme.id
+            ).where(
+                Theme.name == "test_theme",
+                Theme.p_id == 2
+            ))
+        # List containing the deleted subtheme (id 1)
+        sub_themes_info = [2, new_t_id, 7]
+        # Try assign subthemes to theme 3
+        theme = db.session.get(Theme, 3)
+        # Test that exception is raised
+        with raises(ValueError) as err_info:
+            make_sub_themes(theme, sub_themes_info, 1)
+        # Check message of the exception is correct
+        assert str(err_info.value) == f"Theme not in correct project, id: {new_t_id}"
 
 
 def test_theme_name_taken(app):

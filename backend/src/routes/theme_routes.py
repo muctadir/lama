@@ -269,15 +269,21 @@ def create_theme(*, user):
     sub_theme_ids = [sub_theme['id'] for sub_theme in args["sub_themes"]]
     try:
         make_sub_themes(theme, sub_theme_ids, user.id)
-    except ValueError:
-        return make_response("You cannot add deleted themes", 400)
+    except ValueError as e:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted themes", 400)
+        elif str(e).startswith("Theme not"):
+            return make_response("You cannot add themes in different projects", 400)
+        return make_response("You cannot add themes that already have super themes", 400)
     # Note we do not catch ThemeCycleDetected since it cannot happen whilst creating a theme
 
     # Make the labels the labels of the created theme
     try:
         make_labels(theme, args["labels"], user.id)
     except ValueError:
-        return make_response("You cannot add deleted labels", 400)
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted labels", 400)
+        return make_response("You cannot add labels in different projects", 400)
     
 
     # Create the project
@@ -380,14 +386,20 @@ def edit_theme(*, user):
         make_sub_themes(theme, sub_theme_ids, user.id)
     except ThemeCycleDetected:
         return make_response("Your choice of subthemes would introduce a cycle", 400)
-    except ValueError:
-        return make_response("You cannot add deleted themes", 400)
+    except ValueError as e:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted themes", 400)
+        elif str(e).startswith("Theme not"):
+            return make_response("You cannot add themes in different projects", 400)
+        return make_response("You cannot add themes that already have super themes", 400)
 
     # Set the labels of the theme
     try:
         make_labels(theme, args["labels"], user.id)
-    except ValueError:
-        return make_response("You cannot add deleted labels", 400)
+    except ValueError as e:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted labels", 400)
+        return make_response("You cannot add labels in different projects", 400)
 
     # Edit the theme
     try:
@@ -555,7 +567,7 @@ Robust method for setting the labels of a theme
 @params labels_info includes: {
     id: id of the label
 }
-@throws ValueError if the user attempts to add a deleted theme
+@throws ValueError if the user attempts to add a deleted label or a label in a different project
 """
 def make_labels(theme, labels_info, u_id):
     # List for the label ids
@@ -567,10 +579,13 @@ def make_labels(theme, labels_info, u_id):
         .where(Label.id.in_(label_ids_list))
     ).all()
     
-    # Check the user is not trying to add deleted labels
     for label in labels:
+        # Check the user is not trying to add deleted labels
         if label.deleted:
-            raise ValueError
+            raise ValueError(f"Deleted label added, id: {label.id}")
+        # Check the user is not trying to add labels in a different project
+        if label.p_id != theme.p_id:
+            raise ValueError(f"Label not in correct project, id: {label.id}")
 
     label_names = [label.name for label in labels]
 
@@ -585,7 +600,7 @@ def make_labels(theme, labels_info, u_id):
 Robust method for setting new subthemes of a theme
 @params sub_themes_ids : a list of ids of sub_themes
 @throws ThemeCycleDetected if the user attempts to add a subtheme that would introduce a cycle
-@throws ValueError if the user attempts to add a deleted theme
+@throws ValueError if the user attempts to add a deleted theme, a theme in a different project, or a theme which already has a super theme
 """
 def make_sub_themes(theme, sub_theme_ids, u_id):
 
@@ -600,10 +615,17 @@ def make_sub_themes(theme, sub_theme_ids, u_id):
         .where(Theme.id.in_(sub_theme_ids))
     ).all()
 
-    # Check the user is not trying to add deleted themes
+    
     for sub_theme in sub_themes:
+        # Check the user is not trying to add deleted themes
         if sub_theme.deleted:
-            raise ValueError
+            raise ValueError(f"Deleted theme added, id: {sub_theme.id}")
+        # Check the user is not trying to add themes in a different project
+        if sub_theme.p_id != theme.p_id:
+            raise ValueError(f"Theme not in correct project, id: {sub_theme.id}")
+        # Check the user is not trying to add themes that already have a super theme (that is not the given one)
+        if sub_theme.super_theme_id is not None and sub_theme.super_theme_id != theme.id:
+            raise ValueError(f"Theme already has a super theme, id: {sub_theme.id}")
 
     # Get names from themes
     sub_theme_names = [sub_theme.name for sub_theme in sub_themes]
