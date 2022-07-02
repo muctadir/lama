@@ -4,7 +4,7 @@ Authors: Eduardo Costa Martins
 This file contains exceptions we use for the app
 """
 
-# Syntax change class
+# The parser for the changelogs tried to parse a change that was incorrectly formatted
 class ChangeSyntaxError(Exception):
     pass
 
@@ -16,6 +16,7 @@ class ThemeCycleDetected(Exception):
     # This number represents the error code for recursion limit in a MariaDB database.
     MariaDB = 1456
 
-# Authentication error class
+# The programmer tried testing a route that requires being authenticated, 
+# without simulating authentication
 class TestAuthenticationError(Exception):
     pass

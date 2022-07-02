@@ -29,7 +29,6 @@ class UserStatus(Enum):
 
 class User(db.Model):
 
-    # TODO: Handle `status` using Flask-Principal?
     __tablename__ = 'user'
     # auto_increment=True is default for integer primary key
     id = Column(Integer, primary_key=True)

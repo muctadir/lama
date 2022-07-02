@@ -119,13 +119,13 @@ def single_theme_info(*, user, membership):
 
     # SUB THEMES
     # Make list of all sub-themes
-    sub_themes = theme.sub_themes
+    sub_themes = (theme.sub_themes).filter_by(deleted=0)
     # Make a json list of sub-themes
     sub_themes_list_json = theme_schema.dump(sub_themes, many=True)
 
     # LABELS
     # Make list of all labels
-    labels = theme.labels
+    labels = (theme.labels).filter_by(deleted=0)
 
     # Then throw this loop in a list comprehension
     labels_list_json = [get_label_info(
@@ -148,16 +148,16 @@ def single_theme_info(*, user, membership):
 
 
 """
-For getting the all themes without parents 
-@returns a list of themes:
-{
-    themes : the serialized themes without parents
-}
+Given a theme id, returns a list of possible themes that can be added as sub themes
+This means themes that:
+    - are in the same project
+    - have no super theme
+    - would not introduce a cycle if they were added as a sub theme
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
 @in_project
-def all_themes_no_parents():
+def possible_sub_themes():
 
     # The required arguments
     required = ["p_id", "t_id"]
@@ -177,13 +177,15 @@ def all_themes_no_parents():
     # Get theme id
     t_id = int(args["t_id"])
 
-    # Get the themes without parents
+    root_id = __get_root(t_id)
+
+    # Get the themes without parents, and those that would not introduce a cycle
     themes = db.session.scalars(
         select(Theme)
         .where(
             Theme.p_id == p_id,
             Theme.super_theme == None,
-            Theme.id != t_id,
+            Theme.id != root_id,
             Theme.deleted == False
         )
     ).all()
@@ -263,10 +265,11 @@ def create_theme(*, user):
     __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
-    make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
+    sub_theme_ids = [sub_theme['id'] for sub_theme in args["sub_themes"]]
+    make_sub_themes(theme, sub_theme_ids, user.id)
 
     # Make the labels the labels of the created theme
-    make_labels(theme, args["labels"], args['p_id'], user.id)
+    make_labels(theme, args["labels"], user.id)
 
     # Create the project
     try:
@@ -361,17 +364,16 @@ def edit_theme(*, user):
         )
     )
 
-    # Set the sub_themes of the theme
-    make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
+    sub_theme_ids = [sub_theme['id'] for sub_theme in args["sub_themes"]]
 
-    # Check for cycles
+    # Set the sub_themes of the theme
     try:
-        __get_children(t_id)
+        make_sub_themes(theme, sub_theme_ids, user.id)
     except ThemeCycleDetected:
         return make_response("Your choice of subthemes would introduce a cycle", 400)
 
     # Set the labels of the theme
-    make_labels(theme, args["labels"], args['p_id'], user.id)
+    make_labels(theme, args["labels"], user.id)
 
     # Edit the theme
     try:
@@ -540,7 +542,7 @@ For getting the labels from the passed data
     id: id of the label
 }
 """
-def make_labels(theme, labels_info, p_id, u_id):
+def make_labels(theme, labels_info, u_id):
     # List for the label ids
     label_ids_list = [label['id'] for label in labels_info]
 
@@ -553,35 +555,35 @@ def make_labels(theme, labels_info, p_id, u_id):
     label_names = [label.name for label in labels]
 
     # If the assigned labels have changed
-    if set(labels) != set(theme.labels):
+    if set(labels) != set((theme.labels).filter_by(deleted=0)):
         theme.labels = labels
-        __record_children(theme.id, theme.name, p_id,
+        __record_children(theme.id, theme.name, theme.p_id,
                           u_id, label_names, 'label')
 
 
 """
 For getting the themes from the passed data
-@params sub_themes_info includes: {
-    id: id of the theme
-}
+@params sub_themes_ids : a list of ids of sub_themes
 """
-def make_sub_themes(theme, sub_themes_info, p_id, u_id):
+def make_sub_themes(theme, sub_theme_ids, u_id):
+    
+    root_id = __get_root(theme.id)
 
-    # List for the theme ids
-    sub_theme_ids_list = [theme['id'] for theme in sub_themes_info]
+    if root_id in sub_theme_ids:
+        raise ThemeCycleDetected
 
     # Get all themes that are in the list
     sub_themes = db.session.scalars(
         select(Theme)
-        .where(Theme.id.in_(sub_theme_ids_list))
+        .where(Theme.id.in_(sub_theme_ids))
     ).all()
     # Get names from themes
     sub_theme_names = [sub_theme.name for sub_theme in sub_themes]
 
     # If the assigned subthemes have changed
-    if set(sub_themes) != set(theme.sub_themes):
+    if set(sub_themes) != set((theme.sub_themes).filter_by(deleted=0)):
         theme.sub_themes = sub_themes
-        __record_children(theme.id, theme.name, p_id, u_id,
+        __record_children(theme.id, theme.name, theme.p_id, u_id,
                           sub_theme_names, 'subtheme')
 
 
@@ -884,7 +886,7 @@ The project node has structure
     'children' : [theme hierarchies for maximal themes, and loose labels]
 }
 @param p_id : the project to get the hierarchy of
-Returns the project hierarchy as described above, or None if the project with that id does not exist
+@returns the project hierarchy as described above, or None if the project with that id does not exist
 A loose label is one that is not assigned to a theme
 The deleted is still provided to make sure the node has the same structure as other nodes
 """
@@ -925,3 +927,74 @@ def get_project_hierarchy(p_id):
     hierarchy['children'].extend(loose_labels)
 
     return hierarchy
+
+"""
+Author: Eduardo Costa Martins
+@param t_id: id of a theme
+@returns List of tuples corresponding to information of themes on the path to the root of the given theme's tree
+         Each tuple has the form (super_theme_id, theme_id)
+"""
+def __get_super_themes(t_id):
+    # Recursive queries in SQL can be done using CTEs (Common Table Expressions)
+    # This is the anchor statement (like a base case) which gets the given theme, and the id of its super theme
+    super_themes = select(
+        Theme.super_theme_id,
+        Theme.id
+    ).where(
+        Theme.id == t_id
+    ).cte(
+        recursive=True
+    )
+
+    # Since we recurse on the results generated by the previous query, we need to alias it
+    super_themes_alias = super_themes.alias()
+
+    # The union all connects the recursive statement with the anchor statement
+    super_themes = super_themes.union_all(
+        # Recursive statement, gets the parent of newly retrieved themes
+        select(
+            Theme.super_theme_id,
+            Theme.id
+        ).where(
+            Theme.id == super_themes_alias.c.super_theme_id
+        )
+    )
+
+    try:
+
+        results = db.session.execute(select(super_themes)).all()
+
+    except OperationalError as e:
+        # CTEs are limited so I am not aware of a way to stop the recursion early (DISTINCT not allowed for CTE)
+        # So currently we catch an exception and check the error code
+        # This could be made better by actually, checking the type of database we use, but suitable for now
+        # e.orig.args[0] contains the error code
+        if e.orig.args[0] in [ThemeCycleDetected.MariaDB, ThemeCycleDetected.MySQLdb]:
+            raise ThemeCycleDetected
+        raise e
+
+    return results
+
+"""
+Author: Eduardo Costa Martins
+@param t_id : id of a theme
+@returns the id of the theme that is the root of the hierarchy tree this theme is contained in
+@raises ValueError if the root cannot be found (likely due to poor integrity of the database)
+"""
+def __get_root(t_id):
+
+    # Get all super themes
+    themes = __get_super_themes(t_id)
+
+    # The root theme is designated by the one with no super theme
+    # By the construction of the recursive query, the root element should be the last one in the list
+    if themes[-1][0] is None:
+        return themes[-1][1]
+    # If it's not, then we search through every theme
+    else:
+        for theme in themes:
+            if theme[0] is None:
+                return theme[1]
+    
+    # The maximal super theme in this hierarchy is not given in the list of themes
+    raise ValueError

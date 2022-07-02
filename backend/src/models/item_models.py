@@ -175,14 +175,15 @@ class Theme(ChangingItem, db.Model):
     # All sub themes
     # backref creates a super_theme attribute
     sub_themes = relationship('Theme',
-                              backref=backref('super_theme', remote_side='[Theme.p_id, Theme.id]'))
+                              backref=backref('super_theme', remote_side='[Theme.p_id, Theme.id]'),
+                              lazy='dynamic')
 
     # Labels assigned to this theme
     labels = relationship('Label',
                           secondary='label_to_theme',
                           primaryjoin='and_(Theme.id==label_to_theme.c.t_id, Theme.p_id==label_to_theme.c.p_id)',
-                          back_populates='themes'
-                          )
+                          back_populates='themes',
+                          lazy='dynamic')
 
 
 class Labelling(db.Model):

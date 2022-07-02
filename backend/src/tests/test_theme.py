@@ -1,3 +1,5 @@
+from src.exc import ThemeCycleDetected
+from pytest import raises
 from sqlalchemy import select
 from src import db
 from src.conftest import RequestHandler
@@ -97,9 +99,9 @@ def test_single_theme_info(app, client):
     assert response.json == theme_info
 
 
-def test_all_themes_no_parents(app, client):
+def test_possible_sub_themes(app, client):
     """
-    Function to test whether the all_themes_no_parents route gives correct errors and information
+    Function to test whether the possible_sub_themes route gives correct errors and information
     """
 
     # Tests are for user 1
@@ -114,10 +116,9 @@ def test_all_themes_no_parents(app, client):
 
     response = request_handler.get(
         "/theme/possible-sub-themes", {"p_id": 1, "t_id": 7}, True)
-    # Parent themes excluding theme 7
+    # Themes with no super theme, and excluding theme 3 since theme 3 is a parent of theme 7
+    # and that would introduce a cycle
     theme_info = [
-        {'deleted': False, 'description': 'These are backend technologies',
-            'id': 3, 'name': 'Backend technology', 'p_id': 1, 'super_theme_id': None},
         {'deleted': False, 'description': 'Empty theme desc', 'id': 8,
             'name': 'Empty theme', 'p_id': 1, 'super_theme_id': None},
         {'deleted': False, 'description': 'These are frontend technologies', 'id': 4,
@@ -128,7 +129,34 @@ def test_all_themes_no_parents(app, client):
             'name': 'Neutral emotions', 'p_id': 1, 'super_theme_id': None},
         {'deleted': False, 'description': 'These are positive emotions', 'id': 1,
             'name': 'Positive emotions', 'p_id': 1, 'super_theme_id': None},
-        {'deleted': False, 'description': 'This is technology', 'id': 5, 'name': 'Technology', 'p_id': 1, 'super_theme_id': None}]
+        {'deleted': False, 'description': 'This is technology', 'id': 5, 
+            'name': 'Technology', 'p_id': 1, 'super_theme_id': None}]
+
+    # Check if we got an OK response
+    assert response.status_code == 200
+    # Check if the info is correct
+    assert response.json == theme_info
+
+    
+    response = request_handler.get(
+        "/theme/possible-sub-themes", {"p_id": 1, "t_id": 5}, True)
+    # Themes with no super theme, and excluding theme 5 since theme 5 cannot be made a sub theme of itself
+    theme_info = [
+        {'deleted': False, 'description': 'These are backend technologies', 'id': 3,
+            'name': 'Backend technology', 'p_id': 1, 'super_theme_id': None},
+        {'deleted': False, 'description': 'Empty theme desc', 'id': 8,
+            'name': 'Empty theme', 'p_id': 1, 'super_theme_id': None},
+        {'deleted': False, 'description': 'These are frontend technologies', 'id': 4,
+            'name': 'Frontend technologies', 'p_id': 1, 'super_theme_id': None},
+        {'deleted': False, 'description': 'These are negative emotions', 'id': 2,
+            'name': 'Negative emotions', 'p_id': 1, 'super_theme_id': None},
+        {'deleted': False, 'description': 'These are neutral emotions', 'id': 6,
+            'name': 'Neutral emotions', 'p_id': 1, 'super_theme_id': None},
+        {'deleted': False, 'description': 'These are positive emotions', 'id': 1,
+            'name': 'Positive emotions', 'p_id': 1, 'super_theme_id': None}]
+    
+    print([theme['name'] for theme in response.json])
+
     # Check if we got an OK response
     assert response.status_code == 200
     # Check if the info is correct
@@ -221,12 +249,16 @@ def test_create_theme(app, client):
         assert entry.p_id == 1
 
         # Get added label
-        label = db.session.get(Label, 1)
-        assert entry.labels == [label]
+        exp_label = db.session.get(Label, 1)
+        # We do this list comprehension because the loading is dynamic, so we need to extract all the values
+        labels = [label for label in entry.labels]
+        assert labels == [exp_label]
 
         # Get added theme
-        theme = db.session.get(Theme, 1)
-        assert entry.sub_themes == [theme]
+        exp_theme = db.session.get(Theme, 1)
+        # Same dynamic loading problem here (I could not find a way to force the default lazy 'select' loading)
+        sub_themes = [theme for theme in entry.sub_themes]
+        assert sub_themes == [exp_theme]
 
 
 def test_edit_theme(app, client):
@@ -303,22 +335,6 @@ def test_edit_theme(app, client):
     assert response.status_code == 400
     assert response.text == "Bad request"
 
-    # TODO: check cycle error
-    # Theme info with cycle
-    # new_theme_info = {
-    #     "id": 7,
-    #     "name": "New name",
-    #     "description": "New desc",
-    #     "labels": [{"id":1, "name": "Happy", "l_it": 2, "description": "happy label", "deleted": False, "p_id": 1}],
-    #     "sub_themes": [{"id":3, "name": "Backend technology", "description": "These are backend technologies", "deleted": False, "p_id": 1}],
-    #     "p_id": 1
-    # }
-    # # Post request
-    # response = request_handler.post("/theme/edit_theme", new_theme_info, True)
-    # # Check if error was thrown, and which one
-    # assert response.status_code == 400
-    # assert response.text == "Your choice of subthemes would introduce a cycle"
-
     # When t_id does not exist
     # Theme info with unknown id
     new_theme_info = {
@@ -352,7 +368,7 @@ def test_edit_theme(app, client):
     assert response.status_code == 400
     assert response.text == "Bad request"
 
-    # app contect for database use
+    # app context for database use
     with app.app_context():
         # Theme info with labels and sub-themes
         new_theme_info = {
@@ -379,12 +395,16 @@ def test_edit_theme(app, client):
         assert entry.p_id == 1
 
         # Get added label
-        label = db.session.get(Label, 1)
-        assert entry.labels == [label]
+        exp_label = db.session.get(Label, 1)
+        # We do this list comprehension because the loading is dynamic, so we need to extract all the values
+        labels = [label for label in entry.labels]
+        assert labels == [exp_label]
 
         # Get added theme
-        theme = db.session.get(Theme, 6)
-        assert entry.sub_themes == [theme]
+        exp_theme = db.session.get(Theme, 6)
+        # Same dynamic loading problem here (I could not find a way to force the default lazy 'select' loading)
+        sub_themes = [theme for theme in entry.sub_themes]
+        assert sub_themes == [exp_theme]
 
 
 def test_delete_theme(app, client):
@@ -529,12 +549,14 @@ def test_make_labels(app, client):
         # Get the theme we want to add these labels to
         theme = db.session.get(Theme, 1)
         # Add the labels to the theme
-        make_labels(theme, labels_info, 1, 1)
+        make_labels(theme, labels_info, 1)
         # Get the added labels
-        labels = db.session.scalars(
+        exp_labels = db.session.scalars(
             select(Label).where(Label.id.in_([1, 2, 3]))).all()
         # Check if the labels were added
-        assert theme.labels == labels
+        # We do this list comprehension because the loading is dynamic, so we need to extract all the values
+        labels = [label for label in theme.labels]
+        assert labels == exp_labels
 
 
 def test_make_sub_themes(app, client):
@@ -542,26 +564,40 @@ def test_make_sub_themes(app, client):
     Function to test wether the make_sub_themes function gives correct information
     """
 
-    # app contect for database use
+    # app context for database use
     with app.app_context():
-        # Info for creating sub-themes
-        sub_themes_info = [
-            {"id": 2, "name": "Negative emotions"},
-            {"id": 3, "name": "Backend technology"},
-            {"id": 4, "name": "Frontend technologies"}
-        ]
-        # Get the theme we want to add these labels to
+        
+        # Testing exceptions:
+        # 1) making a parent theme a sub theme (introduces a cycle)
+        sub_themes_info = [3]
+        # Get the theme we want to add these subthemes to
+        theme = db.session.get(Theme, 7)
+        with raises(ThemeCycleDetected):
+            make_sub_themes(theme, sub_themes_info, 1)
+            
+        # 2) making a theme a sub theme of itself
+        # Get the theme we want to add these subthemes to
         theme = db.session.get(Theme, 1)
-        # Add the labels to the theme
-        make_sub_themes(theme, sub_themes_info, 1, 1)
-        # Get the added labels
-        sub_themes = db.session.scalars(
+        sub_themes_info = [1]
+        # Add the subthemes to the theme
+        with raises(ThemeCycleDetected):
+            make_sub_themes(theme, sub_themes_info, 1)
+        
+        # Testing normal cases
+        # Info for creating sub-themes
+        sub_themes_info = [2, 3, 4]
+        # Add the subthemes to the theme
+        make_sub_themes(theme, sub_themes_info, 1)
+        # Get the added themes
+        exp_sub_themes = db.session.scalars(
             select(Theme).where(Theme.id.in_([2, 3, 4]))).all()
-        # Check if the labels were added
-        assert theme.sub_themes == sub_themes
+        # Check if the themes were added
+        # We do this list comprehension because the loading is dynamic, so we need to extract all the values
+        sub_themes = [theme for theme in theme.sub_themes]
+        assert sub_themes == exp_sub_themes
 
 
-def test_theme_name_taken(app, client):
+def test_theme_name_taken(app):
     """
     Function to test wether the theme_name_taken function gives correct information
     """
@@ -617,3 +653,37 @@ def test_get_project_hierarchy(app, client):
             {'id': 1, 'name': 'Happy', 'deleted': False, 'type': 'Label'},
             {'id': 17, 'name': 'New Technology', 'deleted': False, 'type': 'Label'}]}
         assert get_project_hierarchy(1) == project_hierarchy
+
+def test_theme_cycle(app, client):
+    # Logged in as super admin
+    request_handler = RequestHandler(app, client, 1)
+
+    # Theme info with cycle (adding theme 3 as a subtheme when 3 is its parent)
+    new_theme_info = {
+        "id": 7,
+        "name": "New name",
+        "description": "New desc",
+        "labels": [{"id":1, "name": "Happy", "l_it": 2, "description": "happy label", "deleted": False, "p_id": 1}],
+        "sub_themes": [{"id":3, "name": "Backend technology", "description": "These are backend technologies", "deleted": False, "p_id": 1}],
+        "p_id": 1
+    }
+    # Post request
+    response = request_handler.post("/theme/edit_theme", new_theme_info, True)
+    # Check if error was thrown, and which one
+    assert response.status_code == 400
+    assert response.text == "Your choice of subthemes would introduce a cycle"
+    
+    # Theme info with cycle (a theme adding itself as a sub theme)
+    new_theme_info = {
+        "id": 6,
+        "name": "New name",
+        "description": "New desc",
+        "labels": [{"id":1, "name": "Happy", "l_it": 2, "description": "happy label", "deleted": False, "p_id": 1}],
+        "sub_themes": [{"id": 6, "name": "Neutral emotions", "description": "These are neutral emotions", "deleted": False, "p_id": 1}],
+        "p_id": 1
+    }
+    # Post request
+    response = request_handler.post("/theme/edit_theme", new_theme_info, True)
+    # Check if error was thrown, and which one
+    assert response.status_code == 400
+    assert response.text == "Your choice of subthemes would introduce a cycle"
