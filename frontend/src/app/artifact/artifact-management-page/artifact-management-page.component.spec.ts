@@ -56,9 +56,7 @@ describe('ArtifactManagementPageComponent', () => {
     modalService = TestBed.inject(NgbModal)
 
     // When the url gets requested, return this string
-    spyOnProperty(router, 'url', 'get').and
-      .returnValue(url)
-
+    spyOnProperty(router, 'url', 'get').and.returnValue(url)
   });
 
   beforeEach(() => {

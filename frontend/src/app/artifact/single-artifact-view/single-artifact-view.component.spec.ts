@@ -128,23 +128,23 @@ describe('SingleArtifactViewComponent', () => {
   // Tests that getArtifact works correctly
   it('should get the artifact and its data', async () => {
     // When artifactDataService.getArtifact is called, return the following data
-    spyOn(component['artifactDataService'], 'getArtifact').and
+    let spy = spyOn(component['artifactDataService'], 'getArtifact').and
       .returnValue(Promise.resolve(artifact_data))
 
     // Call the function and wait until it's done
     component.getArtifact(12, 1).then(() => {
       // Check that artifactDataService.getArtifact was called with the right parameters
-      expect(component['artifactDataService'].getArtifact).toHaveBeenCalledWith(1, 12);
+      expect(spy).toHaveBeenCalledWith(1, 12);
 
       // Check that the artifact data was set correctly
       expect(component.artifact).toEqual(artifact_data["result"]);
       expect(component.userLabels).toEqual(artifact_data["labellings"]);
       expect(component.username).toEqual(artifact_data["username"]);
       expect(component.admin).toEqual(artifact_data["admin"]);
-      expect(component.users[0].getId).toEqual(artifact_data["users"][0]["id"])
-      expect(component.users[1].getId).toEqual(artifact_data["users"][1]["id"])
-      expect(component.users[0].getUsername).toEqual(artifact_data["users"][0]["username"])
-      expect(component.users[1].getUsername).toEqual(artifact_data["users"][1]["username"])
+      expect(component.users[0].getId()).toEqual(artifact_data["users"][0]["id"]);
+      expect(component.users[1].getId()).toEqual(artifact_data["users"][1]["id"]);
+      expect(component.users[0].getUsername()).toEqual(artifact_data["users"][0]["username"]);
+      expect(component.users[1].getUsername()).toEqual(artifact_data["users"][1]["username"]);
     })
   })
 
@@ -167,15 +167,14 @@ describe('SingleArtifactViewComponent', () => {
   // Tests that getLabelTypesWithLabels sets the right label types
   it('should set the correct labels', async () => {
     // When labellingDataService.getLabelTypesWithLabels gets called, return the following array of labels
-    spyOn(component['labellingDataService'], 'getLabelTypesWithLabels').and
+    let spy = spyOn(component['labellingDataService'], 'getLabelTypesWithLabels').and
       .returnValue(Promise.resolve(labelTypes));
 
     // Call the function and wait until it's done
     component.getLabelTypesWithLabels(1).then(() => {
       // Check that the labellingDataService.getLabelTypesWithLabels function was called
       // with the right parameters
-      expect(component['labellingDataService'].getLabelTypesWithLabels)
-        .toHaveBeenCalledWith(1);
+      expect(spy).toHaveBeenCalledWith(1);
 
       // Check that the label types were set correctly
       expect(component.labelTypes).toEqual(labelTypes)
@@ -264,12 +263,12 @@ describe('SingleArtifactViewComponent', () => {
     component.userLabels = artifact_data['labellings'];
 
     // Spy on labellingDataService.updateLabellings and stub the call
-    spyOn(component['labellingDataService'], 'updateLabellings')
+    let labellings_spy = spyOn(component['labellingDataService'], 'updateLabellings')
 
     // Call the function and wait until it's done
     component.updateLabellings().then(async () => {
       // Check that labellingDataService.updateLabellings is called with the right parameters
-      expect(component['labellingDataService'].updateLabellings).toHaveBeenCalledWith(
+      expect(labellings_spy).toHaveBeenCalledWith(
         artifact_data['admin'], 1, 12, artifact_data['username'], artifact_data['labellings'])
 
       // Check that the success toast is being called
@@ -280,7 +279,7 @@ describe('SingleArtifactViewComponent', () => {
   // Tests that updateLabellings displays an error toast when needed
   it('should display a failure toast', async () => {
     // Spy on labellingDataService.updateLabellings and throw an error
-    spyOn(component['labellingDataService'], 'updateLabellings').and.throwError("Test error.")
+    let spy = spyOn(component['labellingDataService'], 'updateLabellings').and.throwError("Test error.")
 
     // Spy on toastCommService.emitChange and stub the call
     spyOn(component["toastCommService"], "emitChange");
@@ -288,7 +287,7 @@ describe('SingleArtifactViewComponent', () => {
     // Call the function and wait until it's done
     component.updateLabellings().then(async () => {
       // Check that labellingDataService.updateLabellings is called with the right parameters
-      expect(component['labellingDataService'].updateLabellings).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
 
       // Check that the success toast is being called
       expect(component['toastCommService'].emitChange).toHaveBeenCalledWith([false, "Something went wrong while saving."]);

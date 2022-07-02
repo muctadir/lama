@@ -40,7 +40,7 @@ describe('ConflictResolutionComponent', () => {
   });
 
   // Test if the openCreateForm function works correctly
-  it('should open the create label modal', async () => {
+  it('should open the create label modal, clear label cache and reinitialize page', async () => {
     // Put a label in  the cache of labels
     component.labels = [new Label(1, "Some label", "Some description", "Some type")];
 
