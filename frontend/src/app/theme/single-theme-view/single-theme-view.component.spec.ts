@@ -64,42 +64,24 @@ describe('SingleThemeViewComponent', () => {
 
   // Test the sortArtifacts function
   it('Tests the sortArtifacts function to theme single page', async () => {
-    // Create a theme
-    let theme = new Theme(1, "New Theme", "Theme desc")
-    // Create labels
-    let fakeLabels = [new Label(1, "Label name", "Label desc", "Emotion"), new Label(2, "Label name 2", "Label desc 2", "Emotion")]
-    // Set labels of theme
-    theme.setLabels(fakeLabels)
+    // Creates dummy input
+    let theme = new Theme(1, "theme1", "tdesc1");
+    let l1 = new Label(1, "label1", "ldesc1", "lt1");
+    let a1 = new StringArtifact(1, "a", "data1");
+    let a2 = new StringArtifact(2, "b", "data2");
 
-    // Spy on the function and call fake
-    spyOn(component, "sortArtifacts").and.callFake(() => {
-      // Get the labels of the theme and check
-      let spy1 = spyOn(theme, "getLabels");
-      let labels = theme.getLabels();
-      expect(spy1).toHaveBeenCalled();
-      if(labels != undefined){
-        // For each label, get the artifacts
-        for (let label of labels){
-          // Get the artifacts and check
-          let spy2 = spyOn(label, "getArtifacts");
-          let artifacts = label.getArtifacts();
-          expect(spy2).toHaveBeenCalled();
-          // Create 3 artifacts
-          let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
-          let artifact2 = new StringArtifact(2, "Identifier 2", "Data 2");
-          let artifact3 = new StringArtifact(3, "Identifier 3", "Data 3");
-          // Give label 1 artifacts
-          label.setArtifacts([artifact2, artifact3, artifact1])
-          if (artifacts != undefined){
-            // Sort the artifacts
-            artifacts.sort((a,b) => a.getId() - b.getId());
-          }
-          // Set the artifacts of the label with the sorted array
-          label.setArtifacts(artifacts);
-          expect(label.getArtifacts).toEqual([artifact1, artifact2, artifact3])
-        }
-      }
-    })
+    // Sets the dummy input 
+    l1.setArtifacts([a2, a1]);
+    theme.setLabels([l1]);
+
+    // sets dummy input in component
+    component.theme = theme;
+
+    // Calls function to be tested
+    component.sortArtifacts();
+
+    // Checks results
+    expect(l1.getArtifacts()).toEqual([a1, a2]);
   });
   
   // Test the reRouter function
@@ -152,14 +134,30 @@ describe('SingleThemeViewComponent', () => {
     expect(spy1).toHaveBeenCalledWith(['/project', component.p_id, 'editTheme', component.t_id]);
   });
 
-  // Test the getParentName function
-  it('Tests the getParentName function from theme single page', () => {
-    // Create spy on the theme.getParent function
-    let spy1 = spyOn(component['theme'], 'getParent');
+  it('should get the parent name from the theme', () => {
+    // Creates dummy input
+    let theme = new Theme(1, "theme1", "desc1");
+    let ptheme = new Theme(2, "theme2", "desc2");
+    theme.setParent(ptheme);
+    component.theme = theme;
+
     // Calls the getParentName function
-    component.getParentName();
-    // Checks whether the function works properly
-    expect(spy1).toHaveBeenCalled();
+    let result = component.getParentName();
+
+    // Checks the results
+    expect(result).toEqual("theme2");
+  });
+
+  it('should get the parent name from the theme, but parent is undefined', () => {
+    // Creates dummy input
+    let theme = new Theme(1, "theme1", "desc1");
+    component.theme = theme;
+
+    // Calls the getParentName function
+    let result = component.getParentName();
+
+    // Checks the results
+    expect(result).toEqual("");
   });
 
   // Test the goToTheme function
@@ -186,23 +184,31 @@ describe('SingleThemeViewComponent', () => {
     expect(spy2).toHaveBeenCalled();
   });
 
-  // Test the getNonDoubleArtifacts function
-  it('Tests the getNonDoubleArtifacts function', () => {
-    // Calls the getNonDoubleArtifacts function and calls a fake
-    spyOn(component, "getNonDoubleArtifacts").and.callFake( (label: Label): StringArtifact[] => {
-      // Create fake artifact
-      let artifact1 = new StringArtifact(1, "Identifier 1", "Data 1");
-      // Make an array of artifacts that is unsorted
-      let artifacts = [artifact1, artifact1];
-      if(artifacts != undefined){
-        // Remove the duplicates from the list
-        return Array.from(artifacts.reduce((m, t) => m.set(t.getId(), t), new Map()).values());
-      }
-      // Set the artifacts of the label with the sorted array
-      expect(artifacts).toEqual([artifact1]);
-      // Return array
-      return [];
-    })
+  it('should return all unique artifacts of a label', () => {
+    // Creates dummy input
+    let l1 = new Label(1, "label1", "ldesc1", "lt1");
+    let a1 = new StringArtifact(1, "a", "data1");
+    let a2 = new StringArtifact(2, "b", "data2");
+
+    // Sets the dummy input 
+    l1.setArtifacts([a2, a1, a2]);
+
+    // Calls function to be tested
+    let result = component.getNonDoubleArtifacts(l1);
+
+    // Checks results
+    expect(result).toEqual([a2, a1]);
+  });
+
+  it('should return an empty array', () => {
+    // Creates dummy input
+    let l1 = new Label(1, "label1", "ldesc1", "lt1");
+
+    // Calls function to be tested
+    let result = component.getNonDoubleArtifacts(l1);
+
+    // Checks results
+    expect(result).toEqual([]);
   });
 
 });
