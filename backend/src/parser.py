@@ -16,7 +16,11 @@ This also allows us to easily make changes here if we do not like the formats we
 @param username: the name of the user corresponding to the u_id in the change
 """
 def parse_change(change, username):
+
+    # We do the import here because otherwise there is a risk of a circular import
     from src.models.change_models import ChangeType
+
+    # Parse change description based on the type of the change
     match change.change_type:
         case ChangeType.create:
             return __parse_creation(change, username)

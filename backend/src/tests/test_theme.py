@@ -235,7 +235,7 @@ def test_create_theme(app, client):
         # Post request
         response = request_handler.post(
             "/theme/create_theme", new_theme_info, True)
-        # Check if post was succesfull
+        # Check if post was succesful
         assert response.status_code == 201
         assert response.text == "Theme created"
 
@@ -382,7 +382,7 @@ def test_edit_theme(app, client):
         # Post request
         response = request_handler.post(
             "/theme/edit_theme", new_theme_info, True)
-        # Check if post was succesfull
+        # Check if post was succesful
         assert response.status_code == 200
         assert response.text == "Theme edited"
 
@@ -475,7 +475,7 @@ def test_search_theme(app, client):
     # Post request
     response = request_handler.get(
         "/theme/search", {"p_id": 1, "search_words": "emotions"}, True)
-    # Check if search was successfull
+    # Check if search was successful
     assert response.status_code == 200
     assert response.json == search_info
 
@@ -515,7 +515,7 @@ def test_theme_visual(app, client):
     ], 'id': 1, 'name': 'Project 1', 'type': 'Project', 'deleted': False}
     # Post request
     response = request_handler.get("/theme/themeVisData", {"p_id": 1}, True)
-    # Check if visualazation data was gotten successfull
+    # Check if visualazation data was gotten successful
     assert response.json == vis_info
     assert response.status_code == 200
 
@@ -536,8 +536,10 @@ def test_make_labels(app, client):
     """
     Function to test wether the make_labels function gives correct information
     """
+    # Simulate being logged in as super admin
+    request_handler = RequestHandler(app, client, 1)
 
-    # app contect for database use
+    # app context for database use
     with app.app_context():
 
         # Info for creating labels
@@ -558,11 +560,30 @@ def test_make_labels(app, client):
         labels = [label for label in theme.labels]
         assert labels == exp_labels
 
+    # We need to delete a label to test adding it as a subtheme
+    response = request_handler.post('/label/delete', {'l_id': 1, 'p_id': 1}, True)
+    assert response.status_code == 200
+
+    with app.app_context():
+        # List containing the deleted subtheme (id 1)
+        labels_info = [
+            {"id": 1, "name": "Happy"},
+            {"id": 2, "name": "Sad"},
+            {"id": 3, "name": "Excited"}
+        ]
+        # Try assign labels to theme 1
+        theme = db.session.get(Theme, 1)
+        # Test that exception is raised
+        with raises(ValueError):
+            make_labels(theme, labels_info, 1)
+
 
 def test_make_sub_themes(app, client):
     """
     Function to test wether the make_sub_themes function gives correct information
     """
+    # Simulate being logged in as super admin
+    request_handler = RequestHandler(app, client, 1)
 
     # app context for database use
     with app.app_context():
@@ -595,6 +616,19 @@ def test_make_sub_themes(app, client):
         # We do this list comprehension because the loading is dynamic, so we need to extract all the values
         sub_themes = [theme for theme in theme.sub_themes]
         assert sub_themes == exp_sub_themes
+    
+    # We need to delete a theme to test adding it as a subtheme
+    response = request_handler.post('/theme/delete_theme', {'t_id': 1, 'p_id': 1}, True)
+    assert response.status_code == 200
+
+    with app.app_context():
+        # List containing the deleted subtheme (id 1)
+        sub_themes_info = [1, 2]
+        # Try assign subthemes to theme 3
+        theme = db.session.get(Theme, 3)
+        # Test that exception is raised
+        with raises(ValueError):
+            make_sub_themes(theme, sub_themes_info, 1)
 
 
 def test_theme_name_taken(app):

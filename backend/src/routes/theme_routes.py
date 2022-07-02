@@ -267,10 +267,18 @@ def create_theme(*, user):
 
     # Make the sub_themes the sub_themes of the created theme
     sub_theme_ids = [sub_theme['id'] for sub_theme in args["sub_themes"]]
-    make_sub_themes(theme, sub_theme_ids, user.id)
+    try:
+        make_sub_themes(theme, sub_theme_ids, user.id)
+    except ValueError:
+        return make_response("You cannot add deleted themes", 400)
+    # Note we do not catch ThemeCycleDetected since it cannot happen whilst creating a theme
 
     # Make the labels the labels of the created theme
-    make_labels(theme, args["labels"], user.id)
+    try:
+        make_labels(theme, args["labels"], user.id)
+    except ValueError:
+        return make_response("You cannot add deleted labels", 400)
+    
 
     # Create the project
     try:
@@ -372,9 +380,14 @@ def edit_theme(*, user):
         make_sub_themes(theme, sub_theme_ids, user.id)
     except ThemeCycleDetected:
         return make_response("Your choice of subthemes would introduce a cycle", 400)
+    except ValueError:
+        return make_response("You cannot add deleted themes", 400)
 
     # Set the labels of the theme
-    make_labels(theme, args["labels"], user.id)
+    try:
+        make_labels(theme, args["labels"], user.id)
+    except ValueError:
+        return make_response("You cannot add deleted labels", 400)
 
     # Edit the theme
     try:
@@ -538,10 +551,11 @@ def get_theme_label_count(t_id):
 
 
 """
-For getting the labels from the passed data
+Robust method for setting the labels of a theme
 @params labels_info includes: {
     id: id of the label
 }
+@throws ValueError if the user attempts to add a deleted theme
 """
 def make_labels(theme, labels_info, u_id):
     # List for the label ids
@@ -552,6 +566,11 @@ def make_labels(theme, labels_info, u_id):
         select(Label)
         .where(Label.id.in_(label_ids_list))
     ).all()
+    
+    # Check the user is not trying to add deleted labels
+    for label in labels:
+        if label.deleted:
+            raise ValueError
 
     label_names = [label.name for label in labels]
 
@@ -563,8 +582,10 @@ def make_labels(theme, labels_info, u_id):
 
 
 """
-For getting the themes from the passed data
+Robust method for setting new subthemes of a theme
 @params sub_themes_ids : a list of ids of sub_themes
+@throws ThemeCycleDetected if the user attempts to add a subtheme that would introduce a cycle
+@throws ValueError if the user attempts to add a deleted theme
 """
 def make_sub_themes(theme, sub_theme_ids, u_id):
 
@@ -578,6 +599,12 @@ def make_sub_themes(theme, sub_theme_ids, u_id):
         select(Theme)
         .where(Theme.id.in_(sub_theme_ids))
     ).all()
+
+    # Check the user is not trying to add deleted themes
+    for sub_theme in sub_themes:
+        if sub_theme.deleted:
+            raise ValueError
+
     # Get names from themes
     sub_theme_names = [sub_theme.name for sub_theme in sub_themes]
 
