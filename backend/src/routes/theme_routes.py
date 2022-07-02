@@ -153,6 +153,7 @@ This means themes that:
     - are in the same project
     - have no super theme
     - would not introduce a cycle if they were added as a sub theme
+    - themes that are not deleted
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
@@ -566,7 +567,7 @@ For getting the themes from the passed data
 @params sub_themes_ids : a list of ids of sub_themes
 """
 def make_sub_themes(theme, sub_theme_ids, u_id):
-    
+
     root_id = __get_root(theme.id)
 
     if root_id in sub_theme_ids:
