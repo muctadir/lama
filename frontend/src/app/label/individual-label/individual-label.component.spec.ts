@@ -2,24 +2,34 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IndividualLabelComponent } from './individual-label.component';
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { HistoryComponent } from 'app/modals/history/history.component';
+import { Label } from 'app/classes/label';
+import { FormBuilder } from '@angular/forms';
 
 describe('IndividualLabelComponent', () => {
   let component: IndividualLabelComponent;
   let fixture: ComponentFixture<IndividualLabelComponent>;
   let router: Router;
+  // Instantiation of NgbModal
+  let modalService: NgbModal;
+  // Instantiation of NgbModalRef
+  let modalRef: NgbModalRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IndividualLabelComponent ],
+      declarations: [IndividualLabelComponent],
       // Addis RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal]
+      providers: [NgbActiveModal, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
+    // Inject the modal service into the component's constructor
+    modalService = TestBed.inject(NgbModal)
   });
 
   beforeEach(() => {
@@ -57,7 +67,7 @@ describe('IndividualLabelComponent', () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabel")
     // Calls the getLabel function
-    await component.getLabel(1,1);
+    await component.getLabel(1, 1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
@@ -67,7 +77,7 @@ describe('IndividualLabelComponent', () => {
     // Create spy for getLabellings call
     let spy = spyOn(component['labellingDataService'], "getLabelling")
     // Calls the getLabellings function
-    await component.getLabellings(1,1);
+    await component.getLabellings(1, 1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
@@ -82,6 +92,50 @@ describe('IndividualLabelComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  // Test if the openEdit function works correctly
+  it('should open the edit label modal, get the label and reinitialize the pae', async () => {
+    // Set the label
+    let label = new Label(1, "Label", "Description", "Type");
+    component.label = label;
+    
+    // Instance of NgbModalRef
+    modalRef = modalService.open(LabelFormComponent);
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+    // Spy on ngOnInit and stub the call
+    let init_spy = spyOn(component, 'ngOnInit');
+
+    // Call the openEdit function
+    component.openEdit();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(LabelFormComponent, { size: 'xl' });
+    // Check if modalRef.componentInstance.label was set with the right value
+    expect(modalRef.componentInstance.label).toEqual(label);
+    // Check if ngOnInit is called
+    expect(init_spy).toHaveBeenCalled();
+  });
+
+  // Test if the openLabelHistory function works correctly
+  it('should open the label history modal', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(HistoryComponent);
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+
+    // Call the openEdit function
+    component.openLabelHistory();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(HistoryComponent, { size: 'xl' });
+    // Check if modalRef.componentInstance.label was set with the right value
+    expect(modalRef.componentInstance.history_type).toEqual("Label");
+  });
+
   // Test the get labelling function
   it('Tests the getLabellingAmount function to individual Label management page', async () => {
     // Create spy for getLabellings call
@@ -91,5 +145,4 @@ describe('IndividualLabelComponent', () => {
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
-
 });

@@ -188,10 +188,10 @@ export class IndividualLabelComponent {
    * @trigger on click of history icon
    */
    openLabelHistory(): void {
-    // opens label history modal
+    // Opens label history modal
     let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
 
-    // passes the type of history we want to view
+    // Passes the type of history we want to view
     modalRef.componentInstance.history_type = "Label";
    }
   
