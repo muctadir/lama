@@ -109,6 +109,49 @@ def test_create(app, client):
         # - Frozen project
         # - White space
 
+def test_edit(app, client):
+    with app.app_context():
+
+        label = {
+            'labelId': 24,
+            'labelName': 'Boring idea',
+            'labelDescription': 'boring',
+            'p_id': 2
+        }
+        # Incorrect method
+        response = client.get('/label/edit')
+        assert response.status_code == 405
+
+        # Incorrect method
+        response = client.post('/label/edit')
+        assert response.status_code == 405
+
+        # Non-existent user
+        request_handler_empty = RequestHandler(app, client, '')
+        edit_label_helper(request_handler_empty, label,
+                        'User does not exist', 401)
+
+        # User not part of project
+        request_handler_wrong_project = RequestHandler(app, client, 7)
+        edit_label_helper(request_handler_wrong_project,
+                        label, 'Unauthorized', 401)
+
+        # Setting up authorized user
+        request_handler = RequestHandler(app, client, 2)
+
+        # Request missing information, missing p_id
+        edit_label_helper(request_handler, {},
+                        'Bad Request, missing p_id', 400)
+
+        # Request missing information, p_id included
+        label_missing_information = {
+            'labelId': 24,
+            'labelName': 'Boring idea',
+            'p_id': 2
+            }
+        edit_label_helper(
+            request_handler, label_missing_information, 'Bad Request', 400)
+
 
 """
 Author: Bartjan Henkemans
@@ -131,17 +174,31 @@ def create_label_helper(request_handler, label, expected_text, expected_status):
     # If we expect this to work
     if expected_status == 200:
         # Query on the data provided
-        entry = db.session.scalar(select(Label).where(
-            Label.lt_id == label['labelTypeId'],
-                Label.lt_id == label['labelTypeId'], 
+        entry = db.session.scalars(select(Label).where(
             Label.lt_id == label['labelTypeId'],
             Label.name == label['labelName'],
             Label.description == label['labelDescription'],
-            Label.p_id == label['p_id']))
+            Label.p_id == label['p_id'])).all()
         # There should be a result
         assert entry
+        assert len(entry) == 1
 
-    
+
+"""
+Author: Bartjan Henkemans
+A helper to execute edit label tests
+@param request_handler: The request handler to handle the requests.
+@param label: the label information
+@param u_id_token: token which authenticates the user
+@param expected_text: What we expect as a text response
+@param expected_text: What we expect as a code response 
+"""
 
 
-    
+def edit_label_helper(request_handler, label, expected_text, expected_status):
+    # Send the post request
+    response = request_handler.patch('/label/edit', label, True)
+    # Check if the correct response code is received
+    assert response.status_code == expected_status
+    # Check if the correct response text is received
+    assert response.text == expected_text
