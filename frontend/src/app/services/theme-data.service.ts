@@ -60,7 +60,8 @@ export class ThemeDataService {
       return themes_list;
       // Catch error
     } catch (e) {
-      console.log("An error occured when trying to get all themes");
+      // Displays error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get all themes"]);
       return [];
     }
   }
@@ -102,7 +103,8 @@ export class ThemeDataService {
       return newTheme;
       // Catch the error
     } catch (e) {
-      console.log("An error occured when trying to get the theme information");
+      // Displays error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get the theme information"]);
       return new Theme(0, "", "");
     }
   }
