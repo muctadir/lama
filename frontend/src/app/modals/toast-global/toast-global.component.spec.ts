@@ -38,4 +38,26 @@ describe('ToastGlobalComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should test the subscription', () => {
+    // creates the spy
+    let spy = spyOn(component["toastService"], "show");
+
+    // Emits a toast
+    component["toastCommService"].emitChange([false, "error"]);
+
+    // Checks whether toast was made
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should test the subscription case 2', () => {
+    // creates the spy
+    let spy = spyOn(component["toastService"], "show");
+
+    // Emits a toast
+    component["toastCommService"].emitChange([true, "no error"]);
+
+    // Checks whether toast was made
+    expect(spy).toHaveBeenCalled();
+  });
+
 });

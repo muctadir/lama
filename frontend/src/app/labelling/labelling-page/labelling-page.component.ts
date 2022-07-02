@@ -321,7 +321,7 @@ export class LabellingPageComponent implements OnInit {
       }
       // Push valid results into result array
       resultArray.push({
-        a_id: this.artifact?.getId(),
+        a_id: this.artifact.getId(),
         label_type: {
           id: el.get('labelType')?.value.getId(),
           name: el.get('labelType')?.value.getName()
@@ -395,7 +395,7 @@ export class LabellingPageComponent implements OnInit {
     firstCharacter = this.startPosFixer(firstCharacter);
     lastCharacter = this.endPosFixer(lastCharacter);
     // Get the text represented by the rounded start and end
-    let splitText = this.artifact?.data.substring(
+    let splitText = this.artifact.data.substring(
       firstCharacter,
       lastCharacter
     );
@@ -421,7 +421,7 @@ export class LabellingPageComponent implements OnInit {
   // Fixes the position of the start character of a word
   startPosFixer(startPos: number) {
     // Gets char at start of the word
-    let chart = this.artifact?.data.charAt(startPos);
+    let chart = this.artifact.data.charAt(startPos);
     // Checks if it is at the correct position to begin with
     if (chart == ' ' ) {
       startPos = startPos + 1
@@ -434,7 +434,7 @@ export class LabellingPageComponent implements OnInit {
 
     // Else, move until we find the start of a word
     while (chart != ' ' && startPos > 0) {
-      chart = this.artifact?.data.charAt(startPos);
+      chart = this.artifact.data.charAt(startPos);
       startPos--;
     }
 
@@ -448,19 +448,19 @@ export class LabellingPageComponent implements OnInit {
   // Fixes the position of the start character of a word
   endPosFixer(endPos: number) {
     // Gets char at end of the word
-    let chend = this.artifact?.data.charAt(endPos);
+    let chend = this.artifact.data.charAt(endPos);
     // See if the last char is correct to begin with
     if (chend == ' ' || endPos == this.artifact.data.length) {
       return endPos
     }
     // Fix such that the next word is not accidentally selected
-    if (this.artifact?.data.charAt(endPos - 1) == ' ') {
+    if (this.artifact.data.charAt(endPos - 1) == ' ') {
       endPos--
       return endPos
     }
     // Else, move until we find a space or hit the end of artifact
-    while (chend != ' ' && endPos < this.artifact?.data.length) {
-      chend = this.artifact?.data.charAt(endPos);
+    while (chend != ' ' && endPos < this.artifact.data.length) {
+      chend = this.artifact.data.charAt(endPos);
       endPos++;
     }
 

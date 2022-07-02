@@ -1,8 +1,7 @@
-import { Component, Input, OnInit, Output, ViewChild  } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, ViewChild  } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
-import { EventEmitter } from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
