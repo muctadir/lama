@@ -87,7 +87,7 @@ describe('LabellingDataService', () => {
     // Creates the spy for the request handler 
     let spy = spyOn(service.requestHandler, "get").and.returnValue(Promise.resolve(true));
 
-    // calls the getLabelling function and stores the result
+    // Calls the getLabelling function and stores the result
     let result = await service.getLabelling(1,2);
 
     // Checks the results
