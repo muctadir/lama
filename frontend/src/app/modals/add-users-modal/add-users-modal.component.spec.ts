@@ -34,7 +34,7 @@ describe('AddUsersModalComponent', () => {
     // Creates spy to check whether event is emitted
     let spy = spyOn(component["addUserEvent"], "emit");
 
-    // dummy input
+    // Dummy input
     let input = new User(5, "test5");
 
     // Calls the function to be tested
