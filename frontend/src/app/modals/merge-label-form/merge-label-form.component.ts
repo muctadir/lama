@@ -123,7 +123,7 @@ export class MergeLabelFormComponent {
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
 
-    const mergedLabels = arrayResult.map(result => result['label'].getId());
+    const mergedLabels = arrayResult?.map(result => result['label'].getId());
 
     try {
       // Wait for the posting of the merging

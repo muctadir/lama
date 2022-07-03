@@ -225,6 +225,27 @@ describe('EditAccountSettingsComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([false, "Input contains leading or trailing whitespaces"]);
   });
 
+  it('should test the makeRequest function in case of error with taken email/name', async () => {
+    // Creates dummy input
+    let input = {
+      "id": 5,
+      "username": "",
+      "description" : "",
+      "email": ""
+    };
+
+    // Creates dummy Error which is an AxiosError
+    let dummyError = new TestError("bad error", {status: 420, data: "Username or email taken"});
+    // Creates the spies
+    let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
+    let spyToast = spyOn(component["toastCommService"], "emitChange");
+    // Makes the request
+    await component.makeRequest(input);
+    // Checks the calls
+    expect(spyRequest).toHaveBeenCalledWith(input);
+    expect(spyToast).toHaveBeenCalledWith([false, "Username or email taken"]);
+  });
+
   it('Tests the makeRequest function in case of error with status != 511', async () => {
     // Creates dummy input
     let input = {

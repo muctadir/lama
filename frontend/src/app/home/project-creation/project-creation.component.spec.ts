@@ -392,17 +392,33 @@ describe('ProjectCreationComponent', () => {
   });
 
 
-  // it('tests removeMember', () => {
-  //   // Creates dummy data for allMembers array
-  //   let userArray = [new User(1, "aaa"), new User(2, "bbb"), new User(3, "ccc")];
-  //   component.projectMembers = userArray;
+  it('tests removeMember', () => {
+    let u1 = new User(1, "aaa");
+    let u2 = new User(2, "bbb");
+    let u3 = new User(3, "ccc");
 
-  //   // Calls the function to be tested
-  //   component.removeMember("bbb");
+    // Creates dummy data for allMembers array
+    let userArray = [u1, u2, u3];
+    component.projectMembers = userArray;
 
-  //   // Checks whether the spy was called correctly
-  //   expect(component.projectMembers).toEqual([new User(1, "aaa"), new User(3, "ccc")]);
-  // });
+    // Calls the function to be tested
+    component.removeMember(u2);
+
+    // Checks whether the spy was called correctly
+    expect(component.projectMembers).toEqual([new User(1, "aaa"), new User(3, "ccc")]);
+  });
+
+  it('should convert label type to array', () => {
+    // Creates a spy
+    let spy = spyOn(component["projectForm"].value.labeltypes, "values").and.returnValue([{"label": "a"}, {"label": "b"}]);
+
+    // Calls the function to be tested
+    let result = component.labelTypeToArray();
+
+    // Checks the results
+    expect(spy).toHaveBeenCalled();
+    expect(result).toEqual(["a", "b"]);
+  });
 
   // Test if the open function works correctly when there are no other users in the project
   it('should open the add user modal and add the new user to the project', async () => {

@@ -6,7 +6,7 @@ import { RequestHandler } from 'app/classes/RequestHandler';
 })
 export class ConflictDataService {
   /* Request handler to deal with requests */
-  private requestHandler: RequestHandler;
+  requestHandler: RequestHandler;
   /* Session token for authentication */
   private sessionToken: string | null;
 
