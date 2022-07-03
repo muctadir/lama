@@ -58,6 +58,7 @@ describe('ThemeDataService', () => {
         }
       ]
     ));
+
     // Call the function
     let result = await service.getThemes(1);
 
