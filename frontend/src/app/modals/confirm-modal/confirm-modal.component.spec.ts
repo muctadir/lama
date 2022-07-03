@@ -28,7 +28,7 @@ describe('ConfirmModalComponent', () => {
   });
 
   it('should call the functions in the confirm method', () => {
-    // creates the spies
+    // Creates the spies
     let spy = spyOn(component["confirmEvent"], "emit");
     let spy2 = spyOn(component["activeModal"], "close");
 
