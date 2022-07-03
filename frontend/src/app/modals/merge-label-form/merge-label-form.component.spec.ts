@@ -201,7 +201,7 @@ describe('MergeLabelFormComponent', () => {
     // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge").and.returnValue(Promise.resolve("Success"));
 
-    // ensures we dont get stuck on the if statement
+    // Ensures the code doesn't get stuck on the if statement
     spyOnProperty(component["toBeMergedLabels"], "length", "get").and.returnValue(200);
 
     // Creates spy for the remove function
