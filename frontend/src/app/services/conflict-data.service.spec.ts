@@ -68,7 +68,7 @@ describe('ConflictDataService', () => {
   });
 
   it('should get the labels per user', async () => {
-    // creates the spy for the requesthandler and returns dummy data
+    // Creates the spy for the requesthandler and returns dummy data
     let spy = spyOn(service.requestHandler, "get").and.returnValue(Promise.resolve(true));
 
     // Stores the error that will be thrown by the function
