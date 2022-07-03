@@ -196,7 +196,7 @@ describe('ProjectSettingsComponent', () => {
     // Checks the variables
     expect(component.added).toEqual([]);
     expect(component.removedMembers).toEqual([]);
-    // checks the toast emitted
+    // Checks the toast emitted
     expect(spyToast).toHaveBeenCalledWith([true, "Edit successful"]);
   });
 
