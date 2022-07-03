@@ -463,7 +463,7 @@ export class ProjectSettingsComponent implements OnInit {
     // Setting project's frozen status to true, and go back to non-edit mode
     this.currentProject.setFrozen(frozenStatus);
     this.editModeService.isInEditMode.next(editMode);
-    //Update the frozen status to the back-end
+    // Update the frozen status to the back-end
     this.sendFreezeRequest({"p_id": this.currentProject.getId(),"frozen": frozenStatus});
   }
 
