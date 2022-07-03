@@ -71,7 +71,7 @@ describe('LabellingDataService', () => {
       }
     ))
 
-    // calls the backend for the label and stores the result
+    // Calls the backend for the label and stores the result
     let result = await service.getLabel(1,2);
 
     // Checks whether the correct functions are called and the correct result is given
