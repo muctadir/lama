@@ -117,8 +117,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [ToastCommService],
-  bootstrap: [
-    AppComponent
-  ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

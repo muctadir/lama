@@ -89,8 +89,6 @@ where id is item id, dist is dist between search term and best word,
 word is the best found word, search is the corresponding search word,
 item is a dictionary of id and data
 """
-
-
 def search_func_all_res(search_words, data, id_col, data_cols):
     # Initialise list to store all id params
     param_list = []

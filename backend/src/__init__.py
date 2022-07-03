@@ -37,7 +37,6 @@ URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 db_opt = AppGroup("db-opt")
 
 # Currently, database initialization needs to be done by hand.
-# TODO: We should do this automatically.
 # `migrate()` takes the defined models and creates tables in the database, if
 # those tables do not yet exist.
 @db_opt.command("init")
