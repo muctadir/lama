@@ -366,7 +366,7 @@ describe('MergeLabelFormComponent', () => {
   });
 
   it('should submit the merging of labels, but error with empty label desc error', async () => {
-    // create the spy for the backend call
+    // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge")
       .and.throwError(new TestError("test", {status: 69, data: "Label description cannot be empty"}));
 
