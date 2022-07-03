@@ -402,7 +402,7 @@ describe('MergeLabelFormComponent', () => {
   });
 
   it('should submit the merging of labels, but error with taken label name error', async () => {
-    // create the spy for the backend call
+    // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge")
       .and.throwError(new TestError("test", {status: 69, data: "Label name already exists"}));
 
