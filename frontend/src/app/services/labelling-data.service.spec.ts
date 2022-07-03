@@ -360,5 +360,4 @@ describe('LabellingDataService', () => {
     // Checks whether the call is made with the correct params
     expect(spy).toHaveBeenCalledWith('/label/search',{p_id: 2, search_words: "search_term"}, true);
   });
-
 });
