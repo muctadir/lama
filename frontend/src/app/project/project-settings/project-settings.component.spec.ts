@@ -360,7 +360,7 @@ describe('ProjectSettingsComponent', () => {
     // Creates the spy on the service
     let spy2 = spyOn(component["editModeService"].isInEditMode, "next");
 
-    // sets some values
+    // Sets some values
     component.projectMembers = [u1, u2];
 
     // Calls the function to be tested
