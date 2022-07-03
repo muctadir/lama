@@ -55,7 +55,7 @@ describe('ProjectDataService', () => {
       }]
     ));
 
-    // makes the call to get the projects, stores the results
+    // Makes the call to get the projects, stores the results
     let result = await service.getProjects();
 
     // Checks whether the spy is created succesfully
