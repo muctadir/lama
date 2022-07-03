@@ -282,7 +282,7 @@ describe('ProjectSettingsComponent', () => {
     expect(spy).toHaveBeenCalled();
     // Checks the toast emitted
     expect(spyToast).toHaveBeenCalledWith([false, "An error occured while creating the theme"]);
-    // checks the function call at the end of the error block
+    // Checks the function call at the end of the error block
     expect(spy2).toHaveBeenCalled();
   });
 
