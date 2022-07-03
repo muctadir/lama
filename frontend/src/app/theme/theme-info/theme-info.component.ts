@@ -22,7 +22,7 @@ export class ThemeInfoComponent implements OnInit {
   // Boolean for edit
   edit = false;
   // Header of the page
-  createEditThemeHeader: string = "";
+  createEditThemeHeader = "";
 
   // Error message string
   errorMsg = "";
@@ -56,14 +56,14 @@ export class ThemeInfoComponent implements OnInit {
   routeService: ReroutingService;
 
   // Highlight label variable
-  highlightedLabel: string = '';
+  highlightedLabel = '';
   // Highlight subtheme variable
-  highlightedSubtheme: string = "";
+  highlightedSubtheme = "";
 
   // Selected Labels description
-  selectedDescriptionLabel: string = '';
+  selectedDescriptionLabel = '';
   // Selected Theme description
-  selectedDescriptionTheme: string = '';
+  selectedDescriptionTheme = '';
 
   // Labels Added
   addedLabels: Label[] = [];
@@ -94,7 +94,7 @@ export class ThemeInfoComponent implements OnInit {
     this.t_id = 0;
   }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     // Check if the project is frozen
     if (await this.projectDataService.getFrozen()) {
       await this.router.navigate(['/project', this.p_id]);

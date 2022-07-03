@@ -45,7 +45,7 @@ export class ThemeVisualComponent implements OnInit {
   /**
    * Function that gets the data and intializes the svg
    */
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     // Gets correct data
     await this.getData();
     // Initialise visualisation svg
@@ -55,7 +55,7 @@ export class ThemeVisualComponent implements OnInit {
   /**
    * Function that gets the data for the visualization
    */
-  async getData() {
+  async getData(): Promise<void> {
     // Call the service to get the theme visualization data
     this.response = await this.themeDataService.themeVisData(this.p_id);
   }
@@ -63,7 +63,7 @@ export class ThemeVisualComponent implements OnInit {
   /**
    * Function that renders the svg of the hierarchy
    */
-  initSvg() {
+  initSvg(): void {
     // Assigns data to variable
     this.data = this.response;
     this.data.name = "Current Project";

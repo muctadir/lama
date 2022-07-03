@@ -31,7 +31,7 @@ export class SingleThemeViewComponent {
   // Variable for the theme
   theme: Theme;
 
-  frozen: boolean = true;
+  frozen = true;
 
   constructor(private router: Router,
     private themeDataService: ThemeDataService,
@@ -57,7 +57,7 @@ export class SingleThemeViewComponent {
   }
 
   // Async function for getting the single theme info
-  async get_single_theme_info(p_id: number, t_id: number) {
+  async get_single_theme_info(p_id: number, t_id: number): Promise<void> {
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
     // Sort the artifacts
@@ -159,7 +159,7 @@ export class SingleThemeViewComponent {
    * 
    * @trigger a sub or super-theme is pressed
   */
-  goToTheme(theme: Theme | undefined) {
+  goToTheme(theme: Theme | undefined): void {
     // Check if we can get the id of the theme
     if (theme != undefined) {
       this.reRouterTheme(theme.getId());
@@ -171,7 +171,7 @@ export class SingleThemeViewComponent {
    * 
    * @Trigger When the delete button is clicked
    */
-  deleteTheme() {
+  deleteTheme(): void {
     // Get the children and labels
     let children = this.theme.getChildren();
     let labels = this.theme.getLabels();

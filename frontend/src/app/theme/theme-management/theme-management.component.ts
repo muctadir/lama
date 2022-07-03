@@ -47,7 +47,7 @@ export class ThemeManagementComponent {
   });
 
   // True if the project is frozen
-  frozen: boolean = true;
+  frozen = true;
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -75,7 +75,7 @@ export class ThemeManagementComponent {
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-   searchClick(){
+   searchClick(): void {
     // Get the search image
     let searchBar = document.getElementById("searchBar")
     if (searchBar != null){
@@ -187,7 +187,7 @@ export class ThemeManagementComponent {
   }
 
   // Gets the search text
-  async onEnter() {
+  async onEnter(): Promise<void> {
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
     // Search text

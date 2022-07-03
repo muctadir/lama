@@ -33,7 +33,7 @@ export class StatsComponent implements OnInit {
   labels: number;
 
   // Indicates whether the project is frozen
-  frozen: boolean = true;
+  frozen = true;
 
   /**
    * Initializes the router, StatsDataService, ProjectDataService, ReroutingService

@@ -10,7 +10,7 @@ export class ToastCommService {
   // Observable string streams
   changeEmitted$ = this.emitChangeToast.asObservable();
   // Service message commands
-  emitChange(change: any) {
+  emitChange(change: any): void {
     this.emitChangeToast.next(change);
   }
 }
