@@ -290,7 +290,7 @@ describe('ThemeDataService', () => {
     let theme1 = new Theme(1, "Theme 1", "Desc 1");
     let theme2 = new Theme(2, "Theme 2", "Desc 2");
 
-    // calls the function which we want to test
+    // Calls the function which we want to test
     let result = await service.themes_without_parents(1, 2);
 
     // Checks whether the result is equivalent to the expected result
