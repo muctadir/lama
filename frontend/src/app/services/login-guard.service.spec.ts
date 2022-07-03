@@ -32,7 +32,7 @@ describe('LoginGuardService', () => {
   });
 
   it('should verify that is the user is not logged in', async () => {
-    // creates a spy on the backend call 
+    // Creates a spy on the backend call 
     let spy = spyOn(service["accountService"], "makeAuthRequest").and.returnValue(Promise.resolve(false));
     let spyRouter = spyOn(service["router"], "navigate");
 
