@@ -20,7 +20,7 @@ describe('LoginGuardService', () => {
   });
 
   it('should verify that is the user is successfully logged in', async () => {
-    // creates a spy on the backend call 
+    // Creates a spy on the backend call 
     let spy = spyOn(service["accountService"], "makeAuthRequest").and.returnValue(Promise.resolve(true));
 
     // Calls the function to be tested
