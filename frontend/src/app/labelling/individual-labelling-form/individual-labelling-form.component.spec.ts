@@ -179,7 +179,7 @@ describe('LabellingTypeComponent', () => {
   });
 
   it('should test the labelForm listener null inputs case 2', async () => {
-    // creates a spy
+    // Creates a spy
     spyOn(component, "getLabels");
 
     // Spies on the get label call
