@@ -328,7 +328,7 @@ export class ProjectSettingsComponent implements OnInit {
     projectInformation["update"] = updateInfo;
     projectInformation["add"] = addedInfo;
 
-    //Sending update to the backend
+    // Sending update to the backend
     this.sendUpdateRequest(projectInformation);
   }
 
