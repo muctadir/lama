@@ -294,7 +294,7 @@ describe('MergeLabelFormComponent', () => {
   });
 
   it('should submit the merging of labels, but error with whitespace error', async () => {
-    // create the spy for the backend call
+    // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge")
       .and.throwError(new TestError("test", {status: 69, data: "Input contains leading or trailing whitespaces"}));
 
