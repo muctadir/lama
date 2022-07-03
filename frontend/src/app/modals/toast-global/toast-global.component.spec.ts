@@ -28,7 +28,7 @@ describe('ToastGlobalComponent', () => {
   });
 
   it('should destroy the subscription', () => {
-    // creates the spy for the function call we are making
+    // Creates the spy for the function call we are making
     let spy = spyOn(component["toastService"], "clear");
 
     // calls function
