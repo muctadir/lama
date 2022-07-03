@@ -1,16 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 import { ThemeVisualComponent } from './theme-visual.component';
 
 describe('ThemeVisualComponent', () => {
   let component: ThemeVisualComponent;
   let fixture: ComponentFixture<ThemeVisualComponent>;
+  let router: Router
 
   // Initialize test environement
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ThemeVisualComponent]
+      declarations: [ ThemeVisualComponent ],
+      imports: [RouterTestingModule]
     })
-      .compileComponents();
+    .compileComponents();
+    router = TestBed.inject(Router)
   });
 
   // Before each test

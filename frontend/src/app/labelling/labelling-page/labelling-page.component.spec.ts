@@ -5,6 +5,9 @@ import { LabelType } from 'app/classes/label-type';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { User } from 'app/classes/user';
 import { LabellingPageComponent } from './labelling-page.component';
+import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { FormBuilder } from '@angular/forms';
 
 /**
  * Testing suite for the labelling page
@@ -13,13 +16,21 @@ describe('LabellingPageComponent', () => {
   let component: LabellingPageComponent;
   let fixture: ComponentFixture<LabellingPageComponent>;
 
+  // Instantiation of NgbModal
+  let modalService: NgbModal;
+  // Instantiation of NgbModalRef
+  let modalRef: NgbModalRef;
+
   // Adds router dependency
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LabellingPageComponent],
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule],
+      providers: [NgbActiveModal, FormBuilder]
     })
       .compileComponents();
+    // Inject the modal service into the component's constructor
+    modalService = TestBed.inject(NgbModal)
   });
 
   beforeEach(() => {
@@ -266,6 +277,27 @@ describe('LabellingPageComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalledWith(['/project', 5]);
     expect(spy3).toHaveBeenCalledWith([false, "Something went wrong. Please try again!"]);
+  });
+
+  // Test if the openCreateForm function works correctly
+  it('should open the create label modal', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(LabelFormComponent);
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+    // Spy on getLabelTypesWithLabels and stub the call
+    let label_spy = spyOn(component, 'getLabelTypesWithLabels');
+
+    // Call the openCreateForm function
+    component.openCreateForm();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(LabelFormComponent, { size: 'xl' });
+    // Check if getLabelTypesWithLabels was called
+    expect(label_spy).toHaveBeenCalled();
+
   });
 
   it('skip button case 1', async () => {

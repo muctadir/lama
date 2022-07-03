@@ -82,7 +82,7 @@ export class ArtifactManagementPageComponent {
   }
 
   /**
-   * Function for searching based on clicking on the maginifying glass
+   * Function for searching based on clicking on the magnifying glass
    */
   searchClick(){
     // Get the search image
@@ -105,8 +105,6 @@ export class ArtifactManagementPageComponent {
 
   /**
    * Sets the artifacts of a specific project from artifact-data.service
-   * 
-   * @param p_id the id of the project
    */
   async getArtifacts(): Promise<void> {
 
@@ -191,7 +189,7 @@ export class ArtifactManagementPageComponent {
 
       // Pass the search word to services
       let artifactsSearched = await this.artifactDataService.search(text, p_id);
-
+      
       // List for the artifacts resulting from the search
       let artifactList: Array<StringArtifact> = [];
       // For loop through all searched artifacts
@@ -221,8 +219,8 @@ export class ArtifactManagementPageComponent {
    * Function that returns the number of users who gave a set of labellings
    * @param labellings: number, the number of labellings
    */
-  getNumberUsers(labellings: number): string | number {
-    if (labellings % this.nLabelTypes != 0) {
+  getNumberUsers(labellings: number): string | number{
+    if(this.nLabelTypes == 0 || labellings % this.nLabelTypes != 0) {
       this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
       return "Cannot compute";
     }

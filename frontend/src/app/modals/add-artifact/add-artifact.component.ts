@@ -77,7 +77,7 @@ export class AddArtifactComponent {
    * @modifies message, error
    *
    */
-  fileUpload(): void {
+  async fileUpload(): Promise<void> {
     // Make sure error is reset
     this.error = false;
 
@@ -92,7 +92,6 @@ export class AddArtifactComponent {
       this.readFile().then(async (added_artifacts) => {
         // Checks if any artifacts have been read from the file
         if (added_artifacts.length == 0) {
-
           // If no artifacts were added and no error was detected,
           // make an error message
           if (!this.error) {
@@ -164,7 +163,7 @@ export class AddArtifactComponent {
    * 
    * @returns an array of strings that contains the artifacts from this.file
    */
-  private async readFile(): Promise<Array<string>> {
+  async readFile(): Promise<Array<string>> {
     // Checks whether the file is a text file, if not displays error
     if (this.file?.type != "text/plain") {
       // Ensures an error message is displayed
@@ -178,10 +177,8 @@ export class AddArtifactComponent {
 
     // Creates a FileReader object, will be used to read the content of a file
     var myReader: FileReader = new FileReader();
-
     // Starts reading the file
     myReader.readAsText(this.file);
-
     // Behaviour of what happens when a file is read
     return new Promise((resolve) => {
       myReader.onloadend = () => {

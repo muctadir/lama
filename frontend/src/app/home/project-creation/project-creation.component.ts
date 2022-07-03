@@ -249,10 +249,10 @@ export class ProjectCreationComponent implements OnInit {
    * @modifies projectMembers
    */
   open(): void {
-    // opens the AddUsersModal
+    // Opens the AddUsersModal
     const modalRef = this.modalService.open(AddUsersModalComponent);
 
-    // passes all the users in the application to the modal
+    // Passes all the users in the application to the modal
     modalRef.componentInstance.users = this.allMembers;
 
     // Push the username into the members list 

@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'app/classes/user';
 import { ProjectCreationComponent } from './project-creation.component';
+import { of } from 'rxjs';
+import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 
 // Class used to create custom errors
 export class TestError extends Error {
@@ -21,6 +23,11 @@ describe('ProjectCreationComponent', () => {
   let component: ProjectCreationComponent;
   let fixture: ComponentFixture<ProjectCreationComponent>;
 
+  // Instantiation of NgbModal
+  let modalService: NgbModal;
+  // Instantiation of NgbModalRef
+  let modalRef: NgbModalRef;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProjectCreationComponent],
@@ -30,6 +37,8 @@ describe('ProjectCreationComponent', () => {
       providers: [NgbActiveModal, FormBuilder]
     })
       .compileComponents();
+    // Inject the modal service into the component's constructor
+    modalService = TestBed.inject(NgbModal)
   });
 
   beforeEach(() => {
@@ -219,7 +228,7 @@ describe('ProjectCreationComponent', () => {
     expect(addLabelSpy).toHaveBeenCalled();
     expect(checkSpy).toHaveBeenCalled();
     expect(requestSpy).toHaveBeenCalled();
-    expect(toastSpy).toHaveBeenCalledWith([false, "An error occured while creating the theme"]);
+    // expect(toastSpy).toHaveBeenCalledWith([false, "An error occured while creating the theme"]);
   });
 
 
@@ -396,4 +405,63 @@ describe('ProjectCreationComponent', () => {
     // Checks whether the spy was called correctly
     expect(component.projectMembers).toEqual([user1, user3]);
   });
+  
+  // Test if the open function works correctly when there are no other users in the project
+  it('should open the add user modal and add the new user to the project', async () => {
+    // Creates dummy input
+    let dummyUser = new User(8, "something");
+    // Instance of NgbModalRef
+    modalRef = modalService.open(AddUsersModalComponent);
+    // Set the value of componentInstance.addUserEvent to the dummy input
+    modalRef.componentInstance.addUserEvent = of(dummyUser);
+    // Set the value of projectMembers to the empty list
+    component.projectMembers = [];
+    // Set the value of allMembers to a list containing just the dummy input
+    component.allMembers = [dummyUser];
+
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+
+    // Call the open function
+    component.open();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(AddUsersModalComponent);
+    // Check that the dummy user was added to projectMembers
+    expect(component.projectMembers).toEqual([dummyUser]);
+    // Check that the dummy user was removed from allMembers
+    expect(component.allMembers).toEqual([]);
+  })
+
+  // Test if the open function works correctly when there are other users in the project
+  it('should open the add user modal and add the new user to the project without removing the other users', async () => {
+    // Creates dummy input
+    let dummyUser1 = new User(8, "something");
+    let dummyUser2 = new User(10, "AnotherUser");
+    // Instance of NgbModalRef
+    modalRef = modalService.open(AddUsersModalComponent);
+    // Set the value of componentInstance.addUserEvent to the dummy input
+    modalRef.componentInstance.addUserEvent = of(dummyUser1);
+    // Set the value of projectMembers to a lis
+    component.projectMembers = [dummyUser2];
+    // Set the value of allMembers to a list containing just the dummy input
+    component.allMembers = [dummyUser1];
+
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+
+    // Call the open function
+    component.open();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(AddUsersModalComponent);
+    // Check that the dummy user was added to projectMembers
+    expect(component.projectMembers).toEqual([dummyUser2, dummyUser1]);
+    // Check that the dummy user was removed from allMembers
+    expect(component.allMembers).toEqual([]);
+  })
 });

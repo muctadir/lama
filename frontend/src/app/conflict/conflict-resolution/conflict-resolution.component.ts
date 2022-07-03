@@ -180,7 +180,7 @@ export class ConflictResolutionComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then((data) => {
+    modal.result.then(() => {
       // Clear the cache of labels
       this.labels = [];
       // Reinitialize the page

@@ -1,11 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IndividualLabelComponent } from './individual-label.component';
+import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
+import { HistoryComponent } from 'app/modals/history/history.component';
+import { Label } from 'app/classes/label';
+import { FormBuilder } from '@angular/forms';
+import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
+import { of } from 'rxjs';
+import { Router } from '@angular/router';
+import { StringArtifact } from 'app/classes/stringartifact';
 
 describe('IndividualLabelComponent', () => {
   let component: IndividualLabelComponent;
   let fixture: ComponentFixture<IndividualLabelComponent>;
+  let router: Router;
+  // Instantiation of NgbModal
+  let modalService: NgbModal;
+  // Instantiation of NgbModalRef
+  let modalRef: NgbModalRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -13,9 +26,11 @@ describe('IndividualLabelComponent', () => {
       // Addis RouterTestingModule dependency
       imports: [RouterTestingModule],
       // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal]
+      providers: [NgbActiveModal, FormBuilder]
     })
       .compileComponents();
+    // Inject the modal service into the component's constructor
+    modalService = TestBed.inject(NgbModal)
   });
 
   beforeEach(() => {
@@ -53,7 +68,7 @@ describe('IndividualLabelComponent', () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabel")
     // Calls the getLabel function
-    await component.getLabel(1,1);
+    await component.getLabel(1, 1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
@@ -63,19 +78,173 @@ describe('IndividualLabelComponent', () => {
     // Create spy for getLabellings call
     let spy = spyOn(component['labellingDataService'], "getLabelling")
     // Calls the getLabellings function
-    await component.getLabellings(1,1);
+    await component.getLabellings(1, 1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
 
-  // Test the softDeleteTheme function
-  it('Tests the deleteLabel function', () => {
+  // Test the postSoftDelete function
+  it('should delete the label and display success toast', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(true);
+    // List of hardcoded themes
+    let artifacts: StringArtifact[] = [];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the label id
+    component.label_id = 3;
+
     // Spy on the functions that should have been called
-    let spy = spyOn(component['label'], 'getArtifacts');
-    // Calls the softDeleteTheme function
-    component.postSoftDelete();
+    let artifact_spy = spyOn(component['label'], 'getArtifacts').and.returnValue(artifacts);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['labellingDataService'], 'postSoftDelete');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.postSoftDelete();
+
     // Checks whether the function works properly
-    expect(spy).toHaveBeenCalled();
+    expect(artifact_spy).toHaveBeenCalled();
+    expect(modal_spy).toHaveBeenCalledWith(ConfirmModalComponent, {});
+    expect(delete_spy).toHaveBeenCalledWith({'p_id': 1, 'l_id': 3})
+    expect(navigate_spy).toHaveBeenCalledWith(['project', 1, 'labelmanagement'])
+    expect(toast_spy).toHaveBeenCalledWith([true, "Successfully deleted label"])
+  });
+
+  // Test if the postSoftDelete function displays error toast when postsoftDelete throws an error
+  it('should display error toast', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(true);
+    // List of hardcoded themes
+    let artifacts: StringArtifact[] = [];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the label id
+    component.label_id = 3;
+
+    // Spy on the functions that should have been called
+    let artifact_spy = spyOn(component['label'], 'getArtifacts').and.returnValue(artifacts);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['labellingDataService'], 'postSoftDelete').and.throwError("Test error");
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.postSoftDelete();
+
+    // Checks whether the function works properly
+    expect(artifact_spy).toHaveBeenCalled();
+    expect(modal_spy).toHaveBeenCalledWith(ConfirmModalComponent, {});
+    expect(delete_spy).toHaveBeenCalledWith({'p_id': 1, 'l_id': 3})
+    expect(navigate_spy).not.toHaveBeenCalledWith(['project', 1, 'labelmanagement'])
+    expect(toast_spy).toHaveBeenCalledWith([false, "Something went wrong!"])
+  });
+
+  // Test if the postSoftDelete does nothing when the confirm modal returns false
+  it('should do nothing', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(ConfirmModalComponent);
+    // Set the value of componentInstance.confirmEvent to false
+    modalRef.componentInstance.confirmEvent = of(false);
+    // List of hardcoded themes
+    let artifacts: StringArtifact[] = [];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the label id
+    component.label_id = 3;
+
+    // Spy on the functions that should have been called
+    let artifact_spy = spyOn(component['label'], 'getArtifacts').and.returnValue(artifacts);
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef);
+    let delete_spy = spyOn(component['labellingDataService'], 'postSoftDelete');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.postSoftDelete();
+
+    // Checks whether the function works properly
+    expect(artifact_spy).toHaveBeenCalled();
+    expect(modal_spy).toHaveBeenCalledWith(ConfirmModalComponent, {});
+    expect(delete_spy).not.toHaveBeenCalled();
+    expect(navigate_spy).not.toHaveBeenCalledWith(['project', 1, 'labelmanagement'])
+    expect(toast_spy).not.toHaveBeenCalledWith([false, "Something went wrong!"])
+  });
+
+  // Test if the postSoftDelete return a failure toast when the label is used
+  it('should do nothing', async () => {
+    // List of hardcoded themes
+    let artifacts: StringArtifact[] = [new StringArtifact(1, 'IDENT', "Something")];
+    // Set the project id 
+    component.p_id = 1;
+    // Set the label id
+    component.label_id = 3;
+
+    // Spy on the functions that should have been called
+    let artifact_spy = spyOn(component['label'], 'getArtifacts').and.returnValue(artifacts);
+    let modal_spy = spyOn(component['modalService'], 'open')
+    let delete_spy = spyOn(component['labellingDataService'], 'postSoftDelete');
+    let navigate_spy = spyOn(component['router'], 'navigate');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+
+    // Calls the deleteTheme function
+    await component.postSoftDelete();
+
+    // Checks whether the function works properly
+    expect(artifact_spy).toHaveBeenCalled();
+    expect(modal_spy).not.toHaveBeenCalled();
+    expect(delete_spy).not.toHaveBeenCalled();
+    expect(navigate_spy).not.toHaveBeenCalledWith(['project', 1, 'labelmanagement'])
+    expect(toast_spy).toHaveBeenCalledWith([false, "This label has been already used, so it cannot be deleted"])
+  });
+
+  // Test if the openEdit function works correctly
+  it('should open the edit label modal, get the label and reinitialize the pae', async () => {
+    // Set the label
+    let label = new Label(1, "Label", "Description", "Type");
+    component.label = label;
+    
+    // Instance of NgbModalRef
+    modalRef = modalService.open(LabelFormComponent);
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+    // Spy on ngOnInit and stub the call
+    let init_spy = spyOn(component, 'ngOnInit');
+
+    // Call the openEdit function
+    component.openEdit();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(LabelFormComponent, { size: 'xl' });
+    // Check if modalRef.componentInstance.label was set with the right value
+    expect(modalRef.componentInstance.label).toEqual(label);
+    // Check if ngOnInit is called
+    expect(init_spy).toHaveBeenCalled();
+  });
+
+  // Test if the openLabelHistory function works correctly
+  it('should open the label history modal', async () => {
+    // Instance of NgbModalRef
+    modalRef = modalService.open(HistoryComponent);
+    // When modalService.open gets called, return modalRef
+    let modal_spy = spyOn(component['modalService'], 'open').and.returnValue(modalRef)
+
+    // Call the openEdit function
+    component.openLabelHistory();
+    // Close the modalRef
+    await modalRef.close();
+
+    // Check if modalService.open is called with the correct parameters
+    expect(modal_spy).toHaveBeenCalledWith(HistoryComponent, { size: 'xl' });
+    // Check if modalRef.componentInstance.label was set with the right value
+    expect(modalRef.componentInstance.history_type).toEqual("Label");
   });
 
   // Test the get labelling function
@@ -87,5 +256,4 @@ describe('IndividualLabelComponent', () => {
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
-
 });
