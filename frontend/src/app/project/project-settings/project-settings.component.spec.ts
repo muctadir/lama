@@ -335,7 +335,7 @@ describe('ProjectSettingsComponent', () => {
     // Calls the function to be tested
     await component.saveEdit();
 
-    // does some checks
+    // Does some checks
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalledWith(false);
 
