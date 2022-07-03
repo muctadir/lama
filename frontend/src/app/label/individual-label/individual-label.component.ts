@@ -126,7 +126,7 @@ export class IndividualLabelComponent {
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
-      // If a confirmEvent = true is emitted we delete the user
+      // If a confirmEvent = true is emitted we delete the label
       if($e) {
         try{
           // Post the soft delete
@@ -188,10 +188,10 @@ export class IndividualLabelComponent {
    * @trigger on click of history icon
    */
    openLabelHistory(): void {
-    // opens label history modal
+    // Opens label history modal
     let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
 
-    // passes the type of history we want to view
+    // Passes the type of history we want to view
     modalRef.componentInstance.history_type = "Label";
    }
   

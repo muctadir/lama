@@ -103,7 +103,7 @@ export class LabelManagementComponent {
     }
   }
 
-  // Open the modal and merge lables
+  // Open the modal and merge labels
   openMerge() {
     const modalRef = this.modalService.open(MergeLabelFormComponent, {
       size: 'xl',
@@ -184,9 +184,8 @@ export class LabelManagementComponent {
     // Result dictionary
     let resultDict: { [id: number]: string } = {};
 
-
     this.labels.forEach(async (label: Label) => {
-      // Wait for the laeblling data service to get the labelling count
+      // Wait for the labelling data service to get the labelling count
       const result = await this.labellingDataService.getLabellingCount({
         p_id: this.p_id,
         l_id: label.getId(),
