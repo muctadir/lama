@@ -300,8 +300,4 @@ describe('ArtifactDataService', () => {
     expect(spy).toHaveBeenCalledWith('/artifact/split',  
       {p_id: 1, parent_id: 2, identifier: "3", start: 4, end: 5, data: "6"}, true);
   });
-
-
-
-
 });
