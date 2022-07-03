@@ -188,7 +188,7 @@ describe('LabellingTypeComponent', () => {
     // Calls function to create listener
     await component.ngOnInit();
 
-    // does the check whether no error occurs
+    // Does the check whether no error occurs
     expect(spy).toHaveBeenCalled();
   });
 
