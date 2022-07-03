@@ -108,7 +108,7 @@ describe('LabellingDataService', () => {
       }
     ]));
 
-    // calls the getLabelling function and stores the result
+    // Calls the getLabelling function and stores the result
     let result = await service.getLabelTypes(1);
 
     // Checks the results
