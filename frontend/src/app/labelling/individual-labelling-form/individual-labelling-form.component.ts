@@ -63,7 +63,7 @@ export class IndividualLabellingForm implements OnInit {
       remark: [undefined, [Validators.required, Validators.minLength(1)]],
     });
 
-    this.reload?.subscribe(v => {
+    this.reload?.subscribe(() => {
       this.ngOnInit();
     });
   }

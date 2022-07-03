@@ -169,7 +169,7 @@ export class ArtifactManagementPageComponent {
   // Open the modal
   open(): void {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
-    modalRef.result.then((data) => {
+    modalRef.result.then(() => {
       this.ngOnInit();
     });
   }  

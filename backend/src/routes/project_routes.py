@@ -525,8 +525,6 @@ def single_project():
 
     # Schema to serialize the Project
     project_schema = Project.__marshmallow__()
-    # Schema to serialize the User
-    user_schema = User.__marshmallow__()
 
     # Convert project to JSON
     project_json = project_schema.dump(project)

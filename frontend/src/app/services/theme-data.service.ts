@@ -295,7 +295,7 @@ export class ThemeDataService {
    */
   async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {
-      return this.requestHandler.get('/theme/themeVisData', { "p_id": p_id }, true);
+      return await this.requestHandler.get('/theme/themeVisData', { "p_id": p_id }, true);
     } catch (e) {
       // Emits an error toast
       let message: string = "An unknown error occurred";

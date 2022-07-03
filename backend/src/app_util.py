@@ -78,16 +78,16 @@ def check_password(password):
     """
     banned = [
         "password", "password123"]  # A list of common banned passwords (use env. variable?)
-    caseRe = r"(?=.*[a-z]).*[A-Z]"  # Uppercase and lowercase
+    case_re = r"(?=.*[a-z]).*[A-Z]"  # Uppercase and lowercase
     # Special and non-special (note: underscore is non-special)
-    specialRe = r"(?=.*\W).*[\w]"
-    numberRe = r"(?=.*[0-9]).*[^0-9]"  # Number and non-number
+    special_re = r"(?=.*\W).*[\w]"
+    number_re = r"(?=.*[0-9]).*[^0-9]"  # Number and non-number
     valid = len(password) <= 64 and len(password) == len(password.strip())
     complex_password = len(password) >= 8 and \
         password.lower() not in banned and \
-        (re.match(caseRe, password) or
-         re.match(specialRe, password) or
-         re.match(numberRe, password))
+        (re.match(case_re, password) or
+         re.match(special_re, password) or
+         re.match(number_re, password))
     return bool(valid and complex_password)
 
 

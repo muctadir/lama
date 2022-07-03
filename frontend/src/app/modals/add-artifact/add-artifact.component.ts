@@ -89,7 +89,7 @@ export class AddArtifactComponent {
 
     // Try reading the file
     try {
-      this.readFile().then(async (added_artifacts) => {
+      await this.readFile().then(async (added_artifacts) => {
         // Checks if any artifacts have been read from the file
         if (added_artifacts.length == 0) {
           // If no artifacts were added and no error was detected,
@@ -170,9 +170,7 @@ export class AddArtifactComponent {
       this.toastCommService.emitChange([false, "Invalid file type, should be .txt"])
       this.error = true;
       // Exists function
-      return new Promise((resolve) => {
-        resolve([])
-      })
+      return [];
     }
 
     // Creates a FileReader object, will be used to read the content of a file

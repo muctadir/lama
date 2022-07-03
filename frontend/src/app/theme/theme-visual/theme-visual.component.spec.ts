@@ -6,7 +6,6 @@ import { ThemeVisualComponent } from './theme-visual.component';
 describe('ThemeVisualComponent', () => {
   let component: ThemeVisualComponent;
   let fixture: ComponentFixture<ThemeVisualComponent>;
-  let router: Router
 
   // Initialize test environement
   beforeEach(async () => {
@@ -15,7 +14,6 @@ describe('ThemeVisualComponent', () => {
       imports: [RouterTestingModule]
     })
     .compileComponents();
-    router = TestBed.inject(Router)
   });
 
   // Before each test
