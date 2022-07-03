@@ -102,7 +102,7 @@ export class IndividualLabellingForm implements OnInit {
    * 
    * @param item the label name clicked / entered
    */
-  clickLabel(item: any) {
+  clickLabel(item: any): void {
     // Create a variable for the searched label
     let searchedLabel: Label | undefined;
     // For all labels, get the correct one
@@ -124,23 +124,23 @@ export class IndividualLabellingForm implements OnInit {
    * Function to get all labels in the project
    * Also gets the names of all labels
    */
-  async getLabels() {
+  async getLabels(): Promise<void> {
     // Get the ptoject id
     let p_id = this.reroutingService.getProjectID(this.router.url);
     // Get the labels
     let labels = await this.labelDataService.getLabelTypesWithLabels(parseInt(p_id));
 
     // Recursion of some sort
-    for (let label in labels) {
-      if (labels[label].getId() == this.labelType?.getId()) {
-        this.labels = labels[label].getLabels();
+    for (let label of labels) {
+      if (label.getId() == this.labelType?.getId()) {
+        this.labels = label.getLabels();
       }
     }
 
     // Get all label names
     this.allLabelsNames = [];
-    for (let label in this.labels) {
-      this.allLabelsNames.push(this.labels[label].getName());
+    for (let label of this.labels) {
+      this.allLabelsNames.push(label.getName());
     }
   }
 

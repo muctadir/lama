@@ -124,14 +124,14 @@ export class ProjectCreationComponent implements OnInit {
    */
   checkProjectData(projectInformation: Record<string, any>): boolean {
     // Checks whether the project name/description is non-empty
-    let checkFilled: boolean = this.service.checkFilled(projectInformation["project"]["name"]) &&
+    let checkFilled = this.service.checkFilled(projectInformation["project"]["name"]) &&
       this.service.checkFilled(projectInformation["project"]["description"])
 
     // checks whether the number of labeltypes is greater than 0
-    let moreThanOneLabelType: boolean = projectInformation["labelTypes"].length > 0;
+    let moreThanOneLabelType = projectInformation["labelTypes"].length > 0;
 
     // Checks whether all label types are non-empty
-    let labelFilled: boolean = true;
+    let labelFilled = true;
     for (const labeltype of projectInformation["labelTypes"]) {
       if (!this.service.checkFilled(labeltype)) {
         labelFilled = false;
@@ -157,7 +157,7 @@ export class ProjectCreationComponent implements OnInit {
     // For each user get the admin status
     for (let projectMember of this.projectMembers) {
       // Boolean indicating whether the user is an admin
-      let admin: boolean = false;
+      let admin = false;
       let adminCheckbox = document.getElementById("projectAdminCheckBox-" + projectMember.getUsername()) as HTMLInputElement;
       if (adminCheckbox != null) {
         admin = adminCheckbox?.checked;
@@ -227,10 +227,10 @@ export class ProjectCreationComponent implements OnInit {
   /**
    * Removes a member from the list of members to be added to the project
    * 
-   * @param id the id of the member that should be removed from the project
+   * @param member the member that should be removed from the project
    * @modifes projectMembers
    */
-  removeMember(member: any): void {
+  removeMember(member: User): void {
     // Go through all members
     this.projectMembers.forEach((projectMember, index) => {
       // If clicked cross matches the person, splice them from the members

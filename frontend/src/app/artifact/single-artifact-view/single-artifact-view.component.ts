@@ -43,7 +43,7 @@ export class SingleArtifactViewComponent implements OnInit {
   // Initialize boolean value that represent whether the labels in this page have been changed
   changed: boolean;
   // Whether the project is frozen
-  frozen: boolean = true;
+  frozen = true;
 
   /**
      * Constructor passes in the modal service and the artifact service,
@@ -176,17 +176,17 @@ export class SingleArtifactViewComponent implements OnInit {
    * Function that sends a request to the backend to store 
    * the labellings in this page into the database
    */
-  async updateLabellings() {
+  async updateLabellings(): Promise<void> {
     try {
       // Make the request to the backend
       await this.labellingDataService.updateLabellings(
-        this.admin, this.p_id, this.a_id, this.username, this.userLabels)
+        this.admin, this.p_id, this.a_id, this.username, this.userLabels);
       // If the request was met successfully, display a success toast
-      this.toastCommService.emitChange([true, "New labels saved successfully!"])
+      this.toastCommService.emitChange([true, "New labels saved successfully!"]);
       // If there was an error while saving the labellings, display an error toast
     } catch (error) {
-      this.toastCommService.emitChange([false, "Something went wrong while saving."])
+      this.toastCommService.emitChange([false, "Something went wrong while saving."]);
     }
-    this.ngOnInit()
+    this.ngOnInit();
   }
 }

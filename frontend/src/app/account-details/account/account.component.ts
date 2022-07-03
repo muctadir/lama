@@ -1,5 +1,5 @@
-// Veerle Furst
-// Jarl Jansen
+// @Author Veerle Furst
+// @Author Jarl Jansen
 
 import { Component } from '@angular/core';
 import { AccountInfoService } from 'app/services/account-info.service';
@@ -17,7 +17,7 @@ export class AccountComponent {
   user: any;
 
   /* Page currently getting viewed, 0 = info page, 1 = edit page, 2 = edit password page */
-  mode: number = 0;
+  mode = 0;
 
   /**
    * Initializes the services which will be used by this component
@@ -34,7 +34,7 @@ export class AccountComponent {
    * @trigger on component load
    */
   ngOnInit(): void {
-    this.getInformation()
+    this.getInformation();
   }
 
   /**

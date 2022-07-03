@@ -103,19 +103,8 @@ export class AccountChangePasswordComponent {
       // Emits a success toast
       this.toastCommService.emitChange([true, "Password changed"]);
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if (e.response.status == 511) {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else {
-        // Sets the error message of the toast
-        let message: string = "An unknown error occurred";
-        if (e instanceof AxiosError) {
-          message = e.response?.data;
-        }
-        // Emits the error toast
-        this.toastCommService.emitChange([false, message]);
-      }
+      // Toast with error message
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 }

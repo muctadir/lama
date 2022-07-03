@@ -32,7 +32,7 @@ export class ArtifactManagementPageComponent {
   // A page number maps to a list of artifacts on that page
   artifacts: Record<number, Array<StringArtifact>> = {};
   // Number of artifacts
-  nArtifacts: number = 0;
+  nArtifacts = 0;
   // Number of label types
   nLabelTypes: number;
 
@@ -48,7 +48,8 @@ export class ArtifactManagementPageComponent {
     search_term: ''
   });
 
-  frozen: boolean = true;
+  // Whether the project is frozen
+  frozen = true;
 
 
   /**
@@ -84,7 +85,7 @@ export class ArtifactManagementPageComponent {
   /**
    * Function for searching based on clicking on the magnifying glass
    */
-  searchClick(){
+  searchClick(): void {
     // Get the search image
     let searchBar = document.getElementById("searchBar")
     if (searchBar != null){
@@ -96,7 +97,7 @@ export class ArtifactManagementPageComponent {
           // When clicked in the maginifying glass
           if (x > 330) {
             // Search
-            this.onEnter()
+            this.onEnter();
           }
         }
       }
@@ -166,7 +167,7 @@ export class ArtifactManagementPageComponent {
   }
 
   // Open the modal
-  open() {
+  open(): void {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
     modalRef.result.then((data) => {
       this.ngOnInit();
@@ -174,7 +175,7 @@ export class ArtifactManagementPageComponent {
   }  
   
   // Gets the search text
-  async onEnter() {
+  async onEnter(): Promise<void> {
     // Search text
     var text = this.searchForm.value.search_term;
     // Get p_id

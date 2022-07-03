@@ -18,7 +18,7 @@ export class ModerationComponent {
   users: User[] = [];
 
   /* Page currently getting viewed, 0 = page with all users, 1 = edit page account details, 2 = edit password page */
-  mode: number = 0;
+  mode = 0;
 
   /**
    * Initializes AccountInfoService
@@ -90,7 +90,7 @@ export class ModerationComponent {
    * @param deluser user to be deleted
    * @trigger delete button is clicked for @deluser
    */
-  async softDelete(deluser: User): Promise<void> {
+  softDelete(deluser: User): void {
     let modalRefrence = this.modalService.open(ConfirmModalComponent, {});
 
     // Listens for an event emitted by the modal

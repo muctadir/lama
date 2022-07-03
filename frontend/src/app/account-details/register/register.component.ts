@@ -1,5 +1,5 @@
-// Veerle Furst
-// Jarl Jansen
+// @Author Veerle Furst
+// @Author Jarl Jansen
 
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -74,7 +74,7 @@ export class RegisterComponent {
       return;
     }
 
-    this.register()
+    this.register();
   }
 
   /**

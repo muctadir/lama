@@ -195,7 +195,7 @@ describe('EditAccountSettingsComponent', () => {
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", { status: 511, data: "some_error_message" });
+    let dummyError = new TestError("bad error", { status: 511, data: "Input contains a forbidden character" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -203,7 +203,7 @@ describe('EditAccountSettingsComponent', () => {
     await component.makeRequest(input);
     // Checks the calls
     expect(spyRequest).toHaveBeenCalledWith(input);
-    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
+    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character"]);
   });
 
   it('Tests the makeRequest function in case of error with status != 511, but data specific', async () => {
@@ -237,7 +237,7 @@ describe('EditAccountSettingsComponent', () => {
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", { status: 420, data: "some_error_message" });
+    let dummyError = new TestError("bad error", { status: 420, data: "Please enter valid details!" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");

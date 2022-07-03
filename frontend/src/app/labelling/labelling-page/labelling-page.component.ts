@@ -40,7 +40,7 @@ export class LabellingPageComponent implements OnInit {
   /**
    * Information concerning the cutting
    */
-  hightlightedText: string = '';
+  hightlightedText = '';
   selectionStartChar?: number;
   selectionEndChar?: number;
 
@@ -57,7 +57,7 @@ export class LabellingPageComponent implements OnInit {
   startTime: any;
   endTime: any;
 
-  hidden: boolean = false;
+  hidden = false;
 
   /**
    * Constructor passes in the modal service and the labelling data service
@@ -446,17 +446,17 @@ export class LabellingPageComponent implements OnInit {
   }
 
   // Fixes the position of the start character of a word
-  endPosFixer(endPos: number) {
+  endPosFixer(endPos: number): number {
     // Gets char at end of the word
     let chend = this.artifact?.data.charAt(endPos);
     // See if the last char is correct to begin with
     if (chend == ' ' || endPos == this.artifact.data.length) {
-      return endPos
+      return endPos;
     }
     // Fix such that the next word is not accidentally selected
     if (this.artifact?.data.charAt(endPos - 1) == ' ') {
       endPos--
-      return endPos
+      return endPos;
     }
     // Else, move until we find a space or hit the end of artifact
     while (chend != ' ' && endPos < this.artifact?.data.length) {

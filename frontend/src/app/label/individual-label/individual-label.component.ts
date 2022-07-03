@@ -2,7 +2,7 @@
  * Author: Victoria Bogachenkova
  * Author: Bartjan Henkemans
  */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Router } from '@angular/router';
@@ -29,7 +29,7 @@ export class IndividualLabelComponent {
   p_id: number;
   label_id: number;
   labelCount: number;
-  frozen: boolean = true;
+  frozen = true;
   /**
    * Constructor which:
    * 1. makes an empty label
@@ -115,7 +115,7 @@ export class IndividualLabelComponent {
   /**
    * Post of the soft delete
    */
-  async postSoftDelete() {
+  async postSoftDelete(): Promise<void> {
     let artifacts = this.label.getArtifacts()
     if(artifacts != undefined){
       if(artifacts.length != 0){
@@ -171,7 +171,7 @@ export class IndividualLabelComponent {
   /**
    * Opens modal to edit label
    */
-  openEdit() {
+  openEdit(): void {
     // Open the modal
     const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl' });
     // Get the label from the modal

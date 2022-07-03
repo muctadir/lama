@@ -82,7 +82,7 @@ export class HomePageComponent implements OnInit {
         sessionStorage.removeItem('ses_token');
 
         // Navigates to the login page
-        this.route.navigate(['/login'])
+        this.route.navigate(['/login']);
 
         // Logged out popup
         this.toastCommService.emitChange([true, "Logged out successfully"]);

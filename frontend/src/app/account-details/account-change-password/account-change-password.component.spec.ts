@@ -218,7 +218,7 @@ describe('AccountChangePasswordComponent', () => {
     let input = { "id": 5, "password": "old_passw", "newPassword": "new_passw" };
 
     // Creates dummyError 
-    let dummyError = new TestError("bad error", { status: 420 })
+    let dummyError = new TestError("bad error", { status: 420, data: 'An unknown error occurred' })
 
     // Creates the spies for the different function calls
     let spyR = spyOn(component["accountInfoService"], "changePassword").and.throwError(dummyError);
