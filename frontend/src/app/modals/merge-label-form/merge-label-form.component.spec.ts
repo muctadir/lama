@@ -171,7 +171,7 @@ describe('MergeLabelFormComponent', () => {
     let lt = new LabelType(1, "lt1", [label]);
     component.form.controls["labelType"].setValue(lt);
 
-    // creates dummy labels
+    // Creates dummy labels
     let label1 = new Label(1, "label1", "desc1", "type1");
     let label2 = new Label(2, "label2", "desc2", "type2");
     // Create the dummy forms for the labels
