@@ -17,7 +17,7 @@ describe('AppToastService', () => {
   });
 
   it('should add a new toast to the list', () => {
-    // creates the spy
+    // Creates the spy
     let spy = spyOn(service["toasts"], "push");
 
     // Calls the function to add a new toast to the list
