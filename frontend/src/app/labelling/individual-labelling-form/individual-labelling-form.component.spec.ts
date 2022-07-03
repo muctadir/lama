@@ -174,7 +174,7 @@ describe('LabellingTypeComponent', () => {
     // Triggers listener
     component["labelForm"].controls["label"].setValue(label);
 
-    // does the check whether no error occurs
+    // Does the check whether no error occurs
     expect(component).toBeTruthy();
   });
 
