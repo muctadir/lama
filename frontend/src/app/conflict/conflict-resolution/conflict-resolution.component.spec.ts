@@ -244,7 +244,7 @@ describe('ConflictResolutionComponent', () => {
     // Creates some spies
     spyOn(component, "startPosFixer").and.returnValue(100);
     spyOn(component, "endPosFixer").and.returnValue(200);
-    // spy for service
+    // Spy for service
     let spyServ = spyOn(component["artifactDataService"], "postSplit").and.returnValue(Promise.resolve(3));
     let spyToast = spyOn(component["toastCommService"], "emitChange");
 
