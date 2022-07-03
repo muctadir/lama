@@ -198,7 +198,7 @@ describe('MergeLabelFormComponent', () => {
   });
 
   it('should submit the merging of labels when they are null', async () => {
-    // create the spy for the backend call
+    // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge").and.returnValue(Promise.resolve("Success"));
 
     // ensures we dont get stuck on the if statement
