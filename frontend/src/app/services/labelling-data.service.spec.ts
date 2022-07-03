@@ -146,7 +146,7 @@ describe('LabellingDataService', () => {
     let spy = spyOn(service.requestHandler, "patch");
   
     // Calls the function to be tested
-    await service.editLabel(8, label, 3);
+    await service.editLabel(8, label);
 
     let result = {
       labelId: 1,

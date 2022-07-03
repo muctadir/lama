@@ -224,7 +224,6 @@ describe('ThemeInfoComponent', () => {
     await component.createTheme();
 
     let output = {
-      "id": 1,
       "name": "theme1",
       "description": "desc1",
       "labels": [l1],

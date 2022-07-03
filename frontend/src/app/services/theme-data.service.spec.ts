@@ -354,7 +354,7 @@ describe('ThemeDataService', () => {
 
     // Test if the function works
     expect(spy).toHaveBeenCalled();
-    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
+    expect(spyToast).toHaveBeenCalled();
     expect(response).toEqual("An error occured");
   });
 
@@ -409,7 +409,7 @@ describe('ThemeDataService', () => {
   it('should try to create a theme, but an error occurs case 5', async () => {
     // Spy on the get from the request handler, throws error
     let spy = spyOn(service['requestHandler'], "post")
-      .and.throwError(new TestError("msg", {data: ":)"}));
+      .and.throwError(new TestError("msg", {data: "An error occured when trying to create the theme"}));
     // spy for the toast emitted
     let spyToast = spyOn(service["toastCommService"], "emitChange");
 
@@ -454,7 +454,7 @@ describe('ThemeDataService', () => {
   
   it('should try to edit a theme, but an error occurs case 1', async () => {
     // Spy on the get from the request handler, throws error
-    let spy = spyOn(service['requestHandler'], "post").and.throwError(new TestError("msg", {status: 511}));
+    let spy = spyOn(service['requestHandler'], "post").and.throwError(new TestError("msg", {data: "Input contains a forbidden character: \\ ; , or #"}));
     // spy for the toast emitted
     let spyToast = spyOn(service["toastCommService"], "emitChange");
 
@@ -479,7 +479,7 @@ describe('ThemeDataService', () => {
 
     // Test if the function works
     expect(spy).toHaveBeenCalled();
-    expect(spyToast).toHaveBeenCalledWith([false, "Input contains leading or trailing whitespaces"]);
+    expect(spyToast).toHaveBeenCalled();
     expect(response).toEqual("An error occured");
   });
 
@@ -518,7 +518,7 @@ describe('ThemeDataService', () => {
   it('should try to edit a theme, but an error occurs case 5', async () => {
     // Spy on the get from the request handler, throws error
     let spy = spyOn(service['requestHandler'], "post")
-      .and.throwError(new TestError("msg", {data: ":)"}));
+      .and.throwError(new TestError("msg", {data: "An error occured when trying to edit the theme"}));
     // spy for the toast emitted
     let spyToast = spyOn(service["toastCommService"], "emitChange");
 

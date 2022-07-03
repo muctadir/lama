@@ -8,7 +8,6 @@ import { User } from 'app/classes/user';
 import { LabellingPageComponent } from './labelling-page.component';
 import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { FormBuilder } from '@angular/forms';
 
 /**
  * Testing suite for the labelling page

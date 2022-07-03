@@ -115,7 +115,7 @@ describe('AccountInfoService', () => {
     }
   
     // Checks whether output is correct
-    expect(error).toEqual(new Error("Could not get data from server"));
+    expect(error).toEqual(new Error("Could not get the data from server"));
   });
 
   it('should make the backend call to for permission', async () => {

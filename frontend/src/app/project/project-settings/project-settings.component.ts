@@ -246,7 +246,11 @@ export class ProjectSettingsComponent implements OnInit {
     }
     catch(e: any) {
       // Emits an error toast
-      this.toastCommService.emitChange([false, e.response.data]);
+      console.log("AAAAAAAAA")
+      console.log(e)
+      let message;
+      if (e instanceof Error) message = e.message
+      this.toastCommService.emitChange([false, message]);
       this.unclickEdit();
     }
   }

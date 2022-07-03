@@ -9,16 +9,7 @@ import { of } from 'rxjs';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
 import { Router } from '@angular/router';
 
-// Class used to create custom errors
-export class TestError extends Error {
-  response: any;
-  constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
-  }
-}
-
-/**
+/*
  * Test bed for the project settings component
  */
 describe('ProjectSettingsComponent', () => {
@@ -244,7 +235,7 @@ describe('ProjectSettingsComponent', () => {
 
   it('should send an update project settings request, but an error 511 occurs', async () => {
     // Creates a spy for the backend call
-    let spy = spyOn(component["requestHandler"], "patch").and.throwError(new TestError("msg", {status: 511}));
+    let spy = spyOn(component["requestHandler"], "patch").and.throwError(new Error("Input contains a forbidden character: \\ ; , or #"));
     // Creates a spy for the toasts
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Create spy for function call
@@ -264,7 +255,7 @@ describe('ProjectSettingsComponent', () => {
   it('should send an update project settings request, but a whitespace error occurs', async () => {
     // Creates a spy for the backend call
     let spy = spyOn(component["requestHandler"], "patch")
-      .and.throwError(new TestError("msg", {status: 69, data: "Input contains leading or trailing whitespaces"}));
+      .and.throwError(new Error("Input contains leading or trailing whitespaces"));
     // Creates a spy for the toasts
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Create spy for function call
@@ -284,7 +275,7 @@ describe('ProjectSettingsComponent', () => {
   it('should send an update project settings request, but an error occurs', async () => {
     // Creates a spy for the backend call
     let spy = spyOn(component["requestHandler"], "patch")
-      .and.throwError(new TestError("msg", {status: 69, data: "something"}));
+      .and.throwError(new Error("An error occured while creating the theme"));
     // Creates a spy for the toasts
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Create spy for function call

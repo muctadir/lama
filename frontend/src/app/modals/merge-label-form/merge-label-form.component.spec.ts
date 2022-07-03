@@ -290,7 +290,7 @@ describe('MergeLabelFormComponent', () => {
 
     // Checks whether remove function was called
     expect(spy).toHaveBeenCalled();
-    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
+    expect(spyToast).toHaveBeenCalled();
   });
 
   it('should submit the merging of labels, but error with whitespace error', async () => {
@@ -404,7 +404,7 @@ describe('MergeLabelFormComponent', () => {
   it('should submit the merging of labels, but error with taken label name error', async () => {
     // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge")
-      .and.throwError(new TestError("test", {status: 69, data: "Label name already exists"}));
+      .and.throwError(new TestError("test", {status: 69, data: "Label name already exists."}));
 
     // Creates spy for the remove function
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -440,7 +440,7 @@ describe('MergeLabelFormComponent', () => {
   it('should submit the merging of labels, but error with other error', async () => {
     // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge")
-      .and.throwError(new TestError("test", {status: 69, data: "something"}));
+      .and.throwError(new TestError("test", {status: 69, data: "Something went wrong while merging"}));
 
     // Creates spy for the remove function
     let spyToast = spyOn(component["toastCommService"], "emitChange");
