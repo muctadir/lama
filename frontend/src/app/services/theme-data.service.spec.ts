@@ -246,7 +246,7 @@ describe('ThemeDataService', () => {
     // Calls the function to be tested
     let result = service.createLabels(label_info);
 
-    // checks whether the result is equivalent to the expected result
+    // Checks whether the result is equivalent to the expected result
     expect(result).toEqual([label1, label2]);
   });
 
