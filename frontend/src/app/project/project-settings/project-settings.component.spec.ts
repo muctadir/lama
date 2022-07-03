@@ -91,7 +91,7 @@ describe('ProjectSettingsComponent', () => {
   it('should get the users from the backend, but an error occurs', async () => {
     // Creates the spies
     let spy = spyOn(component["requestHandler"], "get").and.throwError(new Error("test"));
-    // create spy for the toast
+    // Create spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
 
     // Calls the function to be tested
