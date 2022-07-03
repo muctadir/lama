@@ -207,7 +207,7 @@ describe('MergeLabelFormComponent', () => {
     // Creates spy for the remove function
     let spyToast = spyOn(component["toastCommService"], "emitChange");
 
-    // ensures we are testing the null branch for the form
+    // Ensures we are testing the null branch for the form
     spyOn(component["form"], "get").and.returnValue(null);
 
     // Spy on the modal close
