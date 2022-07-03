@@ -137,10 +137,8 @@ export class ArtifactManagementPageComponent {
     for (let i: number = page - 1; i >= 1; i--) {
       // See if we have already retrieved artifacts for that page
       if (this.artifacts.hasOwnProperty(i)) {
-        console.log("sus")
         // Get the artifacts for that page
         let artifacts: StringArtifact[] = this.artifacts[i];
-        console.log
         // Get the index of the last artifact (the largest index)
         let seekIndex: number = artifacts[artifacts.length - 1].getId();
         // The index can be used to exclude artifacts from the query (before the offset)

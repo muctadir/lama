@@ -173,8 +173,7 @@ describe('ArtifactManagementPageComponent', () => {
 
     // Set the artifacts
     component.artifacts = { 1: artifacts.slice(0, 5), 2: artifacts.slice(5, 8) }
-    console.log(component.getSeekInfo(1))
-    expect(component.artifacts.hasOwnProperty(1)).toEqual(true)
+
     // Check that getSeekInfo returns the right values
     expect(component.getSeekInfo(1)).toEqual([0, 0])
     expect(component.getSeekInfo(2)).toEqual([5, 1])
