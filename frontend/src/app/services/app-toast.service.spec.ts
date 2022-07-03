@@ -31,7 +31,7 @@ describe('AppToastService', () => {
     // Initialize some dummy values
     service.toasts = ["c", "a"];
 
-    // creates the spy
+    // Creates the spy
     let spy = spyOn(service["toasts"], "filter").and.callThrough();
 
     // Calls the function to remove a toast from the list
