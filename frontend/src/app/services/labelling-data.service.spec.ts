@@ -49,7 +49,6 @@ describe('LabellingDataService', () => {
     expect(result).toEqual([l1, l2]);
   });
 
-
   it('should get the label from the backend', async () => {
     // creates the spy which stubs the call and returns dummy data
     let spy = spyOn(service.requestHandler, "get").and.returnValue(Promise.resolve(
