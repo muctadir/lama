@@ -31,7 +31,7 @@ describe('ToastGlobalComponent', () => {
     // Creates the spy for the function call we are making
     let spy = spyOn(component["toastService"], "clear");
 
-    // calls function
+    // Calls function
     component.ngOnDestroy();
 
     // Does the final checks
