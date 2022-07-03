@@ -203,7 +203,7 @@ describe('LabellingTypeComponent', () => {
       )
     );
 
-    // calls function to be tested
+    // Calls function to be tested
     await component.getLabels();
 
     // Basic checks
