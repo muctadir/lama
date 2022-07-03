@@ -24,10 +24,10 @@ export class ProjectSettingsComponent implements OnInit {
   currentProject: Project;
 
   /* Current user ID */
-  currentUserId: number = 0;
+  currentUserId = 0;
 
   /* Super admin ID */
-  superAdminID: number = 0;
+  superAdminID = 0;
 
   /* Array of current members of the project */
   projectMembers: User[] = [];
@@ -52,7 +52,7 @@ export class ProjectSettingsComponent implements OnInit {
   /* Array of label types for project */
   labelTypes: string[] = [];
   /* Boolean showing if the page is in edit mode, default is false */
-  isInEditMode: boolean = false;
+  isInEditMode = false;
 
   /* FormGroup which will hold the different information of the project */
   projectForm: FormGroup;
@@ -157,7 +157,7 @@ export class ProjectSettingsComponent implements OnInit {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for current project information
-      let response: any = requestHandler.get("/project/settings", { 'p_id': this.currentProject.getId() }, true);
+      let response = requestHandler.get("/project/settings", { 'p_id': this.currentProject.getId() }, true);
 
       // Waits on the request
       let result = await response;
@@ -375,7 +375,7 @@ export class ProjectSettingsComponent implements OnInit {
    *
    * @modifies projectMembers, adminMembers, removed, added, allProjectMembers
    */
-  addMember(user: User, admin: boolean) {
+  addMember(user: User, admin: boolean): void {
     // If user is previously removed (from the front end, not yet in the back end)
     if (user.getId() in this.removedMembers) {
       // Remove them from the removed members list
@@ -409,7 +409,7 @@ export class ProjectSettingsComponent implements OnInit {
    *
    * @modifies projectMembers, adminMembers, removed, added, allProjectMembers, removedMembers
    */
-  removeMember(user: User) {
+  removeMember(user: User): void {
     //If user is previously added (in the front end, not yet in the back end)
     if (user.getId() in this.added) {
       //Remove user from list of project members (old and current)
@@ -487,16 +487,11 @@ export class ProjectSettingsComponent implements OnInit {
     try {
       // Makes the request and handles response
       // Makes the request to the backend for current project information
-      let response: any = requestHandler.patch("/project/freeze", { 'p_id': sendingInfo["p_id"], 'frozen': sendingInfo["frozen"] }, true);
+      await requestHandler.patch("/project/freeze", { 'p_id': sendingInfo["p_id"], 'frozen': sendingInfo["frozen"] }, true);
 
-      // Waits on the request
-      let result = await response;
-      if (result == "Ok") {
-        // Emits an error toast
-        this.toastCommService.emitChange([true, "Success"]);
-      }
-    }
-    catch {
+      // Show success toast
+      this.toastCommService.emitChange([true, "Success"]);
+    } catch {
       // Emits an error toast
       this.toastCommService.emitChange([false, "An error occured when loading data from the server"]);
     }

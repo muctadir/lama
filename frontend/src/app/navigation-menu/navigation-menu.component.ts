@@ -16,7 +16,7 @@ export class NavigationMenuComponent {
    * Changes the sizing of the navigation component 
    * based on whether the menu should be collapsed or not
    */
-  @HostBinding('style.width') get className() {
+  @HostBinding('style.width') get className(): string {
     // if the navigation bar is collapsed set size to col-1
     if (this.collapsed) {
       return '8.3333333333%';

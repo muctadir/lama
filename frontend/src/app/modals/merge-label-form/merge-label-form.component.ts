@@ -61,7 +61,7 @@ export class MergeLabelFormComponent {
   }
 
   // Gets the ,erged labels
-  get toBeMergedLabels() {
+  get toBeMergedLabels(): FormArray {
     return this.form.controls['toBeMergedLabels'] as FormArray;
   }
 

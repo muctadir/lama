@@ -46,7 +46,6 @@ export class LabellingDataService {
         new Label(r.label.id, r.label.name, r.label.description, r.label_type)
       );
     });
-
     return result;
   }
 

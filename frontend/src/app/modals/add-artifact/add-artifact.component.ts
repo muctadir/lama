@@ -26,7 +26,7 @@ export class AddArtifactComponent {
   url: string;
 
   /* Whether the message is an error */
-  error: boolean = false;
+  error = false;
 
   /**
    * Initializes the modal
@@ -146,7 +146,7 @@ export class AddArtifactComponent {
        * @param pid number, the id of the project
        * @param artifacts record, has the data of all the artifacts that need to be added
        */
-  async addArtifacts(pid: number, artifacts: Record<string, any>[]) {
+  async addArtifacts(pid: number, artifacts: Record<string, any>[]): Promise<void> {
     let response = await this.artifactDataService.addArtifacts(pid, artifacts);
     // Indicates that the upload was successful
     this.toastCommService.emitChange([true, "Upload successful. Artifact identifier: ".concat(response['identifier'])])

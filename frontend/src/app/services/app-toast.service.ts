@@ -9,17 +9,17 @@ export class AppToastService {
   toasts: any[] = [];
 
   // Show the toast
-  show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
+  show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {
     this.toasts.push({ textOrTpl, ...options });
   }
 
   // Remove the toast from the array
-  remove(toast: any) {
+  remove(toast: any): void {
     this.toasts = this.toasts.filter(t => t !== toast);
   }
 
   // Clear the toast from the array
-  clear() {
+  clear(): void {
     this.toasts.splice(0, this.toasts.length);
   }
 }

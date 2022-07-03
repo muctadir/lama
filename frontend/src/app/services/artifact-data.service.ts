@@ -95,8 +95,7 @@ export class ArtifactDataService {
     }
     // Send the data to the database
     try {
-      let result = await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
-      return result;
+      return await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
     } catch {
       this.toastCommService.emitChange([false, "File formatted incorrect."])
       throw new Error("bad formatting");
@@ -280,8 +279,6 @@ export class ArtifactDataService {
       start: start,
       end: end,
       data: data
-    },
-      true
-    )
+    }, true)
   }
 }

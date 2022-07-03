@@ -16,7 +16,7 @@ export class ReroutingService {
    * @param index which occurence we are looking for
    * @returns the index of the start of substring
    */
-  getPosition(string: string, subString: string, index: number) {
+  getPosition(string: string, subString: string, index: number): number {
     return string.split(subString, index).join(subString).length;
   }
 

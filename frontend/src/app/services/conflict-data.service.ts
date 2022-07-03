@@ -60,9 +60,8 @@ export class ConflictDataService {
    */
   async getLabelPerUser(p_id: number, a_id: number, lt_id: number): Promise<Record<string, any>> {
     // Make call to the backend to get label and return the response
-    let response = await this.requestHandler.get('/conflict/LabelPerUser',
+    return this.requestHandler.get('/conflict/LabelPerUser',
       { 'p_id': p_id, 'a_id': a_id, 'lt_id': lt_id }, true);
-    return response
   }
 
   /**
@@ -73,8 +72,7 @@ export class ConflictDataService {
    */
   async getLabelsByType(p_id: number, lt_id: number): Promise<Array<Record<string, any>>> {
     // Make call to the backend to get labels from a label type in a project and return the response
-    let response = await this.requestHandler.get('/labeltype/labelsByType',
+    return this.requestHandler.get('/labeltype/labelsByType',
       { 'p_id': p_id, 'lt_id': lt_id }, true);
-    return response;
   }
 }

@@ -31,7 +31,7 @@ export class HistoryComponent {
    * @trigger on component creation
    * @modifies changelog
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.getHistoryData();
   }
 
@@ -41,7 +41,7 @@ export class HistoryComponent {
    * 
    * @modifies @changelog
    */
-  async getHistoryData() {
+  async getHistoryData(): Promise<void> {
     this.changelog = await this.historyService.getHistory(this.history_type);
   }
 }

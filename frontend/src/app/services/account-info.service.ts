@@ -65,7 +65,7 @@ export class AccountInfoService {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
-      let response: any = await this.requestHandler.get("/project/users", {}, true);
+      let response = await this.requestHandler.get("/project/users", {}, true);
 
       // Loops over the response of the server and parses the response into the allMembers array
       for (let user of response) {
@@ -112,7 +112,7 @@ export class AccountInfoService {
   async makeAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response: any = this.requestHandler.get("/auth/check_login", {}, true);
+      let response = this.requestHandler.get("/auth/check_login", {}, true);
 
       // Waits on the request
       await response;
@@ -164,13 +164,19 @@ export class AccountInfoService {
    */
   async registerUser(registerInformation: Record<string, any>): Promise<any> {
     try {
-      await this.requestHandler.post('auth/register', registerInformation, false)
+      await this.requestHandler.post('auth/register', registerInformation, false);
     } catch (e) {
       throw e;
     }
   }
 
-
+  /**
+   * Login the users
+   * 
+   * @param user 
+   * @returns response of login
+   * @throws error is an error occurs
+   */
   async loginUser(user: Record<string, any>): Promise<any> {
     try {
       return await this.requestHandler.post('auth/login', user, false);
