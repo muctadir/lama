@@ -173,7 +173,7 @@ describe('ProjectSettingsComponent', () => {
   it('should get the current project, but an error occurs', async () => {
     // Creates a spy for the backend call, returns dummy values
     let spy = spyOn(component["requestHandler"], "get").and.throwError(new Error("test"));
-    // makes spy for the toast
+    // Makes spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
 
     await component.requestCurrentProject();
