@@ -50,7 +50,7 @@ describe('ToastGlobalComponent', () => {
   });
 
   it('should test the subscription case 2', () => {
-    // creates the spy
+    // Creates the spy
     let spy = spyOn(component["toastService"], "show");
 
     // Emits a toast
