@@ -321,7 +321,7 @@ describe('ProjectSettingsComponent', () => {
     let spy1 = spyOn(component, "setCurrenProjectInfo");
     // Creates the spy on the service
     let spy2 = spyOn(component["editModeService"].isInEditMode, "next");
-    // creates spy for final function call
+    // Creates spy for final function call
     let spy3 = spyOn(component, "sendUpdateRequest");
 
     // Sets some initial values
