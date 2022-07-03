@@ -104,7 +104,7 @@ export class ProjectSettingsComponent implements OnInit {
   ngOnInit(): void {
     // Get all users within the tool
     this.requestUsers();
-    //Get information about current project
+    // Get information about current project
     this.requestCurrentProject();
   }
 
