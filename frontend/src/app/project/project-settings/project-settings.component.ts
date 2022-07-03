@@ -460,7 +460,7 @@ export class ProjectSettingsComponent implements OnInit {
    * @trigger Button "Freeze" or "Unfreeze" is clicked
    */
   changeFreezeProject(frozenStatus: boolean, editMode: boolean): void {
-    //Setting project's frozen status to true, and go back to non-edit mode
+    // Setting project's frozen status to true, and go back to non-edit mode
     this.currentProject.setFrozen(frozenStatus);
     this.editModeService.isInEditMode.next(editMode);
     //Update the frozen status to the back-end
