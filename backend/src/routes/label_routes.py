@@ -130,10 +130,13 @@ def edit_label(*, user):
     # Check if the label name is unique
     try:
         if label_name_taken(args["labelName"], args['labelId'], args['p_id']):
+            # Send error if the name is taken
             return make_response("Label name already exists", 400)
     except OperationalError as err:
+        # If a wrong character was passed to the database
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Another error occured
         else:
             return make_response("Bad request", 400)
 
@@ -262,11 +265,15 @@ def merge_route(*, user):
 
     # Check if label name is taken
     try:
+        # If taken send response
         if label_name_taken(args['newLabelName'], 0, args['p_id']):
             return make_response("Label name already exists", 400)
+    # If something went wrong with checking, send back error
     except OperationalError as err:
+        # Illegal character given to database
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Other error
         else:
             return make_response("Bad request", 400)
 

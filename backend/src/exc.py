@@ -6,6 +6,7 @@ This file contains exceptions we use for the app
 
 # The parser for the changelogs tried to parse a change that was incorrectly formatted
 class ChangeSyntaxError(Exception):
+    # Pass
     pass
 
 # Theme cycle class
@@ -19,4 +20,5 @@ class ThemeCycleDetected(Exception):
 # The programmer tried testing a route that requires being authenticated, 
 # without simulating authentication
 class TestAuthenticationError(Exception):
+    # Pass
     pass

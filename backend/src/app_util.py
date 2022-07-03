@@ -167,7 +167,7 @@ def login_required(f):
             if 'user' in getfullargspec(f).kwonlyargs:
                 kwargs['user'] = user
             return f(*args, **kwargs)
-        except OperationalError as e:
+        except OperationalError:
             # Database error
             return make_response('Service Unavailable', 503)
         except InvalidSignatureError:
@@ -212,7 +212,7 @@ def super_admin_required(f):
             if 'super_admin' in getfullargspec(f).kwonlyargs:
                 kwargs['super_admin'] = user
             return f(*args, **kwargs)
-        except OperationalError as e:
+        except OperationalError:
             # Database error
             return make_response('Service Unavailable', 503)
         except InvalidSignatureError:

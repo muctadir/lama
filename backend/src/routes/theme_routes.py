@@ -239,10 +239,13 @@ def create_theme(*, user):
     # Check if the theme name is unique
     try:
         if theme_name_taken(args["name"], 0):
+            # Respond that theme name already exists
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
+        # An illegal character was passed to the database
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Another error occured
         else:
             return make_response("Bad request", 400)
 
@@ -338,10 +341,13 @@ def edit_theme(*, user):
     # Check if the theme name is unique
     try:
         if theme_name_taken(args["name"], args["id"]):
+            # Theme name already exists in the database
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
+        # A character was passed to the database that the database cannot handle
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Another error occured while querying
         else:
             return make_response("Bad request", 400)
 
@@ -1011,9 +1017,7 @@ def __get_super_themes(t_id):
     )
 
     try:
-
         results = db.session.execute(select(super_themes)).all()
-
     except OperationalError as e:
         # CTEs are limited so I am not aware of a way to stop the recursion early (DISTINCT not allowed for CTE)
         # So currently we catch an exception and check the error code
