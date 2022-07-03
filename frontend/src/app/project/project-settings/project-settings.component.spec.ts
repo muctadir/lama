@@ -280,7 +280,7 @@ describe('ProjectSettingsComponent', () => {
 
     // Checks the call for the backend
     expect(spy).toHaveBeenCalled();
-    // checks the toast emitted
+    // Checks the toast emitted
     expect(spyToast).toHaveBeenCalledWith([false, "An error occured while creating the theme"]);
     // checks the function call at the end of the error block
     expect(spy2).toHaveBeenCalled();
