@@ -103,7 +103,7 @@ describe('MergeLabelFormComponent', () => {
     let label = new Label(1, "label1", "desc1", "type1");
     let lt = new LabelType(1, "lt1", [label]);
 
-    // spies on the backend call
+    // Spies on the backend call
     spyOn(component["labellingDataService"], "getLabelTypesWithLabels").and.returnValue(Promise.resolve([lt]));
 
     // Calls the function to test
