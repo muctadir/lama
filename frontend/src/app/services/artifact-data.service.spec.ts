@@ -272,7 +272,7 @@ describe('ArtifactDataService', () => {
 
     // Checks whether spy was called
     expect(spy).toHaveBeenCalled();
-    // checks whether the return data is correct
+    // Checks whether the return data is correct
     let art = new StringArtifact(1, "id1", "text1");
     art.setLabellings([[1,2], [3, 4]]);
     expect(result).toEqual([art])
