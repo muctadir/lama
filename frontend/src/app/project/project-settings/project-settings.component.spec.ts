@@ -206,7 +206,7 @@ describe('ProjectSettingsComponent', () => {
     // Creates a spy for the toasts
     let spyToast = spyOn(component["toastCommService"], "emitChange");
 
-    // initializes some values
+    // Initializes some values
     component.allProjectMembers[1] = new User(1, "user1");
     component.allProjectMembers[2] = new User(2, "user2");
     component.added[1] = 1;
