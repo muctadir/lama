@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppToastService } from './app-toast.service';
 
 /**
- * test suite for the app toasts
+ * Test suite for the app toasts
  */
 describe('AppToastService', () => {
   let service: AppToastService;
