@@ -301,7 +301,7 @@ describe('ThemeDataService', () => {
   it('should get the themes without parents, but an error occurs', async () => {
     // Creates a spy for the backend call, and throws error
     let spy = spyOn(service.requestHandler, "get").and.throwError(new Error("some error"))
-    // creates a spy for the toast
+    // Creates a spy for the toast
     let spyToast = spyOn(service["toastCommService"], "emitChange")
 
     // calls the function which we want to test
