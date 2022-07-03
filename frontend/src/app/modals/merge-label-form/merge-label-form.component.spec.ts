@@ -160,7 +160,7 @@ describe('MergeLabelFormComponent', () => {
   });
 
   it('should submit the merging of labels', async () => {
-    // create the spy for the backend call
+    // Create the spy for the backend call
     let spy = spyOn(component["labellingDataService"], "postMerge").and.returnValue(Promise.resolve("Success"));
 
     // Creates spy for the remove function
