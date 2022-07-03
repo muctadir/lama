@@ -240,7 +240,7 @@ describe('ProjectSettingsComponent', () => {
 
     // Checks the call for the backend
     expect(spy).toHaveBeenCalled();
-    // checks the toast emitted
+    // Checks the toast emitted
     expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
     // checks the function call at the end of the error block
     expect(spy2).toHaveBeenCalled();
