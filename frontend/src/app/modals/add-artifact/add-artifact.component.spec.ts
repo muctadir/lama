@@ -28,7 +28,9 @@ describe('AddArtifactComponent', () => {
       'data': artifacts[2],
       'p_id': 1
 
-    }]
+    }
+  ]
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       // Adds the RouterTestingModule dependency

@@ -112,7 +112,7 @@ export class ThemeDataService {
    * @param subThemes json of sub-themes
    * @returns childArray. array of children themes
    */
-  createChildren(subThemes: []): Array<Theme> {
+  createChildren(subThemes: [any]): Array<Theme> {
     // List for the children
     let childArray: Array<Theme> = [];
     // For each child make an object

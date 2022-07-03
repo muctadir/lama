@@ -54,23 +54,21 @@ describe('ThemeDataService', () => {
     let theme2 = new Theme(2, "Theme 2", "Desc 2");
 
     // Spy on the createChildern service and call a fake function
-    spyOn(service, "createChildren").and.callFake(function (): Array<Theme> {
+    let spy1 = spyOn(service, "createChildren").and.callFake(function (): Array<Theme> {
       // List for the children
-      let childArray: Array<Theme> = [];
+      let childArray: Array<Theme> = [];   
       // For each child make an object
-      for (let child of theme_info) {
-        // Spy on function
-        let spy = spyOn(childArray, "push");
+      for (let child of theme_info) {  
         // Add the child to the array
         childArray.push(new Theme(child["id"], child["name"], child["description"]));
-        // Test if the function works
-        expect(spy).toHaveBeenCalled();
       }
       // Check if the array was filled correctly
       expect(childArray).toEqual([theme1, theme2]);
       // Return the array of children
       return childArray;
     })
+    service.createChildren([""]);
+    expect(spy1).toHaveBeenCalled();
   });
 
   // Test for createLabels function

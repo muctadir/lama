@@ -103,7 +103,7 @@ export class RequestHandler {
       throw new Error(
         'The method requires a session token which was not provided during instantation.'
       );
-    } else if (!authenticationReq && this.sessionToken !== undefined || !authenticationReq && this.sessionToken === undefined) {
+    } else if ((!authenticationReq && this.sessionToken !== undefined) || (!authenticationReq && this.sessionToken === undefined)) {
       this.axiosInstance.defaults.headers.common['u_id_token'] = '';
       return true;
     } else if (authenticationReq && this.sessionToken !== undefined) {
