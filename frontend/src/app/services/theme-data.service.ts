@@ -220,23 +220,8 @@ export class ThemeDataService {
 
       // Catch the error
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Theme name already exists") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Theme name already exists"]);
-      } else if (e.response.data == "Input contains an illegal character") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to create the theme"]);
-      }     
+      // Make the toast display the error
+      this.toastCommService.emitChange([false, e.response.data]);  
       // Return the response
       return "An error occured";
     }
@@ -263,26 +248,8 @@ export class ThemeDataService {
       return message
       // Catch the error
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else if (e.response.data == "Theme name already exists") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Theme name already exists"]);
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Input contains an illegal character") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
-      }
+      // Make the toast display the error
+      this.toastCommService.emitChange([false, e.response.data]);
       return "An error occured"
     }
   }
@@ -307,16 +274,9 @@ export class ThemeDataService {
   }
 
   // Function for searching in backend
-  async search(
-    searchWords: string,
-    p_id: number
-  ): Promise<Array<Record<string, any>>> {
+  async search(searchWords: string, p_id: number): Promise<Array<Record<string, any>>> {
     // Get the theme information from the back end
-    return this.requestHandler.get(
-      '/theme/search',
-      { p_id: p_id, search_words: searchWords },
-      true
-    );
+    return this.requestHandler.get('/theme/search', { p_id: p_id, search_words: searchWords }, true);
   }
 
   /**

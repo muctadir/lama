@@ -70,12 +70,13 @@ export class AccountInfoService {
       // Loops over the response of the server and parses the response into the allMembers array
       for (let user of response) {
         // creates the object
-        let newUser = new User(user.id, user.username);
-        // passes additional data to the newly created user object
-        newUser.setEmail(user.email);
-        newUser.setDesc(user.description);
+        let responseUser = new User(user.id, user.username);
+        // Sets email of new user
+        responseUser.setEmail(user.email);
+        // Sets the description of the new user
+        responseUser.setDesc(user.description);
         // pushes the new user to the array of all users
-        users.push(newUser);
+        users.push(responseUser);
       }
     } catch(e) {
       // Throws an error if something goes wrong
@@ -95,8 +96,8 @@ export class AccountInfoService {
       // Makes the request to the backend for all users in the application
       await this.requestHandler.post("/account/soft_del", {"id": toDel.getId()}, true);
     } catch(e) {
-      // Throws an error if something goes wrong
-      throw new Error("Could not get data from server");
+      // Throws an error if it goes wrong
+      throw new Error("Could not get the data from server");
     }
   }
 

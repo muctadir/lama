@@ -112,17 +112,8 @@ export class ProjectCreationComponent implements OnInit {
         // Navigates the user back to the home page
         this.router.navigate(["/home"]);
       } catch(e: any){
-        // Check if the error has invalid characters
-        if(e.response.status == 511){
-          // Displays the error message
-          this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-        } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-          // Displays the error message
-          this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-        } else {
-          // Emits an error toast
-          this.toastCommService.emitChange([false, "An error occured while creating the theme"]);
-        }
+        // Make the toast display the error
+        this.toastCommService.emitChange([false, e.response.data]);
       }
     } else {
       // Emits an error toast
@@ -264,10 +255,10 @@ export class ProjectCreationComponent implements OnInit {
    * @modifies projectMembers
    */
   open() : void {
-    // opens the AddUsersModal
+    // Opens the AddUsersModal
     const modalRef = this.modalService.open(AddUsersModalComponent);
 
-    // passes all the users in the application to the modal
+    // Passes all the users in the application to the modal
     modalRef.componentInstance.users = this.allMembers;
 
     // Push the username into the members list 

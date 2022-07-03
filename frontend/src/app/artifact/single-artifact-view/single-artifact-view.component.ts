@@ -130,6 +130,7 @@ export class SingleArtifactViewComponent implements OnInit {
     // Passes the type of history we want to view
     modalRef.componentInstance.history_type = "Artifact";
   }
+  
   /** 
    * Function for getting the label and labeltypes
    * @param p_id

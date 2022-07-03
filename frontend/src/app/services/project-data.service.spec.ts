@@ -3,18 +3,23 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Project } from 'app/classes/project';
 import { User } from 'app/classes/user';
 import { ProjectDataService } from './project-data.service';
+import { Router } from '@angular/router';
+
 
 /**
  * Test bed for project data service
  */
 describe('ProjectDataService', () => {
   let service: ProjectDataService;
+   // Instantiation of Router
+   let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule]
     });
     service = TestBed.inject(ProjectDataService);
+    router = TestBed.inject(Router)
   });
 
   it('should be created', () => {

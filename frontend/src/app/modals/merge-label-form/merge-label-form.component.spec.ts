@@ -28,7 +28,7 @@ describe('MergeLabelFormComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule],
       declarations: [ MergeLabelFormComponent ],
       // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal]
+      providers: [NgbActiveModal, FormBuilder]
     })
     .compileComponents();
   });

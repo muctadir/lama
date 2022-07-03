@@ -12,7 +12,7 @@ describe('ThemeVisualComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ ThemeVisualComponent ],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule]
     })
     .compileComponents();
   });
