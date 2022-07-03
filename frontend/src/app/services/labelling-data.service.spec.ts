@@ -21,7 +21,7 @@ describe('LabellingDataService', () => {
   });
 
   it('should get the labels from the backend', async () => {
-    // creates the spy which stubs the get request and returns dummy label data
+    // Creates the spy which stubs the get request and returns dummy label data
     let spy = spyOn(service.requestHandler, "get").and.returnValue(Promise.resolve([
       { label: {
         id: 1,
