@@ -223,7 +223,7 @@ describe('ProjectSettingsComponent', () => {
     expect(component.added).toEqual([]);
     expect(component.removedMembers).toEqual([]);
     expect(component.removed).toEqual({1: 0, 2: 0});
-    // checks the toast emitted
+    // Checks the toast emitted
     expect(spyToast).toHaveBeenCalledWith([true, "Edit successful"]);
   });
 
