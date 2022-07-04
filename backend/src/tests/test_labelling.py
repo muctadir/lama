@@ -6,8 +6,6 @@ from src import db
 from src.conftest import RequestHandler
 
 # Test whether the information received is the correct information.
-
-
 def test_get_labellings_by_label(app, client):
     with app.app_context():
         # Request unauthenticated - non existent user
@@ -47,7 +45,6 @@ def test_get_labellings_by_label(app, client):
         response = request_handler_admin.get(
             '/labelling/by_label', {'p_id': 2, 'label_id': 1}, True)
         assert response.status_code == 200
-
 
 def test_labelling(app, client):
     with app.app_context():

@@ -1,6 +1,5 @@
 from src.conftest import RequestHandler
 
-
 def test_create_name(app, client):
     """
         This test checks whether the health check works.

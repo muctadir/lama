@@ -39,8 +39,6 @@ def test_get_all(app, client):
         response = request_handler_admin.get(
             '/labeltype/all', {'p_id': 1}, True)
         assert response.status_code == 200
-    
-        
 
 # TODO: Check whether the information received matches that of the database
 def test_get_all_with_labels(app, client):
@@ -65,7 +63,6 @@ def test_get_all_with_labels(app, client):
         # Regular user get all without argument
         response = request_handler.get('/labeltype/allWithLabels', {}, True)
         assert response.status_code == 400
-        # assert response.text == "Bad Request, missing p_id"
 
         # Regular user get all
         response = request_handler.get(
@@ -76,7 +73,6 @@ def test_get_all_with_labels(app, client):
         request_handler_admin = RequestHandler(app, client, 1)
         response = request_handler_admin.get(
             '/labeltype/allWithLabels', {'p_id': 1}, True)
-
 
 # TODO: Check whether the information received matches that of the database
 def test_label_by_type(app, client):
@@ -102,7 +98,6 @@ def test_label_by_type(app, client):
         # Regular user get all without argument, no p_id
         response = request_handler.get('/labeltype/labelsByType', {}, True)
         assert response.status_code == 400
-        # assert response.text == "Bad Request, missing p_id" <-- Does not work
 
         # Regular user get all without argument, no lt_id
         response = request_handler.get(

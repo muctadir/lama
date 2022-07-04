@@ -2,7 +2,8 @@
 # Author: Bartjan
 # Author: Eduardo Costa Martins
 from src.app_util import check_args
-from src import db  # need this in every route
+# Need this in every route
+from src import db
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update
@@ -14,8 +15,6 @@ label_type_routes = Blueprint("labeltype", __name__, url_prefix="/labeltype")
 
 # Author: B. Henkemans
 # Gets label types
-
-
 @label_type_routes.route('/all', methods=['GET'])
 @login_required
 @in_project
@@ -44,8 +43,6 @@ def get_label_types():
 
 # Author: B. Henkemans
 # Gets label types with labels
-
-
 @label_type_routes.route('/allWithLabels', methods=['GET'])
 @login_required
 @in_project
@@ -82,8 +79,6 @@ def get_label_types_wl():
 
 # Author: Eduardo Costa Martins
 # Get labels by label type
-
-
 @label_type_routes.route("/labelsByType", methods=["GET"])
 @login_required
 @in_project
@@ -120,14 +115,11 @@ def get_labels_by_label_type():
         (labelType.labels).filter_by(deleted=0), many=True)
     return make_response(jsonify(dict_json))
 
-
 """
 Author: Eduardo Costa Martins
 @params p_id : int|string the project id for which you want the label types and labels
 @returns a dictionary indexed by label type _objects_, mapping to a list of labels of that type
 """
-
-
 def labels_by_label_type(p_id):
     # Get labels by label type
     stmt = select(
