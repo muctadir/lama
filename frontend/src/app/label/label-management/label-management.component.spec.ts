@@ -277,7 +277,7 @@ describe('LabelManagementComponent', () => {
     component.sortNumberOfArtifacts();
 
     // Checks the results
-    expect(component.labels).toEqual([l3, l2, l1]);
+    expect(component.labels).toEqual([l1, l2, l3]);
     expect(component.sortedNOA).toBe(2);
   });
 
@@ -295,7 +295,7 @@ describe('LabelManagementComponent', () => {
     component.sortNumberOfArtifacts();
 
     // Checks the results
-    expect(component.labels).toEqual([l1, l2, l3]);
+    expect(component.labels).toEqual([l3, l2, l1]);
     expect(component.sortedNOA).toBe(1);
   });
 

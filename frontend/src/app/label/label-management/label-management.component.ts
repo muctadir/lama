@@ -258,7 +258,7 @@ export class LabelManagementComponent {
         // Get the number of artifacts labelled
         const n1 = parseInt(this.labelAmount[a.getId()]);
         const n2 = parseInt(this.labelAmount[b.getId()]);
-        return n2 - n1;
+        return n1 - n2;
       });
       // Check if it was sorted descending or not yet
     } else if (this.sortedNOA == sorted.Des || this.sortedNOA == sorted.Not) {
@@ -269,7 +269,7 @@ export class LabelManagementComponent {
         // Get the number of artifacts labelled
         const n1 = parseInt(this.labelAmount[a.getId()]);
         const n2 = parseInt(this.labelAmount[b.getId()]);
-        return n1 - n2;
+        return n2 - n1;
       });
     }
     // Set other sorts to not sorted

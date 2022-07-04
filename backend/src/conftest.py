@@ -8,7 +8,7 @@ Author: Eduardo Costa Martins
 """
 @fixture
 def app():
-    app = create_app({'TESTING': True})
+    app = create_app({'TESTING': True, 'INIT': True})
 
     # Database modifications require app context
     with app.app_context():
@@ -31,12 +31,6 @@ def app():
 @fixture
 def client(app):
     return app.test_client()
-
-# To simulate doing CLI commands (we probably won't need this one?)
-@fixture
-def runner(app):
-    return app.test_cli_runner()
-
 
 """
 Author: Eduardo Costa Martins
