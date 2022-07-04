@@ -233,7 +233,6 @@ def in_project(f):
         if request.method == 'GET':
             p_id = request.args['p_id']
         else:
-            # TODO: Change request handler to not have to use params and get rid of this first case
             if 'params' in request.json and 'p_id' in request.json['params']:
                 p_id = request.json['params']['p_id']
             elif 'p_id' in request.json:
@@ -281,7 +280,6 @@ def not_frozen(f):
         if project.frozen:
             return make_response("Bad Request: Project Frozen", 400)
 
-        # TODO: There _has_ to be a better way of doing this
         # Check if function requires certain keyword only arguments
         if 'user' in getfullargspec(f).kwonlyargs:
             kwargs['user'] = user

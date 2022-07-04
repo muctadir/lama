@@ -26,8 +26,6 @@ def app():
         db.session.commit()
 
     yield app
-    # Tear-down goes here.
-    # TODO: Delete migrations folder
 
 # To simulate requests
 @fixture

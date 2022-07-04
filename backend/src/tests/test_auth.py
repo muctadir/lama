@@ -8,9 +8,6 @@ from werkzeug.security import check_password_hash
 from jwt import decode
 from src.conftest import RequestHandler
 
-# TODO: Test check_format() seperately
-
-
 def test_register(app, client):
 
     request_handler = RequestHandler(app, client)
