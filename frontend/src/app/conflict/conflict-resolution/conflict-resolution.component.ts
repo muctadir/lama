@@ -52,7 +52,7 @@ export class ConflictResolutionComponent implements OnInit {
   frozen: boolean = true;
 
   /**
-   * Information concerning the highlighting and cutting
+   * Information concerning the cutting
    */
   hightlightedText: string = '';
   selectionStartChar?: number;
@@ -180,7 +180,7 @@ export class ConflictResolutionComponent implements OnInit {
    */
   openCreateForm(): void {
     let modal = this.modalService.open(LabelFormComponent, { size: 'xl' });
-    modal.result.then((data) => {
+    modal.result.then(() => {
       // Clear the cache of labels
       this.labels = [];
       // Reinitialize the page
@@ -194,9 +194,9 @@ export class ConflictResolutionComponent implements OnInit {
    * @param user the username of the user who changed their labelling
    * @param label the name of the label to which the user is changing their labelling
    */
-  updateLabelling(user: User, label: string): void {
+  async updateLabelling(user: User, label: string): Promise<void> {
     // Get the updated labelling
-    let response = this.labellingDataService.updateLabelling(
+    let response = await this.labellingDataService.updateLabelling(
       user, label, this.labels, this.lt_id)
 
     // If the updated labelling was received
@@ -267,7 +267,7 @@ export class ConflictResolutionComponent implements OnInit {
    * 
    * @trigger user clicks on the merge labels button
    */
-  async openMerge() {
+  async openMerge() : Promise<void> {
     // Open the modal
     const modalRef = this.modalService.open(MergeLabelFormComponent, {
       size: 'xl',
@@ -289,7 +289,7 @@ export class ConflictResolutionComponent implements OnInit {
     firstCharacter = this.startPosFixer(firstCharacter);
     lastCharacter = this.endPosFixer(lastCharacter);
     // Get the text represented by the rounded start and end
-    let splitText = this.artifact?.data.substring(
+    let splitText = this.artifact.data.substring(
       firstCharacter,
       lastCharacter
     );
@@ -299,7 +299,7 @@ export class ConflictResolutionComponent implements OnInit {
     this.toastCommService.emitChange([true, "Artifact was successfully split into artifact #" + splitId]);
   }
 
-  /**
+ /**
  * Function is ran on mouseDown or mouseUp and updates the current selection
  * of the artifact. If the selection is null or empty, the selection is set
  * to ""
@@ -326,9 +326,9 @@ export class ConflictResolutionComponent implements OnInit {
   }
 
   // Fixes the position of the start character of a word
-  startPosFixer(startPos: number) {
+  startPosFixer(startPos: number) : number {
     // Gets char at start of the word
-    let chart = this.artifact?.data.charAt(startPos);
+    let chart = this.artifact.data.charAt(startPos);
     // Checks if it is at the correct position to begin with
     if (chart == ' ') {
       startPos = startPos + 1
@@ -341,7 +341,7 @@ export class ConflictResolutionComponent implements OnInit {
 
     // Else, move until we find the start of a word
     while (chart != ' ' && startPos > 0) {
-      chart = this.artifact?.data.charAt(startPos);
+      chart = this.artifact.data.charAt(startPos);
       startPos--;
     }
 
@@ -354,24 +354,34 @@ export class ConflictResolutionComponent implements OnInit {
   }
 
   // Fixes the position of the start character of a word
-  endPosFixer(endPos: number) {
+  endPosFixer(endPos: number) : number {
     // Gets char at end of the word
-    let chend = this.artifact?.data.charAt(endPos);
+    let chend = this.artifact.data.charAt(endPos);
     // See if the last char is correct to begin with
     if (chend == ' ' || endPos == this.artifact.data.length) {
       return endPos
     }
     // Fix such that the next word is not accidentally selected
-    if (this.artifact?.data.charAt(endPos - 1) == ' ') {
+    if (this.artifact.data.charAt(endPos - 1) == ' ') {
       endPos--
       return endPos
     }
     // Else, move until we find a space or hit the end of artifact
-    while (chend != ' ' && endPos < this.artifact?.data.length) {
-      chend = this.artifact?.data.charAt(endPos);
+    while (chend != ' ' && endPos < this.artifact.data.length) {
+      chend = this.artifact.data.charAt(endPos);
       endPos++;
     }
 
     return endPos
+  }
+
+  /**
+   * Function for rerouting the user
+   * 
+   * @Trigger clicked on the back button
+   */
+  reRouter() : void {
+    // Changes the route accordingly
+    this.router.navigate(['/project', this.p_id, 'conflict']);
   }
 }

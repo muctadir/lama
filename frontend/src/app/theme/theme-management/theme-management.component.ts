@@ -64,10 +64,10 @@ export class ThemeManagementComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    // Check if project is frozen
     this.frozen = await this.projectDataService.getFrozen();
     // Get the theme information from the request handler
     this.getThemes();
-
     // For search icon to search on click
     this.searchClick();    
   }
@@ -75,17 +75,15 @@ export class ThemeManagementComponent {
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-  searchClick(){
+   searchClick(){
     // Get the search image
-    let image = document.getElementById("searchBar")
-    if (image != null){
+    let searchBar = document.getElementById("searchBar")
+    if (searchBar != null){
       // On click event handler
-      image.onclick = (e) => {
-        if (image != null){
-          // Get placement of the image
-          var rect = image.getBoundingClientRect();
+      searchBar.onclick = (e) => {
+        if (searchBar != null){
           // Get clicked x coordinates
-          var x = e.clientX - rect.left;
+          var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
           if (x > 330){
             // Search
@@ -115,7 +113,9 @@ export class ThemeManagementComponent {
     this.router.navigate(['/project', this.p_id, new_page, theme_id]);
   }
 
-  // Function for getting the theme info
+  /**
+   * Function for getting the theme info
+   */
   async getThemes(): Promise<void> {
     this.themes = await this.themeDataService.getThemes(this.p_id);
   }
@@ -191,36 +191,28 @@ export class ThemeManagementComponent {
 
   // Gets the search text
   async onEnter() {
-
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Search text
     var text = this.searchForm.value.search_term;
-
     // If nothing was searched
     if(text.length == 0){
       // Get all themes anew
       this.getThemes();
     } else {
-      // Otherwise search
-
       // Pass the search word to services
-      let themesSearched = await this.themeDataService.search(text, p_id);
-
-      
+      let themesSearched = await this.themeDataService.search(text, p_id);      
       // List for the artifacts resulting from the search
       let themeList: Array<Theme> = [];
       // For loop through all searched artifacts
       for (let theme of themesSearched) {
-        // Make it an artifact object
+        // Make it an theme object
         let newTheme = new Theme(theme['id'], theme['name'], theme['description']);
         // Append artifact to list
         themeList.push(newTheme);
       }
-
+      // Set the new themes
       this.themes = themeList;
-
     }
   }
 }

@@ -1,7 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
 // Color variables
-$grey-shade: #38474e;
-$white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
 // Changes the color of the button to orange
@@ -24,15 +21,4 @@ $orange-shade: #ed5a06;
 // Description field of the user
 #description{
     resize: none;
-}
-
-// Ensures that the content is not entirely at the top of the page
-.middle-col {
-    margin-top: 10vh;
-}
-
-// Sets layout of the error message that is displayed when register input is incorrect
-#error-msg {
-  color: $orange-shade;
-  font-size: 15px;
 }

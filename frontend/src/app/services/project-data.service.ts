@@ -12,7 +12,7 @@ import { ToastCommService } from './toast-comm.service';
   providedIn: 'root'
 })
 export class ProjectDataService {
-  private requestHandler: RequestHandler;
+  requestHandler: RequestHandler;
   private sessionToken: string | null;
 
   /**
@@ -86,10 +86,11 @@ export class ProjectDataService {
 
     // Loops over the response of the server and parses the response into the allMembers array
     for (let user of response) {
-      // creates the object
+      // Creates the user object
       let newUser = new User(user.id, user.username);
-      // passes additional data to the newly created user object
+      // Sets email of new user
       newUser.setEmail(user.email);
+      // Sets the description of the new user
       newUser.setDesc(user.description);
       // pushes the new user to the array of all users
       result.push(newUser);
@@ -109,7 +110,7 @@ export class ProjectDataService {
    async makeRequest(projectInformation: Record<string, any> ) : Promise<void> {
 
     // Makes the backend request to get the projects of which the user is a member
-    let response: any = await this.requestHandler.post("/project/creation", projectInformation, true);
+    await this.requestHandler.post("/project/creation", projectInformation, true);
   }
 
   /**

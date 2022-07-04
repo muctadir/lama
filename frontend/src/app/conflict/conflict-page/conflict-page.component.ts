@@ -13,6 +13,8 @@ import { ToastCommService } from 'app/services/toast-comm.service';
   styleUrls: ['./conflict-page.component.scss']
 })
 export class ConflictPageComponent implements OnInit {
+  // List of the conflicts
+  conflicts: any[] = [];
 
   /**
    * Initializes the router, rerouting service and conflict data service
@@ -43,9 +45,6 @@ export class ConflictPageComponent implements OnInit {
     this.requestConflicts(projectID);
   }
 
-  // List of the conflicts
-  conflicts: any[] = [];
-
   /**
    * Gets the project id from the URL and reroutes to the conflict resolution page
    * of the same project
@@ -55,10 +54,8 @@ export class ConflictPageComponent implements OnInit {
    reRouter(a_id: number, lt_id: number, lt: string) : void {
     // Gets the url from the router
     let url: string = this.router.url
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
+    let p_id = this.reroutingService.getProjectID(url);
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id, lt ]);
   }

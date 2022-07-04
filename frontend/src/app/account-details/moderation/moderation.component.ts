@@ -65,7 +65,8 @@ export class ModerationComponent {
       // Gets the user data
       this.users = await this.accountService.allUsersData();
     } catch(e) {
-      console.log(e);
+      // Makes an error toast
+      this.toastCommService.emitChange([false, "An error occured when gathering data from the server"]);
     }
   }
 
@@ -90,10 +91,10 @@ export class ModerationComponent {
    * @trigger delete button is clicked for @deluser
    */
   async softDelete(deluser: User): Promise<void> {
-    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+    let modalRefrence = this.modalService.open(ConfirmModalComponent, {});
 
     // Listens for an event emitted by the modal
-    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+    modalRefrence.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       // If a confirmEvent = true is emitted we delete the user
       if($e) {
         try {

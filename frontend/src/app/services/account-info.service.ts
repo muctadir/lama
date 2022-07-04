@@ -70,12 +70,13 @@ export class AccountInfoService {
       // Loops over the response of the server and parses the response into the allMembers array
       for (let user of response) {
         // creates the object
-        let newUser = new User(user.id, user.username);
-        // passes additional data to the newly created user object
-        newUser.setEmail(user.email);
-        newUser.setDesc(user.description);
+        let responseUser = new User(user.id, user.username);
+        // Sets email of new user
+        responseUser.setEmail(user.email);
+        // Sets the description of the new user
+        responseUser.setDesc(user.description);
         // pushes the new user to the array of all users
-        users.push(newUser);
+        users.push(responseUser);
       }
     } catch(e) {
       // Throws an error if something goes wrong
@@ -95,8 +96,8 @@ export class AccountInfoService {
       // Makes the request to the backend for all users in the application
       await this.requestHandler.post("/account/soft_del", {"id": toDel.getId()}, true);
     } catch(e) {
-      // Throws an error if something goes wrong
-      throw new Error("Could not get data from server");
+      // Throws an error if it goes wrong
+      throw new Error("Could not get the data from server");
     }
   }
 
@@ -111,10 +112,7 @@ export class AccountInfoService {
   async makeAuthRequest() : Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response: any = this.requestHandler.get("/auth/check_login", {}, true);
-
-      // Waits on the request
-      await response;
+      await this.requestHandler.get("/auth/check_login", {}, true);
 
       // Returns true if the token is valid
       return true;
@@ -136,10 +134,7 @@ export class AccountInfoService {
    async makeSuperAuthRequest() : Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response: any = this.requestHandler.get("/auth/check_super_admin", {}, true);
-
-      // Waits on the request
-      await response;
+      await this.requestHandler.get("/auth/check_super_admin", {}, true);
 
       // Returns true if the token is valid
       return true;
@@ -169,11 +164,48 @@ export class AccountInfoService {
     }
   }
 
-
+  /**
+   * Makes a request to the backend to login the user
+   * 
+   * @param user user account details
+   * @returns whether the login was succesful
+   */
   async loginUser(user: Record<string, any>): Promise<any> {
     try {
-      return this.requestHandler.post('auth/login', user, false);
+      return await this.requestHandler.post('auth/login', user, false);
     } catch (e: any) {
+      throw e;
+    }
+  }
+
+  /**
+   * Makes request to the backend to edit password
+   * 
+   * @param passwordInformation object holding the old password, new password, and repeated new password
+   * @throws error if an error occurs 
+   */
+  async changePassword(passwordInformation: Record<string, any>) : Promise<void> {
+    try {
+      // Makes request to the backend
+      await this.requestHandler.post("/account/editPassword", passwordInformation, true);
+    } catch(e: any) {
+      // Throws the error if one were to occur
+      throw e;
+    }
+  }
+
+  /**
+   * Makes request to the backend to edit the account information
+   * 
+   * @param accountInformation object holding the id, username, email, description 
+   * @throws error if an error occurs
+   */
+  async changeAccountDetails(accountInformation: Record<string, any>) : Promise<void> {
+    // Tries to make the backend request
+    try {
+      await this.requestHandler.post("/account/edit", accountInformation, true);
+    } catch(e: any) {
+      // catches the error and throws it again
       throw e;
     }
   }

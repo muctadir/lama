@@ -16,7 +16,7 @@ from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
-from src.routes.change_routes import get_changes
+from src.routes.change_routes import get_parsed_changes
 from src.models.item_models import Label
 
 

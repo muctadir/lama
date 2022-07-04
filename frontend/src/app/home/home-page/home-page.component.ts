@@ -26,10 +26,15 @@ export class HomePageComponent implements OnInit {
   user: any;
 
   /**
-   * Initializes the modal service provided by bootstrap
+   * Initializes the modal service, projectDataService, AccountInfoService, ToastCommService, Router
    * 
    * @param modalService instance of modal
-   * @trigger on loads
+   * @param projectDataService instance of ProjectDataService
+   * @param accountService instance of AccountInfoService
+   * @param toastCommService instance of ToastCommService
+   * @param route instance of Router
+   * 
+   * @trigger on component load
    */
   constructor(private modalService: NgbModal,
     private projectDataService: ProjectDataService,
@@ -66,7 +71,7 @@ export class HomePageComponent implements OnInit {
    * @trigger click on logout button
    */
   openLogout() : void {
-    // opens logout modal
+    // Opens logout modal
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
       // Listens for an event emitted by the modal

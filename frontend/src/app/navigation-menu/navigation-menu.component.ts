@@ -37,17 +37,27 @@ export class NavigationMenuComponent {
    * Subscribes to the router events, when the routing changes updates the icon highlighted
    * in the navigation bar accordingly
    * 
-   * Also creates instance of NgbModal
+   * Also creates instance of NgbModal, ReroutingService, ToastCommService
    * 
    * @param router Instance of the Router class used to get info about the current route
    * @param modalService Instance of the NgbModal 
+   * @param routeService instance of ReroutingService
+   * @param toastCommService instance of ToastCommService
    * 
    * @trigger when the route changes
-   * @modifies page 
    */
   constructor(private router: Router, 
     private toastCommService: ToastCommService, 
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    private routeService: ReroutingService) {
+  }
+
+  /**
+   * Ensures that the correct icon is highlighted
+   * 
+   * @trigger on component creation, and when route is changed
+   */
+  ngOnInit() : void {
     // Ensures that the currently highlighted icon is correct
     this.evalURL(this.router.url);
 
@@ -86,8 +96,7 @@ export class NavigationMenuComponent {
     } else if (new_route.includes("conflict")) {
       // highlights conflict management page icon
       this.page = 5;
-    }
-      else if (new_route.includes("settings")) {
+    } else if (new_route.includes("settings")) {
       // highlights settings page icon
       this.page =6;
     }
@@ -110,25 +119,20 @@ export class NavigationMenuComponent {
    * @trigger onclick nav menu
    */
   changePage(next_page : string) : void  {
-    // Removes the first character from the route
-    let url : string = this.router.url;
-
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
+    let p_id = this.routeService.getProjectID(this.router.url);
     
-    // Changes the route accordingly
+    // Changes the route to the requested page
     this.router.navigate(['/project', p_id, next_page]);
   }
 
   /**
-   * Opens the confirm modal and log outs
+   * Opens the confirm modal and listen for confirm event to be emitted
    * 
    * @trigger logout button clicked
    */
   openLogout() : void {
-    // opens logout modal
+    // Opens logout modal
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
     // Listens for an event emitted by the modal
@@ -146,5 +150,4 @@ export class NavigationMenuComponent {
       }
     })
   }
-
 }

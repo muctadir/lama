@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
 export class ThemeDataService {
 
   // Request handler variable
-  private requestHandler: RequestHandler;
+  requestHandler: RequestHandler;
   // Session token variable
   private sessionToken: string | null;
 
@@ -60,7 +60,7 @@ export class ThemeDataService {
       return themes_list;
       // Catch error
     } catch (e) {
-      console.log("An error occured when trying to get all themes");
+      this.toastCommService.emitChange([false, "An error occured when trying to get all themes"]);
       return [];
     }
   }
@@ -102,7 +102,7 @@ export class ThemeDataService {
       return newTheme;
       // Catch the error
     } catch (e) {
-      console.log("An error occured when trying to get the theme information");
+      this.toastCommService.emitChange([false, "An error occured when trying to get the theme information"]);
       return new Theme(0, "", "");
     }
   }
@@ -113,7 +113,7 @@ export class ThemeDataService {
    * @param subThemes json of sub-themes
    * @returns childArray. array of children themes
    */
-  createChildren(subThemes: []): Array<Theme> {
+  createChildren(subThemes: Array<any>): Array<Theme> {
     // List for the children
     let childArray: Array<Theme> = [];
     // For each child make an object
@@ -131,7 +131,7 @@ export class ThemeDataService {
    * @param labels json of labels
    * @returns labelsArray. array of labels
    */
-  createLabels(labels: []): Array<Label> {
+  createLabels(labels: Array<any>): Array<Label> {
     // List for the labels 
     let labelsArray: Array<Label> = [];
     // For each label in the list
@@ -158,7 +158,7 @@ export class ThemeDataService {
    * @param artifacts json of artifacts 
    * @returns artifactArray. list of artifacts
    */
-  createArtifacts(artifacts: []): Array<StringArtifact> {
+  createArtifacts(artifacts: Array<any>): Array<StringArtifact> {
     // List for the artifacts
     let artifactArray: Array<StringArtifact> = [];
     for (let artifact of artifacts) {
@@ -192,7 +192,8 @@ export class ThemeDataService {
       return allSubThemes
       //Catch the error
     } catch (e) {
-      console.log("An error occured when trying to get the themes without parents");
+      // Displays the error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get the themes without parents"]);
       return [];
     }
   }
@@ -219,23 +220,10 @@ export class ThemeDataService {
 
       // Catch the error
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-        // Return the response
-        return "An error occured when trying to edit the theme";
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to create the theme."]);
-        // Return the response
-        return "An error occured when trying to create the theme.";
-      }
+      // Make the toast display the error
+      this.toastCommService.emitChange([false, e.response.data]);  
+      // Return the response
+      return "An error occured";
     }
   }
 
@@ -260,20 +248,8 @@ export class ThemeDataService {
       return message
       // Catch the error
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
-      }
+      // Make the toast display the error
+      this.toastCommService.emitChange([false, e.response.data]);
       return "An error occured"
     }
   }
@@ -298,16 +274,9 @@ export class ThemeDataService {
   }
 
   // Function for searching in backend
-  async search(
-    searchWords: string,
-    p_id: number
-  ): Promise<Array<Record<string, any>>> {
+  async search(searchWords: string, p_id: number): Promise<Array<Record<string, any>>> {
     // Get the theme information from the back end
-    return this.requestHandler.get(
-      '/theme/search',
-      { p_id: p_id, search_words: searchWords },
-      true
-    );
+    return this.requestHandler.get('/theme/search', { p_id: p_id, search_words: searchWords }, true);
   }
 
   /**
@@ -318,11 +287,13 @@ export class ThemeDataService {
    * {
    *   id: the id of the item (theme/label)
    *   name: the name of the item (theme/label)
+   *   deleted: whether or not the item is deleted (true/false)
    *   type: the type of the item, as a string 'Theme', 'Label', or 'Project'
    *   children: a list of dictionaries of items that are children of this theme/project
    * }
    * The children key does not exist for labels, or themes without children.
    * The top level dictionary represents the project that was passed
+   * The project counts as an undeleted item
    */
    async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {

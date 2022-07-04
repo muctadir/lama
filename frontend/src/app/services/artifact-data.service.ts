@@ -256,6 +256,7 @@ export class ArtifactDataService {
       true
     );
   }
+  
   /**
    * Post the split to the database 
    * 

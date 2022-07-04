@@ -82,19 +82,17 @@ export class ArtifactManagementPageComponent {
   }
 
   /**
-   * Function for searching based on clicking on the maginifying glass
+   * Function for searching based on clicking on the magnifying glass
    */
-   searchClick(){
+  searchClick(){
     // Get the search image
-    let image = document.getElementById("searchBar")
-    if (image != null){
+    let searchBar = document.getElementById("searchBar")
+    if (searchBar != null){
       // On click event handler
-      image.onclick = (e) => {
-        if (image != null){
-          // Get placement of the image
-          var rect = image.getBoundingClientRect();
+      searchBar.onclick = (e) => {
+        if (searchBar != null){
           // Get clicked x coordinates
-          var x = e.clientX - rect.left;
+          var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
           if (x > 330){
             // Search
@@ -107,8 +105,6 @@ export class ArtifactManagementPageComponent {
 
   /**
    * Sets the artifacts of a specific project from artifact-data.service
-   * 
-   * @param p_id the id of the project
    */
   async getArtifacts(): Promise<void> {
 
@@ -175,18 +171,14 @@ export class ArtifactManagementPageComponent {
     modalRef.result.then((data) => {
       this.ngOnInit();
     });
-
   }  
   
   // Gets the search text
   async onEnter() {
-
-    // Get p_id
-    let p_id = Number(this.routeService.getProjectID(this.url));
-
     // Search text
     var text = this.searchForm.value.search_term;
-
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
     // If nothing was searched
     if(text.length == 0){
       // Clear cache and show all artifacts
@@ -197,7 +189,7 @@ export class ArtifactManagementPageComponent {
 
       // Pass the search word to services
       let artifactsSearched = await this.artifactDataService.search(text, p_id);
-
+      
       // List for the artifacts resulting from the search
       let artifactList: Array<StringArtifact> = [];
       // For loop through all searched artifacts
@@ -228,7 +220,7 @@ export class ArtifactManagementPageComponent {
    * @param labellings: number, the number of labellings
    */
   getNumberUsers(labellings: number): string|number{
-    if(labellings % this.nLabelTypes != 0) {
+    if(this.nLabelTypes == 0 || labellings % this.nLabelTypes != 0) {
       this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
       return "Cannot compute";
     }
