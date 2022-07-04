@@ -140,9 +140,10 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Label Description text container
-p.labelDescriptionText {
+.labelDescriptionText {
     padding-left: 0px;
     font-size: 14px;
+    overflow-wrap: break-word;
 }
 
 // Button to save
@@ -168,10 +169,10 @@ p.labelDescriptionText {
     overflow-y: scroll;
     height: 20vh;
 }
-
 // Scroll for description
 #descriptionScroll {
     overflow-y: scroll;
+    overflow-x: hidden;
     height: 20vh;
 }
 
