@@ -2,7 +2,8 @@
 
 from sqlalchemy import select
 from src.conftest import RequestHandler
-from src.models.project_models import Project, Membership, User
+from src.models.project_models import Project, Membership
+from src.models.auth_models import User
 from src import db
 from src.routes.project_routes import update_project, update_members_in_project, add_members, get_serialized_users, get_users_in_project
 
