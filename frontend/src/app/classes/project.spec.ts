@@ -51,9 +51,13 @@ describe('Project', () => {
     const proj2 = new Project(id, name, desc);
     const newName = "";
     // catch wrong name
+    let error;
     try {
       proj2.setName(newName);
-    } catch (error) { }
+    } catch (e) {
+      error = e;
+    }
+    expect(error).toEqual(new Error("The project name should not be of length 0 as an argument in setName()"));
   });
 
   // Getting the description
@@ -78,9 +82,13 @@ describe('Project', () => {
     const proj2 = new Project(id, name, desc);
     const newDesc = "";
     // catch wrong name
+    let error;
     try {
       proj2.setDesc(newDesc);
-    } catch (error) { }
+    } catch (e) {
+      error = e
+    }
+    expect(error).toEqual(new Error("The project description should not be of length 0 as an argument in setDesc()"))
   });
 
   // Setting and getting the users

@@ -44,12 +44,14 @@ body {
     background-color: rgb(222, 222, 222);
 }
 
+// Merge labels button
 #mergeLabelButton:hover,
 #mergeLabelButton:focus,
 #mergeLabelButton:active {
     background-color: rgb(222, 222, 222);
 }
 
+// Container for the searching
 .SearchContainer {
     max-width: 30%;
 }
@@ -60,7 +62,7 @@ svg.bi.bi-plus {
     height: 22px;
 }
 
-// TOP BAR
+// Top bar
 #topBarRow {
     margin-left: 10px;
     margin-right: 10px;
@@ -70,25 +72,29 @@ svg.bi.bi-plus {
     height: 100vh;
 }
 
+// Scrollable division
 #scrolly {
     padding-right: 40px;
 }
 
+// Row for the table
 #tableRow {
     padding-top: 5px;
 }
 
+// Horizaontal lines in the table
 #horizontalLineRow {
     padding-top: 10px;
     padding-bottom: 30px;
     padding-right: 0px;
 }
 
+// Horizontal lines in the column
 #horizontalLineColumn {
     padding-right: 0px;
 }
 
-//Table styles
+// Table styles
 .labelHeader {
     font-size: 20px;
     letter-spacing: 1px;
@@ -125,17 +131,6 @@ ngb-pagination ::ng-deep .page-item.active .page-link:focus,
 
 ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
     box-shadow: 0 0 0 0.1rem dimgrey;
-}
-
-//Scroll Related Business
-.my-custom-scrollbar {
-    position: relative;
-    height: 80vh;
-    overflow: auto;
-}
-
-.table-wrapper-scroll-y {
-    display: block;
 }
 
 //Scroll Bar 
