@@ -1,10 +1,9 @@
 # Author: Eduardo Costa Martins
-from src.app_util import check_args
+from src.app_util import check_args, login_required, in_project
 from src.models.auth_models import User
 from src import db
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, or_
-from src.app_util import login_required, in_project
 from src.parser import parse_change
 from sys import modules
 

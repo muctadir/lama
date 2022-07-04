@@ -13,7 +13,7 @@ from sqlalchemy import select, func, distinct
 from src.app_util import login_required, not_frozen, in_project, check_args
 from sqlalchemy.exc import OperationalError
 from src.models.auth_models import User
-from src.searching.search import search_func_all_res, best_search_results
+from src.search import search_func_all_res, best_search_results
 from hashlib import blake2b
 
 artifact_routes = Blueprint("artifact", __name__, url_prefix="/artifact")
