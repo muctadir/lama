@@ -54,7 +54,7 @@ def get_parsed_changes(*, user, membership):
         return make_response('Bad Request', 400)
 
     # Get parsed changelog
-    changes = jsonify(get_parsed_changes(
+    changes = jsonify(parse_changes(
         ItemChangeClass, args['i_id'], user.id, membership.admin, args['p_id']))
 
     return make_response(changes)
@@ -73,7 +73,7 @@ Returns a list of parsed changes for a given item. Each change is a dictionary o
 @param admin: If the user requesting the changes is an admin
 @param p_id: The id of the project that the item belongs to
 """
-def get_parsed_changes(ChangeClass, i_id, u_id, admin, p_id):
+def parse_changes(ChangeClass, i_id, u_id, admin, p_id):
 
     changes = db.session.execute(select(
         # Get the change and the username of the person that made the change

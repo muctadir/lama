@@ -250,7 +250,7 @@ def merge_route(*, user):
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
-        return make_response('Label name cannot be empty')
+        return make_response('Label name cannot be empty', 400)
 
     # Check whether the length of label description is at least one character long
     if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
@@ -418,10 +418,10 @@ def get_label_artifacts(label, u_id, admin):
     if admin:
         return label.artifacts
     # Else get the artifacts they may see
-    return db.session.execute(
+    return db.session.scalars(
         select(Artifact)
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
-    )
+    ).all()
 
 # Author: B. Henkemans
 # Soft delete labels route

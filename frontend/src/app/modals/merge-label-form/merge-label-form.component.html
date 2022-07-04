@@ -15,7 +15,7 @@
       <!-- Input for label type -->
       <div class="input-group">
         <!-- Select for label type -->
-        <select class="form-control" id="label-type" name="labels" formControlName="labelType">
+        <select class="form-select" id="label-type" name="labels" formControlName="labelType">
           <option *ngFor="let labelType of labelTypes" [ngValue]="labelType">
             {{ labelType.getName() }}
           </option>

@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
 import { ArtifactDataService } from 'app/services/artifact-data.service';
-import { LabellingDataService } from 'app/services/labelling-data.service';
 import { FormBuilder } from '@angular/forms';
 import { ToastCommService } from 'app/services/toast-comm.service';
 import { ProjectDataService } from 'app/services/project-data.service';
@@ -61,7 +60,6 @@ export class ArtifactManagementPageComponent {
    */
   constructor(private modalService: NgbModal,
     private artifactDataService: ArtifactDataService,
-    private labellingDataService: LabellingDataService,
     private router: Router, private formBuilder: FormBuilder,
     private toastCommService: ToastCommService,
     private projectDataService: ProjectDataService) {

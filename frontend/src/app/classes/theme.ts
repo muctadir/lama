@@ -13,7 +13,7 @@ export class Theme {
     private name: string;
     // Description of the theme
     private desc: string;
-    // Array of parent themes of the theme
+    // Parent theme of the theme
     private themeParent: Theme | undefined;
     // Array of child themes of the theme
     private themeChildren: Array<Theme> | undefined;

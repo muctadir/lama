@@ -120,11 +120,13 @@ export class SingleThemeViewComponent {
   reRouterTheme(theme_id: number): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, "singleTheme", theme_id])
-      // And reload the page
-      .then(() => {
-        // Get the information for the theme
-        this.get_single_theme_info(this.p_id, theme_id);
-      });
+    // And reload the page
+    .then(() => {
+      // Get the information for the theme
+      this.get_single_theme_info(this.p_id, theme_id);
+    });    
+    // Change theme id
+    this.t_id = theme_id;
   }
 
   /**

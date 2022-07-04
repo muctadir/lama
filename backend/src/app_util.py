@@ -51,7 +51,7 @@ def check_username(username):
     @return : True <=> username is valid
     A valid username is defined as a username that:
         has no leading or trailing whitespace
-        is at least 5 characters long
+        is at least 3 characters long
         is no more than 32 characters long (database constraint)
     """
     return len(username.strip()) == len(username) and \
@@ -148,7 +148,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         # Check that header for token is provided
         u_id_token = request.headers.get('u_id_token')
-        if u_id_token is None:
+        if u_id_token is None or u_id_token == '':
             return make_response('Authentication token not provided', 401)
         try:
             # Decode the token
@@ -190,7 +190,7 @@ def super_admin_required(f):
     def decorated_function(*args, **kwargs):
         # Check that header for token is provided
         u_id_token = request.headers.get('u_id_token')
-        if u_id_token is None:
+        if u_id_token is None or u_id_token == '':
             return make_response('Unauthorized', 401)
         try:
             # Decode the token

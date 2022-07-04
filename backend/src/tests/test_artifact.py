@@ -3,7 +3,6 @@ from src.models.item_models import Artifact, Labelling
 from src.models.auth_models import User
 from src.models.project_models import Project
 from src import db
-from src.exc import HandlerAuthenticationError
 from src.conftest import RequestHandler
 from pytest import raises
 from src.routes.artifact_routes import __get_artifact_info, __get_artifact, __get_extended, generate_artifact_identifier
@@ -990,13 +989,15 @@ def check_login(app, client, route, params, method):
     request_handler = RequestHandler(app, client)
 
     # Make a request and check if the right error is thrown
-    with raises(HandlerAuthenticationError):
-        if method == 'GET':
-            request_handler.get(route, params, True)
-        if method == 'POST':
-            request_handler.post(route, params, True)
-        if method == 'PATCH':
-            request_handler.post(route, params, True)
+    match method:
+        case 'GET':
+            response = request_handler.get(route, params, False)
+        case 'POST':
+            response = request_handler.post(route, params, False)
+        case 'PATCH':
+            response = request_handler.post(route, params, False)
+    
+    assert response.status_code == 401
 
 
 """
