@@ -15,7 +15,7 @@ export class TestError extends Error {
   }
 }
 
-fdescribe('LabelFormComponent', () => {
+describe('LabelFormComponent', () => {
   let component: LabelFormComponent;
   let fixture: ComponentFixture<LabelFormComponent>;
 

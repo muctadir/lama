@@ -8,9 +8,6 @@ describe('AddArtifactComponent', () => {
   let component: AddArtifactComponent;
   let fixture: ComponentFixture<AddArtifactComponent>;
 
-  // Instantiation of Router
-  let router: Router;
-
   // Array of artifact strings
   let artifacts: Array<string> = ["Here is one artifact",
     "And here is a second artifact", "Finally, this is the last artifact."];
@@ -40,10 +37,6 @@ describe('AddArtifactComponent', () => {
       providers: [NgbActiveModal]
     })
       .compileComponents();
-    // Inject the router into the component's constructor
-    router = TestBed.inject(Router);
-    // When the url gets requested, return this string
-    spyOnProperty(router, 'url', 'get').and.returnValue('project/1/artifactmanagement')
   });
 
   beforeEach(() => {
@@ -80,7 +73,6 @@ describe('AddArtifactComponent', () => {
 
     // Checks that the file and the project id have been set correctly
     expect(component.file).toEqual(file);
-    expect(component.p_id).toEqual(1);
   })
 
   // Tests that onChange does not modify file and p_id if no input is detected
@@ -103,7 +95,6 @@ describe('AddArtifactComponent', () => {
 
     // Checks that the file and the project id have not been modified
     expect(component.file).toEqual(null);
-    expect(component.p_id).toEqual(0);
   })
 
   // Tests if fileUpload works correctly
