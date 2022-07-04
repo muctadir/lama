@@ -168,8 +168,10 @@ def test_conflict_management_page_noLogin(app, client):
     request_handler = RequestHandler(app, client)
 
     # Make a request and check if the right error is thrown
-    with raises(HandlerAuthenticationError):
-        request_handler.get('/conflict/conflictmanagement', {'p_id': 1}, True)
+
+    response = request_handler.get('/conflict/conflictmanagement', {'p_id': 1}, False)
+
+    assert response.status_code == 401
 
 # Tests if the route /conflict/conflictmanagement throws an error
 # id the user does not have access to the project
@@ -223,9 +225,9 @@ def test_single_label_per_user_noLogin(app, client):
     # Request handler
     request_handler = RequestHandler(app, client)
 
-    # Make a request and check if the right error is thrown
-    with raises(HandlerAuthenticationError):
-        request_handler.get('/conflict/LabelPerUser', {'p_id': 1}, True)
+    response = request_handler.get('/conflict/LabelPerUser', {'p_id': 1}, False)
+    
+    assert response.status_code == 401
 
 # Tests if the route /conflict/LabelPerUser throws an error
 # id the user does not have access to the project
