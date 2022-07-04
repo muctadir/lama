@@ -112,10 +112,7 @@ export class AccountInfoService {
   async makeAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response = this.requestHandler.get("/auth/check_login", {}, true);
-
-      // Waits on the request
-      await response;
+      await this.requestHandler.get("/auth/check_login", {}, true);
 
       // Returns true if the token is valid
       return true;
@@ -137,10 +134,7 @@ export class AccountInfoService {
   async makeSuperAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response: any = this.requestHandler.get("/auth/check_super_admin", {}, true);
-
-      // Waits on the request
-      await response;
+      await this.requestHandler.get("/auth/check_super_admin", {}, true);
 
       // Returns true if the token is valid
       return true;
@@ -171,10 +165,10 @@ export class AccountInfoService {
   }
 
   /**
-   * Login the users
+   * Makes a request to the backend to login the user
    * 
-   * @param user 
-   * @returns response of login
+   * @param user user account details
+   * @returns whether the login was succesful
    * @throws error is an error occurs
    */
   async loginUser(user: Record<string, any>): Promise<any> {
@@ -184,7 +178,6 @@ export class AccountInfoService {
       throw e;
     }
   }
-
 
   /**
    * Makes request to the backend to edit password

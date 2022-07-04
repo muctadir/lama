@@ -141,15 +141,10 @@ export class SingleThemeViewComponent {
     // Get the parent
     let parent = this.theme.getParent();
     // Check is parent is undefined
-    if (parent != undefined) {
-      if (parent.getName() != undefined) {
-        // If not return the name
-        return parent.getName();
-      } else {
-        // Otherwise return ""
-        return "";
-      }
-    }
+    if(parent != undefined){
+      // If not return the name
+      return parent.getName();
+    }   
     // Otherwise return ""
     return "";
   }

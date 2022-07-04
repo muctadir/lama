@@ -160,7 +160,7 @@ export class ProjectCreationComponent implements OnInit {
       let admin = false;
       let adminCheckbox = document.getElementById("projectAdminCheckBox-" + projectMember.getUsername()) as HTMLInputElement;
       if (adminCheckbox != null) {
-        admin = adminCheckbox?.checked;
+        admin = adminCheckbox.checked;
       }
       // Push the user ids and admin status to list
       projectInformation["users"].push({

@@ -12,7 +12,7 @@ import { ToastCommService } from './toast-comm.service';
   providedIn: 'root'
 })
 export class ProjectDataService {
-  private requestHandler: RequestHandler;
+  requestHandler: RequestHandler;
   private sessionToken: string | null;
 
   /**

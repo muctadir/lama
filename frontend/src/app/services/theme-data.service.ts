@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
 export class ThemeDataService {
 
   // Request handler variable
-  private requestHandler: RequestHandler;
+  requestHandler: RequestHandler;
   // Session token variable
   private sessionToken: string | null;
 
@@ -112,7 +112,7 @@ export class ThemeDataService {
    * @param subThemes json of sub-themes
    * @returns childArray. array of children themes
    */
-  createChildren(subThemes: [any]): Array<Theme> {
+  createChildren(subThemes: Array<any>): Array<Theme> {
     // List for the children
     let childArray: Array<Theme> = [];
     // For each child make an object
@@ -130,7 +130,7 @@ export class ThemeDataService {
    * @param labels json of labels
    * @returns labelsArray. array of labels
    */
-  createLabels(labels: []): Array<Label> {
+  createLabels(labels: Array<any>): Array<Label> {
     // List for the labels 
     let labelsArray: Array<Label> = [];
     // For each label in the list
@@ -157,7 +157,7 @@ export class ThemeDataService {
    * @param artifacts json of artifacts 
    * @returns artifactArray. list of artifacts
    */
-  createArtifacts(artifacts: []): Array<StringArtifact> {
+  createArtifacts(artifacts: Array<any>): Array<StringArtifact> {
     // List for the artifacts
     let artifactArray: Array<StringArtifact> = [];
     for (let artifact of artifacts) {

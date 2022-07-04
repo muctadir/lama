@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
@@ -7,7 +8,6 @@ import { User } from 'app/classes/user';
 import { LabellingPageComponent } from './labelling-page.component';
 import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabelFormComponent } from 'app/modals/label-form/label-form.component';
-import { FormBuilder } from '@angular/forms';
 
 /**
  * Testing suite for the labelling page
@@ -391,6 +391,82 @@ describe('LabellingPageComponent', () => {
     expect(result).toBeDefined();
   });
 
+  it('should test create response function; advanced test', () => {
+    // Creates dummy input
+    let lt = new LabelType(1, "lt1", []);
+    let label = new Label(1, "label1", "desc1", "lt1");
+
+    // Creates the dummy form using dummy input
+    let formBuilder = new FormBuilder();
+     let labelForm = formBuilder.group({
+      labelType: [lt],
+      label: [label],
+      remark: ["something"],
+    });
+    
+    // Enters dummy input into component var
+    component.labellings = new FormArray([labelForm]);
+
+    // Makes the function call
+    let result = component.createResponse(2);
+
+    let expResult = [
+      {a_id: -1, 
+        label_type: {id: 1, name: "lt1"}, 
+        label: {id: 1, name: "label1"}, 
+        remark: "something", 
+        time: 2}
+      ];
+    // Checks whether return value is defined
+    expect(result).toEqual(expResult);
+  });
+
+  it('should test create response function; null form', () => {
+    // Creates the dummy form using dummy input
+    let formBuilder = new FormBuilder();
+     let labelForm = formBuilder.group({
+      something: undefined
+    });
+    
+    // Enters dummy input into component var
+    component.labellings = new FormArray([labelForm]);
+
+    // Makes the function call
+    let result = component.createResponse(2);
+
+    let expResult = [
+      {a_id: -1, 
+        label_type: {id: undefined, name: undefined}, 
+        label: {id: undefined, name: undefined}, 
+        remark: undefined, 
+        time: 2}
+      ];
+    // Checks whether return value is defined
+    expect(result).toEqual(expResult);
+  });
+
+  it('should test create response function; invalid status', () => {
+    // Creates the dummy form that will never be valid
+    let formBuilder = new FormBuilder();
+     let labelForm = formBuilder.group({
+      something: ["test", [Validators.required, Validators.minLength(10)]]
+    });
+
+    // Enters dummy input into component var
+    component.labellings = new FormArray([labelForm]);
+
+    // Makes the function call and stores error
+    let error;
+    try {
+      component.createResponse(2);
+    } catch(e) {
+      error = e;
+    }
+
+    // Checks whether error is correct
+    expect(error).toEqual(new Error('Submission invalid'));
+  });
+
   it('sendSubmission function test, no error case 1', async () => {
     // Creates spies for function calls
     let spyLabel = spyOn(component["labellingDataService"], "postLabelling");
@@ -559,5 +635,17 @@ describe('LabellingPageComponent', () => {
 
     // Tests the results
     expect(result).toBe(3);
-  })
+  });
+
+  it('should test endPosFixer case 3', () => {
+    // Sets the artifact
+    component.artifact = new StringArtifact(1, "xyz", "ab cdd ");
+
+    // Calls the function to be tested
+    let result = component.endPosFixer(3);
+
+    // Tests the results
+    expect(result).toBe(2);
+  });
+
 });

@@ -8,17 +8,28 @@ export class AppToastService {
   // Array of toasts
   toasts: any[] = [];
 
-  // Show the toast
+  /**
+   * Adds a toast to the list of toasts
+   * 
+   * @param textOrTpl the string of the toast
+   * @param options options of the toast
+   */
   show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {
     this.toasts.push({ textOrTpl, ...options });
   }
 
-  // Remove the toast from the array
+  /**
+   * Removes a toast from the list of toasts
+   * 
+   * @param toast toast to remove from the list
+   */
   remove(toast: any): void {
     this.toasts = this.toasts.filter(t => t !== toast);
   }
 
-  // Clear the toast from the array
+  /**
+   * Clears the entire list of toasts
+   */
   clear(): void {
     this.toasts.splice(0, this.toasts.length);
   }
