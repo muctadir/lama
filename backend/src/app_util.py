@@ -51,11 +51,11 @@ def check_username(username):
     @return : True <=> username is valid
     A valid username is defined as a username that:
         has no leading or trailing whitespace
-        is at least 5 characters long
+        is at least 3 characters long
         is no more than 32 characters long (database constraint)
     """
     return len(username.strip()) == len(username) and \
-        len(username) >= 5 and \
+        len(username) >= 3 and \
         len(username) <= 32  # max username length according to db
 
 
