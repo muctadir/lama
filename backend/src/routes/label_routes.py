@@ -418,10 +418,10 @@ def get_label_artifacts(label, u_id, admin):
     if admin:
         return label.artifacts
     # Else get the artifacts they may see
-    return db.session.execute(
+    return db.session.scalars(
         select(Artifact)
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
-    )
+    ).all()
 
 # Author: B. Henkemans
 # Soft delete labels route
