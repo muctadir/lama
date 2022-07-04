@@ -9,9 +9,9 @@ def __insert(prepend, line):
 
 def convert_file(name, out):
     # Add .sql extension if it does not exist
-    if name[:-4] != '.sql':
+    if name[-4:] != '.sql':
         name += '.sql'
-    if out[:-4] != '.sql':
+    if out[-4:] != '.sql':
         out += '.sql'
 
     # Open file with that name
