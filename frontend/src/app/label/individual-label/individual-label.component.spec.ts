@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { Theme } from 'app/classes/theme';
 
-fdescribe('IndividualLabelComponent', () => {
+describe('IndividualLabelComponent', () => {
   let component: IndividualLabelComponent;
   let fixture: ComponentFixture<IndividualLabelComponent>;
   // Instantiation of NgbModal
