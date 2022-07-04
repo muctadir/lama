@@ -48,7 +48,7 @@ def test_create(app, client):
                                     'labelDescription': 'This is an example of a good idea!',
                                     'p_id': 2}
         create_label_helper(
-            request_handler, label_missing_information, 'Bad Request', 400)
+            request_handler, label_missing_information, 'Not all required arguments supplied', 400)
 
         # Request with invalid character in the name
         label_invalid_character = {'labelTypeId': 3,
@@ -95,7 +95,7 @@ def test_create(app, client):
             request_handler, label_wrong_lt, 'Label type not in this project', 400)
 
         # Regular insert
-        create_label_helper(request_handler, label, 'Created', 200)
+        create_label_helper(request_handler, label, 'Created', 201)
 
         # Request with label name which exists in another project
         label_wrong_lt = {'labelTypeId': 3,
@@ -103,7 +103,7 @@ def test_create(app, client):
                         'labelDescription': 'A brilliant idea!',
                         'p_id': 2}
         create_label_helper(
-            request_handler, label_wrong_lt, 'Created', 200)
+            request_handler, label_wrong_lt, 'Created', 201)
 
         # Missing tests:
         # - Frozen project
@@ -169,7 +169,7 @@ def create_label_helper(request_handler, label, expected_text, expected_status):
     # Check if the correct response text is received
     assert response.text == expected_text
     # If we expect this to work
-    if expected_status == 200:
+    if expected_status == 201:
         # Query on the data provided
         entry = db.session.scalars(select(Label).where(
             Label.lt_id == label['labelTypeId'],
