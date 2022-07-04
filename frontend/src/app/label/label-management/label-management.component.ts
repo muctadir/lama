@@ -183,15 +183,17 @@ export class LabelManagementComponent {
     // Result dictionary
     let resultDict: { [id: number]: string } = {};
 
-    this.labels.forEach(async (label: Label) => {
-      // Wait for the labelling data service to get the labelling count
-      const result = await this.labellingDataService.getLabellingCount({
-        p_id: this.p_id,
-        l_id: label.getId(),
+    if(this.labels != undefined){
+      this.labels.forEach(async (label: Label) => {
+        // Wait for the labelling data service to get the labelling count
+        const result = await this.labellingDataService.getLabellingCount({
+          p_id: this.p_id,
+          l_id: label.getId(),
+        });
+        // Fill in the result dictionary
+        resultDict[label.getId()] = result;
       });
-      // Fill in the result dictionary
-      resultDict[label.getId()] = result;
-    });
+    }
     // Set the result equal to the label amount variable
     this.labelAmount = resultDict;
   }

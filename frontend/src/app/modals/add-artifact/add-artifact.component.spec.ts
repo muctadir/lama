@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddArtifactComponent } from './add-artifact.component';
-import { Router } from '@angular/router';
 
 describe('AddArtifactComponent', () => {
   let component: AddArtifactComponent;
@@ -107,10 +106,9 @@ describe('AddArtifactComponent', () => {
     spyOn(component, 'addArtifacts');
 
     // Call the function and wait until it's done
-    component.fileUpload().then(() => {
-      // Check that the right artifacts are sent to the backend
-      expect(component.addArtifacts).toHaveBeenCalledWith(1, artifact_info)
-    });
+    await component.fileUpload();
+    // Check that the right artifacts are sent to the backend
+    expect(component.addArtifacts).toHaveBeenCalledWith(1, artifact_info)
   })
 
   // Tests if fileUpload reacts correctly when no artifacts are uploaded
@@ -125,15 +123,14 @@ describe('AddArtifactComponent', () => {
     let toast_spy = spyOn(component['toastCommService'], 'emitChange')
 
     // Call the function and wait until it's done
-    component.fileUpload().then(() => {
-      // Check that the addArtifacts was not called
-      expect(component.addArtifacts).not.toHaveBeenCalled();
-      // Check that an error was detected
-      expect(component.error).toEqual(true)
-      // Check that an error toast was displayed
-      expect(toast_spy)
-        .toHaveBeenCalledWith([false, "No artifacts were uploaded"]);
-    });
+    await component.fileUpload()
+    // Check that the addArtifacts was not called
+    expect(component.addArtifacts).not.toHaveBeenCalled();
+    // Check that an error was detected
+    expect(component.error).toEqual(true)
+    // Check that an error toast was displayed
+    expect(toast_spy)
+      .toHaveBeenCalledWith([false, "No artifacts were uploaded"]);
   })
 
   // Tests if fileUpload reacts correctly when readFile throws an error
@@ -148,15 +145,14 @@ describe('AddArtifactComponent', () => {
     let toast_spy = spyOn(component['toastCommService'], 'emitChange')
 
     // Call the function and wait until it's done
-    component.fileUpload().then(() => {
-      // Check that the addArtifacts was not called
-      expect(spy).not.toHaveBeenCalled();
-      // Check that an error was detected
-      expect(component.error).toEqual(true)
-      // Check that an error toast was displayed
-      expect(toast_spy)
-        .toHaveBeenCalledWith([false, "Error uploading artifacts"]);
-    });
+    await component.fileUpload()
+    // Check that the addArtifacts was not called
+    expect(spy).not.toHaveBeenCalled();
+    // Check that an error was detected
+    expect(component.error).toEqual(true)
+    // Check that an error toast was displayed
+    expect(toast_spy)
+      .toHaveBeenCalledWith([false, "Error uploading artifacts"]);
   })
 
   // Tests if addArtifacts works correctly if user is admin
@@ -170,20 +166,19 @@ describe('AddArtifactComponent', () => {
     let toast_spy = spyOn(component['toastCommService'], 'emitChange')
 
     // Call the funciton and wait until it's done
-    component.addArtifacts(1, artifact_info).then(() => {
-      // Check that artifactDataService.addArtifacts was called with the right parameters
-      expect(artifact_spy).toHaveBeenCalledWith(1, artifact_info);
-      // Check that the success toast was displayed
-      expect(toast_spy)
-        .toHaveBeenCalledWith([true,
-          "Upload successful. Artifact identifier: ".concat(response['identifier'])]);
-      // Check that the not admin toast was not displayed
-      expect(toast_spy).not
-        .toHaveBeenCalledWith([false,
-          "You are not admin, so you will not be able to see the artifacts you have not labelled"]);
-      // Check that error was set to false
-      expect(component.error).toEqual(false);
-    })
+    await component.addArtifacts(1, artifact_info)
+    // Check that artifactDataService.addArtifacts was called with the right parameters
+    expect(artifact_spy).toHaveBeenCalledWith(1, artifact_info);
+    // Check that the success toast was displayed
+    expect(toast_spy)
+      .toHaveBeenCalledWith([true,
+        "Upload successful. Artifact identifier: ".concat(response['identifier'])]);
+    // Check that the not admin toast was not displayed
+    expect(toast_spy).not
+      .toHaveBeenCalledWith([false,
+        "You are not admin, so you will not be able to see the artifacts you have not labelled"]);
+    // Check that error was set to false
+    expect(component.error).toEqual(false);
   })
 
   // Tests if addArtifacts works correctly if user is not admin
@@ -197,20 +192,19 @@ describe('AddArtifactComponent', () => {
     let toast_spy = spyOn(component['toastCommService'], 'emitChange')
 
     // Call the funciton and wait until it's done
-    component.addArtifacts(1, artifact_info).then(() => {
-      // Check that artifactDataService.addArtifacts was called with the right parameters
-      expect(artifact_spy).toHaveBeenCalledWith(1, artifact_info);
-      // Check that the success toast was displayed
-      expect(toast_spy)
-        .toHaveBeenCalledWith([true,
-          "Upload successful. Artifact identifier: ".concat(response['identifier'])]);
-      // Check that the not admin toast was displayed
-      expect(toast_spy)
-        .toHaveBeenCalledWith([false,
-          "You are not admin, so you will not be able to see the artifacts you have not labelled"]);
-      // Check that error was set to false
-      expect(component.error).toEqual(false);
-    })
+    await component.addArtifacts(1, artifact_info)
+    // Check that artifactDataService.addArtifacts was called with the right parameters
+    expect(artifact_spy).toHaveBeenCalledWith(1, artifact_info);
+    // Check that the success toast was displayed
+    expect(toast_spy)
+      .toHaveBeenCalledWith([true,
+        "Upload successful. Artifact identifier: ".concat(response['identifier'])]);
+    // Check that the not admin toast was displayed
+    expect(toast_spy)
+      .toHaveBeenCalledWith([false,
+        "You are not admin, so you will not be able to see the artifacts you have not labelled"]);
+    // Check that error was set to false
+    expect(component.error).toEqual(false);
   })
 
   // Tests that the readFile function works correctly
@@ -222,10 +216,9 @@ describe('AddArtifactComponent', () => {
     component.file = file;
 
     // Call the function and wait until it's done
-    component.readFile().then((result) => {
-      // Check that the readFile function returns the right artifacts
-      expect(result).toEqual(["Test string", "Another string"]);
-    })
+    let result = await component.readFile()
+    // Check that the readFile function returns the right artifacts
+    expect(result).toEqual(["Test string", "Another string"]);
   })
 
   // Tests that readFile displays error toasts when needed
@@ -240,9 +233,8 @@ describe('AddArtifactComponent', () => {
     let toast_spy = spyOn(component['toastCommService'], 'emitChange')
 
     // Call the function and wait until it's done
-    component.readFile().then(() => {
-      // Check that the invalid file type toast is displayed
-      expect(toast_spy).toHaveBeenCalledWith([false, "Invalid file type, should be .txt"])
-    })
+    component.readFile()
+    // Check that the invalid file type toast is displayed
+    expect(toast_spy).toHaveBeenCalledWith([false, "Invalid file type, should be .txt"])
   })
 });

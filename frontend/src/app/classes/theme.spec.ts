@@ -55,17 +55,6 @@ describe('Theme', () => {
       .toBe(newName)
   })
 
-  // Setting a bad theme name
-  it('should throw an error for bad theme description', () => {
-    // Create instances
-    const theme2 = new Theme(id, name, desc);
-    const newName = "";
-    // catch wrong name
-    try {
-      theme2.setName(newName);
-    } catch (error) { }
-  });
-
   // Getting the description
   it("should get the description", () => {
     expect(theme.getDesc())
@@ -83,17 +72,6 @@ describe('Theme', () => {
     expect(theme2.getDesc())
       .toBe(newDesc)
   })
-
-  // Setting a bad theme description
-  it('should throw an error for bad theme description', () => {
-    // Create instances
-    const theme2 = new Theme(id, name, desc);
-    const newDesc = "";
-    // catch wrong name
-    try {
-      theme2.setDesc(newDesc);
-    } catch (error) { }
-  });
 
   // Setting and getting the parent themes
   it("should set and get parent themes", () => {
@@ -133,6 +111,19 @@ describe('Theme', () => {
     // Check
     expect(theme2.getNumberOfChildren())
       .toBe(children.length)
+  })
+
+  // Getting the number of child themes
+  it("should get the number of child themes, error case", () => {
+    // Create instances
+    const theme2 = new Theme(id, name, desc)
+    const children = undefined;
+    // Set children
+    theme2.setChildren(undefined);
+    let result = theme2.getNumberOfChildren();
+
+    // Check
+    expect(result).toEqual(0);
   })
 
   // Setting and getting the theme labels
