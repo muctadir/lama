@@ -10,7 +10,6 @@ from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
 import click
-from src.models import db
 
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
