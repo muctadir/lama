@@ -152,6 +152,63 @@ def test_edit(app, client):
         edit_label_helper(
             request_handler, label_missing_information, 'Bad Request', 400)
 
+def test_merge(app, client):
+    
+    merge_params = {
+        'mergedLabels': [],
+        'newLabelName': '',
+        'newLabelDescription': '',
+        'p_id': 1,
+        'labelTypeName': ''
+    }
+
+def test_merge_args_fail(app, client):
+
+    # Simulate being logged in as an admin
+    request_handler = RequestHandler(app, client, 1)
+
+    merge_label_helper(request_handler, {'bad_param': 'test'}, 'Not all required arguments supplied', 400)
+
+    merge_label_helper(request_handler, {'newLabelName': ''}, 'Label name cannot be empty', 400)
+
+    merge_label_helper(request_handler, {'newLabelDescription': ''}, 'Label description cannot be empty', 400)
+
+    merge_label_helper(request_handler, {'newLabelName': 'Merged Label '}, 'Input contains leading or trailing whitespaces', 400)
+
+    merge_label_helper(request_handler, {'newLabelName': 'Merged ; Label'}, 'Input contains a forbidden character', 511)
+
+    merge_label_helper(request_handler, {'newLabelName': 'Happy'}, 'Label name already exists', 400)
+
+    merge_label_helper(request_handler, {'mergedLabels': [1, 1]}, 'Label ids must be unique', 400)
+
+    merge_label_helper(request_handler, {'mergedLabels': [1, 30]}, 'One or more labels do not exist', 400)
+
+    merge_label_helper(request_handler, {'p_id': 2}, 'Labels must be in the same project', 400)
+
+    merge_label_helper(request_handler, {'mergedLabels': [1, 9]}, 'Labels must be of the same type', 400)
+
+    merge_label_helper(request_handler, {}, 'Success', 200)
+
+
+def merge_label_helper(request_handler, altered_params, expected_text, expected_status):
+    
+    merge_params = {
+        'mergedLabels': [2, 4],
+        'newLabelName': 'Merged Label',
+        'newLabelDescription': 'Description for Merged Label',
+        'labelTypeName': 'Emotion',
+        'p_id': 1,
+    }
+
+    merge_params.update(altered_params)
+
+    response = request_handler.post('/label/merge', merge_params, True)
+
+    assert response.status_code == expected_status
+    assert response.text == expected_text
+
+    return response
+
 """
 Author: Bartjan Henkemans
 A helper to execute create label tests

@@ -250,7 +250,7 @@ def merge_route(*, user):
 
     # Check whether the length of the label name is at least one character long
     if args['newLabelName'] is None or len(args['newLabelName']) <= 0:
-        return make_response('Label name cannot be empty')
+        return make_response('Label name cannot be empty', 400)
 
     # Check whether the length of label description is at least one character long
     if args['newLabelDescription'] is None or len(args['newLabelDescription']) <= 0:
