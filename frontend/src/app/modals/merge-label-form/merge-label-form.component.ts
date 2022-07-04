@@ -124,15 +124,18 @@ export class MergeLabelFormComponent {
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
 
-    // Check if the label forms were filled in
-    for (let label of arrayResult){
-      // If a label form was not filled in
-      if (label['label'] == null){
-        // Return a toast error message
-        this.toastCommService.emitChange([false, "Please fill in all label forms"]);
-        return
+    // Check is the arrayResult is not null
+    if (arrayResult != null){
+      // Check if the label forms were filled in
+      for (let label of arrayResult){
+        // If a label form was not filled in
+        if (label['label'] == null){
+          // Return a toast error message
+          this.toastCommService.emitChange([false, "Please fill in all label forms"]);
+          return
+        }
       }
-    }
+    } 
 
     // Get the ids of the labels to be merged
     const mergedLabels = arrayResult?.map(result => result['label'].getId());
