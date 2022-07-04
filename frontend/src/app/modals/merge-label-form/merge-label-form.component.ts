@@ -117,12 +117,24 @@ export class MergeLabelFormComponent {
   async submit(): Promise<void> {
     // Check you are merging two or more labels
     if (this.toBeMergedLabels.length < 2) {
-      this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
+      this.toastCommService.emitChange([false, "Please select two or more labels to merge"]);
       return
     }
+
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
 
+    // Check if the label forms were filled in
+    for (let label of arrayResult){
+      // If a label form was not filled in
+      if (label['label'] == null){
+        // Return a toast error message
+        this.toastCommService.emitChange([false, "Please fill in all label forms"]);
+        return
+      }
+    }
+
+    // Get the ids of the labels to be merged
     const mergedLabels = arrayResult?.map(result => result['label'].getId());
 
     try {
