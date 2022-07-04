@@ -151,8 +151,6 @@ def edit_label(*, user):
 
 # Author: Bartjan, Victoria
 # Check whether the pID exists
-
-
 @label_routes.route('/allLabels', methods=['GET'])
 @login_required
 @in_project
