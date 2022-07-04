@@ -33,13 +33,20 @@ db_opt = AppGroup("db-opt")
 # Currently, database initialization needs to be done by hand.
 # `migrate()` takes the defined models and creates tables in the database, if
 # those tables do not yet exist.
+# This is the CLI command for initialization
 @db_opt.command("init")
-def db_init():
+@click.option("--dir", default='migrations')
+def click_db_init(dir):
+    db_init(dir)
+
+# This is the function that actually handles the initialization
+def db_init(dir):
+
     from src.models.auth_models import User, UserStatus
 
-    init()
-    migrate(message="Initial migration")
-    upgrade()
+    init(directory=dir)
+    migrate(message="Initial migration", directory=dir)
+    upgrade(directory=dir)
 
     # This section creates the super admin upon initializing the database
     # The login details are retrieved from environment variables
@@ -82,17 +89,18 @@ def create_app(config={'TESTING': False}):
     mig = Migrate(app, db)
 
     # Since a new database is created when testing, we must migrate each time.
-    if config['TESTING'] is True:
+    if config['TESTING']:
         # The in-memory database is discarded after each test, so we have to
         # remove the migrations folder used by the last test.
         mig_path = Path(__file__).parent.parent / 'migrations-test'
         if mig_path.is_dir():
             rmtree(str(mig_path))
         # This signals which app object the commands below apply to.
-        with app.app_context():
-            init(directory=str(mig_path))
-            migrate(directory=str(mig_path))
-            upgrade(directory=str(mig_path))
+        if config['INIT']:
+            with app.app_context():
+                init(directory=str(mig_path))
+                migrate(directory=str(mig_path))
+                upgrade(directory=str(mig_path))
 
     # generates a secret key for login use
     app.secret_key = token_hex()

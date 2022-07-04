@@ -8,7 +8,7 @@ Author: Eduardo Costa Martins
 """
 @fixture
 def app():
-    app = create_app({'TESTING': True})
+    app = create_app({'TESTING': True, 'INIT': True})
 
     # Database modifications require app context
     with app.app_context():
