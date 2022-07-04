@@ -179,7 +179,7 @@ export class LabelManagementComponent {
   }
 
   // Get the labelled count
-  getLabelledCount(): void {
+  async getLabelledCount(): Promise<void> {
     // Result dictionary
     let resultDict: { [id: number]: string } = {};
 

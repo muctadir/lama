@@ -8,7 +8,6 @@ import { Label } from 'app/classes/label';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 import { of } from 'rxjs';
-import { Router } from '@angular/router';
 import { StringArtifact } from 'app/classes/stringartifact';
 
 describe('IndividualLabelComponent', () => {
