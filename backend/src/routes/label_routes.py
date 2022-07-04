@@ -82,8 +82,6 @@ def create_label(*, user):
 
 # Author: Bartjan, Victoria, Linh, Jarl
 # Edit label
-
-
 @label_routes.route('/edit', methods=['PATCH'])
 @login_required
 @in_project
