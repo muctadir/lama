@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SingleArtifactViewComponent } from './single-artifact-view.component';
-import { Router } from '@angular/router';
 import { StringArtifact } from 'app/classes/stringartifact';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HistoryComponent } from 'app/modals/history/history.component';
@@ -12,8 +11,6 @@ describe('SingleArtifactViewComponent', () => {
   let component: SingleArtifactViewComponent;
   let fixture: ComponentFixture<SingleArtifactViewComponent>;
 
-  // Instantiation of Router
-  let router: Router;
   // Instantiation of NgbModal
   let modalService: NgbModal;
 
@@ -74,9 +71,6 @@ describe('SingleArtifactViewComponent', () => {
         "username": "User2"
       }]
   }
-  // Array of label types
-  let labelTypes = [new LabelType(1, "LT1", []),
-  new LabelType(2, "LT2", [])]
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -85,13 +79,9 @@ describe('SingleArtifactViewComponent', () => {
       declarations: [SingleArtifactViewComponent],
       providers: [NgbActiveModal]
     })
-      .compileComponents();
-    // Inject the router into the component's constructor
-    router = TestBed.inject(Router);
+    .compileComponents();
     // Inject the modal service into the component's constructor
     modalService = TestBed.inject(NgbModal)
-    // When the url gets requested, return this string
-    spyOnProperty(router, 'url', 'get').and.returnValue('project/1/singleartifact/12')
   });
 
   beforeEach(() => {
@@ -109,44 +99,35 @@ describe('SingleArtifactViewComponent', () => {
     // Spy on projectDataService.getFrozen and return false
     spyOn(component['projectDataService'], 'getFrozen').and.returnValue(Promise.resolve(false));
     // Spy on getArtifact and stub the call
-    spyOn(component, 'getArtifact');
+    let spy1 = spyOn(component, 'getArtifact');
     // Spy on getLabelTypesWithLabels and stub the call
-    spyOn(component, 'getLabelTypesWithLabels');
+    let spy2 = spyOn(component, 'getLabelTypesWithLabels');
 
-    // Call ngOnInit and wait until it's done
-    component.ngOnInit().then(() => {
-      // Check that the intialization parameters are set and the functions are called
-      expect(component['projectDataService'].getFrozen).toHaveBeenCalled();
-      expect(component.frozen).toEqual(false);
-      expect(component.changed).toEqual(false);
-      expect(component.users).toEqual([]);
-      expect(component.getArtifact).toHaveBeenCalledWith(12, 1);
-      expect(component.getLabelTypesWithLabels).toHaveBeenCalledWith(1);
-    })
-  })
+    // Calls the function to be tested
+    await component.ngOnInit();
+
+    // Checks the results
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
 
   // Tests that getArtifact works correctly
   it('should get the artifact and its data', async () => {
     // When artifactDataService.getArtifact is called, return the following data
-    let spy = spyOn(component['artifactDataService'], 'getArtifact').and
-      .returnValue(Promise.resolve(artifact_data))
+    let spy = spyOn(component['artifactDataService'], 'getArtifact').and.returnValue(Promise.resolve(artifact_data))
 
     // Call the function and wait until it's done
-    component.getArtifact(12, 1).then(() => {
-      // Check that artifactDataService.getArtifact was called with the right parameters
-      expect(spy).toHaveBeenCalledWith(1, 12);
+    await component.getArtifact(12, 1);
 
-      // Check that the artifact data was set correctly
-      expect(component.artifact).toEqual(artifact_data["result"]);
-      expect(component.userLabels).toEqual(artifact_data["labellings"]);
-      expect(component.username).toEqual(artifact_data["username"]);
-      expect(component.admin).toEqual(artifact_data["admin"]);
-      expect(component.users[0].getId()).toEqual(artifact_data["users"][0]["id"]);
-      expect(component.users[1].getId()).toEqual(artifact_data["users"][1]["id"]);
-      expect(component.users[0].getUsername()).toEqual(artifact_data["users"][0]["username"]);
-      expect(component.users[1].getUsername()).toEqual(artifact_data["users"][1]["username"]);
-    })
-  })
+    // Check that artifactDataService.getArtifact was called with the right parameters
+    expect(spy).toHaveBeenCalled();
+
+    // Check that the artifact data was set correctly
+    expect(component.artifact).toEqual(artifact_data["result"]);
+    expect(component.userLabels).toEqual(artifact_data["labellings"]);
+    expect(component.username).toEqual(artifact_data["username"]);
+    expect(component.admin).toEqual(artifact_data["admin"]);
+  });
 
   // Tests that openArtifactHistory works correctly
   it('should open the artifact history modal', async () => {
@@ -162,42 +143,25 @@ describe('SingleArtifactViewComponent', () => {
 
     // Check that modalService.open was called
     expect(modalService.open).toHaveBeenCalledWith(HistoryComponent, { size: 'xl' });
-  })
+  });
 
   // Tests that getLabelTypesWithLabels sets the right label types
   it('should set the correct labels', async () => {
+    let labelTypes = [new LabelType(1, "lt1", [])];
     // When labellingDataService.getLabelTypesWithLabels gets called, return the following array of labels
     let spy = spyOn(component['labellingDataService'], 'getLabelTypesWithLabels').and
       .returnValue(Promise.resolve(labelTypes));
 
     // Call the function and wait until it's done
-    component.getLabelTypesWithLabels(1).then(() => {
-      // Check that the labellingDataService.getLabelTypesWithLabels function was called
-      // with the right parameters
-      expect(spy).toHaveBeenCalledWith(1);
+    await component.getLabelTypesWithLabels(1)
 
-      // Check that the label types were set correctly
-      expect(component.labelTypes).toEqual(labelTypes)
-    })
-  })
+    // Check that the labellingDataService.getLabelTypesWithLabels function was called
+    // with the right parameters
+    expect(spy).toHaveBeenCalledWith(1);
 
-  // Tests that getLabelTypesWithLabels reacts correctly to an error
-  it('should redirect to the project homepage', () => {
-    // When labellingDataService.getLabelTypesWithLabels gets called, throw an error
-    spyOn(component['labellingDataService'], 'getLabelTypesWithLabels').and
-      .throwError("Test error")
-
-    // Call the function and wait until it's done
-    component.getLabelTypesWithLabels(1).then(() => {
-      // Check that the labellingDataService.getLabelTypesWithLabels function was called
-      // with the right parameters
-      expect(component['labellingDataService'].getLabelTypesWithLabels)
-        .toHaveBeenCalledWith(1);
-
-      // Check that theuser is redirected to the project homepage
-      expect(router.navigate).toHaveBeenCalledWith(['/project', 1]);
-    })
-  })
+    // Check that the label types were set correctly
+    expect(component.labelTypes).toEqual(labelTypes)
+  });
 
   // Tests that updateLabelling works correctly
   it('should update userLabels and changed', () => {
@@ -231,7 +195,7 @@ describe('SingleArtifactViewComponent', () => {
     expect(component.userLabels["User1"]["LT2"]["lt_id"]).toEqual(2);
     expect(component.userLabels["User1"]["LT2"]["labelRemark"]).toEqual("Some remark");
     expect(component.changed).toEqual(true);
-  })
+  });
 
   // Tests that updateLabelling works correctly
   it('should not update userLabels when the updated label is null', () => {
@@ -251,7 +215,7 @@ describe('SingleArtifactViewComponent', () => {
 
     // Check that the labelling was not updated
     expect(component.userLabels["User1"]["LT2"]).toEqual(artifact_data["labellings"]["User1"]["LT2"]);
-  })
+  });
 
   // Tests that updateLabellings works correctly
   it('should update the labellings and display a success toast', async () => {
@@ -263,34 +227,39 @@ describe('SingleArtifactViewComponent', () => {
     component.userLabels = artifact_data['labellings'];
 
     // Spy on labellingDataService.updateLabellings and stub the call
-    let labellings_spy = spyOn(component['labellingDataService'], 'updateLabellings')
+    let labellings_spy = spyOn(component['labellingDataService'], 'updateLabellings');
+    let toast_spy = spyOn(component['toastCommService'], 'emitChange');
+    spyOn(component, "ngOnInit");
 
     // Call the function and wait until it's done
-    component.updateLabellings().then(async () => {
-      // Check that labellingDataService.updateLabellings is called with the right parameters
-      expect(labellings_spy).toHaveBeenCalledWith(
-        artifact_data['admin'], 1, 12, artifact_data['username'], artifact_data['labellings'])
+    await component.updateLabellings()
 
-      // Check that the success toast is being called
-      expect(component['toastCommService'].emitChange).toHaveBeenCalledWith([true, "New labels saved successfully!"]);
-    })
-  })
+    // Check that labellingDataService.updateLabellings is called with the right parameters
+    expect(labellings_spy).toHaveBeenCalledWith(
+      artifact_data['admin'], 1, 12, artifact_data['username'], artifact_data['labellings'])
+
+    // Check that the success toast is being called
+    expect(toast_spy).toHaveBeenCalledWith([true, "New labels saved successfully!"]);
+    
+  });
 
   // Tests that updateLabellings displays an error toast when needed
   it('should display a failure toast', async () => {
     // Spy on labellingDataService.updateLabellings and throw an error
     let spy = spyOn(component['labellingDataService'], 'updateLabellings').and.throwError("Test error.")
+    spyOn(component, "ngOnInit");
 
     // Spy on toastCommService.emitChange and stub the call
     spyOn(component["toastCommService"], "emitChange");
 
     // Call the function and wait until it's done
-    component.updateLabellings().then(async () => {
-      // Check that labellingDataService.updateLabellings is called with the right parameters
-      expect(spy).toHaveBeenCalled();
+    await component.updateLabellings()
 
-      // Check that the success toast is being called
-      expect(component['toastCommService'].emitChange).toHaveBeenCalledWith([false, "Something went wrong while saving."]);
-    })
+    // Check that labellingDataService.updateLabellings is called with the right parameters
+    expect(spy).toHaveBeenCalled();
+
+    // Check that the success toast is being called
+    expect(component['toastCommService'].emitChange).toHaveBeenCalledWith([false, "Something went wrong while saving."]);
+  
   })
 });
