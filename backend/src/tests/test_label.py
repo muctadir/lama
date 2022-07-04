@@ -152,7 +152,6 @@ def test_edit(app, client):
         edit_label_helper(
             request_handler, label_missing_information, 'Bad Request', 400)
 
-
 """
 Author: Bartjan Henkemans
 A helper to execute create label tests
@@ -162,8 +161,6 @@ A helper to execute create label tests
 @param expected_text: What we expect as a text response
 @param expected_text: What we expect as a code response 
 """
-
-
 def create_label_helper(request_handler, label, expected_text, expected_status):
     # Send the post request
     response = request_handler.post('/label/create', label, True)
@@ -183,7 +180,6 @@ def create_label_helper(request_handler, label, expected_text, expected_status):
         assert entry
         assert len(entry) == 1
 
-
 """
 Author: Bartjan Henkemans
 A helper to execute edit label tests
@@ -193,8 +189,6 @@ A helper to execute edit label tests
 @param expected_text: What we expect as a text response
 @param expected_text: What we expect as a code response 
 """
-
-
 def edit_label_helper(request_handler, label, expected_text, expected_status):
     # Send the post request
     response = request_handler.patch('/label/edit', label, True)

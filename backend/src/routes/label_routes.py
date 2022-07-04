@@ -219,8 +219,6 @@ def get_single_label():
 
 # Author: Eduardo
 # Merge labels
-
-
 @label_routes.route('/merge', methods=['POST'])
 @login_required
 @in_project
@@ -355,7 +353,7 @@ def merge_route(*, user):
                 new_label.id,
                 # The project id
                 args['p_id']
-            )  # Distinct in case some themes contain multiple of the labels being merged
+            ) # Distinct in case some themes contain multiple of the labels being merged
             .distinct()
         )
     )
@@ -376,8 +374,6 @@ def merge_route(*, user):
 # @param label
 # @param u_id - user id
 # @param admin
-
-
 def get_label_info(label, u_id, admin):
     # Schemas
     label_schema = LabelSchema()
@@ -395,8 +391,6 @@ def get_label_info(label, u_id, admin):
 # @param label
 # @param u_id - user id
 # @param admin
-
-
 def get_label_artifacts(label, u_id, admin):
     if admin:
         return label.artifacts
@@ -408,8 +402,6 @@ def get_label_artifacts(label, u_id, admin):
 
 # Author: B. Henkemans
 # Soft delete labels route
-
-
 @label_routes.route('/delete', methods=['POST'])
 @login_required
 @in_project
@@ -472,8 +464,6 @@ def count_usage_route():
 
 # Author: Eduardo
 # Search labels
-
-
 @label_routes.route('/search', methods=['GET'])
 @login_required
 @in_project
@@ -528,7 +518,6 @@ def search_route():
     # Serialise objects and jsonify them
     return make_response(jsonify(label_schema.dump(labels_results, many=True)))
 
-
 """
 Records a creation of a label in the label changelog
 @param l_id: the id of the label created
@@ -537,8 +526,6 @@ Records a creation of a label in the label changelog
 @param p_id: the id of the project the new label is in
 @param u_id: the id of the user that created the label
 """
-
-
 def __record_creation(l_id, l_name, lt_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -555,7 +542,6 @@ def __record_creation(l_id, l_name, lt_name, p_id, u_id):
 
     db.session.add(change)
 
-
 """
 Records the editing of label's name in the label changelog
 @param l_id: the id of the label edited
@@ -564,8 +550,6 @@ Records the editing of label's name in the label changelog
 @param p_id: the id of the project the label is in
 @param u_id: the id of the user that edited the label
 """
-
-
 def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -583,7 +567,6 @@ def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
 
     db.session.add(change)
 
-
 """
 Records the editing of label's name in the label changelog
 @param l_id: the id of the label edited
@@ -591,8 +574,6 @@ Records the editing of label's name in the label changelog
 @param p_id: the id of the project the label is in
 @param u_id: the id of the user that edited the label
 """
-
-
 def __record_description_edit(l_id, old_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -606,7 +587,6 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
     )
 
     db.session.add(change)
-
 
 """
 Records the merge of a list of labels in the label changelog
@@ -627,8 +607,6 @@ Records the merge of a list of labels in the label changelog
         name of a merged label that used to belong to the theme
     )
 """
-
-
 def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, theme_changes):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -681,7 +659,6 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
     ) for t_name, t_id, old_label_name in theme_changes]
     db.session.add_all(changes)
 
-
 """
 Records the deletion of a label in the label changelog
 Note that since the label can no longer be viewed, its personal history can't be viewed either
@@ -691,8 +668,6 @@ This change is still recorded in case the project is extended with a history pag
 @param p_id: The project id the label belong(ed/s) to
 @param u_id: The id of the user that deleted the label
 """
-
-
 def __record_delete(l_id, name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -706,15 +681,12 @@ def __record_delete(l_id, name, p_id, u_id):
     )
     db.session.add(change)
 
-
 """
 Function that checks if a label name is already taken
 @params name: string, the name to be checked
 @returns true if name is already a label name and false otherwise
 @author Linh, Jarl
 """
-
-
 def label_name_taken(name, label_id):
     if bool(db.session.scalars(
             select(Label)
@@ -726,7 +698,6 @@ def label_name_taken(name, label_id):
         return True
     return False
 
-
 """
 Author: Eduardo Costa Martins
 @param p_id : The id of the project to get loose labels of
@@ -737,10 +708,7 @@ Author: Eduardo Costa Martins
     'type' : 'Label' (to distinguish from other nodes that do not represent labels)
 }
 """
-
-
 def get_loose_labels(p_id):
-
     # Select label id and name
     loose_labels = db.session.execute(select(
         Label.id,
