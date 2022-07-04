@@ -160,7 +160,7 @@ body {
 
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: white;
     border-radius: 10px;
 }
 
@@ -213,4 +213,9 @@ body {
     border: 2px solid;
     border-color: $green-shade;
     color: $white-shade;
+}
+
+// Make the textarea non-dragable
+#projectDescriptionForm{
+    resize: none;
 }

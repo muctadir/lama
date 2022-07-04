@@ -7,7 +7,7 @@ $light-grey-shade: #bfbfbf;
 
 #main_body {
     height: 100vh;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 // TOP BAR
@@ -26,6 +26,7 @@ p.header {
 
 // Add Artifact button 
 #addArtifactButton {
+    width: 200px;
     float: right;
     margin-right: 10px;
     margin-top: 10px;
@@ -47,7 +48,7 @@ svg.bi.bi-plus {
 }
 
 //New Table version styles
-p.artifactID {
+.artifactID {
     font-size: 17px;
     letter-spacing: 1px;
     text-align: center;
@@ -55,7 +56,7 @@ p.artifactID {
 }
 
 // Artifact text
-p.artifactText {
+.artifactText {
     font-size: 14px;
     letter-spacing: 1px;
     text-align: justify;
@@ -64,7 +65,7 @@ p.artifactText {
 }
 
 // Number for times labelled
-p.timesLabelled {
+.timesLabelled {
     font-size: 17px;
     letter-spacing: 1px;
     text-align: center;
@@ -122,12 +123,6 @@ ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
     padding-top: 20px;
 }
 
-//Scroll Related Business
-.my-custom-scrollbar {
-    position: relative;
-    height: 75vh;
-    overflow: auto;
-}
 
 .table-wrapper-scroll-y {
     display: block;

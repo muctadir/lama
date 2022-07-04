@@ -9,7 +9,7 @@ body {
     overflow-x: hidden;
 }
 
-// TOP BAR
+// Top bar
 .alignValues {
     margin-left: 10px;
     margin-right: 10px;
@@ -17,7 +17,7 @@ body {
 }
 
 // Header saying "Label Management"
-p.header {
+.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
@@ -27,6 +27,7 @@ p.header {
 // Create label button on Label Management Page
 #createLabelButton,
 #mergeLabelButton {
+    width: 200px;
     float: right;
     margin-right: 10px;
     margin-top: 10px;
@@ -34,7 +35,6 @@ p.header {
     border: 2px solid;
     border-color: $gey-shade;
     color: black;
-
 }
 
 // Create project button on hover
@@ -65,9 +65,13 @@ svg.bi.bi-plus {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     height: 100vh;
+}
+
+#scrolly {
+    padding-right: 40px;
 }
 
 #tableRow {
@@ -140,13 +144,8 @@ ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
 }
 
 // Scrollbar background
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-// Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: white;
     border-radius: 10px;
 }
 
@@ -154,12 +153,6 @@ ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
 ::-webkit-scrollbar-thumb {
     background: $gey-shade;
     border-radius: 10px;
-}
-
-// Scroll bar
-#scrolly {
-    padding-right: 40px;
-    height: auto;
 }
 
 // Sets the style for the headers in the table
