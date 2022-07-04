@@ -91,12 +91,14 @@ def post_labelling(*, user):
                                ['name'], labelling['label']['name'], labelling['a_id'])
             db.session.add(labelling_)
         except OperationalError:
+            db.session.rollback()
             return make_response('Internal Server Error: Adding to database unsuccessful', 500)
 
     # Check if the labelling was commited, otherwise throw and error
     try:
         db.session.commit()
     except OperationalError:
+        db.session.rollback()
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
     # Make a response
     return make_response("Labelling successful", 201)
