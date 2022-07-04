@@ -75,9 +75,13 @@ describe('Artifact', () => {
     const artifact2 = new StringArtifact(id, identifier, data);
     const newData = "";
     //bad data try
+    let error;
     try {
       artifact2.setData(newData)
-    } catch (error) { }
+    } catch (e) {
+      error = e;
+    }
+    expect(error).toEqual(new Error("The artifact data should not be of length 0 as an argument in setData())"))
   })
 
   // Setting and getting of completed status

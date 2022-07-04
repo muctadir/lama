@@ -34,9 +34,13 @@ describe('User', () => {
         const user2 = new User(2, name);
         const newUsername = "";
         // catch wrong name
+        let error
         try {
             user2.setUsername(newUsername);
-        } catch (error) { }
+        } catch (e) {
+            error = e
+        }
+        expect(error).toEqual(new Error("The username should not be of length 0 as an argument in setUserame()"));
     });
 
     // Setting and getting the description of the user
