@@ -105,10 +105,18 @@ def test_create(app, client):
         create_label_helper(
             request_handler, label_wrong_lt, 'Created', 201)
 
-        # Missing tests:
-        # - Frozen project
-        # - White space
+        # Request with white spaces
+        label = {'labelTypeId': 3,
+                'labelName': 'Angry ',
+                'labelDescription': 'A brilliant idea!',
+                'p_id': 2}
+        create_label_helper(request_handler, label, "Input contains leading or trailing whitespaces", 400)
 
+        label = {'labelTypeId': 3,
+                'labelName': 'Angry',
+                'labelDescription': 'A brilliant idea! ',
+                'p_id': 2}
+        create_label_helper(request_handler, label, "Input contains leading or trailing whitespaces", 400)
 
 def test_get_all_labels(app, client):
     with app.app_context():
@@ -227,6 +235,58 @@ def test_edit(app, client):
         }
         edit_label_helper(
             request_handler, label_missing_information, 'Bad Request', 400)
+
+        # Invalid label id
+        label = {
+            'labelId': -1,
+            'labelName': 'Boring idea',
+            'labelDescription': 'boring',
+            'p_id': 2
+        }
+        edit_label_helper(request_handler, label, 'Bad Request, labelId invalid', 400)
+
+        # Whitespaces
+        label = {
+            'labelId': 24,
+            'labelName': 'Boring idea ',
+            'labelDescription': 'boring',
+            'p_id': 2
+        }
+        edit_label_helper(request_handler, label, "Input contains leading or trailing whitespaces", 400)
+
+        label = {
+            'labelId': 24,
+            'labelName': 'Boring idea',
+            'labelDescription': 'boring ',
+            'p_id': 2
+        }
+        edit_label_helper(request_handler, label, "Input contains leading or trailing whitespaces", 400)
+
+        label = {
+            'labelId': 24,
+            'labelName': 'Boring i#dea',
+            'labelDescription': 'boring',
+            'p_id': 2
+        }
+        edit_label_helper(request_handler, label, "Input contains a forbidden character", 511)
+
+        # Label that doesn't exist
+        label = {
+            'labelId': 100,
+            'labelName': 'Boring idea',
+            'labelDescription': 'boring',
+            'p_id': 2
+        }
+        edit_label_helper(request_handler, label, 'Label does not exist', 400)
+
+        # Label in wrong project
+        label = {
+            'labelId': 24,
+            'labelName': 'Boring idea',
+            'labelDescription': 'boring',
+            'p_id': 3
+        }
+        edit_label_helper(request_handler, label, 'Label not part of project', 400)
 
 def test_merge(app, client):
 
