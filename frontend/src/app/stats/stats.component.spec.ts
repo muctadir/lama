@@ -54,7 +54,7 @@ describe('StatsComponent', () => {
   });
 
   // Checks if ngOnInit works correctly
-  it('Tests ngOnInit()', async () => {
+  it('should initialize correctly', async () => {
     expect(component.frozen).toBeTruthy();
 
     // Spy on getProject and getUserStats and stub the calls
@@ -74,7 +74,7 @@ describe('StatsComponent', () => {
   });
 
   // Checks if getProject function works correctly
-  it('Tests getProject()', async () => {
+  it('should get the projects', async () => {
     // Return project_data when statsDataService.getProject(p_id) is called
     spyOn(statsDataService, 'getProject').and
       .returnValue(Promise.resolve(project_data));
@@ -92,7 +92,7 @@ describe('StatsComponent', () => {
   });
 
   // Checks if getUserStats function works correctly
-  it('Tests getUserStats()', async () => {
+  it('should get the user statistics', async () => {
     // Return user_contribution when 
     // statsDataService.getUserStats(p_id) is called
     spyOn(statsDataService, 'getUserStats').and
@@ -108,7 +108,7 @@ describe('StatsComponent', () => {
     expect(component.user_contribution).toEqual(user_contribution)
   });
 
-  it('Tests reRouter()', () => {
+  it('should reroute to the labelling page', () => {
     // Spy on router.navigate and stub the call
     spyOn(router, 'navigate');
 

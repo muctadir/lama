@@ -43,7 +43,7 @@ describe('NavigationMenuComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Checks ngOnInit', () => {
+  it('should initialize correctly', () => {
     // Spies on this.router.url
     spyOnProperty(router, 'url', 'get').and.returnValue('/project/5/stats');
     // Spy on evalURL function
@@ -57,14 +57,14 @@ describe('NavigationMenuComponent', () => {
   });
 
   // Test whether changeSize works correctly
-  it('Test whether changeSize works correctly', () => {
+  it('should change size', () => {
     expect(component.collapsed).toBeTruthy();
     component.changeSize();
     expect(component.collapsed).toBeFalsy();
   });
 
   // Test the changePage function
-  it('Tests the changePage function', () => {
+  it('should change page', () => {
     // Create spy for get url call
     spyOnProperty(router, 'url', 'get').and.returnValue('/project/5/stats');
 
@@ -78,7 +78,7 @@ describe('NavigationMenuComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/project', '5', 'thememanagement']);
   });
 
-  it('case 1 of evalURL', () => {
+  it('should evaluate the URL, case 1', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -87,7 +87,7 @@ describe('NavigationMenuComponent', () => {
     expect(component.page).toBe(0);
   });
 
-  it('case 2 of evalURL', () => {
+  it('should evaluate the URL, case 2', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -96,7 +96,7 @@ describe('NavigationMenuComponent', () => {
     expect(component.page).toBe(1);
   });
 
-  it('case 3 of evalURL', () => {
+  it('should evaluate the URL, case 3', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -105,7 +105,7 @@ describe('NavigationMenuComponent', () => {
     expect(component.page).toBe(2);
   });
 
-  it('case 4 of evalURL', () => {
+  it('should evaluate the URL, case 4', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -114,7 +114,7 @@ describe('NavigationMenuComponent', () => {
     expect(component.page).toBe(3);
   });
 
-  it('case 5 of evalURL', () => {
+  it('should evaluate the URL, case 5', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -123,7 +123,7 @@ describe('NavigationMenuComponent', () => {
     expect(component.page).toBe(4);
   });
 
-  it('case 6 of evalURL', () => {
+  it('should evaluate the URL, case 6', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -132,7 +132,7 @@ describe('NavigationMenuComponent', () => {
     expect(component.page).toBe(5);
   });
 
-  it('case 7 of evalURL', () => {
+  it('should evaluate the URL, case 7', () => {
     // Check original state
     expect(component.page).toBe(0);
     // Call function
@@ -173,7 +173,7 @@ describe('NavigationMenuComponent', () => {
 })
 
 // Test if the openLogout does not do anything if confirm modal returns false
-it('should not do anything', async () => {
+it('should not do anything when modal is cancelled', async () => {
   // Instance of NgbModalRef
   modalRef = modalService.open(ConfirmModalComponent);
   // Set the value of componentInstance.confirmEvent to true

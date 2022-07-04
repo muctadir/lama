@@ -378,7 +378,7 @@ describe('ProjectCreationComponent', () => {
   });
 
 
-  it('shoudl delete label type', () => {
+  it('should delete label type', () => {
     // Creates the spy
     let spy = spyOn(component.labeltypes, "removeAt");
 

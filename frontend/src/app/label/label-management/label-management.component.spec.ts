@@ -102,25 +102,8 @@ describe('LabelManagementComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  // Test the get labelled count function
-  // TODO:dont know how to do this
-  it('should test getLabelledCount function on Label management page', async () => {
-    // // Create two themes
-    // let label1 = new Label(1, "", "", "");
-    // let label2 = new Label(2, "", "", "");
-    // // Create the allSubThemes and set it
-    // let labels = [label1, label2];
-    // component.labels = labels;
-    // // Create spy for function
-    // let spy = spyOn(component, "getLabelledCount").and.callThrough();
-    // let count = labels.length
-    // // Checks whether the function works properly
-    // expect(spy).toHaveBeenCalled();
-    // expect(count).toEqual(2);
-  });
-
   // Test the sortLabel function
-  it('Tests if the sortDesc function', () => {
+  it('should tests if the sortLabel function', () => {
     // Create spy for get url call
     let spy = spyOn(component['labels'], 'sort');
     // Calls the sortLabel function
@@ -130,7 +113,7 @@ describe('LabelManagementComponent', () => {
   });
 
   // Test the sortLabelType function
-  it('Tests if the sortDesc function', () => {
+  it('should test the sortLabelType function', () => {
     // Create spy for get url call
     let spy = spyOn(component['labels'], 'sort');
     // Calls the sortLabelType function
@@ -140,7 +123,7 @@ describe('LabelManagementComponent', () => {
   });
 
   // Test the sortNumberOfArtifacts function
-  it('Tests if the sortDesc function', () => {
+  it('should test the sortNumberOfArtifacts function', () => {
     // Create spy for get url call
     let spy = spyOn(component['labels'], 'sort');
     // Calls the sortNumberOfArtifacts function

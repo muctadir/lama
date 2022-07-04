@@ -44,7 +44,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Tests the ngOnChanges function', () => {
+  it('should initialize correctly', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -62,7 +62,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('checks changeInformation with valid input', () => {
+  it('should change information with valid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -87,7 +87,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('checks changeInformation with invalid input', () => {
+  it('should not change information because of invalid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     // Sets the user info
@@ -103,7 +103,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('Check input is tested for valid input', () => {
+  it('should check input for valid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -119,7 +119,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('Check input is tested with empty username', () => {
+  it('should check input with empty username', () => {
     // Creates a dummy user object
     let testUser = new User(8, "");
     testUser.setEmail("test@test.com");
@@ -134,7 +134,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(result).toBeFalsy();
   });
 
-  it('Check input is tested with empty email', () => {
+  it('should check input with empty email', () => {
     // Creates a dummy user object
     let testUser = new User(8, "testname");
     testUser.setEmail("");
@@ -149,7 +149,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(result).toBeFalsy();
   });
 
-  it('Check input is tested with invalid email', () => {
+  it('should check input with invalid email', () => {
     // Creates a dummy user object
     let testUser = new User(8, "testname");
     testUser.setEmail("xx");
@@ -164,7 +164,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(result).toBeFalsy();
   });
 
-  it('Tests the makeRequest function with valid input', async () => {
+  it('should make the request with valid input', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
@@ -185,7 +185,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([true, "Modification successful"]);
   });
 
-  it('Tests the makeRequest function in case of error with status 511', async () => {
+  it('should make the request and catch an 511 error', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
@@ -206,7 +206,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character"]);
   });
 
-  it('Tests the makeRequest function in case of error with status != 511, but data specific', async () => {
+  it('should make the request and catch an error', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
@@ -248,7 +248,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([false, "Username or email taken"]);
   });
 
-  it('Tests the makeRequest function in case of error with status != 511', async () => {
+  it('should make the request and catch an error', async () => {
     // Creates dummy input
     let input = {
       "id": 5,

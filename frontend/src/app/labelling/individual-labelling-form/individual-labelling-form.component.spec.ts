@@ -9,7 +9,7 @@ import { IndividualLabellingForm } from './individual-labelling-form.component';
 /**
  * Testing suite for individual labelling form component
  */
-describe('LabellingTypeComponent', () => {
+describe('IndivdualLabellingComponent', () => {
   let component: IndividualLabellingForm;
   let fixture: ComponentFixture<IndividualLabellingForm>;
 
@@ -34,7 +34,7 @@ describe('LabellingTypeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Tests ngOnInit with valid input', async () => {
+  it('should initialize correctly', async () => {
     // Creates the various spies
     let spy = spyOn(component, "getLabels");
     let spyForm = spyOn(component.labelForm, "reset");
@@ -53,7 +53,7 @@ describe('LabellingTypeComponent', () => {
     expect(spyForm2).toHaveBeenCalled();
   });
 
-  it('Tests ngOnInit with invalid input', async () => {
+  it('should initialize when there is an invalid input, case 1', async () => {
     // Creates the spies
     let spy = spyOn(component, "getLabels");
     let spyForm = spyOn(component.labelForm, "reset");
@@ -75,7 +75,7 @@ describe('LabellingTypeComponent', () => {
     expect(spyForm2).toHaveBeenCalled();
   });
 
-  it('Tests ngOnInit with invalid input2', async () => {
+  it('should initialize when there is an invalid input, case 2', async () => {
     // Creates the spies
     let spy = spyOn(component, "getLabels");
     let spyForm = spyOn(component.labelForm, "reset");
@@ -97,7 +97,7 @@ describe('LabellingTypeComponent', () => {
     expect(spyForm2).toHaveBeenCalled();
   });
 
-  it('tests the clickLabel function', () => {
+  it('should click the label', () => {
     // Creates dummy imput
     component.labels = [new Label(1, "label1", "desc1", "type1"), new Label(2, "label2", "desc2", "type2")];
     // Dummy input which will used in the function call
@@ -114,7 +114,7 @@ describe('LabellingTypeComponent', () => {
     expect(component.selectedDesc).toBe("desc2");
   });
 
-  it('test the getLabels function', async () => {
+  it('should get the labels', async () => {
     // Creates the spies necessary to test the component
     let spyRouter = spyOnProperty(component["router"], "url", "get");
     // Return dummy data
@@ -160,7 +160,7 @@ describe('LabellingTypeComponent', () => {
     expect(component.selectedDesc).toEqual("desc1");
   });
 
-  it('should test the labelForm listener null inputs', async () => {
+  it('should test the labelForm listener with null inputs', async () => {
     // Creates a spy
     spyOn(component, "getLabels");
 
@@ -192,7 +192,7 @@ describe('LabellingTypeComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('test the getLabels function, but has null input for labeltype', async () => {
+  it('should get the labels, but has null input for labeltype', async () => {
     // Creates the spies necessary to test the component
     let spyRouter = spyOnProperty(component["router"], "url", "get");
     // Return dummy data

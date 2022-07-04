@@ -14,7 +14,6 @@ import { StringArtifact } from 'app/classes/stringartifact';
 describe('IndividualLabelComponent', () => {
   let component: IndividualLabelComponent;
   let fixture: ComponentFixture<IndividualLabelComponent>;
-  let router: Router;
   // Instantiation of NgbModal
   let modalService: NgbModal;
   // Instantiation of NgbModalRef
@@ -45,7 +44,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test the ngOnInit function
-  it('Tests the ngOnInit function to individual label management page', () => {
+  it('should initialize correctly', () => {
     // Create spy for get label
     let spy1 = spyOn(component, "getLabel")
     // Create spy for get labellings
@@ -64,7 +63,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test the get label function
-  it('Tests the getLabel function to individual Label management page', async () => {
+  it('should get the label information', async () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabel")
     // Calls the getLabel function
@@ -74,7 +73,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test the get labelling function
-  it('Tests the getLabellings function to individual Label management page', async () => {
+  it('should get the labellings of a label', async () => {
     // Create spy for getLabellings call
     let spy = spyOn(component['labellingDataService'], "getLabelling")
     // Calls the getLabellings function
@@ -146,7 +145,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test if the postSoftDelete does nothing when the confirm modal returns false
-  it('should do nothing', async () => {
+  it('should do nothing if cancelled', async () => {
     // Instance of NgbModalRef
     modalRef = modalService.open(ConfirmModalComponent);
     // Set the value of componentInstance.confirmEvent to false
@@ -177,7 +176,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test if the postSoftDelete return a failure toast when the label is used
-  it('should do nothing', async () => {
+  it('should do nothing if cancelled', async () => {
     // List of hardcoded themes
     let artifacts: StringArtifact[] = [new StringArtifact(1, 'IDENT', "Something")];
     // Set the project id 
@@ -248,7 +247,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test the get labelling function
-  it('Tests the getLabellingAmount function to individual Label management page', async () => {
+  it('should get the labelling amount on the individual Label management page', async () => {
     // Create spy for getLabellings call
     let spy = spyOn(component['labellingDataService'], "getLabellingCount")
     // Calls the getLabellingAmount function
