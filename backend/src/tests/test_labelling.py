@@ -88,7 +88,7 @@ def test_labelling(app, client):
 
         response = request_handler.post(
             '/labelling/create', {'p_id': 1, 'resultArray':  [requestArray]}, True)
-        assert response.status_code == 200
+        assert response.status_code == 201
 
         # Request regular labelling - duplicate 
         requestArray = {
