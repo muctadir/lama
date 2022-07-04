@@ -11,7 +11,7 @@ export class TestError extends Error {
   }
 }
 
-fdescribe('AccountInfoService', () => {
+describe('AccountInfoService', () => {
   let service: AccountInfoService;
 
   // Initialize test environment
