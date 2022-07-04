@@ -3,7 +3,7 @@ from src.models.item_models import Artifact, Labelling, ArtifactSchema
 from src.models.auth_models import UserSchema, User
 from src.models.project_models import Project
 from src import db
-from src.exc import TestAuthenticationError
+from src.exc import HandlerAuthenticationError
 from src.conftest import RequestHandler
 from pytest import raises
 from src.routes.artifact_routes import __get_artifact_info, __get_artifact, __get_extended, generate_artifact_identifier
@@ -969,7 +969,7 @@ def check_login(app, client, route, params, method):
     request_handler = RequestHandler(app, client)
 
     # Make a request and check if the right error is thrown
-    with raises(TestAuthenticationError):
+    with raises(HandlerAuthenticationError):
         if method == 'GET':
             request_handler.get(route, params, True)
         if method == 'POST':

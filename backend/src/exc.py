@@ -14,5 +14,5 @@ class ThemeCycleDetected(Exception):
     # This number represents the error code for recursion limit in a MariaDB database.
     MariaDB = 1456
 
-class TestAuthenticationError(Exception):
+class HandlerAuthenticationError(Exception):
     pass
