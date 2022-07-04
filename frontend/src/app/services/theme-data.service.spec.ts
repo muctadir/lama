@@ -221,55 +221,7 @@ describe('ThemeDataService', () => {
     service.createChildren([""]);
     expect(spy1).toHaveBeenCalled();
   });
-
-  // Test for createLabels function
-  it('should create labels', async () => {
-    // Information for two labels
-    let label_info = [{
-      "id": 1,
-      "name": "Label 1",
-      "description": "Desc 1",
-      "label_type": ""
-    }, {
-      "id": 2,
-      "name": "Label 2",
-      "description": "Desc 2",
-      "label_type": ""
-    }]
-    // Create the two labels
-    let label1 = new Label(1, "Label 1", "Desc 1", "");
-    let label2 = new Label(2, "Label 2", "Desc 2", "");
-
-    // Spy on the createChildern service and call a fake function
-    spyOn(service, "createLabels").and.callFake(function (): Array<Label> {
-      // List for the labels 
-      let labelsArray: Array<Label> = [];
-      // For each label in the list
-      for (let label of label_info) {
-        // Make a new label object
-        let newLabel = new Label(label["id"], label["name"], label["description"], label["label_type"])
-
-        // Spy on createArtifacts function
-        let spy = spyOn(service, "createArtifacts");
-        // Create the artifacts
-        service.createArtifacts([]);
-        // Test if function was called
-        expect(spy).toHaveBeenCalled();
-
-        // Spy on function
-        let spy2 = spyOn(labelsArray, "push");
-        // Add alabel to the labels
-        labelsArray.push(newLabel);
-        // Test if function was called
-        expect(spy2).toHaveBeenCalled();
-      }
-      // Return the array
-      return labelsArray;
-    });
-    let response = service.createLabels([]);
-    expect(response).toEqual([label1, label2]);    
-  });    
-      
+     
   it('should create the label', async () => {
     // Information for two labels
     let label_info = [
