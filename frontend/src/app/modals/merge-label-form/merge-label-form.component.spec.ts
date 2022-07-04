@@ -156,7 +156,7 @@ describe('MergeLabelFormComponent', () => {
     await component.submit();
 
     // Checks whether remove function was called
-    expect(spyToast).toHaveBeenCalledWith([false, "Plase select two or more labels to merge"]);
+    expect(spyToast).toHaveBeenCalledWith([false, "Please select two or more labels to merge"]);
   });
 
   it('should submit the merging of labels', async () => {

@@ -140,9 +140,6 @@ def edit_helper(app, client, data, expected_text, expected_code, u_id):
 
     # Make request to database
     response = request_handler.patch('/labelling/edit', data, True)
-
-    # Check the response is correct
-    print(response.text)
     
     assert response.text == expected_text
     assert response.status_code == expected_code

@@ -154,8 +154,6 @@ def test_possible_sub_themes(app, client):
             'name': 'Neutral emotions', 'p_id': 1, 'super_theme_id': None},
         {'deleted': False, 'description': 'These are positive emotions', 'id': 1,
             'name': 'Positive emotions', 'p_id': 1, 'super_theme_id': None}]
-    
-    print([theme['name'] for theme in response.json])
 
     # Check if we got an OK response
     assert response.status_code == 200
