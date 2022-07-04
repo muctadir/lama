@@ -61,3 +61,8 @@
 .label-selection-form {
   padding-top: 10px;
 }
+
+// Make the textarea non-dragable
+#remark{
+  resize: none;
+}
