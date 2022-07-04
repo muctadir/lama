@@ -17,8 +17,6 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
     Author: Eduardo Costa Martins, Bartjan Henkemans
     This route creates a label in the database
 """
-
-
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
