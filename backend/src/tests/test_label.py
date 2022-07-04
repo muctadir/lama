@@ -143,6 +143,48 @@ def test_get_all_labels(app, client):
         request_handler = RequestHandler(app, client, 1)
 
 
+def test_get_single_label(app, client):
+    with app.app_context():
+        # Request unauthenticated - non existent user
+        request_handler_unauthenticated = RequestHandler(app, client, '')
+        response = request_handler_unauthenticated.get(
+            '/label/singleLabel', {'p_id': 1, 'label_id': 1}, True)
+        assert response.status_code == 401
+        assert response.text == "User does not exist"
+
+        # Request unauthenticated - user not part of project
+        request_handler_unauthenticated = RequestHandler(app, client, 7)
+        response = request_handler_unauthenticated.get(
+            '/label/singleLabel', {'p_id': 2, 'label_id': 1}, True)
+        assert response.status_code == 401
+        assert response.text == "Unauthorized"
+
+        # Set up request handler for User 1
+        request_handler = RequestHandler(app, client, 2)
+
+        # Regular user get all without argument
+        response = request_handler.get(
+            '/label/singleLabel', {}, True)
+        assert response.status_code == 400
+
+        response = request_handler.get(
+            '/label/singleLabel', {'p_id': 1}, True)
+        assert response.status_code == 400
+
+        # Regular user get  normal.
+        response = request_handler.get(
+            '/label/singleLabel', {'p_id': 1, 'label_id': 1}, True)
+        assert response.status_code == 200
+
+        # Admin get  normal.
+        request_handler = RequestHandler(app, client, 1)
+        response = request_handler.get(
+            '/label/singleLabel', {'p_id': 1, 'label_id': 1}, True)
+        assert response.status_code == 200
+
+        request_handler = RequestHandler(app, client, 1)
+
+
 def test_edit(app, client):
     with app.app_context():
 
