@@ -11,12 +11,7 @@ from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
 import click
-from src.models import db, ma
-import src.models.auth_models
-import src.models.project_models
-import src.models.item_models
-from src.routes.change_routes import get_parsed_changes
-from src.models.item_models import Label
+from src.models import db
 
 
 # Read environment variables. Currently these are stored in .env and .flaskenv.
