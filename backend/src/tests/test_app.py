@@ -1,4 +1,4 @@
-from src import create_app, db, db_init
+from src import create_app, db
 from src.models.auth_models import User
 from pytest import raises
 from sqlalchemy.exc import OperationalError
@@ -24,13 +24,19 @@ def test_db_opt_init():
         with raises(OperationalError):
             db.session.get(User, 1)
 
-        # Initialize it
-        db_init('migrations-test')
+        # This is to simulate making cli commands
+        runner = app.test_cli_runner()
+        # Run the CLI command for initializing the database
+        runner.invoke(args=["db-opt", "init", "--dir", "migrations-test"])
 
         # Get super admin
         user = db.session.get(User, 1)
 
+        # Check that a user was created
+        assert user
+        # With the correct role
         assert user.super_admin == True
+        # And correct description
         assert user.description == "Auto-generated super admin"
 
         # Check that only one user was created

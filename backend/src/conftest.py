@@ -32,12 +32,6 @@ def app():
 def client(app):
     return app.test_client()
 
-# To simulate doing CLI commands (we probably won't need this one?)
-@fixture
-def runner(app):
-    return app.test_cli_runner()
-
-
 """
 Author: Eduardo Costa Martins
 This is supposed to simulate requests made using the frontend request handler.

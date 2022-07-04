@@ -36,11 +36,7 @@ db_opt = AppGroup("db-opt")
 @db_opt.command("init")
 @click.option("--dir", default='migrations')
 def click_db_init(dir):
-    db_init(dir)
-
-# This is the function that actually handles the initialization
-def db_init(dir):
-
+    # Import models here to avoid circular imports
     from src.models.auth_models import User, UserStatus
 
     init(directory=dir)
