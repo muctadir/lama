@@ -202,3 +202,7 @@ def __create_auto_schema(cls):
 
 # Wait for the mapper to finish configuring the ORM models, then setup the schemas
 event.listen(mapper, 'after_configured', __setup_schemas)
+
+# List of modules of this package
+# Alternatively you can also just import the modules instead
+__all__ = ['auth_models', 'change_models', 'item_models', 'project_models']
