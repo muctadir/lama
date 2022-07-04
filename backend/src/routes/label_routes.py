@@ -8,7 +8,7 @@ from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args, not_frozen
 from src.models.change_models import ChangeType
 from src.models.item_models import Label, LabelType, Labelling, Artifact, label_to_theme, Theme
-from src.searching.search import search_func_all_res, best_search_results
+from src.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 

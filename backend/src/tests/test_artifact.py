@@ -7,7 +7,7 @@ from src.exc import TestAuthenticationError
 from src.conftest import RequestHandler
 from pytest import raises
 from src.routes.artifact_routes import __get_artifact_info, __get_artifact, __get_extended, generate_artifact_identifier
-from src.searching.search import search_func_all_res, best_search_results
+from src.search import search_func_all_res, best_search_results
 
 # Tests that artifact/artifactmanagement cannot be accessed
 # if the user is not logged in

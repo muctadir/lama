@@ -12,7 +12,7 @@ from src.app_util import login_required, check_args, in_project, check_string, c
 from src.routes.label_routes import get_label_info, get_loose_labels
 from sqlalchemy.exc import OperationalError
 from src.exc import ChangeSyntaxError, ThemeCycleDetected
-from src.searching.search import search_func_all_res, best_search_results
+from src.search import search_func_all_res, best_search_results
 from collections import defaultdict
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
