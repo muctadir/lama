@@ -345,8 +345,8 @@ def conflictmanagement_help(app, client, u_id, p_id, expected):
         # Make the request to the database
         response = request_handler.get('/conflict/conflictmanagement', {'p_id': p_id}, True)
 
-        # Check that the response is the same as expected
-        assert response.json == expected
+        assert [item for item in response.json if item not in expected] == []
+        assert [item for item in expected if item not in response.json] == []
 
 """
 Helper function to perform tests for /LabelPerUser
