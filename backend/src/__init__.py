@@ -2,8 +2,7 @@ from flask import Flask
 from flask.cli import AppGroup
 from flask_migrate import Migrate, init, migrate, upgrade
 from src.models import db
-from src.routes import util_routes, auth_routes, project_routes, account_routes, label_routes, \
-    label_type_routes, labelling_routes, theme_routes, artifact_routes, conflict_routes, change_routes
+from src.routes import *
 from flask_cors import CORS
 from os import environ
 from pathlib import Path
@@ -104,17 +103,17 @@ def create_app(config={'TESTING': False}):
 
     # The endpoints for the API are defined in blueprints. These are imported
     # and hooked to the app object.
-    app.register_blueprint(auth_routes)
-    app.register_blueprint(util_routes)
-    app.register_blueprint(project_routes)
-    app.register_blueprint(account_routes)
-    app.register_blueprint(label_routes)
-    app.register_blueprint(label_type_routes)
-    app.register_blueprint(labelling_routes)
-    app.register_blueprint(artifact_routes)
-    app.register_blueprint(conflict_routes)
-    app.register_blueprint(theme_routes)
-    app.register_blueprint(change_routes)
+    app.register_blueprint(auth_routes.auth_routes)
+    app.register_blueprint(util_routes.util_routes)
+    app.register_blueprint(project_routes.project_routes)
+    app.register_blueprint(account_routes.account_routes)
+    app.register_blueprint(label_routes.label_routes)
+    app.register_blueprint(label_type_routes.label_type_routes)
+    app.register_blueprint(labelling_routes.labelling_routes)
+    app.register_blueprint(artifact_routes.artifact_routes)
+    app.register_blueprint(conflict_routes.conflict_routes)
+    app.register_blueprint(theme_routes.theme_routes)
+    app.register_blueprint(change_routes.change_routes)
 
     # Magic library that makes cross-origin resource sharing work.
     CORS(app)
