@@ -12,9 +12,9 @@ describe('ToastGlobalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ ToastGlobalComponent ],
-      imports: [NgbToastModule]
+      imports: [ NgbToastModule ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

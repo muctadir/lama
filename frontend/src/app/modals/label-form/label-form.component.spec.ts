@@ -14,11 +14,11 @@ describe('LabelFormComponent', () => {
     await TestBed.configureTestingModule({
       // Adds RouterTestingModule dependency
       imports: [RouterTestingModule],
-      declarations: [ LabelFormComponent ],
+      declarations: [LabelFormComponent],
       // Adds NgbActiveModal, LabellingDataService and FormBuilder dependencies
       providers: [NgbActiveModal, LabellingDataService, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

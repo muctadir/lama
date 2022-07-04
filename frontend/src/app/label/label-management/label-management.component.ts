@@ -32,7 +32,7 @@ export class LabelManagementComponent {
   labels: Array<Label>;
   labelAmount: { [id: number]: string };
   // Frozen status
-  frozen: boolean = true;
+  frozen = true;
 
   // Pagination Settings
   page: number;
@@ -84,7 +84,7 @@ export class LabelManagementComponent {
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-   searchClick(){
+  searchClick(): void {
     // Get the search image
     let searchBar = document.getElementById("searchBar")
     if (searchBar != null){
@@ -94,7 +94,7 @@ export class LabelManagementComponent {
           // Get clicked x coordinates
           var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
-          if (x > 330){
+          if (x > 330) {
             // Search
             this.onEnter()
           }
@@ -104,7 +104,7 @@ export class LabelManagementComponent {
   }
 
   // Open the modal and merge labels
-  openMerge() {
+  openMerge(): void {
     const modalRef = this.modalService.open(MergeLabelFormComponent, {
       size: 'xl',
     });
@@ -114,7 +114,7 @@ export class LabelManagementComponent {
   }
 
   // Open the modal and create a new label
-  openCreate() {
+  openCreate(): void {
     const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl' });
     modalRef.result.then(() => {
       this.ngOnInit();
@@ -149,8 +149,7 @@ export class LabelManagementComponent {
   }
 
   // Gets the search text
-  async onEnter() {
-
+  async onEnter(): Promise<void> {
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
     // Search text
@@ -180,7 +179,7 @@ export class LabelManagementComponent {
   }
 
   // Get the labelled count
-  async getLabelledCount(): Promise<void> {
+  getLabelledCount(): void {
     // Result dictionary
     let resultDict: { [id: number]: string } = {};
 
@@ -201,19 +200,19 @@ export class LabelManagementComponent {
    * Function for sorting on name
    * 
    */
-  sortLabel(){
+  sortLabel(): void {
     // Check if it was sorted ascending
-    if (this.sortedLabel == sorted.Asc){
+    if (this.sortedLabel == sorted.Asc) {
       // Make the sorted enum descending
       this.sortedLabel = sorted.Des;
       // Sort the array
-      this.labels.sort((a,b) => b.getName().localeCompare(a.getName()));
-    // Check if it was sorted descending or not yet
-    } else if (this.sortedLabel == sorted.Des || this.sortedLabel == sorted.Not){
+      this.labels.sort((a, b) => b.getName().localeCompare(a.getName()));
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedLabel == sorted.Des || this.sortedLabel == sorted.Not) {
       // Make the sorted enum ascending
       this.sortedLabel = sorted.Asc;
       // Sort the array
-      this.labels.sort((a,b) => a.getName().localeCompare(b.getName()));
+      this.labels.sort((a, b) => a.getName().localeCompare(b.getName()));
     }
     // Set other sorts to not sorted
     this.sortedLabelType = sorted.Not;
@@ -224,19 +223,19 @@ export class LabelManagementComponent {
    * Function for sorting on label type
    * 
   */
-  sortLabelType(){
+  sortLabelType(): void {
     // Check if it was sorted ascending
-    if (this.sortedLabelType == sorted.Asc){
+    if (this.sortedLabelType == sorted.Asc) {
       // Make the sorted enum descending
       this.sortedLabelType = sorted.Des;
       // Sort the array
-      this.labels.sort((a,b) => b.getType().localeCompare(a.getType()));
-    // Check if it was sorted descending or not yet
-    } else if (this.sortedLabelType == sorted.Des || this.sortedLabelType == sorted.Not){
+      this.labels.sort((a, b) => b.getType().localeCompare(a.getType()));
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedLabelType == sorted.Des || this.sortedLabelType == sorted.Not) {
       // Make the sorted enum ascending
       this.sortedLabelType = sorted.Asc;
       // Sort the array
-      this.labels.sort((a,b) => a.getType().localeCompare(b.getType()));
+      this.labels.sort((a, b) => a.getType().localeCompare(b.getType()));
     }
     // Set other sorts to not sorted
     this.sortedLabel = sorted.Not;
@@ -247,24 +246,24 @@ export class LabelManagementComponent {
    * Function for sorting on number of artifacts
    * 
   */
-   sortNumberOfArtifacts(){
+  sortNumberOfArtifacts(): void {
     // Check if it was sorted ascending
-    if (this.sortedNOA == sorted.Asc){
+    if (this.sortedNOA == sorted.Asc) {
       // Make the sorted enum descending
       this.sortedNOA = sorted.Des;
       // Sort the array
-      this.labels.sort((a,b) => {
+      this.labels.sort((a, b) => {
         // Get the number of artifacts labelled
         const n1 = parseInt(this.labelAmount[a.getId()]);
         const n2 = parseInt(this.labelAmount[b.getId()]);
         return n2 - n1;
       });
-    // Check if it was sorted descending or not yet
-    } else if (this.sortedNOA == sorted.Des || this.sortedNOA == sorted.Not){
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedNOA == sorted.Des || this.sortedNOA == sorted.Not) {
       // Make the sorted enum ascending
       this.sortedNOA = sorted.Asc;
       // Sort the array
-      this.labels.sort((a,b) => {
+      this.labels.sort((a, b) => {
         // Get the number of artifacts labelled
         const n1 = parseInt(this.labelAmount[a.getId()]);
         const n2 = parseInt(this.labelAmount[b.getId()]);

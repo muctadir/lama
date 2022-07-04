@@ -11,8 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class TestError extends Error {
   response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -33,7 +33,7 @@ describe('RegisterComponent', () => {
       // Added the dependencies InputCheckService
       providers: [InputCheckService]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   /* Executed before each test case, creates a RegisterComponent */
@@ -48,7 +48,7 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Tests onRegister with valid input', () => {
+  it('should register', () => {
     // Sets the values for the different forms
     component.username.setValue("testusername");
     component.email.setValue("test@test.com");
@@ -63,7 +63,7 @@ describe('RegisterComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('Tests onRegister with an empty input', () => {
+  it('should throw an error because of an empty input', () => {
     // Sets the values for the different forms
     component.username.setValue("");
     component.email.setValue("test@test.com");
@@ -78,7 +78,7 @@ describe('RegisterComponent', () => {
     expect(spy).toHaveBeenCalledWith([false, "Please enter input in all input fields"]);
   });
 
-  it('Tests onRegister with a bad email', () => {
+  it('should throw an error because of a bad email', () => {
     // Sets the values for the different forms
     component.username.setValue("testusername");
     component.email.setValue("test");
@@ -93,7 +93,7 @@ describe('RegisterComponent', () => {
     expect(spy).toHaveBeenCalledWith([false, "Please enter a valid email address"]);
   });
 
-  it('Checks register for valid input', async () => {
+  it('should register the user for valid input', async () => {
     // Sets the values for the different forms
     component.username.setValue("testusername");
     component.email.setValue("test@test.com");
@@ -124,7 +124,7 @@ describe('RegisterComponent', () => {
     expect(spyRouter).toHaveBeenCalledWith(['/login']);
   });
 
-  it('Checks register for valid input', async () => {
+  it('should register the user for valid input but with an error', async () => {
     // Sets the values for the different forms
     component.username.setValue("testusername");
     component.email.setValue("test@test.com");
@@ -135,7 +135,7 @@ describe('RegisterComponent', () => {
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Creates a spy for the accountInfoService backend call, and returns an error
     let spy = spyOn(component["accountInfoService"], "registerUser")
-      .and.throwError(new TestError("message", {data: "some error"}));
+      .and.throwError(new TestError("message", { data: "some error" }));
     // Calls function to be tested
     await component.register();
     // Input

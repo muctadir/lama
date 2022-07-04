@@ -43,7 +43,7 @@ describe('ModerationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('tests the ngOnInit function', async () => {
+  it('should initialize correctly', async () => {
     // Creates the spy for the getAllUsers
     let spy = spyOn(component, "getAllUsers");
     // Calls the ngOnInit function
@@ -52,7 +52,7 @@ describe('ModerationComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('test modeChange, its function calls and the modification', async () => {
+  it('should get all users when the mode is changed', async () => {
     // Checks the original value of mode variable
     expect(component.mode).toBe(0);
     // Makes the spy for the getAllUsers call
@@ -65,7 +65,7 @@ describe('ModerationComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('getAllUsers function without an error', async () => {
+  it('should get all users', async () => {
     // Creates the dummy data
     let result = [new User(2, "user1"), new User(4, "user2")];
     // Spies on the backend call and returns the dummy data
@@ -78,7 +78,7 @@ describe('ModerationComponent', () => {
     expect(component.users).toBe(result);
   });
 
-  it('getAllUsers function with an error', async () => {
+  it('should throw an error while getting all users', async () => {
     // Spies on the backend call and returns an error
     let spy = spyOn(component["accountService"], "allUsersData").and.throwError(new Error("something"));
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -90,7 +90,7 @@ describe('ModerationComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([false, "An error occured when gathering data from the server"]);
   });
 
-  it('tests edit user', () => {
+  it('should edit a user', () => {
     // Checks initial value
     expect(component.mode).toBe(0);
     // Creates dummy input

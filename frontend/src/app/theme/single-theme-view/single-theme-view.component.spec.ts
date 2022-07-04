@@ -46,7 +46,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the ngOnInit function
-  it('Tests the ngOnInit function to single theme page', () => {
+  it('should call all functions on initialization', () => {
     // Creates a fake getFrozen function function
     let spy1 = spyOn(component['projectDataService'], "getFrozen").and.callFake(async () => {
       // Check if get_single_theme_info is called
@@ -61,7 +61,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the get_single_theme_info function
-  it('Tests the get_single_theme_info function to theme single page', async () => {
+  it('should get the information for a single theme', async () => {
     // Create spy for get url call
     let spy1 = spyOn(component['themeDataService'], "single_theme_info")
     // Create spy for the sort artifacts function
@@ -74,9 +74,13 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the sortArtifacts function
-  it('Tests the sortArtifacts function to theme single page', async () => {
-    // Creates dummy input
-    let theme = new Theme(1, "theme1", "tdesc1");
+  it('should sort the artifacts on ID', async () => {
+    // Create a theme
+    let theme = new Theme(1, "New Theme", "Theme desc")
+    // Create labels
+    let fakeLabels = [new Label(1, "Label name", "Label desc", "Emotion"), new Label(2, "Label name 2", "Label desc 2", "Emotion")]
+    // Set labels of theme
+    theme.setLabels(fakeLabels)
 
     // Spy on the function and call fake
     spyOn(component, "sortArtifacts").and.callFake(() => {
@@ -110,7 +114,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the reRouter function
-  it('Tests the reRouter function from theme single page', () => {
+  it('should reroute to the theme management page', () => {
     // Set p_id and t_id in component
     component.p_id = 5;
     component.t_id = 1;
@@ -125,7 +129,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the reRouterTheme function
-  it('Tests the reRouterTheme function from theme single page', async () => {
+  it('should reroute to the single theme page', async () => {
     // Variable for new theme id
     let newThemeId = 2;
     // Set p_id and t_id in component
@@ -145,7 +149,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the reRouterEdit function
-  it('Tests the reRouterEdit function from theme single page', () => {
+  it('should reroute to the edit theme page', () => {
     // Set p_id and t_id in component
     component.p_id = 5;
     component.t_id = 1;
@@ -186,7 +190,7 @@ describe('SingleThemeViewComponent', () => {
   });
 
   // Test the goToTheme function
-  it('Tests the goToTheme function from theme single page', () => {
+  it('should go the single theme page of a selected theme', () => {
     // Create a theme
     let theme = new Theme(1, "Theme 1", "Description 1");
     // Create spy on the reRouterTheme function

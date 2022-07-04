@@ -4,13 +4,14 @@
     <div class="form-group">
         <label id="field_text">Username:</label>
         <!-- The action field, has username filled in if defined and non-empty -->
-        <input type="username" class="form-control" id="form-format" placeholder="Username" [formControl]="username" value = "{{ username }}">
+        <input type="username" class="form-control" id="form-format" placeholder="Username" [formControl]="username"
+            value="{{ username }}">
     </div>
     <!-- Email field -->
     <div class="form-group">
         <label id="field_text">Email Address:</label>
         <!-- The email field, has email filled in, if it is defined -->
-        <input type="email" class="form-control" placeholder="Email address" [formControl]="email" value = "{{ email }}">
+        <input type="email" class="form-control" placeholder="Email address" [formControl]="email" value="{{ email }}">
     </div>
     <!-- Password field -->
     <div class="form-group">
@@ -28,6 +29,7 @@
     <div class="form-group">
         <label id="field_text">Description:</label>
         <!-- Description field, filled in if the description is non-empty, max 140 characters -->
-        <textarea class="form-control" rows="4" placeholder="Description" [formControl]="description" maxlength="140" id="description">{{ description }}</textarea>
+        <textarea class="form-control" rows="4" placeholder="Description" [formControl]="description" maxlength="140"
+            id="description">{{ description }}</textarea>
     </div>
 </form>

@@ -1,5 +1,5 @@
-// Veerle Furst
-// Jarl Jansen
+// @Author Veerle Furst
+// @Author Jarl Jansen
 
 import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -74,7 +74,7 @@ export class RegisterComponent {
       return;
     }
 
-    this.register()
+    this.register();
   }
 
   /**
@@ -102,7 +102,7 @@ export class RegisterComponent {
       this.toastCommService.emitChange([true, "Account created successfully!"]);
       // Reroutes the user to the login page
       this.route.navigate(['/login']);
-    } catch(e: any) {
+    } catch (e: any) {
       // Shows an error in the toast
       this.toastCommService.emitChange([false, e.response.data]);
     }

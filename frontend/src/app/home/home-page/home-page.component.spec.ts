@@ -43,7 +43,7 @@ describe('HomePageComponent', () => {
   });
 
   // Test to see if the ngOnInit function works correctly
-  it('Test for ngOnInit function', async () => {
+  it('should call all functions on intialization', async () => {
     // Spy on the function that is called
     let spy = spyOn(component, "getProjects");
 
@@ -67,7 +67,7 @@ describe('HomePageComponent', () => {
   });
 
   // Test to see if the getProjects function works correctly
-  it('Test for getProjects function', async () => {
+  it('should get all projects', async () => {
     // Create the project with constructor
     let projectNew = new Project(5, "testname", "testdesc");
 

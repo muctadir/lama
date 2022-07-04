@@ -13,9 +13,9 @@ describe('ProjectComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ ProjectComponent ],
       imports: [ RouterModule ],
-      providers: [ChildrenOutletContexts]
+      providers: [ ChildrenOutletContexts ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

@@ -54,7 +54,7 @@ export class HistoryDataService {
     }
 
     // Makes the request to the backend for the changelogs
-    let result = await this.requestHandler.get('/change/changes', {'p_id': p_id, 'item_type': type, 'i_id': i_id}, true);
+    let result = await this.requestHandler.get('/change/changes', { 'p_id': p_id, 'item_type': type, 'i_id': i_id }, true);
 
     // Makes the list of Changelogs
     let changelogArray: Changelog[] = [];

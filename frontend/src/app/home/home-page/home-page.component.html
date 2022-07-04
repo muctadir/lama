@@ -21,7 +21,8 @@
                     <!-- Go to account settings page when clicked -->
                     <button class="button-layout" ngbDropdownItem [routerLink]="['/account']">Account Settings</button>
                     <!-- Go to the user moderation page when clicked -->
-                    <button class="button-layout" ngbDropdownItem *ngIf="user && user.getType()" [routerLink]="['/moderation']">User Moderation</button>
+                    <button class="button-layout" ngbDropdownItem *ngIf="user && user.getType()"
+                        [routerLink]="['/moderation']">User Moderation</button>
                     <!-- Open logout modal when clicked -->
                     <button class="button-layout" ngbDropdownItem (click)="openLogout()">Log out</button>
                 </div>
@@ -57,10 +58,11 @@
                     <div class="progress">
                         <!-- Calculating progress bar progress based on the total number of artifacts, 
                             and the amount that have been completed, also sets the layout of the progress bar -->
-                        <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.getNumberOfCLArtifacts()}}
-                        aria-valuemin="0" attr.aria-valuemax={{project.getNumberOfArtifacts()}} 
-                        [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
-                        style="background-color:#ED5A06 !important;"> 
+                        <div class="progress-bar" role="progressbar"
+                            attr.aria-valuenow={{project.getNumberOfCLArtifacts()}} aria-valuemin="0"
+                            attr.aria-valuemax={{project.getNumberOfArtifacts()}}
+                            [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
+                            style="background-color:#ED5A06 !important;">
                         </div>
                     </div>
                 </div>
@@ -73,10 +75,10 @@
                 <div class="col-1">
                     <!-- If the user is an admin displays a key icon -->
                     <div *ngIf="project.getAdmin()">
-                        <em class="bi bi-key" ngbTooltip="Admin"></em> 
+                        <em class="bi bi-key" ngbTooltip="Admin"></em>
                     </div>
                 </div>
-                
+
                 <!-- Column for whether project is frozen or not -->
                 <div class="col-1">
                     <!-- If the project is frozen displays a key icon -->

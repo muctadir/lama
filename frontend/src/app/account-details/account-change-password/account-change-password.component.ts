@@ -36,7 +36,7 @@ export class AccountChangePasswordComponent {
    * @param accountInfoService instance of AccountInfoService
    * @param service instance of the InputCheckService
    */
-  constructor(private formBuilder: FormBuilder, 
+  constructor(private formBuilder: FormBuilder,
     private toastCommService: ToastCommService,
     private accountInfoService: AccountInfoService,
     private inputCheckService: InputCheckService) {}
@@ -47,20 +47,25 @@ export class AccountChangePasswordComponent {
    * 
    * @trigger user clicks change password button
    */
-  editPasswordF() : void {
+  editPasswordF(): void {
     // Object which will be send to the backend
     let passwordInformation: Record<string, any> = {};
     // Puts old password and new password in the object
     passwordInformation = {
       "id": this.userAccount.getId(),
-      "password" : this.passwordForm.value.old_password,
+      "password": this.passwordForm.value.old_password,
       "newPassword": this.passwordForm.value.new_password
     };
 
-    // Checks input validity
-    let validInput = this.checkInput();
+    // Check if the passwords are equal
+    if (this.passwordForm.value.new_password != this.passwordForm.value.new_passwordR) {
+      // Emits an error toast
+      this.toastCommService.emitChange([false, "New passwords are not equal"]);
+      return
+    }
 
-    if (validInput) {
+    // Checks input validity
+    if (this.checkInput()) {
       // Makes change password request to backend
       this.makeRequest(passwordInformation);
     } else {
@@ -75,7 +80,7 @@ export class AccountChangePasswordComponent {
    * @returns whether user input is correct
    * @trigger user clicks change password button
    */
-  checkInput() : boolean {
+  checkInput(): boolean {
     // Checks input
     return (this.inputCheckService.checkFilled(this.passwordForm.value.old_password) || this.superAdmin) && 
       this.inputCheckService.checkFilled(this.passwordForm.value.new_password) &&
@@ -88,7 +93,7 @@ export class AccountChangePasswordComponent {
    * 
    * @param passwordInformation object holding old and new password
    */
-  async makeRequest(passwordInformation: Record<string, any>) : Promise<void> {
+  async makeRequest(passwordInformation: Record<string, any>): Promise<void> {
     // Tries making the request to the backend to change the password
     try {
       // Makes the request
@@ -97,20 +102,9 @@ export class AccountChangePasswordComponent {
       this.modeChangeEvent.emit(0);
       // Emits a success toast
       this.toastCommService.emitChange([true, "Password changed"]);
-    } catch(e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else {
-        // Sets the error message of the toast
-        let message: string = "An unknown error occurred";
-        if (e instanceof AxiosError) {
-          message = e.response?.data;
-        }
-        // Emits the error toast
-        this.toastCommService.emitChange([false, message]);
-      }
+    } catch (e: any) {
+      // Toast with error message
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 }

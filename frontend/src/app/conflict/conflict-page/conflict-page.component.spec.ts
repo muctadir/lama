@@ -11,11 +11,11 @@ describe('ConflictPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConflictPageComponent ],
+      declarations: [ConflictPageComponent],
       // Adding the RouterTestingModule dependency
       imports: [RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

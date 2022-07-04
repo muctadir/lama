@@ -25,12 +25,12 @@ describe('MergeLabelFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       // Adds the RouterTestingModule dependency
-      imports: [RouterTestingModule, ReactiveFormsModule],
+      imports: [ RouterTestingModule, ReactiveFormsModule ],
       declarations: [ MergeLabelFormComponent ],
       // Adds NgbActiveModal dependency
-      providers: [NgbActiveModal, FormBuilder]
+      providers: [ NgbActiveModal, FormBuilder ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

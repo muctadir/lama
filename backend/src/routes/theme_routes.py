@@ -3,7 +3,7 @@
 
 from flask import current_app as app
 from src.models import db
-from src.models.item_models import Theme, ThemeSchema, Label, label_to_theme
+from src.models.item_models import Theme, Label, label_to_theme
 from src.models.change_models import ChangeType
 from src.models.project_models import Project
 from flask import jsonify, Blueprint, make_response, request
@@ -12,7 +12,7 @@ from src.app_util import login_required, check_args, in_project, check_string, c
 from src.routes.label_routes import get_label_info, get_loose_labels
 from sqlalchemy.exc import OperationalError
 from src.exc import ChangeSyntaxError, ThemeCycleDetected
-from src.searching.search import search_func_all_res, best_search_results
+from src.search import search_func_all_res, best_search_results
 from collections import defaultdict
 
 theme_routes = Blueprint("theme", __name__, url_prefix="/theme")
@@ -34,7 +34,7 @@ def theme_management_info():
 
     # Get args
     args = request.args
-    
+
     # Check if all required arguments are there
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
@@ -49,12 +49,12 @@ def theme_management_info():
     ).all()
 
     # Schemas to serialize
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # List for theme information
     theme_info = [{
-        'theme' : theme_schema.dump(theme),
-        'number_of_labels' : get_theme_label_count(theme.id)
+        'theme': theme_schema.dump(theme),
+        'number_of_labels': get_theme_label_count(theme.id)
     } for theme in all_themes]
 
     # Convert the list of dictionaries to json
@@ -62,6 +62,7 @@ def theme_management_info():
 
     # Return the list of dictionaries
     return make_response(dict_json, 200)
+
 
 """
 For getting the theme information 
@@ -89,7 +90,7 @@ def single_theme_info(*, user, membership):
         return make_response("Not all required arguments supplied", 400)
 
     # Schemas to serialize
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # Get the theme id
     t_id = int(args["t_id"])
@@ -118,24 +119,25 @@ def single_theme_info(*, user, membership):
 
     # SUB THEMES
     # Make list of all sub-themes
-    sub_themes = theme.sub_themes
+    sub_themes = (theme.sub_themes).filter_by(deleted=0)
     # Make a json list of sub-themes
     sub_themes_list_json = theme_schema.dump(sub_themes, many=True)
 
     # LABELS
     # Make list of all labels
-    labels = theme.labels
+    labels = (theme.labels).filter_by(deleted=0)
 
     # Then throw this loop in a list comprehension
-    labels_list_json = [get_label_info(label, user.id, membership.admin) for label in labels]
+    labels_list_json = [get_label_info(
+        label, user.id, membership.admin) for label in labels]
 
     # INFO
     # Put all values into a dictonary
     info = {
-        "theme" : theme_json,
-        "super_theme" : super_theme_json,
-        "sub_themes" : sub_themes_list_json,
-        "labels" : labels_list_json
+        "theme": theme_json,
+        "super_theme": super_theme_json,
+        "sub_themes": sub_themes_list_json,
+        "labels": labels_list_json
     }
 
     # Convert the list of dictionaries to json
@@ -144,17 +146,19 @@ def single_theme_info(*, user, membership):
     # Return the list of dictionaries
     return make_response(dict_json, 200)
 
+
 """
-For getting the all themes without parents 
-@returns a list of themes:
-{
-    themes : the serialized themes without parents
-}
+Given a theme id, returns a list of possible themes that can be added as sub themes
+This means themes that:
+    - are in the same project
+    - have no super theme
+    - would not introduce a cycle if they were added as a sub theme
+    - themes that are not deleted
 """
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
 @in_project
-def all_themes_no_parents():
+def possible_sub_themes():
 
     # The required arguments
     required = ["p_id", "t_id"]
@@ -167,32 +171,35 @@ def all_themes_no_parents():
         return make_response("Not all required arguments supplied", 400)
 
     # Schema to serialize
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # Get the project id
     p_id = int(args["p_id"])
     # Get theme id
     t_id = int(args["t_id"])
 
-    # Get the themes without parents
+    root_id = __get_root(t_id)
+
+    # Get the themes without parents, and those that would not introduce a cycle
     themes = db.session.scalars(
         select(Theme)
         .where(
             Theme.p_id == p_id,
             Theme.super_theme == None,
-            Theme.id != t_id,
+            Theme.id != root_id,
             Theme.deleted == False
         )
     ).all()
 
     # Dump the themes to get the info
     themes_info = theme_schema.dump(themes, many=True)
-    
+
     # Convert the list of dictionaries to json
     list_json = jsonify(themes_info)
 
     # Return the list of dictionaries
     return make_response(list_json, 200)
+
 
 """
 For creating a new theme 
@@ -220,7 +227,7 @@ def create_theme(*, user):
     # Check if all required arguments are there
     if not check_args(required, args):
         return make_response("Not all required arguments supplied", 400)
-    
+
     # Check for invalid characters
     if check_whitespaces([args['name'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
@@ -232,10 +239,13 @@ def create_theme(*, user):
     # Check if the theme name is unique
     try:
         if theme_name_taken(args["name"], 0):
+            # Respond that theme name already exists
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
+        # An illegal character was passed to the database
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Another error occured
         else:
             return make_response("Bad request", 400)
 
@@ -247,34 +257,50 @@ def create_theme(*, user):
     }
 
     # Load the theme data into a theme object
-    thema_schema = ThemeSchema()
+    thema_schema = Theme.__marshmallow__()
     theme = thema_schema.load(theme_creation_info)
 
     # Add the theme to the database
     db.session.add(theme)
     # Flush updates the id of the theme object
     db.session.flush()
-    
+
     # Record the creation of this theme in the theme changelog
     __record_creation(theme.id, theme.name, args['p_id'], user.id)
 
     # Make the sub_themes the sub_themes of the created theme
-    make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
+    sub_theme_ids = [sub_theme['id'] for sub_theme in args["sub_themes"]]
+    try:
+        make_sub_themes(theme, sub_theme_ids, user.id)
+    except ValueError as e:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted themes", 400)
+        elif str(e).startswith("Theme not"):
+            return make_response("You cannot add themes in different projects", 400)
+        return make_response("You cannot add themes that already have super themes", 400)
+    # Note we do not catch ThemeCycleDetected since it cannot happen whilst creating a theme
 
     # Make the labels the labels of the created theme
-    make_labels(theme, args["labels"], args['p_id'], user.id)
+    try:
+        make_labels(theme, args["labels"], user.id)
+    except ValueError:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted labels", 400)
+        return make_response("You cannot add labels in different projects", 400)
+    
 
     # Create the project
     try:
-        db.session.commit()   
+        db.session.commit()
     except OperationalError as err:
         if "Illegal mix of collations" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
-        else: 
-            return make_response("Internal Server Error", 503) 
+        else:
+            return make_response("Internal Server Error", 503)
 
     # Return the confirmation
     return make_response("Theme created", 201)
+
 
 """
 For editing a theme 
@@ -295,7 +321,7 @@ For editing a theme
 def edit_theme(*, user):
 
     # The required arguments
-    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
+    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]    
 
     # Get args
     args = request.json['params']
@@ -312,16 +338,19 @@ def edit_theme(*, user):
     if check_string([args['name']]):
         return make_response("Input contains a forbidden character", 511)
 
-   	# Check if the theme name is unique
+    # Check if the theme name is unique
     try:
         if theme_name_taken(args["name"], args["id"]):
+            # Theme name already exists in the database
             return make_response("Theme name already exists", 400)
     except OperationalError as err:
-        if "illegal" in err.args[0]:
+        # A character was passed to the database that the database cannot handle
+        if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Another error occured while querying
         else:
             return make_response("Bad request", 400)
-    
+
     # Get theme id
     t_id = args["id"]
     # Project id
@@ -337,46 +366,56 @@ def edit_theme(*, user):
     # Check if theme is in given project
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
-    
+
     # Records the renaming in the theme changelog, only if the theme was actually renamed
     if theme.name != args['name']:
         __record_name_edit(theme.id, theme.name, p_id, user.id, args['name'])
-        
+
     # Records a changing of the description in the theme changelog, only if the description was actually changed
     if theme.description != args['description']:
         __record_description_edit(theme.id, args['name'], p_id, user.id)
-    
 
     # Change the theme information
     db.session.execute(
         update(Theme).
         where(Theme.id == t_id).
         values(
-            name = args["name"],
-            description = args["description"]
+            name=args["name"],
+            description=args["description"]
         )
     )
 
+    sub_theme_ids = [sub_theme['id'] for sub_theme in args["sub_themes"]]
+
     # Set the sub_themes of the theme
-    make_sub_themes(theme, args["sub_themes"], args['p_id'], user.id)
-    
-    # Check for cycles
     try:
-        __get_children(t_id)
+        make_sub_themes(theme, sub_theme_ids, user.id)
     except ThemeCycleDetected:
         return make_response("Your choice of subthemes would introduce a cycle", 400)
+    except ValueError as e:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted themes", 400)
+        elif str(e).startswith("Theme not"):
+            return make_response("You cannot add themes in different projects", 400)
+        return make_response("You cannot add themes that already have super themes", 400)
 
     # Set the labels of the theme
-    make_labels(theme, args["labels"], args['p_id'], user.id)
+    try:
+        make_labels(theme, args["labels"], user.id)
+    except ValueError as e:
+        if str(e).startswith("Deleted"):
+            return make_response("You cannot add deleted labels", 400)
+        return make_response("You cannot add labels in different projects", 400)
 
     # Edit the theme
     try:
-        db.session.commit()   
+        db.session.commit()
     except OperationalError:
-        return make_response("Internal Server Error", 503)       
+        return make_response("Internal Server Error", 503)
 
     # Return the conformation
     return make_response("Theme edited", 200)
+
 
 """
 For editing a theme 
@@ -404,7 +443,7 @@ def delete_theme(*, user):
     # Check if all required arguments are there
     if not check_args(required, theme_info):
         return make_response("Not all required arguments supplied", 400)
-    
+
     # Get theme id
     t_id = theme_info["t_id"]
     # Project id
@@ -412,7 +451,7 @@ def delete_theme(*, user):
 
     # Get the corresponding theme
     theme = db.session.get(Theme, t_id)
-    
+
     # Check if the theme exists
     if not theme:
         return make_response("Bad request", 400)
@@ -420,12 +459,12 @@ def delete_theme(*, user):
     # Check if theme is in given project
     if theme.p_id != p_id:
         return make_response("Bad request", 400)
-        
+
     # Change the theme information to be deleted
     db.session.execute(
         update(Theme).
         where(Theme.id == t_id).
-        values(deleted = True)
+        values(deleted=True)
     )
 
     # Records the deleting of this theme in the theme changelog
@@ -433,9 +472,9 @@ def delete_theme(*, user):
 
     # Delete the theme
     try:
-        db.session.commit()   
+        db.session.commit()
     except OperationalError:
-        return make_response("Internal Server Error", 503)       
+        return make_response("Internal Server Error", 503)
 
     # Return the conformation
     return make_response("Theme deleted", 200)
@@ -451,11 +490,11 @@ def search_route():
     args = request.args
     # Required arguments
     required = ['p_id', 'search_words']
-    
+
     # Check if required agruments are supplied
     if not check_args(required, args):
         return make_response('Not all required arguments supplied', 400)
-    
+
     # Sanity conversion to int (for when checking for equality in sql)
     p_id = int(args['p_id'])
 
@@ -473,15 +512,18 @@ def search_route():
     search_columns = ['id', 'name', 'description']
 
     # Get search results
-    results = search_func_all_res(args['search_words'], themes, 'id', search_columns)
+    results = search_func_all_res(
+        args['search_words'], themes, 'id', search_columns)
     # Take the best results
-    clean_results = best_search_results(results, len(args['search_words'].split()))
+    clean_results = best_search_results(
+        results, len(args['search_words'].split()))
     # Gets the actual label object from the search
     themes_results = [result['item'] for result in clean_results]
     # Schema for serialising
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
     # Serialise results and jsonify
     return make_response(jsonify(theme_schema.dump(themes_results, many=True)), 200)
+
 
 """
 Author: Eduardo Costa Martins
@@ -499,7 +541,7 @@ def theme_vis_route():
     # Check that the required arguments were supplied (no more, no less)
     if not check_args(required, args):
         return make_response("Bad Request", 400)
-    
+
     # Get the required data for theme visualization (already in the required format)
     try:
         hierarchy = get_project_hierarchy(args['p_id'])
@@ -521,56 +563,85 @@ Function for getting the number of labels in the theme
 """
 def get_theme_label_count(t_id):
     return db.session.scalar(
-            select(func.count(label_to_theme.c.l_id))
-            .where(label_to_theme.c.t_id==t_id)
-        )
+        select(func.count(label_to_theme.c.l_id))
+        .where(label_to_theme.c.t_id == t_id)
+    )
+
 
 """
-For getting the labels from the passed data
+Robust method for setting the labels of a theme
 @params labels_info includes: {
     id: id of the label
 }
+@throws ValueError if the user attempts to add a deleted label or a label in a different project
 """
-def make_labels(theme, labels_info, p_id, u_id):
+def make_labels(theme, labels_info, u_id):
     # List for the label ids
     label_ids_list = [label['id'] for label in labels_info]
-    
+
     # Get all labels that are in the list
     labels = db.session.scalars(
         select(Label)
         .where(Label.id.in_(label_ids_list))
     ).all()
+    
+    for label in labels:
+        # Check the user is not trying to add deleted labels
+        if label.deleted:
+            raise ValueError(f"Deleted label added, id: {label.id}")
+        # Check the user is not trying to add labels in a different project
+        if label.p_id != theme.p_id:
+            raise ValueError(f"Label not in correct project, id: {label.id}")
 
     label_names = [label.name for label in labels]
 
     # If the assigned labels have changed
-    if set(labels) != set(theme.labels):
+    if set(labels) != set((theme.labels).filter_by(deleted=0)):
         theme.labels = labels
-        __record_children(theme.id, theme.name, p_id, u_id, label_names, 'label')
+        __record_children(theme.id, theme.name, theme.p_id,
+                          u_id, label_names, 'label')
+
 
 """
-For getting the themes from the passed data
-@params sub_themes_info includes: {
-    id: id of the theme
-}
+Robust method for setting new subthemes of a theme
+@params sub_themes_ids : a list of ids of sub_themes
+@throws ThemeCycleDetected if the user attempts to add a subtheme that would introduce a cycle
+@throws ValueError if the user attempts to add a deleted theme, a theme in a different project, or a theme which already has a super theme
 """
-def make_sub_themes(theme, sub_themes_info, p_id, u_id):
+def make_sub_themes(theme, sub_theme_ids, u_id):
 
-    # List for the theme ids
-    sub_theme_ids_list = [theme['id'] for theme in sub_themes_info]
-    
+    root_id = __get_root(theme.id)
+
+    if root_id in sub_theme_ids:
+        raise ThemeCycleDetected
+
     # Get all themes that are in the list
     sub_themes = db.session.scalars(
         select(Theme)
-        .where(Theme.id.in_(sub_theme_ids_list))
+        .where(Theme.id.in_(sub_theme_ids))
     ).all()
+
+    
+    for sub_theme in sub_themes:
+        # Check the user is not trying to add deleted themes
+        if sub_theme.deleted:
+            raise ValueError(f"Deleted theme added, id: {sub_theme.id}")
+        # Check the user is not trying to add themes in a different project
+        if sub_theme.p_id != theme.p_id:
+            raise ValueError(f"Theme not in correct project, id: {sub_theme.id}")
+        # Check the user is not trying to add themes that already have a super theme (that is not the given one)
+        if sub_theme.super_theme_id is not None and sub_theme.super_theme_id != theme.id:
+            raise ValueError(f"Theme already has a super theme, id: {sub_theme.id}")
+
     # Get names from themes
     sub_theme_names = [sub_theme.name for sub_theme in sub_themes]
 
     # If the assigned subthemes have changed
-    if set(sub_themes) != set(theme.sub_themes):
+    if set(sub_themes) != set((theme.sub_themes).filter_by(deleted=0)):
         theme.sub_themes = sub_themes
-        __record_children(theme.id, theme.name, p_id, u_id, sub_theme_names, 'subtheme')
+        __record_children(theme.id, theme.name, theme.p_id, u_id,
+                          sub_theme_names, 'subtheme')
+
 
 """
 Function that checks if a theme name is already taken
@@ -581,7 +652,7 @@ def theme_name_taken(name, t_id):
     return bool(db.session.scalars(
         select(Theme)
         .where(
-            Theme.name==name,
+            Theme.name == name,
             Theme.id != t_id
         ))
         .first())
@@ -608,6 +679,7 @@ def __record_creation(t_id, name, p_id, u_id):
 
     db.session.add(change)
 
+
 """
 Records the editing of a theme's name in the theme changelog
 @param t_id: the id of the theme that was edited
@@ -633,6 +705,7 @@ def __record_name_edit(t_id, old_name, p_id, u_id, new_name):
 
     db.session.add(change)
 
+
 """
 Records the editing of a theme's description in the theme changelog
 @param t_id: the id of the theme that was edited
@@ -653,6 +726,7 @@ def __record_description_edit(t_id, name, p_id, u_id):
     )
 
     db.session.add(change)
+
 
 """
 Records changing of a theme's 'children' in the theme changelog.
@@ -683,6 +757,7 @@ def __record_children(t_id, t_name, p_id, u_id, c_names, c_type):
     )
     db.session.add(change)
 
+
 """
 Records the deletion of a theme in the theme changelog
 Note that since the theme can no longer be viewed, its personal history can't be viewed either
@@ -704,6 +779,7 @@ def __record_delete(t_id, name, p_id, u_id):
         change_type=ChangeType.deleted
     )
     db.session.add(change)
+
 
 """
 Author: Eduardo Costa Martins
@@ -780,6 +856,7 @@ def __get_children(t_id):
 
     return results
 
+
 """
 Author: Eduardo Costa Martins
 @param t_id: The id of the theme to get children of
@@ -845,12 +922,13 @@ def __grouped_children(t_id):
                 new_accumulator.extend(children)
         # We are done using the old accumulator, update it with the new one
         accumulator = new_accumulator
-    
+
     # By the nature of __get_children(), the passed theme is the root element
     # and there are no other themes at its depth retrieved (no siblings retrieved)
     # Thus we can safely just return the first (and only) element at the root
 
     return grouped_children[root][0]
+
 
 """
 Author: Eduardo Costa Martins
@@ -864,12 +942,12 @@ The project node has structure
     'children' : [theme hierarchies for maximal themes, and loose labels]
 }
 @param p_id : the project to get the hierarchy of
-Returns the project hierarchy as described above, or None if the project with that id does not exist
+@returns the project hierarchy as described above, or None if the project with that id does not exist
 A loose label is one that is not assigned to a theme
 The deleted is still provided to make sure the node has the same structure as other nodes
 """
 def get_project_hierarchy(p_id):
-    
+
     project = db.session.get(Project, p_id)
 
     # Check if project exists
@@ -885,17 +963,17 @@ def get_project_hierarchy(p_id):
         # Theme is maximial
         Theme.super_theme_id == None
     )).all()
-    
+
     # All themes grouped in a hierarchy, this list contains the hierarchy for each maximal theme
     grouped_themes = [__grouped_children(t_id) for t_id in maximal_themes]
-    
+
     # We group the maximal themes under the project node
     hierarchy = {
-        'id' : project.id,
-        'name' : project.name,
-        'deleted' : False,
-        'type' : 'Project',
-        'children' : grouped_themes
+        'id': project.id,
+        'name': project.name,
+        'deleted': False,
+        'type': 'Project',
+        'children': grouped_themes
     }
 
     # Get labels without a theme
@@ -905,3 +983,72 @@ def get_project_hierarchy(p_id):
     hierarchy['children'].extend(loose_labels)
 
     return hierarchy
+
+"""
+Author: Eduardo Costa Martins
+@param t_id: id of a theme
+@returns List of tuples corresponding to information of themes on the path to the root of the given theme's tree
+         Each tuple has the form (super_theme_id, theme_id)
+"""
+def __get_super_themes(t_id):
+    # Recursive queries in SQL can be done using CTEs (Common Table Expressions)
+    # This is the anchor statement (like a base case) which gets the given theme, and the id of its super theme
+    super_themes = select(
+        Theme.super_theme_id,
+        Theme.id
+    ).where(
+        Theme.id == t_id
+    ).cte(
+        recursive=True
+    )
+
+    # Since we recurse on the results generated by the previous query, we need to alias it
+    super_themes_alias = super_themes.alias()
+
+    # The union all connects the recursive statement with the anchor statement
+    super_themes = super_themes.union_all(
+        # Recursive statement, gets the parent of newly retrieved themes
+        select(
+            Theme.super_theme_id,
+            Theme.id
+        ).where(
+            Theme.id == super_themes_alias.c.super_theme_id
+        )
+    )
+
+    try:
+        results = db.session.execute(select(super_themes)).all()
+    except OperationalError as e:
+        # CTEs are limited so I am not aware of a way to stop the recursion early (DISTINCT not allowed for CTE)
+        # So currently we catch an exception and check the error code
+        # This could be made better by actually, checking the type of database we use, but suitable for now
+        # e.orig.args[0] contains the error code
+        if e.orig.args[0] in [ThemeCycleDetected.MariaDB, ThemeCycleDetected.MySQLdb]:
+            raise ThemeCycleDetected
+        raise e
+
+    return results
+
+"""
+Author: Eduardo Costa Martins
+@param t_id : id of a theme
+@returns the id of the theme that is the root of the hierarchy tree this theme is contained in
+@raises ValueError if the root cannot be found (likely due to poor integrity of the database)
+"""
+def __get_root(t_id):
+
+    # Get all super themes
+    themes = __get_super_themes(t_id)
+
+    # The root theme is designated by the one with no super theme
+    # By the construction of the recursive query, the root element should be the last one in the list
+    if themes[-1][0] is None:
+        return themes[-1][1]
+    # If it's not, then we search through every theme
+    else:
+        for theme in themes:
+            if theme[0] is None:
+                return theme[1]
+    
+    # The maximal super theme in this hierarchy is not given in the list of themes
+    raise ValueError

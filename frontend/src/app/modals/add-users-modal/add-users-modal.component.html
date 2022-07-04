@@ -12,14 +12,14 @@
     <div class="modal-body row" *ngFor="let user of users" (click)="addUser(user)" id="user-modal-rows">
         <!-- Displays the username of the user -->
         <div class="col" id="username-modal-col">
-          <div> {{ user.getUsername() }}</div>
+            <div> {{ user.getUsername() }}</div>
         </div>
         <!-- Col for adding users button -->
         <div class="col-2">
             <!-- Button for adding new project_members, when clicked adds the user to the project -->
             <button class="btn" type="button" id="addMembersButton" (click)="addUser(user)">
-              <!-- Plus icon displayed behind the username -->
-              <em class="bi bi-plus labelType" id="popup-plus"></em>
+                <!-- Plus icon displayed behind the username -->
+                <em class="bi bi-plus labelType" id="popup-plus"></em>
             </button>
         </div>
     </div>

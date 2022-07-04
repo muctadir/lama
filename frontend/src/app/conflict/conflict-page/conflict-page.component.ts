@@ -24,9 +24,9 @@ export class ConflictPageComponent implements OnInit {
    * @param toastCommService instance of ToastCommService
    */
   constructor(private router: Router,
-     private reroutingService: ReroutingService,
-     private conflictDataService: ConflictDataService,
-     private toastCommService: ToastCommService) { }
+    private reroutingService: ReroutingService,
+    private conflictDataService: ConflictDataService,
+    private toastCommService: ToastCommService) { }
 
   /**
    * Gets all the users within the application from the backend
@@ -37,7 +37,7 @@ export class ConflictPageComponent implements OnInit {
    * @modifies allMembers, currentProject
    * @trigger on creation of component
    */
-   ngOnInit(): void {
+  ngOnInit(): void {
     // Initiliazing project with the retrieved project ID from URL
     let projectID = +(this.reroutingService.getProjectID(this.router.url));
 
@@ -51,13 +51,13 @@ export class ConflictPageComponent implements OnInit {
    * 
    * @trigger resolve conflict button is pressed
    */
-   reRouter(a_id: number, lt_id: number, lt: string) : void {
+  reRouter(a_id: number, lt_id: number, lt: string): void {
     // Gets the url from the router
     let url: string = this.router.url
     // Use reroutingService to obtain the project ID
     let p_id = this.reroutingService.getProjectID(url);
     // Changes the route accordingly
-    this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id, lt ]);
+    this.router.navigate(['/project', p_id, 'conflictResolution', a_id, lt_id, lt]);
   }
 
   /**
@@ -68,7 +68,7 @@ export class ConflictPageComponent implements OnInit {
    * @trigger on component load
    * @modifies allMembers
    */
-   async requestConflicts(p_id: number) : Promise<void> {
+  async requestConflicts(p_id: number): Promise<void> {
     //Getting conflict data from service
     const conflicts = await this.conflictDataService.getConflicts(p_id)
     //Setting the conflict data to the variable

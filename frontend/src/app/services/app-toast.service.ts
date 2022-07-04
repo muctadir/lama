@@ -1,10 +1,11 @@
+// Imports
 import { Injectable, TemplateRef } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppToastService {
-  /* Array containing the toasts */
+  // Array of toasts
   toasts: any[] = [];
 
   /**
@@ -13,7 +14,7 @@ export class AppToastService {
    * @param textOrTpl the string of the toast
    * @param options options of the toast
    */
-  show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
+  show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {
     this.toasts.push({ textOrTpl, ...options });
   }
 
@@ -22,14 +23,14 @@ export class AppToastService {
    * 
    * @param toast toast to remove from the list
    */
-  remove(toast: any) {
+  remove(toast: any): void {
     this.toasts = this.toasts.filter(t => t !== toast);
   }
 
   /**
    * Clears the entire list of toasts
    */
-  clear() {
+  clear(): void {
     this.toasts.splice(0, this.toasts.length);
   }
 }

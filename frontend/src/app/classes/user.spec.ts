@@ -9,19 +9,19 @@ describe('User', () => {
     const user = new User(id, name);
 
     // Getting the id of the user
-    it('Should return the ID of the user', () => {
+    it('should return the ID of the user', () => {
         expect(user.getId())
             .toBe(id);
     });
 
     // Getting the username of the user
-    it('Should return the username of the user', () => {
+    it('should return the username of the user', () => {
         expect(user.getUsername())
             .toBe(name);
     });
 
     // Setting and getting the email of the user
-    it('Should return the Email of the user', () => {
+    it('should return the Email of the user', () => {
         const email = "test@gmail.com"
         user.setEmail(email)
         expect(user.getEmail())
@@ -29,7 +29,7 @@ describe('User', () => {
     });
 
     // Setting a bad username
-    it('throw error for bad label name', () => {
+    it('should throw an error for bad label name', () => {
         // Create instances
         const user2 = new User(2, name);
         const newUsername = "";
@@ -40,7 +40,7 @@ describe('User', () => {
     });
 
     // Setting and getting the description of the user
-    it('Should return the description of the user', () => {
+    it('should return the description of the user', () => {
         const desc = "Test"
         user.setDesc(desc)
         expect(user.getDesc())
@@ -48,7 +48,7 @@ describe('User', () => {
     });
 
     // Setting and getting the status of the user
-    it('Should return the status of the user', () => {
+    it('should return the status of the user', () => {
         const status = "approved"
         user.setStatus(status)
         expect(user.getStatus())
@@ -56,7 +56,7 @@ describe('User', () => {
     });
 
     // Setting and getting the type of the user
-    it('Should return the type of the user', () => {
+    it('should return the type of the user', () => {
         const type = true
         user.setType(type)
         expect(user.getType())
@@ -64,7 +64,7 @@ describe('User', () => {
     });
 
     // Setting and getting the type of the user
-    it('Should return the type of the user', () => {
+    it('should return the type of the user', () => {
         const type = false
         user.setType(type)
         expect(user.getType())

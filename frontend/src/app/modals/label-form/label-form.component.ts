@@ -8,12 +8,7 @@ import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
@@ -132,7 +127,7 @@ export class LabelFormComponent implements OnInit {
       !this.labelForm.controls['labelTypeId'].valid
     ) {
       // Throw error
-      throw 'Invalid Form';
+      throw Error('Invalid Form');
     }
     // Return new label
     return new Label(
@@ -149,14 +144,14 @@ export class LabelFormComponent implements OnInit {
   constructPatch(): void {
     // CHeck label undefined
     if (typeof this.label === 'undefined') {
-      throw 'Patch was attempted to be constructed without a label being supplied.';
+      throw Error('Patch was attempted to be constructed without a label being supplied');
     } else if (
       // Check validity
       !this.labelForm.controls['labelName'].valid ||
       !this.labelForm.controls['labelDescription'].valid
     ) {
       // Throw error
-      throw 'Invalid form';
+      throw Error('Invalid form');
     } else {
       // Change name and/pr description
       this.label.setName(this.labelForm.controls['labelName'].value);

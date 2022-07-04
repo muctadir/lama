@@ -1,4 +1,4 @@
-// Veerle Furst
+// Author Veerle Furst
 import { Component } from '@angular/core';
 import { Theme } from 'app/classes/theme';
 import { Router } from '@angular/router';
@@ -41,16 +41,16 @@ export class ThemeManagementComponent {
   sortedDesc = sorted.Not; // Theme description
   sortedNOL = sorted.Not; // Number of labels
 
-  // var for getting search text
+  // Variables for getting search text
   searchForm = this.formBuilder.group({
     search_term: ''
   });
 
   // True if the project is frozen
-  frozen: boolean = true;
+  frozen = true;
 
-  constructor(private router: Router, 
-    private formBuilder: FormBuilder, 
+  constructor(private router: Router,
+    private formBuilder: FormBuilder,
     private themeDataService: ThemeDataService,
     private projectDataService: ProjectDataService) {
     // Initialize the array for the themes
@@ -60,7 +60,7 @@ export class ThemeManagementComponent {
     // Initialize the ReroutingService
     this.routeService = new ReroutingService();
     // Use reroutingService to obtain the project ID
-    this.p_id = Number(this.routeService.getProjectID(this.url));    
+    this.p_id = Number(this.routeService.getProjectID(this.url));
   }
 
   async ngOnInit(): Promise<void> {
@@ -69,13 +69,13 @@ export class ThemeManagementComponent {
     // Get the theme information from the request handler
     this.getThemes();
     // For search icon to search on click
-    this.searchClick();    
+    this.searchClick();
   }
 
   /**
    * Function for searching based on clicking on the maginifying glass
    */
-   searchClick(){
+   searchClick(): void {
     // Get the search image
     let searchBar = document.getElementById("searchBar")
     if (searchBar != null){
@@ -85,7 +85,7 @@ export class ThemeManagementComponent {
           // Get clicked x coordinates
           var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
-          if (x > 330){
+          if (x > 330) {
             // Search
             this.onEnter()
           }
@@ -93,7 +93,6 @@ export class ThemeManagementComponent {
       }
     }
   }
-
 
   /**
    * Reroutes to other pages
@@ -117,26 +116,26 @@ export class ThemeManagementComponent {
    * Function for getting the theme info
    */
   async getThemes(): Promise<void> {
+    // Call the service to get all themes
     this.themes = await this.themeDataService.getThemes(this.p_id);
   }
 
   /**
    * Function for sorting on name
-   * 
   */
   sortName(): void {
     // Check if it was sorted ascending
-    if (this.sortedName == sorted.Asc){
+    if (this.sortedName == sorted.Asc) {
       // Make the sorted enum descending
       this.sortedName = sorted.Des;
       // Sort the array
-      this.themes.sort((a,b) => b.getName().localeCompare(a.getName()));
-    // Check if it was sorted descending or not yet
-    } else if (this.sortedName == sorted.Des || this.sortedName == sorted.Not){
+      this.themes.sort((a, b) => b.getName().localeCompare(a.getName()));
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedName == sorted.Des || this.sortedName == sorted.Not) {
       // Make the sorted enum ascending
       this.sortedName = sorted.Asc;
       // Sort the array
-      this.themes.sort((a,b) => a.getName().localeCompare(b.getName()));
+      this.themes.sort((a, b) => a.getName().localeCompare(b.getName()));
     }
     // Set other sorts to not sorted
     this.sortedDesc = sorted.Not;
@@ -145,21 +144,20 @@ export class ThemeManagementComponent {
 
   /**
    * Function for sorting on description
-   * 
   */
   sortDesc(): void {
     // Check if it was sorted ascending
-    if (this.sortedDesc == sorted.Asc){
+    if (this.sortedDesc == sorted.Asc) {
       // Make the sorted enum descending
       this.sortedDesc = sorted.Des;
       // Sort the array
-      this.themes.sort((a,b) => b.getDesc().localeCompare(a.getDesc()));
-    // Check if it was sorted descending or not yet
-    } else if (this.sortedDesc == sorted.Des || this.sortedDesc == sorted.Not){
+      this.themes.sort((a, b) => b.getDesc().localeCompare(a.getDesc()));
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedDesc == sorted.Des || this.sortedDesc == sorted.Not) {
       // Make the sorted enum ascending
       this.sortedDesc = sorted.Asc;
       // Sort the array
-      this.themes.sort((a,b) => a.getDesc().localeCompare(b.getDesc()));
+      this.themes.sort((a, b) => a.getDesc().localeCompare(b.getDesc()));
     }
     // Set other sorts to not sorted
     this.sortedName = sorted.Not;
@@ -168,21 +166,20 @@ export class ThemeManagementComponent {
 
   /**
    * Function for sorting on number of labels
-   * 
   */
   sortLabels(): void {
     // Check if it was sorted ascending
-    if (this.sortedNOL == sorted.Asc){
+    if (this.sortedNOL == sorted.Asc) {
       // Make the sorted enum descending
       this.sortedNOL = sorted.Des;
       // Sort the array
-      this.themes.sort((a,b) => a.getNumberOfLabels() - b.getNumberOfLabels());
-    // Check if it was sorted descending or not yet
-    } else if (this.sortedNOL == sorted.Des || this.sortedNOL == sorted.Not){
+      this.themes.sort((a, b) => a.getNumberOfLabels() - b.getNumberOfLabels());
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedNOL == sorted.Des || this.sortedNOL == sorted.Not) {
       // Make the sorted enum ascending
       this.sortedNOL = sorted.Asc;
       // Sort the array
-      this.themes.sort((a,b) => b.getNumberOfLabels() - a.getNumberOfLabels());
+      this.themes.sort((a, b) => b.getNumberOfLabels() - a.getNumberOfLabels());
     }
     // Set other sorts to not sorted
     this.sortedName = sorted.Not;
@@ -190,18 +187,18 @@ export class ThemeManagementComponent {
   }
 
   // Gets the search text
-  async onEnter() {
+  async onEnter(): Promise<void> {
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
     // Search text
     var text = this.searchForm.value.search_term;
     // If nothing was searched
-    if(text.length == 0){
+    if (text.length == 0) {
       // Get all themes anew
       this.getThemes();
     } else {
       // Pass the search word to services
-      let themesSearched = await this.themeDataService.search(text, p_id);      
+      let themesSearched = await this.themeDataService.search(text, p_id);
       // List for the artifacts resulting from the search
       let themeList: Array<Theme> = [];
       // For loop through all searched artifacts

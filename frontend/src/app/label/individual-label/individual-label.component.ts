@@ -2,7 +2,7 @@
  * Author: Victoria Bogachenkova
  * Author: Bartjan Henkemans
  */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LabellingDataService } from 'app/services/labelling-data.service';
 import { Router } from '@angular/router';
@@ -29,7 +29,7 @@ export class IndividualLabelComponent {
   p_id: number;
   label_id: number;
   labelCount: number;
-  frozen: boolean = true;
+  frozen = true;
   /**
    * Constructor which:
    * 1. makes an empty label
@@ -115,7 +115,7 @@ export class IndividualLabelComponent {
   /**
    * Post of the soft delete
    */
-  async postSoftDelete() {
+  async postSoftDelete(): Promise<void> {
     let artifacts = this.label.getArtifacts()
     if(artifacts != undefined){
       if(artifacts.length != 0){
@@ -126,9 +126,9 @@ export class IndividualLabelComponent {
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
-      // If a confirmEvent = true is emitted we delete the label
-      if($e) {
-        try{
+      // If a confirmEvent = true is emitted we delete the user
+      if ($e) {
+        try {
           // Post the soft delete
           await this.labellingDataService.postSoftDelete({
             'p_id': this.p_id,
@@ -171,7 +171,7 @@ export class IndividualLabelComponent {
   /**
    * Opens modal to edit label
    */
-  openEdit() {
+  openEdit(): void {
     // Open the modal
     const modalRef = this.modalService.open(LabelFormComponent, { size: 'xl' });
     // Get the label from the modal
@@ -187,14 +187,14 @@ export class IndividualLabelComponent {
    * 
    * @trigger on click of history icon
    */
-   openLabelHistory(): void {
-    // Opens label history modal
-    let modalRef = this.modalService.open(HistoryComponent, {size: 'xl'});
+  openLabelHistory(): void {
+    // opens label history modal
+    let modalRef = this.modalService.open(HistoryComponent, { size: 'xl' });
 
     // Passes the type of history we want to view
     modalRef.componentInstance.history_type = "Label";
-   }
-  
+  }
+
   // Get the number of labellings
   async getLabellingAmount(): Promise<void> {
     try {

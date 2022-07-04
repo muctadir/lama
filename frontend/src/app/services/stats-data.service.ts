@@ -52,11 +52,13 @@ export class StatsDataService {
     projectNew.setUsers(response["projectUsers"]);
 
     // Return project data
-    return { 'project_data': projectNew,
+    return {
+      'project_data': projectNew,
       // Return number of conflicts in project
-     'conflicts': response["conflicts"],
-     // Return number of labels in project
-     'labels':  response["labels"]}
+      'conflicts': response["conflicts"],
+      // Return number of labels in project
+      'labels': response["labels"]
+    }
   }
 
   /**
@@ -66,13 +68,11 @@ export class StatsDataService {
      * @pre p_id => 1
      * @throws Error if p_id < 1
      */
-  async getUserStats(p_id: number) {
+  async getUserStats(p_id: number): Promise<any> {
     // Check if the p_id is larger than 1
     if (p_id < 1) throw new Error("p_id cannot be less than 1");
 
     // Make a request to the backend to get user statistics
-    let response = await this.requestHandler.get('/project/projectStats', { 'p_id': p_id }, true)
-
-    return response
+    return await this.requestHandler.get('/project/projectStats', { 'p_id': p_id }, true)
   }
 }

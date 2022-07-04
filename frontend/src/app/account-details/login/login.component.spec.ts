@@ -19,7 +19,7 @@ describe('LoginComponent', () => {
       // Added the dependencies InputCheckService, FormBuilder
       providers: [InputCheckService, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   /* Executed before each test case, creates a LoginComponent */
@@ -34,9 +34,9 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Checks loginSubmit with valid input', () => {
+  it('should login with valid input', () => {
     // Sets a valid input
-    component.loginForm.setValue({username: 'username_test', password: 'password_test'});
+    component.loginForm.setValue({ username: 'username_test', password: 'password_test' });
     // Creates the spy for checklogin
     let spy = spyOn(component, "checkLogin");
     // Calls the function to be tested
@@ -47,9 +47,9 @@ describe('LoginComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('Checks loginSubmit with invalid username', () => {
+  it('should throw an error because of an invalid username', () => {
     // Sets a valid input
-    component.loginForm.setValue({username: '', password: 'password_test'});
+    component.loginForm.setValue({ username: '', password: 'password_test' });
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Calls the function to be tested
@@ -60,9 +60,9 @@ describe('LoginComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([false, 'Please fill in a username and password'])
   });
 
-  it('Checks loginSubmit with invalid password', () => {
+  it('should throw an error because of an invalid password', () => {
     // Sets a valid input
-    component.loginForm.setValue({username: 'yayaya', password: ''});
+    component.loginForm.setValue({ username: 'yayaya', password: '' });
     // Creates spy for the toast
     let spyToast = spyOn(component["toastCommService"], "emitChange");
     // Calls the function to be tested

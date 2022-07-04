@@ -6,13 +6,13 @@ $orange-shade: #ed5a06;
 
 /* Icon related markup */
 // Plus icon
-.bi.bi-plus{
+.bi.bi-plus {
     font-size: 24px;
     color: $grey-shade;
 }
 
 // Cross icon next to member name
-.bi.bi-x{
+.bi.bi-x {
     font-size: 20px;
     color: $grey-shade;
     padding: 0px;
@@ -23,7 +23,7 @@ $orange-shade: #ed5a06;
 /* SCSS related to the add user modal */
 // Row displaying the various users
 #user-modal-rows {
-    padding: 5px 16px; 
+    padding: 5px 16px;
     max-height: 35px;
 }
 
@@ -36,13 +36,13 @@ $orange-shade: #ed5a06;
 
 // Column holding the username of the users to be added
 #username-modal-col {
-    padding: 15 1 1 1px; 
-    list-style: none; 
+    padding: 15 1 1 1px;
+    list-style: none;
     max-height: 25px;
 }
 
 // Button for adding members
-#addMembersButton{
+#addMembersButton {
     background-color: $white-shade;
     width: 30px;
     padding: 0px;

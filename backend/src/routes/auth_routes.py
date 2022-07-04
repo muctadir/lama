@@ -3,9 +3,9 @@
 # Eduardo Costa Martins
 
 from operator import or_
-from src import db # need this in every route
+from src import db  # need this in every route
 from src.app_util import check_args, check_email, check_password, check_username, super_admin_required, login_required, check_string, check_whitespaces
-from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.auth_models import User, UserStatus
 from flask import current_app as app
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, or_
@@ -25,7 +25,7 @@ def register():
     """
     args = request.json['params']
     # Required arguments
-    required = ["username", "email", "password", "passwordR", "description"] 
+    required = ["username", "email", "password", "passwordR", "description"]
 
     # Check required arguments are supplied
     if not check_args(required, args):
@@ -34,20 +34,20 @@ def register():
     # Check that username/email are unique
     if taken(args["username"], args["email"]):
         return make_response(("Username or email taken", 400))
-    
+
     # Check for invalid characters
     if check_whitespaces(args):
         return make_response("Input contains leading or trailing whitespaces", 400)
-     
+
     # Check for invalid characters
     if check_string([args['username'], args['email'], args['password']]):
         return make_response("Input contains a forbidden character", 511)
-        
+
     # Check that arguments were formatted correctly
     check, reason = check_format(**args)
     if not check:
         return make_response((reason, 400))
-    
+
     return create_user(args)
 
 # Function to get all users who are pending
@@ -62,13 +62,14 @@ def pending():
     # Check that all (no) arguments are provided
     if not check_args(required, args):
         return make_response("Bad Request", 400)
-    
-    user_schema = UserSchema()
+
+    user_schema = User.__marshmallow__()
     # Get all users with pending status
-    users = db.session.scalars(select(User).where(User.status == UserStatus.pending)).all()
+    users = db.session.scalars(select(User).where(
+        User.status == UserStatus.pending)).all()
     # Convert to json format
     json_users = jsonify(user_schema.dump(users, many=True))
-    
+
     return make_response(json_users)
 
 # Function to make a user login
@@ -85,7 +86,8 @@ def login():
     # Try getting user
     try:
         # Get id and password by username
-        u_id, password = db.session.execute(select(User.id, User.password).where(User.username == args["username"])).one()
+        u_id, password = db.session.execute(
+            select(User.id, User.password).where(User.username == args["username"])).one()
 
         # Check correct password
         if not check_password_hash(password, args["password"]):
@@ -116,13 +118,14 @@ def check_super_admin():
     """
     return make_response(("Success", 200))
 
+
 def login_user(u_id):
     # Encode user id
     token = encode({'u_id_token': u_id}, app.secret_key, algorithm='HS256')
     # Return id in headers
     resp = make_response("Success")
     resp.headers['u_id_token'] = token
-    resp.headers['Access-Control-Expose-Headers'] =  'Content-Encoding, u_id_token'
+    resp.headers['Access-Control-Expose-Headers'] = 'Content-Encoding, u_id_token'
     return resp
 
 # Function to create the user that was register
@@ -148,7 +151,8 @@ def create_user(args):
 
 # If there already exists a User with given username or email
 def taken(username, email):
-    violation = db.session.scalars(select(User).where(or_(User.username == username, User.email == email))).first()
+    violation = db.session.scalars(select(User).where(
+        or_(User.username == username, User.email == email))).first()
     return bool(violation)
 
 # Checks validity of all required fields for User creation

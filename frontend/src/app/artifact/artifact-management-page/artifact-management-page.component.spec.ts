@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
-import { StringArtifact } from 'app/classes/stringartifact';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { ArtifactManagementPageComponent } from './artifact-management-page.component';
-import { ArtifactDataService } from 'app/services/artifact-data.service';
+import { StringArtifact } from 'app/classes/stringartifact';
 import { AddArtifactComponent } from 'app/modals/add-artifact/add-artifact.component';
+import { ArtifactDataService } from 'app/services/artifact-data.service';
 
 describe('ArtifactManagementPageComponent', () => {
   /* Objects to be used in testing */
@@ -36,8 +36,6 @@ describe('ArtifactManagementPageComponent', () => {
   let router: Router;
   // Instantiation of NgbModal
   let modalService: NgbModal;
-  // Instantiation of NgbModalRef
-  let modalRef: NgbModalRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -200,7 +198,7 @@ describe('ArtifactManagementPageComponent', () => {
   // Test if the open function works correctly
   it('should open the artifact upload modal', async () => {
     // Instance of NgbModalRef
-    modalRef = modalService.open(AddArtifactComponent);
+    let modalRef = modalService.open(AddArtifactComponent);
     // When modalService.open gets called, return modalRef
     spyOn(component['modalService'], 'open').and.returnValue(modalRef)
     // Spy on getArtifacts and stub the call

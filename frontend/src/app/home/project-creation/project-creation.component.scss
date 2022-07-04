@@ -8,13 +8,13 @@ $orange-shade: #ed5a06;
 
 /* Icon related markup */
 // Plus icon
-.bi.bi-plus{
+.bi.bi-plus {
     font-size: 24px;
     color: $grey-shade;
 }
 
 // Cross icon next to member name
-.bi.bi-x{
+.bi.bi-x {
     font-size: 20px;
     color: $grey-shade;
     padding: 0px;
@@ -23,22 +23,16 @@ $orange-shade: #ed5a06;
 }
 
 // Plus icon for label types
-.bi.bi-plus.members{
+.bi.bi-plus.members {
     float: right;
 }
 
 /* Project creation page markup */
 // Header of the page
-.header{
+.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
-}
-
-// Markup of error message that gets displayed
-#errorMessage {
-    font-size: 18px;
-    color: red;
 }
 
 // sets displays as a block
@@ -52,17 +46,17 @@ $orange-shade: #ed5a06;
 }
 
 // Container of all elements
-.container.main{
+.container.main {
     height: 90vh;
 }
 
 // Text inside the forms
-.form-control{
+.form-control {
     font-size: 15px;
 }
 
 // Text above the setting divisions
-.settingsHeader{
+.settingsHeader {
     font-size: 18px;
 }
 
@@ -78,18 +72,19 @@ $orange-shade: #ed5a06;
 }
 
 // Project settings divions parent
-.projectSettingsDivParent{
-    margin-top:10px;
+.projectSettingsDivParent {
+    margin-top: 10px;
     margin-bottom: 10px;
 }
+
 // Project settings divisions orange lines
-.projectSettingsDiv{
+.projectSettingsDiv {
     border-top: 2px solid $orange-shade;
     padding: 10px 5px 10px 5px;
 }
 
 // Member settings division
-#membersDiv{
+#membersDiv {
     height: 20vh;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -103,32 +98,33 @@ $orange-shade: #ed5a06;
 }
 
 // Span of the "Project admin" word
-.projectAdminSpan{
+.projectAdminSpan {
     text-align: center;
     text-decoration: underline;
     padding: 0px;
     margin: 0px;
 }
+
 // Style of the member checkbox
-.checkboxCol {  
-    text-align: center; 
+.checkboxCol {
+    text-align: center;
 }
 
 // LABEL TYPE DIVISION
 // Label type settings division
-#labelTypeDiv{
+#labelTypeDiv {
     height: 25vh;
     overflow-y: scroll;
 }
 
 // Label type forms
-.form-control.labelType{
+.form-control.labelType {
     width: 60%;
     margin-bottom: 10px;
 }
 
 // Button for adding label types
-#addLabelTypeButton{
+#addLabelTypeButton {
     width: 200px;
     border: 2px solid $grey-shade;
     background-color: $white-shade;
@@ -138,37 +134,37 @@ $orange-shade: #ed5a06;
 }
 
 // Add label type text 
-#addLabelTypeText{
+#addLabelTypeText {
     float: left;
     margin-top: 5px;
 }
 
 // Response division
-#responseDiv{
-    margin-top:20px;
+#responseDiv {
+    margin-top: 20px;
 }
 
 // Space between the two rows
-.top-buffer{
+.top-buffer {
     margin-top: 10px;
 }
 
 // BOTTOM BUTTONS
 // Row for buttons
-.fixed-bottom{
+.fixed-bottom {
     margin-right: 15px;
     margin-bottom: 15px;
 }
 
 // Both buttons
-.btn.btn-secondary{
+.btn.btn-secondary {
     width: 150px;
     margin-left: 10px;
     margin-right: 10px;
 }
 
 // Cancel project creation button
-#createProjectButton{
+#createProjectButton {
     background-color: $orange-shade;
     border: 2px solid;
     border-color: $orange-shade;
@@ -180,7 +176,7 @@ $orange-shade: #ed5a06;
 }
 
 // Project description text area
-#projectDescriptionForm{
+#projectDescriptionForm {
     resize: none;
 }
 
@@ -193,7 +189,7 @@ $orange-shade: #ed5a06;
 /* SCSS related to the add user modal */
 // Row displaying the various users
 #user-modal-rows {
-    padding:5px 16px; 
+    padding: 5px 16px;
     max-height: 35px;
 }
 
@@ -206,13 +202,13 @@ $orange-shade: #ed5a06;
 
 // Column holding the username of the users to be added
 #username-modal-col {
-    padding:15 1 1 1px; 
-    list-style: none; 
+    padding: 15 1 1 1px;
+    list-style: none;
     max-height: 25px;
 }
 
 // Button for adding members
-#addMembersButton{
+#addMembersButton {
     background-color: $white-shade;
     width: 30px;
     padding: 0px;
@@ -230,13 +226,15 @@ $orange-shade: #ed5a06;
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }

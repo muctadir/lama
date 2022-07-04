@@ -32,7 +32,7 @@ export class ArtifactManagementPageComponent {
   // A page number maps to a list of artifacts on that page
   artifacts: Record<number, Array<StringArtifact>> = {};
   // Number of artifacts
-  nArtifacts: number = 0;
+  nArtifacts = 0;
   // Number of label types
   nLabelTypes: number;
 
@@ -48,7 +48,8 @@ export class ArtifactManagementPageComponent {
     search_term: ''
   });
 
-  frozen: boolean = true;
+  // Whether the project is frozen
+  frozen = true;
 
 
   /**
@@ -84,7 +85,7 @@ export class ArtifactManagementPageComponent {
   /**
    * Function for searching based on clicking on the magnifying glass
    */
-  searchClick(){
+  searchClick(): void {
     // Get the search image
     let searchBar = document.getElementById("searchBar")
     if (searchBar != null){
@@ -94,9 +95,9 @@ export class ArtifactManagementPageComponent {
           // Get clicked x coordinates
           var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
-          if (x > 330){
+          if (x > 330) {
             // Search
-            this.onEnter()
+            this.onEnter();
           }
         }
       }
@@ -164,23 +165,23 @@ export class ArtifactManagementPageComponent {
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
-  
+
   // Open the modal
-  open() {
+  open(): void {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
-    modalRef.result.then((data) => {
+    modalRef.result.then(() => {
       this.ngOnInit();
     });
   }  
   
   // Gets the search text
-  async onEnter() {
+  async onEnter(): Promise<void> {
     // Search text
     var text = this.searchForm.value.search_term;
     // Get p_id
     let p_id = Number(this.routeService.getProjectID(this.url));
     // If nothing was searched
-    if(text.length == 0){
+    if (text.length == 0) {
       // Clear cache and show all artifacts
       this.artifacts = {};
       await this.getArtifacts();
@@ -219,7 +220,7 @@ export class ArtifactManagementPageComponent {
    * Function that returns the number of users who gave a set of labellings
    * @param labellings: number, the number of labellings
    */
-  getNumberUsers(labellings: number): string|number{
+  getNumberUsers(labellings: number): string | number{
     if(this.nLabelTypes == 0 || labellings % this.nLabelTypes != 0) {
       this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
       return "Cannot compute";

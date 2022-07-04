@@ -49,12 +49,12 @@ export class ConflictResolutionComponent implements OnInit {
   // Array of labels in the label type
   labels: Label[];
   //Frozen status of project
-  frozen: boolean = true;
+  frozen = true;
 
   /**
    * Information concerning the cutting
    */
-  hightlightedText: string = '';
+  hightlightedText = '';
   selectionStartChar?: number;
   selectionEndChar?: number;
 
@@ -267,7 +267,7 @@ export class ConflictResolutionComponent implements OnInit {
    * 
    * @trigger user clicks on the merge labels button
    */
-  async openMerge() : Promise<void> {
+  async openMerge(): Promise<void> {
     // Open the modal
     const modalRef = this.modalService.open(MergeLabelFormComponent, {
       size: 'xl',
@@ -326,7 +326,7 @@ export class ConflictResolutionComponent implements OnInit {
   }
 
   // Fixes the position of the start character of a word
-  startPosFixer(startPos: number) : number {
+  startPosFixer(startPos: number): number {
     // Gets char at start of the word
     let chart = this.artifact.data.charAt(startPos);
     // Checks if it is at the correct position to begin with
@@ -354,7 +354,7 @@ export class ConflictResolutionComponent implements OnInit {
   }
 
   // Fixes the position of the start character of a word
-  endPosFixer(endPos: number) : number {
+  endPosFixer(endPos: number): number {
     // Gets char at end of the word
     let chend = this.artifact.data.charAt(endPos);
     // See if the last char is correct to begin with
@@ -380,7 +380,7 @@ export class ConflictResolutionComponent implements OnInit {
    * 
    * @Trigger clicked on the back button
    */
-  reRouter() : void {
+  reRouter(): void {
     // Changes the route accordingly
     this.router.navigate(['/project', this.p_id, 'conflict']);
   }

@@ -2,7 +2,8 @@
 
 from sqlalchemy import select
 from src.conftest import RequestHandler
-from src.models.project_models import Project, Membership, User
+from src.models.project_models import Project, Membership
+from src.models.auth_models import User
 from src import db
 from src.routes.project_routes import update_project, update_members_in_project, add_members, get_serialized_users, get_users_in_project
 
@@ -88,7 +89,7 @@ def test_create(app, client):
         insufficient_project_args_response = request_handler.post('/project/creation', {
             'project': {'p_id': 1, 'name': 'testing'},
             'users': project_users,
-            'labelTypes' : project_label_types
+            'labelTypes': project_label_types
         }, True)
         assert insufficient_project_args_response.status_code == 400
 
@@ -98,7 +99,7 @@ def test_create(app, client):
         insufficient_project_args_response = request_handler.post('/project/creation', {
             'project': {},
             'users': project_users,
-            'labelTypes' : project_label_types
+            'labelTypes': project_label_types
         }, True)
         assert insufficient_project_args_response.status_code == 400
 
@@ -107,7 +108,7 @@ def test_create(app, client):
         whitespace_project_response = request_handler.post('/project/creation', {
             'project': {'name': ' test_create', 'description': 'test_create desc ', 'criteria': 3},
             'users': project_users,
-            'labelTypes' : project_label_types
+            'labelTypes': project_label_types
         }, True)
         assert whitespace_project_response.status_code == 400
 
@@ -116,7 +117,7 @@ def test_create(app, client):
         invalid_name_response = request_handler.post('/project/creation', {
             'project': {'name': '#test', 'description': 'test_create desc', 'criteria': 3},
             'users': project_users,
-            'labelTypes' : project_label_types
+            'labelTypes': project_label_types
         }, True)
         assert invalid_name_response.status_code == 511
         
@@ -124,7 +125,7 @@ def test_create(app, client):
         response = request_handler.post('/project/creation', {
             'project': project_info,
             'users': project_users,
-            'labelTypes' : project_label_types
+            'labelTypes': project_label_types
         }, True)
 
         # Status code should be Created
@@ -205,7 +206,7 @@ def test_edit(app, client):
             'p_id': 1,
             'project': {'p_id': 1, 'name': 'testing'},
             'add': {},
-            'update' : project_members
+            'update': project_members
         }, True)
         assert insufficient_project_args_response.status_code == 400
 
@@ -216,7 +217,7 @@ def test_edit(app, client):
             'p_id': 1,
             'project': {},
             'add': {},
-            'update' : project_members
+            'update': project_members
         }, True)
         assert insufficient_project_args_response.status_code == 400
 
@@ -226,7 +227,7 @@ def test_edit(app, client):
             'p_id': 1,
             'project': {'id': 1, 'name': ' test_edit', 'description': 'test_edit desc ', 'criteria': 2, 'frozen': False},
             'add': {},
-            'update' : project_members
+            'update': project_members
         }, True)
         assert whitespace_project_response.status_code == 400
 
@@ -236,7 +237,7 @@ def test_edit(app, client):
             'p_id': 1,
             'project': {'id': 1, 'name': '#test_edit', 'description': 'test_edit desc', 'criteria': 2, 'frozen': False},
             'add': {},
-            'update' : project_members
+            'update': project_members
         }, True)
         assert invalid_name_response.status_code == 511
 
@@ -244,7 +245,7 @@ def test_edit(app, client):
         response = request_handler.patch('/project/edit', {
             'p_id': "1",
             'project': project_info,
-            'add' : {},
+            'add': {},
             'update': project_members
         }, True)
 
@@ -323,7 +324,8 @@ def test_update_members_in_project(app, client):
         # Add user1 back to the project and check that they got added back correctly
         response = update_members_in_project(1, add_old_members, 0)
         assert response.status_code == 200
-        check_membership(1,2, False, False)
+        check_membership(1, 2, False, False)
+
 
 # Test the auxiliary function that adds members to the project
 def test_add_members(app, client):
@@ -361,9 +363,9 @@ def test_freeze(app, client):
     with app.app_context():
         # Simulating a request to change a project status to frozen
         response = request_handler.patch('/project/freeze', {
-             'p_id': "1",
-             'frozen': True
-         }, True)
+            'p_id': "1",
+            'frozen': True
+        }, True)
         assert response.status_code == 200
 
         # Get the project we created

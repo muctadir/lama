@@ -61,7 +61,7 @@ export class MergeLabelFormComponent {
   }
 
   // Gets the ,erged labels
-  get toBeMergedLabels() {
+  get toBeMergedLabels(): FormArray {
     return this.form.controls['toBeMergedLabels'] as FormArray;
   }
 
@@ -118,7 +118,7 @@ export class MergeLabelFormComponent {
     // Check you are merging two or more labels
     if (this.toBeMergedLabels.length < 2) {
       this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
-      return 
+      return
     }
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
@@ -135,7 +135,7 @@ export class MergeLabelFormComponent {
         'p_id': this.p_id
       });
       // Make toast signalling whether the merging was successful or not
-      if(response == "Success" ){
+      if (response == "Success") {
         this.toastCommService.emitChange([true, "Labels merged successfully"])
         // Close modal
         this.activeModal.close()

@@ -1,13 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HistoryComponent } from './history.component';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
-  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,7 +16,6 @@ describe('HistoryComponent', () => {
       imports: [RouterTestingModule]
     })
      .compileComponents();
-     router = TestBed.inject(Router)
   });
 
   beforeEach(() => {

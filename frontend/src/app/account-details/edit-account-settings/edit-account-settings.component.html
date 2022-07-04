@@ -17,19 +17,22 @@
             <div class="form-group">
                 <label id="field_text">Username:</label>
                 <!-- Input field for username, only displays if username is non-empty -->
-                <input *ngIf="userAccount" type="username" class="form-control" id="form-format" placeholder="Username" formControlName="username">
+                <input *ngIf="userAccount" type="username" class="form-control" id="form-format" placeholder="Username"
+                    formControlName="username">
             </div>
             <!-- Email field -->
             <div class="form-group">
                 <label id="field_text">Email Address:</label>
                 <!-- Input field for email, only displays if email is non-empty -->
-                <input *ngIf="userAccount" type="email" class="form-control" placeholder="Email address" formControlName="email">
+                <input *ngIf="userAccount" type="email" class="form-control" placeholder="Email address"
+                    formControlName="email">
             </div>
             <!-- Description field -->
             <div class="form-group">
                 <label id="field_text">Description:</label>
                 <!-- Input field for description, only displays if description is non-empty, max 140 characters -->
-                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140" formControlName="description" id="description"></textarea>
+                <textarea *ngIf="userAccount" class="form-control" rows="4" placeholder="Description" maxlength="140"
+                    formControlName="description" id="description"></textarea>
             </div>
         </form>
     </div>
@@ -45,12 +48,12 @@
 </div>
 
 <!-- Row for buttons -->
-<div class="row">        
+<div class="row">
     <div class="col-8 offset-2 text-right">
         <!-- Edit button, when clicked calls the changeInformation function -->
         <button (click)="changeInformation()" type="submit" class="btn btn-primary editButtons">Change</button>
         <!-- Cancel button, when clicked moves to the account information page due to modeChangeEvent emitted -->
-        <button (click)="modeChangeEvent.emit(0)" class="btn btn-secondary editButtons" id="cancelEditButton">Cancel</button>
+        <button (click)="modeChangeEvent.emit(0)" class="btn btn-secondary editButtons"
+            id="cancelEditButton">Cancel</button>
     </div>
 </div>
-

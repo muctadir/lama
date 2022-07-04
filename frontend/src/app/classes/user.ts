@@ -30,7 +30,7 @@ export class User {
     * Sets the id of the user
     * @params id
     */
-    setId(id: number) {
+    setId(id: number): void {
         this.id = id;
     }
 
@@ -46,7 +46,7 @@ export class User {
     * Sets the username of the user
     * @params username
     */
-    setUsername(username: string) {
+    setUsername(username: string): void {
         if (username == undefined || typeof username != "string" || username.length <= 0) {
             throw new Error("The username should not be of length 0 as an argument in setUserame()");
         }
@@ -65,7 +65,7 @@ export class User {
     * Sets the email of the user
     * @params email
     */
-    setEmail(email: string) {
+    setEmail(email: string): void {
         this.email = email;
     }
 
@@ -81,7 +81,7 @@ export class User {
     * Gets the description of the user
     * @params desc
     */
-    setDesc(desc: string) {
+    setDesc(desc: string): void {
         this.description = desc;
     }
 
@@ -97,7 +97,7 @@ export class User {
     * Gets the status of the user
     * @params status
     */
-    setStatus(status: string) {
+    setStatus(status: string): void {
         this.status = status;
     }
 
@@ -113,7 +113,7 @@ export class User {
     * Gets the type of the user
     * @params type
     */
-    setType(type: boolean) {
+    setType(type: boolean): void {
         this.type = type;
     }
 }

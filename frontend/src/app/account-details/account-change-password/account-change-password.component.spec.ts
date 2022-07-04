@@ -8,8 +8,8 @@ import { AccountChangePasswordComponent } from './account-change-password.compon
 export class TestError extends Error {
   response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -17,8 +17,8 @@ export class TestError extends Error {
 export class TestAxiosError extends AxiosError {
   override response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -34,12 +34,12 @@ describe('AccountChangePasswordComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountChangePasswordComponent ],
+      declarations: [AccountChangePasswordComponent],
       // Adds dependencies
       imports: [ReactiveFormsModule, FormsModule],
       providers: [FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -53,12 +53,13 @@ describe('AccountChangePasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Checks whether editPasswordF, stubbing all, valid input case', () => {
+  it('should change the password when there is valid input', () => {
     // Creates a dummy user account
     component.userAccount = new User(5, "new_username");
     // Sets the passwordForm with dummy values
     component.passwordForm.controls['old_password'].setValue("old_passw");
     component.passwordForm.controls['new_password'].setValue("new_passw");
+    component.passwordForm.controls['new_passwordR'].setValue("new_passw");
     // Makes a spy for the checkInput function, and returns true
     let spyValid = spyOn(component, "checkInput").and.returnValue(true);
     // Makes a spy for the makeRequest function
@@ -70,11 +71,11 @@ describe('AccountChangePasswordComponent', () => {
     // Checks whether the functions have been called, and parameters are correct
     expect(spyValid).toHaveBeenCalled();
     expect(spyRequest).toHaveBeenCalled();
-    expect(spyRequest).toHaveBeenCalledWith({"id": 5, "password" : "old_passw", "newPassword": "new_passw"});
+    expect(spyRequest).toHaveBeenCalledWith({ "id": 5, "password": "old_passw", "newPassword": "new_passw" });
   });
 
 
-  it('Checks whether editPasswordF, stubbing all, valid input case', () => {
+  it('should show a toast when the change password input it not valid', () => {
     // Creates a dummy user account
     component.userAccount = new User(5, "new_username");
 
@@ -93,7 +94,7 @@ describe('AccountChangePasswordComponent', () => {
   });
 
 
-  it('CheckInput for valid inputs, if superadmin = true and superadmin is false', () => {
+  it('should check valid input, for non superadmin and superadmin', () => {
     // Sets value for superadmin
     component.superAdmin = true;
     // Sets the passwordForm with dummy values
@@ -118,7 +119,7 @@ describe('AccountChangePasswordComponent', () => {
   });
 
 
-  it('CheckInput for valid input only if user is superadmin', () => {
+  it('should change the password of a user when the logged in user is the superamdmin', () => {
     // Sets value for superadmin
     component.superAdmin = true;
     // Sets the passwordForm with dummy values
@@ -143,7 +144,7 @@ describe('AccountChangePasswordComponent', () => {
   });
 
 
-  it('CheckInput for invalid input', () => {
+  it('should show an error for invalid input', () => {
     // Sets value for superadmin
     component.superAdmin = true;
     // Sets the passwordForm with dummy values
@@ -170,9 +171,9 @@ describe('AccountChangePasswordComponent', () => {
   });
 
 
-  it('Checks the makeRequest function when it throws no error', async () => {
+  it('should send information to the backend and receive acceptance of change', async () => {
     // Makes dummy input
-    let input = {"id": 5, "password" : "old_passw", "newPassword": "new_passw"};
+    let input = { "id": 5, "password": "old_passw", "newPassword": "new_passw" };
 
     // Creates the spies for the different function calls
     let spyR = spyOn(component["accountInfoService"], "changePassword");
@@ -183,7 +184,7 @@ describe('AccountChangePasswordComponent', () => {
     await component.makeRequest(input);
 
     // Checks whether the backend call was made with the correct parameters
-    expect(spyR).toHaveBeenCalledWith({"id": 5, "password" : "old_passw", "newPassword": "new_passw"});
+    expect(spyR).toHaveBeenCalledWith({ "id": 5, "password": "old_passw", "newPassword": "new_passw" });
     // Checks whether an event was emitted
     expect(spyEvent).toHaveBeenCalledWith(0);
     // Checks whether a toast was shown
@@ -191,12 +192,12 @@ describe('AccountChangePasswordComponent', () => {
   });
 
 
-  it('Checks the makeRequest function when it throws an error with status 511', async () => {
+  it("should catch the 'Input contains a forbidden character' error while making the request", async () => {
     // Makes dummy input
-    let input = {"id": 5, "password" : "old_passw", "newPassword": "new_passw"};
+    let input = { "id": 5, "password": "old_passw", "newPassword": "new_passw" };
 
     // Creates dummyError 
-    let dummyError = new TestError("bad error", {status: 511})
+    let dummyError = new TestError("bad error", { data: "Input contains a forbidden character" })
 
     // Creates the spies for the different function calls
     let spyR = spyOn(component["accountInfoService"], "changePassword").and.throwError(dummyError);
@@ -206,18 +207,18 @@ describe('AccountChangePasswordComponent', () => {
     await component.makeRequest(input);
 
     // Checks whether the backend call was made with the correct parameters
-    expect(spyR).toHaveBeenCalledWith({"id": 5, "password" : "old_passw", "newPassword": "new_passw"});
+    expect(spyR).toHaveBeenCalledWith({ "id": 5, "password": "old_passw", "newPassword": "new_passw" });
     // Checks whether a toast was shown
-    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
+    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character"]);
   });
 
 
-  it('Checks the makeRequest function when it throws an error with status != 511', async () => {
+  it("should catch errors while making the requests", async () => {
     // Makes dummy input
-    let input = {"id": 5, "password" : "old_passw", "newPassword": "new_passw"};
+    let input = { "id": 5, "password": "old_passw", "newPassword": "new_passw" };
 
     // Creates dummyError 
-    let dummyError = new TestError("bad error", {status: 420})
+    let dummyError = new TestError("bad error", { status: 420, data: 'An unknown error occurred' })
 
     // Creates the spies for the different function calls
     let spyR = spyOn(component["accountInfoService"], "changePassword").and.throwError(dummyError);
@@ -227,18 +228,18 @@ describe('AccountChangePasswordComponent', () => {
     await component.makeRequest(input);
 
     // Checks whether the backend call was made with the correct parameters
-    expect(spyR).toHaveBeenCalledWith({"id": 5, "password" : "old_passw", "newPassword": "new_passw"});
+    expect(spyR).toHaveBeenCalledWith({ "id": 5, "password": "old_passw", "newPassword": "new_passw" });
     // Checks whether a toast was shown
     expect(spyToast).toHaveBeenCalledWith([false, "An unknown error occurred"]);
   });
 
 
-  it('Checks the makeRequest function when it throws an AxiosError with status != 511', async () => {
+  it('should catch axios errors while making the requests', async () => {
     // Makes dummy input
-    let input = {"id": 5, "password" : "old_passw", "newPassword": "new_passw"};
+    let input = { "id": 5, "password": "old_passw", "newPassword": "new_passw" };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestAxiosError("bad error", {status: 420, data: "some_error_message"})
+    let dummyError = new TestAxiosError("bad error", { status: 420, data: "some_error_message" })
 
     // Creates the spies for the different function calls
     let spyR = spyOn(component["accountInfoService"], "changePassword").and.throwError(dummyError);
@@ -248,7 +249,7 @@ describe('AccountChangePasswordComponent', () => {
     await component.makeRequest(input);
 
     // Checks whether the backend call was made with the correct parameters
-    expect(spyR).toHaveBeenCalledWith({"id": 5, "password" : "old_passw", "newPassword": "new_passw"});
+    expect(spyR).toHaveBeenCalledWith({ "id": 5, "password": "old_passw", "newPassword": "new_passw" });
     // Checks whether a toast was shown
     expect(spyToast).toHaveBeenCalledWith([false, "some_error_message"]);
   });

@@ -32,10 +32,7 @@ export class ThemeDataService {
   async getThemes(p_id: number): Promise<Array<Theme>> {
     try {
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/theme-management-info', { "p_id": p_id }, true);
-
-      // Get the response data
-      let themes = response;
+      let themes = await this.requestHandler.get('/theme/theme-management-info', { "p_id": p_id }, true);
 
       // List of all themes
       let themes_list: Array<Theme> = []
@@ -60,6 +57,7 @@ export class ThemeDataService {
       return themes_list;
       // Catch error
     } catch (e) {
+      // Displays error message
       this.toastCommService.emitChange([false, "An error occured when trying to get all themes"]);
       return [];
     }
@@ -80,11 +78,11 @@ export class ThemeDataService {
       // Get the theme data
       let theme = response["theme"];
       // Get the super-theme data
-      let superTheme = response["super_theme"]
+      let superTheme = response["super_theme"];
       // Get the sub-theme data
       let subThemes = response["sub_themes"];
       // Get the label data
-      let labels = response["labels"]
+      let labels = response["labels"];
 
       // Create a new theme object with all information
       let newTheme: Theme = new Theme(theme['id'], theme["name"], theme["description"]);
@@ -102,6 +100,7 @@ export class ThemeDataService {
       return newTheme;
       // Catch the error
     } catch (e) {
+      // Displays error message
       this.toastCommService.emitChange([false, "An error occured when trying to get the theme information"]);
       return new Theme(0, "", "");
     }
@@ -136,9 +135,9 @@ export class ThemeDataService {
     let labelsArray: Array<Label> = [];
     // For each label in the list
     for (let label of labels) {
-      let label_info = label["label"]
+      let label_info = label["label"];
       // Make a new label object
-      let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"])
+      let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"]);
 
       // Create the artifacts
       let artifactArray = this.createArtifacts(label["artifacts"]);
@@ -146,7 +145,7 @@ export class ThemeDataService {
       newLabel.setArtifacts(artifactArray);
 
       // Add alabel to the labels
-      labelsArray.push(newLabel)
+      labelsArray.push(newLabel);
     }
     // Return the array of labels
     return labelsArray;
@@ -189,7 +188,7 @@ export class ThemeDataService {
         allSubThemes.push(newTheme);
       }
       // Return the list of subThemes
-      return allSubThemes
+      return allSubThemes;
       //Catch the error
     } catch (e) {
       // Displays the error message
@@ -216,9 +215,8 @@ export class ThemeDataService {
       else {
         this.toastCommService.emitChange([false, message]);
       }
-      return message
-
-      // Catch the error
+      return message;
+    // Catch the error
     } catch (e: any) {
       // Make the toast display the error
       this.toastCommService.emitChange([false, e.response.data]);  
@@ -295,9 +293,9 @@ export class ThemeDataService {
    * The top level dictionary represents the project that was passed
    * The project counts as an undeleted item
    */
-   async themeVisData(p_id: number): Promise<Record<string, any>> {
+  async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {
-      return this.requestHandler.get('/theme/themeVisData', { "p_id": p_id}, true);
+      return await this.requestHandler.get('/theme/themeVisData', { "p_id": p_id }, true);
     } catch (e) {
       // Emits an error toast
       let message: string = "An unknown error occurred";

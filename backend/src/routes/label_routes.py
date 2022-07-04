@@ -7,9 +7,8 @@ from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args, not_frozen
 from src.models.change_models import ChangeType
-from src.models.item_models import Label, LabelSchema, LabelType, \
-    Labelling, ThemeSchema, Artifact, ArtifactSchema, label_to_theme, Theme
-from src.searching.search import search_func_all_res, best_search_results
+from src.models.item_models import Label, LabelType, Labelling, Artifact, label_to_theme, Theme
+from src.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
@@ -30,7 +29,7 @@ def create_label(*, user):
     # Check whether the required arguments are delivered
     if not check_args(required, args):
         return make_response('Not all required arguments supplied', 400)
-    
+
     # Check for invalid characters
     if check_whitespaces([args['labelName'], args['labelDescription']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
@@ -48,11 +47,10 @@ def create_label(*, user):
         return make_response('Label description cannot be empty', 400)
 
     # Check if label name is taken
-    try: 
+    try:
         if label_name_taken(args['labelName'], 0, args['p_id']):
             return make_response('Label name already exists', 400)
     except OperationalError as err:
-        print(err.args[0])
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
         else:
@@ -129,24 +127,29 @@ def edit_label(*, user):
     # Check if the label is part of the project
     if label.p_id != args["p_id"]:
         return make_response('Label not part of project', 400)
-    
+
     # Check if the label name is unique
     try:
         if label_name_taken(args["labelName"], args['labelId'], args['p_id']):
+            # Send error if the name is taken
             return make_response("Label name already exists", 400)
     except OperationalError as err:
+        # If a wrong character was passed to the database
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Another error occured
         else:
             return make_response("Bad request", 400)
 
     # Records a change in the name, only if the name has actually changed
     if label.name != args['labelName']:
-        __record_name_edit(label.id, label.name, args['p_id'], user.id, args['labelName'])
-        
+        __record_name_edit(label.id, label.name,
+                           args['p_id'], user.id, args['labelName'])
+
     # Records a change in the description, only if the description has actually changed
     if label.description != args['labelDescription']:
-        __record_description_edit(label.id, args['labelName'], args['p_id'], user.id)
+        __record_description_edit(
+            label.id, args['labelName'], args['p_id'], user.id)
 
     db.session.execute(
         update(Label)
@@ -183,7 +186,7 @@ def get_all_labels():
     ).all()
 
     # Initialise label schema
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
 
     # Send the label object, and the name of its type for each label
     label_data = jsonify([{
@@ -215,9 +218,9 @@ def get_single_label():
         return make_response('Label does not exist', 400)
 
     # Initialise label schema
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
     # Initialise theme schema
-    theme_schema = ThemeSchema()
+    theme_schema = Theme.__marshmallow__()
 
     # Create a dictionary with label, label type and themes
     dict_json = jsonify({
@@ -238,8 +241,9 @@ def merge_route(*, user):
 
     args = request.json['params']
     # Required parameters
-    required = ('mergedLabels', 'newLabelName', 'newLabelDescription', 'p_id', 'labelTypeName')    
-    
+    required = ('mergedLabels', 'newLabelName',
+                'newLabelDescription', 'p_id', 'labelTypeName')
+
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Not all required arguments supplied', 400)
@@ -262,18 +266,21 @@ def merge_route(*, user):
 
     # Check if label name is taken
     try:
+        # If taken send response
         if label_name_taken(args['newLabelName'], 0, args['p_id']):
             return make_response("Label name already exists", 400)
+    # If something went wrong with checking, send back error
     except OperationalError as err:
+        # Illegal character given to database
         if "Illegal" in err.args[0]:
             return make_response("Input contains an illegal character", 400)
+        # Other error
         else:
             return make_response("Bad request", 400)
-    
+
     # Check that labels have different ids (set construction keeps only unique ids)
     label_ids = args['mergedLabels']
     if len(label_ids) != len(set(label_ids)):
-        print(100)
         return make_response('Label ids must be unique', 400)
 
     # Labels being merged
@@ -369,7 +376,7 @@ def merge_route(*, user):
                 new_label.id,
                 # The project id
                 args['p_id']
-            ) # Distinct in case some themes contain multiple of the labels being merged
+            )  # Distinct in case some themes contain multiple of the labels being merged
             .distinct()
         )
     )
@@ -392,8 +399,8 @@ def merge_route(*, user):
 # @param admin
 def get_label_info(label, u_id, admin):
     # Schemas
-    label_schema = LabelSchema()
-    artifact_schema = ArtifactSchema()
+    label_schema = Label.__marshmallow__()
+    artifact_schema = Artifact.__marshmallow__()
     # Info of the label
     info = {
         "label": label_schema.dump(label),
@@ -530,9 +537,10 @@ def search_route():
     # Gets the actual label object from the search
     labels_results = [result['item'] for result in clean_results]
     # Schema for serialising
-    label_schema = LabelSchema()
+    label_schema = Label.__marshmallow__()
     # Serialise objects and jsonify them
     return make_response(jsonify(label_schema.dump(labels_results, many=True)))
+
 
 """
 Records a creation of a label in the label changelog
@@ -557,6 +565,7 @@ def __record_creation(l_id, l_name, lt_name, p_id, u_id):
     )
 
     db.session.add(change)
+
 
 """
 Records the editing of label's name in the label changelog
@@ -583,6 +592,7 @@ def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
 
     db.session.add(change)
 
+
 """
 Records the editing of label's name in the label changelog
 @param l_id: the id of the label edited
@@ -603,6 +613,7 @@ def __record_description_edit(l_id, old_name, p_id, u_id):
     )
 
     db.session.add(change)
+
 
 """
 Records the merge of a list of labels in the label changelog
@@ -675,6 +686,7 @@ def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, the
     ) for t_name, t_id, old_label_name in theme_changes]
     db.session.add_all(changes)
 
+
 """
 Records the deletion of a label in the label changelog
 Note that since the label can no longer be viewed, its personal history can't be viewed either
@@ -697,6 +709,7 @@ def __record_delete(l_id, name, p_id, u_id):
     )
     db.session.add(change)
 
+
 """
 Function that checks if a label name is already taken
 @params name: string, the name to be checked
@@ -707,11 +720,12 @@ def label_name_taken(name, label_id, p_id):
     return bool(db.session.scalars(
         select(Label)
         .where(
-            Label.name==name,
+            Label.name == name,
             Label.p_id == p_id,
             Label.id != label_id
         ))
         .first())
+
 
 """
 Author: Eduardo Costa Martins
@@ -741,10 +755,10 @@ def get_loose_labels(p_id):
 
     # Convert to the Node format needed for the hierarchy
     loose_labels = [{
-        'id' : loose_label[0],
-        'name' : loose_label[1],
-        'deleted' : loose_label[2],
-        'type' : 'Label'
+        'id': loose_label[0],
+        'name': loose_label[1],
+        'deleted': loose_label[2],
+        'type': 'Label'
     } for loose_label in loose_labels]
 
     return loose_labels

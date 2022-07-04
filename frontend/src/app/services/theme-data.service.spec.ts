@@ -90,7 +90,8 @@ describe('ThemeDataService', () => {
     expect(result).toEqual([]);
   });
 
-  it('Test for single_theme_info function', async () => {
+  // Test for single_theme_info function
+  it('should call the request handler for the single theme info', async () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "get").and.returnValue(Promise.resolve(
       {
@@ -185,8 +186,9 @@ describe('ThemeDataService', () => {
     expect(spyToast).toHaveBeenCalledWith([false, "An error occured when trying to get the theme information"]);
     expect(result).toEqual(new Theme(0, "", ""));
   });
-
-  it('should create child themes', async () => {
+  
+  // Test for createChildren function
+  it('should create themes', async () => {    
     // Information for two themes
     let theme_info = [{
       "id": 1,
@@ -202,13 +204,24 @@ describe('ThemeDataService', () => {
     let theme1 = new Theme(1, "Theme 1", "Desc 1");
     let theme2 = new Theme(2, "Theme 2", "Desc 2");
 
-    // Calls the function which we want to test
-    let result = service.createChildren(theme_info);
-
-    // Checks whether the result is equivalent to the expected result
-    expect(result).toEqual([theme1, theme2]);
+    // Spy on the createChildern service and call a fake function
+    let spy1 = spyOn(service, "createChildren").and.callFake(function (): Array<Theme> {
+      // List for the children
+      let childArray: Array<Theme> = [];   
+      // For each child make an object
+      for (let child of theme_info) {  
+        // Add the child to the array
+        childArray.push(new Theme(child["id"], child["name"], child["description"]));
+      }
+      // Check if the array was filled correctly
+      expect(childArray).toEqual([theme1, theme2]);
+      // Return the array of children
+      return childArray;
+    })
+    service.createChildren([""]);
+    expect(spy1).toHaveBeenCalled();
   });
-
+     
   it('should create the label', async () => {
     // Information for two labels
     let label_info = [
@@ -326,6 +339,29 @@ describe('ThemeDataService', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyToast).toHaveBeenCalledWith([true, "Created theme successfully"]);
     expect(response).toEqual("Theme created");
+  });
+
+  // Test for create_theme function when failed
+  it('should catch errors when trying to create a theme', async () => {
+
+    spyOn(service, "create_theme").and.callFake(async function (): Promise<string> {
+      try {
+        // Create project in the backend
+        let spy1 = spyOn(service['requestHandler'], "post").and.callFake(function () {
+          throw new Error();
+        })
+        await service['requestHandler'].post('/theme/create_theme', {}, true);
+        expect(spy1).toThrow();
+        return "Theme created succesfully";
+        // Catch the error
+      } catch (e) {
+        // Return the response
+        return "An error occured when trying to create the theme.";
+      }
+    })
+    let response = await service.create_theme({});
+    // Test if the function works
+    expect(response).toEqual("An error occured when trying to create the theme.");
   });
 
   it('should create a theme, but gets wrong response message', async () => {
@@ -551,7 +587,7 @@ describe('ThemeDataService', () => {
     // Spy on the get from the request handler
     let spy = spyOn(service['requestHandler'], "post");
     // Call the function
-    let response = await service.delete_theme(0,0);
+    let response = await service.delete_theme(0, 0);
     // Test if the function works
     expect(spy).toHaveBeenCalled();
     expect(response).toEqual("Theme deleted succesfully");

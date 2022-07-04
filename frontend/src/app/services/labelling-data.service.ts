@@ -46,7 +46,6 @@ export class LabellingDataService {
         new Label(r.label.id, r.label.name, r.label.description, r.label_type)
       );
     });
-
     return result;
   }
 
@@ -221,7 +220,7 @@ export class LabellingDataService {
       // If the current user is admin, send all labellings to the backend
       if (admin) {
         // Send project ID, label type ID, artifact ID and labelling updates to the backend
-        this.editLabelling(p_id, a_id, label_per_user)
+        await this.editLabelling(p_id, a_id, label_per_user)
       }
       // If the current user is not admin, only send the user's labellings to the backend
       else {
@@ -230,7 +229,7 @@ export class LabellingDataService {
         // Assign the user's labellings to their username
         singleUpdate[username] = label_per_user[username];
         // Send project ID, label type ID, artifact ID and labelling updates to the backend
-        this.editLabelling(p_id, a_id, singleUpdate)
+        await this.editLabelling(p_id, a_id, singleUpdate)
       }
     }
     catch (error) {

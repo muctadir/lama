@@ -10,12 +10,11 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
-from src.models import db, ma # need this in every model
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean
+from src.models import db
+from sqlalchemy import Column, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from enum import Enum
-from marshmallow import fields
 
 class UserStatus(Enum):
     """
@@ -27,19 +26,20 @@ class UserStatus(Enum):
     denied = -1
     deleted = -2
 
+
 class User(db.Model):
 
-    # TODO: Handle `status` using Flask-Principal?
     __tablename__ = 'user'
     # auto_increment=True is default for integer primary key
-    id = Column(Integer, primary_key=True) 
+    id = Column(Integer, primary_key=True)
     username = Column(String(32), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
     email = Column(String(320), unique=True, nullable=False)
     # See UserStatus currently initializing to approved
-    status = Column(db.Enum(UserStatus), default=UserStatus.approved, nullable=False)
+    status = Column(db.Enum(UserStatus),
+                    default=UserStatus.approved, nullable=False)
     # Personal description
-    description = Column(Text, default="") 
+    description = Column(Text, default="")
     # If the user is a super admin
     super_admin = Column(Boolean, default=False)
 
@@ -55,26 +55,3 @@ class User(db.Model):
     artifacts = association_proxy('labellings', 'artifact')
     # List of highlights the user has made
     highlights = relationship('Highlight', back_populates='user')
-
-# Note: This is a circular import, but not a circular dependency so nothing breaks
-# i.e., do not use this package at the top level
-from src.models.project_models import Membership
-from src.models.item_models import Labelling
-
-class UserSchema(ma.SQLAlchemyAutoSchema):
-    def __init__(self, *args, **kwargs):
-        # Exclude the password row when serializing a user
-        super(UserSchema, self).__init__(exclude=['password'], *args, **kwargs)
-
-    class Meta:
-        model = User
-        include_fk = True # Include foreign keys (not useful now, but maybe later)
-    
-    # Enum fields are not automatically serialized/deserialized
-    status = fields.Method("get_approval", deserialize="load_approval")
-    # The functions below describe how to serialize/deserialize enums
-    def get_approval(self, obj):
-        return obj.status.name
-    
-    def load_approval(self, value):
-        return UserStatus[value]

@@ -1,9 +1,8 @@
 from src.conftest import RequestHandler
-from src.app_util import parse_change
-from src.routes.change_routes import get_parsed_changes
 from src import db
 from sqlalchemy import select
 from src.models.item_models import Label, Theme, Artifact
+
 
 def test_label_changes(app, client):
     # The user with this id is in Project 1, but not an admin
@@ -14,7 +13,7 @@ def test_label_changes(app, client):
     # Number of changes made by these users
     user5_changes = 0
     user6_changes = 0
-    
+
     # The user with this id is the super admin
     admin_handler = RequestHandler(app, client, 1)
 
@@ -29,7 +28,7 @@ def test_label_changes(app, client):
 
     # The user should not see any changes
     assert len(response.json) == 0
-    
+
     response = admin_handler.get('/change/changes', params, True)
 
     # The admin should see changes
@@ -39,8 +38,8 @@ def test_label_changes(app, client):
     # We assume the changes themselves works since they are tested in other places
     # We just test the recording of the changes
     create_params = {
-        'labelTypeId': 1, 
-        'labelName': 'test_label', 
+        'labelTypeId': 1,
+        'labelName': 'test_label',
         'labelDescription': 'test_description',
         'p_id': 1
     }
@@ -60,14 +59,17 @@ def test_label_changes(app, client):
             Label.name == 'test_label',
             Label.p_id == 1
         )).scalar_one()
-    
+
     # Update the item id with the newly created Label
     params['i_id'] = new_l_id
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Edit the label description
     edit_params = {
@@ -82,11 +84,14 @@ def test_label_changes(app, client):
     user5_changes += 1
 
     assert response.status_code == 200
-    
+
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Edit the label name
     edit_params['labelName'] = 'new_name'
@@ -97,11 +102,13 @@ def test_label_changes(app, client):
 
     assert response.status_code == 200
 
-    
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Edit both the name and the description (with a different user)
     edit_params['labelName'] = 'newer_name'
@@ -115,9 +122,12 @@ def test_label_changes(app, client):
     assert response.status_code == 200
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     delete_params = {
         'l_id': new_l_id,
@@ -131,9 +141,12 @@ def test_label_changes(app, client):
     user6_changes += 1
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     changes = admin_handler.get('/change/changes', params, True).json
 
@@ -195,7 +208,7 @@ def test_merge_change(app, client):
             'i_id': label
         }, True)
         assert len(response.json) == info[0]
-    
+
     # Check that change is recorded for the label created from the merge
     response = admin_handler.get('/change/changes', {
         'p_id': 1,
@@ -204,7 +217,7 @@ def test_merge_change(app, client):
     }, True)
     assert len(response.json) == 1
     assert response.json[0]['description'] == 'admin created Label "merge_label" of type "Emotion" by merging labels ["Sad", "Angry"]'
-    
+
     # Check that the changes for the artifacts were recorded
     for artifact, info in affected_artifacts.items():
         response = admin_handler.get('/change/changes', {
@@ -221,7 +234,7 @@ def test_merge_change(app, client):
         # Assert that there is a correct description for each label
         for label in info[1]:
             assert f'admin changed a labelling for Artifact {artifact} of type "{merged_labels[label][2]}" from "{merged_labels[label][1]}" to "merge_label" as a result of a merge' in descriptions
-        
+
     # Check that the changes for the themes were recorded
     for theme, info in affected_themes.items():
         response = admin_handler.get('/change/changes', {
@@ -239,6 +252,7 @@ def test_merge_change(app, client):
         for label in info[1]:
             assert f'Theme "{info[2]}" had Label "{merged_labels[label][1]}" of type "{merged_labels[label][2]}" switched for "merge_label" as a result of a merge admin made' in descriptions
 
+
 def test_theme_changes(app, client):
     # The user with this id is in Project 1, but not an admin
     # The user has also not made any changes so far
@@ -248,7 +262,7 @@ def test_theme_changes(app, client):
     # Number of changes these users made
     user5_changes = 0
     user6_changes = 0
-    
+
     # The user with this id is the super admin
     admin_handler = RequestHandler(app, client, 1)
 
@@ -263,7 +277,7 @@ def test_theme_changes(app, client):
 
     # The user should not see any changes
     assert len(response.json) == 0
-    
+
     response = admin_handler.get('/change/changes', params, True)
 
     # The admin should see changes
@@ -298,14 +312,17 @@ def test_theme_changes(app, client):
             Theme.name == 'test_theme',
             Theme.p_id == 1
         )).scalar_one()
-    
+
     # Update the item id with the newly created Label
     params['i_id'] = new_t_id
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Editing nothing should not record changes
     edit_params = dict(create_params)
@@ -313,7 +330,8 @@ def test_theme_changes(app, client):
     response = user5_handler.post('/theme/edit_theme', edit_params, True)
     assert response.status_code == 200
     # Check number of changes has not changed
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
 
     # Edit theme name
     edit_params['name'] = 'new_name'
@@ -322,10 +340,13 @@ def test_theme_changes(app, client):
     user5_changes += 1
     descriptions.append('user5 renamed Theme "test_theme" to "new_name"')
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-    
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
+
     # Edit theme description
     edit_params['description'] = 'A new description'
     response = user6_handler.post('/theme/edit_theme', edit_params, True)
@@ -333,9 +354,12 @@ def test_theme_changes(app, client):
     user6_changes += 1
     descriptions.append('user6 changed the description of Theme "new_name"')
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Edit subthemes
     edit_params['sub_themes'] = []
@@ -345,21 +369,28 @@ def test_theme_changes(app, client):
     descriptions.append('user6 set subthemes of Theme "new_name" to nothing')
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Edit labels
     edit_params['labels'] = [{'id': 1}, {'id': 2}]
     response = user6_handler.post('/theme/edit_theme', edit_params, True)
     assert response.status_code == 200
     user6_changes += 1
-    descriptions.append('user6 set labels of Theme "new_name" to ["Happy", "Sad"]')
-    
+    descriptions.append(
+        'user6 set labels of Theme "new_name" to ["Happy", "Sad"]')
+
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Edit everything
     edit_params['description'] = "A newer description"
@@ -377,9 +408,12 @@ def test_theme_changes(app, client):
     ])
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Delete
     delete_params = {
@@ -389,12 +423,15 @@ def test_theme_changes(app, client):
     response = user6_handler.post('/theme/delete_theme', delete_params, True)
     assert response.status_code == 200
     user6_changes += 1
-    descriptions.append('user6 deleted Theme "newer_name"')    
+    descriptions.append('user6 deleted Theme "newer_name"')
 
     # Check only the required users can see that change
-    assert len(user5_handler.get('/change/changes', params, True).json) == user5_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user5_changes + user6_changes
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
+    assert len(user5_handler.get('/change/changes',
+               params, True).json) == user5_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user5_changes + user6_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
 
     # Check order of changes and description
     changes = admin_handler.get('/change/changes', params, True).json
@@ -405,6 +442,7 @@ def test_theme_changes(app, client):
 
     assert response_descriptions == descriptions
 
+
 def test_artifact_changes(app, client):
     # The user with this id is in Project 1, but not an admin
     # The user has also not made any changes so far
@@ -414,11 +452,10 @@ def test_artifact_changes(app, client):
     # Number of changes made by these users
     user6_changes = 0
     user7_changes = 0
-    
+
     # The user with this id is the super admin
     admin_handler = RequestHandler(app, client, 1)
 
-    
     # The parameters to get the changes
     params = {
         'p_id': 1,
@@ -430,7 +467,7 @@ def test_artifact_changes(app, client):
 
     # The user should not see any changes
     assert len(response.json) == 0
-    
+
     response = admin_handler.get('/change/changes', params, True)
 
     # The admin should see changes
@@ -469,15 +506,18 @@ def test_artifact_changes(app, client):
             Artifact.identifier == identifier,
             Artifact.p_id == 1
         )).all()
-    
+
     # For each created artifact
     for a_id in a_ids:
 
         params['i_id'] = a_id
         # Check only the required users can see that change
-        assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-        assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes
-        assert len(user7_handler.get('/change/changes', params, True).json) == user7_changes
+        assert len(user6_handler.get('/change/changes',
+                   params, True).json) == user6_changes
+        assert len(admin_handler.get('/change/changes', params,
+                   True).json) == user6_changes + user7_changes
+        assert len(user7_handler.get('/change/changes',
+                   params, True).json) == user7_changes
 
     # We test changes on the latest artifact that was uploaded
     a_id = params['i_id']
@@ -523,13 +563,16 @@ def test_artifact_changes(app, client):
     descriptions.extend([
         f'user6 labelled Artifact {a_id} with Label "Docker" of type "Technology"',
         f'user6 labelled Artifact {a_id} with Label "Happy" of type "Emotion"'
-    ]) 
+    ])
 
     # Check only the required users can see that change
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes
-    assert len(user7_handler.get('/change/changes', params, True).json) == user7_changes
-    
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user6_changes + user7_changes
+    assert len(user7_handler.get('/change/changes',
+               params, True).json) == user7_changes
+
     # Edit labelling of an artifact
     # First, make an edit that does not change anything
     # What the _fuck_ is this data structure?
@@ -550,21 +593,28 @@ def test_artifact_changes(app, client):
     assert response.status_code == 200
 
     # Check the number of changes has not changed
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes
-    assert len(user7_handler.get('/change/changes', params, True).json) == user7_changes
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user6_changes + user7_changes
+    assert len(user7_handler.get('/change/changes',
+               params, True).json) == user7_changes
 
     # Make a change to a labelling
     edit_params['labellings'][1]['labelling']['id'] = 10
     response = admin_handler.patch('labelling/edit', edit_params, True)
     assert response.status_code == 200
-    descriptions.append(f'admin changed user6\'s labelling for Artifact {a_id} of type "Technology" from "Docker" to "Angular"')
+    descriptions.append(
+        f'admin changed user6\'s labelling for Artifact {a_id} of type "Technology" from "Docker" to "Angular"')
 
     # Check only the required users can see that change
-    assert len(user6_handler.get('/change/changes', params, True).json) == user6_changes
-    assert len(admin_handler.get('/change/changes', params, True).json) == user6_changes + user7_changes + 1
-    assert len(user7_handler.get('/change/changes', params, True).json) == user7_changes
-    
+    assert len(user6_handler.get('/change/changes',
+               params, True).json) == user6_changes
+    assert len(admin_handler.get('/change/changes', params,
+               True).json) == user6_changes + user7_changes + 1
+    assert len(user7_handler.get('/change/changes',
+               params, True).json) == user7_changes
+
     # Check order of changes and description
     changes = admin_handler.get('/change/changes', params, True).json
 
@@ -574,13 +624,14 @@ def test_artifact_changes(app, client):
 
     assert response_descriptions == descriptions
 
+
 def test_artifact_split(app, client):
     # The user with this id is in Project 1, but not an admin
     # The user has also not made any changes so far
     user6_handler = RequestHandler(app, client, 7)
     # Same with this user
     user7_handler = RequestHandler(app, client, 8)
-    
+
     # The user with this id is the super admin
     admin_handler = RequestHandler(app, client, 1)
 
