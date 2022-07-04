@@ -9,8 +9,9 @@ import { FormBuilder } from '@angular/forms';
 import { ConfirmModalComponent } from 'app/modals/confirm-modal/confirm-modal.component';
 import { of } from 'rxjs';
 import { StringArtifact } from 'app/classes/stringartifact';
+import { Theme } from 'app/classes/theme';
 
-describe('IndividualLabelComponent', () => {
+fdescribe('IndividualLabelComponent', () => {
   let component: IndividualLabelComponent;
   let fixture: ComponentFixture<IndividualLabelComponent>;
   // Instantiation of NgbModal
@@ -43,7 +44,7 @@ describe('IndividualLabelComponent', () => {
   });
 
   // Test the ngOnInit function
-  it('should initialize correctly', () => {
+  it('should initialize correctly', async () => {
     // Create spy for get label
     let spy1 = spyOn(component, "getLabel")
     // Create spy for get labellings
@@ -53,7 +54,7 @@ describe('IndividualLabelComponent', () => {
     // Create spy for get frozen status
     let spy4 = spyOn(component['projectDataService'], "getFrozen")
     // Calls the ngOnInit function
-    component.ngOnInit();
+    await component.ngOnInit();
     // Checks whether the functions works properly
     expect(spy1).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
@@ -65,20 +66,52 @@ describe('IndividualLabelComponent', () => {
   it('should get the label information', async () => {
     // Create spy for get label call
     let spy = spyOn(component['labellingDataService'], "getLabel")
+    // create spy for the router
+    let routeSpy = spyOn(component["router"], "navigate");
+    // Sets variable
+    component.p_id = 1;
+
     // Calls the getLabel function
     await component.getLabel(1, 1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
+    expect(routeSpy).toHaveBeenCalledWith(['project', 1]);
+  });
+
+  it('should get the label information, and change theme', async () => {
+    let label = new Label(1, "label1", "desc1", "type1");
+    label.setThemes([new Theme(1, "theme1", "desc1")]);
+
+    // Create spy for get label call
+    let spy = spyOn(component['labellingDataService'], "getLabel").and.returnValue(Promise.resolve(label));
+    // create spy for the router
+    let routeSpy = spyOn(component["router"], "navigate");
+
+    // Sets variable
+    component.p_id = 1;
+
+    // Calls the getLabel function
+    await component.getLabel(1, 1);
+    // Checks whether the function works properly
+    expect(spy).toHaveBeenCalled();
+    expect(routeSpy).toHaveBeenCalledWith(['project', 1]);
+    expect(component.themes).toEqual([new Theme(1, "theme1", "desc1")]);
   });
 
   // Test the get labelling function
   it('should get the labellings of a label', async () => {
     // Create spy for getLabellings call
     let spy = spyOn(component['labellingDataService'], "getLabelling")
+    // create spy for the router
+    let routeSpy = spyOn(component["router"], "navigate");
+    // Sets variable
+    component.p_id = 1;
+
     // Calls the getLabellings function
     await component.getLabellings(1, 1);
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
+    expect(routeSpy).toHaveBeenCalledWith(['project', 1]);
   });
 
   // Test the postSoftDelete function
@@ -254,4 +287,25 @@ describe('IndividualLabelComponent', () => {
     // Checks whether the function works properly
     expect(spy).toHaveBeenCalled();
   });
+
+  it('should reroute to a different page', async () => {
+    // Create spy router
+    let spy = spyOn(component['router'], "navigate");
+    component.p_id = 5;
+    // Calls function to be tested
+    component.reRouter();
+    // Checks whether the function works properly
+    expect(spy).toHaveBeenCalledWith(['/project', 5, 'labelmanagement']);
+  });
+
+  it('should reroute to a different theme', async () => {
+    // Create spy router
+    let spy = spyOn(component['router'], "navigate");
+    component.p_id = 5;
+    // Calls function to be tested
+    component.reRouterTheme(8);
+    // Checks whether the function works properly
+    expect(spy).toHaveBeenCalledWith(['/project', 5, 'singleTheme', 8]);
+  });
+
 });
