@@ -83,6 +83,5 @@ if __name__ == '__main__':
     # We need 2 arguments, but the first one is always the file we are running
     if len(argv) != 3:
         print("Incorrect number of arguments")
-        print(str(argv))
     else:
         convert_file(argv[1], argv[2])

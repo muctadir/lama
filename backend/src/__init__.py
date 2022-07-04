@@ -86,7 +86,6 @@ def create_app(config={'TESTING': False}):
     if config['TESTING'] is True:
         # The in-memory database is discarded after each test, so we have to
         # remove the migrations folder used by the last test.
-        # TODO: Perhaps do this in teardown?
         mig_path = Path(__file__).parent.parent / 'migrations-test'
         if mig_path.is_dir():
             rmtree(str(mig_path))

@@ -5,7 +5,7 @@ from src.conftest import RequestHandler
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts, project_conflicts
 from collections import Counter
 from pytest import raises
-from src.exc import TestAuthenticationError
+from src.exc import HandlerAuthenticationError
 
 def test_nr_project_conflicts(app):
     with app.app_context():
@@ -168,7 +168,7 @@ def test_conflict_management_page_noLogin(app, client):
     request_handler = RequestHandler(app, client)
 
     # Make a request and check if the right error is thrown
-    with raises(TestAuthenticationError):
+    with raises(HandlerAuthenticationError):
         request_handler.get('/conflict/conflictmanagement', {'p_id': 1}, True)
 
 # Tests if the route /conflict/conflictmanagement throws an error
@@ -224,7 +224,7 @@ def test_single_label_per_user_noLogin(app, client):
     request_handler = RequestHandler(app, client)
 
     # Make a request and check if the right error is thrown
-    with raises(TestAuthenticationError):
+    with raises(HandlerAuthenticationError):
         request_handler.get('/conflict/LabelPerUser', {'p_id': 1}, True)
 
 # Tests if the route /conflict/LabelPerUser throws an error

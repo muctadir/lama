@@ -7,7 +7,6 @@ import { Project } from 'app/classes/project';
 import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 import { AddUsersModalComponent } from 'app/modals/add-users-modal/add-users-modal.component';
-import { Router } from '@angular/router';
 
 /*
  * Test bed for the project settings component
@@ -15,9 +14,6 @@ import { Router } from '@angular/router';
 describe('ProjectSettingsComponent', () => {
   let component: ProjectSettingsComponent;
   let fixture: ComponentFixture<ProjectSettingsComponent>;
-
-  // Instantiation of Router
-  let router: Router;
 
   // Instantiation of NgbModal
   let modalService: NgbModal;
@@ -31,7 +27,6 @@ describe('ProjectSettingsComponent', () => {
       providers: [FormBuilder, NgbActiveModal]
     })
       .compileComponents();
-    router = TestBed.inject(Router);
     // Inject the modal service into the component's constructor
     modalService = TestBed.inject(NgbModal)
   });

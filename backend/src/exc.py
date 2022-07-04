@@ -19,6 +19,6 @@ class ThemeCycleDetected(Exception):
 
 # The programmer tried testing a route that requires being authenticated, 
 # without simulating authentication
-class TestAuthenticationError(Exception):
+class HandlerAuthenticationError(Exception):
     # Pass
     pass

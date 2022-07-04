@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Changelog } from 'app/classes/changelog';
-import { Router } from '@angular/router';
 import { HistoryDataService } from './history-data.service';
 
 /**
@@ -9,14 +8,12 @@ import { HistoryDataService } from './history-data.service';
  */
 describe('HistoryDataService', () => {
   let service: HistoryDataService;
-  let router: Router
   
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule]
     });
     service = TestBed.inject(HistoryDataService);
-    router = TestBed.inject(Router)
   });
 
   it('should be created', () => {

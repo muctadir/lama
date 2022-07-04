@@ -1,6 +1,6 @@
 from pytest import fixture
 from src import create_app, db
-from src.exc import TestAuthenticationError
+from src.exc import HandlerAuthenticationError
 from jwt import encode
 
 """
@@ -26,8 +26,6 @@ def app():
         db.session.commit()
 
     yield app
-    # Tear-down goes here.
-    # TODO: Delete migrations folder
 
 # To simulate requests
 @fixture
@@ -97,7 +95,7 @@ class RequestHandler:
 
         if authentication_req:
             if self.session_token is None:
-                raise TestAuthenticationError
+                raise HandlerAuthenticationError
             self.headers['u_id_token'] = self.session_token
         else:
             self.headers['u_id_token'] = ''

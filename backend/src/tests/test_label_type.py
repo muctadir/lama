@@ -5,7 +5,6 @@ from src.models.item_models import Label, LabelType
 from src import db
 from src.conftest import RequestHandler
 
-# TODO: Check whether the information received matches that of the database
 def test_get_all(app, client):
     with app.app_context():
         # Request unauthenticated - non existent user
@@ -40,7 +39,6 @@ def test_get_all(app, client):
             '/labeltype/all', {'p_id': 1}, True)
         assert response.status_code == 200
 
-# TODO: Check whether the information received matches that of the database
 def test_get_all_with_labels(app, client):
     with app.app_context():
         # Request unauthenticated - non existent user
@@ -74,7 +72,6 @@ def test_get_all_with_labels(app, client):
         response = request_handler_admin.get(
             '/labeltype/allWithLabels', {'p_id': 1}, True)
 
-# TODO: Check whether the information received matches that of the database
 def test_label_by_type(app, client):
     with app.app_context():
         assert True

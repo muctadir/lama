@@ -1,7 +1,6 @@
 # Veerle Furst
 # Eduardo Costa Martins
 
-from flask import current_app as app
 from src.models import db
 from src.models.item_models import Theme, Label, label_to_theme
 from src.models.change_models import ChangeType
@@ -178,7 +177,8 @@ def possible_sub_themes():
     # Get theme id
     t_id = int(args["t_id"])
 
-    root_id = __get_root(t_id)
+    # Check cycle subthemes when we are in edit mode
+    root_id = __get_root(t_id) if t_id != 0 else 0
 
     # Get the themes without parents, and those that would not introduce a cycle
     themes = db.session.scalars(
