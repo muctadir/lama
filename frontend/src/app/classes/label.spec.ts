@@ -57,7 +57,7 @@ describe('Label', () => {
   })
 
   // Setting a bad label name
-  it('throw error for bad label name', () => {
+  it('should throw error for bad label name', () => {
     // Create instances
     const label2 = new Label(id, name, desc, type);
     const newName = "";
@@ -86,7 +86,7 @@ describe('Label', () => {
   })
 
   // Setting a bad label description
-  it('throw error for bad label description', () => {
+  it('should throw error for bad label description', () => {
     // Create instances
     const label2 = new Label(id, name, desc, type);
     const newDesc = "";
@@ -115,7 +115,7 @@ describe('Label', () => {
   })
 
   // Setting a bad label type
-  it('throw error for bad label description', () => {
+  it('should throw error for bad label description', () => {
     // Create instances
     const label2 = new Label(id, name, desc, type);
     const newType = "";
@@ -139,7 +139,7 @@ describe('Label', () => {
   })
 
   // Getting the number of parent labels
-  it("Should get the number of parent labels", () => {
+  it("should get the number of parent labels", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const parent1 = new Label(3, "label1", "labelDesc1", "type");
@@ -166,7 +166,7 @@ describe('Label', () => {
   })
 
   // Getting the number of child labels
-  it("Should get the number of child labels", () => {
+  it("should get the number of child labels", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const child1 = new Label(3, "label1", "labelDesc1", "type");
@@ -193,7 +193,7 @@ describe('Label', () => {
   })
 
   // Getting the number of label artifacts
-  it("Should get the number of artifacts", () => {
+  it("should get the number of artifacts", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const artifact1 = new StringArtifact(1, "artifact1", "artifactData1");
@@ -220,7 +220,7 @@ describe('Label', () => {
   })
 
   // Getting the number of label users
-  it("Should get the number of users", () => {
+  it("should get the number of users", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const user1 = new User(1, "user1");
@@ -247,7 +247,7 @@ describe('Label', () => {
   })
 
   // Getting the number of theme labels
-  it("Should get the number of theme labels", () => {
+  it("should get the number of theme labels", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const theme1 = new Theme(3, "theme1", "themeDesc1");
@@ -271,8 +271,6 @@ describe('Label', () => {
     expect(label2.getDeleted())
       .toBe(status)
   })
-
-
 });
 
 

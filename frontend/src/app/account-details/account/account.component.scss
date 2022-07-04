@@ -1,8 +1,3 @@
-// Color variables
-$grey-shade: #38474e;
-$white-shade: #FFFFFF;
-$orange-shade: #ed5a06;
-
 // Ensures that the logout button is on the top right
 #logout-icon {
     position: fixed;
@@ -12,7 +7,7 @@ $orange-shade: #ed5a06;
 
 // Sets the layout of the logout button
 .def {
-    color: black; 
+    color: black;
     font-size: 45px;
     cursor: pointer;
 }

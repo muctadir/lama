@@ -16,7 +16,7 @@ export abstract class Artifact {
      * [username, labelname, labeltype, description, remark]
      * This is all that is needed for the artifact page
      * You can put extra/less infromation in here if needed, because its an any type array
-    **/ 
+    **/
     private labellings: Array<Array<any>> | undefined;
     // Parent of the artifact (split)
     private parentId: number | undefined;

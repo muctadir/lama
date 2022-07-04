@@ -50,18 +50,6 @@ $light-grey-shade: #aaaaaa;
   overflow-y: scroll;
 }
 
-
-// Scroll Related Business
-.my-custom-scrollbar {
-  position: relative;
-  height: 80vh;
-  overflow: auto;
-}
-
-.table-wrapper-scroll-y {
-  display: block;
-}
-
 // Scroll Bar 
 ::-webkit-scrollbar {
   width: 10px;
@@ -80,22 +68,16 @@ $light-grey-shade: #aaaaaa;
   border-radius: 10px;
 }
 
-// Scroll bar
-#scrolly {
-  padding-right: 40px;
-  height: auto;
-}
-
 //style for the tooltip
-::ng-deep div.tooltip {	
-  position: absolute;			
-  text-align: center;			
-  width: 60px;					
-  height: 28px;					
-  padding: 2px;				
-  font: 9px sans-serif;		
-  background: lightsteelblue;	
-  border: 3px;		
-  border-radius: 8px;			
-  pointer-events: none;			
+::ng-deep div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 33px;
+  padding: 2px;
+  font: 9px sans-serif;
+  background: lightsteelblue;
+  border: 3px;
+  border-radius: 8px;
+  pointer-events: none;
 }

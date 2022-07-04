@@ -13,16 +13,9 @@ import { StatsDataService } from 'app/services/stats-data.service';
   templateUrl: './stats.component.html',
   styleUrls: ['./stats.component.scss']
 })
-export class StatsComponent implements OnInit{
-  // Pagination Settings
-  page = 1;
-  pageSize = 10;
-
+export class StatsComponent implements OnInit {
   // Initialize the url
   url: string;
-    
-  // Initialize the ReroutingService
-  routeService: ReroutingService;
 
   // Initialize the project ID
   p_id: number;
@@ -34,39 +27,49 @@ export class StatsComponent implements OnInit{
   user_contribution: Array<any>;
 
   // Initialize the number of conflicts in the project
-  conflicts: number
+  conflicts: number;
 
   // Initialize the number of labels in the project
   labels: number;
 
-  frozen: boolean = true;
+  // Indicates whether the project is frozen
+  frozen = true;
 
   /**
-   * Initializes the router 
+   * Initializes the router, StatsDataService, ProjectDataService, ReroutingService
+   * and sets some default values
    * 
    * @param router instance of router
+   * @param statsDataService instance of StatsDataService
+   * @param projectDataService instance of ProjectDataService
+   * @param routeService instance of ReroutingService
    */
-   constructor(private router: Router,
+  constructor(private router: Router,
     private statsDataService: StatsDataService,
-    private projectDataService: ProjectDataService) { 
-      this.url = this.router.url;
-      this.routeService = new ReroutingService();
-      this.p_id = Number(this.routeService.getProjectID(this.url));
-      this.project = new Project(0, "", "");
-      this.user_contribution = [];
-      this.conflicts = 0;
-      this.labels = 0;
+    private projectDataService: ProjectDataService,
+    private routeService: ReroutingService) {
+    this.url = this.router.url;
+    this.p_id = Number(this.routeService.getProjectID(this.url));
+    this.project = new Project(0, "", "");
+    this.user_contribution = [];
+    this.conflicts = 0;
+    this.labels = 0;
   }
 
-
+  /**
+   * Gets the data required for the component from the backend
+   * 
+   * @trigger on component creation
+   */
   async ngOnInit(): Promise<void> {
+    // Checks whether the component is frozen
     this.frozen = await this.projectDataService.getFrozen();
-    
+
     // Get the project statistics from the back end
-    await this.getProject(this.p_id);
-    
+    this.getProject(this.p_id);
+
     // Get the user statistics from the backend
-    await this.getUserStats(this.p_id);
+    this.getUserStats(this.p_id);
   }
 
   /**
@@ -77,7 +80,7 @@ export class StatsComponent implements OnInit{
    * @modifies this.conflicts, such that this.conflicts' value is equal to 
    * the number of conflicts in the project
    */
-  async getProject(p_id: number): Promise<void>{
+  async getProject(p_id: number): Promise<void> {
     // Make request to the backend
     const data = await this.statsDataService.getProject(p_id);
 
@@ -96,7 +99,7 @@ export class StatsComponent implements OnInit{
    * @modifies this.user_contribution, such that this.user_contribution contains an array of statistics
    * where each element has the statistics for one user
    */
-  async getUserStats(p_id: number): Promise<void>{
+  async getUserStats(p_id: number): Promise<void> {
     // Make request to the backend
     const data = await this.statsDataService.getUserStats(p_id)
     // Pass the user statistics
@@ -108,17 +111,12 @@ export class StatsComponent implements OnInit{
    * of the same project
    * 
    * @trigger start labelling button is pressed
-   */  
-  reRouter() : void {
-    // Gets the url from the router
-    let url: string = this.router.url
-    
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+   */
+  reRouter(): void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
-    // Changes the route accordingly
+    let p_id = this.routeService.getProjectID(this.url);
+
+    // Changes the route to the labelling page
     this.router.navigate(['/project', p_id, 'labelling-page']);
   }
 }

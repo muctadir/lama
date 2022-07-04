@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LoginComponent } from './login.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputCheckService } from 'app/services/input-check.service';
 import { RouterTestingModule } from '@angular/router/testing';
 
+/**
+ * Test suite for the Login component
+ */
 describe('LoginComponent', () => {
-  /* Test environment setup */
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
@@ -14,11 +15,11 @@ describe('LoginComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
       // Adding the RouterTestingModule dependency
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, FormsModule],
       // Added the dependencies InputCheckService, FormBuilder
       providers: [InputCheckService, FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   /* Executed before each test case, creates a LoginComponent */
@@ -28,10 +29,47 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  /* Test cases */
   // Checks whether the component gets created
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should login with valid input', () => {
+    // Sets a valid input
+    component.loginForm.setValue({ username: 'username_test', password: 'password_test' });
+    // Creates the spy for checklogin
+    let spy = spyOn(component, "checkLogin");
+    // Calls the function to be tested
+    component.loginSubmit();
+    // Checks results
+    expect(component.loginForm.value.username).toBe("username_test");
+    expect(component.loginForm.value.password).toBe("password_test");
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should throw an error because of an invalid username', () => {
+    // Sets a valid input
+    component.loginForm.setValue({ username: '', password: 'password_test' });
+    // Creates spy for the toast
+    let spyToast = spyOn(component["toastCommService"], "emitChange");
+    // Calls the function to be tested
+    component.loginSubmit();
+    // Checks the results
+    expect(component.loginForm.value.username).toBe("");
+    expect(component.loginForm.value.password).toBe("password_test");
+    expect(spyToast).toHaveBeenCalledWith([false, 'Please fill in a username and password'])
+  });
+
+  it('should throw an error because of an invalid password', () => {
+    // Sets a valid input
+    component.loginForm.setValue({ username: 'yayaya', password: '' });
+    // Creates spy for the toast
+    let spyToast = spyOn(component["toastCommService"], "emitChange");
+    // Calls the function to be tested
+    component.loginSubmit();
+    // Checks the results
+    expect(component.loginForm.value.username).toBe("yayaya");
+    expect(component.loginForm.value.password).toBe("");
+    expect(spyToast).toHaveBeenCalledWith([false, 'Please fill in a username and password'])
+  });
 });

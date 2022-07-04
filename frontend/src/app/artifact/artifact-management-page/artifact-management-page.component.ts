@@ -32,7 +32,7 @@ export class ArtifactManagementPageComponent {
   // A page number maps to a list of artifacts on that page
   artifacts: Record<number, Array<StringArtifact>> = {};
   // Number of artifacts
-  nArtifacts: number = 0;
+  nArtifacts = 0;
   // Number of label types
   nLabelTypes: number;
 
@@ -48,7 +48,8 @@ export class ArtifactManagementPageComponent {
     search_term: ''
   });
 
-  frozen: boolean = true;
+  // Whether the project is frozen
+  frozen = true;
 
 
   /**
@@ -82,23 +83,21 @@ export class ArtifactManagementPageComponent {
   }
 
   /**
-   * Function for searching based on clicking on the maginifying glass
+   * Function for searching based on clicking on the magnifying glass
    */
-   searchClick(){
+  searchClick(): void {
     // Get the search image
-    let image = document.getElementById("searchBar")
-    if (image != null){
+    let searchBar = document.getElementById("searchBar")
+    if (searchBar != null){
       // On click event handler
-      image.onclick = (e) => {
-        if (image != null){
-          // Get placement of the image
-          var rect = image.getBoundingClientRect();
+      searchBar.onclick = (e) => {
+        if (searchBar != null){
           // Get clicked x coordinates
-          var x = e.clientX - rect.left;
+          var x = e.clientX - searchBar.getBoundingClientRect().left;
           // When clicked in the maginifying glass
-          if (x > 330){
+          if (x > 330) {
             // Search
-            this.onEnter()
+            this.onEnter();
           }
         }
       }
@@ -107,8 +106,6 @@ export class ArtifactManagementPageComponent {
 
   /**
    * Sets the artifacts of a specific project from artifact-data.service
-   * 
-   * @param p_id the id of the project
    */
   async getArtifacts(): Promise<void> {
 
@@ -168,27 +165,23 @@ export class ArtifactManagementPageComponent {
     // Changes the route accordingly
     this.router.navigate(['/project', p_id, 'singleartifact', a_id]);
   }
-  
+
   // Open the modal
-  open() {
+  open(): void {
     const modalRef = this.modalService.open(AddArtifactComponent, { size: 'lg' });
-    modalRef.result.then((data) => {
+    modalRef.result.then(() => {
       this.ngOnInit();
     });
-
   }  
   
   // Gets the search text
-  async onEnter() {
-
-    // Get p_id
-    let p_id = Number(this.routeService.getProjectID(this.url));
-
+  async onEnter(): Promise<void> {
     // Search text
     var text = this.searchForm.value.search_term;
-
+    // Get p_id
+    let p_id = Number(this.routeService.getProjectID(this.url));
     // If nothing was searched
-    if(text.length == 0){
+    if (text.length == 0) {
       // Clear cache and show all artifacts
       this.artifacts = {};
       await this.getArtifacts();
@@ -197,7 +190,7 @@ export class ArtifactManagementPageComponent {
 
       // Pass the search word to services
       let artifactsSearched = await this.artifactDataService.search(text, p_id);
-
+      
       // List for the artifacts resulting from the search
       let artifactList: Array<StringArtifact> = [];
       // For loop through all searched artifacts
@@ -227,8 +220,8 @@ export class ArtifactManagementPageComponent {
    * Function that returns the number of users who gave a set of labellings
    * @param labellings: number, the number of labellings
    */
-  getNumberUsers(labellings: number): string|number{
-    if(labellings % this.nLabelTypes != 0) {
+  getNumberUsers(labellings: number): string | number{
+    if(this.nLabelTypes == 0 || labellings % this.nLabelTypes != 0) {
       this.toastCommService.emitChange([false, "Something is wrong with the labellings"]);
       return "Cannot compute";
     }

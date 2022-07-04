@@ -66,7 +66,7 @@ export class Theme {
     * @param themeName 
     */
     setName(name: string): void {
-        if ( name == undefined || typeof name != "string" || name.length < 0) {
+        if (name == undefined || typeof name != "string" || name.length < 0) {
             throw new Error("The theme name should not be of length 0 as an argument in setName()");
         }
         this.name = name;
@@ -86,7 +86,7 @@ export class Theme {
     * @param desc 
     */
     setDesc(desc: string): void {
-        if ( desc == undefined || typeof desc != "string" || desc.length < 0) {
+        if (desc == undefined || typeof desc != "string" || desc.length < 0) {
             throw new Error("The theme description should not be of length 0 as an argument in setDesc()");
         }
         this.desc = desc;
@@ -150,7 +150,7 @@ export class Theme {
     * Sets the theme's labels 
     * @param labels
     */
-    setLabels(labels: Array<Label> ): void {
+    setLabels(labels: Array<Label>): void {
         // Set the labels
         this.labels = labels;
         // Change the number of labels to the new length

@@ -6,7 +6,7 @@ from src.models.item_models import Artifact, LabelType
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, distinct
 from src.models.item_models import Labelling, Label
-from src.models.auth_models import UserSchema, User
+from src.models.auth_models import User
 from src.models import db
 from src.app_util import login_required, check_args, in_project
 
@@ -27,10 +27,10 @@ def nr_project_conflicts(p_id):
         Labelling.lt_id,
         # Distinct labels for a label type (renamed to 'label_count')
         func.count(distinct(Labelling.l_id)).label('label_count')
-    # In the given project
+        # In the given project
     ).where(
         Labelling.p_id == p_id
-    # Grouped by artifacts and by label type
+        # Grouped by artifacts and by label type
     ).group_by(
         Labelling.a_id,
         Labelling.lt_id
@@ -65,6 +65,7 @@ def nr_project_conflicts(p_id):
 
     return result
 
+
 """
 Author: Eduardo Costa Martins
 @params p_id: int, id of the project
@@ -83,9 +84,9 @@ def nr_user_conflicts(p_id):
         func.count(distinct(Labelling.l_id)).label('label_count')
     ).where(
         Labelling.p_id == p_id
-    # Grouped by artifacts and by label type
+        # Grouped by artifacts and by label type
     ).group_by(
-        Labelling.a_id, 
+        Labelling.a_id,
         Labelling.lt_id
     ).subquery()
 
@@ -95,24 +96,25 @@ def nr_user_conflicts(p_id):
         per_label_type.c.a_id,
         # Number of conflicts (replace count with a_id?)
         func.count(per_label_type.c.lt_id).label('conflict_count')
-    # Counts as a conflict if there is more than one distinct label for a label type
+        # Counts as a conflict if there is more than one distinct label for a label type
     ).where(
         per_label_type.c.label_count > 1
-    # Grouped by artifact
+        # Grouped by artifact
     ).group_by(
         per_label_type.c.a_id
     ).subquery()
 
     # Pair each user with artifacts they have labelled and the conflicts for that artifact
     per_user_artifact = select(
-        Labelling.u_id, Labelling.a_id, per_artifact.c.conflict_count.label('conflict_count')
+        Labelling.u_id, Labelling.a_id, per_artifact.c.conflict_count.label(
+            'conflict_count')
     ).where(
         Labelling.a_id == per_artifact.c.a_id
     ).group_by(
         Labelling.a_id, Labelling.u_id
     ).subquery()
 
-    # Sum the number of conflicts for each user 
+    # Sum the number of conflicts for each user
     # (which is summing the conflicts for each artifact the user has labelled)
     per_user = select(
         per_user_artifact.c.u_id, func.sum(per_user_artifact.c.conflict_count)
@@ -129,6 +131,7 @@ def nr_user_conflicts(p_id):
     )
 
     return results
+
 
 """"
 Author: Ana-Maria Olteniceanu
@@ -155,12 +158,12 @@ def project_conflicts(p_id, admin, u_id):
         Labelling.lt_id,
         # Distinct labels for a label type (renamed to 'label_count')
         func.count(distinct(Labelling.l_id)).label('label_count')
-    # In the given project
+        # In the given project
     ).where(
         Labelling.p_id == p_id)
     if not admin:
         per_label_type = per_label_type.where(Labelling.a_id.in_(a_per_user))
-    
+
     # Grouped by artifacts and by label type
     per_label_type = per_label_type.group_by(
         Labelling.a_id,
@@ -173,7 +176,7 @@ def project_conflicts(p_id, admin, u_id):
         per_label_type.c.a_id,
         # Label type id of the conflict
         per_label_type.c.lt_id
-    # Counts as a conflict if there is more than one distinct label for a label type
+        # Counts as a conflict if there is more than one distinct label for a label type
     ).where(
         per_label_type.c.label_count > 1
     )
@@ -182,7 +185,7 @@ def project_conflicts(p_id, admin, u_id):
     artifacts_with_conflicts = select(
         # Artifact id
         per_label_type.c.a_id,
-    # Counts as a conflict if there is more than one distinct label for a label type
+        # Counts as a conflict if there is more than one distinct label for a label type
     ).where(
         per_label_type.c.label_count > 1
     )
@@ -192,16 +195,18 @@ def project_conflicts(p_id, admin, u_id):
         # Label type id
         per_label_type.c.lt_id,
     ).where(
-    # Counts as a conflict if there is more than one distinct label for a label type
+        # Counts as a conflict if there is more than one distinct label for a label type
         per_label_type.c.label_count > 1
     )
 
     # Get the list of conflicts
     conflicts = db.session.execute(per_artifact).all()
     # Get the list of artifacts with conflicts
-    artifacts = set(db.session.scalars(select(Artifact).where(Artifact.id.in_(artifacts_with_conflicts))).all())
+    artifacts = set(db.session.scalars(select(Artifact).where(
+        Artifact.id.in_(artifacts_with_conflicts))).all())
     # Get the list of label types with conflicts
-    label_types = set(db.session.scalars(select(LabelType).where(LabelType.id.in_(label_types_with_conflicts))).all())
+    label_types = set(db.session.scalars(select(LabelType).where(
+        LabelType.id.in_(label_types_with_conflicts))).all())
 
     # Dictionary mapping all ids of artifacts with artifact objects
     conflict_artifacts = {}
@@ -217,7 +222,7 @@ def project_conflicts(p_id, admin, u_id):
     info_list = []
 
     # User schema to serialize users
-    user_schema = UserSchema()
+    user_schema = User.__marshmallow__()
 
     # Add a dictionary of conflict data to the list of dictionaries
     for conflict in conflicts:
@@ -231,13 +236,13 @@ def project_conflicts(p_id, admin, u_id):
             "lt_name": conflict_label_types[conflict[1]].name,
             "users": user_schema.dump(users, many=True)
             }
+        
         # Add the dictionary to the list of dictionaries
         info_list.append(info)
 
-    # Jsonify the list of dictionaries
-    json_list = jsonify(info_list)
     # Return the list
-    return json_list
+    return info_list
+
 
 """
 Route to send conflict information to the frontend
@@ -255,7 +260,7 @@ Route to send conflict information to the frontend
 @login_required
 @in_project
 def conflict_management_page(*, user, membership):
-    # Get args 
+    # Get args
     args = request.args
 
     # What args are required
@@ -265,14 +270,14 @@ def conflict_management_page(*, user, membership):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
-    #Assigning project ID
+    # Assigning project ID
     p_id = args['p_id']
 
-    return make_response(project_conflicts(p_id, membership.admin, user.id))
+    return make_response(jsonify(project_conflicts(p_id, membership.admin, user.id)))
 """
 Author: Linh Nguyen & Ana-Maria Olteniceanu
 Route to send labelling made by a specific user concerning a certain conflict to the frontend
-@returns list of dictionaries of the form:
+@returns dictionary with username as key and value is dictionary of the form:
 {
     u_id: user ID
     id: label ID
@@ -285,7 +290,7 @@ Route to send labelling made by a specific user concerning a certain conflict to
 @login_required
 @in_project
 def single_label_per_user():
-    # Get args 
+    # Get args
     args = request.args
 
     # What args are required
@@ -296,16 +301,18 @@ def single_label_per_user():
         return make_response('Bad Request', 400)
 
     # Subquery to select the user ids of the users who made a labelling of this label id
-    user_per_lt = select(Labelling.u_id).where(Labelling.lt_id==args['lt_id'])
+    user_per_lt = select(Labelling.u_id).where(
+        Labelling.lt_id == args['lt_id'])
 
     # Get the usernames, the label names and the descriptions of the labels given to this artifact
     userInfo = db.session.execute(select(distinct(User.username), User.id, Labelling.l_id, Label.name, Label.description)
-    .where(User.id.in_(user_per_lt), User.id==Labelling.u_id, Labelling.l_id == Label.id,
-     Labelling.lt_id==args['lt_id'], Labelling.a_id==args['a_id'])).all()
+                                  .where(User.id.in_(user_per_lt), User.id == Labelling.u_id, Labelling.l_id == Label.id,
+                                         Labelling.lt_id == args['lt_id'], Labelling.a_id == args['a_id'])).all()
 
-    #Processing the response from the database to send to the front-end label ID, name and description
+    # Processing the response from the database to send to the front-end label ID, name and description
     response = {}
     for labeller in userInfo:
-        response[labeller[0]] = {"u_id": labeller[1], "id": labeller[2], "name": labeller[3], "description": labeller[4], "lt_id": args['lt_id']}
+        response[labeller[0]] = {"u_id": labeller[1], "id": labeller[2],
+                                 "name": labeller[3], "description": labeller[4], "lt_id": args['lt_id']}
 
     return make_response(response)

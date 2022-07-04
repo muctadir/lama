@@ -145,6 +145,4 @@ describe('LabelType', () => {
       labelType2.removeLabel(wrongId);
     } catch (error) { }
   });
-
-
 });

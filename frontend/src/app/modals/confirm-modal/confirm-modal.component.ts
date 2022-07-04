@@ -16,9 +16,9 @@ export class ConfirmModalComponent {
    * @param activeModal instance of NgbActiveModal
    * @param route instance of Router
    */
-   constructor(public activeModal: NgbActiveModal, private route: Router) { }
+  constructor(public activeModal: NgbActiveModal, private route: Router) { }
 
-  confirm() : void {
+  confirm(): void {
     this.confirmEvent.emit(true);
     this.activeModal.close();
   }

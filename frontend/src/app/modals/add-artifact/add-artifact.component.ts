@@ -26,7 +26,7 @@ export class AddArtifactComponent {
   url: string;
 
   /* Whether the message is an error */
-  error: boolean = false;
+  error = false;
 
   /**
    * Initializes the modal
@@ -39,11 +39,11 @@ export class AddArtifactComponent {
     private artifactDataService: ArtifactDataService,
     private toastCommService: ToastCommService,
     private router: Router) {
-       this.file = null;
-       this.p_id = 0;
-       this.routeService = new ReroutingService();
-       this.url = this.router.url;
-     }
+    this.file = null;
+    this.p_id = 0;
+    this.routeService = new ReroutingService();
+    this.url = this.router.url;
+  }
 
   /**
    * Stores the file uploaded by the user to the @file variable
@@ -77,7 +77,7 @@ export class AddArtifactComponent {
    * @modifies message, error
    *
    */
-  fileUpload(): void {
+  async fileUpload(): Promise<void> {
     // Make sure error is reset
     this.error = false;
 
@@ -89,10 +89,9 @@ export class AddArtifactComponent {
 
     // Try reading the file
     try {
-      this.readFile().then(async (added_artifacts) => {
+      await this.readFile().then(async (added_artifacts) => {
         // Checks if any artifacts have been read from the file
         if (added_artifacts.length == 0) {
-
           // If no artifacts were added and no error was detected,
           // make an error message
           if (!this.error) {
@@ -102,7 +101,7 @@ export class AddArtifactComponent {
         }
 
         // Stop if an error has been found
-        if (this.error)  return;
+        if (this.error) return;
 
         // Put the artifacts from the file in artifacts
         artifacts = added_artifacts;
@@ -127,7 +126,7 @@ export class AddArtifactComponent {
         try {
           // Add the artifacts to the backend
           await this.addArtifacts(p_id, allArtifacts)
-        } catch(e) {
+        } catch (e) {
         }
         // Close modal
         this.activeModal.close();
@@ -147,12 +146,12 @@ export class AddArtifactComponent {
        * @param pid number, the id of the project
        * @param artifacts record, has the data of all the artifacts that need to be added
        */
-  async addArtifacts(pid: number, artifacts: Record<string, any>[]) {
+  async addArtifacts(pid: number, artifacts: Record<string, any>[]): Promise<void> {
     let response = await this.artifactDataService.addArtifacts(pid, artifacts);
     // Indicates that the upload was successful
     this.toastCommService.emitChange([true, "Upload successful. Artifact identifier: ".concat(response['identifier'])])
-    if(!response['admin']) {
-      this.toastCommService.emitChange([false, 
+    if (!response['admin']) {
+      this.toastCommService.emitChange([false,
         "You are not admin, so you will not be able to see the artifacts you have not labelled"])
     }
     this.error = false;
@@ -164,24 +163,20 @@ export class AddArtifactComponent {
    * 
    * @returns an array of strings that contains the artifacts from this.file
    */
-  private async readFile(): Promise<Array<string>> {
+  async readFile(): Promise<Array<string>> {
     // Checks whether the file is a text file, if not displays error
     if (this.file?.type != "text/plain") {
       // Ensures an error message is displayed
       this.toastCommService.emitChange([false, "Invalid file type, should be .txt"])
       this.error = true;
       // Exists function
-      return new Promise((resolve) => {
-        resolve([])
-      })
+      return [];
     }
 
     // Creates a FileReader object, will be used to read the content of a file
     var myReader: FileReader = new FileReader();
-
     // Starts reading the file
     myReader.readAsText(this.file);
-
     // Behaviour of what happens when a file is read
     return new Promise((resolve) => {
       myReader.onloadend = () => {

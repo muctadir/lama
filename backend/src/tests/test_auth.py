@@ -3,12 +3,10 @@
 from sqlalchemy import select
 from src import db
 from src.models.auth_models import User, UserStatus
-from src.routes.auth_routes import check_format, taken
+from src.routes.auth_routes import taken
 from werkzeug.security import check_password_hash
 from jwt import decode
 from src.conftest import RequestHandler
-
-# TODO: Test check_format() seperately
 
 def test_register(app, client):
 
@@ -23,16 +21,17 @@ def test_register(app, client):
         response = request_handler.post('/auth/register', {
             'username': "Eduardo",
             'email': "god_level@programmer.com",
-            'password' : "secure-password",
-            'passwordR' : "secure-password",
-            'description' : "Help, how do I get out of here?"
+            'password': "secure-password",
+            'passwordR': "secure-password",
+            'description': "Help, how do I get out of here?"
         }, False)
 
         # Status code should be Created
         assert response.status_code == 201
 
         # Get the user we created
-        entry = db.session.scalar(select(User).where(User.username == "Eduardo"))
+        entry = db.session.scalar(
+            select(User).where(User.username == "Eduardo"))
 
         # Check that the user was created correctly
         assert entry.username == "Eduardo"
@@ -42,6 +41,7 @@ def test_register(app, client):
         # assert entry.status == UserStatus.pending
         # Note: since we did not implement super admin approval of users, the status defaults to approved
         assert entry.status == UserStatus.approved
+
 
 def test_login(app, client):
 
@@ -66,6 +66,7 @@ def test_login(app, client):
     }
     login_helper(app, client, login_details, "Invalid username or password")
 
+
 def test_taken(app):
 
     with app.app_context():
@@ -73,6 +74,7 @@ def test_taken(app):
         assert taken('name_not_taken', 'user1@test.com')
         assert taken('ùser1', 'user1@test.com')
         assert not taken('name_not_taken', 'email@not.taken')
+
 
 """
 Author: Eduardo Costa Martins
@@ -93,12 +95,14 @@ def login_helper(app, client, login_details, expected_text, u_id=None):
     # If it is a success code, we expect the token header to be provided
     if u_id is not None:
         # Assert that the headers we need exist
-        assert response.headers.get('Access-Control-Expose-Headers') == 'Content-Encoding, u_id_token'
+        assert response.headers.get(
+            'Access-Control-Expose-Headers') == 'Content-Encoding, u_id_token'
         u_id_token = response.headers.get('u_id_token')
         # Assert that the token represents the correct user id
         assert u_id_token
-        assert decode(u_id_token, app.secret_key, algorithms=['HS256'])['u_id_token'] == u_id
+        assert decode(u_id_token, app.secret_key, algorithms=[
+                      'HS256'])['u_id_token'] == u_id
     else:
-        # FOr a failure we expect there not be a token
+        # For a failure we expect there not be a token
         assert not response.headers.get('u_id_token')
         assert not response.headers.get('Access-Control-Expose-Headers')

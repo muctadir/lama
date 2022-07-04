@@ -16,11 +16,11 @@ export class NavigationMenuComponent {
    * Changes the sizing of the navigation component 
    * based on whether the menu should be collapsed or not
    */
-  @HostBinding('style.width') get className() { 
+  @HostBinding('style.width') get className(): string {
     // if the navigation bar is collapsed set size to col-1
     if (this.collapsed) {
       return '8.3333333333%';
-    } 
+    }
     // if the navigation bar is not collapsed set size to col-3
     else {
       return '25%';
@@ -37,17 +37,27 @@ export class NavigationMenuComponent {
    * Subscribes to the router events, when the routing changes updates the icon highlighted
    * in the navigation bar accordingly
    * 
-   * Also creates instance of NgbModal
+   * Also creates instance of NgbModal, ReroutingService, ToastCommService
    * 
    * @param router Instance of the Router class used to get info about the current route
    * @param modalService Instance of the NgbModal 
+   * @param routeService instance of ReroutingService
+   * @param toastCommService instance of ToastCommService
    * 
    * @trigger when the route changes
-   * @modifies page 
    */
-  constructor(private router: Router, 
-    private toastCommService: ToastCommService, 
-    private modalService: NgbModal) {
+  constructor(private router: Router,
+    private toastCommService: ToastCommService,
+    private modalService: NgbModal,
+    private routeService: ReroutingService) {
+  }
+
+  /**
+   * Ensures that the correct icon is highlighted
+   * 
+   * @trigger on component creation, and when route is changed
+   */
+  ngOnInit(): void {
     // Ensures that the currently highlighted icon is correct
     this.evalURL(this.router.url);
 
@@ -67,7 +77,7 @@ export class NavigationMenuComponent {
    * @param new_route the url
    * @modifies page
    */
-  evalURL(new_route: string) : void {
+  evalURL(new_route: string): void {
     if (new_route.includes("stats")) {
       // highlights stats page icon
       this.page = 0;
@@ -86,10 +96,9 @@ export class NavigationMenuComponent {
     } else if (new_route.includes("conflict")) {
       // highlights conflict management page icon
       this.page = 5;
-    }
-      else if (new_route.includes("settings")) {
+    } else if (new_route.includes("settings")) {
       // highlights settings page icon
-      this.page =6;
+      this.page = 6;
     }
   }
 
@@ -99,7 +108,7 @@ export class NavigationMenuComponent {
    * @trigger when the top most icon is clicked in the navigation menu
    * @modifies collapsed
    */
-  changeSize() : void {
+  changeSize(): void {
     this.collapsed = !this.collapsed;
   }
 
@@ -109,32 +118,27 @@ export class NavigationMenuComponent {
    * @param next_page new page the user wants to see
    * @trigger onclick nav menu
    */
-  changePage(next_page : string) : void  {
-    // Removes the first character from the route
-    let url : string = this.router.url;
-
-    // Initialize the ReroutingService
-    let routeService: ReroutingService = new ReroutingService();
+  changePage(next_page: string): void {
     // Use reroutingService to obtain the project ID
-    let p_id = routeService.getProjectID(url);
-    
-    // Changes the route accordingly
+    let p_id = this.routeService.getProjectID(this.router.url);
+
+    // Changes the route to the requested page
     this.router.navigate(['/project', p_id, next_page]);
   }
 
   /**
-   * Opens the confirm modal and log outs
+   * Opens the confirm modal and listen for confirm event to be emitted
    * 
    * @trigger logout button clicked
    */
-  openLogout() : void {
-    // opens logout modal
+  openLogout(): void {
+    // Opens logout modal
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
     // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       // If a confirmEvent = true is emitted we delete the user
-      if($e) {
+      if ($e) {
         // Drops the session token
         sessionStorage.removeItem('ses_token');
 
@@ -146,5 +150,4 @@ export class NavigationMenuComponent {
       }
     })
   }
-
 }

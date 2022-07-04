@@ -2,9 +2,8 @@
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { RequestHandler } from 'app/classes/RequestHandler';
 import { User } from 'app/classes/user';
-import { Router } from '@angular/router';
+import { AccountInfoService } from 'app/services/account-info.service';
 import { InputCheckService } from 'app/services/input-check.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
@@ -30,9 +29,15 @@ export class EditAccountSettingsComponent {
   /**
    * Initializes the form builder
    * 
-   * @param formBuilder instance of form builder
+   * @param formBuilder instance of FormBuilder
+   * @param toastCommService instance of ToastCommService
+   * @param accountInfoService instance of AccountInfoService
+   * @param service instance of the InputCheckService
    */
-  constructor(private formBuilder: FormBuilder, private router: Router, private toastCommService: ToastCommService) { }
+  constructor(private formBuilder: FormBuilder,
+    private toastCommService: ToastCommService,
+    private accountInfoService: AccountInfoService,
+    private service: InputCheckService) { }
 
   /**
    * When the userAccount gets modified it ensures that this change is communicated 
@@ -41,9 +46,9 @@ export class EditAccountSettingsComponent {
    * @trigger change occurs in the component
    * @modifies accountForm
    */
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.accountForm.setValue({
-      username: this.userAccount.getUsername(), 
+      username: this.userAccount.getUsername(),
       email: this.userAccount.getEmail(),
       description: this.userAccount.getDesc()
     });
@@ -55,15 +60,15 @@ export class EditAccountSettingsComponent {
    * @trigger Change button is clicked
    * @modifies errorMsg
    */
-  changeInformation() {
+  changeInformation(): void {
     // Creates object which will be send to the backend
     let accountInformation: Record<string, any> = {};
-    
+
     // Enters the data into the object
     accountInformation = {
       "id": this.userAccount.getId(),
-      "username" : this.accountForm.value.username,
-      "description" : this.accountForm.value.description,
+      "username": this.accountForm.value.username,
+      "description": this.accountForm.value.description,
       "email": this.accountForm.value.email
     };
 
@@ -83,14 +88,11 @@ export class EditAccountSettingsComponent {
    * @returns whether input is valid
    * @trigger on click of change button
    */
-  checkInput() : boolean {
-    // Initializes inputCheckService
-    let service : InputCheckService = new InputCheckService();
-
+  checkInput(): boolean {
     // Checks input
-    return service.checkFilled(this.accountForm.value.username) && 
-      service.checkFilled(this.accountForm.value.email) &&
-      service.checkEmail(this.accountForm.value.email);
+    return this.service.checkFilled(this.accountForm.value.username) &&
+      this.service.checkFilled(this.accountForm.value.email) &&
+      this.service.checkEmail(this.accountForm.value.email);
   }
 
   /**
@@ -99,42 +101,17 @@ export class EditAccountSettingsComponent {
    * @param accountInformation object containing account info
    * @trigger on click of change button
    */
-  async makeRequest(accountInformation: Record<string, any>) {
-    // Gets the authentication toekn
-    let token: string | null  = sessionStorage.getItem('ses_token');
-
-    // Initializes request handler and makes request
-    let requestHandler: RequestHandler = new RequestHandler(token);
+  async makeRequest(accountInformation: Record<string, any>): Promise<void> {
+    // Tries to make the backend request
     try {
-      let response: any = requestHandler.post("/account/edit", accountInformation, true);
-
-      // Waits on the request
-      let result = await response;
-
+      await this.accountInfoService.changeAccountDetails(accountInformation);
       // Reloads the page, goes back to the info page
-      if (result.includes("Updated succesfully")) {
-        this.modeChangeEvent.emit(0);
-      }
-      
+      this.modeChangeEvent.emit(0);
       // Emits a success toast
       this.toastCommService.emitChange([true, "Modification successful"]);
-
-    } catch(e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if the error has whitespaces
-      } else if (e.response.data == "Input contains leading or trailing whitespaces"){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Username or email taken"){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Username or email taken"]);
-      } else {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Please enter valid details!"]);
-      }
+    } catch (e: any) {
+      // Toast with error message
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 

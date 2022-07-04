@@ -1,10 +1,10 @@
 # Author: Eduardo Costa Martins
-from src.app_util import check_args
+from src.app_util import check_args, login_required, in_project
 from src.models.auth_models import User
 from src import db
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, or_
-from src.app_util import login_required, in_project, parse_change
+from src.parser import parse_change
 from sys import modules
 
 change_routes = Blueprint('change', __name__, url_prefix='/change')
@@ -22,7 +22,7 @@ Returns a list of dicts of the form:
 @change_routes.route('/changes', methods=['GET'])
 @login_required
 @in_project
-def get_changes(*, user, membership):
+def get_parsed_changes(*, user, membership):
 
     # Arguments provided
     args = request.args
@@ -39,12 +39,12 @@ def get_changes(*, user, membership):
         getattr(
             # Look in the item_models module (modules are objects)
             modules['src.models.item_models'],
-            # The class is an attribute of a module object 
-            args['item_type'], 
+            # The class is an attribute of a module object
+            args['item_type'],
             # Default to NoneType object if an item with this name does not exist
-            None), 
+            None),
         # The __change__ attribute of a changing item gives the change class
-        '__change__', 
+        '__change__',
         # Default to None if this object does not have a changelog
         None
     )
@@ -54,9 +54,11 @@ def get_changes(*, user, membership):
         return make_response('Bad Request', 400)
 
     # Get parsed changelog
-    changes = jsonify(get_changes(ItemChangeClass, args['i_id'], user.id, membership.admin, args['p_id']))
+    changes = jsonify(get_parsed_changes(
+        ItemChangeClass, args['i_id'], user.id, membership.admin, args['p_id']))
 
     return make_response(changes)
+
 
 """
 Returns a list of parsed changes for a given item. Each change is a dictionary of the form
@@ -71,7 +73,7 @@ Returns a list of parsed changes for a given item. Each change is a dictionary o
 @param admin: If the user requesting the changes is an admin
 @param p_id: The id of the project that the item belongs to
 """
-def get_changes(ChangeClass, i_id, u_id, admin, p_id):
+def get_parsed_changes(ChangeClass, i_id, u_id, admin, p_id):
 
     changes = db.session.execute(select(
         # Get the change and the username of the person that made the change
@@ -89,7 +91,7 @@ def get_changes(ChangeClass, i_id, u_id, admin, p_id):
         ChangeClass.p_id == p_id
     ).order_by(
         # Newest changes first
-        ChangeClass.timestamp.desc()
+        ChangeClass.id.desc()
     )).all()
 
     # Convert to relevant format to be used for frontend

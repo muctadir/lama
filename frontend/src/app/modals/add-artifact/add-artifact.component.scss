@@ -1,26 +1,13 @@
 //Section for adding artifact
-#addArtifacts{
+#addArtifacts {
     text-align: left;
     font-size: 35px;
 }
+
 //row for buttons used
-#buttonRow{
+#buttonRow {
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-// Markup for the message displayed on success
-#success-msg {
-    color: green;
-    font-size: 14px;
-    padding-left: 30px;
-}
-
-// Markup for the message displayed on error
-#error-msg {
-    color: red;
-    font-size: 14px;
-    padding-left: 30px;
 }
 
 // Make the highlight around the buttons none
@@ -29,19 +16,18 @@
 }
 
 // Upload file input
-#customFile:focus{
+#customFile:focus {
     box-shadow: none;
     outline: none;
 }
 
 // Upload button
-#btn-upload{
+#btn-upload {
     border: none;
-    margin-left:10px;
+    margin-left: 10px;
 }
 
 // Width of the buttonspython --version
-.btn{
+.btn {
     width: 150px;
 }
-

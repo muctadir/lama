@@ -63,7 +63,7 @@ export class StringArtifact extends Artifact {
     getEnd(): number | undefined {
         return this.end;
     }
-    
+
     /**
      * sets the end
      * @params end

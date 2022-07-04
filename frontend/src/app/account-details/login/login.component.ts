@@ -7,7 +7,6 @@ import axios from 'axios';
 import { InputCheckService } from 'app/services/input-check.service';
 import { Router } from '@angular/router';
 import { ToastCommService } from 'app/services/toast-comm.service';
-import { AccountInfoService } from 'app/services/account-info.service';
 import { environment } from 'environments/environment';
 
 /**
@@ -41,9 +40,8 @@ export class LoginComponent {
     private formBuilder: FormBuilder,
     private service: InputCheckService,
     private route: Router,
-    private toastCommService: ToastCommService,
-    private accountInfoService: AccountInfoService
-  ) {}
+    private toastCommService: ToastCommService
+  ) { }
 
   /**
    * Checks whether the input is valid, if it is valid, removes error message and calls login function
@@ -61,10 +59,7 @@ export class LoginComponent {
 
     // Checks input
     if (!not_empty) {
-      this.toastCommService.emitChange([
-        false,
-        'Please fill in a username and password',
-      ]);
+      this.toastCommService.emitChange([false, 'Please fill in a username and password']);
       return;
     }
     this.checkLogin();
@@ -77,8 +72,7 @@ export class LoginComponent {
    * in further communication with the backend.
    *
    * @trigger After clicking login button and basic input checks succeed
-   *
-   * @modifies errorMsg, route
+   * @modifies route
    */
   checkLogin(): void {
     // Creates the object with the user filled info

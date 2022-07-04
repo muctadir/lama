@@ -25,12 +25,6 @@ $light-grey-shade: #bfbfbf;
     cursor: pointer;
 }
 
-// Sets layout of the error message that is displayed when register input is incorrect
-#infoMessage {
-    color: $orange-shade;
-    font-size: 15px;
-}
-
 // Buttons
 .editButtons {
     border: none;
@@ -54,13 +48,7 @@ $light-grey-shade: #bfbfbf;
     padding-bottom: 2%;
 }
 
-// Line between things
-hr {
-    height: 2px;
-    color: $light-grey-shade;
-}
-
 // Text field for personal description
-#description{
+#description {
     resize: none;
 }

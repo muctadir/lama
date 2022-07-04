@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { AppToastService } from 'app/services/app-toast.service';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
-@Component({ 
-  selector: 'ngbd-toast-global', 
+@Component({
+  selector: 'ngbd-toast-global',
   styleUrls: ['./toast-global.component.scss'],
   templateUrl: './toast-global.component.html'
 })

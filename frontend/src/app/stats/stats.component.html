@@ -8,12 +8,13 @@
             <p class="header">Statistics</p>
         </div>
 
-        <!-- Button for going to the labelling page -->  
-        <div class="col">            
-            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="reRouter()" [disabled]="frozen">
+        <!-- Button for going to the labelling page -->
+        <div class="col">
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="reRouter()"
+                [disabled]="frozen">
                 Start labelling
                 <em class="bi bi-plus"></em>
-            </button>                
+            </button>
         </div>
     </div>
 
@@ -42,10 +43,10 @@
             <!-- Progress bar -->
             <div class="progress">
                 <!-- Calculating progress bar and other values -->
-                <div class="progress-bar" role="progressbar" attr.aria-valuenow = {{project.getNumberOfCLArtifacts()}}
-                aria-valuemin="0" attr.aria-valuemax={{project.getNumberOfArtifacts()}}
-                [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
-                style="background-color:#ED5A06 !important;"> 
+                <div class="progress-bar" role="progressbar" attr.aria-valuenow={{project.getNumberOfCLArtifacts()}}
+                    aria-valuemin="0" attr.aria-valuemax={{project.getNumberOfArtifacts()}}
+                    [style.width]="(project.getNumberOfCLArtifacts() / project.getNumberOfArtifacts())*100 + '%'"
+                    style="background-color:#ED5A06 !important;">
                 </div>
             </div>
         </div>
@@ -54,70 +55,85 @@
         <div class="col-2">{{project.getNumberOfCLArtifacts()}} / {{project.getNumberOfArtifacts()}}</div>
         <div class="col">
             <div>
-                <p class="left">{{conflicts}}</p> 
+                <p class="left">{{conflicts}}</p>
                 <em class="left bi bi-binoculars" id="bino-icon" ngbTooltip="Conflicts"></em>
             </div>
             <div class="col" id="labels">
                 <div>
-                    <p class="left">{{labels}}</p> 
+                    <p class="left">{{labels}}</p>
                     <em class="left bi bi-tags def" id="label-icon" ngbTooltip="Labels"></em>
                 </div>
-        </div>
-    </div>
-
-    <!-- Shows the "user stats" text and the number of users and icon -->
-    <div class="row" id="user-stats-box">
-        <div class="col-1"></div>
-        <div class="col">
-            <div>
-                <!--  -->
-                <div class="left page-splitter">User stats</div>
-                <em class="left bi bi-person" id="person-icon" ngbTooltip="Users"></em>
-                <p class="left text-margin">{{project.getNumberOfUsers()}}</p>
             </div>
         </div>
-    </div>
 
-    <!-- Shows the table with all the users and their contribution -->
-    <div class="row" id="table">
-        <div class="col-1"></div>
-        <div class="col-10">
-            <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
-                <table class="table table-hover" id="labelTable">
+        <!-- Shows the "user stats" text and the number of users and icon -->
+        <div class="row" id="user-stats-box">
+            <div class="col-1"></div>
+            <div class="col">
+                <div>
+                    <!--  -->
+                    <div class="left page-splitter">User stats</div>
+                    <em class="left bi bi-person" id="person-icon" ngbTooltip="Users"></em>
+                    <p class="left text-margin">{{project.getNumberOfUsers()}}</p>
+                </div>
+            </div>
+        </div>
 
-                    <!--Table Headers-->
-                    <thead>
-                        <tr>
-                            <!-- Column with usernames -->
-                            <th scope="col"><p class="tableheader">User</p></th>
-                            <!-- Column with number of artifacts labelled by user -->
-                            <th scope="col"><p class="tableheader"># Labelled artifacts</p></th>
-                            <!-- Column with average time spent labelling by user -->
-                            <th scope="col"><p class="tableheader">Avg time per artifact</p></th>
-                            <!-- Column with number of conflicts user is involved in -->
-                            <th scope="col"><p class="tableheader"># Conflicts</p></th>
-                        </tr>
-                    </thead>
-                    <!--Table Content-->
-                    <tbody>
-                        <tr *ngFor="let user of user_contribution">
-                            <!-- Table with stats per user -->
+        <!-- Shows the table with all the users and their contribution -->
+        <div class="row" id="table">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="table-wrapper-scroll-y" id="scrolly">
+                    <table class="table table-hover" id="labelTable">
+
+                        <!--Table Headers-->
+                        <thead>
+                            <tr>
+                                <!-- Column with usernames -->
+                                <th scope="col">
+                                    <p class="tableheader">User</p>
+                                </th>
+                                <!-- Column with number of artifacts labelled by user -->
+                                <th scope="col">
+                                    <p class="tableheader"># Labelled artifacts</p>
+                                </th>
+                                <!-- Column with average time spent labelling by user -->
+                                <th scope="col">
+                                    <p class="tableheader">Avg time per artifact</p>
+                                </th>
+                                <!-- Column with number of conflicts user is involved in -->
+                                <th scope="col">
+                                    <p class="tableheader"># Conflicts</p>
+                                </th>
+                            </tr>
+                        </thead>
+                        <!--Table Content-->
+                        <tbody>
+                            <tr *ngFor="let user of user_contribution">
+                                <!-- Table with stats per user -->
                                 <!-- User's username -->
-                                <td><p class="tablecontent">{{user.username}} 
-                                    <!-- If user is superadmin, write that -->
-                                    <ng-container *ngIf="user.superadmin">(Superadmin)</ng-container>
-                                </p></td>
+                                <td>
+                                    <p class="tablecontent">{{user.username}}
+                                        <!-- If user is superadmin, write that -->
+                                        <ng-container *ngIf="user.superadmin">(Superadmin)</ng-container>
+                                    </p>
+                                </td>
                                 <!-- Number of artifacts the user labelled -->
-                                <td><p class="tablecontent">{{user.nr_labelled}}</p></td>
+                                <td>
+                                    <p class="tablecontent">{{user.nr_labelled}}</p>
+                                </td>
                                 <!-- Average time the user took to label artifacts -->
-                                <td><p class="tablecontent">{{user.time}}</p></td>
+                                <td>
+                                    <p class="tablecontent">{{user.time}}</p>
+                                </td>
                                 <!-- Number of conflicts the user is involved in -->
-                                <td><p class="tablecontent">{{user.nr_conflicts}}</p></td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <td>
+                                    <p class="tablecontent">{{user.nr_conflicts}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-    
-</div>

@@ -26,16 +26,21 @@ export class HomePageComponent implements OnInit {
   user: any;
 
   /**
-   * Initializes the modal service provided by bootstrap
+   * Initializes the modal service, projectDataService, AccountInfoService, ToastCommService, Router
    * 
    * @param modalService instance of modal
-   * @trigger on loads
+   * @param projectDataService instance of ProjectDataService
+   * @param accountService instance of AccountInfoService
+   * @param toastCommService instance of ToastCommService
+   * @param route instance of Router
+   * 
+   * @trigger on component load
    */
   constructor(private modalService: NgbModal,
     private projectDataService: ProjectDataService,
     private accountService: AccountInfoService,
     private toastCommService: ToastCommService,
-    private route: Router) {}
+    private route: Router) { }
 
   /**
    * When the component gets created calls function to gather all the projects that the user is a member of
@@ -65,19 +70,19 @@ export class HomePageComponent implements OnInit {
    * 
    * @trigger click on logout button
    */
-  openLogout() : void {
-    // opens logout modal
+  openLogout(): void {
+    // Opens logout modal
     let modalRef = this.modalService.open(ConfirmModalComponent, {});
 
-      // Listens for an event emitted by the modal
+    // Listens for an event emitted by the modal
     modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       // If a confirmEvent = true is emitted we delete the user
-      if($e) {
+      if ($e) {
         // Drops the session token
         sessionStorage.removeItem('ses_token');
 
         // Navigates to the login page
-        this.route.navigate(['/login'])
+        this.route.navigate(['/login']);
 
         // Logged out popup
         this.toastCommService.emitChange([true, "Logged out successfully"]);

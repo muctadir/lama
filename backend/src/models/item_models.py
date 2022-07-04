@@ -10,11 +10,11 @@ Relevant info:
                  these are accessed as attributes though (not as functions)
 """
 
-from src.models import db, ma
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, ForeignKeyConstraint, Table, UniqueConstraint
+from src.models import db
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
-from marshmallow import fields, post_dump
+
 
 @declarative_mixin
 class ProjectItem():
@@ -36,6 +36,7 @@ class ProjectItem():
     def project(cls):
         return relationship('Project', backref=cls.__tablename__ + 's')
 
+
 @declarative_mixin
 class ChangingItem(ProjectItem):
     """
@@ -49,7 +50,7 @@ class ChangingItem(ProjectItem):
     @declared_attr
     def change_class_name(cls):
         return cls.__name__ + 'Change'
-    
+
     @declared_attr
     def change_table_name(cls):
         return cls.__tablename__ + '_change'
@@ -58,19 +59,22 @@ class ChangingItem(ProjectItem):
     def changes(cls):
         # Somehow SQLAlchemy does not understand how to join two pairs of foreign keys
         # So we have to spell it out for it in primary join
-        return relationship(cls.change_class_name, 
-                back_populates='item',
-                primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.__name__, cls.change_class_name))
+        return relationship(cls.change_class_name,
+                            back_populates='item',
+                            primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.__name__, cls.change_class_name))
+
 
 class LabelType(ProjectItem, db.Model):
 
     __tablename__ = 'label_type'
-    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
-    
+    __table_args__ = (UniqueConstraint(
+        'p_id', 'name', name='project_uniqueness'), )
+
     name = Column(String(64), nullable=False)
 
     # A list of labels that are of this type
     labels = relationship('Label', back_populates='label_type', lazy='dynamic')
+
 
 class Artifact(ChangingItem, db.Model):
 
@@ -92,8 +96,8 @@ class Artifact(ChangingItem, db.Model):
     parent_id = Column(Integer, ForeignKey('artifact.id'))
     # Children is list of artifacts created from split
     # backref creates a parent attribute which is the split source (as an Artifact object)
-    children = relationship('Artifact', 
-            backref=backref('parent', remote_side='[Artifact.p_id, Artifact.id]'))
+    children = relationship('Artifact',
+                            backref=backref('parent', remote_side='[Artifact.p_id, Artifact.id]'))
 
     # Attributes for labelling relationship
     labellings = relationship('Labelling', back_populates='artifact')
@@ -103,23 +107,25 @@ class Artifact(ChangingItem, db.Model):
     labels = association_proxy('labellings', 'label')
     # List of users that have labelled this artifact
     users = association_proxy('labellings', 'user')
-    
+
     # All highlights on this artifact
     highlights = relationship('Highlight', back_populates='artifact')
+
 
 class Label(ChangingItem, db.Model):
 
     __tablename__ = 'label'
-    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
-    
+    __table_args__ = (UniqueConstraint(
+        'p_id', 'name', name='project_uniqueness'), )
+
     name = Column(String(64), nullable=False)
 
     # The id of the label type this label corresponds to
     lt_id = Column(Integer, ForeignKey('label_type.id'), nullable=False)
     # The actual label type object this label corresponds to
-    label_type = relationship('LabelType', 
-            primaryjoin='and_(LabelType.p_id==Label.p_id, LabelType.id==Label.lt_id)',
-            back_populates='labels')
+    label_type = relationship('LabelType',
+                              primaryjoin='and_(LabelType.p_id==Label.p_id, LabelType.id==Label.lt_id)',
+                              back_populates='labels')
     # Description of meaning of label
     description = Column(Text, nullable=False)
     # Boolean for if the label was (soft) deleted (can be seen in history, but not used)
@@ -131,7 +137,7 @@ class Label(ChangingItem, db.Model):
     # Parents is a list of labels merged into this one
     # backref creates a child attribute which is the label that this label was merged into
     parents = relationship('Label',
-            backref=backref('child', remote_side='[Label.p_id, Label.id]'))
+                           backref=backref('child', remote_side='[Label.p_id, Label.id]'))
 
     # Attributes for labelling relationship
     labellings = relationship('Labelling', back_populates='label')
@@ -144,15 +150,17 @@ class Label(ChangingItem, db.Model):
 
     # Themes this label is assigned to
     themes = relationship('Theme',
-            secondary='label_to_theme',
-            primaryjoin='and_(Label.id==label_to_theme.c.l_id, Label.p_id==label_to_theme.c.p_id)',
-            back_populates='labels'
-    )
+                          secondary='label_to_theme',
+                          primaryjoin='and_(Label.id==label_to_theme.c.l_id, Label.p_id==label_to_theme.c.p_id)',
+                          back_populates='labels'
+                          )
+
 
 class Theme(ChangingItem, db.Model):
 
     __tablename__ = 'theme'
-    __table_args__ = (UniqueConstraint('p_id', 'name', name='project_uniqueness'), )
+    __table_args__ = (UniqueConstraint(
+        'p_id', 'name', name='project_uniqueness'), )
 
     name = Column(String(64), nullable=False)
 
@@ -166,15 +174,16 @@ class Theme(ChangingItem, db.Model):
     super_theme_id = Column(Integer, ForeignKey('theme.id'))
     # All sub themes
     # backref creates a super_theme attribute
-    sub_themes = relationship('Theme', 
-            backref=backref('super_theme', remote_side='[Theme.p_id, Theme.id]'))
+    sub_themes = relationship('Theme',
+                              backref=backref('super_theme', remote_side='[Theme.p_id, Theme.id]'),
+                              lazy='dynamic')
 
     # Labels assigned to this theme
     labels = relationship('Label',
-            secondary='label_to_theme',
-            primaryjoin='and_(Theme.id==label_to_theme.c.t_id, Theme.p_id==label_to_theme.c.p_id)',
-            back_populates='themes'
-    )
+                          secondary='label_to_theme',
+                          primaryjoin='and_(Theme.id==label_to_theme.c.t_id, Theme.p_id==label_to_theme.c.p_id)',
+                          back_populates='themes',
+                          lazy='dynamic')
 
 
 class Labelling(db.Model):
@@ -204,16 +213,17 @@ class Labelling(db.Model):
 
     # The user, artifact, label, and label_type objects corresponding to this relationship
     user = relationship('User', back_populates='labellings')
-    artifact = relationship('Artifact', 
-            primaryjoin='and_(Artifact.p_id==Labelling.p_id, Artifact.id==Labelling.a_id)',
-            back_populates='labellings')
-    label = relationship('Label', 
-            primaryjoin='and_(Label.p_id==Labelling.p_id, Label.id==Labelling.l_id)',
-            back_populates='labellings')
+    artifact = relationship('Artifact',
+                            primaryjoin='and_(Artifact.p_id==Labelling.p_id, Artifact.id==Labelling.a_id)',
+                            back_populates='labellings')
+    label = relationship('Label',
+                         primaryjoin='and_(Label.p_id==Labelling.p_id, Label.id==Labelling.l_id)',
+                         back_populates='labellings')
     # I may add a back_populates later, as it could be useful for statistics about a label type
     # No association proxies for this one as that would just be equivalent to project.label_types
     label_type = relationship('LabelType',
-            primaryjoin='and_(LabelType.p_id==Labelling.p_id, LabelType.id==Labelling.lt_id)')
+                              primaryjoin='and_(LabelType.p_id==Labelling.p_id, LabelType.id==Labelling.lt_id)')
+
 
 class Highlight(db.Model):
 
@@ -234,78 +244,17 @@ class Highlight(db.Model):
     # The user and artifact objects corresponding to this highlight
     user = relationship('User', back_populates='highlights')
     artifact = relationship('Artifact',
-            primaryjoin='and_(Highlight.p_id==Artifact.p_id, Highlight.a_id==Artifact.id)',
-            back_populates='highlights')
+                            primaryjoin='and_(Highlight.p_id==Artifact.p_id, Highlight.a_id==Artifact.id)',
+                            back_populates='highlights')
+
 
 # Table to manage label to theme relationship
 # A many to many theme to theme hierarchy would work a similar way
 # If you wish to add other attributes, an association class should be used instead
 label_to_theme = Table('label_to_theme', db.Model.metadata,
-        Column('p_id', Integer, ForeignKey('project.id')),
-        Column('t_id', Integer, ForeignKey('theme.id'), primary_key=True),
-        Column('l_id', Integer, ForeignKey('label.id'), primary_key=True)
-)
-
-# Note: This is a circular import, but not a circular dependency so nothing breaks
-# i.e., do not use this package at the top level
-from src.models.auth_models import User
-# Changes is a list with all the Change classes
-from src.models.change_models import Changes
-
-class LabelTypeSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = LabelType
-        include_fk = True
-        load_instance = True
-
-class ArtifactSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Artifact
-        include_fk = True
-        load_instance = True
-
-class LabelSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Label
-        include_fk = True
-        load_instance = True
-    
-    # The frontend Label class requires the label type name to be constructed
-    # So sometimes we add the type attribute to label objects
-    # Since it's not a default attribute, it's not automatically serialized so we add a new field
-    type = fields.Method("get_type")
-
-    # Gets the type name, and defaults to None if it does not exist
-    def get_type(self, obj):
-        return getattr(obj, 'type', None)
-    
-    # This will remove the type attribute if it is None
-    @post_dump
-    def remove_none_type(self, data, **kwargs):
-        if not data['type']:
-            del data['type']
-        return data
-
-class ThemeSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Theme
-        include_fk = True
-        load_instance = True
-
-class LabellingSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Labelling
-        include_fk = True
-        load_instance = True
-
-class HighlightSchema(ma.SQLAlchemyAutoSchema):
-
-    class Meta:
-        model = Highlight
-        include_fk = True
-        load_instance = True
+                       Column('p_id', Integer, ForeignKey('project.id')),
+                       Column('t_id', Integer, ForeignKey(
+                           'theme.id'), primary_key=True),
+                       Column('l_id', Integer, ForeignKey(
+                           'label.id'), primary_key=True)
+                       )

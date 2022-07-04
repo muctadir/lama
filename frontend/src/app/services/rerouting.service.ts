@@ -16,7 +16,7 @@ export class ReroutingService {
    * @param index which occurence we are looking for
    * @returns the index of the start of substring
    */
-  getPosition(string: string, subString: string, index: number) {
+  getPosition(string: string, subString: string, index: number): number {
     return string.split(subString, index).join(subString).length;
   }
 
@@ -44,14 +44,13 @@ export class ReroutingService {
    * Gets the label ID from a url string
    * @param url_path the url in string format
    * @returns label ID
-   * TODO: check whether this url even has a labelId
    */
-  getLabelID(url_path : string) : string {
+  getLabelID(url_path: string): string {
     // Get position of third slash
     let third_slash = this.getPosition(url_path, '/', 4);
 
     // Removes everything before the third "/"
-    let label_id : string = url_path.substring(third_slash + 1);
+    let label_id: string = url_path.substring(third_slash + 1);
 
     // Removes everything after the label ID, (only label ID remains)
     label_id = label_id.substring(0, third_slash);
@@ -101,7 +100,7 @@ export class ReroutingService {
    * @param url_path the url in string format
    * @returns theme ID
    */
-  getThemeID(url_path : string) : string {
+  getThemeID(url_path: string): string {
 
     // Makes a substring of text after the last /
     let t_id: string = url_path.substring(url_path.lastIndexOf("/"))
@@ -114,7 +113,7 @@ export class ReroutingService {
   checkLabellingId(url_path: string): boolean {
     let count: number;
     count = (url_path.split("/").length - 1);
-    if(count == 4){
+    if (count == 4) {
       return true;
     }
     return false;

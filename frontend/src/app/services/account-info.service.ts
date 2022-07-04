@@ -30,13 +30,13 @@ export class AccountInfoService {
    * @returns User object with user data
    * @throws error when server request goes wrong
    */
-  async userData() : Promise<any> {
+  async userData(): Promise<any> {
     // User object
     let user;
 
     try {
       // Creates a request for the account information
-      let response: any =  await this.requestHandler.get("/account/information", {}, true);
+      let response: any = await this.requestHandler.get("/account/information", {}, true);
 
       // Gets the user data from the database response and stores the data
       user = new User(response['id'], response['username']);
@@ -65,19 +65,20 @@ export class AccountInfoService {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
-      let response: any = await this.requestHandler.get("/project/users", {}, true);
+      let response = await this.requestHandler.get("/project/users", {}, true);
 
       // Loops over the response of the server and parses the response into the allMembers array
       for (let user of response) {
         // creates the object
-        let newUser = new User(user.id, user.username);
-        // passes additional data to the newly created user object
-        newUser.setEmail(user.email);
-        newUser.setDesc(user.description);
+        let responseUser = new User(user.id, user.username);
+        // Sets email of new user
+        responseUser.setEmail(user.email);
+        // Sets the description of the new user
+        responseUser.setDesc(user.description);
         // pushes the new user to the array of all users
-        users.push(newUser);
+        users.push(responseUser);
       }
-    } catch(e) {
+    } catch (e) {
       // Throws an error if something goes wrong
       throw new Error("Could not get data from server");
     }
@@ -89,14 +90,14 @@ export class AccountInfoService {
    *
    * @param toDel user to be deleted
    */
-  async softDelUser(toDel: User) : Promise<void> {
+  async softDelUser(toDel: User): Promise<void> {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
       await this.requestHandler.post("/account/soft_del", {"id": toDel.getId()}, true);
     } catch(e) {
-      // Throws an error if something goes wrong
-      throw new Error("Could not get data from server");
+      // Throws an error if it goes wrong
+      throw new Error("Could not get the data from server");
     }
   }
 
@@ -108,17 +109,14 @@ export class AccountInfoService {
    *
    * @returns whether authentication token is valid
    */
-  async makeAuthRequest() : Promise<boolean> {
+  async makeAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response: any = this.requestHandler.get("/auth/check_login", {}, true);
-
-      // Waits on the request
-      await response;
+      await this.requestHandler.get("/auth/check_login", {}, true);
 
       // Returns true if the token is valid
       return true;
-    } catch(e: any) {
+    } catch (e: any) {
       this.toastCommService.emitChange([false, e.response.data]);
       // Returns false if the token is not valid
       return false;
@@ -133,17 +131,14 @@ export class AccountInfoService {
    *
    * @returns whether authentication token is valid
    */
-   async makeSuperAuthRequest() : Promise<boolean> {
+  async makeSuperAuthRequest(): Promise<boolean> {
     try {
       // Makes the backend request to check whether the token is valid
-      let response: any = this.requestHandler.get("/auth/check_super_admin", {}, true);
-
-      // Waits on the request
-      await response;
+      await this.requestHandler.get("/auth/check_super_admin", {}, true);
 
       // Returns true if the token is valid
       return true;
-    } catch(e) {
+    } catch (e) {
       // Returns false if the token is not valid
       return false;
     }
@@ -163,17 +158,55 @@ export class AccountInfoService {
    */
   async registerUser(registerInformation: Record<string, any>): Promise<any> {
     try {
-      await this.requestHandler.post('auth/register', registerInformation, false)
+      await this.requestHandler.post('auth/register', registerInformation, false);
     } catch (e) {
       throw e;
     }
   }
 
-
+  /**
+   * Makes a request to the backend to login the user
+   * 
+   * @param user user account details
+   * @returns whether the login was succesful
+   * @throws error is an error occurs
+   */
   async loginUser(user: Record<string, any>): Promise<any> {
     try {
-      return this.requestHandler.post('auth/login', user, false);
+      return await this.requestHandler.post('auth/login', user, false);
     } catch (e: any) {
+      throw e;
+    }
+  }
+
+  /**
+   * Makes request to the backend to edit password
+   * 
+   * @param passwordInformation object holding the old password, new password, and repeated new password
+   * @throws error if an error occurs 
+   */
+  async changePassword(passwordInformation: Record<string, any>): Promise<void> {
+    try {
+      // Makes request to the backend
+      await this.requestHandler.post("/account/editPassword", passwordInformation, true);
+    } catch (e: any) {
+      // Throws the error if one were to occur
+      throw e;
+    }
+  }
+
+  /**
+   * Makes request to the backend to edit the account information
+   * 
+   * @param accountInformation object holding the id, username, email, description 
+   * @throws error if an error occurs
+   */
+  async changeAccountDetails(accountInformation: Record<string, any>): Promise<void> {
+    // Tries to make the backend request
+    try {
+      await this.requestHandler.post("/account/edit", accountInformation, true);
+    } catch (e: any) {
+      // catches the error and throws it again
       throw e;
     }
   }

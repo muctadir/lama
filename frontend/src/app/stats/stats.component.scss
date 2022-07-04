@@ -3,6 +3,7 @@ $grey-shade: #38474e;
 $white-shade: #FFFFFF;
 $orange-shade: #ed5a06;
 
+// Ensures that the page doesnt go out of view
 #main-cont {
     height: 100vh;
     overflow-y: scroll;
@@ -10,7 +11,7 @@ $orange-shade: #ed5a06;
 }
 
 // Sets the layout of the header saying Statistics
-p.header{
+p.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
@@ -20,7 +21,7 @@ p.header{
 // Markup of the button linking to the labelling page
 #mergeLabelButton {
     float: right;
-    margin-right: 10px;    
+    margin-right: 10px;
     margin-top: 10px;
     background-color: white;
     border: 2px solid;
@@ -45,14 +46,15 @@ p.header{
 
 // PROGRESS BAR
 // The division of the progress
-.progress{
-    margin-top:5px;
+.progress {
+    margin-top: 5px;
     width: 100%;
     float: left;
     border-radius: 10px
 }
+
 // Actual progress bar
-.progress-bar{
+.progress-bar {
     background-color: $orange-shade;
     border-radius: 10px
 }
@@ -89,7 +91,7 @@ p.header{
     color: $orange-shade;
     font-size: 30px;
     margin-left: 50px;
-    margin-top: -6px; 
+    margin-top: -6px;
 }
 
 // Moves the box with the user stats slightly down
@@ -117,40 +119,40 @@ p.header{
     box-shadow: none;
 }
 
-// Scroll Related Business
-.my-custom-scrollbar {
-    position:relative;
-    height: 80vh;
-    overflow: auto;
-    }
+// Make table scrollable
 .table-wrapper-scroll-y {
     display: block;
-    }
+}
+
 // Scroll Bar 
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }
+
 // Scroll bar
-#scrolly{
+#scrolly {
     padding-right: 40px;
     height: auto;
 }
 
 // Number of labels
-#labels{
+#labels {
     padding-left: 100px;
 }
