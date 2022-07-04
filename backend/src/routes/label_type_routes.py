@@ -2,7 +2,8 @@
 # Author: Bartjan
 # Author: Eduardo Costa Martins
 from src.app_util import check_args
-from src import db  # need this in every route
+# Need this in every route
+from src import db
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select
 from src.app_util import login_required, in_project
@@ -90,6 +91,13 @@ def get_labels_by_label_type():
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
+    # Check if the label type is part of the project
+    lt = db.session.scalars(select(LabelType).where(
+        LabelType.p_id == args['p_id'], 
+        LabelType.id == args['lt_id'])).all()
+    if not lt:
+        return make_response('Label type does not exist in this project', 400)
+        
     # Get all the labels of a labelType
     labelType = db.session.scalar(
         select(LabelType)

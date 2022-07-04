@@ -7,14 +7,15 @@ from sqlalchemy import select, update, func, delete, insert
 from sqlalchemy.exc import OperationalError
 from src.app_util import login_required, in_project, check_string, check_whitespaces, check_args, not_frozen
 from src.models.change_models import ChangeType
-from src.models.item_models import Label, LabelType, \
-    Labelling, Artifact, label_to_theme, Theme
+from src.models.item_models import Label, LabelType, Labelling, Artifact, label_to_theme, Theme
 from src.searching.search import search_func_all_res, best_search_results
 
 label_routes = Blueprint("label", __name__, url_prefix="/label")
 
-# Author: Eduardo, Bartjan
-# Create a label
+"""
+    Author: Eduardo Costa Martins, Bartjan Henkemans
+    This route creates a label in the database
+"""
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
@@ -738,7 +739,6 @@ Author: Eduardo Costa Martins
 }
 """
 def get_loose_labels(p_id):
-
     # Select label id, name, and deleted status
     loose_labels = db.session.execute(select(
         Label.id,

@@ -152,14 +152,14 @@ def test_create_artifact_not_all_params(app, client):
     # Make request with no args
     response = request_handler.post('/artifact/creation', {}, True)
     # Check that the status code is correct
-    assert(response.status_code == 500)
+    assert(response.status_code == 400)
 
     # Make request without p_id
     response = request_handler.post('/artifact/creation', {
         'artifacts': []
     }, True)
     # Check that the status code is correct
-    assert(response.status_code == 500)
+    assert(response.status_code == 400)
 
     # Make request without artifacts
     response = request_handler.post('/artifact/creation', {
@@ -470,7 +470,7 @@ def test_split_not_all_params(app, client):
     # Make a request with no params
     result = request_handler.post('/artifact/split', {}, True)
     # Check that the right status code is returned
-    assert(result.status_code == 500)
+    assert(result.status_code == 400)
 
     # Make a request without p_id
     result = request_handler.post('/artifact/split', {'parent_id': 1,
@@ -479,7 +479,7 @@ def test_split_not_all_params(app, client):
                                                       'end': 17,
                                                       'data': 'Lorem ipsum dolor'}, True)
     # Check that the right status code is returned
-    assert(result.status_code == 500)
+    assert(result.status_code == 400)
 
     # Make a request without parent_id
     check_no_params(app, client, '/artifact/split', {'p_id': 1,

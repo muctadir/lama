@@ -234,10 +234,12 @@ def in_project(f):
             p_id = request.args['p_id']
         else:
             # TODO: Change request handler to not have to use params and get rid of this first case
-            if 'params' in request.json:
+            if 'params' in request.json and 'p_id' in request.json['params']:
                 p_id = request.json['params']['p_id']
-            else:
+            elif 'p_id' in request.json:
                 p_id = request.json['p_id']
+            else:
+                return make_response('Bad Request, missing p_id', 400)
         # Check that pId argument was provided
         if not p_id:
             return make_response('Unauthorized', 401)
