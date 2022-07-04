@@ -20,5 +20,4 @@ __________
 # Development Setup
 In order to develop the app locally you first have to set it up on your local machine. To do that you have to follow the instructions in Chapter 2 of the STD (Software Design Document) [^1]. 
 
-[^1]: Software Transfer Document (STD) (LaMa), Labelling Labourers, Eindhoven University of Technology}
-}
+[^1]: Software Transfer Document (STD) (LaMa), Labelling Labourers, Eindhoven University of Technology
