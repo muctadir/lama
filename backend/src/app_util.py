@@ -55,7 +55,7 @@ def check_username(username):
         is no more than 32 characters long (database constraint)
     """
     return len(username.strip()) == len(username) and \
-        len(username) >= 3 and \
+        len(username) >= 5 and \
         len(username) <= 32  # max username length according to db
 
 

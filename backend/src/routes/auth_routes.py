@@ -36,7 +36,7 @@ def register():
         return make_response(("Username or email taken", 400))
 
     # Check for invalid characters
-    if check_whitespaces(args):
+    if check_whitespaces([args['username'], args['email'], args['password'], args['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
 
     # Check for invalid characters
@@ -49,28 +49,6 @@ def register():
         return make_response((reason, 400))
 
     return create_user(args)
-
-# Function to get all users who are pending
-@auth_routes.route("/pending", methods=["GET"])
-@super_admin_required
-def pending():
-    """
-    Returns list of all users that are pending approval from the super-admin
-    """
-    args = request.args
-    required = ()
-    # Check that all (no) arguments are provided
-    if not check_args(required, args):
-        return make_response("Bad Request", 400)
-
-    user_schema = User.__marshmallow__()
-    # Get all users with pending status
-    users = db.session.scalars(select(User).where(
-        User.status == UserStatus.pending)).all()
-    # Convert to json format
-    json_users = jsonify(user_schema.dump(users, many=True))
-
-    return make_response(json_users)
 
 # Function to make a user login
 @auth_routes.route("/login", methods=["POST"])
