@@ -38,6 +38,57 @@ describe('Label', () => {
       .toBe(newId)
   })
 
+  // Setting the id
+  it("should set the id incorrectly", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+
+    // Gets the error
+    let error;
+    try {
+      label2.setId(-1);
+    } catch(e) {
+      error = e;
+    }
+
+    // Check
+    expect(error).toEqual(new Error("label id should be larger or equal to 1"));
+  })
+
+  // Setting the name
+  it("should set the name incorrectly", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+
+    // Gets the error
+    let error;
+    try {
+      label2.setName("");
+    } catch(e) {
+      error = e;
+    }
+
+    // Check
+    expect(error).toEqual(new Error("The label name should not be of length 0 as an argument in setName()"));
+  })
+
+  // Setting the desc
+  it("should set the desc incorrectly", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+
+    // Gets the error
+    let error;
+    try {
+      label2.setDesc("");
+    } catch(e) {
+      error = e;
+    }
+
+    // Check
+    expect(error).toEqual(new Error("The label description should not be of length 0 as an argument in setDesc()"));
+  })
+
   // Getting the name
   it("should get the name", () => {
     expect(label.getName())
@@ -55,17 +106,6 @@ describe('Label', () => {
     expect(label2.getName())
       .toBe(newName)
   })
-
-  // Setting a bad label name
-  it('throw error for bad label name', () => {
-    // Create instances
-    const label2 = new Label(id, name, desc, type);
-    const newName = "";
-    // catch wrong name
-    try {
-      label2.setName(newName);
-    } catch (error) { }
-  });
 
   // Getting the description
   it("should get the description", () => {
@@ -85,17 +125,6 @@ describe('Label', () => {
       .toBe(newDesc)
   })
 
-  // Setting a bad label description
-  it('throw error for bad label description', () => {
-    // Create instances
-    const label2 = new Label(id, name, desc, type);
-    const newDesc = "";
-    // catch wrong name
-    try {
-      label2.setDesc(newDesc);
-    } catch (error) { }
-  });
-
   // Getting the type
   it("should get the type", () => {
     expect(label.getType())
@@ -114,17 +143,6 @@ describe('Label', () => {
       .toBe(newType)
   })
 
-  // Setting a bad label type
-  it('throw error for bad label description', () => {
-    // Create instances
-    const label2 = new Label(id, name, desc, type);
-    const newType = "";
-    // catch wrong name
-    try {
-      label2.setType(newType);
-    } catch (error) { }
-  });
-
   // Setting and getting the parent labels
   it("should set and get parent labels", () => {
     // Create instances
@@ -139,7 +157,7 @@ describe('Label', () => {
   })
 
   // Getting the number of parent labels
-  it("Should get the number of parent labels", () => {
+  it("should get the number of parent labels", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const parent1 = new Label(3, "label1", "labelDesc1", "type");
@@ -150,6 +168,18 @@ describe('Label', () => {
     // Check
     expect(label2.getNumberOfParents())
       .toBe(parents.length)
+  })
+
+  // Getting the number of parent labels
+  it("should get the number of parent labels error case", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+    const parents = undefined;
+    // Set parents
+    label2.setParents(parents);
+    // Check
+    expect(label2.getNumberOfParents())
+      .toBe(0)
   })
 
   // Setting and getting the child labels
@@ -166,7 +196,7 @@ describe('Label', () => {
   })
 
   // Getting the number of child labels
-  it("Should get the number of child labels", () => {
+  it("should get the number of child labels", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const child1 = new Label(3, "label1", "labelDesc1", "type");
@@ -177,6 +207,18 @@ describe('Label', () => {
     // Check
     expect(label2.getNumberOfChildren())
       .toBe(children.length)
+  })
+
+  // Getting the number of child labels
+  it("should get the number of child labels error case", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+    const children = undefined;
+    // Set children
+    label2.setChildren(children);
+    // Check
+    expect(label2.getNumberOfChildren())
+      .toBe(0)
   })
 
   // Setting and getting the label artifacts
@@ -193,7 +235,7 @@ describe('Label', () => {
   })
 
   // Getting the number of label artifacts
-  it("Should get the number of artifacts", () => {
+  it("should get the number of artifacts", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const artifact1 = new StringArtifact(1, "artifact1", "artifactData1");
@@ -204,6 +246,18 @@ describe('Label', () => {
     // Check
     expect(label2.getNumberOfArtifacts())
       .toBe(artifacts.length)
+  })
+
+  // Getting the number of label artifacts
+  it("should get the number of artifacts error case", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+    const artifacts = undefined;
+    // Set artifacts
+    label2.setArtifacts(artifacts);
+    // Check
+    expect(label2.getNumberOfArtifacts())
+      .toBe(0)
   })
 
   // Setting and getting the label users
@@ -220,7 +274,7 @@ describe('Label', () => {
   })
 
   // Getting the number of label users
-  it("Should get the number of users", () => {
+  it("should get the number of users", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const user1 = new User(1, "user1");
@@ -231,6 +285,17 @@ describe('Label', () => {
     // Check
     expect(label2.getNumberOfUsers())
       .toBe(users.length)
+  })
+
+  it("should get the number of users error case", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+    const users = undefined;
+    // Set users
+    label2.setUsers(users);
+    // Check
+    expect(label2.getNumberOfUsers())
+      .toBe(0)
   })
 
   // Setting and getting label's themes
@@ -247,7 +312,7 @@ describe('Label', () => {
   })
 
   // Getting the number of theme labels
-  it("Should get the number of theme labels", () => {
+  it("should get the number of theme labels", () => {
     // Create instances
     const label2 = new Label(id, name, desc, type)
     const theme1 = new Theme(3, "theme1", "themeDesc1");
@@ -258,6 +323,17 @@ describe('Label', () => {
     // Check
     expect(label2.getNumberOfThemes())
       .toBe(themes.length)
+  })
+
+  it("should get the number of theme labels error case", () => {
+    // Create instances
+    const label2 = new Label(id, name, desc, type)
+    const themes = undefined;
+    // Set themes
+    label2.setThemes(themes);
+    // Check
+    expect(label2.getNumberOfThemes())
+      .toBe(0)
   })
 
   // Getting and setting the deletion status
@@ -271,8 +347,6 @@ describe('Label', () => {
     expect(label2.getDeleted())
       .toBe(status)
   })
-
-  
 });
 
 

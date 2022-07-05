@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
 export class ThemeDataService {
 
   // Request handler variable
-  private requestHandler: RequestHandler;
+  requestHandler: RequestHandler;
   // Session token variable
   private sessionToken: string | null;
 
@@ -32,10 +32,7 @@ export class ThemeDataService {
   async getThemes(p_id: number): Promise<Array<Theme>> {
     try {
       // Get request to the backend
-      let response = await this.requestHandler.get('/theme/theme-management-info', { "p_id": p_id }, true);
-
-      // Get the response data
-      let themes = response;
+      let themes = await this.requestHandler.get('/theme/theme-management-info', { "p_id": p_id }, true);
 
       // List of all themes
       let themes_list: Array<Theme> = []
@@ -60,7 +57,8 @@ export class ThemeDataService {
       return themes_list;
       // Catch error
     } catch (e) {
-      console.log("An error occured when trying to get all themes");
+      // Displays error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get all themes"]);
       return [];
     }
   }
@@ -80,11 +78,11 @@ export class ThemeDataService {
       // Get the theme data
       let theme = response["theme"];
       // Get the super-theme data
-      let superTheme = response["super_theme"]
+      let superTheme = response["super_theme"];
       // Get the sub-theme data
       let subThemes = response["sub_themes"];
       // Get the label data
-      let labels = response["labels"]
+      let labels = response["labels"];
 
       // Create a new theme object with all information
       let newTheme: Theme = new Theme(theme['id'], theme["name"], theme["description"]);
@@ -102,7 +100,8 @@ export class ThemeDataService {
       return newTheme;
       // Catch the error
     } catch (e) {
-      console.log("An error occured when trying to get the theme information");
+      // Displays error message
+      this.toastCommService.emitChange([false, "An error occured when trying to get the theme information"]);
       return new Theme(0, "", "");
     }
   }
@@ -113,7 +112,7 @@ export class ThemeDataService {
    * @param subThemes json of sub-themes
    * @returns childArray. array of children themes
    */
-  createChildren(subThemes: []): Array<Theme> {
+  createChildren(subThemes: Array<any>): Array<Theme> {
     // List for the children
     let childArray: Array<Theme> = [];
     // For each child make an object
@@ -131,14 +130,14 @@ export class ThemeDataService {
    * @param labels json of labels
    * @returns labelsArray. array of labels
    */
-  createLabels(labels: []): Array<Label> {
+  createLabels(labels: Array<any>): Array<Label> {
     // List for the labels 
     let labelsArray: Array<Label> = [];
     // For each label in the list
     for (let label of labels) {
-      let label_info = label["label"]
+      let label_info = label["label"];
       // Make a new label object
-      let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"])
+      let newLabel = new Label(label_info["id"], label_info["name"], label_info["description"], label["label_type"]);
 
       // Create the artifacts
       let artifactArray = this.createArtifacts(label["artifacts"]);
@@ -146,7 +145,7 @@ export class ThemeDataService {
       newLabel.setArtifacts(artifactArray);
 
       // Add alabel to the labels
-      labelsArray.push(newLabel)
+      labelsArray.push(newLabel);
     }
     // Return the array of labels
     return labelsArray;
@@ -158,7 +157,7 @@ export class ThemeDataService {
    * @param artifacts json of artifacts 
    * @returns artifactArray. list of artifacts
    */
-  createArtifacts(artifacts: []): Array<StringArtifact> {
+  createArtifacts(artifacts: Array<any>): Array<StringArtifact> {
     // List for the artifacts
     let artifactArray: Array<StringArtifact> = [];
     for (let artifact of artifacts) {
@@ -189,7 +188,7 @@ export class ThemeDataService {
         allSubThemes.push(newTheme);
       }
       // Return the list of subThemes
-      return allSubThemes
+      return allSubThemes;
       //Catch the error
     } catch (e) {
       // Displays the error message
@@ -216,27 +215,11 @@ export class ThemeDataService {
       else {
         this.toastCommService.emitChange([false, message]);
       }
-      return message
-
-      // Catch the error
+      return message;
+    // Catch the error
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Theme name already exists") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Theme name already exists"]);
-      } else if (e.response.data == "Input contains an illegal character") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to create the theme"]);
-      }     
+      // Make the toast display the error
+      this.toastCommService.emitChange([false, e.response.data]);  
       // Return the response
       return "An error occured";
     }
@@ -263,26 +246,8 @@ export class ThemeDataService {
       return message
       // Catch the error
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if(e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      } else if (e.response.data == "Theme name already exists") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Theme name already exists"]);
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Input contains an illegal character") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      } else if (e.response.data == "Your choice of subthemes would introduce a cycle"){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Your choice of subthemes would introduce a cycle"]);
-      } else {
-        // Emits an error toast
-        this.toastCommService.emitChange([false, "An error occured when trying to edit the theme"]);
-      }
+      // Make the toast display the error
+      this.toastCommService.emitChange([false, e.response.data]);
       return "An error occured"
     }
   }
@@ -307,16 +272,9 @@ export class ThemeDataService {
   }
 
   // Function for searching in backend
-  async search(
-    searchWords: string,
-    p_id: number
-  ): Promise<Array<Record<string, any>>> {
+  async search(searchWords: string, p_id: number): Promise<Array<Record<string, any>>> {
     // Get the theme information from the back end
-    return this.requestHandler.get(
-      '/theme/search',
-      { p_id: p_id, search_words: searchWords },
-      true
-    );
+    return this.requestHandler.get('/theme/search', { p_id: p_id, search_words: searchWords }, true);
   }
 
   /**
@@ -335,9 +293,9 @@ export class ThemeDataService {
    * The top level dictionary represents the project that was passed
    * The project counts as an undeleted item
    */
-   async themeVisData(p_id: number): Promise<Record<string, any>> {
+  async themeVisData(p_id: number): Promise<Record<string, any>> {
     try {
-      return this.requestHandler.get('/theme/themeVisData', { "p_id": p_id}, true);
+      return await this.requestHandler.get('/theme/themeVisData', { "p_id": p_id }, true);
     } catch (e) {
       // Emits an error toast
       let message: string = "An unknown error occurred";

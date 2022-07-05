@@ -7,28 +7,29 @@ $orange-shade: #ed5a06;
 $green-shade: #1c5858;
 
 // General text settings
-body{
+body {
     color: $grey-shade;
     font-size: 15px;
     letter-spacing: 1px;
     overflow-y: hidden;
     overflow-x: hidden;
 }
+
 // Top bar row
-#topBarRow{
+#topBarRow {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
 }
 
 // Plus icon
-.bi.bi-plus{
+.bi.bi-plus {
     font-size: 24px;
     color: $grey-shade;
 }
 
 // Header of the page
-.header{
+.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
@@ -41,101 +42,114 @@ body{
 }
 
 // Texts above each of the forms indicating what the form is for
-#field_text{
+#field_text {
     font-size: 18px;
     letter-spacing: 1px;
     margin-top: 10px;
 }
+
 // Text inside the forms
-.form-control{
+.form-control {
     font-size: 15px;
 }
+
 // Text above the setting divisions
-.settingsHeader{
+.settingsHeader {
     font-size: 18px;
 }
 
 // Project description
 #projectDescription {
-    height:200px;
-    font-size:14pt;
+    height: 200px;
+    font-size: 14pt;
 }
 
 // PROJECT SETTINGS DIVISIONS
 // Project settings divions parent
-.projectSettingsDivParent{
-    margin-top:10px;
+.projectSettingsDivParent {
+    margin-top: 10px;
     margin-bottom: 10px;
 }
+
 // Project settings divisions orange lines
-.projectSettingsDiv{
+.projectSettingsDiv {
     border-top: 2px solid $orange-shade;
     padding: 10px 5px 10px 5px;
 }
+
 // MEMBER SETTINGS DIVISION
-#membersDiv{
+#membersDiv {
     height: 25vh;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
 // Span of the "Project admin" word
-.projectAdminSpan{
+.projectAdminSpan {
     text-align: center;
     text-decoration: underline;
     padding: 0px;
     margin: 0px;
 }
+
 // Style of the member checkbox
-.checkboxCol {  
-    text-align: center; 
+.checkboxCol {
+    text-align: center;
 }
+
 // Cross icon next to member name
-.bi.bi-x{
+.bi.bi-x {
     font-size: 20px;
     color: $grey-shade;
     padding: 0px;
     margin: 0px;
     cursor: pointer;
 }
+
 // Button for adding members
-#addMembersButton{
+#addMembersButton {
     background-color: $white-shade;
     width: 30px;
-    padding:0px;
-    border:none;
+    padding: 0px;
+    border: none;
 }
+
 // Plus icon for label types
-.bi.bi-plus.members{
+.bi.bi-plus.members {
     float: right;
 }
+
 // LABEL TYPE DIVISION
 // Label type settings division
-#labelTypeDiv{
+#labelTypeDiv {
     height: 25vh;
     overflow-y: scroll;
 }
+
 // Label type forms
-.form-control.labelType{
+.form-control.labelType {
     width: 60%;
     margin-bottom: 10px;
 }
+
 // Button for adding label types
-#addLabelTypeButton{
+#addLabelTypeButton {
     border: 2px solid $grey-shade;
     background-color: $white-shade;
     color: $grey-shade;
     margin: 0px;
     text-align: left;
 }
+
 // Add label type text 
-#addLabelTypeText{
+#addLabelTypeText {
     float: left;
     margin-top: 5px;
 }
 
 // Response division
-#responseDiv{
-    margin-top:20px;
+#responseDiv {
+    margin-top: 20px;
 }
 
 // SCROLLBARS
@@ -143,43 +157,49 @@ body{
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: white;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }
 
 // Space between the two rows
-.top-buffer{
+.top-buffer {
     margin-top: 10px;
 }
 
 // BOTTOM BUTTONS
 // Row for buttons
-.fixed-bottom{
+.fixed-bottom {
     margin-right: 15px;
     margin-bottom: 15px;
 }
+
 // Both buttons
-.btn.btn-secondary{
+.btn.btn-secondary {
     width: 200px;
     margin-left: 10px;
     margin-right: 10px;
 }
+
 // Cancel project creation button
-#cancelProjectEditButton{
+#cancelProjectEditButton {
     background-color: $white-shade;
     border: 2px solid;
     border-color: $grey-shade;
     color: $grey-shade;
 }
+
 // Cancel project creation button
-#editProjectButton, #saveProjectButton{
+#editProjectButton,
+#saveProjectButton {
     background-color: $orange-shade;
     border: 2px solid;
     border-color: $orange-shade;
@@ -187,9 +207,15 @@ body{
 }
 
 // Cancel project creation button
-#freezeProjectButton, #unfreezeProjectButton {
+#freezeProjectButton,
+#unfreezeProjectButton {
     background-color: $green-shade;
     border: 2px solid;
     border-color: $green-shade;
     color: $white-shade;
+}
+
+// Make the textarea non-dragable
+#projectDescriptionForm{
+    resize: none;
 }

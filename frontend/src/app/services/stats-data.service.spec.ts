@@ -46,13 +46,13 @@ describe('StatsDataService', () => {
   });
 
   // Checks if getProject throws an error when necessary
-  it('getProject should throw an error for unsuitable p_id', async () => {
+  it('should throw an error for unsuitable p_id for getProject', async () => {
     await expectAsync(service.getProject(0))
       .toBeRejectedWith(new Error("p_id cannot be less than 1"));
   });
 
   // Checks if getProject works correctly
-  it('getProject should return the correct data and call the request handler', async () => {
+  it('should return the correct data and call the request handler for getProject', async () => {
     // Return project_data when statsDataService.getProject(p_id) is called
     spyOn(service['requestHandler'], 'get').and
       .returnValue(Promise.resolve(project_data));
@@ -73,13 +73,13 @@ describe('StatsDataService', () => {
   });
 
   // Checks if getUserStats throws an error when necessary
-  it('getUserStats should throw an error for unsuitable p_id', async () => {
+  it('should throw an error for unsuitable p_id for getUserStats', async () => {
     await expectAsync(service.getUserStats(0))
       .toBeRejectedWith(new Error("p_id cannot be less than 1"));
   });
 
   // Checks if getUserStats works correctly
-  it('getUserStats should return the correct data and call the request handler', async () => {
+  it('should return the correct data and call the request handler for getUserStats', async () => {
     // Return project_data when statsDataService.getProject(p_id) is called
     spyOn(service['requestHandler'], 'get').and
       .returnValue(Promise.resolve(['array', 'of', 'data']));

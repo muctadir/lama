@@ -1,8 +1,3 @@
-// Color variables
-$grey-shade: #38474e;
-$white-shade: #FFFFFF;
-$orange-shade: #ed5a06;
-
 // Markup of the logout header
 #header {
     text-align: center;
@@ -15,35 +10,35 @@ $orange-shade: #ed5a06;
     padding-top: 10px;
 }
 
-//Scroll Related Business
-.my-custom-scrollbar {
-    position:relative;
-    height: 80vh;
-    overflow: auto;
-    }
+// Make table scrollable
 .table-wrapper-scroll-y {
     display: block;
-    }
+}
+
 //Scroll Bar 
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }
+
 // Scroll bar
-#scrolly{
+#scrolly {
     padding-right: 40px;
     height: auto;
     max-height: 70vh;

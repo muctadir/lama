@@ -1,33 +1,37 @@
+// Title of the page
 .title {
     padding-top: 10px;
-    border-bottom: 1px; 
+    border-bottom: 1px;
     border-bottom-style: solid;
     font-size: 36px;
     letter-spacing: 1px;
 }
 
+// Subtitle of the page
 .subTitle {
     padding-top: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px; 
+    border-bottom: 1px;
     border-bottom-style: solid;
     border-color: #ed5a06;
     font-size: 25px;
     letter-spacing: 1px;
 }
 
+// Container
 .container {
     margin-bottom: 10px;
 }
 
 // Edit button
-#btn-edit, #btn-submit{
+#btn-edit,
+#btn-submit {
     border: none;
     width: 150px;
 }
 
 // Cancel button
-#btn-cancel{
+#btn-cancel {
     margin-right: 10px;
     border: none;
     width: 150px;
@@ -39,6 +43,6 @@
 }
 
 // Description text area
-#description{
+#description {
     resize: none;
 }

@@ -1,85 +1,100 @@
 // <!-- Author: Victoria Bogachenkova, Thea Bradley -->
 // Color variables
-:root {
-    --main-color-1: #ED5A06;
-    --main-color-2: #38474e;
-}
+$orange-shade: #ed5a06;
+$gey-shade: #38474e;
 
 // Body
 body {
-    color: var(--main-color-2);
+    color: $orange-shade;
     overflow-x: hidden;
 }
 
-// TOP BAR
+// Top bar
 .alignValues {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
 }
+
 // Header saying "Label Management"
-p.header {
+.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
+
 // CREATE LABEL
 // Create label button on Label Management Page
-#createLabelButton, #mergeLabelButton {
+#createLabelButton,
+#mergeLabelButton {
+    width: 200px;
     float: right;
-    margin-right: 10px;    
+    margin-right: 10px;
     margin-top: 10px;
     background-color: white;
     border: 2px solid;
-    border-color: var(--main-color-2);
+    border-color: $gey-shade;
     color: black;
+}
 
-}
 // Create project button on hover
-#createLabelButton:hover, #createLabelButton:focus, #createLabelButton:active {
+#createLabelButton:hover,
+#createLabelButton:focus,
+#createLabelButton:active {
     background-color: rgb(222, 222, 222);
 }
-#mergeLabelButton:hover, #mergeLabelButton:focus, #mergeLabelButton:active {
+
+// Merge labels button
+#mergeLabelButton:hover,
+#mergeLabelButton:focus,
+#mergeLabelButton:active {
     background-color: rgb(222, 222, 222);
 }
+
+// Container for the searching
 .SearchContainer {
     max-width: 30%;
 }
+
 // Create button plus
 svg.bi.bi-plus {
     width: 22px;
     height: 22px;
 }
-// Color variables
-:root {
-    --main-color-1: #ED5A06;
-    --main-color-2: #38474e;
-}
 
-// TOP BAR
+// Top bar
 #topBarRow {
     margin-left: 10px;
     margin-right: 10px;
     max-width: 98%;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     height: 100vh;
 }
 
+// Scrollable division
+#scrolly {
+    padding-right: 40px;
+}
+
+// Row for the table
 #tableRow {
     padding-top: 5px;
 }
 
+// Horizaontal lines in the table
 #horizontalLineRow {
     padding-top: 10px;
     padding-bottom: 30px;
     padding-right: 0px;
 }
+
+// Horizontal lines in the column
 #horizontalLineColumn {
     padding-right: 0px;
 }
 
-//Table styles
+// Table styles
 .labelHeader {
     font-size: 20px;
     letter-spacing: 1px;
@@ -101,52 +116,39 @@ svg.bi.bi-plus {
 
 // Pagination Color
 ngb-pagination ::ng-deep a {
-    color:#ED5A06 !important;
-}  
-ngb-pagination ::ng-deep .page-item.active .page-link {
-border-color: #1C5858;
-background-color: white;
-}
-ngb-pagination ::ng-deep .page-item.active .page-link:focus, .page-link:not(:disabled):not(.disabled):active:focus {
-box-shadow: 0 0 0 0.1rem dimgrey;
-}
-ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
-box-shadow: 0 0 0 0.1rem dimgrey;
+    color: $orange-shade  !important;
 }
 
-//Scroll Related Business
-.my-custom-scrollbar {
-    position:relative;
-    height: 80vh;
-    overflow: auto;
-    }
-.table-wrapper-scroll-y {
-    display: block;
-    }
+ngb-pagination ::ng-deep .page-item.active .page-link {
+    border-color: $gey-shade;
+    background-color: white;
+}
+
+ngb-pagination ::ng-deep .page-item.active .page-link:focus,
+.page-link:not(:disabled):not(.disabled):active:focus {
+    box-shadow: 0 0 0 0.1rem dimgrey;
+}
+
+ngb-pagination ::ng-deep .page-link:not(:disabled):not(.disabled):active:focus {
+    box-shadow: 0 0 0 0.1rem dimgrey;
+}
+
 //Scroll Bar 
 ::-webkit-scrollbar {
     width: 10px;
 }
-// Scrollbar background
-::-webkit-scrollbar {
-    width: 10px;
-}
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: white;
     border-radius: 10px;
-}
-// Scrollbar scroller
-::-webkit-scrollbar-thumb {
-    background: #38474e; 
-    border-radius: 10px;
-}
-// Scroll bar
-#scrolly {
-    padding-right: 40px;
-    height: auto;
 }
 
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: $gey-shade;
+    border-radius: 10px;
+}
 
 // Sets the style for the headers in the table
 .tableheader {
@@ -160,7 +162,7 @@ box-shadow: 0 0 0 0.1rem dimgrey;
 
 // Centers the pagination to the middle of the page
 #center-pagination {
-    display: flex; 
+    display: flex;
     justify-content: center;
 }
 
@@ -169,7 +171,7 @@ box-shadow: 0 0 0 0.1rem dimgrey;
     &__container {
         padding-top: 3px;
     }
-    
+
     &__input {
         width: 100%;
         padding: 12px 24px;
@@ -178,12 +180,10 @@ box-shadow: 0 0 0 0.1rem dimgrey;
         transition: transform 250ms ease-in-out;
         font-size: 14px;
         line-height: 18px;
-        
+
         color: #575756;
         background-color: transparent;
 
-        //sTODO: replace with icon
-        //background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
         background-image: url(search_heart.svg);
         background-repeat: no-repeat;
         background-size: 18px 18px;
@@ -193,13 +193,13 @@ box-shadow: 0 0 0 0.1rem dimgrey;
         transition: all 250ms ease-in-out;
         backface-visibility: hidden;
         transform-style: preserve-3d;
-        
+
         &::placeholder {
             color: color(#575756 a(0.8));
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
-        
+
         &:hover,
         &:focus {
             padding: 12px 0;
@@ -212,5 +212,3 @@ box-shadow: 0 0 0 0.1rem dimgrey;
         }
     }
 }
-
-

@@ -41,7 +41,7 @@ export class LoginComponent {
     private service: InputCheckService,
     private route: Router,
     private toastCommService: ToastCommService
-  ) {}
+  ) { }
 
   /**
    * Checks whether the input is valid, if it is valid, removes error message and calls login function

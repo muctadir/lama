@@ -15,9 +15,9 @@ describe('AccountComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountComponent ]
+      declarations: [AccountComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe('AccountComponent', () => {
   });
 
 
-  it('Checks whether ngOnInit calls getInformation', () => {
+  it('should call getInformation() on initialization', () => {
     // Creates a spy which spies on getInformation
     let ngSpy = spyOn(component, "getInformation");
     // Calls ngOnInit
@@ -42,7 +42,7 @@ describe('AccountComponent', () => {
   });
 
 
-  it('Checks whether modeChange calls and changes variables correctly', () => {
+  it('should set the mode variable correctly', () => {
     // Creates a spy which spies on getInformation
     let modeSpy = spyOn(component, "getInformation");
     // Checks that the mode variable is orignally 0
@@ -55,8 +55,8 @@ describe('AccountComponent', () => {
     expect(modeSpy).toHaveBeenCalled();
   });
 
-  
-  it('Checks whether getInformation calls accountService.userData()', async () => {
+
+  it('should call accountService.userData() when getting the user information', async () => {
     // Creates the spy on userData()
     let dataSpy = spyOn(component["accountService"], "userData");
     // Calls the getInfo function
@@ -66,7 +66,7 @@ describe('AccountComponent', () => {
   });
 
 
-  it('Checks whether getInformation works when data is returned', async () => {
+  it('should process the received information correctly', async () => {
     // Creates a dummy user
     let userReturn = new User(8, "Lannes");
     // Sets a variable of the user object
@@ -84,7 +84,7 @@ describe('AccountComponent', () => {
   });
 
 
-  it('Checks whether getInformation catch statement works', async () => {
+  it('should catch the error when getting user information', async () => {
     // Spies on userData and return error
     let dataSpy = spyOn(component["accountService"], "userData").and.throwError(new Error("error"));
     // Spies on the toastCommService in the catch statement

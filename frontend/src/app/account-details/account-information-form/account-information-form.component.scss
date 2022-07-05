@@ -2,8 +2,11 @@
 $orange-shade: #ed5a06;
 
 // Changes the color of the button to orange
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    background-color: $orange-shade !important;
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
+    background-color: $orange-shade  !important;
 }
 
 // Make the highlight around the buttons none
@@ -19,6 +22,6 @@ $orange-shade: #ed5a06;
 }
 
 // Description field of the user
-#description{
+#description {
     resize: none;
 }

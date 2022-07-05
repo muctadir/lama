@@ -18,7 +18,7 @@ export class ModerationComponent {
   users: User[] = [];
 
   /* Page currently getting viewed, 0 = page with all users, 1 = edit page account details, 2 = edit password page */
-  mode: number = 0;
+  mode = 0;
 
   /**
    * Initializes AccountInfoService
@@ -27,7 +27,7 @@ export class ModerationComponent {
    * @trigger on component creation
    */
   constructor(private accountService: AccountInfoService,
-    private toastCommService: ToastCommService, 
+    private toastCommService: ToastCommService,
     private modalService: NgbModal) { }
 
   /**
@@ -64,7 +64,7 @@ export class ModerationComponent {
     try {
       // Gets the user data
       this.users = await this.accountService.allUsersData();
-    } catch(e) {
+    } catch (e) {
       // Makes an error toast
       this.toastCommService.emitChange([false, "An error occured when gathering data from the server"]);
     }
@@ -90,13 +90,13 @@ export class ModerationComponent {
    * @param deluser user to be deleted
    * @trigger delete button is clicked for @deluser
    */
-  async softDelete(deluser: User): Promise<void> {
-    let modalRef = this.modalService.open(ConfirmModalComponent, {});
+  softDelete(deluser: User): void {
+    let modalRefrence = this.modalService.open(ConfirmModalComponent, {});
 
     // Listens for an event emitted by the modal
-    modalRef.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
+    modalRefrence.componentInstance.confirmEvent.subscribe(async ($e: boolean) => {
       // If a confirmEvent = true is emitted we delete the user
-      if($e) {
+      if ($e) {
         try {
           // Makes the call to delete the user
           await this.accountService.softDelUser(deluser);

@@ -4,17 +4,15 @@
 # Linh Nguyen
 
 from src.models.project_models import Membership
-from flask import current_app as app
 from src.models import db
-from src.models.auth_models import User, UserSchema, UserStatus
+from src.models.auth_models import User, UserStatus
 from src.models.item_models import Artifact, LabelType, Labelling, Label
-from src.models.project_models import Project, Membership, ProjectSchema
+from src.models.project_models import Project, Membership
 from flask import jsonify, Blueprint, make_response, request
 from sqlalchemy import select, func, update, distinct
 from src.app_util import login_required, check_args, in_project, check_string, check_whitespaces, in_project, not_frozen
 from sqlalchemy.exc import OperationalError, IntegrityError
 from src.routes.conflict_routes import nr_project_conflicts, nr_user_conflicts
-from collections import defaultdict
 
 project_routes = Blueprint("project", __name__, url_prefix="/project")
 
@@ -38,8 +36,8 @@ def home_page(*, user):
         select(
             Membership
         ).where(
-            Membership.u_id==user.id,
-            Membership.deleted==0
+            Membership.u_id == user.id,
+            Membership.deleted == 0
         )
     ).all()
 
@@ -47,30 +45,31 @@ def home_page(*, user):
     projects_info = []
 
     # Schema to serialize the Project
-    project_schema = ProjectSchema()
+    project_schema = Project.__marshmallow__()
 
     # For loop for admin, users, #artifacts
     for membership_project in projects_of_user:
 
-        # Make project variable 
+        # Make project variable
         project = membership_project.project
 
         # Convert project to JSON
         project_json = project_schema.dump(project)
 
-        # Get admin status 
+        # Get admin status
         projects_admin = membership_project.admin
 
         # Get number of artifacts, and number of completed artifacts
-        project_nr_artifacts, project_nr_cl_artifacts = __get_artifact_counts(project.id, project.criteria)
+        project_nr_artifacts, project_nr_cl_artifacts = __get_artifact_counts(
+            project.id, project.criteria)
 
         # Get the serialized users in the project
         users = get_serialized_users(get_users_in_project(project.id)
-        )
-        
+                                     )
+
         # Put all values into a dictonary
         info = {
-            "project" : project_json,
+            "project": project_json,
             "projectAdmin": projects_admin,
             "projectNrArtifacts": project_nr_artifacts,
             "projectNrCLArtifacts": project_nr_cl_artifacts,
@@ -85,6 +84,7 @@ def home_page(*, user):
     # Return the list of dictionaries
     return make_response(dict_json)
 
+
 """
 For getting all users that can be added to a project
 @returns a list of users that are not super admins, and not the authenticated user
@@ -94,15 +94,16 @@ For getting all users that can be added to a project
 def get_users(*, user):
 
     # Make a list of all approved users
-    all_users = db.session.scalars(select(User).where(User.status==UserStatus.approved,
-            User.super_admin == False,
-            User.id != user.id)).all()
+    all_users = db.session.scalars(select(User).where(User.status == UserStatus.approved,
+                                                      User.super_admin == False,
+                                                      User.id != user.id)).all()
 
     # Convert the list of users to json
     response_users = jsonify(get_serialized_users(all_users))
 
     # Return the list of users
     return make_response(response_users)
+
 
 """
 For creating a new project
@@ -137,7 +138,7 @@ def create_project(*, user):
     # Check if all required arguments are there
     if not check_args(required, project_info["project"]):
         return make_response("Not all required arguments supplied", 400)
-    
+
     # Check for invalid characters
     if check_whitespaces([project_info['project']['name'], project_info['project']['description']]):
         return make_response("Input contains leading or trailing whitespaces", 400)
@@ -147,25 +148,27 @@ def create_project(*, user):
         return make_response("Input contains a forbidden character", 511)
 
     # Load the project data into a project object
-    project_schema = ProjectSchema()
+    project_schema = Project.__marshmallow__()
     project = project_schema.load(project_info["project"])
 
     # Add the project to the database
     db.session.add(project)
-    
-    # Get the ids of all users 
-    users = {user['u_id'] : user['admin'] for user in project_info['users']}
+
+    # Get the ids of all users
+    users = {user['u_id']: user['admin'] for user in project_info['users']}
 
     # Also append the user that created the project as an admin
     users[user.id] = True
 
     # Get the ids of all super_admins
-    super_admin_ids = db.session.scalars(select(User.id).where(User.super_admin == True)).all()
+    super_admin_ids = db.session.scalars(
+        select(User.id).where(User.super_admin == True)).all()
     # Add all super admins as admins
     for super_admin_id in super_admin_ids:
         users[super_admin_id] = True
 
-    memberships = [Membership(p_id=project.id, u_id=k, admin=v) for k, v in users.items()]
+    memberships = [Membership(p_id=project.id, u_id=k, admin=v)
+                   for k, v in users.items()]
 
     db.session.add_all(memberships)
 
@@ -175,17 +178,18 @@ def create_project(*, user):
     for type_name in type_names:
         # Create a label type object
         label_type = LabelType(p_id=project.id, name=type_name)
-        
+
         # Add the label type to the database
         db.session.add(label_type)
 
-    # Try committing all changes to the database   
+    # Try committing all changes to the database
     try:
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error', 503)
-    
+
     return make_response('Projetc created', 201)
+
 
 """
 Function to get a serialized list of users
@@ -194,9 +198,10 @@ Function to get a serialized list of users
 """
 def get_serialized_users(users):
     # Schema to serialize the Users
-    user_schema = UserSchema()
-    
-    return user_schema.dump(users, many = True)
+    user_schema = User.__marshmallow__()
+
+    return user_schema.dump(users, many=True)
+
 
 """
 For getting the information in a project's settings page
@@ -214,7 +219,7 @@ For getting the information in a project's settings page
 @login_required
 @in_project
 def get_project(*, user):
-    # Get args 
+    # Get args
     args = request.args
 
     # Required args
@@ -223,15 +228,15 @@ def get_project(*, user):
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
-    #Get project with supplied project ID
+    # Get project with supplied project ID
     project = db.session.get(Project, args['p_id'])
-    #If no such project exists
+    # If no such project exists
     if not project:
         return make_response('Project does not exist', 400)
 
     # Get all users from the project
     users_of_project = db.session.scalars(
-        select(Membership).where(Membership.p_id==args['p_id'])
+        select(Membership).where(Membership.p_id == args['p_id'])
     ).all()
 
     # Send the user object
@@ -241,12 +246,12 @@ def get_project(*, user):
         'admin': member.admin,
         'removed': member.deleted,
         'super_admin': member.user.super_admin
-    } for member in users_of_project]    
+    } for member in users_of_project]
 
-    #Get all label types from the project
+    # Get all label types from the project
     label_types = db.session.scalars(
-            select(LabelType).where(LabelType.p_id==args['p_id'])
-        ).all()
+        select(LabelType).where(LabelType.p_id == args['p_id'])
+    ).all()
 
     # Send the label type object
     label_type_data = [{
@@ -265,8 +270,9 @@ def get_project(*, user):
         "labelType": label_type_data
     })
 
-    #Send response to frontend
+    # Send response to frontend
     return make_response(project_data)
+
 
 """
 For editing an existing project
@@ -301,7 +307,7 @@ def edit_project(*, membership):
     if (not membership.admin):
         return make_response('This member is not admin', 401)
 
-    # Get args 
+    # Get args
     args = request.json['params']
     # Required args
     required = ["p_id", "project", "add", "update"]
@@ -327,9 +333,11 @@ def edit_project(*, membership):
     # Updating project information
     project_updated = update_project(args['project'])
     # Updating members admin status or removing members
-    project_members_updated = update_members_in_project(project.id, args['update'], 1)
+    project_members_updated = update_members_in_project(
+        project.id, args['update'], 1)
     # Adding old members back to the project
-    project_old_members_added = update_members_in_project(project.id, args['add'], 0)
+    project_old_members_added = update_members_in_project(
+        project.id, args['add'], 0)
     # Adding new members to the project
     project_new_members_added = add_members(project.id, args['add'])
     # Checks if everything went well
@@ -346,6 +354,7 @@ def edit_project(*, membership):
     else:
         return make_response('Error with saving')
 
+
 """
 For updating project info
 @params a dictionary of the form: {
@@ -357,18 +366,19 @@ For updating project info
 """
 def update_project(args):
     try:
-        #Updating information from the project with info from args
+        # Updating information from the project with info from args
         db.session.execute(
-            update(Project).where(Project.id == args['id']).values(name=args['name'], 
-            description=args['description'], criteria=args["criteria"])
+            update(Project).where(Project.id == args['id']).values(name=args['name'],
+                                                                   description=args['description'], criteria=args["criteria"])
         )
-        #Returning response saying that things went well
+        # Returning response saying that things went well
         return make_response("Updated", 200)
     except OperationalError:
-        #Returning an error response
+        # Returning an error response
         return make_response("Internal Server Error", 503)
     except:
         return make_response("An error has occurred", 400)
+
 
 """
 For updating members information
@@ -385,25 +395,26 @@ For updating members information
 """
 def update_members_in_project(p_id, args, update_or_add):
     try:
-        #List containing members whose information is to be updated/who will be removed
+        # List containing members whose information is to be updated/who will be removed
         updated_members_list = []
-        #Appending updated information about each member to the list above
+        # Appending updated information about each member to the list above
         for mem in args:
             match update_or_add:
                 case 1:
-                    updated_members_list.append({'p_id': p_id,'u_id': args[mem]['id'],
-                    'admin': args[mem]['admin'], 'deleted': args[mem]['removed']})
+                    updated_members_list.append({'p_id': p_id, 'u_id': args[mem]['id'],
+                                                 'admin': args[mem]['admin'], 'deleted': args[mem]['removed']})
                 case 0:
                     if (args[mem]['removed'] == 1):
-                        updated_members_list.append({'p_id': p_id,'u_id': args[mem]['id'],
-                        'admin': args[mem]['admin'], 'deleted': 0})
-        #Updating the information in the database
-        db.session.bulk_update_mappings(Membership,updated_members_list)
-        #Returning response saying that things went well
+                        updated_members_list.append({'p_id': p_id, 'u_id': args[mem]['id'],
+                                                     'admin': args[mem]['admin'], 'deleted': 0})
+        # Updating the information in the database
+        db.session.bulk_update_mappings(Membership, updated_members_list)
+        # Returning response saying that things went well
         return make_response("Success", 200)
     except OperationalError:
-        #Returning an error response
+        # Returning an error response
         return make_response("Internal Service Error", 503)
+
 
 """
 For adding new members to the project
@@ -424,8 +435,8 @@ def add_members(p_id, args):
     # Appending new members' information to the lists above
     for mem in args:
         if (args[mem]['removed'] == 0):
-            added_members_list.append({'p_id': p_id,'u_id': args[mem]['id'],
-            'admin': args[mem]['admin'], 'deleted': 0})
+            added_members_list.append({'p_id': p_id, 'u_id': args[mem]['id'],
+                                       'admin': args[mem]['admin'], 'deleted': 0})
     try:
         # Adding members to the database
         db.session.bulk_insert_mappings(Membership, added_members_list)
@@ -447,36 +458,41 @@ For freezing a project
 @login_required
 @in_project
 def freeze_project(*, membership):
+    # Check if user is admin
     if not membership.admin:
         return make_response('This member is not admin', 401)
 
-    # Get args 
+    # Get args
     args = request.json['params']
     # Required args
     required = ['p_id', 'frozen']
 
+    # Check if the required arguments are required
     if not check_args(required, args):
         return make_response('Bad Request', 400)
 
-    #Get project with supplied ID
+    # Get project with supplied ID
     project = db.session.get(Project, args['p_id'])
+    # Check if the project exists
     if not project:
         return make_response('Project does not exist', 400)
 
-    #Updating the frozen status of the project
+    # Updating the frozen status of the project
     db.session.execute(
-        update(Project).where(Project.id == args['p_id']).values(frozen=args['frozen'])
+        update(Project).where(Project.id == args['p_id']).values(
+            frozen=args['frozen'])
     )
 
-    #Committing the information to the backend
-    try: 
+    # Committing the information to the backend
+    try:
         db.session.commit()
     except OperationalError:
         return make_response('Internal Server Error', 503)
 
-    #Returning a response
+    # Returning a response
     return make_response('Ok', 200)
-    
+
+
 """
 Author: Ana-Maria Olteniceanu
 Gets data from a single project
@@ -493,7 +509,7 @@ Gets data from a single project
 @login_required
 @in_project
 def single_project():
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id']
@@ -508,14 +524,13 @@ def single_project():
     project = __get_project(p_id)
 
     # Schema to serialize the Project
-    project_schema = ProjectSchema()
-    # Schema to serialize the User
-    user_schema = UserSchema()
+    project_schema = Project.__marshmallow__()
 
     # Convert project to JSON
     project_json = project_schema.dump(project)
 
-    project_nr_artifacts, project_nr_cl_artifacts = __get_artifact_counts(p_id, project.criteria)
+    project_nr_artifacts, project_nr_cl_artifacts = __get_artifact_counts(
+        p_id, project.criteria)
 
     # Serialize all users
     users = get_serialized_users(get_users_in_project(project.id))
@@ -524,23 +539,25 @@ def single_project():
     conflicts = nr_project_conflicts(p_id)
 
     # Get the number of labels in the conflict
-    labels = db.session.scalar(select(func.count(distinct(Label.id))).where(Label.p_id==p_id))
-        
+    labels = db.session.scalar(
+        select(func.count(distinct(Label.id))).where(Label.p_id == p_id))
+
     # Put all values into a dictonary
     info = {
-        "project" : project_json,
+        "project": project_json,
         "projectNrArtifacts": project_nr_artifacts,
         "projectNrCLArtifacts": project_nr_cl_artifacts,
         "projectUsers": users,
         "conflicts": conflicts,
         "labels": labels
-        }
+    }
 
     # Convert dictionary to json
     dict_json = jsonify(info)
 
     # Return the dictionary
     return make_response(dict_json)
+
 
 """
 Author: Ana-Maria Olteniceanu
@@ -557,7 +574,7 @@ Gets user statistics for a single project
 @login_required
 @in_project
 def project_stats():
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id']
@@ -608,7 +625,7 @@ def project_stats():
         if user.id in user_conflicts:
             conflicts = user_conflicts[user.id]
         else:
-             conflicts = 0
+            conflicts = 0
 
         # Add all data to a dictionary
         info = {
@@ -632,7 +649,7 @@ def project_stats():
 def __get_project(p_id):
     return db.session.get(Project, p_id)
 
-# Function that converts a datetime.time variable into 
+# Function that converts a datetime.time variable into
 # the number of seconds it's equivalent with
 def __time_in_seconds(time):
     return (time.hour * 60 + time.minute) * 60 + time.second
@@ -662,9 +679,10 @@ def __time_to_string(time):
             if number < 10:
                 time_string += '0'
             time_string += str(number) + ':'
-    
+
     # Return the string with the time
     return time_string[:-1]
+
 
 def __get_artifact_counts(p_id, criteria):
 
@@ -672,7 +690,7 @@ def __get_artifact_counts(p_id, criteria):
     project_nr_artifacts = db.session.scalar(select(
         func.count(Artifact.id)
     ).where(
-        Artifact.p_id==p_id
+        Artifact.p_id == p_id
     ))
 
     per_label_type = select(
@@ -718,6 +736,7 @@ def __get_artifact_counts(p_id, criteria):
 
     return project_nr_artifacts, project_nr_cl_artifacts
 
+
 """
 Function to query for the users in a project
 @param p_id: the project id
@@ -725,9 +744,9 @@ Function to query for the users in a project
 """
 def get_users_in_project(p_id):
     return db.session.scalars(select(User)
-            .where(
-                Membership.u_id==User.id,
-                Membership.p_id==p_id,
-                Membership.deleted==False,
-                User.status==UserStatus.approved
-            )).all()
+                              .where(
+        Membership.u_id == User.id,
+        Membership.p_id == p_id,
+        Membership.deleted == False,
+        User.status == UserStatus.approved
+    )).all()

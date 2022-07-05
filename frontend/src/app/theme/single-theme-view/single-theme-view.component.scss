@@ -22,7 +22,7 @@ $light-grey-shade: #aaaaaa;
     padding-top: 10px;
     text-align: left;
     letter-spacing: 1px;
-    border-bottom: 1px; 
+    border-bottom: 1px;
     border-bottom-style: solid;
     border-bottom-color: $light-grey-shade;
 }
@@ -40,16 +40,16 @@ $light-grey-shade: #aaaaaa;
 
 // Name Column
 #name {
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    border-bottom: 1px;
+    border-bottom-style: solid;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
 }
 
 // Label Count Header
 #labelCount {
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    border-bottom: 1px;
+    border-bottom-style: solid;
     font-size: 16px;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
@@ -57,8 +57,8 @@ $light-grey-shade: #aaaaaa;
 
 // ArtifactCount Header
 #artifactCount {
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    border-bottom: 1px;
+    border-bottom-style: solid;
     font-size: 16px;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
@@ -66,8 +66,8 @@ $light-grey-shade: #aaaaaa;
 
 // Parent-Themes Header
 #parentThemes {
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    border-bottom: 1px;
+    border-bottom-style: solid;
     font-size: 16px;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
@@ -80,7 +80,11 @@ $light-grey-shade: #aaaaaa;
 }
 
 //Content text of multipl sections in top left part
-#parentThemesText, #themeNameText, #labelCountText, #artifactCountText, #subThemesText {
+#parentThemesText,
+#themeNameText,
+#labelCountText,
+#artifactCountText,
+#subThemesText {
     font-size: 14px;
     letter-spacing: 1px;
     margin-bottom: 0;
@@ -89,14 +93,15 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Make childern names hoverable
-#subThemesText:hover, #parentThemesText:hover {
+#subThemesText:hover,
+#parentThemesText:hover {
     cursor: pointer;
 }
 
 //Sub-ThemesHeader
 #subThemes {
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    border-bottom: 1px;
+    border-bottom-style: solid;
     font-size: 16px;
     letter-spacing: 1px;
     border-bottom-color: $orange-shade;
@@ -122,8 +127,8 @@ $light-grey-shade: #aaaaaa;
 
 //Labels Header 
 #labelsHeader {
-    border-bottom: 1px; 
-    border-bottom-style: solid; 
+    border-bottom: 1px;
+    border-bottom-style: solid;
     font-size: 16px;
     font-weight: 450;
     letter-spacing: 1px;
@@ -131,7 +136,8 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Artifact text and remarks
-#artifactText ,#artifactRemark {
+#artifactText,
+#artifactRemark {
     font-size: 14px;
     font-weight: 400;
 }
@@ -146,18 +152,16 @@ $light-grey-shade: #aaaaaa;
 ::-webkit-scrollbar {
     width: 10px;
 }
-// Scrollbar background
-::-webkit-scrollbar {
-    width: 10px;
-}
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: $white-shade; 
+    background: $white-shade;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: $grey-shade; 
+    background: $grey-shade;
     border-radius: 10px;
 }
 
@@ -176,7 +180,8 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Cancel button
-#btns-cancel-submit, #deleteButton {
+#btns-cancel-submit,
+#deleteButton {
     border: none;
     width: 150px;
 }
@@ -189,19 +194,6 @@ $light-grey-shade: #aaaaaa;
 // Row for the buttons
 .buttonRow {
     width: 100%;
-}
-
-// Column for the alert message
-#alertMessageCol {
-    padding-top: 10px;
-}
-
-// Style for the alert message
-#alertMessage {
-    font-size: 18px;
-    color: red;
-    margin: 0px;
-    padding:0px;
 }
 
 // Changes the cursor of the user when hovering

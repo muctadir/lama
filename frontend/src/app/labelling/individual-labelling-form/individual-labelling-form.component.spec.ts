@@ -9,18 +9,18 @@ import { IndividualLabellingForm } from './individual-labelling-form.component';
 /**
  * Testing suite for individual labelling form component
  */
-describe('LabellingTypeComponent', () => {
+describe('IndivdualLabellingComponent', () => {
   let component: IndividualLabellingForm;
   let fixture: ComponentFixture<IndividualLabellingForm>;
 
   // Sets dependencies
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IndividualLabellingForm ],
+      declarations: [IndividualLabellingForm],
       imports: [RouterTestingModule, ReactiveFormsModule, NgbTypeaheadModule, FormsModule],
       providers: [FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('LabellingTypeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Tests ngOnInit with valid input', async () => {
+  it('should initialize correctly', async () => {
     // Creates the various spies
     let spy = spyOn(component, "getLabels");
     let spyForm = spyOn(component.labelForm, "reset");
@@ -51,9 +51,9 @@ describe('LabellingTypeComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyForm).toHaveBeenCalled();
     expect(spyForm2).toHaveBeenCalled();
-  }); 
+  });
 
-  it('Tests ngOnInit with invalid input', async () => {
+  it('should initialize when there is an invalid input, case 1', async () => {
     // Creates the spies
     let spy = spyOn(component, "getLabels");
     let spyForm = spyOn(component.labelForm, "reset");
@@ -73,9 +73,9 @@ describe('LabellingTypeComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyForm).toHaveBeenCalled();
     expect(spyForm2).toHaveBeenCalled();
-  }); 
+  });
 
-  it('Tests ngOnInit with invalid input2', async () => {
+  it('should initialize when there is an invalid input, case 2', async () => {
     // Creates the spies
     let spy = spyOn(component, "getLabels");
     let spyForm = spyOn(component.labelForm, "reset");
@@ -96,12 +96,12 @@ describe('LabellingTypeComponent', () => {
     expect(spyForm).toHaveBeenCalled();
     expect(spyForm2).toHaveBeenCalled();
   });
-  
-  it('tests the clickLabel function', () => {
+
+  it('should click the label', () => {
     // Creates dummy imput
     component.labels = [new Label(1, "label1", "desc1", "type1"), new Label(2, "label2", "desc2", "type2")];
     // Dummy input which will used in the function call
-    let item = {item: "label2"};
+    let item = { item: "label2" };
     // Creates a spy 
     let spy = spyOn(component.labelForm.controls['label'], "setValue");
 
@@ -114,14 +114,14 @@ describe('LabellingTypeComponent', () => {
     expect(component.selectedDesc).toBe("desc2");
   });
 
-  it('test the getLabels function', async () => {
+  it('should get the labels', async () => {
     // Creates the spies necessary to test the component
     let spyRouter = spyOnProperty(component["router"], "url", "get");
     // Return dummy data
     let spyReRouting = spyOn(component["reroutingService"], "getProjectID").and.returnValue("5");
     let spyLabel = spyOn(component["labelDataService"], "getLabelTypesWithLabels").and.returnValue(
       Promise.resolve([new LabelType(1, "labeltype1", [new Label(1, "l1", "d1", "1"), new Label(2, "l2", "d2", "1")]),
-        new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])]
+      new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])]
       )
     );
 
@@ -139,5 +139,76 @@ describe('LabellingTypeComponent', () => {
     // Advanced checks
     expect(component.labels).toEqual([new Label(1, "l1", "d1", "1"), new Label(2, "l2", "d2", "1")]);
     expect(component.allLabelsNames).toEqual(["l1", "l2"]);
+  });
+
+
+  it('should test the labelForm listener', async () => {
+    // Creates a spy
+    spyOn(component, "getLabels");
+    
+    // Calls function to create listener
+    await component.ngOnInit();
+
+    // Creates the dummy input
+    let label = new Label(1, "label1", "desc1", "type1");
+    let labeltype = new LabelType(1, "lt1", [label]);
+    component.labelType = labeltype;
+
+    // Triggers listener
+    component["labelForm"].controls["label"].setValue(label);
+
+    expect(component.selectedDesc).toEqual("desc1");
+  });
+
+  it('should test the labelForm listener with null inputs', async () => {
+    // Creates a spy
+    spyOn(component, "getLabels");
+
+    // Calls function to create listener
+    await component.ngOnInit();
+
+    // Creates the dummy input
+    let label = new Label(1, "label1", "desc1", "type1");
+    component.labelType = undefined;
+
+    // Triggers listener
+    component["labelForm"].controls["label"].setValue(label);
+
+    // Does the check whether no error occurs
+    expect(component).toBeTruthy();
+  });
+
+  it('should test the labelForm listener null inputs case 2', async () => {
+    // Creates a spy
+    spyOn(component, "getLabels");
+
+    // Spies on the get label call
+    let spy = spyOn(component["labelForm"], "get").and.returnValue(null);
+
+    // Calls function to create listener
+    await component.ngOnInit();
+
+    // Does the check whether no error occurs
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should get the labels, but has null input for labeltype', async () => {
+    // Creates the spies necessary to test the component
+    let spyRouter = spyOnProperty(component["router"], "url", "get");
+    // Return dummy data
+    let spyReRouting = spyOn(component["reroutingService"], "getProjectID").and.returnValue("5");
+    let spyLabel = spyOn(component["labelDataService"], "getLabelTypesWithLabels").and.returnValue(
+      Promise.resolve([new LabelType(1, "labeltype1", [new Label(1, "l1", "d1", "1"), new Label(2, "l2", "d2", "1")]),
+        new LabelType(2, "labeltype2", [new Label(3, "l3", "d3", "2"), new Label(4, "l4", "d4", "2")])]
+      )
+    );
+
+    // Calls function to be tested
+    await component.getLabels();
+
+    // Basic checks
+    expect(spyRouter).toHaveBeenCalled();
+    expect(spyReRouting).toHaveBeenCalled();
+    expect(spyLabel).toHaveBeenCalledWith(5);
   });
 });

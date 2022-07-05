@@ -6,12 +6,14 @@
             <p class="header">Label Management</p>
         </div>
         <div class="col">
-        <!-- Buttons for creating and adding labels -->
-            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()" [disabled]="frozen">
+            <!-- Buttons for creating and adding labels -->
+            <button type="button" class="btn btn-secondary" id="createLabelButton" (click)="openCreate()"
+                [disabled]="frozen">
                 Create label
                 <i class="bi bi-plus"></i>
             </button>
-            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()" [disabled]="frozen">
+            <button type="button" class="btn btn-secondary" id="mergeLabelButton" (click)="openMerge()"
+                [disabled]="frozen">
                 Merge labels
                 <i class="bi bi-plus"></i>
             </button>
@@ -23,7 +25,8 @@
         <div class="col-5">
             <div class="search__container">
                 <form [formGroup]="searchForm">
-                    <input id="searchBar" class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                    <input id="searchBar" class="search__input" type="text" placeholder="Search"
+                        formControlName="search_term" (keyup.enter)="onEnter()">
                 </form>
             </div>
         </div>
@@ -31,28 +34,41 @@
 
 
     <!--Row containing Artifacts Table-->
-    <div class="row" id="tableRow">
-        <div class="col-1"></div>
+    <div class="row justify-content-sm-center" id="tableRow">
         <div class="col-9">
-            <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+            <div id="scrolly">
                 <table class="table table-hover">
                     <!--Table Headers-->
                     <thead>
                         <tr>
-                            <th scope="col"><p class="labelheader" (click)="sortLabel();"><span class="clickable">Label</span></p></th>
-                            <th scope="col"><p class="labelheader" (click)="sortLabelType();"><span class="clickable">Label Type</span></p></th>
-                            <th scope="col"><p class="labelheader" (click)="sortNumberOfArtifacts();"><span class="clickable">Artifacts Labelled</span></p></th>
+                            <th scope="col">
+                                <p class="labelheader" (click)="sortLabel();"><span class="clickable">Label</span></p>
+                            </th>
+                            <th scope="col">
+                                <p class="labelheader" (click)="sortLabelType();"><span class="clickable">Label
+                                        Type</span></p>
+                            </th>
+                            <th scope="col">
+                                <p class="labelheader" (click)="sortNumberOfArtifacts();"><span
+                                        class="clickable">Artifacts Labelled</span></p>
+                            </th>
                         </tr>
                     </thead>
                     <!--Table Content-->
                     <tbody>
                         <tr *ngFor="let label of labels" (click)="reRouter(label.getId())">
                             <!-- Label name field -->
-                            <td><p class="tablecontent">{{label.getName()}}</p></td>
+                            <td>
+                                <p class="tablecontent">{{label.getName()}}</p>
+                            </td>
                             <!-- Label type name field -->
-                            <td><p class="tablecontent">{{label.getType()}}</p></td>
+                            <td>
+                                <p class="tablecontent">{{label.getType()}}</p>
+                            </td>
                             <!-- Number of times the labels were used field -->
-                            <td><p class="tablecontent">{{labelAmount[label.getId()]}}</p></td>
+                            <td>
+                                <p class="tablecontent">{{labelAmount[label.getId()]}}</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

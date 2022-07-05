@@ -8,12 +8,7 @@ import { LabelType } from 'app/classes/label-type';
 import { Label } from 'app/classes/label';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastCommService } from 'app/services/toast-comm.service';
 
 @Component({
@@ -132,7 +127,7 @@ export class LabelFormComponent implements OnInit {
       !this.labelForm.controls['labelTypeId'].valid
     ) {
       // Throw error
-      throw 'Invalid Form';
+      throw Error('Invalid Form');
     }
     // Return new label
     return new Label(
@@ -149,14 +144,14 @@ export class LabelFormComponent implements OnInit {
   constructPatch(): void {
     // CHeck label undefined
     if (typeof this.label === 'undefined') {
-      throw 'Patch was attempted to be constructed without a label being supplied.';
+      throw Error('Patch was attempted to be constructed without a label being supplied');
     } else if (
       // Check validity
       !this.labelForm.controls['labelName'].valid ||
       !this.labelForm.controls['labelDescription'].valid
     ) {
       // Throw error
-      throw 'Invalid form';
+      throw Error('Invalid form');
     } else {
       // Change name and/pr description
       this.label.setName(this.labelForm.controls['labelName'].value);
@@ -180,33 +175,8 @@ export class LabelFormComponent implements OnInit {
       // Close modal
       this.activeModal.close();
     } catch (e: any) {
-      // Check if the error has invalid characters
-      if (e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"])
-      // Check if the label name is empty
-      } else if (e.response.data == "Label name cannot be empty"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name cannot be empty"]);
-      } else if (e.response.data == "Input contains an illegal character") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      // Check if the label description is empty
-      } else if (e.response.data == "Label description cannot be empty"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label description cannot be empty"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name already exists."]);
-      } else {
-        // Throw error
-        this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
-      }
+      // Throw error
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 
@@ -217,34 +187,13 @@ export class LabelFormComponent implements OnInit {
   async submitPatchToServer(label: Label): Promise<void> {
     try {
       // Wait for edit label
-      await this.labellingDataService.editLabel(
-        this.p_id,
-        label,
-        this.labelForm.controls['labelTypeId'].value
-      );
+      await this.labellingDataService.editLabel(this.p_id, label);
       // Close modal
       this.activeModal.close();
       this.toastCommService.emitChange([true, "Edited label successfully"]);
-    } catch (e:any) {
-      // Check if the error has invalid characters
-      if (e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      } else if (e.response.data == "Input contains an illegal character") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains an illegal character"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name already exists."]);
-      } else {
-        // Throw error
-        this.toastCommService.emitChange([false, "Something went wrong while submitting."]);
-      }
+    } catch (e: any) {
+      // Throw error
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 }

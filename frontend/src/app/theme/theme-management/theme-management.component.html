@@ -4,19 +4,22 @@
 
 <!-- big container -->
 <div class="container-fluid min-vh-100 d-flex flex-column" id="body">
-    <div class="row" >
-        <div class="col header" id="pageTitle"> 
+    <div class="row">
+        <div class="col header" id="pageTitle">
             Theme Management
         </div>
         <!-- Theme visualization button -->
         <div class="col-2 buttonsDiv">
             <!-- Button for visualizing the theme hierarchy -->
-            <button class="form-control btn btn-secondary" id="themeVisButton" (click)="reRouter('themeVisual')">Theme hierarchy</button>   
+            <button class="form-control btn btn-secondary" id="themeVisButton" (click)="reRouter('themeVisual')">
+                Theme hierarchy
+            </button>
         </div>
         <!-- Create theme button -->
         <div class="col-2 buttonsDiv">
             <!-- Button for creating a new theme -->
-            <button class="form-control btn btn-secondary" id="createThemeButton" (click)="reRouter('createTheme')" [disabled]="frozen">Create Theme<i class="bi bi-plus createTheme"></i></button>   
+            <button class="form-control btn btn-secondary" id="createThemeButton" (click)="reRouter('createTheme')"
+                [disabled]="frozen">Create Theme<i class="bi bi-plus createTheme"></i></button>
         </div>
     </div>
 
@@ -25,7 +28,8 @@
         <div class="col-5">
             <div class="search__container">
                 <form [formGroup]="searchForm">
-                    <input id="searchBar" class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                    <input id="searchBar" class="search__input" type="text" placeholder="Search"
+                        formControlName="search_term" (keyup.enter)="onEnter()">
                 </form>
             </div>
         </div>
@@ -39,7 +43,7 @@
                     <tr>
                         <th scope="col" (click)="sortName();"><span class="clickable">Name</span></th>
                         <th scope="col" (click)="sortDesc();"><span class="clickable">Description</span></th>
-                        <th scope="col" (click)="sortLabels();"><span class="clickable">Labels</span></th>                
+                        <th scope="col" (click)="sortLabels();"><span class="clickable">Labels</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,5 +57,5 @@
         </div>
 
     </div>
-    
+
 </div>

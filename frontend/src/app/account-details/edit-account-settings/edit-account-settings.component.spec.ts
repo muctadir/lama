@@ -7,8 +7,8 @@ import { User } from 'app/classes/user';
 export class TestError extends Error {
   response: any;
   constructor(message?: string, errortype?: any) {
-      super(message);
-      this.response = errortype;
+    super(message);
+    this.response = errortype;
   }
 }
 
@@ -26,11 +26,11 @@ describe('EditAccountSettingsComponent', () => {
     await TestBed.configureTestingModule({
       // Adds the RouterTestingModule dependency
       imports: [ReactiveFormsModule],
-      declarations: [ EditAccountSettingsComponent ],
+      declarations: [EditAccountSettingsComponent],
       // Adds FormBuilder dependency
       providers: [FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Tests the ngOnChanges function', () => {
+  it('should initialize correctly', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -62,7 +62,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('checks changeInformation with valid input', () => {
+  it('should change information with valid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -78,14 +78,16 @@ describe('EditAccountSettingsComponent', () => {
     component.changeInformation();
     // Checks results
     expect(spyCheck).toHaveBeenCalled();
-    expect(spyRequest).toHaveBeenCalledWith({"id": 8, 
-    "username": "username_test", 
-    "description" : "Test description", 
-    "email": "test@test.com"});
+    expect(spyRequest).toHaveBeenCalledWith({
+      "id": 8,
+      "username": "username_test",
+      "description": "Test description",
+      "email": "test@test.com"
+    });
   });
 
 
-  it('checks changeInformation with invalid input', () => {
+  it('should not change information because of invalid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     // Sets the user info
@@ -101,7 +103,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('Check input is tested for valid input', () => {
+  it('should check input for valid input', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -117,7 +119,7 @@ describe('EditAccountSettingsComponent', () => {
   });
 
 
-  it('Check input is tested with empty username', () => {
+  it('should check input with empty username', () => {
     // Creates a dummy user object
     let testUser = new User(8, "");
     testUser.setEmail("test@test.com");
@@ -132,7 +134,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(result).toBeFalsy();
   });
 
-  it('Check input is tested with empty email', () => {
+  it('should check input with empty email', () => {
     // Creates a dummy user object
     let testUser = new User(8, "testname");
     testUser.setEmail("");
@@ -147,7 +149,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(result).toBeFalsy();
   });
 
-  it('Check input is tested with invalid email', () => {
+  it('should check input with invalid email', () => {
     // Creates a dummy user object
     let testUser = new User(8, "testname");
     testUser.setEmail("xx");
@@ -162,12 +164,12 @@ describe('EditAccountSettingsComponent', () => {
     expect(result).toBeFalsy();
   });
 
-  it('Tests the makeRequest function with valid input', async () => {
+  it('should make the request with valid input', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
       "username": "testname",
-      "description" : "desctest",
+      "description": "desctest",
       "email": "email@test.com"
     };
 
@@ -183,17 +185,17 @@ describe('EditAccountSettingsComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([true, "Modification successful"]);
   });
 
-  it('Tests the makeRequest function in case of error with status 511', async () => {
+  it('should make the request and catch an 511 error', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
       "username": "",
-      "description" : "",
+      "description": "",
       "email": ""
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 511, data: "some_error_message"});
+    let dummyError = new TestError("bad error", { status: 511, data: "Input contains a forbidden character" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -201,20 +203,20 @@ describe('EditAccountSettingsComponent', () => {
     await component.makeRequest(input);
     // Checks the calls
     expect(spyRequest).toHaveBeenCalledWith(input);
-    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character: \\ ; , or #"]);
+    expect(spyToast).toHaveBeenCalledWith([false, "Input contains a forbidden character"]);
   });
 
-  it('Tests the makeRequest function in case of error with status != 511, but data specific', async () => {
+  it('should make the request and catch an error', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
       "username": "",
-      "description" : "",
+      "description": "",
       "email": ""
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 420, data: "Input contains leading or trailing whitespaces"});
+    let dummyError = new TestError("bad error", { status: 420, data: "Input contains leading or trailing whitespaces" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");
@@ -225,7 +227,7 @@ describe('EditAccountSettingsComponent', () => {
     expect(spyToast).toHaveBeenCalledWith([false, "Input contains leading or trailing whitespaces"]);
   });
 
-  it('Tests the makeRequest function in case of error with status != 511', async () => {
+  it('should test the makeRequest function in case of error with taken email/name', async () => {
     // Creates dummy input
     let input = {
       "id": 5,
@@ -235,7 +237,28 @@ describe('EditAccountSettingsComponent', () => {
     };
 
     // Creates dummy Error which is an AxiosError
-    let dummyError = new TestError("bad error", {status: 420, data: "some_error_message"});
+    let dummyError = new TestError("bad error", {status: 420, data: "Username or email taken"});
+    // Creates the spies
+    let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
+    let spyToast = spyOn(component["toastCommService"], "emitChange");
+    // Makes the request
+    await component.makeRequest(input);
+    // Checks the calls
+    expect(spyRequest).toHaveBeenCalledWith(input);
+    expect(spyToast).toHaveBeenCalledWith([false, "Username or email taken"]);
+  });
+
+  it('should make the request and catch an error', async () => {
+    // Creates dummy input
+    let input = {
+      "id": 5,
+      "username": "",
+      "description": "",
+      "email": ""
+    };
+
+    // Creates dummy Error which is an AxiosError
+    let dummyError = new TestError("bad error", { status: 420, data: "Please enter valid details!" });
     // Creates the spies
     let spyRequest = spyOn(component["accountInfoService"], "changeAccountDetails").and.throwError(dummyError);
     let spyToast = spyOn(component["toastCommService"], "emitChange");

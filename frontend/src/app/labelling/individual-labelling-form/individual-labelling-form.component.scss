@@ -40,12 +40,29 @@ $orange-shade: #ed5a06;
 }
 
 // Description field of the user
-#description{
+#description {
   resize: none;
 }
 
 // Make the dropdown scrollable
-::ng-deep .dropdown-menu{
+::ng-deep .dropdown-menu {
   max-height: 200px;
   overflow-y: scroll;
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+// Scrollbar background
+::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 10px;
+}
+
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+  background: #38474e;
+  border-radius: 10px;
 }

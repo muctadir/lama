@@ -15,10 +15,10 @@ describe('AccountInformationFormComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountInformationFormComponent ],
+      declarations: [AccountInformationFormComponent],
       imports: [ReactiveFormsModule, FormsModule],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('AccountInformationFormComponent', () => {
 
 
   // Tests whether ngOnInit works correctly
-  it('Tests whether ngOnInit works correctly', () => {
+  it('should initialize correctly', () => {
     // Creates a dummy user object
     let testUser = new User(8, "username_test");
     testUser.setEmail("test@test.com");
@@ -54,7 +54,7 @@ describe('AccountInformationFormComponent', () => {
     expect(component.description.value).toBe("Test description");
   });
 
-  it('Tests whether ngOnInit works when conditions are not satisfied', () => {
+  it('should initialize correctly when it has invalid inputs', () => {
     // Creates a dummy user object
     let testUser = new User(8, "");
 

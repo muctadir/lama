@@ -48,7 +48,8 @@
                 Description
             </div>
             <div class="form-group">
-                <textarea class="form-control" rows="8" placeholder="Description" id="description" readonly>{{label.getDesc()}}</textarea>
+                <textarea class="form-control" rows="8" placeholder="Description" id="description"
+                    readonly>{{label.getDesc()}}</textarea>
             </div>
             <!-- Part of which Themes -->
             <div class="subTitle">
@@ -60,14 +61,19 @@
         </div>
     </div>
 
-    <!-- Back and Edit Buttons -->
-    <div class="col-6 align-self-end">
-        <div>
-          <button *ngIf="labelCount == 0" class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete" [disabled]="frozen">Delete</button>
-          <!-- Edit button -->
-          <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit" [disabled]="frozen">Edit</button>
-          <!-- Cancel button -->
-          <button class="btn btn-secondary float-end" (click)="reRouter()" id="btn-back">Back</button>
+    <!-- Row for the delete buttons -->
+    <div class="row align-items-end justify-content-end">
+        <!-- Back and Edit Buttons -->
+        <div class="col-8 align-self-end">
+            <div>
+                <button *ngIf="labelCount == 0" class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete"
+                    [disabled]="frozen">Delete</button>
+                <!-- Edit button -->
+                <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit"
+                    [disabled]="frozen">Edit</button>
+                <!-- Cancel button -->
+                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btn-back">Back</button>
+            </div>
         </div>
     </div>
 </div>

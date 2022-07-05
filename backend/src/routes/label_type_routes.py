@@ -2,12 +2,12 @@
 # Author: Bartjan
 # Author: Eduardo Costa Martins
 from src.app_util import check_args
-from src import db # need this in every route
-from flask import current_app as app
+# Need this in every route
+from src import db
 from flask import make_response, request, Blueprint, jsonify
-from sqlalchemy import select, update
+from sqlalchemy import select
 from src.app_util import login_required, in_project
-from src.models.item_models import Label, LabelSchema, LabelType, LabelTypeSchema
+from src.models.item_models import Label, LabelType
 from collections import defaultdict
 
 label_type_routes = Blueprint("labeltype", __name__, url_prefix="/labeltype")
@@ -17,7 +17,7 @@ label_type_routes = Blueprint("labeltype", __name__, url_prefix="/labeltype")
 @label_type_routes.route('/all', methods=['GET'])
 @login_required
 @in_project
-def get_label_types(): 
+def get_label_types():
     # Get args from request
     args = request.args
     # What args are required
@@ -26,15 +26,15 @@ def get_label_types():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # Get all the labels of a labelType
     label_types = db.session.execute(
-            select(LabelType)
-            .where(LabelType.p_id==args['p_id'])
-        ).scalars().all()
-    
+        select(LabelType)
+        .where(LabelType.p_id == args['p_id'])
+    ).scalars().all()
+
     # Initialise label type schema
-    label_type_schema = LabelTypeSchema()
+    label_type_schema = LabelType.__marshmallow__()
     # Jsonify label type schema
     label_type_json = jsonify(label_type_schema.dump(label_types, many=True))
 
@@ -45,7 +45,7 @@ def get_label_types():
 @label_type_routes.route('/allWithLabels', methods=['GET'])
 @login_required
 @in_project
-def get_label_types_wl(): 
+def get_label_types_wl():
     # Get args from request
     args = request.args
     # What args are required
@@ -54,7 +54,7 @@ def get_label_types_wl():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # Get all the labels of a labelType
     labelTypes = db.session.scalars(
         select(LabelType)
@@ -64,16 +64,16 @@ def get_label_types_wl():
     ).all()
 
     # Initialise label type schema
-    label_type_schema = LabelTypeSchema()
+    label_type_schema = LabelType.__marshmallow__()
     # Initialise label schema
-    label_schema = LabelSchema()
-    
+    label_schema = Label.__marshmallow__()
+
     # Create dictionary with label type and labels
     dict_json = jsonify([{
-        'label_type': label_type_schema.dump(labelType), 
-        'labels': label_schema.dump((labelType.labels).filter_by(deleted=0), many = True)
+        'label_type': label_type_schema.dump(labelType),
+        'labels': label_schema.dump((labelType.labels).filter_by(deleted=0), many=True)
     } for labelType in labelTypes])
-    
+
     return make_response(dict_json)
 
 # Author: Eduardo Costa Martins
@@ -90,7 +90,14 @@ def get_labels_by_label_type():
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
+    # Check if the label type is part of the project
+    lt = db.session.scalars(select(LabelType).where(
+        LabelType.p_id == args['p_id'], 
+        LabelType.id == args['lt_id'])).all()
+    if not lt:
+        return make_response('Label type does not exist in this project', 400)
+        
     # Get all the labels of a labelType
     labelType = db.session.scalar(
         select(LabelType)
@@ -100,11 +107,13 @@ def get_labels_by_label_type():
     )
 
     # Initialise label schema
-    label_schema = LabelSchema()
-    
+    label_schema = Label.__marshmallow__()
+
     # Create dictionary with label type and labels
-    dict_json = label_schema.dump((labelType.labels).filter_by(deleted=0), many = True)
+    dict_json = label_schema.dump(
+        (labelType.labels).filter_by(deleted=0), many=True)
     return make_response(jsonify(dict_json))
+
 
 """
 Author: Eduardo Costa Martins

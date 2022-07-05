@@ -55,17 +55,6 @@ describe('Theme', () => {
       .toBe(newName)
   })
 
-  // Setting a bad theme name
-  it('throw error for bad theme description', () => {
-    // Create instances
-    const theme2 = new Theme(id, name, desc);
-    const newName = "";
-    // catch wrong name
-    try {
-      theme2.setName(newName);
-    } catch (error) { }
-  });
-
   // Getting the description
   it("should get the description", () => {
     expect(theme.getDesc())
@@ -84,17 +73,6 @@ describe('Theme', () => {
       .toBe(newDesc)
   })
 
-  // Setting a bad theme description
-  it('throw error for bad theme description', () => {
-    // Create instances
-    const theme2 = new Theme(id, name, desc);
-    const newDesc = "";
-    // catch wrong name
-    try {
-      theme2.setDesc(newDesc);
-    } catch (error) { }
-  });
-
   // Setting and getting the parent themes
   it("should set and get parent themes", () => {
     // Create instances
@@ -107,7 +85,7 @@ describe('Theme', () => {
       .toEqual(parent)
   })
 
-  
+
   // Setting and getting the child themes
   it("should set and get the child themes", () => {
     // Create instances
@@ -122,7 +100,7 @@ describe('Theme', () => {
   })
 
   // Getting the number of child themes
-  it("Should get the number of child themes", () => {
+  it("should get the number of child themes", () => {
     // Create instances
     const theme2 = new Theme(id, name, desc)
     const child1 = new Theme(3, "theme1", "themeDesc1");
@@ -133,6 +111,19 @@ describe('Theme', () => {
     // Check
     expect(theme2.getNumberOfChildren())
       .toBe(children.length)
+  })
+
+  // Getting the number of child themes
+  it("should get the number of child themes, error case", () => {
+    // Create instances
+    const theme2 = new Theme(id, name, desc)
+    const children = undefined;
+    // Set children
+    theme2.setChildren(undefined);
+    let result = theme2.getNumberOfChildren();
+
+    // Check
+    expect(result).toEqual(0);
   })
 
   // Setting and getting the theme labels
@@ -149,7 +140,7 @@ describe('Theme', () => {
   })
 
   // Getting the number of theme labels
-  it("Should get the number of labels", () => {
+  it("should get the number of labels", () => {
     // Create instances
     const theme2 = new Theme(id, name, desc)
     const label1 = new Label(1, "label1", "labelDesc1", "type");
@@ -163,7 +154,7 @@ describe('Theme', () => {
   })
 
   // Getting the number of theme labels
-  it("Should get the number of labels", () => {
+  it("should get the number of labels", () => {
     // Create instances
     const theme2 = new Theme(id, name, desc)
     const numberOfLabels = 5;
@@ -197,6 +188,4 @@ describe('Theme', () => {
     expect(theme2.getDeleted())
       .toBe(status)
   })
-
-
 });

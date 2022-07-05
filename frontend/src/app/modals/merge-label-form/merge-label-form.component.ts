@@ -61,7 +61,7 @@ export class MergeLabelFormComponent {
   }
 
   // Gets the ,erged labels
-  get toBeMergedLabels() {
+  get toBeMergedLabels(): FormArray {
     return this.form.controls['toBeMergedLabels'] as FormArray;
   }
 
@@ -117,13 +117,28 @@ export class MergeLabelFormComponent {
   async submit(): Promise<void> {
     // Check you are merging two or more labels
     if (this.toBeMergedLabels.length < 2) {
-      this.toastCommService.emitChange([false, "Plase select two or more labels to merge"]);
-      return 
+      this.toastCommService.emitChange([false, "Please select two or more labels to merge"]);
+      return
     }
+
     // Puts the labels to be merged in array
     const arrayResult: [Record<string, Label>] = this.form.get('toBeMergedLabels')?.value;
 
-    const mergedLabels = arrayResult.map(result => result['label'].getId());
+    // Check is the arrayResult is not null
+    if (arrayResult != null){
+      // Check if the label forms were filled in
+      for (let label of arrayResult){
+        // If a label form was not filled in
+        if (label['label'] == null){
+          // Return a toast error message
+          this.toastCommService.emitChange([false, "Please fill in all label forms"]);
+          return
+        }
+      }
+    } 
+
+    // Get the ids of the labels to be merged
+    const mergedLabels = arrayResult?.map(result => result['label'].getId());
 
     try {
       // Wait for the posting of the merging
@@ -135,7 +150,7 @@ export class MergeLabelFormComponent {
         'p_id': this.p_id
       });
       // Make toast signalling whether the merging was successful or not
-      if(response == "Success" ){
+      if (response == "Success") {
         this.toastCommService.emitChange([true, "Labels merged successfully"])
         // Close modal
         this.activeModal.close()
@@ -144,30 +159,8 @@ export class MergeLabelFormComponent {
         this.toastCommService.emitChange([false, response])
       }
     } catch (e:any) {
-      // Check if the error has invalid characters
-      if (e.response.status == 511){
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains a forbidden character: \\ ; , or #"]);
-      // Check if error has invalid whitespaces
-      } else if (e.response.data == "Input contains leading or trailing whitespaces") {
-        // Displays the error message
-        this.toastCommService.emitChange([false, "Input contains leading or trailing whitespaces"]);
-      // Check if the label name is empty
-      } else if (e.response.data == "Label name cannot be empty"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name cannot be empty"]);
-      // Check if the label description is empty
-      } else if (e.response.data == "Label description cannot be empty"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label description cannot be empty"]);
-      // Check if label name already exists
-      } else if (e.response.data == "Label name already exists"){
-        // Throw error
-        this.toastCommService.emitChange([false, "Label name already exists."]);
-      } else {
-        // Throw error
-        this.toastCommService.emitChange([false, "Something went wrong while merging"]);
-      }
+      // Throw error
+      this.toastCommService.emitChange([false, e.response.data]);
     }
   }
 

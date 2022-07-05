@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, Output, ViewChild  } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Label } from 'app/classes/label';
 import { LabelType } from 'app/classes/label-type';
-import { EventEmitter } from '@angular/core';
-import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject, merge, OperatorFunction } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { LabellingDataService } from 'app/services/labelling-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
@@ -35,7 +34,7 @@ export class IndividualLabellingForm implements OnInit {
   instance!: NgbTypeahead;
   // Listeners for different click and focus events
   click$ = new Subject<string>();
-  focus$ = new Subject<string>(); 
+  focus$ = new Subject<string>();
 
   // Search on labels to be added
   searchLabel: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
@@ -54,7 +53,7 @@ export class IndividualLabellingForm implements OnInit {
    * Constructor which:
    * 1. Creates a label form
    */
-  constructor(private formBuilder: FormBuilder, 
+  constructor(private formBuilder: FormBuilder,
     private labelDataService: LabellingDataService,
     private reroutingService: ReroutingService,
     private router: Router) {
@@ -64,7 +63,7 @@ export class IndividualLabellingForm implements OnInit {
       remark: [undefined, [Validators.required, Validators.minLength(1)]],
     });
 
-    this.reload?.subscribe(v => {
+    this.reload?.subscribe(() => {
       this.ngOnInit();
     });
   }
@@ -103,18 +102,18 @@ export class IndividualLabellingForm implements OnInit {
    * 
    * @param item the label name clicked / entered
    */
-  clickLabel(item: any){
+  clickLabel(item: any): void {
     // Create a variable for the searched label
     let searchedLabel: Label | undefined;
     // For all labels, get the correct one
-    for (let label of this.labels){
-      if (label.getName() == item.item){
+    for (let label of this.labels) {
+      if (label.getName() == item.item) {
         // Asign the searched label
         searchedLabel = label;
       }
     }
     // If the label exists
-    if (searchedLabel != undefined){
+    if (searchedLabel != undefined) {
       // We set the form value to this label
       this.labelForm.controls['label'].setValue(searchedLabel)
       this.selectedDesc = searchedLabel.getDesc()
@@ -125,23 +124,23 @@ export class IndividualLabellingForm implements OnInit {
    * Function to get all labels in the project
    * Also gets the names of all labels
    */
-  async getLabels() {
+  async getLabels(): Promise<void> {
     // Get the ptoject id
     let p_id = this.reroutingService.getProjectID(this.router.url);
     // Get the labels
     let labels = await this.labelDataService.getLabelTypesWithLabels(parseInt(p_id));
 
     // Recursion of some sort
-    for(let label in labels) {
-      if (labels[label].getId() == this.labelType?.getId()){
-        this.labels = labels[label].getLabels();
+    for (let label of labels) {
+      if (label.getId() == this.labelType?.getId()) {
+        this.labels = label.getLabels();
       }
     }
 
     // Get all label names
     this.allLabelsNames = [];
-    for(let label in this.labels) {
-      this.allLabelsNames.push(this.labels[label].getName());
+    for (let label of this.labels) {
+      this.allLabelsNames.push(label.getName());
     }
   }
 

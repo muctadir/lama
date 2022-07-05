@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, ElementRef, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ThemeDataService } from 'app/services/theme-data.service';
 import { ReroutingService } from 'app/services/rerouting.service';
 import { Router } from '@angular/router';
 // Import of d3
 import * as d3 from 'd3';
-import { getQueryPredicate } from '@angular/compiler/src/render3/view/util';
 
 
 @Component({
@@ -14,7 +13,7 @@ import { getQueryPredicate } from '@angular/compiler/src/render3/view/util';
 })
 
 export class ThemeVisualComponent implements OnInit {
-  // Declaring a lot off attributes
+  // Width variable
   width: number;
   // Height depends on end node count
   height: any;
@@ -23,7 +22,7 @@ export class ThemeVisualComponent implements OnInit {
   margin = { top: 20, right: 20, bottom: 30, left: 40 };
   svg: any;
   g: any;
-  // Relating to the tree
+  // Variables relating to the tree
   tree: any;
   root: any;
   link: any;
@@ -32,7 +31,7 @@ export class ThemeVisualComponent implements OnInit {
   data: any;
   p_id: number;
   response: any;
-
+  // X and Y coordinates of the page
   pageX: any;
   pageY: any;
 
@@ -43,7 +42,10 @@ export class ThemeVisualComponent implements OnInit {
     this.p_id = Number(new ReroutingService().getProjectID(this.router.url));
   }
 
-  async ngOnInit() {
+  /**
+   * Function that gets the data and intializes the svg
+   */
+  async ngOnInit(): Promise<void> {
     // Gets correct data
     await this.getData();
     // Initialise visualisation svg
@@ -53,18 +55,18 @@ export class ThemeVisualComponent implements OnInit {
   /**
    * Function that gets the data for the visualization
    */
-  async getData() {
-    this.response = await this.themeDataService.themeVisData(this.p_id)
+  async getData(): Promise<void> {
+    // Call the service to get the theme visualization data
+    this.response = await this.themeDataService.themeVisData(this.p_id);
   }
 
   /**
    * Function that renders the svg of the hierarchy
    */
-  initSvg() {
+  initSvg(): void {
     // Assigns data to variable
-    this.data = this.response
-    this.data.name = "Current Project"
-
+    this.data = this.response;
+    this.data.name = "Current Project";
 
     // Define the div for the tooltip
     let div = d3.select("#treeChart").append("div")
@@ -152,7 +154,7 @@ export class ThemeVisualComponent implements OnInit {
           .duration(200)
           .style("opacity", .9);
         // Text shown in the box when you hover over a node with your mouse
-        div.html("id: " + d.data.id + "<br/>" + "type: " + d.data.type + "<br/> deleted: " + d.data.deleted )
+        div.html("id: " + d.data.id + "<br/>" + "type: " + d.data.type + "<br/> deleted: " + d.data.deleted)
           .style("left", (d.y + 100) + "px")
           .style("top", (d.x - 25) + "px");
       })

@@ -10,13 +10,14 @@
         <!-- fills rightmost column -->
         <div class="col-7" id="right_fill"></div>
     </div>
-  
+
     <!-- Row containing the actual content -->
     <div class="row align-items-center" id="main_row">
         <!-- Left column containing page content (logo, name) -->
         <div class="col-5" id="body_left">
             <!-- Adds in the logo on the left side of the login page -->
-            <img [src]="'assets/lama_login.png'" alt="Image showing the logo of LaMa (Labelling Machine)" id="image_logo">
+            <img [src]="'assets/lama_login.png'" alt="Image showing the logo of LaMa (Labelling Machine)"
+                id="image_logo">
 
             <!-- Text below the logo-->
             <div id="logo_text">LaMa</div>
@@ -40,18 +41,21 @@
                             <div class="form-group">
                                 <label id="field_text">Username:</label>
                                 <!-- Input field for the username -->
-                                <input type="username" class="form-control" placeholder="Username" formControlName="username">
+                                <input type="username" class="form-control" placeholder="Username"
+                                    formControlName="username">
                             </div>
                             <!-- Password field -->
                             <div class="form-group">
                                 <label id="field_text">Password:</label>
                                 <!-- Input field for the password -->
-                                <input type="password" class="form-control" placeholder="Password" formControlName="password">
+                                <input type="password" class="form-control" placeholder="Password"
+                                    formControlName="password">
                             </div>
                             <!-- Button for loggin in, calls loginSubmit on click -->
-                            <button type="submit" class="btn btn-primary" id="login_button" (click)="loginSubmit()">Login</button>
+                            <button type="submit" class="btn btn-primary" id="login_button"
+                                (click)="loginSubmit()">Login</button>
                         </form>
-                        
+
                         <!-- Displays create an account text, when clicked redirects to register page -->
                         <div><a [routerLink]="['/register']" id="create-account">Create an account</a></div>
 
@@ -62,7 +66,7 @@
             </div>
         </div>
     </div>
-  
+
     <!-- Row which will fill the space below the content -->
     <div class="row flex-grow-1">
         <!-- Fills leftmost column -->
@@ -70,4 +74,4 @@
         <!-- Fills rightmost column -->
         <div class="col-7" id="right_fill"></div>
     </div>
-  </div>
+</div>

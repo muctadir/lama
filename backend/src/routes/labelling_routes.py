@@ -1,5 +1,5 @@
 from src.app_util import check_args
-from src import db # need this in every route
+from src import db  # need this in every route
 from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select
 from sqlalchemy.exc import OperationalError, MultipleResultsFound
@@ -22,7 +22,7 @@ Author: B. Henkemans, V. Bogachenkova
 @login_required
 @in_project
 def get_labelling_by_label(*, user, membership):
-    # Get args from request 
+    # Get args from request
     args = request.args
     # What args are required
     required = ['p_id', 'label_id']
@@ -30,25 +30,25 @@ def get_labelling_by_label(*, user, membership):
     # Check if required args are presentF
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # If you are an admin get all the labellings,
     # otherwise only get the user's labellings
     if membership.admin:
         labellings = db.session.execute(
-            select(Labelling).where(Labelling.l_id == args['label_id'], 
-            Labelling.p_id == args['p_id'])
+            select(Labelling).where(Labelling.l_id == args['label_id'],
+                                    Labelling.p_id == args['p_id'])
         ).scalars().all()
-    else: 
+    else:
         labellings = db.session.execute(
             select(Labelling).where(Labelling.l_id == args['label_id'],
-             Labelling.p_id == args['p_id'], Labelling.u_id == user.id)
+                                    Labelling.p_id == args['p_id'], Labelling.u_id == user.id)
         ).scalars().all()
 
     # Dictionary to store data: artifact id, remark and the username
     labelling_data = jsonify([{
-        'a_id' : labelling.a_id,
-        'remark' : labelling.remark,
-        'username' : labelling.user.username
+        'a_id': labelling.a_id,
+        'remark': labelling.remark,
+        'username': labelling.user.username
     } for labelling in labellings])
 
     return make_response(labelling_data)
@@ -64,7 +64,7 @@ Author: B. Henkemans, V. Bogachenkova
 @in_project
 @not_frozen
 def post_labelling(*, user):
-    
+
     args = request.json['params']
     # What args are required
     required = ['p_id', 'resultArray']
@@ -72,34 +72,38 @@ def post_labelling(*, user):
     # Check if required args are present
     if not check_args(required, args):
         return make_response('Bad Request', 400)
-    
+
     # For every labelling, record the required data:
     # artifact id, label type id, label id, project id, remark and time
     for labelling in args['resultArray']:
         labelling_ = Labelling(
-            u_id=user.id, 
-            a_id=labelling['a_id'], 
-            lt_id=labelling['label_type']['id'], 
-            l_id=labelling['label']['id'], 
-            p_id=args['p_id'], 
+            u_id=user.id,
+            a_id=labelling['a_id'],
+            lt_id=labelling['label_type']['id'],
+            l_id=labelling['label']['id'],
+            p_id=args['p_id'],
             remark=labelling['remark'],
             time=time_from_seconds(labelling['time'])
         )
         # Check if the labelling was added, otherwise throw and error
         try:
-            __record_labelling(args['p_id'], user.id, labelling['label_type']['name'], labelling['label']['name'], labelling['a_id'])
+            __record_labelling(args['p_id'], user.id, labelling['label_type']
+                               ['name'], labelling['label']['name'], labelling['a_id'])
             db.session.add(labelling_)
         except OperationalError:
+            db.session.rollback()
             return make_response('Internal Server Error: Adding to database unsuccessful', 500)
 
     # Check if the labelling was commited, otherwise throw and error
     try:
         db.session.commit()
     except OperationalError:
+        db.session.rollback()
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
     # Make a response
     return make_response("Labelling successful", 201)
-    
+
+
 """
 Author: Linh Nguyen, Ana-Maria Olteniceanu, Eduardo Costa Martins
 Editing existing labelling(s)
@@ -112,7 +116,7 @@ Editing existing labelling(s)
 @in_project
 @not_frozen
 def edit_labelling(*, user, membership):
-    # Get args from request 
+    # Get args from request
     args = request.json['params']
     # What args are required
     required = ['p_id', 'a_id', 'labellings']
@@ -131,13 +135,13 @@ def edit_labelling(*, user, membership):
     # Note: I could not find a bulk update which worked on ORM models, which is why we use dictionaries
     updated_labellings = [
         {
-            'u_id' : labelling['u_id'],
-            'a_id' : args['a_id'],
-            'lt_id' : labelling['lt_id'],
-            'l_id' : labelling['id']
+            'u_id': labelling['u_id'],
+            'a_id': args['a_id'],
+            'lt_id': labelling['lt_id'],
+            'l_id': labelling['id']
         } for lt in args['labellings'].values() for labelling in lt.values()
     ]
-    
+
     # Go through the updates an see which one was actually changed
     # Note: I tried my best to do this in one query, however I could not find a way to treat updated_labellings as a subquery
     for labelling in updated_labellings:
@@ -180,7 +184,7 @@ def edit_labelling(*, user, membership):
         # and we are only joining on two elements (grouped into one)
         except MultipleResultsFound:
             return make_response('Not Acceptable', 506)
-            
+
     # Updating the information in the database
     try:
         db.session.bulk_update_mappings(Labelling, updated_labellings)
@@ -189,17 +193,17 @@ def edit_labelling(*, user, membership):
 
     # Record the changes in the changelog
     __record_labelling_edits(args['p_id'], user.id, args['a_id'], changes)
-    
 
     # Committing the information to the backend
-    try: 
+    try:
         db.session.commit()
     except OperationalError:
-        #Returning an error response
+        # Returning an error response
         return make_response('Internal Server Error', 503)
 
     # Returning a response
     return make_response('Succeeded', 200)
+
 
 """
 Records a labelling in the artifact changelog
@@ -224,6 +228,7 @@ def __record_labelling(p_id, u_id, lt_name, l_name, a_id):
     )
 
     db.session.add(change)
+
 
 """
 Records the changing of potentially several labellings in the artifact changelog

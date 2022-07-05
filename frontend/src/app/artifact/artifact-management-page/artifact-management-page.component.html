@@ -14,7 +14,8 @@
         <!--Add Artifact Button-->
         <div class="col">
             <span class="float-end">
-                <button type="button" class="btn btn-secondary" id="addArtifactButton" [disabled]="frozen" (click)="open()">
+                <button type="button" class="btn btn-secondary" id="addArtifactButton" [disabled]="frozen"
+                    (click)="open()">
                     Add Artifact
                     <!-- Displays the + icon next to "Add artifact" -->
                     <em class="bi bi-plus-lg"></em>
@@ -27,59 +28,66 @@
             <div class="col-5">
                 <div class="search__container">
                     <form [formGroup]="searchForm">
-                        <input id="searchBar" class="search__input" type="text" placeholder="Search" formControlName="search_term" (keyup.enter)="onEnter()">
+                        <input id="searchBar" class="search__input" type="text" placeholder="Search"
+                            formControlName="search_term" (keyup.enter)="onEnter()">
                     </form>
                 </div>
             </div>
         </div>
 
-    <!--Row containing Artifacts Table-->
-    <div class="row justify-content-sm-center">
-        <div class="col-9">
-            <div class="table-wrapper-scroll-y my-custom-scrollbar" id="scrolly">
+        <!--Row containing Artifacts Table-->
+        <div class="row justify-content-sm-center">
+            <div class="col-9">
+                <div id="scrolly">
 
-                <!-- Table displaying the artifacts -->
-                <table class="table table-hover">
+                    <!-- Table displaying the artifacts -->
+                    <table class="table table-hover">
 
-                    <!--Table Headers-->
-                    <thead>
-                        <tr>
-                            <!-- ID header -->
-                            <th scope="col" sortable="ID"><p class="idHeader">ID</p></th>
-                            <!-- Artifact header -->
-                            <th scope="col" sortable="Artifact"><p class="artifactHeader">Artifact</p></th>
-                            <!-- # of times labelled header-->
-                            <th scope="col" sortable="timesLabelled"><p class="timeslabelledHeader">Times Labelled</p></th>
-                        </tr>
-                    </thead>
+                        <!--Table Headers-->
+                        <thead>
+                            <tr>
+                                <!-- ID header -->
+                                <th scope="col" sortable="ID">
+                                    <p class="idHeader">ID</p>
+                                </th>
+                                <!-- Artifact header -->
+                                <th scope="col" sortable="Artifact">
+                                    <p class="artifactHeader">Artifact</p>
+                                </th>
+                                <!-- # of times labelled header-->
+                                <th scope="col" sortable="timesLabelled">
+                                    <p class="timeslabelledHeader">Times Labelled</p>
+                                </th>
+                            </tr>
+                        </thead>
 
-                    <!-- Table Content -->
-                    <tbody>
-                        <tr *ngFor="let artifact of artifacts[page]" (click)="reRouter(artifact.getId())">
-                            <!-- Artifact ID -->
-                            <td><p class="artifactID">{{artifact.getId()}}</p></td>
-                            <!-- Artifact text -->
-                            <td><p class="artifactText">{{artifact.getData()}}</p></td>
-                            <!-- Times artifact is labelled -->
-                            <td><p class="timesLabelled">{{getNumberUsers(artifact.getNumberOfLabellings())}}</p></td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <!-- Table Content -->
+                        <tbody>
+                            <tr *ngFor="let artifact of artifacts[page]" (click)="reRouter(artifact.getId())">
+                                <!-- Artifact ID -->
+                                <td>
+                                    <p class="artifactID">{{artifact.getId()}}</p>
+                                </td>
+                                <!-- Artifact text -->
+                                <td>
+                                    <p class="artifactText">{{artifact.getData()}}</p>
+                                </td>
+                                <!-- Times artifact is labelled -->
+                                <td>
+                                    <p class="timesLabelled">{{getNumberUsers(artifact.getNumberOfLabellings())}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination of the table -->
+                <div id="center-pagination">
+                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="nArtifacts"
+                        (pageChange)="getArtifacts()" [maxSize]="5" [rotate]="true" [boundaryLinks]="true">
+                    </ngb-pagination>
+                </div>
+
             </div>
-
-            <!-- Pagination of the table -->
-            <div id="center-pagination">
-                <ngb-pagination
-                    [(page)]="page"
-                    [pageSize]="pageSize"
-                    [collectionSize]="nArtifacts"
-                    (pageChange)="getArtifacts()"
-                    [maxSize]="5"
-                    [rotate]="true"
-                    [boundaryLinks]="true">
-                </ngb-pagination>
-            </div>
-
         </div>
     </div>
-</div>

@@ -16,10 +16,10 @@ describe('AccountInformationComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountInformationComponent ],
+      declarations: [AccountInformationComponent],
       imports: [RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

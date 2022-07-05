@@ -1,11 +1,12 @@
 // <!-- Author: Victoria Bogachenkova -->
 // Header saying "Label "name""
-p.header{
+p.header {
     font-size: 35px;
     letter-spacing: 1px;
     padding-top: 10px;
 }
 
+// Main container
 #main-cont {
     height: 100vh;
     overflow-y: auto;
@@ -55,7 +56,7 @@ p.header{
 }
 
 // Textarea for description
-#description{
+#description {
     resize: none;
 }
 
@@ -72,10 +73,11 @@ p.header{
     box-shadow: none;
 }
 
+// Delete button layout
 #btn-delete {
-  margin-left: 10px;
-  border: none;
-  width: 150px;
+    margin-left: 10px;
+    border: none;
+    width: 150px;
 }
 
 // Changes the cursor of the user when hovering history icon
@@ -86,6 +88,6 @@ p.header{
 }
 
 // Make clickable text have a pointer on hover
-#clickable:hover{
+#clickable:hover {
     cursor: pointer;
 }

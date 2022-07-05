@@ -40,10 +40,3 @@ services:
 
 volumes:
   mysqlData:
-
-
-# TODOs
-# Move all the environment variables to here
-# Make a network
-# Do something about the volumes. Preferably I would want these to be stored in the root directory or something so everything stays nice and close.
-# Perhaps fiddle with the health check. Currently the healthcheck takes over 20s which is super long because the first health check always fails.

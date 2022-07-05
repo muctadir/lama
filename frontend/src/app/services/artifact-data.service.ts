@@ -39,7 +39,8 @@ export class ArtifactDataService {
       'page': page,
       'page_size': pageSize,
       'seek_index': seekIndex,
-      'seek_page': seekPage }, true);
+      'seek_page': seekPage
+    }, true);
 
     // For each artifact in the list
     response['info'].forEach((artifact: any) => {
@@ -66,41 +67,40 @@ export class ArtifactDataService {
   }
 
 
-    /**
-   * Function does call to backend to upload new artifacts
-   *
-   * @params p_id: number
-   * @pre p_id => 1
-   * @pre artifacts.length > 0
-   * @pre \forall i; 0 < i < artifacts.length; artifacts[i].length > 0
-   * @throws Error if p_id < 1
-   * @throws Error if artifacts.length <= 0
-   * @throws Error if \exists i; 0 < i < artifacts.length; artifacts[i].length <= 0
-   * @returns Promise<Record<string, any>>
-   */
+  /**
+ * Function does call to backend to upload new artifacts
+ *
+ * @params p_id: number
+ * @pre p_id => 1
+ * @pre artifacts.length > 0
+ * @pre \forall i; 0 < i < artifacts.length; artifacts[i].length > 0
+ * @throws Error if p_id < 1
+ * @throws Error if artifacts.length <= 0
+ * @throws Error if \exists i; 0 < i < artifacts.length; artifacts[i].length <= 0
+ * @returns Promise<Record<string, any>>
+ */
   async addArtifacts(p_id: number, artifacts: Record<string, any>[]): Promise<Record<string, any>> {
     // Check if the p_id is larger than 0
     if (p_id < 1) throw new Error("p_id cannot be less than 1")
     // Check if the list of artifacts is empty
     if (artifacts.length <= 0) throw new Error("No artifacts have been submitted")
 
-      // Check if the artifact has any data
-      for (const element of artifacts) {
-        if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
-      }
-      // Record containting the artifacts
-      let artifacts_rec = {
-        'array': artifacts
-      }
-      // Send the data to the database
-      try {
-        let result = await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
-        return result;
-      } catch {
-        this.toastCommService.emitChange([false, "File formatted incorrect."])
-        throw new Error("bad formatting");
-      }
+    // Check if the artifact has any data
+    for (const element of artifacts) {
+      if (Object.keys(element).length <= 0) throw new Error("Artifacts cannot have empty fields")
     }
+    // Record containting the artifacts
+    let artifacts_rec = {
+      'array': artifacts
+    }
+    // Send the data to the database
+    try {
+      return await this.requestHandler.post('/artifact/creation', { 'p_id': p_id, 'artifacts': artifacts_rec }, true);
+    } catch {
+      this.toastCommService.emitChange([false, "File formatted incorrect."])
+      throw new Error("bad formatting");
+    }
+  }
 
   /**
      * Function does call to backend to retrieve a single artifact
@@ -115,7 +115,7 @@ export class ArtifactDataService {
      * @throws Error if a_id < 1
      * @returns Promise<StringArtifact>
      */
-   async getArtifact(p_id: number, a_id: number): Promise<Record<string, any>> {
+  async getArtifact(p_id: number, a_id: number): Promise<Record<string, any>> {
     // Session token
     let token: string | null = sessionStorage.getItem('ses_token');
     // Check if the session token exists
@@ -214,18 +214,18 @@ export class ArtifactDataService {
       true
     );
 
-    response.forEach((artifactInfo : Record<string, any>) => {
+    response.forEach((artifactInfo: Record<string, any>) => {
       // Separate information into an artifact and its labellings
       let artifactJson = artifactInfo['artifact'];
       let labellingsJson = artifactInfo['artifact_labellings'];
-      
+
       // Construct StringArtifact object
       let artifact: StringArtifact = new StringArtifact(
         artifactJson['id'],
         artifactJson['identifier'],
         artifactJson['data']
       );
-      
+
       // Update the artifacts labellings
       artifact.setLabellings(labellingsJson);
       // Add the artifact to the end result
@@ -256,6 +256,7 @@ export class ArtifactDataService {
       true
     );
   }
+  
   /**
    * Post the split to the database 
    * 
@@ -266,11 +267,11 @@ export class ArtifactDataService {
    * @param end 
    * @param data 
    */
-  async postSplit(p_id: number, 
-    parent_id: number, 
-    identifier: string, 
-    start: number, 
-    end: number, 
+  async postSplit(p_id: number,
+    parent_id: number,
+    identifier: string,
+    start: number,
+    end: number,
     data: string): Promise<any> {
     return this.requestHandler.post('/artifact/split', {
       p_id: p_id,
@@ -279,8 +280,6 @@ export class ArtifactDataService {
       start: start,
       end: end,
       data: data
-    },
-    true
-    )
+    }, true)
   }
 }

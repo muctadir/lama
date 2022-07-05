@@ -1,12 +1,13 @@
 // Page header title
 #pageTitle {
     padding-top: 10px;
-    border-bottom: 0px; 
+    border-bottom: 0px;
     border-bottom-style: solid;
 }
 
 // Artifact header part
-#artifactId, #artifactIdentifier {
+#artifactId,
+#artifactIdentifier {
     font-size: 36px;
     letter-spacing: 1px;
 }
@@ -14,7 +15,7 @@
 // Container for the artifact
 .artifactContainer {
     max-height: 35vh;
-    border: 1px; 
+    border: 1px;
     border: solid;
     border-color: #1C5858;
     border-width: thin;
@@ -22,8 +23,9 @@
     min-height: 30vh;
     overflow-y: scroll;
 }
+
 // Section right below "labelled by"
-#names{
+#names {
     padding-top: 3px;
     padding-bottom: 5px;
 }
@@ -35,74 +37,80 @@
     margin-top: -20px;
 }
 
-
 // Scrollbar
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 // Scrollbar background
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: white;
     border-radius: 10px;
 }
+
 // Scrollbar scroller
 ::-webkit-scrollbar-thumb {
-    background: #38474e; 
+    background: #38474e;
     border-radius: 10px;
 }
 
 // Artifact identifier
-#artifactIdentifier{
+#artifactIdentifier {
     text-align: right
 }
 
 // Labeltype names
-#labelTypeName1{
+#labelTypeName1 {
     font-size: 15px;
     letter-spacing: 1px;
     font-weight: 450;
 }
 
 // Remark given for each user
-#remarks{
+#remarks {
     font-size: 17px;
     letter-spacing: 1px;
     text-align: left;
     font-weight: 450;
 }
-#remarksText{
+
+#remarksText {
     font-size: 16px;
     letter-spacing: 1px;
     text-align: left;
 }
 
 // Name of labeller
-#labeller{
+#labeller {
     font-size: 17px;
     letter-spacing: 1px;
     font-weight: 450;
 }
-#split1, #split2{
+
+#split1,
+#split2 {
     color: #ed5a06;
 }
 
 // Labels input box
-#formControl{
-    width:auto;
+#formControl {
+    width: auto;
 }
 
 // Horizontal line between the labellers
-.horizontalLine{
-    height:1px; 
-    width:80%; 
-    border-width:0px;
+.horizontalLine {
+    height: 1px;
+    width: 80%;
+    border-width: 0px;
 }
+
 // Save button
 .btn {
     background-color: #ed5a06;
     border-color: #ed5a06;
     margin: 15px;
 }
+
 // Labelled by Div
 .infoDiv {
     height: 55vh;

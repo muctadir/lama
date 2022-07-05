@@ -28,8 +28,8 @@
                     <!-- Column with resolve button -->
                     <div class="col-3 text-center">
                         <!-- Navigate to the page of respective conflict -->
-                        <button class="btn btn-secondary" id="resolveConflictButton" 
-                        (click)="reRouter(conflict.conflictName, conflict.conflictLTid, conflict.conflictLT)" >
+                        <button class="btn btn-secondary" id="resolveConflictButton"
+                            (click)="reRouter(conflict.conflictName, conflict.conflictLTid, conflict.conflictLT)">
                             Resolve
                         </button>
                     </div>
@@ -37,7 +37,7 @@
                 <!-- Row for the users within the conflict -->
                 <div class="col-12">
                     <span class="col text-end" id="users"> Conflicting users: </span>
-                    <span  *ngFor="let user of conflict.conflictUsers; last as isLast">
+                    <span *ngFor="let user of conflict.conflictUsers; last as isLast">
                         {{user.username}}<span *ngIf="!isLast">,</span>
                     </span>
                 </div>

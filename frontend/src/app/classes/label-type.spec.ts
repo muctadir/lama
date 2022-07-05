@@ -58,9 +58,13 @@ describe('LabelType', () => {
     const labelType2 = new LabelType(id, name, labels);
     const newName = "";
     // catch wrong name
+    let error;
     try {
       labelType2.setName(newName);
-    } catch (error) { }
+    } catch (e) { 
+      error = e;
+    }
+    expect(error).toEqual(new Error('Label name should be a string'));
   });
 
   // Getting label type labels
@@ -117,20 +121,6 @@ describe('LabelType', () => {
       .toEqual(labels);
   });
 
-  // Removing a label when there are none
-  it('should add a label to the labels of the the labelType', () => {
-    // Creating instances
-    const labelType2 = new LabelType(id, name, labels);
-    const idNewLabel = 6
-    //const newLabel3 = new Label(idNewLabel, "Angry", "Angry label", name);
-    // Add and remove the labels
-    //labelType2.addLabel(newLabel3);
-    // Check
-    try {
-      labelType2.removeLabel(idNewLabel);
-    } catch (error) { }
-  });
-
   // Removing a non-existent label
   it('should add a label to the labels of the the labelType', () => {
     // Creating instances
@@ -141,10 +131,13 @@ describe('LabelType', () => {
     // Add and remove the labels
     labelType2.addLabel(newLabel3);
     // Check
+    let error;
     try {
       labelType2.removeLabel(wrongId);
-    } catch (error) { }
+    } catch (e) {
+      error = e;
+    }
+
+    expect(error).toEqual(new Error("Label ID does not exist."))
   });
-
-
 });

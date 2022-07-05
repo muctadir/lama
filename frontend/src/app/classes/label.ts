@@ -57,9 +57,9 @@ export class Label {
      * @param id 
      */
     setId(id: number): void {
-        if ( id == undefined || typeof id != "number" || id == null ) {
+        if (id == undefined || typeof id != "number" || id == null) {
             throw new Error("label id should be a number");
-        } else if ( id <= 0) {
+        } else if (id <= 0) {
             throw new Error("label id should be larger or equal to 1")
         }
         this.id = id;
@@ -78,7 +78,7 @@ export class Label {
      * @param name: string 
      */
     setName(name: string): void {
-        if ( name == undefined || typeof name != "string" ||name.length <= 0) {
+        if (name == undefined || typeof name != "string" || name.length <= 0) {
             throw new Error("The label name should not be of length 0 as an argument in setName()");
         }
         this.name = name;
@@ -97,7 +97,7 @@ export class Label {
      * @param desc
      */
     setDesc(desc: string): void {
-        if ( desc == undefined || typeof desc != "string" || desc.length <= 0) {
+        if (desc == undefined || typeof desc != "string" || desc.length <= 0) {
             throw new Error("The label description should not be of length 0 as an argument in setDesc()");
         }
         this.desc = desc;
@@ -116,7 +116,7 @@ export class Label {
      * @param type
      */
     setType(type: string): void {
-        if ( type == undefined || typeof type != "string" || type.length < 0) {
+        if (type == undefined || typeof type != "string" || type.length < 0) {
             throw new Error("The label type should not be of length 0 as an argument in setType()");
         }
         this.type = type;

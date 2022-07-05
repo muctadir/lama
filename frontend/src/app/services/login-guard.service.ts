@@ -24,16 +24,14 @@ export class LoginGuardService implements CanActivate {
    */
   async canActivate(): Promise<boolean> {
     // Makes call to backend checking whether user token is valid
-    if(await this.accountService.makeAuthRequest()) {
+    if (await this.accountService.makeAuthRequest()) {
       // Returns that the user is allowed to view the page
-      return true
+      return true;
     } else {
       // Redirects to the login page
       this.router.navigate(["/login"]);
       // Blocks the user from viewing the page
-      return false
+      return false;
     }
   }
-
-  
 }
