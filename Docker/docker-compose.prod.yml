@@ -14,8 +14,8 @@ services:
     container_name: lama-backend
     environment:
       - HOST=lama-mysql
-      - USER=lamaUser
-      - PASSWORD=password
+      - USER=${MYSQL_USER}
+      - PASSWORD=${MYSQL_PASSWORD}
     links: 
       - lama-mysql
     depends_on:
@@ -26,10 +26,10 @@ services:
     image: mysql:8-oracle
     container_name: lama-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootPassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: lama
-      MYSQL_USER: lamaUser
-      MYSQL_PASSWORD: password
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysqlData:/var/lib/mysql
     healthcheck:
@@ -59,7 +59,7 @@ services:
       - lama-backend
       - lama-phpmyadmin
     environment:
-      hostname: lamahost.win.tue.nl
+      hostname: ${HOSTNAME}
       letsencrypt: true
     depends_on:
       - lama-frontend
