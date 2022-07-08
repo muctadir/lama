@@ -1,0 +1,29 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Flask (src)" type="Python.FlaskServer" nameIsGenerated="true">
+    <module name="backend" />
+    <option name="target" value="src" />
+    <option name="targetType" value="PYTHON" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="DATABASE" value="lama" />
+      <env name="DIALECT" value="mysql" />
+      <env name="DRIVER" value="mysqldb" />
+      <env name="HOST" value="127.0.0.1" />
+      <env name="PASSWORD" value="password" />
+      <env name="PORT" value="3306" />
+      <env name="SUPER_EMAIL" value="" />
+      <env name="SUPER_PASSWORD" value="password" />
+      <env name="SUPER_USER" value="admin" />
+      <env name="USER" value="lamaUser" />
+    </envs>
+    <option name="SDK_HOME" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="true" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="launchJavascriptDebuger" value="false" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -16,12 +16,13 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
     Author: Eduardo Costa Martins, Bartjan Henkemans
     This route creates a label in the database
 """
+
+
 @label_routes.route('/create', methods=['POST'])
 @login_required
 @in_project
 @not_frozen
 def create_label(*, user):
-
     args = request.json['params']
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
@@ -84,6 +85,7 @@ def create_label(*, user):
         return make_response('Internal Server Error: Commit to database unsuccessful', 500)
 
     return make_response('Created', 201)
+
 
 # Author: Bartjan, Victoria, Linh, Jarl
 # Edit label
@@ -163,6 +165,7 @@ def edit_label(*, user):
 
     return make_response()
 
+
 # Author: Bartjan, Victoria
 # Check whether the pID exists
 @label_routes.route('/allLabels', methods=['GET'])
@@ -231,6 +234,7 @@ def get_single_label():
 
     return make_response(dict_json)
 
+
 # Author: Eduardo
 # Merge labels
 @label_routes.route('/merge', methods=['POST'])
@@ -238,7 +242,6 @@ def get_single_label():
 @in_project
 @not_frozen
 def merge_route(*, user):
-
     args = request.json['params']
     # Required parameters
     required = ('mergedLabels', 'newLabelName',
@@ -392,6 +395,7 @@ def merge_route(*, user):
     except OperationalError:
         return make_response('Internal Server Error: Commit to database unsuccesful', 500)
 
+
 # Author: Veerle Furst
 # Function for getting the information (label, label_type, and artifacts) of a label
 # @param label
@@ -409,6 +413,7 @@ def get_label_info(label, u_id, admin):
     }
     return info
 
+
 # Author: B. Henkemans
 # Only gets the artifacts that the user with a given id can see
 # @param label
@@ -422,6 +427,7 @@ def get_label_artifacts(label, u_id, admin):
         select(Artifact)
         .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
     ).all()
+
 
 # Author: B. Henkemans
 # Soft delete labels route
@@ -485,13 +491,13 @@ def count_usage_route():
     except OperationalError:
         return make_response('Internal Server Error', 500)
 
+
 # Author: Eduardo
 # Search labels
 @label_routes.route('/search', methods=['GET'])
 @login_required
 @in_project
 def search_route():
-
     # Get arguments
     args = request.args
     # Required arguments
@@ -550,6 +556,8 @@ Records a creation of a label in the label changelog
 @param p_id: the id of the project the new label is in
 @param u_id: the id of the user that created the label
 """
+
+
 def __record_creation(l_id, l_name, lt_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -575,6 +583,8 @@ Records the editing of label's name in the label changelog
 @param p_id: the id of the project the label is in
 @param u_id: the id of the user that edited the label
 """
+
+
 def __record_name_edit(l_id, old_name, p_id, u_id, new_name):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -600,6 +610,8 @@ Records the editing of label's name in the label changelog
 @param p_id: the id of the project the label is in
 @param u_id: the id of the user that edited the label
 """
+
+
 def __record_description_edit(l_id, old_name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -634,6 +646,8 @@ Records the merge of a list of labels in the label changelog
         name of a merged label that used to belong to the theme
     )
 """
+
+
 def __record_merge(new_label, labels, p_id, u_id, lt_name, artifact_changes, theme_changes):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -696,6 +710,8 @@ This change is still recorded in case the project is extended with a history pag
 @param p_id: The project id the label belong(ed/s) to
 @param u_id: The id of the user that deleted the label
 """
+
+
 def __record_delete(l_id, name, p_id, u_id):
     # PascalCase because it is a class
     LabelChange = Label.__change__
@@ -716,6 +732,8 @@ Function that checks if a label name is already taken
 @returns true if name is already a label name and false otherwise
 @author Linh, Jarl, Bartjan
 """
+
+
 def label_name_taken(name, label_id, p_id):
     return bool(db.session.scalars(
         select(Label)
@@ -724,7 +742,7 @@ def label_name_taken(name, label_id, p_id):
             Label.p_id == p_id,
             Label.id != label_id
         ))
-        .first())
+                .first())
 
 
 """
@@ -738,6 +756,8 @@ Author: Eduardo Costa Martins
     'type' : 'Label' (to distinguish from other nodes that do not represent labels)
 }
 """
+
+
 def get_loose_labels(p_id):
     # Select label id, name, and deleted status
     loose_labels = db.session.execute(select(

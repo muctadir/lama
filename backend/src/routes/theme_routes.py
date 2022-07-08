@@ -24,10 +24,11 @@ For getting the theme information
     number_of_labels : the number of labels within the theme
 }
 """
+
+
 @theme_routes.route("/theme-management-info", methods=["GET"])
 @login_required
 def theme_management_info():
-
     # The required arguments
     required = ["p_id"]
 
@@ -73,11 +74,12 @@ For getting the theme information
     labels: the labels within the theme
 }
 """
+
+
 @theme_routes.route("/single-theme-info", methods=["GET"])
 @login_required
 @in_project
 def single_theme_info(*, user, membership):
-
     # The required arguments
     required = ["p_id", "t_id"]
 
@@ -154,11 +156,12 @@ This means themes that:
     - would not introduce a cycle if they were added as a sub theme
     - themes that are not deleted
 """
+
+
 @theme_routes.route("/possible-sub-themes", methods=["GET"])
 @login_required
 @in_project
 def possible_sub_themes():
-
     # The required arguments
     required = ["p_id", "t_id"]
 
@@ -212,12 +215,13 @@ For creating a new theme
     p_id: project id
 }
 """
+
+
 @theme_routes.route("/create_theme", methods=["POST"])
 @login_required
 @in_project
 @not_frozen
 def create_theme(*, user):
-
     # The required arguments
     required = ["name", "description", "labels", "sub_themes", "p_id"]
 
@@ -283,11 +287,10 @@ def create_theme(*, user):
     # Make the labels the labels of the created theme
     try:
         make_labels(theme, args["labels"], user.id)
-    except ValueError:
+    except ValueError as e:
         if str(e).startswith("Deleted"):
             return make_response("You cannot add deleted labels", 400)
         return make_response("You cannot add labels in different projects", 400)
-    
 
     # Create the project
     try:
@@ -314,14 +317,15 @@ For editing a theme
     p_id: project id
 }
 """
+
+
 @theme_routes.route("/edit_theme", methods=["POST"])
 @login_required
 @in_project
 @not_frozen
 def edit_theme(*, user):
-
     # The required arguments
-    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]    
+    required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
 
     # Get args
     args = request.json['params']
@@ -425,12 +429,13 @@ For editing a theme
     p_id: project id
 }
 """
+
+
 @theme_routes.route("/delete_theme", methods=["POST"])
 @login_required
 @in_project
 @not_frozen
 def delete_theme(*, user):
-
     # The required arguments
     required = ["p_id", "t_id"]
 
@@ -479,13 +484,13 @@ def delete_theme(*, user):
     # Return the conformation
     return make_response("Theme deleted", 200)
 
+
 # Author: Eduardo
 # Search labels
 @theme_routes.route('/search', methods=['GET'])
 @login_required
 @in_project
 def search_route():
-
     # Get arguments
     args = request.args
     # Required arguments
@@ -529,6 +534,8 @@ def search_route():
 Author: Eduardo Costa Martins
 Return project hierarchy (see get_project_hierarchy())
 """
+
+
 @theme_routes.route("/themeVisData", methods=["GET"])
 @login_required
 @in_project
@@ -561,6 +568,8 @@ def theme_vis_route():
 Function for getting the number of labels in the theme
 @params t_id: theme id
 """
+
+
 def get_theme_label_count(t_id):
     return db.session.scalar(
         select(func.count(label_to_theme.c.l_id))
@@ -575,6 +584,8 @@ Robust method for setting the labels of a theme
 }
 @throws ValueError if the user attempts to add a deleted label or a label in a different project
 """
+
+
 def make_labels(theme, labels_info, u_id):
     # List for the label ids
     label_ids_list = [label['id'] for label in labels_info]
@@ -584,7 +595,7 @@ def make_labels(theme, labels_info, u_id):
         select(Label)
         .where(Label.id.in_(label_ids_list))
     ).all()
-    
+
     for label in labels:
         # Check the user is not trying to add deleted labels
         if label.deleted:
@@ -608,8 +619,9 @@ Robust method for setting new subthemes of a theme
 @throws ThemeCycleDetected if the user attempts to add a subtheme that would introduce a cycle
 @throws ValueError if the user attempts to add a deleted theme, a theme in a different project, or a theme which already has a super theme
 """
-def make_sub_themes(theme, sub_theme_ids, u_id):
 
+
+def make_sub_themes(theme, sub_theme_ids, u_id):
     root_id = __get_root(theme.id)
 
     if root_id in sub_theme_ids:
@@ -621,7 +633,6 @@ def make_sub_themes(theme, sub_theme_ids, u_id):
         .where(Theme.id.in_(sub_theme_ids))
     ).all()
 
-    
     for sub_theme in sub_themes:
         # Check the user is not trying to add deleted themes
         if sub_theme.deleted:
@@ -648,6 +659,8 @@ Function that checks if a theme name is already taken
 @params name: string, the name to be checked
 @returns true if name is already a theme name and false otherwise
 """
+
+
 def theme_name_taken(name, t_id):
     return bool(db.session.scalars(
         select(Theme)
@@ -655,7 +668,7 @@ def theme_name_taken(name, t_id):
             Theme.name == name,
             Theme.id != t_id
         ))
-        .first())
+                .first())
 
 
 """
@@ -665,6 +678,8 @@ Records the creation of a theme in the theme changelog
 @param p_id: the id of the project the theme is in
 @param u_id: the id of the user that created the theme
 """
+
+
 def __record_creation(t_id, name, p_id, u_id):
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
@@ -688,6 +703,8 @@ Records the editing of a theme's name in the theme changelog
 @param p_id: the id of the project the theme is in
 @param u_id: the id of the user that renamed the theme
 """
+
+
 def __record_name_edit(t_id, old_name, p_id, u_id, new_name):
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
@@ -713,6 +730,8 @@ Records the editing of a theme's description in the theme changelog
 @param p_id: the project id of the theme that was edited
 @param u_id: the id of the user that edited the theme
 """
+
+
 def __record_description_edit(t_id, name, p_id, u_id):
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
@@ -738,6 +757,8 @@ A child here refers to the labels or subthemes of a theme.
 @param c_names: a list of names of the children
 @param c_type: the type of child, EITHER 'label' OR 'subtheme'
 """
+
+
 def __record_children(t_id, t_name, p_id, u_id, c_names, c_type):
     # Check that the correct child type was provided
     if c_type != 'label' and c_type != 'subtheme':
@@ -767,6 +788,8 @@ This change is still recorded in case the project is extended with a history pag
 @param p_id: the id of the project the theme belong(ed/s) to
 @param u_id: the id of the user that deleted the theme
 """
+
+
 def __record_delete(t_id, name, p_id, u_id):
     # PascalCase because it is a class
     ThemeChange = Theme.__change__
@@ -796,6 +819,8 @@ Note that SQL has a limit on recursion depth. _Our_ database defaults to 1000. Y
     )
 @raises ThemeCycleDetected if the recursion limit is reached (likely due to a cycle)
 """
+
+
 def __get_children(t_id):
     # Recursive queries in SQL can be done using CTEs (Common Table Expressions)
     # This is the anchor statement (like a base case) which gets the immediate subthemes of the given theme
@@ -872,8 +897,9 @@ Each dictionary is of the form:
 The children key does not exist for labels, or themes without children.
 The top level dictionary represents the theme that was passed
 """
-def __grouped_children(t_id):
 
+
+def __grouped_children(t_id):
     results = __get_children(t_id)
 
     # A dictionary which will use a default implementation to add things to lists
@@ -946,8 +972,9 @@ The project node has structure
 A loose label is one that is not assigned to a theme
 The deleted is still provided to make sure the node has the same structure as other nodes
 """
-def get_project_hierarchy(p_id):
 
+
+def get_project_hierarchy(p_id):
     project = db.session.get(Project, p_id)
 
     # Check if project exists
@@ -984,12 +1011,15 @@ def get_project_hierarchy(p_id):
 
     return hierarchy
 
+
 """
 Author: Eduardo Costa Martins
 @param t_id: id of a theme
 @returns List of tuples corresponding to information of themes on the path to the root of the given theme's tree
          Each tuple has the form (super_theme_id, theme_id)
 """
+
+
 def __get_super_themes(t_id):
     # Recursive queries in SQL can be done using CTEs (Common Table Expressions)
     # This is the anchor statement (like a base case) which gets the given theme, and the id of its super theme
@@ -1029,14 +1059,16 @@ def __get_super_themes(t_id):
 
     return results
 
+
 """
 Author: Eduardo Costa Martins
 @param t_id : id of a theme
 @returns the id of the theme that is the root of the hierarchy tree this theme is contained in
 @raises ValueError if the root cannot be found (likely due to poor integrity of the database)
 """
-def __get_root(t_id):
 
+
+def __get_root(t_id):
     # Get all super themes
     themes = __get_super_themes(t_id)
 
@@ -1049,6 +1081,6 @@ def __get_root(t_id):
         for theme in themes:
             if theme[0] is None:
                 return theme[1]
-    
+
     # The maximal super theme in this hierarchy is not given in the list of themes
     raise ValueError
