@@ -1,8 +1,9 @@
 // Color variables
 $grey-shade: #38474e;
-$white-shade: #FFFFFF;
+$white-shade: #450606;
 $orange-shade: #ed5a06;
 $light-grey-shade: #aaaaaa;
+$red-dark: rgb(186, 4, 4);
 
 // Main container
 #main-cont {
@@ -173,17 +174,28 @@ $light-grey-shade: #aaaaaa;
 
 // Edit Button
 #editButton {
-    background-color: $orange-shade;
-    margin-left: 10px;
-    border: none;
-    width: 150px;
+    color: $orange-shade;
 }
 
-// Cancel button
+// button
 #btns-cancel-submit,
-#deleteButton {
+#deleteButton, 
+#historyButton, 
+#editButton {
     border: none;
     width: 150px;
+    margin-left: 10px;
+    background-color: white;
+}
+
+#deleteButton:disabled, 
+#editButton:disabled {
+    cursor:not-allowed;
+}
+
+
+#deleteButton {
+    color: $red-dark;
 }
 
 // Make the highlight around the buttons none
@@ -197,6 +209,6 @@ $light-grey-shade: #aaaaaa;
 }
 
 // Changes the cursor of the user when hovering
-#history-hover {
+.pinter-hover {
     cursor: pointer;
 }

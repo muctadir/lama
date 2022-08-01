@@ -116,7 +116,7 @@ export abstract class Artifact {
      * @return this.labelling.length
      */
     getNumberOfLabellings(): number {
-        const labelling = this.labellings
+        const labelling = this.labellings;
         // Make sure the list is not undefined
         if (labelling != undefined) {
             return labelling.length;
@@ -130,7 +130,7 @@ export abstract class Artifact {
      * @param newLabelling 
      */
     addLabelling(newLabelling: any): void {
-        const labelling = this.labellings
+        const labelling = this.labellings;
         // Make sure the list in not undefined
         if (labelling != undefined) {
             labelling.push(newLabelling);

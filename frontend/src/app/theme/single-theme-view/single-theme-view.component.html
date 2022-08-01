@@ -7,13 +7,16 @@
     <!-- Page Header -->
     <div class="row" id="titleRow">
         <!-- Displays the theme name -->
-        <div class="col-11 header" id="pageTitle">
+        <div class="col-10 header" id="pageTitle">
             {{theme.getName()}}
         </div>
         <!-- Displays the history icon -->
-        <div class="col-1 d-flex justify-content-center" id="pageTitle">
+        <div class="col-2 d-flex justify-content-center" id="pageTitle">
             <!-- When clicked calls openThemeHistory function -->
-            <em class="bi bi-clock-history" id="history-hover" (click)="openThemeHistory()" ngbTooltip="History"></em>
+            <button class="bi bi-arrow-left pinter-hover" (click)="reRouter()" id="btns-cancel-submit" ngbTooltip="Back"></button>
+            <button class="bi bi-pencil pinter-hover" (click)="reRouterEdit()" id="editButton" ngbTooltip="Edit" [disabled]="frozen"></button>
+            <button class="bi bi-trash pinter-hover" (click)="deleteTheme()" id="deleteButton" ngbTooltip="Delete" [disabled]="frozen"></button>
+            <button class="bi bi-clock-history pinter-hover" (click)="openThemeHistory()" id="historyButton" ngbTooltip="History"></button>
         </div>
     </div>
 
@@ -71,28 +74,6 @@
         </div>
     </div>
 
-    <!-- Row for the buttons -->
-    <div class="row buttonRow">
-        <!-- Delet button column -->
-        <div class="col align-self-start">
-            <div>
-                <!-- Delete button -->
-                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton"
-                    [disabled]="frozen">Delete</button>
-            </div>
-        </div>
-        <!-- Back and Edit Buttons -->
-        <div class="col-6 align-self-end">
-            <div>
-                <!-- Create button -->
-                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton"
-                    [disabled]="frozen">Edit</button>
-                <!-- Cancel button -->
-                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
-            </div>
-        </div>
-    </div>
-
     <!--Bottom Half-->
     <div class="row justify-content-md-center bottomHalf">
         <div class="col-12">
@@ -123,7 +104,7 @@
                                                             <!--Artifact Text-->
                                                             <div class="col-12">
                                                                 <div id="artifactRemark">
-                                                                    <p *ngFor="let labelling of artifact.getLabellings()" class="p-3 mb-2 bg-light">
+                                                                    <p *ngFor="let labelling of artifact.getLabellings()" class="p-3 mb-2 bg-light border">
                                                                         <b>Remark:</b> {{labelling.remark || '\<None\>'}} | <b>By:</b> {{labelling.user}}
                                                                     </p>    
                                                                 </div>
