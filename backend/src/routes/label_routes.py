@@ -404,7 +404,7 @@ def merge_route(*, user):
 def get_label_info(label, u_id, admin):
     # Schemas
     label_schema = Label.__marshmallow__()
-    artifact_schema = Artifact.__marshmallow__()
+    artifact_schema = Artifact.__labelled_artifact_schema__()
     # Info of the label
     info = {
         "label": label_schema.dump(label),

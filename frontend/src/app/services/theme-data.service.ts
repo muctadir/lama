@@ -161,8 +161,10 @@ export class ThemeDataService {
     // List for the artifacts
     let artifactArray: Array<StringArtifact> = [];
     for (let artifact of artifacts) {
+      let newArtifact = new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]);
+      newArtifact.setLabellings(artifact["labellings"]);
       // Push the new artifact
-      artifactArray.push(new StringArtifact(artifact["id"], artifact["identifier"], artifact["data"]));
+      artifactArray.push(newArtifact);
     }
     // Return the array with artifacts
     return artifactArray;

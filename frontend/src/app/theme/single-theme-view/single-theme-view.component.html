@@ -71,6 +71,28 @@
         </div>
     </div>
 
+    <!-- Row for the buttons -->
+    <div class="row buttonRow">
+        <!-- Delet button column -->
+        <div class="col align-self-start">
+            <div>
+                <!-- Delete button -->
+                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton"
+                    [disabled]="frozen">Delete</button>
+            </div>
+        </div>
+        <!-- Back and Edit Buttons -->
+        <div class="col-6 align-self-end">
+            <div>
+                <!-- Create button -->
+                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton"
+                    [disabled]="frozen">Edit</button>
+                <!-- Cancel button -->
+                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
+            </div>
+        </div>
+    </div>
+
     <!--Bottom Half-->
     <div class="row justify-content-md-center bottomHalf">
         <div class="col-12">
@@ -94,12 +116,17 @@
                                             <!--Artifacts of label-->
                                             <ngb-accordion *ngFor="let artifact of getNonDoubleArtifacts(label)"
                                                 #acc="ngbAccordion" activeIds="ngb-panel-1">
-                                                <ngb-panel title="Artifact #{{artifact.getId()}}">
+                                                <ngb-panel title="Artifact #{{artifact.getId()}} | Identifier: {{artifact.getIdentifier()}}">
                                                     <!--Artifact Content-->
                                                     <ng-template ngbPanelContent>
                                                         <div class="row">
                                                             <!--Artifact Text-->
                                                             <div class="col-12">
+                                                                <div id="artifactRemark">
+                                                                    <p *ngFor="let labelling of artifact.getLabellings()" class="p-3 mb-2 bg-light">
+                                                                        <b>Remark:</b> {{labelling.remark || '\<None\>'}} | <b>By:</b> {{labelling.user}}
+                                                                    </p>    
+                                                                </div>
                                                                 <p id="artifactText">{{artifact.getData()}}</p>
                                                             </div>
                                                         </div>
@@ -117,27 +144,4 @@
         </div>
 
     </div>
-
-    <!-- Row for the buttons -->
-    <div class="row buttonRow">
-        <!-- Delet button column -->
-        <div class="col align-self-start">
-            <div>
-                <!-- Delete button -->
-                <button class="btn btn-secondary float-start" (click)="deleteTheme()" id="deleteButton"
-                    [disabled]="frozen">Delete</button>
-            </div>
-        </div>
-        <!-- Back and Edit Buttons -->
-        <div class="col-6 align-self-end">
-            <div>
-                <!-- Create button -->
-                <button class="btn btn-secondary float-end" (click)="reRouterEdit()" id="editButton"
-                    [disabled]="frozen">Edit</button>
-                <!-- Cancel button -->
-                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btns-cancel-submit">Back</button>
-            </div>
-        </div>
-    </div>
-
 </div>

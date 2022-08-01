@@ -17,8 +17,8 @@ from marshmallow import fields, post_dump
 db = SQLAlchemy()
 ma = Marshmallow()
 
-def __setup_schemas():
 
+def __setup_schemas():
     # Get each module in this package
     for _, module in getmembers(modules[__name__], ismodule):
 
@@ -29,7 +29,7 @@ def __setup_schemas():
         #   has a __tablename__ attribute, a check to see if the class is a model (easier than checking inheritance)
         #   the member belongs to the module (to remove duplicates, since imported classes also count as a member)
         for name, model in getmembers(module, lambda member:
-                isclass(member) and hasattr(member, '__tablename__') and member.__module__ == module.__name__):
+        isclass(member) and hasattr(member, '__tablename__') and member.__module__ == module.__name__):
 
             # Make sure the class is not a schema
             if name.endswith("Schema"):
@@ -40,14 +40,12 @@ def __setup_schemas():
 
             # See if the item has a changelog associated with it
             change_cls = getattr(model, "__change__", None)
-            
+
             if change_cls:
                 # Create schema for the changelog
                 change_schema = __create_change_schema(change_cls)
                 # Link schema to the changelog class
                 setattr(change_cls, "__marshmallow__", change_schema)
-
-            schema = None
 
             # Create schema for each model
             match name:
@@ -55,10 +53,44 @@ def __setup_schemas():
                     schema = __create_user_schema()
                 case "Label":
                     schema = __create_label_schema()
+                case "Artifact":
+                    schema = __create_auto_schema(model)
+                    setattr(model, "__labelled_artifact_schema__", __create_labelled_artifact_schema())
                 case _:
                     schema = __create_auto_schema(model)
             # Link schema to the model class
             setattr(model, "__marshmallow__", schema)
+
+
+def __create_labelled_artifact_schema():
+    from src.models.item_models import Artifact
+
+    class ArtifactWithLabelAndRemarkSchema(ma.SQLAlchemyAutoSchema):
+        def __init__(self, *args, **kwargs):
+            super(ArtifactWithLabelAndRemarkSchema, self).__init__(*args, **kwargs)
+
+        class Meta:
+            # The meta class contains options for the schema
+            # The model we are serializing
+            model = Artifact
+            # Include foreign keys
+            include_fk = True
+            # Allow using this schema to deserialise a json into a transient entity
+            # NB: Transient refers to an entity not in the database, do not use this to fetch existing entities
+            load_instance = True
+
+        labellings = fields.Method("get_label_details")
+
+        def get_label_details(self, obj):
+            # create a list with labels, labeller name and remark
+            # possible issue: if this data used for showing remark in the theme view
+            # and artifact labelled with different labels, all remarks (including from
+            # different label) still can show up
+            return [dict(l_id=lbl.l_id, label=lbl.label.name, user=lbl.user.username, remark=lbl.remark) for lbl in
+                    obj.labellings]
+
+    return ArtifactWithLabelAndRemarkSchema
+
 
 def __create_user_schema():
     # Import inside the function (otherwise circular import)
@@ -90,12 +122,12 @@ def __create_user_schema():
 
     return UserSchema
 
+
 def __create_label_schema():
     # Import inside the function (otherwise circular import)
     from src.models.item_models import Label
 
     class LabelSchema(ma.SQLAlchemyAutoSchema):
-
         class Meta:
             # The meta class contains options for the schema
             # The model we are (de)serializing
@@ -121,11 +153,11 @@ def __create_label_schema():
             if not data['type']:
                 del data['type']
             return data
-    
+
     return LabelSchema
 
-def __create_change_schema(cls):
 
+def __create_change_schema(cls):
     from src.models.change_models import ChangeType
 
     # We define the attributes of the schema
@@ -160,7 +192,7 @@ def __create_change_schema(cls):
         # Name of class
         schema_class_name,
         # Inherited classes
-        (ma.SQLAlchemyAutoSchema, ),
+        (ma.SQLAlchemyAutoSchema,),
         # Dictionary of attributes
         {
             'change_type': change_type,
@@ -171,8 +203,8 @@ def __create_change_schema(cls):
 
     return schema_class
 
+
 def __create_auto_schema(cls):
-    
     class Meta(object):
         # The meta class contains options for the schema
         # The model we are (de)serialising
@@ -182,16 +214,16 @@ def __create_auto_schema(cls):
         # Allow using this schema to deserialise a json into a transient entity
         # NB: Transient refers to an entity not in the database, do not use this to fetch existing entities
         load_instance = True
-    
+
     # Add Schema to the end of the class name
     schema_class_name = "%sSchema" % cls.__name__
 
     # type function returns a class object
     schema_class = type(
         # Name of the class
-        schema_class_name, 
+        schema_class_name,
         # Inherited classes
-        (ma.SQLAlchemyAutoSchema, ), 
+        (ma.SQLAlchemyAutoSchema,),
         # Dictionary of attributes
         {
             'Meta': Meta
@@ -199,6 +231,7 @@ def __create_auto_schema(cls):
     )
 
     return schema_class
+
 
 # Wait for the mapper to finish configuring the ORM models, then setup the schemas
 event.listen(mapper, 'after_configured', __setup_schemas)
