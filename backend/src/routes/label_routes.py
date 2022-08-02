@@ -420,12 +420,13 @@ def get_label_info(label, u_id, admin):
 # @param u_id - user id
 # @param admin
 def get_label_artifacts(label, u_id, admin):
-    if admin:
-        return label.artifacts
-    # Else get the artifacts they may see
+    filters = [Artifact.id == Labelling.a_id, Labelling.l_id == label.id]
+    if not admin:
+        # filter out not labelled by user if not admin
+        filters.append(Labelling.u_id == u_id)
+
     return db.session.scalars(
-        select(Artifact)
-        .where(Artifact.id == Labelling.a_id, Labelling.u_id == u_id, Labelling.l_id == label.id)
+        select(Artifact).where(*filters).order_by(Labelling.created_at)
     ).all()
 
 

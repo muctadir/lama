@@ -11,7 +11,6 @@ from secrets import token_hex
 from werkzeug.security import generate_password_hash
 import click
 
-
 # Read environment variables. Currently these are stored in .env and .flaskenv.
 HOST = environ.get("HOST")
 PORT = environ.get("PORT")
@@ -23,11 +22,11 @@ DRIVER = environ.get("DRIVER")
 # This identifies the connection to the Dockerized database.
 URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
-
 # In the command line we have access to the `$ flask` command.
 # AppGroups allow us to define extensions for this command-line interface.
 # In this case, we can call `$ flask db-opt init` and `$ flask db-opt fill`.
 db_opt = AppGroup("db-opt")
+
 
 # Currently, database initialization needs to be done by hand.
 # `migrate()` takes the defined models and creates tables in the database, if
@@ -58,6 +57,7 @@ def click_db_init(dir):
         description="Auto-generated super admin"
     ))
     db.session.commit()
+
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
