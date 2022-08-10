@@ -39,6 +39,7 @@ export class LabelManagementComponent {
   pageSize: number;
 
   //Variables for sorting - all are not sorted
+  sortedLabelById = sorted.Not;
   sortedLabel = sorted.Not; // Label name
   sortedLabelType = sorted.Not; // Label Type 
   sortedNOA = sorted.Not; // Number of artifacts
@@ -198,6 +199,32 @@ export class LabelManagementComponent {
     this.labelAmount = resultDict;
   }
 
+
+  /**
+   * Function for sorting on name
+   * 
+   */
+   sortLabelById(): void {
+    // Check if it was sorted ascending
+    if (this.sortedLabelById == sorted.Asc) {
+      // Make the sorted enum descending
+      this.sortedLabelById = sorted.Des;
+      // Sort the array
+      this.labels.sort((a, b) => b.getId() - a.getId());
+      // Check if it was sorted descending or not yet
+    } else if (this.sortedLabelById == sorted.Des || this.sortedLabelById == sorted.Not) {
+      // Make the sorted enum ascending
+      this.sortedLabelById = sorted.Asc;
+      // Sort the array
+      this.labels.sort((a, b) => a.getId() - b.getId());
+    }
+    // Set other sorts to not sorted
+    this.sortedLabel = sorted.Not;
+    this.sortedLabelType = sorted.Not;
+    this.sortedNOA = sorted.Not
+  }
+
+
   /**
    * Function for sorting on name
    * 
@@ -219,6 +246,7 @@ export class LabelManagementComponent {
     // Set other sorts to not sorted
     this.sortedLabelType = sorted.Not;
     this.sortedNOA = sorted.Not
+    this.sortedLabelById = sorted.Not;
   }
 
   /**
@@ -242,6 +270,7 @@ export class LabelManagementComponent {
     // Set other sorts to not sorted
     this.sortedLabel = sorted.Not;
     this.sortedNOA = sorted.Not
+    this.sortedLabelById = sorted.Not;
   }
 
   /**
@@ -275,5 +304,6 @@ export class LabelManagementComponent {
     // Set other sorts to not sorted
     this.sortedLabel = sorted.Not;
     this.sortedLabelType = sorted.Not
+    this.sortedLabelById = sorted.Not;
   }
 }
