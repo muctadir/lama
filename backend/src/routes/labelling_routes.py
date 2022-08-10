@@ -47,6 +47,7 @@ def get_labelling_by_label(*, user, membership):
     # Dictionary to store data: artifact id, remark and the username
     labelling_data = jsonify([{
         'a_id': labelling.a_id,
+        'data': labelling.artifact.data,
         'remark': labelling.remark,
         'username': labelling.user.username
     } for labelling in labellings])
