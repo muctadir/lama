@@ -18,11 +18,13 @@ RUN apt-get update \
 
 WORKDIR /app
 
-ADD requirements.txt /app
+ADD .env /app
+
+ADD ./backend/requirements.txt /app
 
 RUN pip3 install -r requirements.txt
 
-ADD ./ /app/
+ADD ./backend/ /app/
 
 EXPOSE 5000
 

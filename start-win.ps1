@@ -23,7 +23,7 @@ if ($option -eq 1)
     Clear-Host
     Write-Output "1) Production [Fully Dockerized]"
     Write-Output "================================================================================="
-    docker compose --env-file backend/.env -f Docker/docker-compose.yml up --build -d
+    docker compose --env-file .env -f Docker/docker-compose.yml up --build -d
     Write-Output "================================================================================="
     Write-Output "Script is complete. Check above for errors."
     Write-Output "If you want to shut down, run the stop-win.ps1 file."
@@ -36,7 +36,7 @@ elseif ( $option -eq 2 )
     Clear-Host
     Write-Output "2) Suited for frontend development [Flask, MySQL & phpMyAdmin Dockerized]"
     Write-Output "================================================================================="
-    docker compose --env-file backend/.env -f Docker/docker-compose-frontend-dev.yml up --build -d
+    docker compose --env-file .env -f Docker/docker-compose-frontend-dev.yml up --build -d
     Write-Output "================================================================================="
     Write-Output "To finish set up, enter the following commands (this cannot be automated...)"
     Write-Output "cd frontend"
@@ -54,7 +54,7 @@ elseif ( $option -eq 3 )
     Clear-Host 
     Write-Output "3) Suited for backend development [Angular, MySQL & phpMyAdmin Dockerized]"
     Write-Output "================================================================================="
-    docker compose --env-file backend/.env -f Docker/docker-compose-backend-dev.yml up --build -d
+    docker compose --env-file .env -f Docker/docker-compose-backend-dev.yml up --build -d
     Write-Output "================================================================================="
     Write-Output "To finish set up, enter the following commands (this cannot be automated...)"
     Write-Output "cd backend"

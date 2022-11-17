@@ -10,7 +10,9 @@ services:
         condition: service_healthy
 
   lama-flask:
-    build: ../backend
+    build: 
+      context: ../
+      dockerfile: ./backend/Dockerfile
     container_name: lama-flask
     environment:
       - HOST=${HOSTNAME}

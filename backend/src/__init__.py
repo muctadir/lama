@@ -5,14 +5,21 @@ from src.models import db
 from src.routes import *
 from flask_cors import CORS
 from os import environ
+from os.path import join, dirname
+from dotenv import load_dotenv
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
 import click
 
+# Add environment variables from file in root directory .env into process environment.
+# First get path to .env file
+dotenv_path = join(dirname(__file__), "../.env")
+# Add variables
+load_dotenv(dotenv_path)
 
-# Read environment variables. Currently these are stored in .env and .flaskenv.
+# Read environment variables.
 HOST = environ.get("HOST")
 PORT = environ.get("PORT")
 USERNAME = environ.get("USER")
@@ -22,6 +29,10 @@ DIALECT = environ.get("DIALECT")
 DRIVER = environ.get("DRIVER")
 # This identifies the connection to the Dockerized database.
 URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
+
+print("testing123")
+print(dotenv_path)
+print(URI, flush=True)
 
 
 # In the command line we have access to the `$ flask` command.
