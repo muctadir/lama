@@ -13,9 +13,9 @@ services:
     build: ../backend
     container_name: lama-flask
     environment:
-      - HOST=lama-mysql
-      - USER=lamaUser
-      - PASSWORD=password
+      - HOST=${HOSTNAME}
+      - USER=${MYSQL_USER}
+      - PASSWORD=${MYSQL_PASSWORD}
     links: 
       - lama-mysql
     depends_on:
@@ -26,12 +26,12 @@ services:
 
   lama-mysql:
     image: mysql:8-oracle
-    container_name: lama-mysql
+    container_name: ${HOSTNAME}
     environment:
-      MYSQL_ROOT_PASSWORD: rootPassword
-      MYSQL_DATABASE: lama
-      MYSQL_USER: lamaUser
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysqlData:/var/lib/mysql
     healthcheck:
@@ -45,7 +45,7 @@ services:
     links:
       - lama-mysql
     environment:
-      PMA_HOST: lama-mysql
+      PMA_HOST: ${HOSTNAME}
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
     ports:

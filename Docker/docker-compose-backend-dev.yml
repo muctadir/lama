@@ -8,12 +8,12 @@ services:
         
   lama-mysql:
     image: mysql:8-oracle
-    container_name: lama-mysql
+    container_name: ${HOSTNAME}
     environment:
-      MYSQL_ROOT_PASSWORD: rootPassword
-      MYSQL_DATABASE: lama
-      MYSQL_USER: lamaUser
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -29,7 +29,7 @@ services:
     links:
       - lama-mysql
     environment:
-      PMA_HOST: lama-mysql
+      PMA_HOST: ${HOSTNAME}
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
     ports:
