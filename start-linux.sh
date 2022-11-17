@@ -29,7 +29,7 @@ then
     clear
     echo "1) Production [Fully Dockerized]"
     echo "================================================================================="
-    docker-compose -f Docker/docker-compose.yml up --build -d
+    docker-compose --env-file .env -f Docker/docker-compose.yml up --build -d
     echo "================================================================================="
     echo "Script is complete. Check above for errors."
     echo "If you want to shut down, run the stop-linux.sh file."
@@ -41,7 +41,7 @@ then
     clear
     echo "2) Suited for frontend development [Flask, MySQL & phpMyAdmin Dockerized]"
     echo "=================================================================================" && sleep 2
-    docker-compose -f Docker/docker-compose-frontend-dev.yml up --build -d 
+    docker-compose --env-file .env -f Docker/docker-compose-frontend-dev.yml up --build -d 
     echo "================================================================================="
     echo "To finish set up, enter the following commands (this cannot be automated...)"
     echo "cd frontend"
@@ -58,7 +58,7 @@ then
     clear 
     echo "3) Suited for backend development [Angular, MySQL & phpMyAdmin Dockerized]"
     echo "================================================================================="
-    docker-compose -f Docker/docker-compose-backend-dev.yml up --build -d 
+    docker-compose --env-file .env -f Docker/docker-compose-backend-dev.yml up --build -d 
     echo "================================================================================="
     echo "To finish set up, enter the following commands (this cannot be automated...)"
     echo "cd backend"
