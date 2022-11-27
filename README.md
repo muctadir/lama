@@ -1,4 +1,4 @@
-# Software End Project (SEP)
+# LaMa (Labelling Machine)
 
 ![LaMa logo](/frontend/assets/lama_nobg.png)
 ===
@@ -8,5 +8,71 @@ The tool was created to facilitate collaboration and peer feedback on labelled a
 
 This project builds upon the already existing [Labeling Machine tool](https://github.com/muctadir/labeling-machine) by extending it and adding new functionalities, which include but are not limited to a new API and remaking the User Interface (UI).
 
-----
-For more information about the tool refer to the [LaMa Wiki](https://github.com/muctadir/lama/wiki)
+## Table of Content
+1. [Dependencies](#dependencies)
+2. [Installation](#installation)
+3. [User Manual](#user_manual)
+4. [Testing](#testing)
+5. [Contributions](#contributions)
+
+## <a name="dependencies"></a>Dependencies
+These are the dependencies/tools without which LaMa may not work
+1. NodeJS ≥ 16.15
+2. Python ≥ 3.10
+3. Git ≥ 2.37.0
+4. pip ≥ 22.1.2
+5. Docker ≥ 20.10 (with compose plugin)
+6. IDE (optional, but recommended for easier development)
+
+## <a name="installation"></a>Installation
+
+## <a name="user_manual"></a>User Manual
+
+### Participating in project
+Projects are the fundamental building block of the tool, functionalities are on a per project basis. There are 2 ways to participate in a project:
+* Create your own project
+* Join an existing project
+
+Creating a project can be done through the **Create project** button at the top right of the screen, this opens a menu in which settings of the project can be configured. To join an existing project the project admin of that project needs to add your account through the **project setting menu** of the project. The project settings menu can be opened through the **setting (gear icon)** in the menu bar on the left after opening the project.
+
+### Uploading artifacts
+After participating in a project, for any functionality first artifacts have to be added. Artifacts can be added by navigating to the **Artifact management page**, from the navigation menu on the left after opening the project. On the artifact management page click the **Add artifact** button at the top right, and upload a _.txt_ file containing the artifact(s).
+
+### Labelling an artifact
+After having uploaded artifacts it is possible to start labelling them. Navigate using the **navigation menu** on the left to the **labelling page**. An artifact will be shown here. To label an artifact, select labels from the **dropdown menu** below the artifact text. New labels can be created using the **add label** button above the dropdown menu. The remark text-field can be used to add comments on why a certain label was selected.
+
+_Note: Labels have a label type, this is a way grouping of labels. To label an artifact the user should select a label from each label type. Label types are specified during the project creation, and are not adjustable afterwards._
+
+### Conflict resolution
+After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labeling given to ensure that there is conformity between the assigned labels, and then click the **resolve conflict** button to resolve the conflict.
+
+### Advanced features
+For a full list of features we refer the reader to the **Software User Manual (SUM)**, below we will briefly describe some of the more important advanced features for common use cases.
+
+* Artifacts can be viewed on the **artifact management page**. Additional info about labels given to artifacts can be seen by clicking on an artifact.
+* Segments from an artifact can be transformed into a new artifact, this operation is referred to as **"split"**. Splitting of artifacts is done by highlighting the portion of the artifact to be split on the labelling page, and then clicking the **scissor icon** in the top right.
+* The label management page displays all labels in a project, changes can be made to labels, such as editing names, merging labels.
+* Themes can be created to provide a logical grouping of labels, allowing for better analysis. Themes are created on the **theme management page**. Labels are assigned to themes on the label management page, or the theme management page.
+* Themes can be logically grouped with other themes to create a hierarchical view of the elements within a project.
+* Artifacts, labels and themes store change history. This can be inspected by clicking the **clock icon** when viewing the aforementioned elements.
+* Various project **statistics** can be viewed on the statistics page. The user can navigate to the statistics page using the navigation menu on the left side of the screen.
+* The hierarchy and status of labels and themes can be visualized by clicking the **Theme hierarchy** button on the theme management page. A visualization will be displayed showing how the different elements are related to another, and their current status.
+
+## <a name="testing"></a>Testing
+
+## <a name="contributions"></a>Contributions
+The tool was created for the Final Bachelor Project at Eindhoven University of Technology by 9 students: 
+V. Bogachenkova*, 
+T. Bradley, 
+E.J. Costa Martins*, 
+V. Fürst, 
+B. Henkemans, 
+J.L.O. Jansen*, 
+L.C. Lavin, 
+L.V. Nguyen, 
+A. Olteniceanu
+
+The project was supervised by: 
+H.M. Muctadir and A.Serebrenik
+
+*Published the project to JOSS
