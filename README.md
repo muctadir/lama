@@ -25,6 +25,21 @@ These are the dependencies/tools without which LaMa may not work
 6. IDE (optional, but recommended for easier development)
 
 ## <a name="installation"></a>Installation
+Assuming that you have all the necessary dependencies installed.
+1. Clone repository
+2. Navigate to the repository in a terminal
+3. On Windows run:
+```
+.\start-win.ps1
+```
+On Linux run:
+```
+.\start-linux.sh
+```
+
+You should now have LaMa running in your browser.
+
+### Environment variables
 
 ## <a name="user_manual"></a>User Manual
 
