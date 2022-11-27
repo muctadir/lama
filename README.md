@@ -59,7 +59,18 @@ For a full list of features we refer the reader to the **Software User Manual (S
 * The hierarchy and status of labels and themes can be visualized by clicking the **Theme hierarchy** button on the theme management page. A visualization will be displayed showing how the different elements are related to another, and their current status.
 
 ## <a name="testing"></a>Testing
-
+### Frontend testing
+1. Navigate to the frontend folder
+2. Run
+```
+ng test
+```
+### Backend testing
+1. Navigate to the backend folder
+2. Run
+```
+pytest -rA
+```
 ## <a name="contributions"></a>Contributions
 The tool was created for the Final Bachelor Project at Eindhoven University of Technology by 9 students: 
 V. Bogachenkova*, 
