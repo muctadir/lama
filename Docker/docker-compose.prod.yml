@@ -48,7 +48,7 @@ services:
       - lama-mysql
     environment:
       PMA_HOST: ${HOSTNAME}
-      PMA_PORT: 3306
+      PMA_PORT: ${PORT}
       PMA_ARBITRARY: 1
       PMA_ABSOLUTE_URI: http://localhost/pma
     depends_on:

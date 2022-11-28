@@ -50,7 +50,7 @@ services:
       - lama-mysql
     environment:
       PMA_HOST: ${HOSTNAME}
-      PMA_PORT: 3306
+      PMA_PORT: ${PORT}
       PMA_ARBITRARY: 1
     ports:
       - 81:80

@@ -17,7 +17,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${PORT}:${PORT}"
     volumes:
       - mysqlData:/var/lib/mysql
     healthcheck:
@@ -32,7 +32,7 @@ services:
       - lama-mysql
     environment:
       PMA_HOST: ${HOSTNAME}
-      PMA_PORT: 3306
+      PMA_PORT: ${PORT}
       PMA_ARBITRARY: 1
     ports:
       - 81:80

@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 10
     ports:
-      - 3306:3306
+      - ${PORT}:${PORT}
 
   lama-phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.1.3
@@ -25,7 +25,7 @@ services:
       - lama-mysql
     environment:
       PMA_HOST: ${HOSTNAME}
-      PMA_PORT: 3306
+      PMA_PORT: ${PORT}
       PMA_ARBITRARY: 1
     ports:
       - 81:80
