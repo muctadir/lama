@@ -101,4 +101,3 @@ A. Olteniceanu
 The project was supervised by: 
 H.M. Muctadir and A.Serebrenik
 
-*Published the project to JOSS
