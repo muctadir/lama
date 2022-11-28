@@ -30,11 +30,6 @@ DRIVER = environ.get("DRIVER")
 # This identifies the connection to the Dockerized database.
 URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
-print("testing123")
-print(dotenv_path)
-print(URI, flush=True)
-
-
 # In the command line we have access to the `$ flask` command.
 # AppGroups allow us to define extensions for this command-line interface.
 # In this case, we can call `$ flask db-opt init` and `$ flask db-opt fill`.

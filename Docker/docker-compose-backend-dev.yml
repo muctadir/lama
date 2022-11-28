@@ -2,7 +2,9 @@ version: "3.9"
 services:
   lama-frontend:
     container_name: lama-frontend
-    build: ../frontend
+    build:
+      context: ../
+      dockerfile: ./frontend/Dockerfile
     ports:
       - "80:80"
         
