@@ -6,7 +6,9 @@ WORKDIR /usr/local/app
 
 COPY ./frontend/ /usr/local/app/
 
-COPY .env /usr/local/app
+COPY .env /usr/local
+
+WORKDIR /usr/local/app/src/environments
 
 RUN npm i
 
