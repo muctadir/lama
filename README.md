@@ -18,7 +18,8 @@ This project builds upon the already existing [Labeling Machine tool](https://gi
 ## <a name="dependencies"></a>Dependencies
 For deployment using docker:
 1. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
-For development these are the dependencies/tools without which LaMa may not work
+
+For development these are the dependencies/tools without which LaMa may not work:
 1. [NodeJS](https://nodejs.org/en/) ≥ 16.15
 2. [Python](https://www.python.org/) ≥ 3.10
 3. [Git](https://git-scm.com/) ≥ 2.37.0
