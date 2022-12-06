@@ -16,12 +16,14 @@ This project builds upon the already existing [Labeling Machine tool](https://gi
 5. [Contributions](#contributions)
 
 ## <a name="dependencies"></a>Dependencies
-These are the dependencies/tools without which LaMa may not work
-1. NodeJS ≥ 16.15
-2. Python ≥ 3.10
-3. Git ≥ 2.37.0
+For deployment using docker:
+1. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
+For development these are the dependencies/tools without which LaMa may not work
+1. [NodeJS](https://nodejs.org/en/) ≥ 16.15
+2. [Python](https://www.python.org/) ≥ 3.10
+3. [Git](https://git-scm.com/) ≥ 2.37.0
 4. pip ≥ 22.1.2
-5. Docker ≥ 20.10 (with compose plugin)
+5. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
 6. IDE (optional, but recommended for easier development)
 
 ## <a name="installation"></a>Installation
@@ -88,16 +90,15 @@ pytest -rA
 ```
 ## <a name="contributions"></a>Contributions
 The tool was created for the Final Bachelor Project at Eindhoven University of Technology by 9 students: 
-V. Bogachenkova*, 
-T. Bradley, 
-E.J. Costa Martins*, 
-V. Fürst, 
-B. Henkemans, 
-J.L.O. Jansen*, 
-L.C. Lavin, 
-L.V. Nguyen, 
-A. Olteniceanu
+- V. Bogachenkova*, 
+- T. Bradley, 
+- E.J. Costa Martins*, 
+- V. Fürst, 
+- B. Henkemans, 
+- J.L.O. Jansen*, 
+- L.C. Lavin, 
+- L.V. Nguyen, 
+- A. Olteniceanu
 
 The project was supervised by: 
 H.M. Muctadir and A.Serebrenik
-
