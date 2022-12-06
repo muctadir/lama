@@ -51,18 +51,37 @@ Projects are the fundamental building block of the tool, functionalities are on 
 * Create your own project
 * Join an existing project
 
-Creating a project can be done through the **Create project** button at the top right of the screen, this opens a menu in which settings of the project can be configured. To join an existing project the project admin of that project needs to add your account through the **project setting menu** of the project. The project settings menu can be opened through the **setting (gear icon)** in the menu bar on the left after opening the project.
+Creating a project can be done through the **Create project** button at the top right of the screen, this opens a menu in which settings of the project can be configured. 
+![alt text](https://github.com/muctadir/lama/blob/main/images/home-page-user-to-create-project.png?raw=true)
+
+To join an existing project the project admin of that project needs to add your account through the **project setting menu** of the project. The project settings menu can be opened through the **setting (gear icon)** in the menu bar on the left after opening the project.
+
+![alt text](https://github.com/muctadir/lama/blob/main/images/add-users-button.png?raw=true)
 
 ### Uploading artifacts
 After participating in a project, for any functionality first artifacts have to be added. Artifacts can be added by navigating to the **Artifact management page**, from the navigation menu on the left after opening the project. On the artifact management page click the **Add artifact** button at the top right, and upload a _.txt_ file containing the artifact(s).
 
+![alt text](https://github.com/muctadir/lama/blob/main/images/add-button.png?raw=true)
+
 ### Labelling an artifact
-After having uploaded artifacts it is possible to start labelling them. Navigate using the **navigation menu** on the left to the **labelling page**. An artifact will be shown here. To label an artifact, select labels from the **dropdown menu** below the artifact text. New labels can be created using the **add label** button above the dropdown menu. The remark text-field can be used to add comments on why a certain label was selected.
+After having uploaded artifacts it is possible to start labelling them. Navigate using the **navigation menu** on the left to the **labelling page**. An artifact will be shown here. To label an artifact, select labels from the **dropdown menu** below the artifact text. 
+
+![alt text](https://github.com/muctadir/lama/blob/main/images/label-type-dropdown.png?raw=true)
+
+New labels can be created using the **add label** button above the dropdown menu. The remark text-field can be used to add comments on why a certain label was selected.
+
+![alt text](https://github.com/muctadir/lama/blob/main/images/create-new-label.png?raw=true)
 
 _Note: Labels have a label type, this is a way grouping of labels. To label an artifact the user should select a label from each label type. Label types are specified during the project creation, and are not adjustable afterwards._
 
 ### Conflict resolution
-After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labeling given to ensure that there is conformity between the assigned labels, and then click the **resolve conflict** button to resolve the conflict.
+After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labeling given to ensure that there is conformity between the assigned labels. 
+
+![alt text](https://github.com/muctadir/lama/blob/main/images/change-label.png?raw=true)
+
+Clicking the **resolve conflict** button will resolve the conflict if the labels are consistent.
+
+![alt text](https://github.com/muctadir/lama/blob/main/images/resolve-conflict.png?raw=true)
 
 ### Advanced features
 For a full list of features we refer the reader to the **Software User Manual (SUM)**, below we will briefly describe some of the more important advanced features for common use cases.
