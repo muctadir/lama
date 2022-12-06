@@ -20,7 +20,7 @@ Qualitative analysis of data is relevant for a variety of domains, among which e
 # Statement of need
 
 # Key features
-LaMa is in its core functionality similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus and collaboration between users, as well as provide additional insight. 
+LaMa is in its core functionality similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus and collaboration between users, as well as provide additional insight compared to existing labelling tools. 
 - **Conflict resolution**: To ensure consensus during collaboration automatic conflict detection has been implemented. Users can view the disagreement and are provided with a variety of methods to resolve the conflict.
 - **Dynamic entities**: Complex input data and user defined constructs can be broken up into parts, or merged to ensure simplicity of analysis as well as coherence.
 - **Themes**: Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. In additional themes categorized hierarchically further aiding in the analysis and classification process.
