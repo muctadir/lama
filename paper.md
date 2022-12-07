@@ -7,7 +7,7 @@ tags:
 authors:
 ??
 affiliations:
-??
+Eindhoven University of Technology
 date: 6 December 2022
 bibliography: paper.bib
 
@@ -26,6 +26,5 @@ LaMa is in its core functionality similar to comparable labelling tools for qual
 - **Themes**: Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. In additional themes categorized hierarchically further aiding in the analysis and classification process.
 - **Visualizing hierarchy**: To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
 
-# Conclusion
-
 # Acknowledgements
+The students of Eindhoven University of Technology, V. Bogachenkova,T. Bradley, E.J. Costa Martins, V. Fürst, B. Henkemans, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, and A. Olteniceanu, for designing the tool from scratch. The client of the project, H.M. Muctadir, and the supervisor of the project, A. Serebrenik.
