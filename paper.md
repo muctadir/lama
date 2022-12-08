@@ -4,6 +4,7 @@ tags:
 - Angular
 - Labelling
 - Qualitative data analysis
+- Thematic analysis
 authors:
 ??
 affiliations:
