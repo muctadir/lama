@@ -23,7 +23,7 @@ As mentioned previously, LaMa is a thematic labeling tool. The tool builds upon 
 
 Thematic analysis is a widely used technique with several popular tools already on the market, such as Atlas.ti [@atlas.ti]  and maxQDA [@maxqda_2022] Analysing qualitative data has been proven to be a labor intensive and time consuming [@analysing_qual_data] due to its nature. Thematic analysis is a ‘powerful yet flexible method for analysing qualitative data’ [@thematic_analysis]. Analysing textual data through this method allows the user to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych]. 
 
-LaMa facilitates thematic analysis through its unique features, making it stand out from the previously developed tools. Our tool is aimed at academic usage, with a possibility of expanding it, with features that enable teamwork, allow the user to create themes to group labels and facilitate dynamic construction of the data set. 
+LaMa facilitates thematic analysis through its unique features, making it stand out from the previously developed tools. Our tool is aimed at academic usage, with a possibility of expanding it. To tackle the limitations of other tools, LaMa introduces features that enable teamwork, allow the user to create themes to group labels and facilitate dynamic construction of the data set. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
 
 
 # Key features
