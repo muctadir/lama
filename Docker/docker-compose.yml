@@ -20,13 +20,15 @@ services:
       - HOST=${HOSTNAME}
       - USER=${MYSQL_USER}
       - PASSWORD=${MYSQL_PASSWORD}
-    links: 
+    links:
       - lama-mysql
     depends_on:
       lama-mysql:
         condition: service_healthy
     ports:
       - 5000:5000
+    volumes:
+      - migrationsData:/app/migrations
 
   lama-mysql:
     image: mysql:8-oracle
@@ -60,3 +62,4 @@ services:
 
 volumes:
   mysqlData:
+  migrationsData:

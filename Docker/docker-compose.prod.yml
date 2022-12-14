@@ -25,6 +25,8 @@ services:
     depends_on:
       lama-mysql:
         condition: service_healthy
+    volumes:
+      - migrationsData:/app/migrations
 
   lama-mysql:
     image: mysql:8-oracle
@@ -75,3 +77,4 @@ services:
           - 443:443
 volumes:
   mysqlData:
+  migrationsData:

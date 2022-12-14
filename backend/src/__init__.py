@@ -4,13 +4,14 @@ from flask_migrate import Migrate, init, migrate, upgrade
 from src.models import db
 from src.routes import *
 from flask_cors import CORS
-from os import environ
-from os.path import join, dirname
+from os import environ, listdir
+from os.path import join, dirname, exists
 from dotenv import load_dotenv
 from pathlib import Path
 from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
+from sqlalchemy import select
 import click
 
 # Add environment variables from file in root directory .env into process environment.
@@ -32,28 +33,44 @@ URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
 # In the command line we have access to the `$ flask` command.
 # AppGroups allow us to define extensions for this command-line interface.
-# In this case, we can call `$ flask db-opt init` and `$ flask db-opt fill`.
-db_opt = AppGroup("db-opt")
+# In this case, we can call `$ flask db-safe init` and `$ flask db-safe fill`.
+db_safe = AppGroup("db-safe")
 
-# Currently, database initialization needs to be done by hand.
-# `migrate()` takes the defined models and creates tables in the database, if
-# those tables do not yet exist.
-# This is the CLI command for initialization
-@db_opt.command("init")
+# Creates directory for database migrations if (and only if) it does not exist yet.
+@db_safe.command("init")
 @click.option("--dir", default='migrations')
-def click_db_init(dir):
-    # Import models here to avoid circular imports
-    from src.models.auth_models import User, UserStatus
+def click_safe_init(dir):
+    mig_dir = join(dirname(__file__), f"../{dir}")
+    mig_exists = exists(mig_dir)
 
+    if mig_exists and len(listdir(mig_dir)):
+        print("Migration directory exists and is not empty... aborting initialisation")
+        return
+    
     init(directory=dir)
-    migrate(message="Initial migration", directory=dir)
-    upgrade(directory=dir)
+
+# Creates a super admin user based on environment variables if (and only if) one does not exist.
+@db_safe.command("add-super-admin")
+def click_add_super_admin():
+
+    from src.models.auth_models import User, UserStatus
 
     # This section creates the super admin upon initializing the database
     # The login details are retrieved from environment variables
     SUPER_USER = environ.get("SUPER_USER")
     SUPER_PASSWORD = environ.get("SUPER_PASSWORD")
     SUPER_EMAIL = environ.get("SUPER_EMAIL")
+
+    # See if super admin already exists
+    super_admin = db.session.scalar(
+        select(User).where(User.super_admin == True)
+    )
+
+    if super_admin is not None:
+        print("Super admin exists... aborting creation")
+        return
+
+    print("Creating super admin...")
     # The super admin is created and added
     db.session.add(User(
         username=SUPER_USER,
@@ -64,6 +81,10 @@ def click_db_init(dir):
         description="Auto-generated super admin"
     ))
     db.session.commit()
+    print("Super admin created")
+
+    # TODO: Add memberships
+
 
 # This method returns a Flask application object, based on the given config
 # dict. This allows us to have different behaviour for testing and non-testing
@@ -103,12 +124,11 @@ def create_app(config={'TESTING': False}):
                 migrate(directory=str(mig_path))
                 upgrade(directory=str(mig_path))
 
-    # generates a secret key for login use
+    # Generates a secret key for login use
     app.secret_key = token_hex()
 
-    # Allows the Flask CLI to use the `db-opt` commands. I'm not quite sure how
-    # it knows about this.
-    app.cli.add_command(db_opt)
+    # Allows the Flask CLI to use the `db-safe` commands.
+    app.cli.add_command(db_safe)
 
     # The endpoints for the API are defined in blueprints. These are imported
     # and hooked to the app object.

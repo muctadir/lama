@@ -16,6 +16,8 @@ services:
         condition: service_healthy
     ports:
       - 5000:5000
+    volumes:
+      - migrationsData:/app/migrations
 
   lama-mysql:
     image: mysql:8-oracle
@@ -49,3 +51,4 @@ services:
 
 volumes:
   mysqlData:
+  migrationsData:
