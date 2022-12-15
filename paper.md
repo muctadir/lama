@@ -6,9 +6,9 @@ tags:
 - Qualitative data analysis
 - Thematic analysis
 authors:
-??
+- name: placeholder1
 affiliations:
-Eindhoven University of Technology
+- name: Eindhoven University of Technology
 date: 6 December 2022
 bibliography: paper.bib
 
