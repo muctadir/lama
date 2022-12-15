@@ -28,11 +28,12 @@ LaMa facilitates thematic analysis through its unique features, making it stand 
 
 
 # Key features
-LaMa is in its core functionality similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus and collaboration between users, as well as provide additional insight compared to existing labelling tools. 
-- **Conflict resolution**: To ensure consensus during collaboration automatic conflict detection has been implemented. Users can view the disagreement and are provided with a variety of methods to resolve the conflict.
-- **Dynamic entities**: Complex input data and user defined constructs can be broken up into parts, or merged to ensure simplicity of analysis as well as coherence.
-- **Themes**: Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. In additional themes categorized hierarchically further aiding in the analysis and classification process.
-- **Visualizing hierarchy**: To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
+LaMa is in its core functionality similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus and collaboration between users, as well as provide additional insight compared to existing labelling tools.
+
+- Conflict resolution: To ensure consensus during collaboration automatic conflict detection has been implemented. Users can view the disagreement and are provided with a variety of methods to resolve the conflict.
+- Dynamic entities: Complex input data and user defined constructs can be broken up into parts, or merged to ensure simplicity of analysis as well as coherence.
+- Themes: Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. In additional themes categorized hierarchically further aiding in the analysis and classification process.
+- Visualizing hierarchy: To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
 
 # Acknowledgements
 The students of Eindhoven University of Technology, V. Bogachenkova,T. Bradley, E.J. Costa Martins, V. Fürst, B. Henkemans, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, and A. Olteniceanu, for designing the tool from scratch. The client of the project, H.M. Muctadir, and the supervisor of the project, A. Serebrenik.
