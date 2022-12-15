@@ -21,11 +21,11 @@ dotenv_path = join(dirname(__file__), "../.env")
 load_dotenv(dotenv_path)
 
 # Read environment variables.
-HOST = environ.get("HOST")
-PORT = environ.get("PORT")
-USERNAME = environ.get("USER")
-PASSWORD = environ.get("PASSWORD")
-DATABASE = environ.get("DATABASE")
+HOST = environ.get("DB_HOSTNAME")
+PORT = environ.get("DB_PORT")
+USERNAME = environ.get("DB_USER")
+PASSWORD = environ.get("DB_PASSWORD")
+DATABASE = environ.get("DATABASE_NAME")
 DIALECT = environ.get("DIALECT")
 DRIVER = environ.get("DRIVER")
 # This identifies the connection to the Dockerized database.
