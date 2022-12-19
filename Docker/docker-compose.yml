@@ -22,7 +22,7 @@ services:
       lama-db:
         condition: service_healthy
     ports:
-      - 5000:5000
+      - ${FLASK_RUN_PORT}:${FLASK_RUN_PORT}
     volumes:
       - migrationsData:/app/migrations
 

@@ -5,8 +5,13 @@ const { writeFile } = require('fs');
 const { argv } = require('yargs');
 const { join } = require('path')
 
+const dotenv = require('dotenv');
+const dotenvExpand = require('dotenv-expand');
+
 // Read env variables
-require('dotenv').config({ path: join(__dirname, '../../.env') });
+const myEnv = dotenv.config({ path: join(__dirname, '../../.env') });
+// Variable expansion (since some variables reference other variables)
+dotenvExpand.expand(myEnv);
 
 // Read cmd line arguments
 const environment = argv.environment;

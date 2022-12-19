@@ -34,6 +34,7 @@
     "bootstrap-icons": "^1.8.2",
     "d3": "^7.4.4",
     "dotenv": "^16.0.3",
+    "dotenv-expand": "^10.0.0",
     "fs-web": "^1.0.1",
     "lorem-ipsum": "^2.0.4",
     "os": "^0.1.2",
