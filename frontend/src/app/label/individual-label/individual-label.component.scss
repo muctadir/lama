@@ -1,4 +1,12 @@
 // <!-- Author: Victoria Bogachenkova -->
+
+$grey-shade: #38474e;
+$white-shade: #450606;
+$orange-shade: #ed5a06;
+$light-grey-shade: #aaaaaa;
+$red-dark: rgb(186, 4, 4);
+
+
 // Header saying "Label "name""
 p.header {
     font-size: 35px;
@@ -62,10 +70,11 @@ p.header {
 
 // Color of edit button
 #btn-edit {
-    background-color: #ed5a06;
-    margin-left: 10px;
-    border: none;
-    width: 150px;
+    color: $orange-shade;
+}
+
+#btn-delete {
+    color: $red-dark;
 }
 
 // Make the highlight around the buttons none
@@ -73,21 +82,18 @@ p.header {
     box-shadow: none;
 }
 
-// Delete button layout
-#btn-delete {
-    margin-left: 10px;
-    border: none;
-    width: 150px;
-}
-
-// Changes the cursor of the user when hovering history icon
-#history-hover {
-    cursor: pointer;
-    font-size: 30px;
-    margin-top: 20px;
-}
-
 // Make clickable text have a pointer on hover
 #clickable:hover {
     cursor: pointer;
+}
+
+#btn-history,
+#btn-back, 
+#btn-delete, 
+#btn-edit {
+    font-size: 35px;
+    border: none;
+    width: 150px;
+    margin-left: 10px;
+    background-color: rgb(255, 255, 255);
 }

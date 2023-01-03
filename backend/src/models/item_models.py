@@ -11,7 +11,7 @@ Relevant info:
 """
 
 from src.models import db
-from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, Boolean, Time, ForeignKey, Table, UniqueConstraint, DateTime, func
 from sqlalchemy.orm import declarative_mixin, declared_attr, relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -61,14 +61,14 @@ class ChangingItem(ProjectItem):
         # So we have to spell it out for it in primary join
         return relationship(cls.change_class_name,
                             back_populates='item',
-                            primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.__name__, cls.change_class_name))
+                            primaryjoin='and_({0}.id=={1}.i_id, {0}.p_id=={1}.p_id)'.format(cls.__name__,
+                                                                                            cls.change_class_name))
 
 
 class LabelType(ProjectItem, db.Model):
-
     __tablename__ = 'label_type'
     __table_args__ = (UniqueConstraint(
-        'p_id', 'name', name='project_uniqueness'), )
+        'p_id', 'name', name='project_uniqueness'),)
 
     name = Column(String(64), nullable=False)
 
@@ -77,7 +77,6 @@ class LabelType(ProjectItem, db.Model):
 
 
 class Artifact(ChangingItem, db.Model):
-
     __tablename__ = 'artifact'
 
     # The name (or some other identifier) of the file the artifact originated from
@@ -113,10 +112,9 @@ class Artifact(ChangingItem, db.Model):
 
 
 class Label(ChangingItem, db.Model):
-
     __tablename__ = 'label'
     __table_args__ = (UniqueConstraint(
-        'p_id', 'name', name='project_uniqueness'), )
+        'p_id', 'name', name='project_uniqueness'),)
 
     name = Column(String(64), nullable=False)
 
@@ -157,10 +155,9 @@ class Label(ChangingItem, db.Model):
 
 
 class Theme(ChangingItem, db.Model):
-
     __tablename__ = 'theme'
     __table_args__ = (UniqueConstraint(
-        'p_id', 'name', name='project_uniqueness'), )
+        'p_id', 'name', name='project_uniqueness'),)
 
     name = Column(String(64), nullable=False)
 
@@ -226,7 +223,6 @@ class Labelling(db.Model):
 
 
 class Highlight(db.Model):
-
     __tablename__ = 'highlight'
 
     # The id of the user that made the highlight

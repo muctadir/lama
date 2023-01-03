@@ -3,18 +3,27 @@
     <!-- contains the page title and Artifact Identifier -->
     <div class="row">
         <!-- Label Name as title -->
-        <div id="artifactId" class="col-11">
+        <div id="artifactId" class="col-10">
             <p class="header">{{label.getName()}}</p>
         </div>
-        <div class="col-1 d-flex justify-content-center">
-            <!-- When clicked calls openThemeHistory function -->
-            <em class="bi bi-clock-history" id="history-hover" (click)="openLabelHistory()" ngbTooltip="History"></em>
+        <div class="col-2 d-flex justify-content-center">
+            <!-- Cancel button -->
+            <button class="bi bi-arrow-left" (click)="reRouter()" id="btn-back" ngbTooltip="Back"></button>
+
+            <!-- Edit button -->
+            <button class="bi bi-pencil" (click)="openEdit()" id="btn-edit" [disabled]="frozen" ngbTooltip="Edit"></button>
+
+            <button *ngIf="labelCount == 0" class="bi bi-trash" (click)="postSoftDelete()" id="btn-delete" ngbTooltip="Delete"
+            [disabled]="frozen"></button>
+
+            <!-- When clicked calls labelHistory function -->
+            <button class="bi bi-clock-history" (click)="openLabelHistory()" id="btn-history" ngbTooltip="History"></button>
         </div>
     </div>
 
     <!-- Container for Labels -->
     <div class="row" id="rowLabels">
-        <div class="col-4">
+        <div class="col-7">
             <div>
                 <!-- Label Name -->
                 <div class="subTitle">Name</div>
@@ -34,15 +43,19 @@
                 <div class="subTitle">Artifacts Labelled</div>
                 <div *ngFor="let labelling of labellings" class="labeledArtifacts">
                     <span id="artifactIdText">Artifact #{{labelling.a_id}}</span><span> by {{labelling.username}}</span>
-                    <p id="remarksArtifacts">Remarks:</p>
+                    <p id="remarksArtifacts">Remark:</p>
                     <div>
                         <p id="remarksArtifactsContent">{{labelling.remark}}</p>
+                    </div>
+                    <p id="artifact">Artifact:</p>
+                    <div>
+                        <p id="artifactData">{{labelling.data}}</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-2"></div>
-        <div class="col-6">
+        <div class="col-1"></div>
+        <div class="col-4">
             <!-- Description -->
             <div class="subTitle">
                 Description
@@ -62,18 +75,4 @@
     </div>
 
     <!-- Row for the delete buttons -->
-    <div class="row align-items-end justify-content-end">
-        <!-- Back and Edit Buttons -->
-        <div class="col-8 align-self-end">
-            <div>
-                <button *ngIf="labelCount == 0" class="btn btn-danger float-end" (click)="postSoftDelete()" id="btn-delete"
-                    [disabled]="frozen">Delete</button>
-                <!-- Edit button -->
-                <button class="btn btn-secondary float-end" (click)="openEdit()" id="btn-edit"
-                    [disabled]="frozen">Edit</button>
-                <!-- Cancel button -->
-                <button class="btn btn-secondary float-end" (click)="reRouter()" id="btn-back">Back</button>
-            </div>
-        </div>
-    </div>
 </div>

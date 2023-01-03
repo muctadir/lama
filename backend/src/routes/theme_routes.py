@@ -120,13 +120,13 @@ def single_theme_info(*, user, membership):
 
     # SUB THEMES
     # Make list of all sub-themes
-    sub_themes = (theme.sub_themes).filter_by(deleted=0)
+    sub_themes = theme.sub_themes.filter_by(deleted=0)
     # Make a json list of sub-themes
     sub_themes_list_json = theme_schema.dump(sub_themes, many=True)
 
     # LABELS
     # Make list of all labels
-    labels = (theme.labels).filter_by(deleted=0)
+    labels = theme.labels.filter_by(deleted=0).order_by(Label.id)
 
     # Then throw this loop in a list comprehension
     labels_list_json = [get_label_info(
