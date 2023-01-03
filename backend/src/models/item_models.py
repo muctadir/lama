@@ -205,8 +205,6 @@ class Labelling(db.Model):
     p_id = Column(Integer, ForeignKey('project.id'), nullable=False)
     # Remark on why this label was chosen for this artifact
     remark = Column(Text)
-    # this column was created for sorting artifacts in theme view and ensure backward compatibility
-    created_at = Column(DateTime, default=func.now())
     # How long it took the user to label this artifact
     time = Column(Time)
 

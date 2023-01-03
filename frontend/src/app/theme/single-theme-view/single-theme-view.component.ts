@@ -61,7 +61,7 @@ export class SingleThemeViewComponent {
     // Put the gotten themes into the list of themes
     this.theme = await this.themeDataService.single_theme_info(p_id, t_id);
     // Sort the artifacts
-    // this.sortArtifacts();
+    this.sortArtifacts();
   }
 
   /**

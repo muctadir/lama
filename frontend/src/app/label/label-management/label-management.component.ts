@@ -39,7 +39,7 @@ export class LabelManagementComponent {
   pageSize: number;
 
   //Variables for sorting - all are not sorted
-  sortedLabelById = sorted.Not;
+  sortedLabelById = sorted.Not; // Label id
   sortedLabel = sorted.Not; // Label name
   sortedLabelType = sorted.Not; // Label Type 
   sortedNOA = sorted.Not; // Number of artifacts
@@ -201,7 +201,7 @@ export class LabelManagementComponent {
 
 
   /**
-   * Function for sorting on name
+   * Function for sorting on id
    * 
    */
    sortLabelById(): void {

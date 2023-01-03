@@ -426,8 +426,7 @@ def get_label_artifacts(label, u_id, admin):
         filters.append(Labelling.u_id == u_id)
 
     return db.session.scalars(
-        select(Artifact).where(*filters).order_by(Labelling.created_at)
-    ).all()
+        select(Artifact).where(*filters)).all()
 
 
 # Author: B. Henkemans

@@ -44,7 +44,7 @@ def get_labelling_by_label(*, user, membership):
                                     Labelling.p_id == args['p_id'], Labelling.u_id == user.id)
         ).scalars().all()
 
-    # Dictionary to store data: artifact id, remark and the username
+    # Dictionary to store data: artifact id, artifact text, remark and the username
     labelling_data = jsonify([{
         'a_id': labelling.a_id,
         'data': labelling.artifact.data,
