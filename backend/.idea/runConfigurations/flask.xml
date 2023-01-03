@@ -4,10 +4,11 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="PYTHONUNBUFFERED" value="1" />
       <env name="FLASK_APP" value="src" />
       <env name="FLASK_ENV" value="debug" />
       <env name="FLASK_RUN_PORT" value="5000" />
+      <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="FLASK_DEBUG" value="True" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
