@@ -7,7 +7,7 @@ $os = read-host 'Boot option: '
 
 if ($os -eq 1) {
     Write-Output "Shutting down LAMA."
-    docker compose -f Docker/docker-compose.yml down 
+    docker compose --env-file .env -f Docker/docker-compose.yml down 
     Write-Output "Done. Goodbye!"
     exit
 } else {

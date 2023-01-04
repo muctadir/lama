@@ -18,14 +18,18 @@ RUN apt-get update \
 
 WORKDIR /app
 
-ADD requirements.txt /app
+ADD .env /app
+
+ADD ./backend/requirements.txt /app
 
 RUN pip3 install -r requirements.txt
 
-ADD ./ /app/
+ADD ./backend/ /app/
 
 EXPOSE 5000
 
 HEALTHCHECK --interval=5s --timeout=3s CMD curl --fail http://localhost:5000/health || exit 
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+RUN chmod u+x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]

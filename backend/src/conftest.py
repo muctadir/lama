@@ -54,23 +54,23 @@ class RequestHandler:
             self.session_token = encode(
                 {'u_id_token': u_id}, app.secret_key, algorithm='HS256')
 
-    # Simulates a post request (with the params being nested in a dictionary)
+    # Simulates a post request
     def post(self, path, params, auth):
 
         self.verify_authentication(auth)
 
         response = self.client.post(
-            path, json={'params': params}, headers=self.headers)
+            path, json=params, headers=self.headers)
 
         return response
 
-    # Simulates a patch request (with the params being nested in a dictionary)
+    # Simulates a patch request
     def patch(self, path, params, auth):
 
         self.verify_authentication(auth)
 
         response = self.client.patch(
-            path, json={'params': params}, headers=self.headers)
+            path, json=params, headers=self.headers)
 
         return response
 

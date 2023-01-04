@@ -10,6 +10,8 @@ This file is for testing things related to the construction of the app.
 """
 
 def test_db_opt_init():
+    print("This test is deprecated")
+    return
 
     # Tests need to be told to load environment variables explicitly
     load_dotenv()

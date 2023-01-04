@@ -226,7 +226,7 @@ def create_theme(*, user):
     required = ["name", "description", "labels", "sub_themes", "p_id"]
 
     # Get args
-    args = request.json['params']
+    args = request.json
 
     # Check if all required arguments are there
     if not check_args(required, args):
@@ -328,7 +328,7 @@ def edit_theme(*, user):
     required = ["id", "name", "description", "labels", "sub_themes", "p_id"]
 
     # Get args
-    args = request.json['params']
+    args = request.json
 
     # Check if all required arguments are there
     if not check_args(required, args):
@@ -440,11 +440,8 @@ def delete_theme(*, user):
     required = ["p_id", "t_id"]
 
     # Get args
-    args = request.json
-
-    # Get the info
-    theme_info = args["params"]
-
+    theme_info = request.json
+    
     # Check if all required arguments are there
     if not check_args(required, theme_info):
         return make_response("Not all required arguments supplied", 400)

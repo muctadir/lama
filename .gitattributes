@@ -1,0 +1,5 @@
+# Handle line endings automatically
+* text=auto
+
+# Shell files should use LF line endings (that is, it should use \n instead of \r\n which is CRLF)
+*.sh text eol=lf

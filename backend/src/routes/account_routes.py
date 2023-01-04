@@ -45,7 +45,6 @@ def edit_user_information(*, user):
 
     # Get the information needed
     args = request.json
-    args = args['params']
 
     # Required arguments
     required = ["username", "email", "description", "id"]
@@ -113,7 +112,7 @@ def edit_user_password(*, user):
     """
 
     # Get the information needed
-    args = request.json['params']
+    args = request.json
 
     # Required arguments
     required = ["password", "newPassword", "id"]
@@ -173,7 +172,6 @@ def edit_user_password(*, user):
 def soft_delete(*, super_admin):
     # gets the arguments from the request
     args = request.json
-    args = args['params']
 
     # checks whether the ID param is given
     required = ["id"]

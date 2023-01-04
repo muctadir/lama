@@ -65,7 +65,7 @@ Author: B. Henkemans, V. Bogachenkova
 @not_frozen
 def post_labelling(*, user):
 
-    args = request.json['params']
+    args = request.json
     # What args are required
     required = ['p_id', 'resultArray']
 
@@ -117,7 +117,7 @@ Editing existing labelling(s)
 @not_frozen
 def edit_labelling(*, user, membership):
     # Get args from request
-    args = request.json['params']
+    args = request.json
     # What args are required
     required = ['p_id', 'a_id', 'labellings']
 

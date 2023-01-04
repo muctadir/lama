@@ -109,7 +109,7 @@ def get_artifacts(*, user, membership):
 @not_frozen
 def add_new_artifacts(*, user, membership):
     # Get args from request
-    args = request.json['params']
+    args = request.json
     # What args are required
     required = ['p_id', 'artifacts']
 
@@ -438,7 +438,7 @@ def get_labellers(*, user, membership):
 @in_project
 @not_frozen
 def post_split(*, user):
-    args = request.json['params']
+    args = request.json
 
     # What args are required
     required = ['p_id', 'parent_id', 'identifier', 'start', 'end', 'data']
