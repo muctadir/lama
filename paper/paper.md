@@ -90,6 +90,11 @@ LaMa is in its core functionality similar to comparable labelling tools for qual
 
 - __Visualizing hierarchy:__ To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
 
+
+# Conclusion and future work
+
+
+
 # Acknowledgements
 
 This project was partially funded by NWO (the Dutch national research council) under the NWO AES Perspective program (Digital Twin), project code P18-03 P3.
