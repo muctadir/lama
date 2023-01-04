@@ -36,6 +36,6 @@ writeFile(targetPath, environmentFileContent, function (err: any) {
     if (err) {
        console.log(err);
     } else {
-      console.log('Wrote variables to ${targetPath}');
+      console.log(`Wrote variables to ${targetPath}`);
     }
  });

@@ -58,7 +58,7 @@ export class RequestHandler {
   public async post(path: string, params: {}, auth: boolean): Promise<any> {
     this.verifyAuthentication(auth);
     return this.axiosInstance
-      .post(path, { params: params })
+      .post(path, params)
       .then((response: any) => {
         return response.data;
       })
@@ -77,7 +77,7 @@ export class RequestHandler {
   public async patch(path: string, params: {}, auth: boolean): Promise<any> {
     this.verifyAuthentication(auth);
     return this.axiosInstance
-      .patch(path, { params: params })
+      .patch(path, params)
       .then((response: any) => {
         return response.data;
       })

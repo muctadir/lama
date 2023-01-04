@@ -23,7 +23,7 @@ def register():
     Registers a user when supplied username, email, password, and description
     See create_user() for default arguments
     """
-    args = request.json['params']
+    args = request.json
     # Required arguments
     required = ["username", "email", "password", "passwordR", "description"]
 

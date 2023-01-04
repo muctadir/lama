@@ -12,6 +12,7 @@ from shutil import rmtree
 from secrets import token_hex
 from werkzeug.security import generate_password_hash
 from sqlalchemy import select
+from sqlalchemy.exc import OperationalError
 import click
 
 # Add environment variables from file in root directory .env into process environment.
@@ -54,6 +55,7 @@ def click_safe_init(dir):
 def click_add_super_admin():
 
     from src.models.auth_models import User, UserStatus
+    from src.models.project_models import Project, Membership
 
     # This section creates the super admin upon initializing the database
     # The login details are retrieved from environment variables
@@ -80,10 +82,28 @@ def click_add_super_admin():
         super_admin=True,
         description="Auto-generated super admin"
     ))
-    db.session.commit()
-    print("Super admin created")
+    print("Super admin created... Adding to projects...")
+    
+    # Get newly created super admin
+    super_admin = db.session.scalar(
+        select(User).where(User.super_admin == True)
+    )
 
-    # TODO: Add memberships
+    # Get all project ids
+    projects = db.session.scalars(
+        select(Project.id)
+    )
+
+    # Create admin membership from super admin to all projects
+    memberships = [Membership(p_id=p_id, u_id=super_admin.id, admin=True) for p_id in projects]
+
+    # Add memberships and commit
+    db.session.add_all(memberships)
+    try:
+        db.session.commit()
+    except OperationalError:
+        raise OperationalError("Failed to commit creation of super admin")
+    print("Added to projects")
 
 
 # This method returns a Flask application object, based on the given config
