@@ -1,5 +1,5 @@
 ---
-title: 'LaMa, a thematic labelling webapp'
+title: 'LaMa: a thematic labelling web application'
 
 tags:
 - Labelling
