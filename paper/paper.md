@@ -75,8 +75,6 @@ Analysing qualitative data has been proven to be a labor intensive and time cons
 
 As thematic analysis is a widely used qualitative analysis technique, several commercial tools, such as Atlas.ti [@atlas.ti]  and maxQDA [@maxqda_2022], are available that provides support for such research. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labeling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
 
-<!-- , making it stand out from the previously developed tools. Our tool is aimed at academic usage, with a possibility of expanding it. To tackle the limitations of other tools, LaMa introduces features that enable teamwork, allow the user to create themes to group labels and facilitate dynamic construction of the data set. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces. -->
-
 # Key features
 
 LaMa is in its core functionality similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus and collaboration between users, as well as provide additional insight compared to existing labelling tools.
