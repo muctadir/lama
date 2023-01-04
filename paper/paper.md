@@ -58,9 +58,8 @@ affiliations:
 - name: McGill University, Montreal, Canada
   index: 2
 
-date: 6 December 2022
+date: 10 January 2022
 bibliography: paper.bib
-
 ---
 
 # Summary
@@ -81,13 +80,13 @@ LaMa is in its core functionality similar to comparable labelling tools for qual
 
 - __Artifact based labeling:__ LaMa uses an artifact based approach for labeling. An artifact is a short text that contains one key message and can potentially be labeled with one label. If the labeler thinks the corresponding artifact contains multiple messages, he/she can split the artifact accordingly during the labeling process.
 
-- __Collaborative labeling:__ With LaMa multiple researchers can simultaneously label same set of text artifacts. During labeling newly created labels are immediately shared with other labelers, which allows the labelers to reuse existing labels. Furthermore, 
+- __Collaborative labeling:__ With LaMa multiple researchers can simultaneously label same set of text artifacts. During labeling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured in such a way that required one artifact to be labeled by more than one labeler to reduce individual bias.
 
-- __Traceability:__
-
-- __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. Users can view the disagreement and are provided with a variety of methods to resolve the conflict.
+- __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. With LaMa users can view these disagreements that facilitates a dialog among corresponding labelers to agree on a label. This is very important for reducing individual bias during the labeling process.
 
 - __Themes:__ Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. Furthermore, themes can be categorized hierarchically further aiding in the analysis and classification process.
+
+- __Traceability:__ LaMa keeps a record of all the changes made to the artifacts, labels and themes. These changes are visible on the details page of the corresponding entities. This adds an extra layer of traceability.
 
 - __Visualizing hierarchy:__ To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
 
