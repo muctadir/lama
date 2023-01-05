@@ -45,12 +45,18 @@ authors:
 
 - name: Mark van den Brand
   affiliation: 1
+  orcid: 0000-0003-3529-6182
+  email: m.g.j.v.d.brand@tue.nl
 
 - name: Loek Cleophas
   affiliation: 1
+  orcid: 0000-0002-7221-3676
+  email: l.g.w.a.cleophas@tue.nl
 
 - name: Alexander Serebrenik
   affiliation: 1
+  orcid: 0000-0002-1418-0095
+  email: a.serebrenik@tue.nl
 
 affiliations:
 - name: Software Engineering and Technology cluster, Eindhoven University of Technology, Eindhoven, The Netherlands
