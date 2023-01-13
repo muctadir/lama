@@ -98,8 +98,9 @@ LaMa is in its core functionality similar to comparable labelling tools for qual
 
 
 # Conclusion and future work
-LaMa is an open-source web-application for thematic labelling of qualitative data. Its key-assets are greater consensus building and better collaboration between users through features such as collaborative labelling and conflict resolution. Obtaining insight into the data is further aided through features such as hierarchical grouping and visualizations. 
+LaMa is an open-source web-application for thematic labelling of qualitative data. Its key-asset is obtaining insight into data by hierarchically grouping them into labels and themes. This is further aided by facilitating better collaboration between users through features such as collaborative labelling and conflict resolution.
 
+We hope LaMa being an open-source tool and it's provided features can aid future qualitative research. Meanwhile, we plan to extend this tool by creating a more intuitive user experience and adding features such as document-based labelling, AI-based assistance, and labelling of audio, video & images.
 
 # Acknowledgements
 
