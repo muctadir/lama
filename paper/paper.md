@@ -74,21 +74,22 @@ Qualitative analysis of data is relevant for a variety of domains including empi
 
 # Statement of need
 
-Analyzing qualitative data has been proven to be a labor intensive and time consuming task [@analysing_qual_data] due to its nature. Thematic analysis [@thematic_analysis] is a powerful yet flexible method for performing such analysis. Analyzing textual data through this method allows the user to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
+Analyzing qualitative data has been proven to be labor intensive and time consuming task [@analysing_qual_data] due to its nature. Thematic analysis [@thematic_analysis] is a powerful yet flexible method for performing such analysis. Analyzing textual data through this method allows the researcher to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
 
 LaMa is an web application intended to support the thematic analysis. The tool is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig], and significantly expands its functionality, as described in the Key features section.
 
-As thematic analysis is a widely used qualitative analysis technique, several commercial tools, such as Atlas.ti [@atlas.ti] and maxQDA [@maxqda_2022], are available that provides support for such research. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
+As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti ^[atlasti.com]  and maxQDA [@maxqda_2022]. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
+
 
 # Key features
 
-LaMa is in its core functionality similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus and collaboration between users, as well as provide additional insight compared to existing labelling tools.
+LaMa in its core functionality is similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus & collaboration between users and provide additional insight.
 
 - __Artifact based labelling:__ LaMa uses an artifact based approach for labelling. An artifact is a short text that contains one key message and can potentially be labeled with one label. If the labeler thinks the corresponding artifact contains multiple messages, he/she can split the artifact accordingly during the labelling process.
 
 - __Collaborative labelling:__ With LaMa multiple researchers can simultaneously label same set of text artifacts. During labelling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured in such a way that required one artifact to be labeled by more than one labeler to reduce individual bias.
 
-- __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. LaMa users can view these disagreements that facilitates a dialog among corresponding labelers to agree on a label. This is very important for reducing individual bias during the labelling process.
+- __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. LaMa users can view these disagreements, which facilitates a dialog among corresponding labelers to agree on a label. This is very important for reducing individual bias during the labelling process.
 
 - __Themes:__ Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. Furthermore, themes can be categorized hierarchically further aiding in the analysis and classification process.
 
