@@ -70,15 +70,15 @@ bibliography: paper.bib
 
 # Summary
 
-Qualitative analysis of data is relevant for a variety of domains including empirical research studies. While performing qualitative analysis of large textual data sets such as data from StackOverflow, Apache Mailing Lists, and GitHub issues, condensing pieces of data into a set of terms or keywords simplifies analysis, and helps in obtaining useful insight. This condensation of data can be achieved by associating keywords “labels” with text fragments “artifacts”. To achieve greater accuracy, and limit bias, collaboration and consensus building is essential during such research activities. LaMa, which is a short form for Labelling Machine, is an open-source web application for thematic labelling of qualitative data. The application facilitates cooperation through allowing simultaneous analysis by multiple researchers, and consensus building through conflict resolution techniques. The source code is available at: <https://github.com/muctadir/lama>.
+Qualitative analysis of data is relevant for a variety of domains including empirical research studies and social science. While performing qualitative analysis of large textual data sets such as data from interviews, surveys, mailing lists, and code repositories, condensing pieces of data into a set of terms or keywords simplifies analysis, and helps in obtaining useful insight. This condensation of data can be achieved by associating keywords “labels” with text fragments, i.e., “artifacts”. It is essential during this type of research to achieve greater accuracy, facilitate collaboration, build consensus, and limit bias. LaMa, short for Labelling Machine, is an open-source web application developed for aiding in thematic analysis of qualitative data. The application facilitates cooperation through allowing simultaneous analysis by multiple researchers, and consensus building through conflict resolution techniques. The source code is available at <https://github.com/muctadir/lama>.
 
 # Statement of need
 
-As mentioned previously, LaMa is a thematic labelling tool. The tool is built based on an existing application called the Labeling Machine [@labeling_machine] and significantly expands its functionality, as described in the Key features section.
+Analyzing qualitative data has been proven to be a labor intensive and time consuming task [@analysing_qual_data] due to its nature. Thematic analysis [@thematic_analysis] is a powerful yet flexible method for performing such analysis. Analyzing textual data through this method allows the user to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
 
-Analysing qualitative data has been proven to be a labor intensive and time consuming [@analysing_qual_data] due to its nature. Thematic analysis is a ‘powerful yet flexible method for analysing qualitative data’ [@thematic_analysis]. Analysing textual data through this method allows the user to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
+LaMa is an web application intended to support the thematic analysis. The tool is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig], and significantly expands its functionality, as described in the Key features section.
 
-As thematic analysis is a widely used qualitative analysis technique, several commercial tools, such as Atlas.ti [@atlas.ti]  and maxQDA [@maxqda_2022], are available that provides support for such research. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
+As thematic analysis is a widely used qualitative analysis technique, several commercial tools, such as Atlas.ti [@atlas.ti] and maxQDA [@maxqda_2022], are available that provides support for such research. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
 
 # Key features
 
@@ -88,7 +88,7 @@ LaMa is in its core functionality similar to comparable labelling tools for qual
 
 - __Collaborative labelling:__ With LaMa multiple researchers can simultaneously label same set of text artifacts. During labelling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured in such a way that required one artifact to be labeled by more than one labeler to reduce individual bias.
 
-- __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. With LaMa users can view these disagreements that facilitates a dialog among corresponding labelers to agree on a label. This is very important for reducing individual bias during the labelling process.
+- __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. LaMa users can view these disagreements that facilitates a dialog among corresponding labelers to agree on a label. This is very important for reducing individual bias during the labelling process.
 
 - __Themes:__ Lama allows users to group labels into themes, thereby providing a way of classifying data and the analysis of the data. Furthermore, themes can be categorized hierarchically further aiding in the analysis and classification process.
 
@@ -96,8 +96,8 @@ LaMa is in its core functionality similar to comparable labelling tools for qual
 
 - __Visualizing hierarchy:__ To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
 
-
 # Conclusion and future work
+
 LaMa is an open-source web-application for thematic labelling of qualitative data. Its key-asset is obtaining insight into data by hierarchically grouping them into labels and themes. This is further aided by facilitating better collaboration between users through features such as collaborative labelling and conflict resolution.
 
 We hope LaMa being an open-source tool and it's provided features can aid future qualitative research. Meanwhile, we plan to extend this tool by creating a more intuitive user experience and adding features such as document-based labelling, AI-based assistance, and labelling of audio, video & images.
@@ -105,3 +105,5 @@ We hope LaMa being an open-source tool and it's provided features can aid future
 # Acknowledgements
 
 This project was partially funded by NWO (the Dutch national research council) under the NWO AES Perspective program (Digital Twin), project code P18-03 P3.
+
+# References
