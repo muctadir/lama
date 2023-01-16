@@ -78,8 +78,7 @@ Analyzing qualitative data has been proven to be labor intensive and time consum
 
 LaMa is an web application intended to support the thematic analysis. The tool is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig], and significantly expands its functionality, as described in the Key features section.
 
-As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti ^[atlasti.com]  and maxQDA [@maxqda_2022]. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
-
+As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/]  and maxQDA^[https://www.maxqda.com/]. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
 
 # Key features
 
