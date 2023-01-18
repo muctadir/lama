@@ -84,7 +84,7 @@ New labels can be created using the **add label** button above the dropdown menu
 _Note: Labels have a label type, this is a way grouping of labels. To label an artifact the user should select a label from each label type. Label types are specified during the project creation, and are not adjustable afterwards._
 
 ### Conflict resolution
-After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labeling given to ensure that there is conformity between the assigned labels. 
+After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labelling given to ensure that there is conformity between the assigned labels. 
 
 ![alt text](https://github.com/muctadir/lama/blob/main/images/change-label.png?raw=true)
 
