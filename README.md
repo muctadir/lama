@@ -40,7 +40,7 @@ On Linux run:
 .\start-linux.sh
 ```
 
-You should now have LaMa running in your browser.
+You should now have LaMa running in your browser. You can open the link that you defined in the .env file.
 
 ### Environment variables
 
