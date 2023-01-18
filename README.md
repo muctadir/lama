@@ -44,6 +44,15 @@ You should now have LaMa running in your browser.
 
 ### Environment variables
 
+The Environment variables can be found in the .env file in the root of the repository. Here all of the default values for the necessary variables are set. If one wants to change any of these variables they should change the values in this file. 
+
+The file is divided into sections:
+1) Database - these are all the variables that have anything to do with the database, such as the database port, database login details etc.
+2) PhPMyadmin - this is where the port for the phpmyadmin is defined
+3) LaMa Config -  these are all the variables that have anything to do with theapplication itself, such as superadmin username and password
+4) Flask Server - these are the default variables needed to run the flask server
+5) Frontend Server - these are two variables for the url on which the application is run
+
 ## <a name="user_manual"></a>User Manual
 
 ### Participating in project
