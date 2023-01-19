@@ -82,7 +82,7 @@ As thematic analysis is a widely used qualitative analysis technique, several co
 
 - __Data access and privacy:__ Qualitative research often processes sensitive data, such as legally protected information, private information of individuals. With rising privacy concerns, increasing number of research organizations are requiring specialized approval for working with such data. For example, at Eindhoven University of Technology it is mandatory, among other information, to specify which individuals can have access to the research data. This information can not be provided for commercial tools, such as the ones mentioned earlier, as they have varied data storage solutions. This greatly influenced the development of LaMa as it can be deployed locally under organizational infrastructure preventing outside access while allowing collaborative labeling, which is explained in the next section.
 
-- __Complex collaboration workflow:__
+- __Complex collaboration workflow:__ 
 
 LaMa is an web application intended to support the thematic analysis. The tool is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig], and significantly expands its functionality, as described in the Key features section.
 
