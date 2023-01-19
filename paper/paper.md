@@ -74,15 +74,25 @@ Qualitative analysis of data is relevant for a variety of domains including empi
 
 # Statement of need
 
-Analyzing qualitative data has been proven to be labor intensive and time consuming task [@analysing_qual_data] due to its nature. Thematic analysis [@thematic_analysis] is a powerful yet flexible method for performing such analysis. Analyzing textual data through this method allows the researcher to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
+Analyzing qualitative data has been proven to be labor intensive and time consuming task [@analysing_qual_data] due to its nature. Thematic analysis [@thematic_analysis] is a powerful yet flexible method for performing such analysis. Analyzing textual data through this method allows a researcher to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
+
+As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/] and maxQDA^[https://www.maxqda.com/]. Although these tools are very well developed, there are three major drawbacks that inspired the development of LaMa.
+
+- __Commercial tool:__ As these are commercial tools, their services are not free and can be quite expensive depending on the subscription.
+
+- __Data access and privacy:__ Qualitative research often processes sensitive data, such as legally protected information, private information of individuals. With rising privacy concerns, increasing number of research organizations are requiring specialized approval for working with such data. For example, at Eindhoven University of Technology it is mandatory, among other information, to specify which individuals can have access to the research data. This information can not be provided for commercial tools, such as the ones mentioned earlier, as they have varied data storage solutions. This greatly influenced the development of LaMa as it can be deployed locally under organizational infrastructure preventing outside access while allowing collaborative labeling, which is explained in the next section.
+
+- __Complex collaboration workflow:__
 
 LaMa is an web application intended to support the thematic analysis. The tool is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig], and significantly expands its functionality, as described in the Key features section.
 
-As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/]  and maxQDA^[https://www.maxqda.com/]. In addition to being an open-source alternative, LaMa facilitates thematic analysis through its unique features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
+As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/] and maxQDA^[https://www.maxqda.com/]. In addition to being an open-source alternative, LaMa facilitates thematic analysis through features such as artifact based collaborative labelling, grouping of labels into themes, and private installation with complete control over research data. With the help of this tool thematic analysis becomes less time consuming and more structured due to the flow that the tool enforces.
 
 # Key features
 
 LaMa in its core functionality is similar to comparable labelling tools for qualitative analysis, however a number of key features ensure greater consensus & collaboration between users and provide additional insight.
+
+- __Open source and locally deployable:__
 
 - __Artifact based labelling:__ LaMa uses an artifact based approach for labelling. An artifact is a short text that contains one key message and can potentially be labeled with one label. If the labeler thinks the corresponding artifact contains multiple messages, he/she can split the artifact accordingly during the labelling process.
 
