@@ -82,8 +82,6 @@ As thematic analysis is a widely used qualitative analysis technique, several co
 
 - __Data access and privacy:__ Qualitative researches often process sensitive data, such as legally protected information, private information of individuals. With rising privacy concerns, increasing number of research organizations are requiring specialized approval for working with such data. For example, at Eindhoven University of Technology it is mandatory, among other information, to specify which individuals can have access to the research data. Information such as these are often unavailable for commercial tools.
 
-This information can not be provided for commercial tools, such as the ones mentioned earlier, as they have varied data storage solutions.
-
 - __Complex collaboration workflow:__ Collaborative labelling or coding is an established method for reducing bias during qualitative analysis [@APracticalGuidetoCollaborativeQualitativeDataAnalysis]. Although commercial tools provide this feature in various forms, they often follow a complex workflow specially in case of disagreements or conflicts in labelling.
 
 Based on these points we developed LaMa, which is a web application intended to support the thematic analysis and is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig]. Its key features are described in the following section.
