@@ -23,7 +23,7 @@ label_routes = Blueprint("label", __name__, url_prefix="/label")
 @in_project
 @not_frozen
 def create_label(*, user):
-    args = request.json['params']
+    args = request.json
 
     required = ['labelTypeId', 'labelName', 'labelDescription', 'p_id']
 
@@ -95,7 +95,7 @@ def create_label(*, user):
 @not_frozen
 def edit_label(*, user):
     # Get args
-    args = request.json['params']
+    args = request.json
     # Required args
     required = ('labelId', 'labelName', 'labelDescription', 'p_id')
 
@@ -242,7 +242,7 @@ def get_single_label():
 @in_project
 @not_frozen
 def merge_route(*, user):
-    args = request.json['params']
+    args = request.json
     # Required parameters
     required = ('mergedLabels', 'newLabelName',
                 'newLabelDescription', 'p_id', 'labelTypeName')
@@ -436,7 +436,7 @@ def get_label_artifacts(label, u_id, admin):
 @in_project
 @not_frozen
 def soft_delete_route(*, user):
-    args = request.json['params']
+    args = request.json
     # Required args
     required = ['l_id', 'p_id']
     # Check for arguments

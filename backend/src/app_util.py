@@ -233,9 +233,7 @@ def in_project(f):
         if request.method == 'GET':
             p_id = request.args['p_id']
         else:
-            if 'params' in request.json and 'p_id' in request.json['params']:
-                p_id = request.json['params']['p_id']
-            elif 'p_id' in request.json:
+            if 'p_id' in request.json:
                 p_id = request.json['p_id']
             else:
                 return make_response('Bad Request, missing p_id', 400)
