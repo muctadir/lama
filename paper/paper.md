@@ -80,9 +80,11 @@ As thematic analysis is a widely used qualitative analysis technique, several co
 
 - __Commercial tool:__ As these are commercial tools, their services are not free and can be quite expensive depending on the subscription.
 
-- __Data access and privacy:__ Qualitative research often processes sensitive data, such as legally protected information, private information of individuals. With rising privacy concerns, increasing number of research organizations are requiring specialized approval for working with such data. For example, at Eindhoven University of Technology it is mandatory, among other information, to specify which individuals can have access to the research data. This information can not be provided for commercial tools, such as the ones mentioned earlier, as they have varied data storage solutions.
+- __Data access and privacy:__ Qualitative researches often process sensitive data, such as legally protected information, private information of individuals. With rising privacy concerns, increasing number of research organizations are requiring specialized approval for working with such data. For example, at Eindhoven University of Technology it is mandatory, among other information, to specify which individuals can have access to the research data. Information such as these are often unavailable for commercial tools.
 
-- __Complex collaboration workflow:__ Collaborative labelling or coding is an established method for reducing bias during qualitative analysis [@APracticalGuidetoCollaborativeQualitativeDataAnalysis]. Although commercial tools provide this feature in various forms, they often follow a complex workflow specially in case of disagreement or conflict in labelling.
+This information can not be provided for commercial tools, such as the ones mentioned earlier, as they have varied data storage solutions.
+
+- __Complex collaboration workflow:__ Collaborative labelling or coding is an established method for reducing bias during qualitative analysis [@APracticalGuidetoCollaborativeQualitativeDataAnalysis]. Although commercial tools provide this feature in various forms, they often follow a complex workflow specially in case of disagreements or conflicts in labelling.
 
 Based on these points we developed LaMa, which is a web application intended to support the thematic analysis and is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the original Labeling Machine [@labeling_machine_orig]. Its key features are described in the following section.
 
@@ -94,7 +96,7 @@ LaMa in its core functionality is similar to comparable labelling tools for qual
 
 - __Artifact based labelling:__ LaMa uses an artifact based approach for labelling. An artifact is a short text that contains one key message and can potentially be labeled with one label. If the labeler thinks the corresponding artifact contains multiple messages, he/she can split the artifact accordingly during the labelling process.
 
-- __Collaborative labelling:__ With LaMa multiple researchers can simultaneously label same set of text artifacts. During labelling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured in such a way that required one artifact to be labeled by more than one labeler to reduce individual bias.
+- __Collaborative labelling:__ With LaMa multiple researchers can simultaneously label same set of text artifacts. During labelling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured in such a way that requires one artifact to be labeled by more than one labeler to reduce individual bias.
 
 - __Conflict resolution:__ To ensure consensus during collaboration automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. LaMa users can view these disagreements, which facilitates a dialog among corresponding labelers to agree on a label. This is very important for reducing individual bias during the labelling process.
 
@@ -106,9 +108,9 @@ LaMa in its core functionality is similar to comparable labelling tools for qual
 
 # Conclusion and future work
 
-LaMa is an open-source web-application for thematic labelling of qualitative data. Its key-asset is obtaining insight into data by hierarchically grouping them into labels and themes. This is further aided by facilitating better collaboration between users through features such as collaborative labelling and conflict resolution.
+LaMa is an open-source web-application for thematic labelling of qualitative data. Its key-assets are obtaining insight into data by hierarchically grouping them into labels & themes and facilitating better collaboration between users through features such as collaborative labelling & conflict resolution.
 
-LaMa has been extremely beneficial for the data analysis of an ongoing semi-structured interview research. We hope that LaMa can aid future qualitative research by the features it provides and by being extendible due to its open-source nature. Meanwhile, we plan to extend this tool by creating a more intuitive user experience and adding features such as document-based labelling, AI-based assistance, and labelling of audio, video & images.
+LaMa has been extremely beneficial for analyzing the data of an ongoing semi-structured interview research. We hope that LaMa can aid future qualitative research by the features it provides and by being extendible due to its open-source nature. Meanwhile, we plan to extend this tool by creating a more intuitive user experience and adding features such as document-based labelling, AI-based assistance, and labelling of audio, video & images.
 
 # Acknowledgements
 
