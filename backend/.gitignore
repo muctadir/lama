@@ -10,5 +10,6 @@ src/__pycache__/*
 src/routes/__pycache__/*
 src/models/__pycache__/*
 src/tests/__pycache__/*
+src/migrations/
 migrations/*
 migrations-test/*

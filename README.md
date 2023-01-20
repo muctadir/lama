@@ -22,12 +22,12 @@ This project builds upon the already existing [Labeling Machine tool](https://gi
 For deployment using docker:
 
 1. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
+2. [Git](https://git-scm.com/) ≥ 2.37.0
 
 For development these are the dependencies/tools without which LaMa may not work:
 
 1. [NodeJS](https://nodejs.org/en/) ≥ 16.15
 2. [Python](https://www.python.org/) ≥ 3.10
-3. [Git](https://git-scm.com/) ≥ 2.37.0
 4. pip ≥ 22.1.2
 5. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
 6. IDE (optional, but recommended for easier development. We recommend [PyCharm](https://www.jetbrains.com/pycharm) for Backend and [VSCode](https://code.visualstudio.com/) for Frontend)
@@ -50,9 +50,18 @@ On Linux run:
 .\start-linux.sh
 ```
 
-You should now have LaMa running in your browser.
+You should now have LaMa running in your browser. You can open the link that you defined in the .env file.
 
 ### Environment variables
+
+The Environment variables can be found in the .env file in the root of the repository. Here all of the default values for the necessary variables are set. If one wants to change any of these variables they should change the values in this file. 
+
+The file is divided into sections:
+1) Database - these are all the variables that have anything to do with the database, such as the database port, database login details etc.
+2) PhPMyadmin - this is where the port for the phpmyadmin is defined
+3) LaMa Config -  these are all the variables that have anything to do with theapplication itself, such as superadmin username and password
+4) Flask Server - these are the default variables needed to run the flask server
+5) Frontend Server - these are two variables for the url on which the application is run
 
 ## <a name="user_manual"></a>User Manual
 
@@ -90,7 +99,7 @@ _Note: Labels have a label type, this is a way grouping of labels. To label an a
 
 ### Conflict resolution
 
-After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labeling given to ensure that there is conformity between the assigned labels.
+After different users have labelled an artifact there could be conflict between the labels that have been assigned. Artifacts with different labels appear in the **conflict resolution page**. Here users can modify the labelling given to ensure that there is conformity between the assigned labels. 
 
 ![alt text](https://github.com/muctadir/lama/blob/main/images/change-label.png?raw=true)
 

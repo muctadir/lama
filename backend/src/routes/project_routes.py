@@ -123,9 +123,6 @@ def create_project(*, user):
     # Get the information given by the frontend
     project_info = request.json
 
-    # Get the actual information
-    project_info = project_info["params"]
-
     # Required fields
     required = ["project", "labelTypes", "users"]
 
@@ -188,7 +185,7 @@ def create_project(*, user):
     except OperationalError:
         return make_response('Internal Server Error', 503)
 
-    return make_response('Projetc created', 201)
+    return make_response('Project created', 201)
 
 
 """
@@ -308,7 +305,7 @@ def edit_project(*, membership):
         return make_response('This member is not admin', 401)
 
     # Get args
-    args = request.json['params']
+    args = request.json
     # Required args
     required = ["p_id", "project", "add", "update"]
     required_project = ['id', 'name', 'description', 'criteria', 'frozen']
@@ -463,7 +460,7 @@ def freeze_project(*, membership):
         return make_response('This member is not admin', 401)
 
     # Get args
-    args = request.json['params']
+    args = request.json
     # Required args
     required = ['p_id', 'frozen']
 
