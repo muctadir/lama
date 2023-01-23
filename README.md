@@ -1,3 +1,5 @@
+[![status](https://joss.theoj.org/papers/f91f03787429efa115f1e3aa144254bc/status.svg)](https://joss.theoj.org/papers/f91f03787429efa115f1e3aa144254bc)
+
 # LaMa (Labelling Machine)
 
 ![LaMa logo](/frontend/assets/lama_nobg.png)
