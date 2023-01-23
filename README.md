@@ -50,18 +50,19 @@ On Linux run:
 .\start-linux.sh
 ```
 
-You should now have LaMa running in your browser. You can open the link that you defined in the .env file.
+You should now have LaMa running in your browser. By default, the frontend server runs on [localhost](http://localhost) and default login credentials are `admin` as username & `password` as password.
 
 ### Environment variables
 
-The Environment variables can be found in the .env file in the root of the repository. Here all of the default values for the necessary variables are set. If one wants to change any of these variables they should change the values in this file. 
+The Environment variables can be found in the .env file in the root of the repository. Here all of the default values for the necessary variables are set. If one wants to change any of these variables they should change the values in this file.
 
 The file is divided into sections:
+
 1) Database - these are all the variables that have anything to do with the database, such as the database port, database login details etc.
 2) PhPMyadmin - this is where the port for the phpmyadmin is defined
-3) LaMa Config -  these are all the variables that have anything to do with theapplication itself, such as superadmin username and password
-4) Flask Server - these are the default variables needed to run the flask server
-5) Frontend Server - these are two variables for the url on which the application is run
+3) LaMa Config -  these variables defines the superadmin username and password. Please, note that a superadmin is created by default who has access of all the projects and their contents.
+4) Flask Server - these are the variables needed to run the flask server.
+5) Frontend Server - these are two variables for the urls to the backend server. The frontend uses these variables to interact with the apis provided by the backend.
 
 ## <a name="user_manual"></a>User Manual
 
@@ -142,4 +143,4 @@ pytest -rA
 
 ## <a name="contributions"></a>Acknowledgements
 
-LaMa was developed based on a web application called [Labeling Machine](https://github.com/muctadir/labeling-machine), which is forked from an earlier version of the [Labeling Machine](https://github.com/emadpres/labeling-machine). Development of LaMa was partially funded by NWO (the Dutch national research council) under the NWO AES Perspective program (Digital Twin), project code P18-03 P3. We acknowledge the contribution of the nine bachelor students from [Eindhoven University of Technology, Netherlands](https://www.tue.nl) V. Bogachenkova, T. Bradley, E.J. Costa Martins, V. Fürst, B. Henkemans, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, and A. Olteniceanu, who contributed to this project significantly as part of their final project of the bachelors program in computer science.
+LaMa was developed based on a web application called [Labeling Machine](https://github.com/muctadir/labeling-machine), which is forked from an earlier version of the [Labeling Machine](https://github.com/emadpres/labeling-machine). Development of LaMa was partially funded by NWO (the Dutch national research council) under the NWO AES Perspective program (Digital Twin), project code P18-03 P3. We acknowledge the contribution of the nine bachelor students from [Eindhoven University of Technology, the Netherlands](https://www.tue.nl) V. Bogachenkova, T. Bradley, E.J. Costa Martins, V. Fürst, B. Henkemans, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, and A. Olteniceanu, who contributed to this project significantly as part of their final project of the bachelors program in computer science.
