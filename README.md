@@ -140,19 +140,6 @@ ng test
 pytest -rA
 ```
 
-## <a name="contributions"></a>Contributions
+## <a name="contributions"></a>Acknowledgements
 
-The tool was created for the Final Bachelor Project at Eindhoven University of Technology by 9 students:
-
-* V. Bogachenkova*,
-* T. Bradley,
-* E.J. Costa Martins*,
-* V. Fürst,
-* B. Henkemans,
-* J.L.O. Jansen*,
-* L.C. Lavin,
-* L.V. Nguyen,
-* A. Olteniceanu
-
-The project was supervised by:
-H.M. Muctadir and A.Serebrenik
+LaMa was developed based on a web application called [Labeling Machine](https://github.com/muctadir/labeling-machine), which is forked from an earlier version of the [Labeling Machine](https://github.com/emadpres/labeling-machine). This project was partially funded by NWO (the Dutch national research council) under the NWO AES Perspective program (Digital Twin), project code P18-03 P3.
