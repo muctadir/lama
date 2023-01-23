@@ -20,7 +20,6 @@ import click
 dotenv_path = join(dirname(__file__), "../.env")
 # Add variables
 load_dotenv(dotenv_path)
-
 # Read environment variables.
 HOST = environ.get("DB_HOSTNAME")
 PORT = environ.get("DB_PORT")

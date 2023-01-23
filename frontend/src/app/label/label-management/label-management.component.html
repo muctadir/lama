@@ -42,6 +42,9 @@
                     <thead>
                         <tr>
                             <th scope="col">
+                                <p class="labelheader" (click)="sortLabelById();"><span class="clickable">Id</span></p>
+                            </th>
+                            <th scope="col">
                                 <p class="labelheader" (click)="sortLabel();"><span class="clickable">Label</span></p>
                             </th>
                             <th scope="col">
@@ -57,6 +60,9 @@
                     <!--Table Content-->
                     <tbody>
                         <tr *ngFor="let label of labels" (click)="reRouter(label.getId())">
+                            <td>
+                                <p class="tablecontent">{{label.getId()}}</p>
+                            </td>
                             <!-- Label name field -->
                             <td>
                                 <p class="tablecontent">{{label.getName()}}</p>
