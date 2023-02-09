@@ -49,7 +49,7 @@ Assuming that you have all the necessary dependencies installed.
 On Linux run:
 
 ```
-.\start-linux.sh
+./start-linux.sh
 ```
 
 You should now have LaMa running in your browser. By default, the frontend server runs on [localhost](http://localhost) and default login credentials are `admin` as username & `password` as password.
