@@ -45,7 +45,7 @@ Assuming that you have all the necessary dependencies installed.
 docker compose --env-file .env -f Docker/docker-compose.yml up --build -d
 ```
 
-4. On shut down the application run:
+4. To shut down the application run:
 ```
 docker compose --env-file .env -f Docker/docker-compose.yml down
 ```
