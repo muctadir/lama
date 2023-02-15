@@ -40,16 +40,14 @@ Assuming that you have all the necessary dependencies installed.
 
 1. Clone repository
 2. Navigate to the repository in a terminal
-3. On Windows run:
-
+3. To start the application run:
 ```
-.\start-win.ps1
+docker compose --env-file .env -f Docker/docker-compose.yml up --build -d
 ```
 
-On Linux run:
-
+4. To shut down the application run:
 ```
-./start-linux.sh
+docker compose --env-file .env -f Docker/docker-compose.yml down
 ```
 
 You should now have LaMa running in your browser. By default, the frontend server runs on [localhost](http://localhost) and default login credentials are `admin` as username & `password` as password.
