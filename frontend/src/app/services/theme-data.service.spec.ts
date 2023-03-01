@@ -135,12 +135,14 @@ describe('ThemeDataService', () => {
               {
                 "id": 1,
                 "identifier": "a",
-                "data": "some data1"
+                "data": "some data1",
+                "labellings": []
               },
               {
                 "id": 2,
                 "identifier": "b",
-                "data": "some data2"
+                "data": "some data2",
+                "labellings": []
               }
             ]
           }
@@ -162,6 +164,8 @@ describe('ThemeDataService', () => {
     let l1 = new Label(1, "lname1", "ldesc1", "type1");
     let a1 = new StringArtifact(1, "a", "some data1");
     let a2 = new StringArtifact(2, "b", "some data2");
+    a1.setLabellings([]);
+    a2.setLabellings([]);
     l1.setArtifacts([a1, a2]);
     
     // Sets some properties
@@ -268,15 +272,19 @@ describe('ThemeDataService', () => {
     let artifact_info = [{
       "id": 1,
       "identifier": "ABCDE",
-      "data": "Data 1"
+      "data": "Data 1",
+      "labellings": []
     }, {
       "id": 2,
       "identifier": "ABCED",
-      "data": "Data 2"
+      "data": "Data 2",
+      "labellings": []
     }];
     // Create the two labels
     let artifact1 = new StringArtifact(1, "ABCDE", "Data 1");
     let artifact2 = new StringArtifact(2, "ABCED", "Data 2");
+    artifact1.setLabellings([]);
+    artifact2.setLabellings([]);
 
     // Calls the function to be tested
     let result = service.createArtifacts(artifact_info);
