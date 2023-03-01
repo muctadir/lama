@@ -124,7 +124,6 @@ For a full list of features we refer the reader to the **Software User Manual (S
 ## <a name="testing"></a>Testing
 
 ### Frontend testing
-
 1. Navigate to the frontend folder on the terminal
 2. Run
 
@@ -140,6 +139,7 @@ ng test
 ```
 pytest -rA
 ```
+(if pytest has not been added to your path, instead run: python -m pytest -rA)
 
 ## <a name="acknowledgements"></a>Acknowledgements
 
