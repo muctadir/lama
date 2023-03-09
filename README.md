@@ -125,7 +125,11 @@ For a full list of features we refer the reader to the **Software User Manual (S
 
 ### Frontend testing
 1. Navigate to the frontend folder on the terminal
-2. Run
+2. To install the required librarier run the command:
+```
+npm install
+```
+2. After this command has executed succesfully, run the front-end test cases using the command:
 
 ```
 ng test
@@ -134,8 +138,11 @@ ng test
 ### Backend testing
 
 1. Navigate to the backend folder on the terminal
-2. Run
-
+2. To install the required dependencies run the command:
+```
+pip install -r requirements.txt
+```
+3. After this command has executed succesfully, run the back-end test cases using the command:
 ```
 pytest -rA
 ```
