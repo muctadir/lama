@@ -84,7 +84,7 @@ As thematic analysis is a widely used qualitative analysis technique, several co
 
 - **Complex collaboration workflow:** Collaborative labelling or coding is an established method for reducing bias during qualitative analysis [@APracticalGuidetoCollaborativeQualitativeDataAnalysis]. While commercial tools provide this feature in various forms, the process for resolving conflicting labels is often complicated.
 
-Based on these points we developed LaMa, which is a web application intended to support the thematic analysis and is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the an earlier Labeling Machine [@labeling_machine_orig]. Its key features are described in the following section.
+Based on these points we developed LaMa, which is a web application intended to support the thematic analysis and is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the an earlier Labeling Machine [@labeling_machine_orig]. In addition to significantly improving the user interface, LaMa provides additional features such as multi-labelling, hierarchical theming, and change tracking. Its key features are described in the following section.
 
 # Key features
 
@@ -96,13 +96,13 @@ LaMa in its core functionality is similar to comparable labelling tools for qual
 
 - **Collaborative labelling:** With LaMa multiple researchers can simultaneously label same set of text artifacts. During labelling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured so that it requires one artifact to be labeled by more than one labeler to reduce individual bias.
 
+- **Multi labelling:** LaMa allows each artifact to be labelled with multiple labels. This feature is particularly useful if a researcher wants to label an artifact from more then one viewpoints. These viewpoints, which are called label types, can be configured during project creation.
+
 - **Conflict resolution:** To ensure consensus during collaboration, automatic conflict detection has been implemented. A conflict occurs when one artifact is labeled differently by multiple labelers. LaMa users can view these disagreements, which facilitates a dialog among corresponding labelers to agree on a label. Having this dialog and resolving the disagreement are very important for reducing individual bias during the labelling process.
 
 - **Themes:** LaMa allows users to group labels into themes, thereby providing help in the classification and the analysis of the data. Furthermore, themes can be categorized hierarchically further aiding in the analysis and classification process.
 
 - **Traceability:** LaMa keeps a record of all the changes made to the artifacts, labels and themes. These changes are visible on the details page of the corresponding entities. This adds an extra layer of traceability.
-
-- **Visualizing hierarchy:** To obtain insight into how artifacts are mapped to labels, and labels ordered into themes, a visualization of the hierarchy can be constructed on demand.
 
 # Conclusion and future work
 
