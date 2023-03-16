@@ -30,11 +30,10 @@ For development these are the dependencies/tools without which LaMa may not work
 
 1. [NodeJS](https://nodejs.org/en/) ≥ 16.15
 2. [AngularCLI](https://angular.io/guide/setup-local) ≥ 13.3.10
-3. [Typescript](https://www.typescriptlang.org/download) ≥ 4.6.4
-4. [Python](https://www.python.org/) ≥ 3.10
-5. pip ≥ 22.1.2
-6. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
-7. IDE (optional, but recommended for easier development. We recommend [PyCharm](https://www.jetbrains.com/pycharm) for Backend and [VSCode](https://code.visualstudio.com/) for Frontend)
+3. [Python](https://www.python.org/) ≥ 3.10
+4. pip ≥ 22.1.2
+5. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
+6. IDE (optional, but recommended for easier development. We recommend [PyCharm](https://www.jetbrains.com/pycharm) for Backend and [VSCode](https://code.visualstudio.com/) for Frontend)
 
 ## <a name="installation"></a>Installation
 
