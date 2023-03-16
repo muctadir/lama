@@ -20,8 +20,9 @@ import click
 dotenv_path = join(dirname(__file__), "../.env")
 # Add variables
 load_dotenv(dotenv_path)
-# Read environment variables.
-HOST = environ.get("DB_HOSTNAME")
+# Read environment variables
+IN_CONTAINER = environ.get("IN_DOCKER_CONTAINER", False)
+HOST = environ.get("DB_HOSTNAME") if IN_CONTAINER else "localhost"
 PORT = environ.get("DB_PORT")
 USERNAME = environ.get("DB_USER")
 PASSWORD = environ.get("DB_PASSWORD")
@@ -33,7 +34,7 @@ URI = f"{DIALECT}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
 # In the command line we have access to the `$ flask` command.
 # AppGroups allow us to define extensions for this command-line interface.
-# In this case, we can call `$ flask db-safe init` and `$ flask db-safe fill`.
+# In this case, we can call `$ flask db-safe init` and `$ flask db-safe add-super-admin`.
 db_safe = AppGroup("db-safe")
 
 # Creates directory for database migrations if (and only if) it does not exist yet.

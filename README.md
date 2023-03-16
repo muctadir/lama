@@ -29,10 +29,12 @@ For deployment using docker:
 For development these are the dependencies/tools without which LaMa may not work:
 
 1. [NodeJS](https://nodejs.org/en/) ≥ 16.15
-2. [Python](https://www.python.org/) ≥ 3.10
-4. pip ≥ 22.1.2
-5. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
-6. IDE (optional, but recommended for easier development. We recommend [PyCharm](https://www.jetbrains.com/pycharm) for Backend and [VSCode](https://code.visualstudio.com/) for Frontend)
+2. [AngularCLI](https://angular.io/guide/setup-local) ≥ 13.3.10
+3. [Typescript](https://www.typescriptlang.org/download) ≥ 4.6.4
+4. [Python](https://www.python.org/) ≥ 3.10
+5. pip ≥ 22.1.2
+6. [Docker](https://www.docker.com/) ≥ 20.10 (with compose plugin)
+7. IDE (optional, but recommended for easier development. We recommend [PyCharm](https://www.jetbrains.com/pycharm) for Backend and [VSCode](https://code.visualstudio.com/) for Frontend)
 
 ## <a name="installation"></a>Installation
 
@@ -51,6 +53,42 @@ docker compose --env-file .env -f Docker/docker-compose.yml down
 ```
 
 You should now have LaMa running in your browser. By default, the frontend server runs on [localhost](http://localhost) and default login credentials are `admin` as username & `password` as password.
+
+### Setup for development
+
+Database:
+1. Open a terminal in the root directory of the repository
+2. Start the database with:
+```
+docker compose --env-file .env -f Docker/docker-compose-db.yml up --build -d
+```
+3. Shut down the database with:
+```
+docker compose --env-file .env -f Docker/docker-compose-db.yml down
+```
+
+Frontend:
+1. Open a terminal in the frontend directory
+2. Run `npm i`
+3. Create the environment variables, `npx tsc .\src\setenv.ts | node .\src\setenv.js` on Windows or `npx tsc ./src/setenv.ts | node ./src/setenv.js` on Linux
+4. Run `ng serve`
+5. The frontend server will run on localhost:4200
+
+Backend:
+1. Set the `FLASK_ENV` environment variable to `development`
+2. Open a terminal in the backend directory
+3. On your first time create a virtual environment with `python -m venv venv`
+4. Activate your virtual environment, `.\venv\Scripts\activate` on Windows or `source venv/bin/activate` on Linux
+5. Run `pip install -r requirements.txt`
+6. Run the following commands:
+```
+flask db-safe init
+flask db migrate
+flask db upgrade
+flask db-safe add-super-admin
+flask run --host=0.0.0.0
+```
+7. On teardown do not forget to revert the `FLASK_ENV` environment variable to `production`, and run `deactivate` to deactivate the virtual environment
 
 ### Environment variables
 
@@ -125,7 +163,7 @@ For a full list of features we refer the reader to the **Software User Manual (S
 
 ### Frontend testing
 1. Navigate to the frontend folder on the terminal
-2. To install the required librarier run the command:
+2. To install the required libraries run the command:
 ```
 npm install
 ```

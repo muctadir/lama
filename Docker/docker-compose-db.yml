@@ -1,41 +1,15 @@
 version: "3.9"
 services:
-  lama-frontend:
-    container_name: lama-frontend
-    build:
-      context: ../
-      dockerfile: ./frontend/Dockerfile
-    ports:
-      - "80:80"
-    depends_on:
-      lama-flask: 
-        condition: service_healthy
-
-  lama-flask:
-    build: 
-      context: ../
-      dockerfile: ./backend/Dockerfile
-    container_name: lama-flask
-    environment:
-      IN_DOCKER_CONTAINER: 1
-    links:
-      - lama-db
-    depends_on:
-      lama-db:
-        condition: service_healthy
-    ports:
-      - ${FLASK_RUN_PORT}:${FLASK_RUN_PORT}
-    volumes:
-      - migrationsData:/app/migrations
-
   lama-db:
     image: mysql:8-oracle
-    container_name: lama-db
+    container_name: ${DB_HOSTNAME}
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - mysqlData:/var/lib/mysql
     healthcheck:
