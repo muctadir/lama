@@ -76,7 +76,7 @@ Qualitative analysis of data is relevant for a variety of domains including empi
 
 Analyzing qualitative data has been proven to be labor intensive and time consuming task [@analysing_qual_data] due to its nature. Thematic analysis [@thematic_analysis] is a powerful yet flexible method for performing such analysis. Analyzing textual data through this method allows a researcher to understand experiences and thoughts, as well as emotions and behaviors throughout a data set. Due to the flexibility of this analysis method, the users are not bound to using only one paradigmatic perspective but within different data sets can use different ones [@clarke_psych].
 
-As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/] and maxQDA^[https://www.maxqda.com/]. Although these tools are very well developed, there are three major trade offs that inspired the development of LaMa.
+As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/] and maxQDA^[https://www.maxqda.com/]. We also investigated open-source applications that allows labelling of artifacts such as Label Studio^[https://labelstud.io/]. Although these tools are very well developed, there are three major trade offs that inspired the development of LaMa.
 
 - **Cost:** As these are commercial tools, their services are not free and can be quite expensive depending on the subscription.
 
