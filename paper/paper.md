@@ -78,7 +78,7 @@ Analyzing qualitative data has been proven to be labor intensive and time consum
 
 As thematic analysis is a widely used qualitative analysis technique, several commercial tools are available, such as Atlas.ti^[https://atlasti.com/] and maxQDA^[https://www.maxqda.com/]. We also investigated open-source applications that allows labelling of artifacts such as Label Studio^[https://labelstud.io/]. Although these tools are very well developed, there are three major trade offs that inspired the development of LaMa.
 
-- **Cost:** As these are commercial tools, their services are not free and can be quite expensive depending on the subscription.
+- **Cost:** The services provided by the commercial tools mentioned above are not free and can be quite expensive depending on the subscription.
 
 - **Data access and privacy:** Qualitative researches often process sensitive data, such as legally protected information, private information of individuals. With rising privacy concerns, increasing number of research organizations are requiring specialized approval for working with such data. For example, at Eindhoven University of Technology it is mandatory, among other information, to specify which individuals can have access to the research data. With commercial tools, control over the access of the research data or the storage location are often unavailable.
 
