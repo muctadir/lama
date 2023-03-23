@@ -15,6 +15,7 @@ from sqlalchemy import Column, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from enum import Enum
+from app_util import get_variable
 
 class UserStatus(Enum):
     """
@@ -26,8 +27,9 @@ class UserStatus(Enum):
     denied = -1
     deleted = -2
 
-
 class User(db.Model):
+
+    __default_status = UserStatus(int(get_variable("AUTO_APPROVAL")))
 
     __tablename__ = 'user'
     # auto_increment=True is default for integer primary key
@@ -37,7 +39,7 @@ class User(db.Model):
     email = Column(String(320), unique=True, nullable=False)
     # See UserStatus currently initializing to approved
     status = Column(db.Enum(UserStatus),
-                    default=UserStatus.approved, nullable=False)
+                    default=__default_status, nullable=False)
     # Personal description
     description = Column(Text, default="")
     # If the user is a super admin
