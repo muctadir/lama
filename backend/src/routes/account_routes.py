@@ -4,7 +4,7 @@ from src import db  # need this in every route
 from src.models.auth_models import User, UserStatus
 from src.app_util import check_args, check_email, check_password, check_username, check_string, check_whitespaces
 from flask import current_app as app
-from flask import make_response, request, Blueprint
+from flask import make_response, request, Blueprint, jsonify
 from sqlalchemy import select, update, or_, and_
 from src.app_util import login_required, super_admin_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -166,15 +166,31 @@ def edit_user_password(*, user):
     # Return a success message
     return make_response("Updated succesfully")
 
-# Soft deletes a user from the database
-@account_routes.route("/soft_del", methods=["POST"])
+# Retrieves all users with pending approval
+@account_routes.route("/pending", methods=["GET"])
 @super_admin_required
-def soft_delete(*, super_admin):
+def pending_users(*, super_admin):
+
+    # All users with pending approval
+    users = db.session.scalars(
+        select(User).where(User.status == UserStatus.pending)
+    ).all()
+
+    # Schema to serialize users
+    user_schema = User.__marshmallow__()
+
+    return make_response(jsonify(user_schema.dump(users, many=True)))
+
+# Updates a user to have a different approval status
+@account_routes.route("/status", methods=["PATCH"])
+@super_admin_required
+def patch_status(*, super_admin):
+    
     # gets the arguments from the request
     args = request.json
 
-    # checks whether the ID param is given
-    required = ["id"]
+    # user id and new status are required parameters
+    required = ["id", "status"]
 
     # Check required arguments are supplied
     if not check_args(required, args):
@@ -185,7 +201,7 @@ def soft_delete(*, super_admin):
         update(User).
         where(User.id == args["id"]).
         values(
-            status=UserStatus.deleted
+            status=UserStatus[args["status"]]
         )
     )
 
@@ -197,7 +213,7 @@ def soft_delete(*, super_admin):
 
     # Return a success message
     return make_response("Updated succesfully")
-
+    
 
 # Checks validity of all required fields for User creation
 def check_format(username, email, description):

@@ -94,7 +94,7 @@ export class AccountInfoService {
     // Makes the request and handles response
     try {
       // Makes the request to the backend for all users in the application
-      await this.requestHandler.post("/account/soft_del", {"id": toDel.getId()}, true);
+      await this.requestHandler.patch("/account/status", {"id": toDel.getId(), "status": "deleted"}, true);
     } catch(e) {
       // Throws an error if it goes wrong
       throw new Error("Could not get the data from server");

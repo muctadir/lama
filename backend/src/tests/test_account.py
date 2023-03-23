@@ -231,7 +231,7 @@ def test_soft_delete(app, client):
     request_handler = RequestHandler(app, client, 1)
 
     # When not all arguments are given
-    response = request_handler.post("/account/soft_del", {"id": 2}, True)
+    response = request_handler.post("/account/status", {"id": 2, "status": "deleted"}, True)
     # Check if eror was thrown and which one
     assert response.status_code == 200
     assert response.text == "Updated succesfully"
