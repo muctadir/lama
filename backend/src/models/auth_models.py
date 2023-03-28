@@ -15,7 +15,7 @@ from sqlalchemy import Column, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.associationproxy import association_proxy
 from enum import Enum
-from app_util import get_variable
+from src.app_util import get_variable
 
 class UserStatus(Enum):
     """
