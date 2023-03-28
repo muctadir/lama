@@ -69,7 +69,7 @@ docker compose --env-file .env -f Docker/docker-compose-db.yml down
 Frontend:
 1. Open a terminal in the frontend directory
 2. Run `npm i`
-3. Create the environment variables, `npx tsc .\src\setenv.ts | node .\src\setenv.js` on Windows or `npx tsc ./src/setenv.ts | node ./src/setenv.js` on Linux
+3. Create the environment variables, `npx tsx .\src\setenv.ts`
 4. Run `ng serve`
 5. The frontend server will run on localhost:4200
 
