@@ -210,4 +210,52 @@ export class AccountInfoService {
       throw e;
     }
   }
+
+  /**
+   * Returns an array with User objects of all unapproved users in the application
+   *
+   * @returns array with all users in the app
+   */
+  async pendingUsersData(): Promise<Array<User>> {
+    let users: User[] = [];
+
+    // Makes the request and handles response
+    try {
+      // Makes the request to the backend for all users in the application
+      let response = await this.requestHandler.get("/account/pending", {}, true);
+
+      // Loops over the response of the server and parses the response into the allMembers array
+      for (let user of response) {
+        // creates the object
+        let responseUser = new User(user.id, user.username);
+        // Sets email of new user
+        responseUser.setEmail(user.email);
+        // Sets the description of the new user
+        responseUser.setDesc(user.description);
+        // pushes the new user to the array of all users
+        users.push(responseUser);
+      }
+    } catch (e) {
+      // Throws an error if something goes wrong
+      throw new Error("Could not get data from server");
+    }
+    return users;
+  }
+
+  /**
+   * Makes a call to the server to approve user
+   *
+   * @param toApprove user to be approved
+   */
+  async approveUser(toApprove: User): Promise<void> {
+    // Makes the request and handles response
+    try {
+      // Makes the request to the backend for all users in the application
+      await this.requestHandler.patch("/account/status", {"id": toApprove.getId(), "status": "approved"}, true);
+    } catch(e) {
+      // Throws an error if it goes wrong
+      throw new Error("Could not get the data from server");
+    }
+  }
+
 }

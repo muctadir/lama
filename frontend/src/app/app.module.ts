@@ -57,6 +57,7 @@ import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.comp
 
 /* Imports bootstrap */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserApprovalComponent } from './account-details/user-approval/user-approval.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HistoryComponent,
     ToastGlobalComponent,
     ToastsContainer,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    UserApprovalComponent
   ],
   imports: [
     BrowserModule,

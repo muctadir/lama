@@ -1,0 +1,70 @@
+// Color variables
+$grey-shade: #38474e;
+$white-shade: #FFFFFF;
+$orange-shade: #ed5a06;
+$light-grey-shade: #bfbfbf;
+
+// Header above the input fields
+#header {
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding-top: 10px;
+}
+
+// Padding between the buttons
+.padd {
+    margin-right: 10px;
+}
+
+// Markup of the cross to go back to the home page
+#approve-button {
+    top: 5px;
+    left: 5px;
+    position: fixed;
+}
+
+// Moves the table down
+#table {
+    margin-top: 30px;
+    height: 90vh;
+    overflow-y: scroll;
+    margin-right: 2px;
+}
+
+// Sets the style for the headers in the table
+.tableheader {
+    font-size: 15px;
+}
+
+// Sets the style for the content of the table
+.tablecontent {
+    font-size: 15px;
+}
+
+// Make the highlight around the buttons none
+.btn:focus {
+    box-shadow: none;
+}
+
+// Border for the edit button
+#editButton {
+    border: $orange-shade;
+}
+
+//Scroll Bar 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+// Scrollbar background
+::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 10px;
+}
+
+// Scrollbar scroller
+::-webkit-scrollbar-thumb {
+    background: #38474e;
+    border-radius: 10px;
+}
