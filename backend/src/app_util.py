@@ -316,4 +316,4 @@ def get_variable(name: str, default_value: bool | None = None) -> bool:
             value = str(default_value)
     if value.lower() not in true_ + false_:
         raise ValueError(f'Invalid value `{value}` for variable `{name}`')
-    return value in true_
+    return value.lower() in true_
