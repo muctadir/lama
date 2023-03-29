@@ -100,7 +100,7 @@ describe('AccountInfoService', () => {
 
   it('should make the backend call to delete a user', async () => {
     // Creates a spy
-    let spy = spyOn(service["requestHandler"], "post");
+    let spy = spyOn(service["requestHandler"], "patch");
 
     // Calls the softDelUser function with dummy input
     service.softDelUser(new User(1, "a"));

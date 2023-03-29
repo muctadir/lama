@@ -1,0 +1,79 @@
+<!-- Author Jarl Jansen -->
+<!-- Container with all the content -->
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <!-- Account information -->
+    <ng-container>
+        <!-- Button for going back to the home page -->
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-secondary text-nowrap" [routerLink]="['/home']" id="back-button">Back</button>
+            </div>
+        </div>
+
+        <!-- Adds the row of the header -->
+        <div class="row">
+            <div class="col-8 offset-2">
+                <!-- Header saying user moderation -->
+                <div id="header">
+                    User Approval
+                </div>
+            </div>
+        </div>
+
+        <!-- Shows the table with all the users and their contribution -->
+        <div class="row" id="table">
+            <div class="col-10 offset-1">
+                <!-- Adds the fancy scrollbar into the page -->
+                <div>
+                    <table class="table table-hover">
+                        <!--Table Headers-->
+                        <thead>
+                            <tr>
+                                <!-- Column with usernames -->
+                                <th scope="col" class="col-3">
+                                    <p class="tableheader">User</p>
+                                </th>
+                                <!-- Column with email -->
+                                <th scope="col" class="col-3">
+                                    <p class="tableheader">Email</p>
+                                </th>
+                                <!-- Column with description of the users -->
+                                <th scope="col" class="col-3">
+                                    <p class="tableheader">Description</p>
+                                </th>
+                                <!-- Column edit and delete button-->
+                                <th scope="col" class="col-3">
+                                    <p class="tableheader">Approve</p>
+                                </th>
+                            </tr>
+                        </thead>
+                        <!--Table Content-->
+                        <tbody>
+                            <!-- Loops through all the users in the application -->
+                            <tr *ngFor="let user of users">
+                                <!-- Displays the username of the user -->
+                                <td>
+                                    <p class="tablecontent">{{user.getUsername()}}</p>
+                                </td>
+                                <!-- Displays the email of the user -->
+                                <td>
+                                    <p class="tablecontent">{{user.getEmail()}}</p>
+                                </td>
+                                <!-- Displays the description of the user -->
+                                <td>
+                                    <p class="tablecontent">{{user.getDesc()}}</p>
+                                </td>
+                                <!-- Displays the modification buttons -->
+                                <td>
+                                    <!-- Displays the edit button -->
+                                    <button class="btn btn-primary text-nowrap padd" id="approveButton"
+                                        (click)="approveUser(user)">Approve</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

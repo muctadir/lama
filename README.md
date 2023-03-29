@@ -97,7 +97,7 @@ The file is divided into sections:
 
 1) Database - these are all the variables that have anything to do with the database, such as the database port, database login details etc.
 2) PhPMyadmin - this is where the port for the phpmyadmin is defined
-3) LaMa Config -  these variables defines the superadmin username and password. Please, note that a superadmin is created by default who has access of all the projects and their contents.
+3) LaMa Config -  these variables defines the superadmin username and password. Please, note that a superadmin is created by default who has access of all the projects and their contents. The AUTO_APPROVAL variable determines whether new accounts are approved by default, or must be approved by super admins, it should parse as a boolean.
 4) Flask Server - these are the variables needed to run the flask server.
 5) Frontend Server - these are two variables for the urls to the backend server. The frontend uses these variables to interact with the apis provided by the backend.
 

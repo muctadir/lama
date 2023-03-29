@@ -39,6 +39,7 @@ import { ThemeInfoComponent } from './theme/theme-info/theme-info.component';
 import { ThemeVisualComponent } from './theme/theme-visual/theme-visual.component';
 // Other imports
 import { ModerationComponent } from './account-details/moderation/moderation.component';
+import { UserApprovalComponent } from './account-details/user-approval/user-approval.component';
 
 
 /* All the routes within the application */
@@ -52,6 +53,8 @@ const routes: Routes = [
     {path: 'account', component: AccountComponent, canActivate: [LoginGuardService]},
     // User moderation
     {path: 'moderation', component: ModerationComponent, canActivate: [SuperAdminGuardService]},
+    // User approval
+    {path: 'user-approval', component: UserApprovalComponent, canActivate: [SuperAdminGuardService]},
     // Home page route
     {path: 'home', component: HomePageComponent, canActivate: [LoginGuardService]},
     // Project creation route

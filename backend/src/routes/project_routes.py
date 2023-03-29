@@ -64,8 +64,7 @@ def home_page(*, user):
             project.id, project.criteria)
 
         # Get the serialized users in the project
-        users = get_serialized_users(get_users_in_project(project.id)
-                                     )
+        users = get_serialized_users(get_users_in_project(project.id))
 
         # Put all values into a dictonary
         info = {

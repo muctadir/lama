@@ -23,6 +23,8 @@
                     <!-- Go to the user moderation page when clicked -->
                     <button class="button-layout" ngbDropdownItem *ngIf="user && user.getType()"
                         [routerLink]="['/moderation']">User Moderation</button>
+                    <button class="button-layout" ngbDropdownItem *ngIf="user && user.getType()"
+                        [routerLink]="['/user-approval']">User Approval</button>
                     <!-- Open logout modal when clicked -->
                     <button class="button-layout" ngbDropdownItem (click)="openLogout()">Log out</button>
                 </div>

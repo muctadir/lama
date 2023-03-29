@@ -12,6 +12,7 @@ from flask import make_response, request
 from sqlalchemy.exc import OperationalError
 from inspect import getfullargspec
 from datetime import time
+from os import environ
 
 def check_args(required, args):
     """
@@ -289,7 +290,6 @@ def not_frozen(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
 # Get time from seconds
 def time_from_seconds(seconds):
     # Left over seconds
@@ -303,3 +303,17 @@ def time_from_seconds(seconds):
 
     # Return the time
     return time(hours, minutes_leftover, seconds_leftover)
+
+# Converts a environment variable to a boolean
+def get_variable(name: str, default_value: bool | None = None) -> bool:
+    true_ = ('true', '1', 't')  # Add more entries if you want, like: `y`, `yes`, `on`, ...
+    false_ = ('false', '0', 'f')  # Add more entries if you want, like: `n`, `no`, `off`, ...
+    value: str | None = environ.get(name, None)
+    if value is None:
+        if default_value is None:
+            raise ValueError(f'Variable `{name}` not set!')
+        else:
+            value = str(default_value)
+    if value.lower() not in true_ + false_:
+        raise ValueError(f'Invalid value `{value}` for variable `{name}`')
+    return value.lower() in true_
