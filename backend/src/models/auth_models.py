@@ -29,7 +29,7 @@ class UserStatus(Enum):
 
 class User(db.Model):
 
-    __default_status = UserStatus(int(get_variable("AUTO_APPROVAL")))
+    __default_status = UserStatus(int(get_variable("AUTO_APPROVAL", True)))
 
     __tablename__ = 'user'
     # auto_increment=True is default for integer primary key
