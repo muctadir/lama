@@ -101,6 +101,18 @@ The file is divided into sections:
 4) Flask Server - these are the variables needed to run the flask server.
 5) Frontend Server - these are two variables for the urls to the backend server. The frontend uses these variables to interact with the apis provided by the backend.
 
+### Sample Database
+
+With the database running do the following:
+
+1) Go the PMA, which runs on localhost:81 by default.
+2) In the lama database, check all tables and _drop_ them. You _will_ lose all your data.
+3) Go to the import tab, choose the `sample.sql` file found in the root of the repository, and press Go.
+
+The sample database contains one project on the topic of restaurant reviews, and this project already has some labelled artifacts. The three main criteria for reviews are the food, service, and decor. There are two users with the following login details:
+- Username: `admin` Password: `password`
+- Username: `John Doe` Password: `Testing123`
+
 ## <a name="user_manual"></a>User Manual
 
 ### Participating in project
