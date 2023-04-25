@@ -86,7 +86,7 @@ As thematic analysis is a widely used qualitative analysis technique, several co
 
 - **Thematic analysis use-case:** We identified several annotation tools, including open-source ones (i.e., Label Studio^[https://labelstud.io/]), that can annotate texts, images, audio and various other data formats. However, these tools are primarily intended to be used together with various machine learning or classification algorithms and therefore, not particularly tailored towards thematic analysis related use-cases.
 
-Based on these points we developed LaMa, which is a web application intended to support the thematic analysis and is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the an earlier Labeling Machine [@labeling_machine_orig]. In addition to significantly improving the user interface, LaMa provides additional features such as multi-labelling, hierarchical theming, and change tracking. Its key features are described in the following section.
+Based on these points we developed LaMa, which is a web application intended to support the thematic analysis and is built based on an existing application called the Labeling Machine [@labeling_machine], which is forked from the earlier Labeling Machine [@labeling_machine_orig]. In addition to significantly improving the user interface, LaMa provides additional features such as multi-labelling, hierarchical theming, and change tracking. Its key features are described in the following section.
 
 # Key features
 
@@ -94,9 +94,9 @@ LaMa in its core functionality is similar to comparable labelling tools for qual
 
 - **Open-source and locally deployable:** LaMa is open-source and can be deployed locally under organizational infrastructure preventing outside access while allowing collaborative labelling by researchers from an organization. This can benefit from security measures already in place at an organizational level, allow more control over research data, and reduce the possibility of data leakage. Furthermore, due to its open-source nature, the tool can be adapted based on specialized needs.
 
-- **Artifact based labelling:** LaMa uses an artifact based approach for labelling. An artifact is a short text that contains one key message and can potentially be labeled with one label. If the labeler thinks the corresponding artifact contains multiple messages, he/she can split the artifact accordingly during the labelling process.
+- **Artifact-based labelling:** LaMa uses an artifact-based approach for labelling. An artifact is a short text that contains one key message and can potentially be labeled with one label. If the labeler thinks the corresponding artifact contains multiple messages, he/she can split the artifact accordingly during the labelling process.
 
-- **Collaborative labelling:** With LaMa multiple researchers can simultaneously label same set of text artifacts. During labelling newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured so that it requires one artifact to be labeled by more than one labeler to reduce individual bias.
+- **Collaborative labelling:** With LaMa multiple researchers can simultaneously label the same set of text artifacts. During labelling, newly created labels are immediately shared with other labelers, which facilitates the reuse of existing labels. Furthermore, a LaMa project can be configured so that it requires one artifact to be labeled by more than one labeler to reduce individual bias.
 
 - **Multi labelling:** LaMa allows each artifact to be labelled with multiple labels. This feature is particularly useful if a researcher wants to label an artifact from more then one viewpoints. These viewpoints, which are called label types, can be configured during project creation.
 
