@@ -197,6 +197,26 @@ pytest -rA
 ```
 (if pytest has not been added to your path, instead run: python -m pytest -rA)
 
+## <a name="citing"></a>Citing this work
+
+Please use the following Bibtex for citing this work.
+
+```
+@article{lama2023, 
+  author = {Victoria Bogachenkova and Eduardo Costa Martins and Jarl Jansen and Ana-Maria Olteniceanu and Bartjan Henkemans and Chinno Lavin and Linh Nguyen and Thea Bradley and Veerle Fürst and Hossain Muhammad Muctadir and Mark van den Brand and Loek Cleophas and Alexander Serebrenik}, 
+  title = {LaMa: a thematic labelling web application}, 
+  journal = {Journal of Open Source Software}, 
+  doi = {10.21105/joss.05135}, 
+  url = {https://doi.org/10.21105/joss.05135}, 
+  year = {2023}, 
+  publisher = {The Open Journal}, 
+  volume = {8},
+  number = {85}, 
+  pages = {5135} 
+} 
+```
+
+
 ## <a name="acknowledgements"></a>Acknowledgements
 
 LaMa was developed based on a web application called [Labeling Machine](https://github.com/muctadir/labeling-machine), which is forked from an earlier version of the [Labeling Machine](https://github.com/emadpres/labeling-machine). Development of LaMa was partially funded by NWO (the Dutch national research council) under the NWO AES Perspective program (Digital Twin), project code P18-03 P3. We acknowledge the contribution of the nine bachelor students from [Eindhoven University of Technology, the Netherlands](https://www.tue.nl) V. Bogachenkova, T. Bradley, E.J. Costa Martins, V. Fürst, B. Henkemans, J.L.O. Jansen, L.C. Lavin, L.V. Nguyen, and A. Olteniceanu, who contributed to this project significantly as part of their final project of the bachelors program in computer science.
